@@ -38,7 +38,7 @@ class Authenticate
     public function handle(Request $request, Closure $next, $guard = null)
     {
         if (empty($request->headers->get('authorization'))) {
-            Log::error(
+            Log::debug(
                 "Action attempted with no API key.",
                 [
                     'route' => $request->getRequestUri(),
@@ -56,7 +56,7 @@ class Authenticate
 
         // If they don't give us a valid key, tell them to go away and log it.
         if ($this->auth->guard($guard)->guest()) {
-            Log::error(
+            Log::debug(
                 "Action attempted with invalid API key.",
                 [
                     'route' => $request->getRequestUri(),
