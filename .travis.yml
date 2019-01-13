@@ -1,0 +1,38 @@
+language: php
+php:
+  - '7.1'
+  - '7.3'
+  - nightly
+
+matrix:
+  allow_failures:
+    - php: nightly
+
+addons:
+  mariadb: '10.2'
+
+# Only run on the base branches
+branches:
+  only:
+    - master
+    - develop
+
+before_install:
+  - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
+  - sudo apt-get update
+  - composer self-update
+
+install:
+  - mysql -e 'create database IF NOT EXISTS uk_plugin;' -uroot
+
+before_script:
+  - cp .env.travis .env
+  - composer install
+  - php artisan migrate
+  - php artisan passport:install
+  - php artisan db:seed
+
+script:
+  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpcs --file-list=.phpcs --standard=PSR2
+  - php script/lint-dependencies.php

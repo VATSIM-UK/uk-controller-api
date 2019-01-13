@@ -1,0 +1,12 @@
+app/
+bootstrap/
+config/
+public/
+resources/
+routes/
+tests/app
+tests/BaseApiTestCase.php
+tests/BaseFunctionalTestCase.php
+tests/BaseTestCase.php
+tests/BaseUnitTestCase.php
+tests/bootstrap.php

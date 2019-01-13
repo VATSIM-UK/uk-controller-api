@@ -1,0 +1,1506 @@
+{
+    "EGAA_APP": {
+        "frequency": 120.9,
+        "top-down": [
+            "EGAA",
+            "EGAC"
+        ]
+    },
+    "EGAA_GND": {
+        "frequency": 121.75,
+        "top-down": [
+            "EGAA"
+        ]
+    },
+    "EGAA_R_APP": {
+        "frequency": 128.5,
+        "top-down": [
+            "EGAA"
+        ]
+    },
+    "EGAA_TWR": {
+        "frequency": 118.3,
+        "top-down": [
+            "EGAA"
+        ]
+    },
+    "EGAC_APP": {
+        "frequency": 130.85,
+        "top-down": [
+            "EGAC"
+        ]
+    },
+    "EGAC_R_APP": {
+        "frequency": 134.8,
+        "top-down": []
+    },
+    "EGAC_TWR": {
+        "frequency": 122.82,
+        "top-down": [
+            "EGAC"
+        ]
+    },
+    "EGAD_R_TWR": {
+        "frequency": 128.3,
+        "top-down": []
+    },
+    "EGAE_APP": {
+        "frequency": 123.62,
+        "top-down": [
+            "EGAE"
+        ]
+    },
+    "EGAE_TWR": {
+        "frequency": 134.15,
+        "top-down": [
+            "EGAE"
+        ]
+    },
+    "EGBB_APP": {
+        "frequency": 118.05,
+        "top-down": [
+            "EGBB",
+            "EGBE"
+        ]
+    },
+    "EGBB_DEL": {
+        "frequency": 121.92,
+        "top-down": [
+            "EGBB"
+        ]
+    },
+    "EGBB_F_APP": {
+        "frequency": 131,
+        "top-down": []
+    },
+    "EGBB_GND": {
+        "frequency": 121.8,
+        "top-down": [
+            "EGBB"
+        ]
+    },
+    "EGBB_TWR": {
+        "frequency": 118.3,
+        "top-down": [
+            "EGBB"
+        ]
+    },
+    "EGBE_R_TWR": {
+        "frequency": 123.82,
+        "top-down": [
+            "EGBE"
+        ]
+    },
+    "EGBJ_APP": {
+        "frequency": 128.55,
+        "top-down": [
+            "EGBJ"
+        ]
+    },
+    "EGBJ_TWR": {
+        "frequency": 122.9,
+        "top-down": [
+            "EGBJ"
+        ]
+    },
+    "EGCC_DEL": {
+        "frequency": 121.7,
+        "top-down": [
+            "EGCC"
+        ]
+    },
+    "EGCC_F_APP": {
+        "frequency": 121.35,
+        "top-down": [
+            "EGCC"
+        ]
+    },
+    "EGCC_GND": {
+        "frequency": 121.85,
+        "top-down": [
+            "EGCC"
+        ]
+    },
+    "EGCC_N_APP": {
+        "frequency": 135,
+        "top-down": [
+            "EGCC"
+        ]
+    },
+    "EGCC_N_TWR": {
+        "frequency": 118.62,
+        "top-down": [
+            "EGCC"
+        ]
+    },
+    "EGCC_S_APP": {
+        "frequency": 118.57,
+        "top-down": [
+            "EGCC"
+        ]
+    },
+    "EGCC_S_TWR": {
+        "frequency": 119.4,
+        "top-down": [
+            "EGCC"
+        ]
+    },
+    "EGCN_APP": {
+        "frequency": 126.22,
+        "top-down": [
+            "EGCN"
+        ]
+    },
+    "EGCN_TWR": {
+        "frequency": 128.77,
+        "top-down": [
+            "EGCN"
+        ]
+    },
+    "EGFF_APP": {
+        "frequency": 119.15,
+        "top-down": []
+    },
+    "EGFF_R_APP": {
+        "frequency": 125.85,
+        "top-down": [
+            "EGFF",
+            "EGGD"
+        ]
+    },
+    "EGFF_TWR": {
+        "frequency": 133.1,
+        "top-down": [
+            "EGFF"
+        ]
+    },
+    "EGGD_APP": {
+        "frequency": 125.65,
+        "top-down": [
+            "EGGD"
+        ]
+    },
+    "EGGD_DEL": {
+        "frequency": 121.92,
+        "top-down": [
+            "EGGD"
+        ]
+    },
+    "EGGD_GND": {
+        "frequency": 121.92,
+        "top-down": [
+            "EGGD"
+        ]
+    },
+    "EGGD_R_APP": {
+        "frequency": 136.07,
+        "top-down": []
+    },
+    "EGGD_TWR": {
+        "frequency": 133.85,
+        "top-down": [
+            "EGGD"
+        ]
+    },
+    "EGGP_APP": {
+        "frequency": 119.85,
+        "top-down": [
+            "EGGP",
+            "EGNR"
+        ]
+    },
+    "EGGP_F_APP": {
+        "frequency": 118.45,
+        "top-down": []
+    },
+    "EGGP_GND": {
+        "frequency": 119.998,
+        "top-down": [
+            "EGGP"
+        ]
+    },
+    "EGGP_TWR": {
+        "frequency": 126.35,
+        "top-down": [
+            "EGGP"
+        ]
+    },
+    "EGGW_APP": {
+        "frequency": 129.55,
+        "top-down": [
+            "EGGW"
+        ]
+    },
+    "EGGW_DEL": {
+        "frequency": 121.67,
+        "top-down": [
+            "EGGW"
+        ]
+    },
+    "EGGW_F_APP": {
+        "frequency": 128.75,
+        "top-down": []
+    },
+    "EGGW_GND": {
+        "frequency": 121.75,
+        "top-down": [
+            "EGGW"
+        ]
+    },
+    "EGGW_TWR": {
+        "frequency": 132.55,
+        "top-down": [
+            "EGGW"
+        ]
+    },
+    "EGGX_FSS": {
+        "frequency": 131.8,
+        "top-down": []
+    },
+    "EGHH_APP": {
+        "frequency": 119.47,
+        "top-down": [
+            "EGHH"
+        ]
+    },
+    "EGHH_F_APP": {
+        "frequency": 118.65,
+        "top-down": []
+    },
+    "EGHH_GND": {
+        "frequency": 121.7,
+        "top-down": [
+            "EGHH"
+        ]
+    },
+    "EGHH_TWR": {
+        "frequency": 125.6,
+        "top-down": [
+            "EGHH"
+        ]
+    },
+    "EGHI_APP": {
+        "frequency": 122.72,
+        "top-down": [
+            "EGHI"
+        ]
+    },
+    "EGHI_GND": {
+        "frequency": 121.77,
+        "top-down": [
+            "EGHI"
+        ]
+    },
+    "EGHI_TWR": {
+        "frequency": 118.2,
+        "top-down": [
+            "EGHI"
+        ]
+    },
+    "EGHQ_APP": {
+        "frequency": 127.92,
+        "top-down": [
+            "EGHQ",
+            "EGHQ"
+        ]
+    },
+    "EGHQ_GND": {
+        "frequency": 121.95,
+        "top-down": [
+            "EGHQ"
+        ]
+    },
+    "EGHQ_TWR": {
+        "frequency": 134.37,
+        "top-down": [
+            "EGHQ"
+        ]
+    },
+    "EGJA_GND": {
+        "frequency": 130.5,
+        "top-down": [
+            "EGJA"
+        ]
+    },
+    "EGJA_TWR": {
+        "frequency": 125.35,
+        "top-down": [
+            "EGJA"
+        ]
+    },
+    "EGJB_APP": {
+        "frequency": 124.5,
+        "top-down": [
+            "EGJB",
+            "EGJB"
+        ]
+    },
+    "EGJB_GND": {
+        "frequency": 121.8,
+        "top-down": [
+            "EGJB"
+        ]
+    },
+    "EGJB_TWR": {
+        "frequency": 119.95,
+        "top-down": [
+            "EGJB"
+        ]
+    },
+    "EGJJ_APP": {
+        "frequency": 120.3,
+        "top-down": [
+            "EGJJ"
+        ]
+    },
+    "EGJJ_C_APP": {
+        "frequency": 125.2,
+        "top-down": [
+            "EGJA",
+            "EGJB",
+            "EGJJ"
+        ]
+    },
+    "EGJJ_GND": {
+        "frequency": 121.9,
+        "top-down": [
+            "EGJJ"
+        ]
+    },
+    "EGJJ_R_APP": {
+        "frequency": 118.55,
+        "top-down": []
+    },
+    "EGJJ_S_APP": {
+        "frequency": 120.45,
+        "top-down": []
+    },
+    "EGJJ_TWR": {
+        "frequency": 119.45,
+        "top-down": [
+            "EGJJ"
+        ]
+    },
+    "EGKA_APP": {
+        "frequency": 123.15,
+        "top-down": [
+            "EGKA"
+        ]
+    },
+    "EGKA_TWR": {
+        "frequency": 125.4,
+        "top-down": [
+            "EGKA"
+        ]
+    },
+    "EGKB_APP": {
+        "frequency": 129.4,
+        "top-down": [
+            "EGKB"
+        ]
+    },
+    "EGKB_TWR": {
+        "frequency": 134.8,
+        "top-down": [
+            "EGKB"
+        ]
+    },
+    "EGKK-S_APP": {
+        "frequency": 126.82,
+        "top-down": []
+    },
+    "EGKK_APP": {
+        "frequency": 126.82,
+        "top-down": [
+            "EGKK"
+        ]
+    },
+    "EGKK_DEL": {
+        "frequency": 121.95,
+        "top-down": [
+            "EGKK"
+        ]
+    },
+    "EGKK_F_APP": {
+        "frequency": 118.95,
+        "top-down": [
+            "EGKK"
+        ]
+    },
+    "EGKK_GND": {
+        "frequency": 121.8,
+        "top-down": [
+            "EGKK"
+        ]
+    },
+    "EGKK_TWR": {
+        "frequency": 124.22,
+        "top-down": [
+            "EGKK"
+        ]
+    },
+    "EGKR_TWR": {
+        "frequency": 119.6,
+        "top-down": []
+    },
+    "EGLC_APP": {
+        "frequency": 128.02,
+        "top-down": [
+            "EGLC"
+        ]
+    },
+    "THAMES_APP": {
+        "frequency": 132.7,
+        "top-down": [
+            "EGLC",
+            "EGKB",
+            "EGMC"
+        ]
+    },
+    "EGLC_GND": {
+        "frequency": 121.82,
+        "top-down": [
+            "EGLC"
+        ]
+    },
+    "EGLC_TWR": {
+        "frequency": 118.07,
+        "top-down": [
+            "EGLC"
+        ]
+    },
+    "EGLD_I_TWR": {
+        "frequency": 130.72,
+        "top-down": []
+    },
+    "EGLF_APP": {
+        "frequency": 134.35,
+        "top-down": [
+            "EGLF"
+        ]
+    },
+    "EGLF_TWR": {
+        "frequency": 122.5,
+        "top-down": [
+            "EGLF"
+        ]
+    },
+    "EGLL_1_GND": {
+        "frequency": 121.9,
+        "top-down": []
+    },
+    "EGLL_2_GND": {
+        "frequency": 121.7,
+        "top-down": [
+            "EGLL"
+        ]
+    },
+    "EGLL_3_GND": {
+        "frequency": 121.85,
+        "top-down": []
+    },
+    "EGLL_DEL": {
+        "frequency": 121.97,
+        "top-down": [
+            "EGLL"
+        ]
+    },
+    "EGLL_F_APP": {
+        "frequency": 120.4,
+        "top-down": [
+            "EGLL",
+            "EGWU"
+        ]
+    },
+    "EGLL_N_APP": {
+        "frequency": 119.72,
+        "top-down": [
+            "EGLL",
+            "EGWU"
+        ]
+    },
+    "EGLL_N_TWR": {
+        "frequency": 118.7,
+        "top-down": [
+            "EGLL"
+        ]
+    },
+    "EGLL_P_GND": {
+        "frequency": 124.47,
+        "top-down": []
+    },
+    "EGLL_S_APP": {
+        "frequency": 134.97,
+        "top-down": [
+            "EGLL",
+            "EGWU"
+        ]
+    },
+    "EGLL_S_TWR": {
+        "frequency": 118.5,
+        "top-down": [
+            "EGLL"
+        ]
+    },
+    "EGLW_TWR": {
+        "frequency": 122.9,
+        "top-down": []
+    },
+    "EGMC_APP": {
+        "frequency": 130.77,
+        "top-down": [
+            "EGMC"
+        ]
+    },
+    "EGMC_TWR": {
+        "frequency": 127.72,
+        "top-down": [
+            "EGMC"
+        ]
+    },
+    "EGMD_APP": {
+        "frequency": 120.7,
+        "top-down": [
+            "EGMD"
+        ]
+    },
+    "EGMD_TWR": {
+        "frequency": 128.52,
+        "top-down": [
+            "EGMD"
+        ]
+    },
+    "EGNC_APP": {
+        "frequency": 123.6,
+        "top-down": [
+            "EGNC"
+        ]
+    },
+    "EGNC_TWR": {
+        "frequency": 123.6,
+        "top-down": [
+            "EGNC"
+        ]
+    },
+    "EGNH_APP": {
+        "frequency": 119.95,
+        "top-down": [
+            "EGNH"
+        ]
+    },
+    "EGNH_TWR": {
+        "frequency": 118.4,
+        "top-down": [
+            "EGNH"
+        ]
+    },
+    "EGNJ_APP": {
+        "frequency": 119.12,
+        "top-down": [
+            "EGNJ"
+        ]
+    },
+    "EGNJ_TWR": {
+        "frequency": 124.9,
+        "top-down": [
+            "EGNJ"
+        ]
+    },
+    "EGNM_APP": {
+        "frequency": 134.57,
+        "top-down": [
+            "EGNM"
+        ]
+    },
+    "EGNM_DEL": {
+        "frequency": 121.8,
+        "top-down": [
+            "EGNM"
+        ]
+    },
+    "EGNM_F_APP": {
+        "frequency": 125.37,
+        "top-down": []
+    },
+    "EGNM_TWR": {
+        "frequency": 120.3,
+        "top-down": [
+            "EGNM"
+        ]
+    },
+    "EGNR_APP": {
+        "frequency": 123.35,
+        "top-down": [
+            "EGNR"
+        ]
+    },
+    "EGNR_F_APP": {
+        "frequency": 130.02,
+        "top-down": [
+            "EGNR"
+        ]
+    },
+    "EGNR_TWR": {
+        "frequency": 124.95,
+        "top-down": [
+            "EGNR"
+        ]
+    },
+    "EGNS_APP": {
+        "frequency": 120.85,
+        "top-down": [
+            "EGNS"
+        ]
+    },
+    "EGNS_F_APP": {
+        "frequency": 125.3,
+        "top-down": []
+    },
+    "EGNS_TWR": {
+        "frequency": 119,
+        "top-down": [
+            "EGNS"
+        ]
+    },
+    "EGNT_F_APP": {
+        "frequency": 125.82,
+        "top-down": []
+    },
+    "EGNT_GND": {
+        "frequency": 121.72,
+        "top-down": [
+            "EGNT"
+        ]
+    },
+    "EGNT_R_APP": {
+        "frequency": 124.37,
+        "top-down": [
+            "EGNT",
+            "EGNV"
+        ]
+    },
+    "EGNT_TWR": {
+        "frequency": 119.7,
+        "top-down": [
+            "EGNT"
+        ]
+    },
+    "EGNV_APP": {
+        "frequency": 118.85,
+        "top-down": [
+            "EGNV"
+        ]
+    },
+    "EGNV_F_APP": {
+        "frequency": 128.85,
+        "top-down": []
+    },
+    "EGNV_TWR": {
+        "frequency": 119.8,
+        "top-down": [
+            "EGNV"
+        ]
+    },
+    "EGNX_APP": {
+        "frequency": 134.17,
+        "top-down": [
+            "EGNX"
+        ]
+    },
+    "EGNX_F_APP": {
+        "frequency": 120.12,
+        "top-down": []
+    },
+    "EGNX_GND": {
+        "frequency": 121.9,
+        "top-down": [
+            "EGNX"
+        ]
+    },
+    "EGNX_TWR": {
+        "frequency": 124,
+        "top-down": [
+            "EGNX"
+        ]
+    },
+    "EGOV_P_APP": {
+        "frequency": 123.3,
+        "top-down": []
+    },
+    "EGOV_R_APP": {
+        "frequency": 125.22,
+        "top-down": []
+    },
+    "EGOV_TWR": {
+        "frequency": 122.1,
+        "top-down": []
+    },
+    "EGPA_APP": {
+        "frequency": 118.3,
+        "top-down": []
+    },
+    "EGPA_I_TWR": {
+        "frequency": 118.3,
+        "top-down": []
+    },
+    "EGPA_TWR": {
+        "frequency": 118.3,
+        "top-down": []
+    },
+    "EGPB_APP": {
+        "frequency": 123.15,
+        "top-down": []
+    },
+    "EGPB_TWR": {
+        "frequency": 118.25,
+        "top-down": [
+            "EGPB"
+        ]
+    },
+    "EGPC_APP": {
+        "frequency": 119.7,
+        "top-down": []
+    },
+    "EGPC_ATIS": {
+        "frequency": 119.7,
+        "top-down": []
+    },
+    "EGPC_TWR": {
+        "frequency": 119.7,
+        "top-down": []
+    },
+    "EGPD_APP": {
+        "frequency": 119.05,
+        "top-down": [
+            "EGPD"
+        ]
+    },
+    "EGPD_F_APP": {
+        "frequency": 128.3,
+        "top-down": [
+            "EGPD"
+        ]
+    },
+    "EGPD_GND": {
+        "frequency": 121.7,
+        "top-down": [
+            "EGPD"
+        ]
+    },
+    "EGPD_TWR": {
+        "frequency": 118.1,
+        "top-down": [
+            "EGPD"
+        ]
+    },
+    "EGPE_APP": {
+        "frequency": 122.6,
+        "top-down": [
+            "EGPE"
+        ]
+    },
+    "EGPE_R_APP": {
+        "frequency": 122.6,
+        "top-down": [
+            "EGPE"
+        ]
+    },
+    "EGPE_TWR": {
+        "frequency": 118.4,
+        "top-down": [
+            "EGPE"
+        ]
+    },
+    "EGPF_APP": {
+        "frequency": 119.1,
+        "top-down": [
+            "EGPF"
+        ]
+    },
+    "EGPF_F_APP": {
+        "frequency": 128.75,
+        "top-down": [
+            "EGPF"
+        ]
+    },
+    "EGPF_GND": {
+        "frequency": 121.7,
+        "top-down": [
+            "EGPF"
+        ]
+    },
+    "EGPF_TWR": {
+        "frequency": 118.8,
+        "top-down": [
+            "EGPF"
+        ]
+    },
+    "EGPH_APP": {
+        "frequency": 121.2,
+        "top-down": [
+            "EGPH"
+        ]
+    },
+    "EGPH_F_APP": {
+        "frequency": 128.97,
+        "top-down": []
+    },
+    "EGPH_GND": {
+        "frequency": 121.75,
+        "top-down": [
+            "EGPH"
+        ]
+    },
+    "EGPH_TWR": {
+        "frequency": 118.7,
+        "top-down": [
+            "EGPH"
+        ]
+    },
+    "EGPK_APP": {
+        "frequency": 129.45,
+        "top-down": [
+            "EGPK"
+        ]
+    },
+    "EGPK_F_APP": {
+        "frequency": 124.62,
+        "top-down": [
+            "EGPK"
+        ]
+    },
+    "EGPK_GND": {
+        "frequency": 121.8,
+        "top-down": [
+            "EGPK"
+        ]
+    },
+    "EGPK_TWR": {
+        "frequency": 118.15,
+        "top-down": [
+            "EGPK"
+        ]
+    },
+    "EGPL_APP": {
+        "frequency": 119.2,
+        "top-down": []
+    },
+    "EGPL_I_TWR": {
+        "frequency": 125.9,
+        "top-down": []
+    },
+    "EGPL_TWR": {
+        "frequency": 119.2,
+        "top-down": []
+    },
+    "EGPM_APP": {
+        "frequency": 123.6,
+        "top-down": [
+            "EGPM"
+        ]
+    },
+    "EGPM_TWR": {
+        "frequency": 123.6,
+        "top-down": [
+            "EGPM"
+        ]
+    },
+    "EGPN_APP": {
+        "frequency": 122.9,
+        "top-down": []
+    },
+    "EGPN_TWR": {
+        "frequency": 122.9,
+        "top-down": []
+    },
+    "EGPO_APP": {
+        "frequency": 123.5,
+        "top-down": []
+    },
+    "EGPO_TWR": {
+        "frequency": 123.5,
+        "top-down": []
+    },
+    "EGPX_INFO": {
+        "frequency": 119.87,
+        "top-down": []
+    },
+    "EGQQ_CTR": {
+        "frequency": 134.3,
+        "top-down": []
+    },
+    "EGQS_P_APP": {
+        "frequency": 123.3,
+        "top-down": []
+    },
+    "EGQS_R_APP": {
+        "frequency": 119.35,
+        "top-down": []
+    },
+    "EGQS_TWR": {
+        "frequency": 118.92,
+        "top-down": []
+    },
+    "EGSC_APP": {
+        "frequency": 123.6,
+        "top-down": [
+            "EGSC"
+        ]
+    },
+    "EGSC_R_APP": {
+        "frequency": 124.97,
+        "top-down": [
+            "EGSC"
+        ]
+    },
+    "EGSC_TWR": {
+        "frequency": 125.9,
+        "top-down": [
+            "EGSC"
+        ]
+    },
+    "EGSH_APP": {
+        "frequency": 119.35,
+        "top-down": [
+            "EGSH"
+        ]
+    },
+    "EGSH_F_APP": {
+        "frequency": 128.32,
+        "top-down": []
+    },
+    "EGSH_TWR": {
+        "frequency": 124.25,
+        "top-down": [
+            "EGSH"
+        ]
+    },
+    "EGSS_APP": {
+        "frequency": 126.95,
+        "top-down": [
+            "EGSS"
+        ]
+    },
+    "ESSEX_APP": {
+        "frequency": 126.620,
+        "top-down": [
+            "EGSS",
+            "EGGW",
+            "EGSC"
+        ]
+    },
+    "EGSS_DEL": {
+        "frequency": 121.95,
+        "top-down": [
+            "EGSS"
+        ]
+    },
+    "EGSS_GND": {
+        "frequency": 121.72,
+        "top-down": [
+            "EGSS"
+        ]
+    },
+    "EGSS_TWR": {
+        "frequency": 123.8,
+        "top-down": [
+            "EGSS"
+        ]
+    },
+    "EGTB_GND": {
+        "frequency": 121.77,
+        "top-down": []
+    },
+    "EGTB_TWR": {
+        "frequency": 126.55,
+        "top-down": []
+    },
+    "EGTC_APP": {
+        "frequency": 122.85,
+        "top-down": [
+            "EGTC"
+        ]
+    },
+    "EGTC_TWR": {
+        "frequency": 134.92,
+        "top-down": [
+            "EGTC"
+        ]
+    },
+    "EGTE_N_APP": {
+        "frequency": 128.97,
+        "top-down": [
+            "EGTE"
+        ]
+    },
+    "EGTE_S_APP": {
+        "frequency": 123.57,
+        "top-down": []
+    },
+    "EGTE_TWR": {
+        "frequency": 119.8,
+        "top-down": [
+            "EGTE"
+        ]
+    },
+    "EGTK_APP": {
+        "frequency": 127.75,
+        "top-down": [
+            "EGTK"
+        ]
+    },
+    "EGTK_GND": {
+        "frequency": 121.95,
+        "top-down": [
+            "EGTK"
+        ]
+    },
+    "EGTK_TWR": {
+        "frequency": 133.42,
+        "top-down": [
+            "EGTK"
+        ]
+    },
+    "EGTO_I_TWR": {
+        "frequency": 122.25,
+        "top-down": []
+    },
+    "EGTT_INFO": {
+        "frequency": 124.6,
+        "top-down": []
+    },
+    "EGVN_GND": {
+        "frequency": 121.72,
+        "top-down": []
+    },
+    "EGVN_P_APP": {
+        "frequency": 123.55,
+        "top-down": []
+    },
+    "EGVN_R_APP": {
+        "frequency": 127.25,
+        "top-down": []
+    },
+    "EGVN_TWR": {
+        "frequency": 123.72,
+        "top-down": []
+    },
+    "EGVN_Z_APP": {
+        "frequency": 119,
+        "top-down": []
+    },
+    "EGVV_CTR": {
+        "frequency": 135.15,
+        "top-down": []
+    },
+    "EGVV_L_CTR": {
+        "frequency": 127.45,
+        "top-down": []
+    },
+    "EGWD_CTR": {
+        "frequency": 135.27,
+        "top-down": []
+    },
+    "EGWU_D_APP": {
+        "frequency": 130.35,
+        "top-down": [
+            "EGWU"
+        ]
+    },
+    "EGWU_GND": {
+        "frequency": 121.57,
+        "top-down": [
+            "EGWU"
+        ]
+    },
+    "EGWU_R_APP": {
+        "frequency": 126.45,
+        "top-down": []
+    },
+    "EGWU_TWR": {
+        "frequency": 120.67,
+        "top-down": [
+            "EGWU"
+        ]
+    },
+    "EGXC_APP": {
+        "frequency": 120.8,
+        "top-down": []
+    },
+    "EGXC_GND": {
+        "frequency": 121.85,
+        "top-down": []
+    },
+    "EGXC_P_APP": {
+        "frequency": 123.3,
+        "top-down": []
+    },
+    "EGXC_TWR": {
+        "frequency": 122.1,
+        "top-down": []
+    },
+    "EGYD_GND": {
+        "frequency": 121.77,
+        "top-down": []
+    },
+    "EGYD_P_APP": {
+        "frequency": 123.3,
+        "top-down": []
+    },
+    "EGYD_R_APP": {
+        "frequency": 124.45,
+        "top-down": []
+    },
+    "EGYD_TWR": {
+        "frequency": 125.05,
+        "top-down": []
+    },
+    "EGYM_P_APP": {
+        "frequency": 123.3,
+        "top-down": []
+    },
+    "EGYM_R_APP": {
+        "frequency": 124.15,
+        "top-down": []
+    },
+    "EGYM_TWR": {
+        "frequency": 118.325,
+        "top-down": []
+    },
+    "LON_CTR": {
+        "frequency": 123.9,
+        "top-down": [
+            "EGBB",
+            "EGBE",
+            "EGBJ",
+            "EGCC",
+            "EGCN",
+            "EGFF",
+            "EGGD",
+            "EGGP",
+            "EGGW",
+            "EGHH",
+            "EGHI",
+            "EGHQ",
+            "EGJA",
+            "EGJB",
+            "EGJJ",
+            "EGKA",
+            "EGKB",
+            "EGKK",
+            "EGLC",
+            "EGLF",
+            "EGLL",
+            "EGMC",
+            "EGMD",
+            "EGNJ",
+            "EGNM",
+            "EGNS",
+            "EGNT",
+            "EGNV",
+            "EGNX",
+            "EGSC",
+            "EGSH",
+            "EGSS",
+            "EGTC",
+            "EGTE",
+            "EGTK",
+            "EGWU"
+        ]
+    },
+    "LON_C_CTR": {
+        "frequency": 127.1,
+        "top-down": [
+            "EGBB",
+            "EGBE",
+            "EGGW",
+            "EGNX",
+            "EGSC",
+            "EGSS",
+            "EGTC",
+            "EGTK",
+            "EGWU"
+        ]
+    },
+    "LON_D_CTR": {
+        "frequency": 134.9,
+        "top-down": [
+            "EGKB",
+            "EGLC",
+            "EGLL",
+            "EGMC",
+            "EGMD"
+        ]
+    },
+    "LON_E_CTR": {
+        "frequency": 121.22,
+        "top-down": []
+    },
+    "LON_N_CTR": {
+        "frequency": 133.7,
+        "top-down": [
+            "EGCC",
+            "EGCN",
+            "EGGP",
+            "EGNJ",
+            "EGNM",
+            "EGNS",
+            "EGNT",
+            "EGNV",
+            "EGSH"
+        ]
+    },
+    "LON_SC_CTR": {
+        "frequency": 132.6,
+        "top-down": [
+            "EGBB",
+            "EGBE",
+            "EGGW",
+            "EGHH",
+            "EGHI",
+            "EGKA",
+            "EGKB",
+            "EGKK",
+            "EGLC",
+            "EGLF",
+            "EGLL",
+            "EGMC",
+            "EGMD",
+            "EGNX",
+            "EGSC",
+            "EGSS",
+            "EGTC",
+            "EGTK",
+            "EGWU"
+        ]
+    },
+    "LON_S_CTR": {
+        "frequency": 129.42,
+        "top-down": [
+            "EGHH",
+            "EGHI",
+            "EGKA",
+            "EGKB",
+            "EGKK",
+            "EGLC",
+            "EGLF",
+            "EGLL",
+            "EGMC",
+            "EGMD"
+        ]
+    },
+    "LON_W_CTR": {
+        "frequency": 126.07,
+        "top-down": [
+            "EGBJ",
+            "EGFF",
+            "EGGD",
+            "EGHQ",
+            "EGJA",
+            "EGJB",
+            "EGJJ",
+            "EGTE"
+        ]
+    },
+    "LTC_CTR": {
+        "frequency": 124.92,
+        "top-down": [
+            "EGGW",
+            "EGKA",
+            "EGKB",
+            "EGKK",
+            "EGLC",
+            "EGLF",
+            "EGLL",
+            "EGMC",
+            "EGMD",
+            "EGSC",
+            "EGSS",
+            "EGWU"
+        ]
+    },
+    "LTC_E_CTR": {
+        "frequency": 129.6,
+        "top-down": []
+    },
+    "LTC_NE_CTR": {
+        "frequency": 118.82,
+        "top-down": []
+    },
+    "LTC_NW_CTR": {
+        "frequency": 121.27,
+        "top-down": [
+            "EGGW",
+            "EGSC",
+            "EGSS",
+            "EGWU"
+        ]
+    },
+    "LTC_N_CTR": {
+        "frequency": 119.77,
+        "top-down": [
+            "EGGW",
+            "EGSC",
+            "EGSS",
+            "EGWU"
+        ]
+    },
+    "LTC_SE_CTR": {
+        "frequency": 120.52,
+        "top-down": [
+            "EGKB",
+            "EGLC",
+            "EGLL",
+            "EGMC",
+            "EGMD"
+        ]
+    },
+    "LTC_SW_CTR": {
+        "frequency": 133.17,
+        "top-down": [
+            "EGKA",
+            "EGKK",
+            "EGLF"
+        ]
+    },
+    "LTC_S_CTR": {
+        "frequency": 134.12,
+        "top-down": [
+            "EGKA",
+            "EGKB",
+            "EGKK",
+            "EGLC",
+            "EGLF",
+            "EGLL",
+            "EGMC",
+            "EGMD"
+        ]
+    },
+    "MAN_W_CTR": {
+        "frequency": 128.05,
+        "top-down": [
+            "EGGP",
+            "EGNR",
+            "EGNH",
+            "EGNS"
+        ]
+    },
+    "MAN_E_CTR": {
+        "frequency": 133.8,
+        "top-down": [
+            "EGCC",
+            "EGNM",
+            "EGNJ",
+            "EGNC",
+            "EGNT",
+            "EGNV"
+        ]
+    },
+    "MAN_CTR": {
+        "frequency": 118.7,
+        "top-down": [
+            "EGGP",
+            "EGNR",
+            "EGNH",
+            "EGNS",
+            "EGCC",
+            "EGNM",
+            "EGNJ",
+            "EGNC",
+            "EGNT",
+            "EGNV"
+        ]
+    },
+    "SCO_CTR": {
+        "frequency": 135.52,
+        "top-down": [
+            "EGAA",
+            "EGAC",
+            "EGAE",
+            "EGNC",
+            "EGPB",
+            "EGPD",
+            "EGPE",
+            "EGPF",
+            "EGPH",
+            "EGPK",
+            "EGPM"
+        ]
+    },
+    "SCO_D_CTR": {
+        "frequency": 135.85,
+        "top-down": [
+            "EGNC",
+            "EGPF",
+            "EGPH",
+            "EGPK"
+        ]
+    },
+    "SCO_E_CTR": {
+        "frequency": 121.32,
+        "top-down": [
+            "EGPB",
+            "EGPD",
+            "EGPE",
+            "EGPM"
+        ]
+    },
+    "SCO_R_CTR": {
+        "frequency": 129.1,
+        "top-down": [
+            "EGAA",
+            "EGAC",
+            "EGAE"
+        ]
+    },
+    "SCO_WD_CTR": {
+        "frequency": 133.2,
+        "top-down": [
+            "EGAA",
+            "EGAC",
+            "EGAE",
+            "EGNC",
+            "EGPF",
+            "EGPH",
+            "EGPK"
+        ]
+    },
+    "SCO_W_CTR": {
+        "frequency": 132.72,
+        "top-down": [
+            "EGAA",
+            "EGAC",
+            "EGAE"
+        ]
+    },
+    "STC_A_CTR": {
+        "frequency": 123.77,
+        "top-down": [
+            "EGAA",
+            "EGAC"
+        ]
+    },
+    "STC_CTR": {
+        "frequency": 124.82,
+        "top-down": [
+            "EGNC",
+            "EGPF",
+            "EGPH",
+            "EGPK"
+        ]
+    },
+    "STC_E_CTR": {
+        "frequency": 130.97,
+        "top-down": [
+            "EGNC",
+            "EGPH"
+        ]
+    },
+    "STC_W_CTR": {
+        "frequency": 121.37,
+        "top-down": [
+            "EGPF",
+            "EGPK"
+        ]
+    }
+}

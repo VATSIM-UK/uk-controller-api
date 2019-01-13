@@ -1,0 +1,10 @@
+/vendor
+/.idea
+/.vscode
+Homestead.json
+Homestead.yaml
+.env
+tests/_coverage
+storage/*
+!storage/app
+public/storage
