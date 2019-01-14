@@ -3,8 +3,12 @@
 use App\Log\LoggerFactory;
 
 return [
-    'default' => env('LOG_CHANNEL', 'custom'),
+    'default' => env('LOG_CHANNEL', 'stack'),
     'channels' => [
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => ['bugsnag', 'custom'],
+        ],
         'custom' => [
             'driver' => 'custom',
             'via' => LoggerFactory::class,
@@ -15,5 +19,8 @@ return [
             'via' => \App\Log\NullLoggerFactory::class,
             'name' => 'NULL',
         ],
+        'bugsnag' => [
+            'driver' => 'bugsnag'
+        ]
     ],
 ];
