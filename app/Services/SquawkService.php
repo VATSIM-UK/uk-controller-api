@@ -140,7 +140,8 @@ class SquawkService
 
             if ($ranges && $ranges->isNotEmpty()) {
                 foreach ($ranges as $generalSquawkRanges) {
-                    foreach ($generalSquawkRanges->ranges as $possibleRange) {
+                    $possibleRanges = $generalSquawkRanges->ranges->shuffle();
+                    foreach ($possibleRanges as $possibleRange) {
                         // Check the applicable ranges for a squawk and see if we can find one.
                         $squawk = $this->searchForSquawkInRange($possibleRange);
                         if ($squawk !== false) {
