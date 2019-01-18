@@ -103,6 +103,10 @@ class SquawkService
             throw new InvalidArgumentException('Unit not found');
         }
 
+        if ($rules === 'S') {
+            $rules = 'V';
+        }
+
         $allRanges = $unit->ranges;
         $ruleSpecificRanges = $allRanges->where('rules', $rules)->shuffle();
         $rangesToUse = ($ruleSpecificRanges->isNotEmpty())
