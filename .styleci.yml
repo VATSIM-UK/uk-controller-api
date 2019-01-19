@@ -1,0 +1,10 @@
+preset: psr2
+
+risky: false
+
+finder:
+  exclude:
+    - "tests"
+
+  name:
+    - "*.php"
