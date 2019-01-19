@@ -1,8 +1,16 @@
+[master_build_status]: https://travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=master
+[develop_build_status]: https://travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=develop
+
 # uk-controller-api
 The API backend to the UK Controller Plugin, provides the plugin with information such
 as dependency files, squawk allocations and user authentication.
 
 The API is built on Laravel's [Lumen Framework](https://lumen.laravel.com/) and uses [PHPUnit](https://phpunit.de/) for tests.
+
+|      Check      |                            Provider                                          |              Status             |
+|-----------------|------------------------------------------------------------------------------|---------------------------------|
+| Build (Master)  | [TravisCI](https://travis-ci.com/VATSIM-UK/uk-controller-api)                | ![master_build_status]          |
+| Build (Develop) | [TravisCI](https://travis-ci.com/VATSIM-UK/uk-controller-api)                | ![develop_build_status]         |
 
 ## System Requirements
 
