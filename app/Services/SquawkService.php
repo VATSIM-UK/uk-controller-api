@@ -22,7 +22,7 @@ use InvalidArgumentException;
 class SquawkService
 {
     /**
-     * Constant deemed to mean Any Flight Rules
+     * Constant deemed to mean Any Flight Rules.
      *
      * @var String
      */
