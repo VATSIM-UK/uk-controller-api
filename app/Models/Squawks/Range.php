@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Range extends Model
 {
-
     protected $table = 'squawk_range';
     public $timestamps = false;
 

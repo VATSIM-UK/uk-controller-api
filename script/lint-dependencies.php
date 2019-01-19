@@ -24,7 +24,6 @@ foreach ($iterator as $item) {
 }
 
 if (count($failures) > 0) {
-
     echo PHP_EOL . '-------------------------------------------------' . PHP_EOL . PHP_EOL;
 
     echo 'Failures: ' . PHP_EOL . PHP_EOL;
