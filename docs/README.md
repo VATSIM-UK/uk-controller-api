@@ -1,5 +1,5 @@
-[master_build_status]: https://travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=master
-[develop_build_status]: https://travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=develop
+[master_build_status]: https://api.travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=master
+[develop_build_status]: https://api.travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=develop
 
 # uk-controller-api
 The API backend to the UK Controller Plugin, provides the plugin with information such
