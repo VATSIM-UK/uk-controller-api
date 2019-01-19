@@ -10,5 +10,4 @@ use Exception;
  */
 class TooManyTokensException extends Exception
 {
-
 }

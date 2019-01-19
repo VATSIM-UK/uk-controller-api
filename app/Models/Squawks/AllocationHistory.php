@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AllocationHistory extends Model
 {
-
     protected $table = 'squawk_allocation_history';
 
     public $timestamps = false;

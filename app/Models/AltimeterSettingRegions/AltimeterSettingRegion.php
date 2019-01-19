@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AltimeterSettingRegion extends Model
 {
-
     protected $table = 'altimeter_setting_region';
 
     public $timestamps = false;

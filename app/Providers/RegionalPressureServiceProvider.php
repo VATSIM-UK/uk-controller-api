@@ -16,7 +16,6 @@ use Illuminate\Support\ServiceProvider;
  */
 class RegionalPressureServiceProvider extends ServiceProvider
 {
-
     protected $defer = true;
 
     /**
