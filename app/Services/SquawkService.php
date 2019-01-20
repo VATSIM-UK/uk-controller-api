@@ -22,7 +22,7 @@ use InvalidArgumentException;
 class SquawkService
 {
     /**
-     * Constant deemed to mean Any Flight Rules
+     * Constant deemed to mean Any Flight Rules.
      *
      * @var String
      */
@@ -101,6 +101,10 @@ class SquawkService
         $unit = SquawkUnit::where('unit', $unit)->first();
         if (!$unit) {
             throw new InvalidArgumentException('Unit not found');
+        }
+
+        if ($rules === 'S') {
+            $rules = 'V';
         }
 
         $allRanges = $unit->ranges;

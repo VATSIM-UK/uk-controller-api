@@ -207,6 +207,11 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         $this->assertSame('3762', $this->squawkService->assignLocalSquawk('BAW9AZ', 'EGKA', 'I')->squawk());
     }
 
+    public function testLocalSquawksTreatsSvfrAsVfr()
+    {
+        $this->assertSame('3763', $this->squawkService->assignLocalSquawk('BAW9AZ', 'EGKA', 'S')->squawk());
+    }
+
     public function testItAuditsWhoAssignsLocalSquawks()
     {
         $this->squawkService->assignLocalSquawk('BAW9AZ', 'EGKA', 'I');
