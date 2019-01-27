@@ -11,5 +11,4 @@ use Exception;
  */
 class PluginErrorException extends Exception
 {
-
 }

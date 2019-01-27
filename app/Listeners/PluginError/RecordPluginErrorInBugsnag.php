@@ -3,11 +3,9 @@
 
 namespace App\Listeners\PluginError;
 
-
 use App\Events\PluginErrorReceivedEvent;
 use App\Exceptions\PluginErrorException;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
-use Illuminate\Support\Facades\Log;
 
 class RecordPluginErrorInBugsnag
 {
