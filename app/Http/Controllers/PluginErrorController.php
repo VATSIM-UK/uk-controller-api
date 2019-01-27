@@ -36,6 +36,6 @@ class PluginErrorController extends BaseController
             ]
         );
 
-        return response('', 204);
+        return response(null, 204);
     }
 }
