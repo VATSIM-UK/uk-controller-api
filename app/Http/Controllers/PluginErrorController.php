@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PluginErrorReceivedEvent;
 use App\Models\PluginError\PluginError;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 
 class PluginErrorController extends BaseController
 {
@@ -28,7 +30,7 @@ class PluginErrorController extends BaseController
             return response(null, 400);
         }
 
-        PluginError::create(
+        $pluginError = PluginError::create(
             [
                 'user_id' => Auth::user()->id,
                 'user_report' => $request->json('user_report'),
@@ -36,6 +38,7 @@ class PluginErrorController extends BaseController
             ]
         );
 
-        return response(null, 204);
+        Event::fire(new PluginErrorReceivedEvent($pluginError));
+        return response('', 204);
     }
 }
