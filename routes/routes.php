@@ -37,6 +37,9 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
     
     // Regional Pressure
     $router->get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
+
+    // Plugin Errors
+    $router->post('plugin-error', 'PluginErrorController@recordPluginError');
 });
 
 // Routes for user administration
