@@ -487,7 +487,9 @@
     },
     "EGLL_1_GND": {
         "frequency": 121.9,
-        "top-down": []
+        "top-down": [
+            "EGLL"
+        ]
     },
     "EGLL_2_GND": {
         "frequency": 121.7,
