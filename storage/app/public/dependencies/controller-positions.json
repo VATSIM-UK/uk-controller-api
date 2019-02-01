@@ -553,7 +553,7 @@
         ]
     },
     "EGMC_TWR": {
-        "frequency": 127.72,
+        "frequency": 126.72,
         "top-down": [
             "EGMC"
         ]
