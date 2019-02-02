@@ -26,6 +26,9 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
             'uses' => 'VersionController@getVersionStatus'
         ]
     );
+
+    // Holds
+    $router->get('hold', 'HoldController@getAllHolds');
     
     // Dependencies
     $router->get('dependency', 'DependencyController@getManifest');
