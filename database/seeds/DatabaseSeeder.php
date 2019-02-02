@@ -27,7 +27,10 @@ class DatabaseSeeder extends Seeder
         ],
         AsrTableSeeder::class => [
             'altimeter_setting_region',
-        ]
+        ],
+        HoldTableSeeder::class => [
+            'hold',
+        ],
     ];
 
 
