@@ -1,7 +1,6 @@
 <?php
 namespace App\Models\Hold;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,6 +15,12 @@ class Hold extends Model
     protected $table = 'hold';
 
     public $timestamps = true;
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
