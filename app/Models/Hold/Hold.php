@@ -15,13 +15,7 @@ class Hold extends Model
 
     protected $table = 'hold';
 
-    public $timestamps = false;
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
+    public $timestamps = true;
     /**
      * The attributes that are mass assignable.
      *
