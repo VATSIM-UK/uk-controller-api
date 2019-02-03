@@ -31,7 +31,9 @@ class HoldControllerTest extends BaseApiTestCase
                     [
                         'id' => 1,
                         'hold_id' => 1,
-                        'restriction' => '{"foo": "bar"}',
+                        'restriction' => [
+                            'foo' => 'bar',
+                        ],
                     ],
                 ],
             ],

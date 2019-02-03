@@ -38,7 +38,9 @@ class HoldServiceTest extends BaseFunctionalTestCase
                     [
                         'id' => 1,
                         'hold_id' => 1,
-                        'restriction' => '{"foo": "bar"}',
+                        'restriction' => [
+                            'foo' => 'bar',
+                        ],
                     ],
                 ],
             ],
@@ -72,7 +74,9 @@ class HoldServiceTest extends BaseFunctionalTestCase
                     [
                         'id' => 1,
                         'hold_id' => 1,
-                        'restriction' => '{"foo": "bar"}',
+                        'restriction' => [
+                            'foo' => 'bar',
+                        ],
                     ],
                 ],
             ],
@@ -118,7 +122,9 @@ class HoldServiceTest extends BaseFunctionalTestCase
                     [
                         'id' => 1,
                         'hold_id' => 1,
-                        'restriction' => '{"foo": "bar"}',
+                        'restriction' => [
+                            'foo' => 'bar',
+                        ],
                     ],
                 ],
             ],

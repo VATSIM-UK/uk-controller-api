@@ -20,6 +20,10 @@ class HoldRestriction extends Model
         'updated_at',
     ];
 
+    protected $casts = [
+        'restriction' => 'array',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
