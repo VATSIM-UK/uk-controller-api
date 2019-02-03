@@ -31,6 +31,9 @@ class DatabaseSeeder extends Seeder
         HoldTableSeeder::class => [
             'hold',
         ],
+        HoldRestrictionTableSeeder::class => [
+            'hold_restriction'
+        ],
     ];
 
 
