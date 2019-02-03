@@ -15,7 +15,7 @@ class HoldRestrictionTableSeeder extends Seeder
         HoldRestriction::create(
             [
                 'hold_id' => 1,
-                'restriction' => json_encode(['foo' => 'bar'])
+                'restriction' => ['foo' => 'bar'],
             ]
         );
     }
