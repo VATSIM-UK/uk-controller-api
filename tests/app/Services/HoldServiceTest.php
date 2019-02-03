@@ -34,6 +34,13 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'left',
                 'description' => 'WILLO',
+                'restrictions' => [
+                    [
+                        'id' => 1,
+                        'hold_id' => 1,
+                        'restriction' => '{"foo": "bar"}',
+                    ],
+                ],
             ],
             [
                 'id' => 2,
@@ -43,6 +50,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'right',
                 'description' => 'TIMBA',
+                'restrictions' => [],
             ],
         ];
         $actual = $this->holdService->getHolds();
@@ -60,6 +68,13 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'left',
                 'description' => 'WILLO',
+                'restrictions' => [
+                    [
+                        'id' => 1,
+                        'hold_id' => 1,
+                        'restriction' => '{"foo": "bar"}',
+                    ],
+                ],
             ],
             [
                 'id' => 2,
@@ -69,6 +84,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'right',
                 'description' => 'TIMBA',
+                'restrictions' => [],
             ],
         ];
         $this->holdService->getHolds();
@@ -98,6 +114,13 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'left',
                 'description' => 'WILLO',
+                'restrictions' => [
+                    [
+                        'id' => 1,
+                        'hold_id' => 1,
+                        'restriction' => '{"foo": "bar"}',
+                    ],
+                ],
             ],
             [
                 'id' => 2,
@@ -107,6 +130,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'right',
                 'description' => 'TIMBA',
+                'restrictions' => [],
             ],
             [
                 'id' => 3,
@@ -116,7 +140,8 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'maximum_altitude' => 10000,
                 'turn_direction' => 'left',
                 'description' => 'This is a test hold',
-            ]
+                'restrictions' => [],
+            ],
         ];
         $this->holdService->getHolds();
 

@@ -27,6 +27,13 @@ class HoldControllerTest extends BaseApiTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'left',
                 'description' => 'WILLO',
+                'restrictions' => [
+                    [
+                        'id' => 1,
+                        'hold_id' => 1,
+                        'restriction' => '{"foo": "bar"}',
+                    ],
+                ],
             ],
             [
                 'id' => 2,
@@ -36,6 +43,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'right',
                 'description' => 'TIMBA',
+                'restrictions' => [],
             ],
         ];
 

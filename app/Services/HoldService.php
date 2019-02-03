@@ -22,7 +22,7 @@ class HoldService
             return Cache::get(self::CACHE_KEY);
         }
 
-        $data = Hold::all()->toArray();
+        $data = Hold::with('restrictions')->get()->toArray();
         Cache::forever(self::CACHE_KEY, $data);
         return $data;
     }
