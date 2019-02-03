@@ -4,14 +4,14 @@ namespace App\Models\Hold;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Model for a hold
+ * Model for a restriction on a hold
  *
- * Class Hold
- * @package App\Models\Squawks
+ * Class HoldRestriction
+ * @package App\Models\Hold
  */
-class Hold extends Model
+class HoldRestriction extends Model
 {
-    protected $table = 'hold';
+    protected $table = 'hold_restriction';
 
     public $timestamps = true;
 
@@ -26,11 +26,7 @@ class Hold extends Model
      * @var array
      */
     protected $fillable = [
-        'fix',
-        'inbound_heading',
-        'minimum_altitude',
-        'maximum_altitude',
-        'turn_direction',
-        'description',
+        'hold_id',
+        'restriction',
     ];
 }
