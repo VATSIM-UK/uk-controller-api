@@ -33,4 +33,14 @@ class Hold extends Model
         'turn_direction',
         'description',
     ];
+
+    /**
+     * Relationship between a hold and its restrictions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function restrictions()
+    {
+        return $this->hasMany(HoldRestriction::class, 'hold_id', 'id');
+    }
 }
