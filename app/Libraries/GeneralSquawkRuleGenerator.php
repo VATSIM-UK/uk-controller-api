@@ -37,7 +37,15 @@ class GeneralSquawkRuleGenerator
         $arrivalLetter = substr($arrivalAirport, 0, 1);
 
 
-        // Return the rules
+        /*
+         * Return the rules:
+         *
+         * 1. Exact airport matches
+         * 2. Matching countries
+         * 3. Matching regions
+         * 4. Try ORCAM if applicable
+         * 5. Nothing's applicable, fall back to the entire CCAMS range
+         */
         return [
             ['departure_ident' => $departureAirport, 'arrival_ident' => $arrivalAirport],
             ['departure_ident' => $departureAirport, 'arrival_ident' => $arrivalCountry],
