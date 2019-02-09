@@ -216,6 +216,7 @@
     "EGLL": [
         "EGLL_DEL",
         "EGLL_2_GND",
+        "EGLL_1_GND",
         "EGLL_N_TWR",
         "EGLL_S_TWR",
         "EGLL_N_APP",
