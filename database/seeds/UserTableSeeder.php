@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class UserTableSeeder extends Seeder
@@ -31,12 +32,16 @@ class UserTableSeeder extends Seeder
             [
                 'id' => self::ACTIVE_USER_CID,
                 'status' => 1,
+                'last_Login' => Carbon::now(),
+                'last_version' => 3,
             ]
         );
         User::create(
             [
                 'id' => self::BANNED_USER_CID,
                 'status' => 2,
+                'last_Login' => Carbon::now()->subDays(1),
+                'last_version' => 1,
             ]
         );
 
