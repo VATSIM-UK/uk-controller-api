@@ -32,7 +32,7 @@ class UserTableSeeder extends Seeder
             [
                 'id' => self::ACTIVE_USER_CID,
                 'status' => 1,
-                'last_Login' => Carbon::now(),
+                'last_Login' => Carbon::today()->addMinutes(5),
                 'last_version' => 3,
             ]
         );
