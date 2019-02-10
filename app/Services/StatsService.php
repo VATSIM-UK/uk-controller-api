@@ -39,7 +39,8 @@ class StatsService
                 [
                     ['last_login', '>', Carbon::now()->subMonths(3)],
                     ['id', '>', UserService::MINIMUM_VATSIM_CID],
-                ])->count(),
+                ]
+            )->count(),
             'users_today' => User::where(
                 [
                     ['last_login', '>', Carbon::today()->toDateTimeString()],
