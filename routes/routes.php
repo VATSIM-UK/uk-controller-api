@@ -121,3 +121,8 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_VERSION_A
         // Route for updating and creating versions
         $router->put('version/{version:[A-Za-z0-9\.\-]+}', 'VersionController@createOrUpdateVersion');
 });
+
+// Unscoped routes
+$router->group([], function () use ($router) {
+    $router->get('stats', 'StatsController@get');
+});
