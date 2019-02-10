@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\StatsService;
+use Illuminate\Http\JsonResponse;
 
 class StatsController extends BaseController
 {
@@ -19,7 +20,12 @@ class StatsController extends BaseController
         $this->statsService = $statsService;
     }
 
-    public function get()
+    /**
+     * Get the stats
+     *
+     * @return JsonResponse
+     */
+    public function get() : JsonResponse
     {
         return response()->json($this->statsService->getStats());
     }
