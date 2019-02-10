@@ -9,6 +9,11 @@ use App\Models\Version\Version;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class StatsService
+ *
+ * For producing and caching stats about plugin usage
+ */
 class StatsService
 {
     // The key against which to cache stats
