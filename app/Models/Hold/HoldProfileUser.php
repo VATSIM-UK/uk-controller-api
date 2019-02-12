@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class HoldProfile
  * @package App\Models\Squawks
  */
-class HoldProfile extends Model
+class HoldProfileUser extends Model
 {
     protected $table = 'hold_profile';
 
@@ -26,6 +26,7 @@ class HoldProfile extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'data',
     ];
 }
