@@ -18,6 +18,7 @@ class HoldProfile extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+        'user_id',
     ];
 
     /**
@@ -26,14 +27,14 @@ class HoldProfile extends Model
      * @var array
      */
     protected $fillable = [
-        'data',
+        'name',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function holds()
     {
-        return $this->hasMany(HoldProfileHold::class, 'id', 'hold_profile_id');
+        return $this->hasManyThrough(Hold::class, HoldProfileHold::class, 'hold_id', 'id', 'id', 'hold_profile_id');
     }
 }
