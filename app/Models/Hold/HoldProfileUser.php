@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HoldProfileUser extends Model
 {
-    protected $table = 'hold_profile';
+    protected $table = 'hold_profile_user';
 
     public $timestamps = true;
 
