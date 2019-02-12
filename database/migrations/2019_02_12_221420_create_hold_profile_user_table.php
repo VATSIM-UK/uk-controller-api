@@ -16,7 +16,7 @@ class CreateHoldProfileUserTable extends Migration
         Schema::create('hold_profile_user', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->json('data');
+            $table->string('name');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('user');

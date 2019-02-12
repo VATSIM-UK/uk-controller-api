@@ -15,7 +15,7 @@ class CreateHoldProfileTable extends Migration
     {
         Schema::create('hold_profile', function (Blueprint $table) {
             $table->increments('id');
-            $table->json('data');
+            $table->string('name');
             $table->timestamps();
         });
     }
