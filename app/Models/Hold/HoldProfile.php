@@ -28,4 +28,12 @@ class HoldProfile extends Model
     protected $fillable = [
         'data',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function holds()
+    {
+        return $this->hasMany(HoldProfileHold::class, 'id', 'hold_profile_id');
+    }
 }
