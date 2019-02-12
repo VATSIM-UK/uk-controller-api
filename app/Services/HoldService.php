@@ -34,6 +34,9 @@ class HoldService
     {
         if (!Cache::forget(self::CACHE_KEY)) {
             Log::warning('Hold cache clear failed');
+            return;
         }
+
+        Log::info('Hold cache cleared');
     }
 }
