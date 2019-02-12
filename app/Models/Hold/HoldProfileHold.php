@@ -9,16 +9,11 @@ use Illuminate\Database\Eloquent\Model;
  * Class HoldProfile
  * @package App\Models\Squawks
  */
-class HoldProfileUser extends Model
+class HoldProfileHold extends Model
 {
-    protected $table = 'hold_profile_user';
+    protected $table = 'hold_profile_hold';
 
-    public $timestamps = true;
-
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-    ];
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +21,7 @@ class HoldProfileUser extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'data',
+        'hold_profile_id',
+        'hold_id',
     ];
 }

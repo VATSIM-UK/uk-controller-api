@@ -15,12 +15,14 @@ class HoldProfileTableSeeder extends Seeder
     {
         $holds = [
             [
-                'name' => 'Hold Profile 1',
+                'name' => 'Generic Hold Profile',
+                'user_id' => null,
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'updated_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'name' => 'Hold Profile 2',
+                'name' => 'User Hold Profile',
+                'user_id' => UserTableSeeder::ACTIVE_USER_CID,
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'updated_at' => Carbon::now()->toDateTimeString(),
             ],
