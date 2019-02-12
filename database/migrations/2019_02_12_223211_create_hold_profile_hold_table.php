@@ -14,8 +14,8 @@ class CreateHoldProfileHoldTable extends Migration
     public function up()
     {
         Schema::create('hold_profile_hold', function (Blueprint $table) {
-            $table->unsignedInteger('hold_profile_id');
-            $table->unsignedInteger('hold_id');
+            $table->unsignedInteger('hold_profile_id')->comment('The id of the hold profile');
+            $table->unsignedInteger('hold_id')->comment('The id of the hold');
 
 
             $table->foreign('hold_profile_id')->references('id')->on('hold_profile');
