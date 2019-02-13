@@ -69,4 +69,22 @@ class HoldControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeJsonEquals($expected);
     }
+
+    public function testItReturns200OnUserHoldProfileSuccess()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile/user')->seeStatusCode(200);
+    }
+
+    public function testItReturnsUserHoldProfiles()
+    {
+        $expected = [
+            [
+                'id' => 2,
+                'name' => 'User Hold Profile',
+                'holds' => [1, 2]
+            ]
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile/user')->seeJsonEquals($expected);
+    }
 }
