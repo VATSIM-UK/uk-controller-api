@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\Hold;
 
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,7 @@ class HoldProfile extends Model
      */
     protected $fillable = [
         'name',
+        'user_id',
     ];
 
     /**
