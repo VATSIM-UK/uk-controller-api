@@ -87,4 +87,26 @@ class HoldControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile/user')->seeJsonEquals($expected);
     }
+
+    public function testDeleteUserHoldProfilesReturnsNoContent()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/user/2')->seeStatusCode(204);
+    }
+
+    public function testDeleteUserHoldProfilesDeletesTheHoldProfile()
+    {
+        $this->seeInDatabase(
+            'hold_profile',
+            [
+                'id' => 2,
+            ]
+        );
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/user/2');
+        $this->notSeeInDatabase(
+            'hold_profile',
+            [
+                'id' => 2,
+            ]
+        );
+    }
 }

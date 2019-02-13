@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\HoldService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class HoldController extends BaseController
 {
@@ -48,5 +50,17 @@ class HoldController extends BaseController
     public function getUserHoldProfiles() : JsonResponse
     {
         return response()->json($this->holdService->getUserHoldProfiles())->setStatusCode(200);
+    }
+
+    /**
+     * Delete the given user hold profile
+     *
+     * @param int $holdProfileId Profile to delete
+     * @return Response|\Laravel\Lumen\Http\ResponseFactory
+     */
+    public function deleteUserHoldProfile(int $holdProfileId)
+    {
+        $this->holdService->deleteUserHoldProfile($holdProfileId);
+        return response('', 204);
     }
 }

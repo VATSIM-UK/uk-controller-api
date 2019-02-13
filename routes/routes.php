@@ -31,6 +31,9 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
     $router->get('hold', 'HoldController@getAllHolds');
     $router->get('hold/profile', 'HoldController@getGenericHoldProfiles');
     $router->get('hold/profile/user', 'HoldController@getUserHoldProfiles');
+    $router->put('hold/profile/user', 'HoldController@createUserHoldProfile');
+    $router->put('hold/profile/user/{profile_id:\d+}', 'HoldController@updateUserHoldProfile');
+    $router->delete('hold/profile/user/{profile_id:\d+}', 'HoldController@deleteUserHoldProfile');
 
     // Dependencies
     $router->get('dependency', 'DependencyController@getManifest');
