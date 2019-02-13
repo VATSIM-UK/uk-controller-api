@@ -18,8 +18,15 @@ class CreateHoldProfileHoldTable extends Migration
             $table->unsignedInteger('hold_id')->comment('The id of the hold');
 
 
-            $table->foreign('hold_profile_id')->references('id')->on('hold_profile');
-            $table->foreign('hold_id')->references('id')->on('hold');
+            $table->foreign('hold_profile_id')
+                ->references('id')
+                ->on('hold_profile')
+                ->onDelete('cascade');
+
+            $table->foreign('hold_id')
+                ->references('id')
+                ->on('hold')
+                ->onDelete('cascade');
         });
     }
 

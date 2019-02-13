@@ -21,7 +21,10 @@ class CreateHoldProfileTable extends Migration
             $table->string('name')->comment('The given name of the profile');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('user');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('user')
+                ->onDelete('cascade');
         });
     }
 
