@@ -29,6 +29,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
 
     // Holds
     $router->get('hold', 'HoldController@getAllHolds');
+    $router->get('hold/profile', 'HoldController@getGenericHoldProfiles');
     
     // Dependencies
     $router->get('dependency', 'DependencyController@getManifest');

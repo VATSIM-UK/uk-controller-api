@@ -29,4 +29,12 @@ class HoldController extends BaseController
     {
         return response()->json($this->holdService->getHolds())->setStatusCode(200);
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getGenericHoldProfiles() : JsonResponse
+    {
+        return response()->json($this->holdService->getGenericHoldProfiles())->setStatusCode(200);
+    }
 }

@@ -11,7 +11,7 @@ class HoldControllerTest extends BaseApiTestCase
         $this->assertInstanceOf(HoldController::class, $this->app->make(HoldController::class));
     }
 
-    public function testItReturns200OnSuccess()
+    public function testItReturns200OnHoldDataSuccess()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->seeStatusCode(200);
     }
@@ -50,5 +50,23 @@ class HoldControllerTest extends BaseApiTestCase
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->seeJsonEquals($expected);
+    }
+
+    public function testItReturns200OnGenericHoldProfileSuccess()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeStatusCode(200);
+    }
+
+    public function testItReturnsGenericHoldProfiles()
+    {
+        $expected = [
+            [
+                'id' => 1,
+                'name' => 'Generic Hold Profile',
+                'holds' => [1]
+            ]
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeJsonEquals($expected);
     }
 }
