@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Hold\HoldProfile;
+use Carbon\Carbon;
 
 class HoldControllerTest extends BaseApiTestCase
 {
@@ -106,6 +108,118 @@ class HoldControllerTest extends BaseApiTestCase
             'hold_profile',
             [
                 'id' => 2,
+            ]
+        );
+    }
+
+    public function testCreateUserHoldProfileReturns400NoName()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user',
+            [
+                'holds' => [1, 2],
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testCreateUserHoldProfileReturns400NameNotAString()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user',
+            [
+                'name' => 123,
+                'holds' => [1, 2],
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testCreateUserHoldProfileReturns400NoHolds()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user',
+            [
+                'name' => 'Newly Created Profile',
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testCreateUserHoldProfileReturns400HoldsNotAnArray()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user',
+            [
+                'name' => 'Newly Created Profile',
+                'holds' => 123,
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testCreateUserHoldProfileReturns400HoldsNonNumeric()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user',
+            [
+                'name' => 'Newly Created Profile',
+                'holds' => ['abc', 1, 2, 3],
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testCreateUserHoldProfileReturnsResponse()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user',
+            [
+                'name' => 'Newly Created Profile',
+                'holds' => [1, 2],
+            ]
+        )
+            ->seeJson(['id' => HoldProfile::orderBy('id', 'DESC')->get()->first()->id])
+            ->seeStatusCode(201);
+    }
+
+    public function testCreateUserHoldCreatesProfile()
+    {
+        Carbon::setTestNow(Carbon::now());
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user',
+            [
+                'name' => 'Newly Created Profile',
+                'holds' => [1, 2],
+            ]
+        );
+
+        $profileId = json_decode($this->response->getContent(), true)['id'];
+        $this->seeInDatabase(
+            'hold_profile',
+            [
+                'id' => $profileId,
+                'name' => 'Newly Created Profile',
+                'user_id' => self::ACTIVE_USER_CID,
+                'created_at' => Carbon::now(),
+            ]
+        );
+
+        $this->seeInDatabase(
+            'hold_profile_hold',
+            [
+                'hold_profile_id' => $profileId,
+                'hold_id' => 1,
+            ]
+        );
+
+        $this->seeInDatabase(
+            'hold_profile_hold',
+            [
+                'hold_profile_id' => $profileId,
+                'hold_id' => 2,
             ]
         );
     }
