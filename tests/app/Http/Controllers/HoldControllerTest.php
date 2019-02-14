@@ -203,7 +203,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'id' => $profileId,
                 'name' => 'Newly Created Profile',
                 'user_id' => self::ACTIVE_USER_CID,
-                'created_at' => Carbon::now(),
+                'created_at' => Carbon::now()->toDateTimeString(),
             ]
         );
 
@@ -219,6 +219,116 @@ class HoldControllerTest extends BaseApiTestCase
             'hold_profile_hold',
             [
                 'hold_profile_id' => $profileId,
+                'hold_id' => 2,
+            ]
+        );
+    }
+
+    public function testUpdateUserHoldProfileReturns400NoName()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user/2',
+            [
+                'holds' => [1, 2],
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testUpdateUserHoldProfileReturns400NameNotAString()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user/2',
+            [
+                'name' => 123,
+                'holds' => [1, 2],
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testUpdateUserHoldProfileReturns400NoHolds()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user/2',
+            [
+                'name' => 'Newly Created Profile',
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testUpdateUserHoldProfileReturns400HoldsNotAnArray()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user/2',
+            [
+                'name' => 'Newly Created Profile',
+                'holds' => 123,
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testUpdateUserHoldProfileReturns400HoldsNonNumeric()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user/2',
+            [
+                'name' => 'Newly Created Profile',
+                'holds' => ['abc', 1, 2, 3],
+            ]
+        )->seeStatusCode(400);
+    }
+
+    public function testUpdateUserHoldProfileReturnsResponse()
+    {
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user/2',
+            [
+                'name' => 'Newly Updated Profile',
+                'holds' => [1],
+            ]
+        )
+            ->seeStatusCode(204);
+    }
+
+    public function testUpdateUserHoldUpdatesProfile()
+    {
+        Carbon::setTestNow(Carbon::now());
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            'hold/profile/user/2',
+            [
+                'name' => 'Newly Updated Profile',
+                'holds' => [1],
+            ]
+        );
+
+        $this->seeInDatabase(
+            'hold_profile',
+            [
+                'id' => 2,
+                'name' => 'Newly Updated Profile',
+                'user_id' => self::ACTIVE_USER_CID,
+                'updated_at' => Carbon::now()->toDateTimeString(),
+            ]
+        );
+
+        $this->seeInDatabase(
+            'hold_profile_hold',
+            [
+                'hold_profile_id' => 2,
+                'hold_id' => 1,
+            ]
+        );
+
+        $this->notSeeInDatabase(
+            'hold_profile_hold',
+            [
+                'hold_profile_id' => 2,
                 'hold_id' => 2,
             ]
         );
