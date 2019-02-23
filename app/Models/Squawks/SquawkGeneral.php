@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SquawkGeneral extends Model
 {
-
     protected $table = 'squawk_general';
     public $timestamps = false;
 

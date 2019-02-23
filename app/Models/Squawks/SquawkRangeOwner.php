@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SquawkRangeOwner extends Model
 {
-
     protected $table = 'squawk_range_owner';
     public $timestamps = false;
 
