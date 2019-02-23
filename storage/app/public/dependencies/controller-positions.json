@@ -297,6 +297,13 @@
             "EGHI"
         ]
     },
+    "SOLENT_APP": {
+        "frequency": 120.22,
+        "top-down": [
+            "EGHI",
+            "EGHH"
+        ]
+    },
     "EGHQ_APP": {
         "frequency": 127.92,
         "top-down": [
