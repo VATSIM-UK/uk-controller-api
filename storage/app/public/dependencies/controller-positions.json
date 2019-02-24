@@ -57,7 +57,7 @@
         ]
     },
     "EGBB_APP": {
-        "frequency": 118.05,
+        "frequency": 123.95,
         "top-down": [
             "EGBB",
             "EGBE"
@@ -297,6 +297,13 @@
             "EGHI"
         ]
     },
+    "SOLENT_APP": {
+        "frequency": 120.22,
+        "top-down": [
+            "EGHI",
+            "EGHH"
+        ]
+    },
     "EGHQ_APP": {
         "frequency": 127.92,
         "top-down": [
@@ -487,7 +494,9 @@
     },
     "EGLL_1_GND": {
         "frequency": 121.9,
-        "top-down": []
+        "top-down": [
+            "EGLL"
+        ]
     },
     "EGLL_2_GND": {
         "frequency": 121.7,
@@ -553,7 +562,7 @@
         ]
     },
     "EGMC_TWR": {
-        "frequency": 127.72,
+        "frequency": 126.72,
         "top-down": [
             "EGMC"
         ]
@@ -982,7 +991,7 @@
         ]
     },
     "ESSEX_APP": {
-        "frequency": 126.620,
+        "frequency": 120.62,
         "top-down": [
             "EGSS",
             "EGGW",

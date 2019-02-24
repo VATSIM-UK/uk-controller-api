@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SquawkUnit extends Model
 {
-
     protected $table = 'squawk_unit';
     public $timestamps = false;
 
