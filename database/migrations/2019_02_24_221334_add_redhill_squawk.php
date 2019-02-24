@@ -44,6 +44,9 @@ class AddRedhillSquawk extends Migration
      */
     public function down()
     {
-        // Nothing to do
+        $unit = SquawkUnit::where('unit', '=', 'EGKR')->first();
+        $unit->delete();
+        Range::where('squawk_range_owner_id', '=', $unit->squawk_range_owner_id);
+        SquawkRangeOwner::find($unit->squawk_range_owner_id)->delete();
     }
 }
