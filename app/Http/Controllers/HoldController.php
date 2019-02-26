@@ -34,16 +34,6 @@ class HoldController extends BaseController
     }
 
     /**
-     * Get all the generic (non-user-specific) hold profiles
-     *
-     * @return JsonResponse
-     */
-    public function getGenericHoldProfiles() : JsonResponse
-    {
-        return response()->json($this->holdService->getGenericHoldProfiles())->setStatusCode(200);
-    }
-
-    /**
      * Get all the hold profiles pertaining to a user
      *
      * @return JsonResponse

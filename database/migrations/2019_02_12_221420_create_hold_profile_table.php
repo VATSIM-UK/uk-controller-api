@@ -16,8 +16,7 @@ class CreateHoldProfileTable extends Migration
         Schema::create('hold_profile', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')
-                ->nullable()
-                ->comment('The id the profile links to, null if it is a generic profile');
+                ->comment('The user the profile links to');
             $table->string('name')->comment('The given name of the profile');
             $table->timestamps();
 
@@ -25,6 +24,9 @@ class CreateHoldProfileTable extends Migration
                 ->references('id')
                 ->on('user')
                 ->onDelete('cascade');
+
+            // The names should be unique per-user
+            $table->unique(['user_id', 'name']);
         });
     }
 

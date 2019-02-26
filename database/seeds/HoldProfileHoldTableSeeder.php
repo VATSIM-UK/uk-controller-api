@@ -21,10 +21,6 @@ class HoldProfileHoldTableSeeder extends Seeder
                 'hold_profile_id' => 1,
                 'hold_id' => 2,
             ],
-            [
-                'hold_profile_id' => 2,
-                'hold_id' => 2,
-            ],
         ];
 
         HoldProfileHold::insert($holds);

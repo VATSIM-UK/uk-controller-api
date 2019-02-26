@@ -49,6 +49,16 @@ class HoldControllerTest extends BaseApiTestCase
                 'description' => 'TIMBA',
                 'restrictions' => [],
             ],
+            [
+                'id' => 3,
+                'fix' => 'MAY',
+                'inbound_heading' => 90,
+                'minimum_altitude' => 3000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'right',
+                'description' => 'Mayfield Low',
+                'restrictions' => [],
+            ],
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->seeJsonEquals($expected);
@@ -59,42 +69,27 @@ class HoldControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeStatusCode(200);
     }
 
-    public function testItReturnsGenericHoldProfiles()
-    {
-        $expected = [
-            [
-                'id' => 1,
-                'name' => 'Generic Hold Profile',
-                'holds' => [1],
-                'user_profile' => false,
-            ]
-        ];
-
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeJsonEquals($expected);
-    }
-
     public function testItReturns200OnUserHoldProfileSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile/user')->seeStatusCode(200);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeStatusCode(200);
     }
 
     public function testItReturnsUserHoldProfiles()
     {
         $expected = [
             [
-                'id' => 2,
+                'id' => 1,
                 'name' => 'User Hold Profile',
-                'holds' => [1, 2],
-                'user_profile' => true,
+                'holds' => [1],
             ]
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile/user')->seeJsonEquals($expected);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeJsonEquals($expected);
     }
 
     public function testDeleteUserHoldProfilesReturnsNoContent()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/user/2')->seeStatusCode(204);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/1')->seeStatusCode(204);
     }
 
     public function testDeleteUserHoldProfilesDeletesTheHoldProfile()
@@ -102,14 +97,14 @@ class HoldControllerTest extends BaseApiTestCase
         $this->seeInDatabase(
             'hold_profile',
             [
-                'id' => 2,
+                'id' => 1,
             ]
         );
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/user/2');
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/1');
         $this->notSeeInDatabase(
             'hold_profile',
             [
-                'id' => 2,
+                'id' => 1,
             ]
         );
     }
@@ -118,7 +113,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user',
+            'hold/profile',
             [
                 'holds' => [1, 2],
             ]
@@ -129,7 +124,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user',
+            'hold/profile',
             [
                 'name' => 123,
                 'holds' => [1, 2],
@@ -141,7 +136,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user',
+            'hold/profile',
             [
                 'name' => 'Newly Created Profile',
             ]
@@ -152,7 +147,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user',
+            'hold/profile',
             [
                 'name' => 'Newly Created Profile',
                 'holds' => 123,
@@ -164,7 +159,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user',
+            'hold/profile',
             [
                 'name' => 'Newly Created Profile',
                 'holds' => ['abc', 1, 2, 3],
@@ -176,7 +171,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user',
+            'hold/profile',
             [
                 'name' => 'Newly Created Profile',
                 'holds' => [1, 2],
@@ -191,7 +186,7 @@ class HoldControllerTest extends BaseApiTestCase
         Carbon::setTestNow(Carbon::now());
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user',
+            'hold/profile',
             [
                 'name' => 'Newly Created Profile',
                 'holds' => [1, 2],
@@ -230,7 +225,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user/2',
+            'hold/profile/1',
             [
                 'holds' => [1, 2],
             ]
@@ -241,7 +236,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user/2',
+            'hold/profile/1',
             [
                 'name' => 123,
                 'holds' => [1, 2],
@@ -253,7 +248,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user/2',
+            'hold/profile/1',
             [
                 'name' => 'Newly Created Profile',
             ]
@@ -264,7 +259,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user/2',
+            'hold/profile/1',
             [
                 'name' => 'Newly Created Profile',
                 'holds' => 123,
@@ -276,7 +271,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user/2',
+            'hold/profile/1',
             [
                 'name' => 'Newly Created Profile',
                 'holds' => ['abc', 1, 2, 3],
@@ -288,7 +283,7 @@ class HoldControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user/2',
+            'hold/profile/1',
             [
                 'name' => 'Newly Updated Profile',
                 'holds' => [1],
@@ -302,7 +297,7 @@ class HoldControllerTest extends BaseApiTestCase
         Carbon::setTestNow(Carbon::now());
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'hold/profile/user/2',
+            'hold/profile/1',
             [
                 'name' => 'Newly Updated Profile',
                 'holds' => [1],
@@ -312,7 +307,7 @@ class HoldControllerTest extends BaseApiTestCase
         $this->seeInDatabase(
             'hold_profile',
             [
-                'id' => 2,
+                'id' => 1,
                 'name' => 'Newly Updated Profile',
                 'user_id' => self::ACTIVE_USER_CID,
                 'updated_at' => Carbon::now()->toDateTimeString(),
@@ -322,7 +317,7 @@ class HoldControllerTest extends BaseApiTestCase
         $this->seeInDatabase(
             'hold_profile_hold',
             [
-                'hold_profile_id' => 2,
+                'hold_profile_id' => 1,
                 'hold_id' => 1,
             ]
         );
@@ -330,7 +325,7 @@ class HoldControllerTest extends BaseApiTestCase
         $this->notSeeInDatabase(
             'hold_profile_hold',
             [
-                'hold_profile_id' => 2,
+                'hold_profile_id' => 1,
                 'hold_id' => 2,
             ]
         );

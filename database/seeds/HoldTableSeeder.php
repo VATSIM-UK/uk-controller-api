@@ -31,6 +31,15 @@ class HoldTableSeeder extends Seeder
                 'turn_direction' => 'right',
                 'description' => 'TIMBA',
                 'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            [
+                'fix' => 'MAY',
+                'inbound_heading' => 90,
+                'minimum_altitude' => 3000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'right',
+                'description' => 'Mayfield Low',
+                'created_at' => Carbon::now()->toDateTimeString(),
             ]
         ];
 

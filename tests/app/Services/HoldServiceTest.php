@@ -58,6 +58,16 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'description' => 'TIMBA',
                 'restrictions' => [],
             ],
+            [
+                'id' => 3,
+                'fix' => 'MAY',
+                'inbound_heading' => 90,
+                'minimum_altitude' => 3000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'right',
+                'description' => 'Mayfield Low',
+                'restrictions' => [],
+            ],
         ];
         $actual = $this->holdService->getHolds();
         $this->assertEquals($expected, $actual);
@@ -98,6 +108,16 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'description' => 'TIMBA',
                 'restrictions' => [],
             ],
+            [
+                'id' => 3,
+                'fix' => 'MAY',
+                'inbound_heading' => 90,
+                'minimum_altitude' => 3000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'right',
+                'description' => 'Mayfield Low',
+                'restrictions' => [],
+            ],
         ];
 
 
@@ -130,51 +150,17 @@ class HoldServiceTest extends BaseFunctionalTestCase
         $this->holdService->clearCache();
     }
 
-    public function testGetGenericHoldProfilesReturnsGenericProfilesWithHoldIds()
-    {
-        $expected = [
-            [
-                'id' => 1,
-                'name' => 'Generic Hold Profile',
-                'holds' => [1],
-                'user_profile' => false,
-            ],
-        ];
-        $this->assertEquals($expected, $this->holdService->getGenericHoldProfiles());
-    }
-
     public function testGetUserHoldProfilesReturnsUserProfilesWithHoldIds()
     {
         $this->actingAs(User::find(self::ACTIVE_USER_CID));
         $expected = [
             [
-                'id' => 2,
+                'id' => 1,
                 'name' => 'User Hold Profile',
-                'holds' => [1, 2],
-                'user_profile' => true,
+                'holds' => [1],
             ],
         ];
         $this->assertEquals($expected, $this->holdService->getUserHoldProfiles());
-    }
-
-    public function testGetUserAndGenericHoldProfilesReturnsUserAndGenericProfiles()
-    {
-        $this->actingAs(User::find(self::ACTIVE_USER_CID));
-        $expected = [
-            [
-                'id' => 1,
-                'name' => 'Generic Hold Profile',
-                'holds' => [1],
-                'user_profile' => false,
-            ],
-            [
-                'id' => 2,
-                'name' => 'User Hold Profile',
-                'holds' => [1, 2],
-                'user_profile' => true,
-            ],
-        ];
-        $this->assertEquals($expected, $this->holdService->getUserAndGenericHoldProfiles());
     }
 
     public function testItDeletesHoldProfiles()
@@ -183,40 +169,18 @@ class HoldServiceTest extends BaseFunctionalTestCase
         $this->seeInDatabase(
             'hold_profile',
             [
-                'id' => 2,
-                'user_id' => self::ACTIVE_USER_CID,
-            ]
-        );
-
-        $this->holdService->deleteUserHoldProfile(2);
-
-        $this->notSeeInDatabase(
-            'hold_profile',
-            [
-                'id' => 2,
-                'user_id' => self::ACTIVE_USER_CID,
-            ]
-        );
-    }
-
-    public function testItDoesntDeleteNonUserProfiles()
-    {
-        $this->actingAs(User::find(self::ACTIVE_USER_CID));
-        $this->seeInDatabase(
-            'hold_profile',
-            [
                 'id' => 1,
-                'user_id' => null,
+                'user_id' => self::ACTIVE_USER_CID,
             ]
         );
 
         $this->holdService->deleteUserHoldProfile(1);
 
-        $this->seeInDatabase(
+        $this->notSeeInDatabase(
             'hold_profile',
             [
                 'id' => 1,
-                'user_id' => null,
+                'user_id' => self::ACTIVE_USER_CID,
             ]
         );
     }
@@ -227,18 +191,18 @@ class HoldServiceTest extends BaseFunctionalTestCase
         $this->seeInDatabase(
             'hold_profile_hold',
             [
-                'hold_profile_id' => 2,
-                'hold_id' => 2,
+                'hold_profile_id' => 1,
+                'hold_id' => 1,
             ]
         );
 
-        $this->holdService->deleteUserHoldProfile(2);
+        $this->holdService->deleteUserHoldProfile(1);
 
         $this->notSeeInDatabase(
             'hold_profile_hold',
             [
-                'hold_profile_id' => 2,
-                'hold_id' => 2,
+                'hold_profile_id' => 1,
+                'hold_id' => 1,
             ]
         );
     }
@@ -287,12 +251,12 @@ class HoldServiceTest extends BaseFunctionalTestCase
     {
         $this->actingAs(User::find(self::ACTIVE_USER_CID));
         Carbon::setTestNow(Carbon::now());
-        $this->holdService->updateUserHoldProfile(2, 'Super New User Profile', [2]);
+        $this->holdService->updateUserHoldProfile(1, 'Super New User Profile', [2]);
 
         $this->seeInDatabase(
             'hold_profile',
             [
-                'id' => 2,
+                'id' => 1,
                 'user_id' => self::ACTIVE_USER_CID,
                 'name' => 'Super New User Profile',
                 'updated_at' => Carbon::now()->toDateTimeString(),
@@ -304,12 +268,12 @@ class HoldServiceTest extends BaseFunctionalTestCase
     {
         $this->actingAs(User::find(self::ACTIVE_USER_CID));
         Carbon::setTestNow(Carbon::now());
-        $this->holdService->updateUserHoldProfile(2, 'Super New User Profile', [2]);
+        $this->holdService->updateUserHoldProfile(1, 'Super New User Profile', [2]);
 
         $this->notSeeInDatabase(
             'hold_profile_hold',
             [
-                'hold_profile_id' => 2,
+                'hold_profile_id' => 1,
                 'hold_id' => 1,
             ]
         );
@@ -317,7 +281,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
         $this->seeInDatabase(
             'hold_profile_hold',
             [
-                'hold_profile_id' => 2,
+                'hold_profile_id' => 1,
                 'hold_id' => 2,
             ]
         );

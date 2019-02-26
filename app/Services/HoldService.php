@@ -45,25 +45,6 @@ class HoldService
     }
 
     /**
-     * Get an array of all the generic hold profiles
-     *
-     * @return array
-     */
-    public function getGenericHoldProfiles(): array
-    {
-        $profiles = HoldProfile::with('holds')
-            ->whereNull('user_id')
-            ->get()
-            ->toArray();
-
-        foreach ($profiles as $key => $profile) {
-            $profiles[$key]['holds'] = array_column($profile['holds'], 'id');
-        }
-
-        return $profiles;
-    }
-
-    /**
      * Get an array of all the user hold profiles
      *
      * @return array
@@ -72,27 +53,6 @@ class HoldService
     {
         $profiles = HoldProfile::with('holds')
             ->where('user_id', '=', Auth::user()->id)
-            ->get()
-            ->toArray();
-
-        foreach ($profiles as $key => $profile) {
-            $profiles[$key]['holds'] = array_column($profile['holds'], 'id');
-        }
-
-        return $profiles;
-    }
-
-    /**
-     * Get an array of the users hole profiles
-     * and the generic ones
-     *
-     * @return array
-     */
-    public function getUserAndGenericHoldProfiles(): array
-    {
-        $profiles = HoldProfile::with('holds')
-            ->where('user_id', '=', Auth::user()->id)
-            ->orWhereNull('user_id')
             ->get()
             ->toArray();
 
