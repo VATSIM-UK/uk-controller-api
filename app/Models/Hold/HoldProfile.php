@@ -33,10 +33,28 @@ class HoldProfile extends Model
     ];
 
     /**
+     * Append to JSON serialisation
+     *
+     * @var array
+     */
+    protected $appends = [
+        'user_profile'
+    ];
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function holds()
     {
         return $this->hasManyThrough(Hold::class, HoldProfileHold::class, 'hold_id', 'id', 'id', 'hold_profile_id');
+    }
+
+    /**
+     * Returns whether or not the profile is a user profile
+     *
+     * @return bool
+     */
+    public function getUserProfileAttribute() : bool
+    {
+        return $this->attributes['user_id'] !== null;
     }
 }

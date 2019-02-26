@@ -137,6 +137,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'id' => 1,
                 'name' => 'Generic Hold Profile',
                 'holds' => [1],
+                'user_profile' => false,
             ],
         ];
         $this->assertEquals($expected, $this->holdService->getGenericHoldProfiles());
@@ -150,6 +151,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'id' => 2,
                 'name' => 'User Hold Profile',
                 'holds' => [1, 2],
+                'user_profile' => true,
             ],
         ];
         $this->assertEquals($expected, $this->holdService->getUserHoldProfiles());
@@ -163,11 +165,13 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'id' => 1,
                 'name' => 'Generic Hold Profile',
                 'holds' => [1],
+                'user_profile' => false,
             ],
             [
                 'id' => 2,
                 'name' => 'User Hold Profile',
                 'holds' => [1, 2],
+                'user_profile' => true,
             ],
         ];
         $this->assertEquals($expected, $this->holdService->getUserAndGenericHoldProfiles());

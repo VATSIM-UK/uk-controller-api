@@ -65,7 +65,8 @@ class HoldControllerTest extends BaseApiTestCase
             [
                 'id' => 1,
                 'name' => 'Generic Hold Profile',
-                'holds' => [1]
+                'holds' => [1],
+                'user_profile' => false,
             ]
         ];
 
@@ -83,7 +84,8 @@ class HoldControllerTest extends BaseApiTestCase
             [
                 'id' => 2,
                 'name' => 'User Hold Profile',
-                'holds' => [1, 2]
+                'holds' => [1, 2],
+                'user_profile' => true,
             ]
         ];
 
