@@ -555,11 +555,15 @@
         "frequency": 122.9,
         "top-down": []
     },
-    "EGMC_APP": {
+    "EGMC_R_APP": {
         "frequency": 130.77,
         "top-down": [
             "EGMC"
         ]
+    },
+    "EGMC_APP": {
+        "frequency": 132.45,
+        "top-down": []
     },
     "EGMC_TWR": {
         "frequency": 126.72,
