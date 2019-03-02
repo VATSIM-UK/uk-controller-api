@@ -349,7 +349,12 @@
     "EGPK": {
         "NGY1K": 6000,
         "NGY1L": 6000,
-        "TRN1K": 6000,
-        "TRN1L": 6000
+        "TRN2K": 6000,
+        "TRN2L": 6000,
+        "DAUNT1K": 6000,
+        "LUCCO1K": 6000,
+        "OKNOB1K": 6000,
+        "SUDBY1L": 6000,
+        "SUMIN1L": 6000
     }
 }

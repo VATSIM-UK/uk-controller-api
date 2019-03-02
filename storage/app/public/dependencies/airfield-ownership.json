@@ -234,7 +234,7 @@
     ],
     "EGMC": [
         "EGMC_TWR",
-        "EGMC_APP",
+        "EGMC_R_APP",
         "THAMES_APP",
         "LTC_SE_CTR",
         "LTC_S_CTR",
