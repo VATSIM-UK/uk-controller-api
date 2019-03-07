@@ -17,7 +17,6 @@ class CreateAirfieldMslCalculationTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('airfield_id')->comment('The airfield the calculation is for');
             $table->json('calculation')->comment('How to calculate the MSL');
-            $table->timestamps();
 
             $table->unique('airfield_id');
             $table->foreign('airfield_id')->references('id')->on('airfield');

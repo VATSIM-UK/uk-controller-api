@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TmaMslCalculation extends Model
 {
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $table = 'tma_msl_calculation';
 
@@ -18,8 +18,6 @@ class TmaMslCalculation extends Model
     protected $fillable = [
         'tma_id',
         'calculation',
-        'created_at',
-        'updated_at'
     ];
 
     /**

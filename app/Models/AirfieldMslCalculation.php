@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AirfieldMslCalculation extends Model
 {
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $table = 'airfield_msl_calculation';
 
@@ -18,8 +18,6 @@ class AirfieldMslCalculation extends Model
     protected $fillable = [
         'airfield_id',
         'calculation',
-        'created_at',
-        'updated_at'
     ];
 
     /**

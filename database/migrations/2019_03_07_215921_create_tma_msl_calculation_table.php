@@ -17,7 +17,6 @@ class CreateTmaMslCalculationTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('tma_id')->comment('The TMA the calculation is for');
             $table->json('calculation')->comment('How to calculate the MSL');
-            $table->timestamps();
 
             $table->unique('tma_id');
             $table->foreign('tma_id')->references('id')->on('tma');
