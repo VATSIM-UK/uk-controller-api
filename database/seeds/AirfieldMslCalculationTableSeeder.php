@@ -1,19 +1,16 @@
 <?php
 
-use App\Models\Airfield;
-use Carbon\Carbon;
+use App\Models\AirfieldMslCalculation;
 use Illuminate\Database\Seeder;
 
-class AirfieldTableSeeder extends Seeder
+class AirfieldMslCalculationTableSeeder extends Seeder
 {
     public function run()
     {
-        Airfield::create(
+        AirfieldMslCalculation::create(
             [
-                'code' => 'EGLL',
-                'transition_altitude' => 6000,
-                'created_at' => Carbon::now()->subHour(),
-                'updated_at' => Carbon::now(),
+                'airfield_id' => 1,
+                'calculation' => json_encode(['type' => 'airfield', 'code' => 'EGLL']),
             ]
         );
     }

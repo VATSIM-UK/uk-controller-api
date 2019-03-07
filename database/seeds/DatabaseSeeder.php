@@ -27,7 +27,19 @@ class DatabaseSeeder extends Seeder
         ],
         AsrTableSeeder::class => [
             'altimeter_setting_region',
-        ]
+        ],
+        AirfieldTableSeeder::class => [
+            'airfield',
+        ],
+        TmaTableSeeder::class => [
+            'tma',
+        ],
+        AirfieldMslCalculationTableSeeder::class => [
+            'airfield_msl_calculation',
+        ],
+        TmaMslCalculationTableSeeder::class => [
+            'tma_msl_calculation',
+        ],
     ];
 
 

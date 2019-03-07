@@ -1,16 +1,17 @@
 <?php
 
-use App\Models\Airfield;
+use App\Models\Tma;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-class AirfieldTableSeeder extends Seeder
+class TmaTableSeeder extends Seeder
 {
     public function run()
     {
-        Airfield::create(
+        Tma::create(
             [
-                'code' => 'EGLL',
+                'name' => 'LTMA',
+                'description' => 'London TMA',
                 'transition_altitude' => 6000,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
