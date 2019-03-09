@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
-use App\Models\MinStack\MslAirfield;
-use App\Models\MinStack\MslTma;
 
 class MinStackLevelServiceTest extends BaseFunctionalTestCase
 {
@@ -26,10 +24,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsAirfieldMinStacks()
     {
-        $this->assertEquals(
-            MslAirfield::where('airfield_id', 1)->first(),
-            $this->service->getMinStackLevelForAirfield("EGLL")
-        );
+        $this->assertEquals(7000, $this->service->getMinStackLevelForAirfield("EGLL"));
     }
 
     public function testItReturnsNullMinStackAirfieldNotFound()
@@ -44,7 +39,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsTmaMinStacks()
     {
-        $this->assertEquals(MslTma::where('tma_id', 2)->first(), $this->service->getMinStackLevelForTma("MTMA"));
+        $this->assertEquals(6000, $this->service->getMinStackLevelForTma("MTMA"));
     }
 
     public function testItReturnsNullMinStackTmaNotFound()
@@ -55,5 +50,10 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
     public function testItReturnsNullMinStackTmaHasNoMinStack()
     {
         $this->assertNull($this->service->getMinStackLevelForTma("LTMA"));
+    }
+
+    public function testItReturnsAllAirfieldMinStackLevels()
+    {
+        $this->assertEquals(['EGLL' => 7000], $this->service->getAllAirfieldMinStackLevels());
     }
 }

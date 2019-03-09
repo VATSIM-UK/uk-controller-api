@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Models\Airfield;
-use App\Models\MinStack\MslAirfield;
-use App\Models\MinStack\MslTma;
 use App\Models\Tma;
 
 class MinStackLevelService
 {
-    public function getMinStackLevelForAirfield(string $icao) : ?MslAirfield
+    public function getMinStackLevelForAirfield(string $icao) : ?int
     {
         $airfield = Airfield::where('code', $icao)->first();
 
@@ -17,16 +15,32 @@ class MinStackLevelService
             return null;
         }
 
-        return $airfield->msl;
+        return $airfield->msl->msl;
     }
 
-    public function getMinStackLevelForTma(string $name) : ?MslTma
+    public function getMinStackLevelForTma(string $name) : ?int
     {
         $tma = Tma::where('name', $name)->first();
         if ($tma === null || $tma->msl === null) {
             return null;
         }
 
-        return $tma->msl;
+        return $tma->msl->msl;
+    }
+
+    public function getAllAirfieldMinStackLevels()
+    {
+        $airfields = Airfield::all();
+        $minStackLevels = [];
+
+        $airfields->each( function (Airfield $airfield) use (&$minStackLevels) {
+            if ($airfield->msl === null) {
+                return;
+            }
+
+            $minStackLevels[$airfield->code] = $airfield->msl->msl;
+        });
+
+        return $minStackLevels;
     }
 }
