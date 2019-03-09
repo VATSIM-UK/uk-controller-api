@@ -50,7 +50,7 @@ class CreateStandardHolds extends Migration
                 'fix' => 'ROSUN',
                 'inbound_heading' => 172,
                 'minimum_altitude' => 7000,
-                'maximum_altitude' => 24000,
+                'maximum_altitude' => 14000,
                 'turn_direction' => 'right',
                 'description' => 'ROSUN',
                 'created_at' => Carbon::now()->toDateTimeString(),
