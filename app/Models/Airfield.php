@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -27,5 +28,13 @@ class Airfield extends Model
     public function mslCalculation() : HasOne
     {
         return $this->hasOne(AirfieldMslCalculation::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function msl() : HasOne
+    {
+        return $this->hasOne(MslAirfield::class);
     }
 }

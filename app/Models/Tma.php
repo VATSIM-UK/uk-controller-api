@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\MinStack\MslTma;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -28,5 +29,13 @@ class Tma extends Model
     public function mslCalculation() : HasOne
     {
         return $this->hasOne(TmaMslCalculation::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function msl() : HasOne
+    {
+        return $this->hasOne(MslTma::class);
     }
 }
