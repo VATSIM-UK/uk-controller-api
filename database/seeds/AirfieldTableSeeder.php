@@ -16,5 +16,13 @@ class AirfieldTableSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ]
         );
+        Airfield::create(
+            [
+                'code' => 'EGBB',
+                'transition_altitude' => 6000,
+                'created_at' => Carbon::now()->subHour(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
     }
 }

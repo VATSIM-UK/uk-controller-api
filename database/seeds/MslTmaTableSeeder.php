@@ -10,8 +10,8 @@ class MslTmaTableSeeder extends Seeder
     {
         MslTma::create(
             [
-                'tma_id' => 1,
-                'msl' => 8000,
+                'tma_id' => 2,
+                'msl' => 6000,
                 'generated_at' => Carbon::now()->subHour(),
             ]
         );

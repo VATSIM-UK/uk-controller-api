@@ -17,5 +17,14 @@ class TmaTableSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ]
         );
+        Tma::create(
+            [
+                'name' => 'MTMA',
+                'description' => 'Manchester TMA',
+                'transition_altitude' => 5000,
+                'created_at' => Carbon::now()->subHour(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
     }
 }
