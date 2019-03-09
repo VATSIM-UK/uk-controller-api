@@ -54,4 +54,23 @@ class MinStackLevelService
 
         return $minStackLevels;
     }
+
+    /**
+     * @return array
+     */
+    public function getAllTmaMinStackLevels() : array
+    {
+        $airfields = Tma::all();
+        $minStackLevels = [];
+
+        $airfields->each( function (Tma $tma) use (&$minStackLevels) {
+            if ($tma->msl === null) {
+                return;
+            }
+
+            $minStackLevels[$tma->name] = $tma->msl->msl;
+        });
+
+        return $minStackLevels;
+    }
 }

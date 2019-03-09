@@ -56,4 +56,9 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
     {
         $this->assertEquals(['EGLL' => 7000], $this->service->getAllAirfieldMinStackLevels());
     }
+
+    public function testItReturnsAllTmaMinStackLevels()
+    {
+        $this->assertEquals(['MTMA' => 6000], $this->service->getAllTmaMinStackLevels());
+    }
 }
