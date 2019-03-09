@@ -40,6 +40,12 @@ class DatabaseSeeder extends Seeder
         TmaMslCalculationTableSeeder::class => [
             'tma_msl_calculation',
         ],
+        MslAirfieldTableSeeder::class => [
+            'msl_airfield',
+        ],
+        MslTmaTableSeeder::class => [
+            'msl_tma',
+        ],
     ];
 
 
