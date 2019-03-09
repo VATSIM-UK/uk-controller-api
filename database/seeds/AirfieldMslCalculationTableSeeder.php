@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\AirfieldMslCalculation;
+use App\Models\MinStack\AirfieldMslCalculation;
 use Illuminate\Database\Seeder;
 
 class AirfieldMslCalculationTableSeeder extends Seeder

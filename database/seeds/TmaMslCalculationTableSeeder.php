@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\TmaMslCalculation;
+use App\Models\MinStack\TmaMslCalculation;
 use Illuminate\Database\Seeder;
 
 class TmaMslCalculationTableSeeder extends Seeder

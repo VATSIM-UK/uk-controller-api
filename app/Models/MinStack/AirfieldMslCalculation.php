@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\MinStack;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class TmaMslCalculation extends Model
+class AirfieldMslCalculation extends Model
 {
     public $timestamps = false;
 
-    protected $table = 'tma_msl_calculation';
+    protected $table = 'airfield_msl_calculation';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'tma_id',
+        'airfield_id',
         'calculation',
     ];
 
     /**
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function tma() : BelongsTo
+    public function airfield() : BelongsTo
     {
-        return $this->belongsTo(Tma::class);
+        return $this->belongsTo(Airfield::class);
     }
 }
