@@ -7,6 +7,10 @@ use App\Models\Tma;
 
 class MinStackLevelService
 {
+    /**
+     * @param string $icao
+     * @return int|null
+     */
     public function getMinStackLevelForAirfield(string $icao) : ?int
     {
         $airfield = Airfield::where('code', $icao)->first();
@@ -18,6 +22,10 @@ class MinStackLevelService
         return $airfield->msl->msl;
     }
 
+    /**
+     * @param string $name
+     * @return int|null
+     */
     public function getMinStackLevelForTma(string $name) : ?int
     {
         $tma = Tma::where('name', $name)->first();
@@ -28,7 +36,10 @@ class MinStackLevelService
         return $tma->msl->msl;
     }
 
-    public function getAllAirfieldMinStackLevels()
+    /**
+     * @return array
+     */
+    public function getAllAirfieldMinStackLevels() : array
     {
         $airfields = Airfield::all();
         $minStackLevels = [];
