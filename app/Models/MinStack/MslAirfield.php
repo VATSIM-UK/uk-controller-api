@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MslAirfield extends Model
 {
+    public $timestamps = false;
+
     protected $table = 'msl_airfield';
 
     protected $fillable = [

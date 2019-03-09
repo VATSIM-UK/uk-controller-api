@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MslTma extends Model
 {
+    public $timestamps = false;
+
     protected $table = 'msl_tma';
 
     protected $fillable = [
