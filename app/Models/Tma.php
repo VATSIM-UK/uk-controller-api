@@ -19,6 +19,8 @@ class Tma extends Model
         'name',
         'description',
         'transition_altitude',
+        'standard_high',
+        'msl_calculation',
         'created_at',
         'updated_at'
     ];

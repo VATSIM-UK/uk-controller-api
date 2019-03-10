@@ -14,6 +14,7 @@ class TmaTableSeeder extends Seeder
                 'description' => 'London TMA',
                 'transition_altitude' => 6000,
                 'standard_high' => true,
+                'msl_calculation' => json_encode(['type' => 'airfield', 'code' => 'EGLL']),
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]
@@ -23,6 +24,7 @@ class TmaTableSeeder extends Seeder
                 'name' => 'MTMA',
                 'description' => 'Manchester TMA',
                 'transition_altitude' => 5000,
+                'msl_calculation' => json_encode(['type' => 'airfield', 'code' => 'EGCC']),
                 'standard_high' => false,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),

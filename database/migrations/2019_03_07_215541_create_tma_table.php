@@ -19,6 +19,7 @@ class CreateTmaTable extends Migration
             $table->string('description')->comment('Description of the TMA');
             $table->unsignedMediumInteger('transition_altitude');
             $table->boolean('standard_high')->comment('Is standard pressure (1013) considered high pressure');
+            $table->json('msl_calculation')->comment('How to calculate the MSL');
             $table->timestamps();
 
             $table->unique('name');

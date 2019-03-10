@@ -18,6 +18,7 @@ class CreateAirfieldTable extends Migration
             $table->string('code')->comment('ICAO code for the airfield');
             $table->unsignedMediumInteger('transition_altitude')->comment('The transition altitude');
             $table->boolean('standard_high')->comment('Is standard pressure (1013) considered high pressure');
+            $table->json('msl_calculation')->comment('How to calculate the MSL');
             $table->timestamps();
 
             $table->unique('code');

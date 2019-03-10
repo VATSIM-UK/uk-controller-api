@@ -18,6 +18,8 @@ class Airfield extends Model
     protected $fillable = [
         'code',
         'transition_altitude',
+        'standard_high',
+        'msl_calculation',
         'created_at',
         'updated_at'
     ];
