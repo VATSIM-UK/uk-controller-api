@@ -1,8 +1,9 @@
 <?php
 
+namespace App\Helpers\MinStack;
+
 use App\BaseFunctionalTestCase;
-use App\Helpers\MinStack\MinStackCalculator;
-use App\Helpers\MinStack\MinStackDataProviderInterface;
+use Mockery;
 use Mockery\MockInterface;
 
 class MinStackCalculatorTest extends BaseFunctionalTestCase

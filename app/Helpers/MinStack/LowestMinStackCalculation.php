@@ -3,7 +3,6 @@
 
 namespace App\Helpers\MinStack;
 
-
 use App\Services\MetarService;
 
 class LowestMinStackCalculation implements MinStackCalculableInterface

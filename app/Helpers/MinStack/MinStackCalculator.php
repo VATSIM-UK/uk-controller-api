@@ -15,8 +15,7 @@ class MinStackCalculator
      */
     public static function calculateMinStack(MinStackDataProviderInterface $dataProvider, int $qnh) : int
     {
-        if (
-            $qnh > self::STANDARD_PRESSURE ||
+        if ($qnh > self::STANDARD_PRESSURE ||
             ($qnh === self::STANDARD_PRESSURE && $dataProvider->standardPressureHigh())
         ) {
             return $dataProvider->transitionAltitude() + 1000;

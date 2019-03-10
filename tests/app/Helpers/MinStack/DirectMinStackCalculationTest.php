@@ -1,9 +1,10 @@
 <?php
 
+namespace App\Helpers\MinStack;
+
 use App\BaseFunctionalTestCase;
-use App\Helpers\MinStack\DirectMinStackCalculation;
-use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Services\MetarService;
+use Mockery;
 use Mockery\MockInterface;
 
 class DirectMinStackCalculationTest extends BaseFunctionalTestCase
