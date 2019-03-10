@@ -20,7 +20,7 @@ class Tma extends Model
         'description',
         'transition_altitude',
         'standard_high',
-        'msl_calculation',
+        'msl_airfield_id',
         'created_at',
         'updated_at'
     ];

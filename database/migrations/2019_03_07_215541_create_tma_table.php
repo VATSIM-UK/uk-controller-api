@@ -19,9 +19,10 @@ class CreateTmaTable extends Migration
             $table->string('description')->comment('Description of the TMA');
             $table->unsignedMediumInteger('transition_altitude');
             $table->boolean('standard_high')->comment('Is standard pressure (1013) considered high pressure');
-            $table->json('msl_calculation')->comment('How to calculate the MSL');
+            $table->unsignedInteger('msl_airfield_id')->comment('Which airfield QNH to base MSL from');
             $table->timestamps();
 
+            $table->foreign('msl_airfield_id')->references('id')->on('airfield');
             $table->unique('name');
         });
     }
