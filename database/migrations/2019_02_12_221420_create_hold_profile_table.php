@@ -24,9 +24,6 @@ class CreateHoldProfileTable extends Migration
                 ->references('id')
                 ->on('user')
                 ->onDelete('cascade');
-
-            // The names should be unique per-user
-            $table->unique(['user_id', 'name']);
         });
     }
 
