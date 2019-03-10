@@ -31,11 +31,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'description' => 'WILLO',
                 'restrictions' => [
                     [
-                        'id' => 1,
-                        'hold_id' => 1,
-                        'restriction' => [
-                            'foo' => 'bar',
-                        ],
+                        'foo' => 'bar',
                     ],
                 ],
             ],
@@ -80,7 +76,7 @@ class HoldControllerTest extends BaseApiTestCase
             [
                 'id' => 1,
                 'name' => 'User Hold Profile',
-                'holds' => [1],
+                'holds' => [1, 2],
             ]
         ];
 

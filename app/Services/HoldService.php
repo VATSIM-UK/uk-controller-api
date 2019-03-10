@@ -27,6 +27,12 @@ class HoldService
         }
 
         $data = Hold::with('restrictions')->get()->toArray();
+        foreach ($data as $key => $hold) {
+            foreach ($hold['restrictions'] as $restrictionKey => $restriction) {
+                $data[$key]['restrictions'][$restrictionKey] = $data[$key]['restrictions'][$restrictionKey]['restriction'];
+            }
+        }
+
         Cache::forever(self::CACHE_KEY, $data);
         return $data;
     }
@@ -51,13 +57,12 @@ class HoldService
      */
     public function getUserHoldProfiles(): array
     {
-        $profiles = HoldProfile::with('holds')
-            ->where('user_id', '=', Auth::user()->id)
+        $profiles = HoldProfile::where('user_id', '=', Auth::user()->id)
             ->get()
             ->toArray();
 
         foreach ($profiles as $key => $profile) {
-            $profiles[$key]['holds'] = array_column($profile['holds'], 'id');
+            unset($profiles[$key]['hold_profile_hold']);
         }
 
         return $profiles;

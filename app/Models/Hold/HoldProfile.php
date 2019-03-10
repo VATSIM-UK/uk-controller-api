@@ -2,7 +2,10 @@
 
 namespace App\Models\Hold;
 
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Model for a hold profile
@@ -20,6 +23,11 @@ class HoldProfile extends Model
         'created_at',
         'updated_at',
         'user_id',
+        'hold_profile_hold',
+    ];
+
+    protected $appends = [
+        'holds'
     ];
 
     /**
@@ -35,8 +43,24 @@ class HoldProfile extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function holds()
+    public function getHoldsAttribute()
     {
-        return $this->hasManyThrough(Hold::class, HoldProfileHold::class, 'hold_id', 'id', 'id', 'hold_profile_id');
+        return $this->holdProfileHold->pluck('hold_id')->toArray();
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function holdProfileHold() : HasMany
+    {
+        return $this->hasMany(HoldProfileHold::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
