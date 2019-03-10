@@ -29,7 +29,8 @@ class HoldService
         $data = Hold::with('restrictions')->get()->toArray();
         foreach ($data as $key => $hold) {
             foreach ($hold['restrictions'] as $restrictionKey => $restriction) {
-                $data[$key]['restrictions'][$restrictionKey] = $data[$key]['restrictions'][$restrictionKey]['restriction'];
+                $data[$key]['restrictions'][$restrictionKey] =
+                    $data[$key]['restrictions'][$restrictionKey]['restriction'];
             }
         }
 
