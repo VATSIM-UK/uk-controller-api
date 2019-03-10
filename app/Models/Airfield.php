@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Helpers\MinStackLevel\MinStackDataProviderInterface;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Airfield extends Model
+class Airfield extends Model implements MinStackDataProviderInterface
 {
     public $timestamps = true;
 
@@ -27,16 +28,39 @@ class Airfield extends Model
     /**
      * @return HasOne
      */
-    public function mslCalculation() : HasOne
-    {
-        return $this->hasOne(AirfieldMslCalculation::class);
-    }
-
-    /**
-     * @return HasOne
-     */
     public function msl() : HasOne
     {
         return $this->hasOne(MslAirfield::class);
+    }
+
+    /**
+     * The facility against which the MSL should be calculated
+     *
+     * @return string
+     */
+    public function calculationFacility(): string
+    {
+        return $this->code;
+    }
+
+    /**
+     * The transition altitude for the facility in question
+     *
+     * @return int
+     */
+    public function transitionAltitude(): int
+    {
+        return $this->transition_altitude;
+    }
+
+    /**
+     * True if the facility considers standard pressure (1013) to be
+     * high
+     *
+     * @return bool
+     */
+    public function standardPressureHigh(): bool
+    {
+        return $this->standard_high;
     }
 }
