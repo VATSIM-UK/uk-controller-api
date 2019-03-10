@@ -13,7 +13,7 @@ class MinStackCalculator
      * @param bool $standardHigh
      * @return int
      */
-    public static function CalculateMinStack(int $transitionAltitude, int $qnh, bool $standardHigh) : int
+    public static function calculateMinStack(int $transitionAltitude, int $qnh, bool $standardHigh) : int
     {
         if ($qnh > self::STANDARD_PRESSURE || ($qnh === self::STANDARD_PRESSURE && $standardHigh)) {
             return $transitionAltitude + 1000;
