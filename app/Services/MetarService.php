@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Exceptions\MetarException;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Service for parsing data in relation to METARs.
