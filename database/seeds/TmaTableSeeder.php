@@ -13,6 +13,7 @@ class TmaTableSeeder extends Seeder
                 'name' => 'LTMA',
                 'description' => 'London TMA',
                 'transition_altitude' => 6000,
+                'standard_high' => true,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]
@@ -22,6 +23,7 @@ class TmaTableSeeder extends Seeder
                 'name' => 'MTMA',
                 'description' => 'Manchester TMA',
                 'transition_altitude' => 5000,
+                'standard_high' => false,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]

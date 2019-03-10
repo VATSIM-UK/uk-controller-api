@@ -18,6 +18,7 @@ class CreateTmaTable extends Migration
             $table->string('name')->comment('The TMA name');
             $table->string('description')->comment('Description of the TMA');
             $table->unsignedMediumInteger('transition_altitude');
+            $table->boolean('standard_high')->comment('Is standard pressure (1013) considered high pressure');
             $table->timestamps();
 
             $table->unique('name');

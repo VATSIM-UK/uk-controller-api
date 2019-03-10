@@ -12,6 +12,7 @@ class AirfieldTableSeeder extends Seeder
             [
                 'code' => 'EGLL',
                 'transition_altitude' => 6000,
+                'standard_high' => true,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]
@@ -20,6 +21,7 @@ class AirfieldTableSeeder extends Seeder
             [
                 'code' => 'EGBB',
                 'transition_altitude' => 6000,
+                'standard_high' => false,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]
