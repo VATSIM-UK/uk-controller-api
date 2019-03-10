@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Helpers\MinStackLevel\MinStackDataProviderInterface;
+use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;

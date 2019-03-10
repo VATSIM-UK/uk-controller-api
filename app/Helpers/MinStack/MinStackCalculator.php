@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\MinStackLevel;
+namespace App\Helpers\MinStack;
 
 class MinStackCalculator
 {

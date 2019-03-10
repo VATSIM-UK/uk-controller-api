@@ -1,9 +1,8 @@
 <?php
 
 use App\BaseFunctionalTestCase;
-use App\Helpers\MinStackLevel\MinStackCalculator;
-use App\Helpers\MinStackLevel\MinStackDataProviderInterface;
-use App\Services\MetarService;
+use App\Helpers\MinStack\MinStackCalculator;
+use App\Helpers\MinStack\MinStackDataProviderInterface;
 use Mockery\MockInterface;
 
 class MinStackCalculatorTest extends BaseFunctionalTestCase
