@@ -141,4 +141,28 @@ class MetarServiceTest extends BaseUnitTestCase
         $service = new MetarService($mockClient);
         $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
     }
+
+    public function testItCachesMetars()
+    {
+        $mockResponse = new Response(200, [], 'EGLL 02012KT Q1014');
+
+        $mockClient = Mockery::mock(Client::class);
+        $mockClient->shouldReceive('get')
+            ->once()
+            ->with(
+                env('VATSIM_METAR_URL'),
+                [
+                    RequestOptions::ALLOW_REDIRECTS => true,
+                    RequestOptions::HTTP_ERRORS => false,
+                    RequestOptions::QUERY => [
+                        'id' => 'EGLL',
+                    ],
+                ]
+            )
+            ->andReturn($mockResponse);
+
+        $service = new MetarService($mockClient);
+        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
+        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
+    }
 }

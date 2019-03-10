@@ -20,6 +20,13 @@ class MetarService
     private $httpClient;
 
     /**
+     * A cache of METARs that have been retrieved from VATSIM in this request
+     *
+     * @var array
+     */
+    private $metarCache = [];
+
+    /**
      * MetarService constructor.
      * @param Client $httpClient
      */
@@ -58,6 +65,11 @@ class MetarService
      */
     public function getQnhFromVatsimMetar(string $icao) : ?int
     {
+        // Don't go and get it again if we already have iu
+        if (isset($this->metarCache[$icao])) {
+            return $this->getQnhFromMetar($this->metarCache[$icao]);
+        }
+
         $metar = $this->httpClient->get(
             env('VATSIM_METAR_URL'),
             [
@@ -80,6 +92,9 @@ class MetarService
         if (strpos($metarString, 'No METAR available for') === 0) {
             return null;
         }
+
+        // Cache the METAR for later
+        $this->metarCache[$icao] = $metarString;
 
         // Parse the QNH from the METAR
         $qnh = null;
