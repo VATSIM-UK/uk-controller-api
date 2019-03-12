@@ -2,29 +2,27 @@
 
 namespace App\Services;
 
-use App\Helpers\MinStack\MinStackCalculator;
+use App\Helpers\MinStack\MinStackCalculableInterface;
 use App\Models\Airfield;
 use App\Models\MinStack\MslAirfield;
 use App\Models\Tma;
+use Carbon\Carbon;
+use Laravel\Lumen\Application;
 
 class MinStackLevelService
 {
     /**
-     * @var array
+     * @var Application
      */
-    private $calculatedMinStacks;
-    /**
-     * @var MinStackCalculator
-     */
-    private $minStackCalculator;
+    private $application;
 
     /**
      * MinStackLevelService constructor.
-     * @param MinStackCalculator $minStackCalculator
+     * @param Application $application
      */
-    public function __construct(MinStackCalculator $minStackCalculator)
+    public function __construct(Application $application)
     {
-        $this->minStackCalculator = $minStackCalculator;
+        $this->application = $application;
     }
 
     /**
@@ -94,53 +92,37 @@ class MinStackLevelService
         return $minStackLevels;
     }
 
+    /**
+     * Update all min stack levels in the database from the VATSIM metar server.
+     */
     public function updateAirfieldMinStackLevelsFromVatsimMetarServer() : void
     {
         $airfields = Airfield::all();
 
         $minStackLevels = [];
         $airfields->each(function (Airfield $airfield) use (&$minStackLevels) {
-            if ($airfield->mslCalculation === null) {
+            if ($airfield->msl_calculation === null) {
                 return;
             }
 
-            $minStack = $this->getMinStackLevelForAirfield($airfield);
+            $minStackCalculation = $this->application->makeWith(
+                MinStackCalculableInterface::class,
+                $airfield->msl_calculation
+            );
 
-            if ($minStack === null) {
-                return;
-            }
-
-            $minStackLevels[$airfield->id] = $minStack;
+            $minStackLevels[$airfield->id] = $minStackCalculation->calculateMinStack();
         });
 
         foreach ($minStackLevels as $airfield => $minStack) {
-            MslAirfield::createOrUpdate(
+            MslAirfield::updateOrCreate(
                 [
                     'airfield_id' => $airfield,
-                    'msl' => $minStack
+                ],
+                [
+                    'msl' => $minStack,
+                    'generated_at' => Carbon::now(),
                 ]
             );
         }
-    }
-
-    public function getMinStackForAirfield(Airfield $airfield) : ?int
-    {
-        if ($airfield->mslCalculation === null) {
-            return null;
-        }
-
-        if ($airfield->mslCalculation['type'] === self::CALCULATION_TYPE_AIRFIELD) {
-            return $this->minStackCalculator->calculateDirectMinStack(
-                $airfield->code,
-                $airfield->transition_altitude,
-                $airfield->standard_high
-            );
-        }
-
-        if ($airfield->mslCalculation['type'] === self::CALCULATION_TYPE_LOWEST) {
-            return $this->calculateLowestOfMinStack($airfield);
-        }
-
-        return null;
     }
 }
