@@ -64,7 +64,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(['MTMA' => 6000], $this->service->getAllTmaMinStackLevels());
     }
 
-    public function testItGeneratesMinStackLevels()
+    public function testItGeneratesMinStackLevelsForAirfields()
     {
         Carbon::setTestNow(Carbon::now());
 
@@ -109,6 +109,44 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
             'msl_airfield',
             [
                 'airfield_id' => 3,
+            ]
+        );
+    }
+
+    public function testItGeneratesMinStackLevelsForTmas()
+    {
+        Carbon::setTestNow(Carbon::now());
+
+        // Mock the METAR service because we don't want to make actual calls to VATSIM
+        $metarService = Mockery::mock(MetarService::class);
+        $metarService->shouldReceive('getQnhFromVatsimMetar')
+            ->with('EGLL')
+            ->once()
+            ->andReturn(1014);
+
+        $metarService->shouldReceive('getQnhFromVatsimMetar')
+            ->with('EGBB')
+            ->once()
+            ->andReturn(977);
+
+        $this->app->instance(MetarService::class, $metarService);
+        $this->service->updateTmaMinStackLevelsFromVatsimMetarServer();
+
+        $this->seeInDatabase(
+            'msl_tma',
+            [
+                'tma_id' => 1,
+                'msl' => 7000,
+                'generated_at' => Carbon::now()
+            ]
+        );
+
+        $this->seeInDatabase(
+            'msl_tma',
+            [
+                'tma_id' => 2,
+                'msl' => 9000,
+                'generated_at' => Carbon::now()
             ]
         );
     }

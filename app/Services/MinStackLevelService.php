@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\MinStack\MinStackCalculableInterface;
 use App\Models\Airfield;
 use App\Models\MinStack\MslAirfield;
+use App\Models\MinStack\MslTma;
 use App\Models\Tma;
 use Carbon\Carbon;
 use Laravel\Lumen\Application;
@@ -117,6 +118,36 @@ class MinStackLevelService
             MslAirfield::updateOrCreate(
                 [
                     'airfield_id' => $airfield,
+                ],
+                [
+                    'msl' => $minStack,
+                    'generated_at' => Carbon::now(),
+                ]
+            );
+        }
+    }
+
+    /**
+     * Update all TMA min stack levels in the database from the VATSIM metar server.
+     */
+    public function updateTmaMinStackLevelsFromVatsimMetarServer() : void
+    {
+        $tmas = Tma::all();
+
+        $minStackLevels = [];
+        $tmas->each(function (Tma $tma) use (&$minStackLevels) {
+            $minStackCalculation = $this->application->makeWith(
+                MinStackCalculableInterface::class,
+                $tma->mslAirfield->msl_calculation
+            );
+
+            $minStackLevels[$tma->id] = $minStackCalculation->calculateMinStack();
+        });
+
+        foreach ($minStackLevels as $tma => $minStack) {
+            MslTma::updateOrCreate(
+                [
+                    'tma_id' => $tma,
                 ],
                 [
                     'msl' => $minStack,

@@ -31,7 +31,7 @@ class Tma extends Model implements MinStackDataProviderInterface
      */
     public function mslAirfield() : HasOne
     {
-        return $this->hasOne(Airfield::class);
+        return $this->hasOne(Airfield::class, 'id', 'msl_airfield_id');
     }
 
     /**

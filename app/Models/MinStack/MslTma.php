@@ -2,9 +2,11 @@
 
 namespace App\Models\MinStack;
 
+use App\Models\Airfield;
 use App\Models\Tma;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class MslTma extends Model
 {
@@ -23,8 +25,16 @@ class MslTma extends Model
     /**
      * @return BelongsTo
      */
-    public function airfield() : BelongsTo
+    public function tma() : BelongsTo
     {
         return $this->belongsTo(Tma::class);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function airfield() : HasOne
+    {
+        return $this->hasOne(Airfield::class);
     }
 }
