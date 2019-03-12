@@ -113,6 +113,36 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItReturnsUpdatedAirfieldMsls()
+    {
+        Carbon::setTestNow(Carbon::now());
+
+        // Mock the METAR service because we don't want to make actual calls to VATSIM
+        $metarService = Mockery::mock(MetarService::class);
+        $metarService->shouldReceive('getQnhFromVatsimMetar')
+            ->with('EGLL')
+            ->once()
+            ->andReturn(1012);
+
+        $metarService->shouldReceive('getQnhFromVatsimMetar')
+            ->with('EGBB')
+            ->once()
+            ->andReturn(1014);
+
+        $metarService->shouldReceive('getQnhFromVatsimMetar')
+            ->with('EGKR')
+            ->never();
+
+        $this->app->instance(MetarService::class, $metarService);
+
+        $expected = [
+            'EGLL' => 8000,
+            'EGBB' => 7000,
+        ];
+        $actual =$this->service->updateAirfieldMinStackLevelsFromVatsimMetarServer();
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testItGeneratesMinStackLevelsForTmas()
     {
         Carbon::setTestNow(Carbon::now());
@@ -149,5 +179,31 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
                 'generated_at' => Carbon::now()
             ]
         );
+    }
+
+    public function testItReturnsUpdateMslsForTmas()
+    {
+        Carbon::setTestNow(Carbon::now());
+
+        // Mock the METAR service because we don't want to make actual calls to VATSIM
+        $metarService = Mockery::mock(MetarService::class);
+        $metarService->shouldReceive('getQnhFromVatsimMetar')
+            ->with('EGLL')
+            ->once()
+            ->andReturn(1014);
+
+        $metarService->shouldReceive('getQnhFromVatsimMetar')
+            ->with('EGBB')
+            ->once()
+            ->andReturn(977);
+
+        $this->app->instance(MetarService::class, $metarService);
+
+        $expected = [
+            'LTMA' => 7000,
+            'MTMA' => 9000
+        ];
+        $actual = $this->service->updateTmaMinStackLevelsFromVatsimMetarServer();
+        $this->assertEquals($expected, $actual);
     }
 }

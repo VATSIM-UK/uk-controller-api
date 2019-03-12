@@ -95,8 +95,10 @@ class MinStackLevelService
 
     /**
      * Update all min stack levels in the database from the VATSIM metar server.
+     *
+     * @return array
      */
-    public function updateAirfieldMinStackLevelsFromVatsimMetarServer() : void
+    public function updateAirfieldMinStackLevelsFromVatsimMetarServer() : array
     {
         $airfields = Airfield::all();
 
@@ -125,12 +127,21 @@ class MinStackLevelService
                 ]
             );
         }
+
+        $returnValue = [];
+        foreach ($minStackLevels as $airfield => $minStackLevel) {
+            $returnValue[$airfields->find($airfield)->code] = $minStackLevel;
+        }
+
+        return $returnValue;
     }
 
     /**
      * Update all TMA min stack levels in the database from the VATSIM metar server.
+     *
+     * @return array
      */
-    public function updateTmaMinStackLevelsFromVatsimMetarServer() : void
+    public function updateTmaMinStackLevelsFromVatsimMetarServer() : array
     {
         $tmas = Tma::all();
 
@@ -155,5 +166,12 @@ class MinStackLevelService
                 ]
             );
         }
+
+        $returnValue = [];
+        foreach ($minStackLevels as $tma => $minStackLevel) {
+            $returnValue[$tmas->find($tma)->name] = $minStackLevel;
+        }
+
+        return $returnValue;
     }
 }
