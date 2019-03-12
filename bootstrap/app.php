@@ -123,6 +123,7 @@ $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(\App\Providers\RegionalPressureServiceProvider::class);
+$app->register(\App\Providers\MinStackCalculationServiceProvider::class);
 if (class_exists('Vluzrmos\Tinker\TinkerServiceProvider')) {
     $app->register(Vluzrmos\Tinker\TinkerServiceProvider::class);
 }

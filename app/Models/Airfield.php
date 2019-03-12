@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\MinStack\MinStackCalculableInterface;
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;

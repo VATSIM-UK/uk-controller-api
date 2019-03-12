@@ -29,7 +29,8 @@
     "autoload-dev": {
         "classmap": [
             "tests/",
-            "database/"
+            "database/seeds",
+            "database/migrations"
         ]
     },
     "scripts": {
@@ -38,6 +39,5 @@
         ]
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "optimize-autoloader": true
+    "prefer-stable": true
 }
