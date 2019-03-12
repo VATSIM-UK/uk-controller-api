@@ -1,10 +1,29 @@
 <?php
 
-
 namespace App\Console\Commands;
 
+use App\Services\MinStackLevelService;
+use Illuminate\Console\Command;
 
-class GenerateMinStackLevels
+class GenerateMinStackLevels extends Command
 {
+    protected $signature = 'msl:generate';
 
+    protected $description = 'Regenerate the minimum stack levels for TMAs and Airfields';
+
+    /**
+     * Update the minimum stack levels
+     *
+     * @param MinStackLevelService $service
+     * @return int
+     */
+    public function handle(MinStackLevelService $service) : int
+    {
+        $this->info('Updating minimum stack levels');
+        $service->updateAirfieldMinStackLevelsFromVatsimMetarServer();
+        $this->info('Successfully updated minimum stack levels for airfields');
+        $service->updateTmaMinStackLevelsFromVatsimMetarServer();
+        $this->info('Successfully updated minimum stack levels for TMAs');
+        return 0;
+    }
 }
