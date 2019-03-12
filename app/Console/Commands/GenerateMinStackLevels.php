@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\MinStacksUpdatedEvent;
 use App\Services\MinStackLevelService;
 use Illuminate\Console\Command;
 
@@ -20,10 +21,11 @@ class GenerateMinStackLevels extends Command
     public function handle(MinStackLevelService $service) : int
     {
         $this->info('Updating minimum stack levels');
-        $service->updateAirfieldMinStackLevelsFromVatsimMetarServer();
+        $airfields =$service->updateAirfieldMinStackLevelsFromVatsimMetarServer();
         $this->info('Successfully updated minimum stack levels for airfields');
-        $service->updateTmaMinStackLevelsFromVatsimMetarServer();
+        $tmas = $service->updateTmaMinStackLevelsFromVatsimMetarServer();
         $this->info('Successfully updated minimum stack levels for TMAs');
+        event(new MinStacksUpdatedEvent($airfields, $tmas));
         return 0;
     }
 }
