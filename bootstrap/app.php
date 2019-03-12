@@ -115,6 +115,7 @@ $app->routeMiddleware(
 // $app->register(App\Providers\AppServiceProvider::class);
 $app->register(Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\BroadcastServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->bind(\App\Providers\SquawkService::class, function ($app) {
     return new \App\Providers\SquawkService();
@@ -124,6 +125,7 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 $app->register(\App\Providers\RegionalPressureServiceProvider::class);
 $app->register(\App\Providers\MinStackCalculationServiceProvider::class);
+$app->register(\Illuminate\Redis\RedisServiceProvider::class);
 if (class_exists('Vluzrmos\Tinker\TinkerServiceProvider')) {
     $app->register(Vluzrmos\Tinker\TinkerServiceProvider::class);
 }
