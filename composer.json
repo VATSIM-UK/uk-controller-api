@@ -12,7 +12,9 @@
         "dusterio/lumen-passport": "^0.2.4",
         "league/flysystem": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
-        "bugsnag/bugsnag-laravel": "^2.15"
+        "bugsnag/bugsnag-laravel": "^2.15",
+        "predis/predis": "~1.0",
+        "illuminate/redis": "~5.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
