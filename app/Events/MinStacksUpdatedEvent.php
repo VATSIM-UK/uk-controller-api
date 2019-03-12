@@ -5,22 +5,24 @@ namespace App\Events;
 
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class AirfieldMinStacksUpdatedEvent implements ShouldBroadcast
+class MinStacksUpdatedEvent implements ShouldBroadcast
 {
     const CHANNEL = 'minstack-updates';
 
     /**
      * @var array
      */
-    private $airfield;
+    public $airfield;
+
     /**
      * @var array
      */
-    private $tma;
+    public $tma;
 
     /**
      * AirfieldMinStacksUpdatedEvent constructor.
-     * @param array $minStacks
+     * @param array $airfield
+     * @param array $tma
      */
     public function __construct(array $airfield, array $tma)
     {
