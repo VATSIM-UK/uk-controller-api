@@ -18,7 +18,7 @@ class CreateMslAirfieldTable extends Migration
             $table->unsignedSmallInteger('msl');
             $table->timestamp('generated_at');
 
-            $table->unique('airfield_id');
+            $table->primary('airfield_id');
             $table->foreign('airfield_id')->references('id')->on('airfield');
         });
     }

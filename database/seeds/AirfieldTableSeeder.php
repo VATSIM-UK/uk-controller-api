@@ -13,7 +13,7 @@ class AirfieldTableSeeder extends Seeder
                 'code' => 'EGLL',
                 'transition_altitude' => 6000,
                 'standard_high' => true,
-                'msl_calculation' => json_encode(['type' => 'airfield', 'code' => 'EGLL']),
+                'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGLL']),
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]
@@ -23,7 +23,17 @@ class AirfieldTableSeeder extends Seeder
                 'code' => 'EGBB',
                 'transition_altitude' => 6000,
                 'standard_high' => false,
-                'msl_calculation' => json_encode(['type' => 'airfield', 'code' => 'EGBB']),
+                'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGBB']),
+                'created_at' => Carbon::now()->subHour(),
+                'updated_at' => Carbon::now(),
+            ]
+        );
+        Airfield::create(
+            [
+                'code' => 'EGKR',
+                'transition_altitude' => 6000,
+                'standard_high' => true,
+                'msl_calculation' => null,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]

@@ -34,7 +34,7 @@ class MinStackCalculationProviderTest extends BaseFunctionalTestCase
 
         $calculation = $this->app->makeWith(
             MinStackCalculableInterface::class,
-            ['type' => 'airfield', 'airfield' => 'EGLL']
+            ['type' => 'direct', 'airfield' => 'EGLL']
         );
 
         $this->assertEquals(7000, $calculation->calculateMinStack());

@@ -17,13 +17,13 @@ class MinStackCalculationServiceProvider extends ServiceProvider
     {
         $this->app->bind(MinStackCalculableInterface::class, function (Application $app, array $calculation) {
             if (!isset($calculation['type']) ||
-                ($calculation['type'] !== 'airfield' && $calculation['type'] !== 'lowest')
+                ($calculation['type'] !== 'direct' && $calculation['type'] !== 'lowest')
             ) {
                 throw new InvalidMslCalculationException('Invalid calculation type');
             }
 
-            return $calculation['type'] === 'airfield'
-                ? $this->getAirfieldCalculation($calculation)
+            return $calculation['type'] === 'direct'
+                ? $this->getDirectCalculation($calculation)
                 : $this->getLowestCalculation($calculation);
         });
     }
@@ -35,7 +35,7 @@ class MinStackCalculationServiceProvider extends ServiceProvider
      * @param array $calculation
      * @return DirectMinStackCalculation
      */
-    private function getAirfieldCalculation(array $calculation) : DirectMinStackCalculation
+    private function getDirectCalculation(array $calculation) : DirectMinStackCalculation
     {
         return new DirectMinStackCalculation(
             Airfield::where('code', $calculation['airfield'])->firstOrFail(),

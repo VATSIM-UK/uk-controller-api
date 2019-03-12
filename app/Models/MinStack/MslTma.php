@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MslTma extends Model
 {
+    protected $primaryKey = 'tma_id';
+
     public $timestamps = false;
 
     protected $table = 'msl_tma';

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\MinStack\MinStackCalculableInterface;
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
@@ -63,5 +62,17 @@ class Airfield extends Model implements MinStackDataProviderInterface
     public function standardPressureHigh(): bool
     {
         return $this->standard_high;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMslCalculationAttribute(): ?array
+    {
+        if (!isset($this->attributes['msl_calculation'])) {
+            return null;
+        }
+
+        return json_decode($this->attributes['msl_calculation'], true);
     }
 }
