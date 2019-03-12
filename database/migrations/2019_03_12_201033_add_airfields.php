@@ -188,7 +188,7 @@ class AddAirfields extends Migration
                 'code' => 'EGSH',
                 'transition_altitude' => 5000,
                 'standard_high' => true,
-                'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGNS']),
+                'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGSH']),
             ],
             [
                 'code' => 'EGNT',

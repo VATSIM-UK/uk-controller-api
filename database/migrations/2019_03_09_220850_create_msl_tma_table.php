@@ -19,7 +19,7 @@ class CreateMslTmaTable extends Migration
             $table->timestamp('generated_at');
 
             $table->primary('tma_id');
-            $table->foreign('tma_id')->references('id')->on('airfield');
+            $table->foreign('tma_id')->references('id')->on('tma');
         });
     }
 
