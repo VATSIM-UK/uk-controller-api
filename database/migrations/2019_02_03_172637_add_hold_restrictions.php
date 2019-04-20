@@ -123,6 +123,42 @@ class AddHoldRestrictions extends Migration
                 'restriction' => $this->createLevelBlockRestriction([13000]),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
+            // LOREL
+            [
+                'hold_id' => '10',
+                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // ABBOT
+            [
+                'hold_id' => '11',
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, null, null, 8000),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // BRI
+            [
+                'hold_id' => '12',
+                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // CDF
+            [
+                'hold_id' => '13',
+                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // TIPOD
+            [
+                'hold_id' => '14',
+                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // KEGUN
+            [
+                'hold_id' => '15',
+                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
         ];
 
         HoldRestriction::insert($restrictions);
