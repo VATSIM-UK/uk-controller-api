@@ -20,143 +20,191 @@ class AddHoldRestrictions extends Migration
         $restrictions = [
             // WILLO
             [
-                'hold_id' => '1',
-                'restriction' => $this->createMinimumRestriction(self::MSL),
+                'hold_id' => 1,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGKK'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // TIMBA
             [
-                'hold_id' => '2',
-                'restriction' => $this->createMinimumRestriction(self::MSL),
+                'hold_id' => 2,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGKK'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // DAYNE
             [
-                'hold_id' => '3',
-                'restriction' => $this->createMinimumRestriction(self::MSL, '05L', 'any', 7000),
+                'hold_id' => 3,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGCC', '05L', 'any', 7000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '3',
-                'restriction' => $this->createMinimumRestriction(self::MSL, '05R', 'any', 7000),
+                'hold_id' => 3,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGCC', '05R', 'any', 7000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '3',
-                'restriction' => $this->createMinimumRestriction(self::MSL, '23L', 'any', 7000),
+                'hold_id' => 3,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGCC', '23L', 'any', 7000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '3',
-                'restriction' => $this->createMinimumRestriction(self::MSL, '23R', 'any', 7000),
+                'hold_id' => 3,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGCC', '23R', 'any', 7000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // ROSUN
             [
-                'hold_id' => '4',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1, '05L', 'any', 7000),
+                'hold_id' => 4,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGCC', '05L', 'any', 7000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '4',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1, '05R', 'any', 7000),
+                'hold_id' => 4,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGCC', '05R', 'any', 7000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '4',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1, '23L', 'any', 8000),
+                'hold_id' => 4,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGCC', '23L', 'any', 8000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '4',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1, '23R', 'any', 8000),
+                'hold_id' => 4,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGCC', '23R', 'any', 8000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // MIRSI
             [
-                'hold_id' => '5',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1, '05L', 'any', 8000),
+                'hold_id' => 5,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGCC', '05L', 'any', 8000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '5',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1, '05R', 'any', 8000),
+                'hold_id' => 5,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGCC', '05R', 'any', 8000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '5',
-                'restriction' => $this->createMinimumRestriction(self::MSL, '23L'),
+                'hold_id' => 5,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGCC', '23L', 'any'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '5',
-                'restriction' => $this->createMinimumRestriction(self::MSL, '23R'),
+                'hold_id' => 5,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGCC', '23R', 'any'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
 
             // BIG
             [
-                'hold_id' => '6',
-                'restriction' => $this->createMinimumRestriction(self::MSL),
+                'hold_id' => 6,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGLL'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // OCK
             [
-                'hold_id' => '7',
-                'restriction' => $this->createMinimumRestriction(self::MSL),
+                'hold_id' => 7,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGLL'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // BNN
             [
-                'hold_id' => '8',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'hold_id' => 8,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGLL'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // LAM
             [
-                'hold_id' => '9',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'hold_id' => 9,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGLL'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'hold_id' => '9',
+                'hold_id' => 9,
                 'restriction' => $this->createLevelBlockRestriction([13000]),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // LOREL
             [
-                'hold_id' => '10',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'hold_id' => 10,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGSS'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // ABBOT
             [
-                'hold_id' => '11',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1, null, null, 8000),
+                'hold_id' => 11,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGSS', null, null, 8000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // BRI
             [
-                'hold_id' => '12',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'hold_id' => 12,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGGD'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // CDF
             [
-                'hold_id' => '13',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'hold_id' => 13,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGFF'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // TIPOD
             [
-                'hold_id' => '14',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'hold_id' => 14,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGGP'),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // KEGUN
             [
-                'hold_id' => '15',
-                'restriction' => $this->createMinimumRestriction(self::MSLP1),
+                'hold_id' => 15,
+                'restriction' => $this->createMinimumRestriction(self::MSLP1, 'EGGP'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // TWEED
+            [
+                'hold_id' => 20,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGPH'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // STIRA
+            [
+                'hold_id' => 21,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGPH'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // LANAK
+            [
+                'hold_id' => 22,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGPF'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // GOW
+            [
+                'hold_id' => 23,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGPF'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // GROVE
+            [
+                'hold_id' => 24,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGBB'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // CHASE
+            [
+                'hold_id' => 25,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGBB'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // ROKUP
+            [
+                'hold_id' => 26,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGNX'),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ],
+            // PIGOT
+            [
+                'hold_id' => 27,
+                'restriction' => $this->createMinimumRestriction(self::MSL, 'EGBB', null, null, 8000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
         ];
@@ -194,16 +242,23 @@ class AddHoldRestrictions extends Migration
      * Create a minimum level restriction
      *
      * @param string $level The level restriction
+     * @param string $mslTarget The airfield to use the MSL at if not
      * @param null|string $activeRunway The active runway designation
      * @param null|string $runwayType The type of runway, either arrival, departure or any
      * @param null|int $override The overriding level
      * @return false|string
      */
-    private function createMinimumRestriction($level, $activeRunway = null, $runwayType = null, $override = null)
-    {
+    private function createMinimumRestriction(
+        string $level,
+        string $mslTarget,
+        string $activeRunway = null,
+        string $runwayType = null,
+        int $override = null
+    ) {
         $data = [];
         $data['type'] = 'minimum-level';
         $data['level'] = $level;
+        $data['target'] = $mslTarget;
 
         if ($activeRunway) {
             $data['runway']['designator'] = $activeRunway;
