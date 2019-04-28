@@ -202,7 +202,7 @@ class CreateStandardHolds extends Migration
                 'minimum_altitude' => 8000,
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'left',
-                'description' => 'EGLL - SABER',
+                'description' => 'LOGAN1H - SABER',
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             // OKESI - Because CTP
