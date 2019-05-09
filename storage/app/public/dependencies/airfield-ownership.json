@@ -111,6 +111,7 @@
         "EGHH_GND",
         "EGHH_TWR",
         "EGHH_APP",
+        "SOLENT_APP",
         "LON_S_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -119,6 +120,7 @@
         "EGHI_GND",
         "EGHI_TWR",
         "EGHI_APP",
+        "SOLENT_APP",
         "LON_S_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -216,6 +218,7 @@
     "EGLL": [
         "EGLL_DEL",
         "EGLL_2_GND",
+        "EGLL_1_GND",
         "EGLL_N_TWR",
         "EGLL_S_TWR",
         "EGLL_N_APP",
@@ -231,7 +234,7 @@
     ],
     "EGMC": [
         "EGMC_TWR",
-        "EGMC_APP",
+        "EGMC_R_APP",
         "THAMES_APP",
         "LTC_SE_CTR",
         "LTC_S_CTR",
