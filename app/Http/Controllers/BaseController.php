@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +23,7 @@ class BaseController extends LumenController
      * @param  Request $request  The request
      * @param  array   $rules    The laravel validation rules to match
      * @param  array   $messages (optional) The error messages to log for each rule
-     * @return Response|boolean
+     * @return JsonResponse|bool
      */
     protected function checkForSuppliedData(Request $request, $rules, $messages = [])
     {

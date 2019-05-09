@@ -26,7 +26,14 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
             'uses' => 'VersionController@getVersionStatus'
         ]
     );
-    
+
+    // Holds
+    $router->get('hold', 'HoldController@getAllHolds');
+    $router->get('hold/profile', 'HoldController@getUserHoldProfiles');
+    $router->put('hold/profile', 'HoldController@createUserHoldProfile');
+    $router->put('hold/profile/{profile_id:\d+}', 'HoldController@updateUserHoldProfile');
+    $router->delete('hold/profile/{profile_id:\d+}', 'HoldController@deleteUserHoldProfile');
+
     // Dependencies
     $router->get('dependency', 'DependencyController@getManifest');
     

@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": "^7.1",
+        "ext-json": "*",
         "laravel/lumen-framework": "^5.5",
         "vlucas/phpdotenv": "~2.2",
         "dusterio/lumen-passport": "^0.2.4",
