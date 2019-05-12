@@ -4,7 +4,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-
     // The seeders and the tables they affect
     const SEEDERS = [
         VersionTableSeeder::class => [
@@ -39,6 +38,18 @@ class DatabaseSeeder extends Seeder
         ],
         MslTmaTableSeeder::class => [
             'msl_tma',
+        ],
+        HoldTableSeeder::class => [
+            'hold',
+        ],
+        HoldProfileTableSeeder::class => [
+            'hold_profile',
+        ],
+        HoldProfileHoldTableSeeder::class => [
+            'hold_profile_hold',
+        ],
+        HoldRestrictionTableSeeder::class => [
+            'hold_restriction'
         ],
     ];
 
