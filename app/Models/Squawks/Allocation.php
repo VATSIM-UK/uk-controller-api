@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Allocation extends Model
 {
-
     protected $table = 'squawk_allocation';
 
     public $timestamps = false;

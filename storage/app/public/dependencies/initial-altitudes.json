@@ -234,10 +234,11 @@
         "CHK": 6000,
         "CPT3G": 6000,
         "CPT3F": 6000,
+        "CPT5J": 6000,
+        "CPT4K": 6000,
         "DET1K": 6000,
         "DET1J": 6000,
         "DET2G": 6000,
-        "DET1Z": 6000,
         "DET2F": 6000,
         "GASGU1K": 6000,
         "GASGU1J": 6000,
@@ -295,8 +296,8 @@
         "LAM3R": 4000,
         "LYD5S": 5000,
         "LYD6R": 5000,
-        "NUGBO1R": 5000,
-        "NUGBO1S": 4000,
+        "NUGBO1R": 4000,
+        "NUGBO1S": 5000,
         "UTAVA1S": 5000,
         "UTAVA1R": 4000,
         "CLN1E": 4000,
@@ -349,7 +350,12 @@
     "EGPK": {
         "NGY1K": 6000,
         "NGY1L": 6000,
-        "TRN1K": 6000,
-        "TRN1L": 6000
+        "TRN2K": 6000,
+        "TRN2L": 6000,
+        "DAUNT1K": 6000,
+        "LUCCO1K": 6000,
+        "OKNOB1K": 6000,
+        "SUDBY1L": 6000,
+        "SUMIN1L": 6000
     }
 }

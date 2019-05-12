@@ -161,7 +161,7 @@ class SquawkController extends BaseController
             $request,
             [
                 'unit' => 'required|alpha',
-                'rules' => 'required|in:V,I',
+                'rules' => 'required|in:V,I,S',
             ]
         );
 
