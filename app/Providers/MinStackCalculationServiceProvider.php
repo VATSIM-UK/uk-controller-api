@@ -62,5 +62,4 @@ class MinStackCalculationServiceProvider extends ServiceProvider
             ...$airfields
         );
     }
-
 }
