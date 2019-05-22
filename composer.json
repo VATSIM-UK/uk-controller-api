@@ -8,7 +8,7 @@
         "php": "^7.1",
         "ext-json": "*",
         "laravel/lumen-framework": "^5.5",
-        "vlucas/phpdotenv": "~2.2",
+        "vlucas/phpdotenv": "^3.0",
         "dusterio/lumen-passport": "^0.2.4",
         "league/flysystem": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
