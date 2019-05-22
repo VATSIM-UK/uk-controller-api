@@ -3,6 +3,8 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class MinStacksUpdatedEvent implements ShouldBroadcast
@@ -33,10 +35,10 @@ class MinStacksUpdatedEvent implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|\Illuminate\Broadcasting\Channel[]
+     * @return Channel[]
      */
     public function broadcastOn() : array
     {
-        return [self::CHANNEL];
+        return [new PrivateChannel(self::CHANNEL)];
     }
 }
