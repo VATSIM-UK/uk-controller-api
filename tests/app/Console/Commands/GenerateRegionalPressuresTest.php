@@ -16,14 +16,7 @@ class GenerateRegionalPressuresTest extends BaseUnitTestCase
      */
     private $command;
 
-    /**
-     * Mock output
-     *
-     * @var OutputInterface;
-     */
-    private $outputMock;
-
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->command = $this->app->make(GenerateRegionalPressures::class);

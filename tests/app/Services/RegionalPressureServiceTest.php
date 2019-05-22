@@ -40,7 +40,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         }
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->metarService = new MetarService(new Client());

@@ -21,7 +21,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
      */
     private $squawkService;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->actingAs($this->activeUser());

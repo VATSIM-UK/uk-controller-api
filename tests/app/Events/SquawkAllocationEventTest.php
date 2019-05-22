@@ -17,7 +17,7 @@ class SquawkAllocationEventTest extends BaseFunctionalTestCase
      */
     private $allocation;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->allocation = Allocation::find(1);

@@ -8,7 +8,7 @@ class SquawkRangeTest extends BaseFunctionalTestCase
 {
     protected $range = [];
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $squawkRangeOwner = SquawkRangeOwner::create();

@@ -43,7 +43,7 @@ abstract class BaseApiTestCase extends BaseTestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->regenerateAccessToken(static::$tokenScope, static::$tokenUser);
