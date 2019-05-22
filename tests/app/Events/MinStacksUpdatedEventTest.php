@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\BaseUnitTestCase;
+use Illuminate\Broadcasting\PrivateChannel;
 
 class MinStacksUpdatedEventTest extends BaseUnitTestCase
 {
@@ -32,6 +33,6 @@ class MinStacksUpdatedEventTest extends BaseUnitTestCase
 
     public function testItBroadcastsOnTheCorrectChannel()
     {
-        $this->assertEquals([$this->event::CHANNEL], $this->event->broadcastOn());
+        $this->assertEquals([new PrivateChannel($this->event::CHANNEL)], $this->event->broadcastOn());
     }
 }
