@@ -79,7 +79,7 @@ class UserServiceTest extends BaseFunctionalTestCase
         $this->seeInDatabase(
             'oauth_access_tokens',
             [
-                'user_id' => 1,
+                'user_id' => 2,
                 'client_id' => 1,
                 'revoked' => 0,
             ]
@@ -93,7 +93,7 @@ class UserServiceTest extends BaseFunctionalTestCase
         $this->seeInDatabase(
             'oauth_access_tokens',
             [
-                'user_id' => 2,
+                'user_id' => 3,
                 'client_id' => 1,
                 'revoked' => 0,
             ]

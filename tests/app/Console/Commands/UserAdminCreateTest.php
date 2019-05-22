@@ -22,7 +22,7 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
     public function testItCreatesAUser()
     {
         Artisan::call('user:create-admin');
-        $userId = User::where('id', 1)->first()->id;
+        $userId = User::where('id', 2)->first()->id;
         $this->seeInDatabase(
             'oauth_access_tokens',
             [

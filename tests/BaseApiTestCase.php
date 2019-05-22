@@ -49,7 +49,6 @@ abstract class BaseApiTestCase extends BaseTestCase
         $this->regenerateAccessToken(static::$tokenScope, static::$tokenUser);
     }
 
-
     /**
      * Regenerate the tests access token under a given user id
      *

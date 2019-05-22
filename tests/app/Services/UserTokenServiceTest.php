@@ -82,6 +82,6 @@ class UserTokenServiceTest extends BaseApiTestCase
     public function testDeleteAllTokensForUserThrowsExceptionIfUserDoesNotExist()
     {
         $this->expectException(ModelNotFoundException::class);
-        $this->service->deleteAllForUser(1);
+        $this->service->deleteAllForUser(55);
     }
 }
