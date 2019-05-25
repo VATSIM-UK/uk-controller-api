@@ -16,7 +16,7 @@ class VatsimCidTest extends BaseUnitTestCase
      */
     private $middleware;
     
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->middleware = $this->app->make(VatsimCid::class);

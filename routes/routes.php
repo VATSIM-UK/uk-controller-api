@@ -44,6 +44,15 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
     
     // Regional Pressure
     $router->get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
+
+    // Min Stack Levels
+    $router->get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
+    $router->get('msl/tma', 'MinStackController@getTmaMinStackLevels');
+    $router->get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield');
+    $router->get('msl/tma/{tma}', 'MinStackController@getMslForTma');
+
+    // Broadcasting
+    $router->post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
 });
 
 // Routes for user administration

@@ -13,7 +13,7 @@ class UserConfigTest extends BaseUnitTestCase
      */
     private $userConfig;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->userConfig = new UserConfig('user-api-key');

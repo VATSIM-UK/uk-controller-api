@@ -3,6 +3,11 @@ namespace App\Services;
 
 use App\BaseUnitTestCase;
 use App\Exceptions\MetarException;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\RequestOptions;
+use Mockery;
 
 class MetarServiceTest extends BaseUnitTestCase
 {
@@ -11,7 +16,7 @@ class MetarServiceTest extends BaseUnitTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->service = $this->app->make(MetarService::class);
@@ -47,5 +52,117 @@ class MetarServiceTest extends BaseUnitTestCase
     {
         $metar = 'EGGD Q1029 Q1001';
         $this->assertEquals(1029, $this->service->getQnhFromMetar($metar));
+    }
+
+    public function testItReturnsNullIfVatsimMetarDownloadFails()
+    {
+        $mockResponse = new Response(418, []);
+
+        $mockClient = Mockery::mock(Client::class);
+        $mockClient->shouldReceive('get')
+            ->with(
+                env('VATSIM_METAR_URL'),
+                [
+                    RequestOptions::ALLOW_REDIRECTS => true,
+                    RequestOptions::HTTP_ERRORS => false,
+                    RequestOptions::QUERY => [
+                        'id' => 'EGLL',
+                    ],
+                ]
+            )
+            ->andReturn($mockResponse);
+
+        $service = new MetarService($mockClient);
+        $this->assertNull($service->getQnhFromVatsimMetar('EGLL'));
+    }
+
+    public function testItReturnsNullIfNoMetarAvailable()
+    {
+        $mockResponse = new Response(200, [], 'No METAR available for EGLL');
+
+        $mockClient = Mockery::mock(Client::class);
+        $mockClient->shouldReceive('get')
+            ->with(
+                env('VATSIM_METAR_URL'),
+                [
+                    RequestOptions::ALLOW_REDIRECTS => true,
+                    RequestOptions::HTTP_ERRORS => false,
+                    RequestOptions::QUERY => [
+                        'id' => 'EGLL',
+                    ],
+                ]
+            )
+            ->andReturn($mockResponse);
+
+        $service = new MetarService($mockClient);
+        $this->assertNull($service->getQnhFromVatsimMetar('EGLL'));
+    }
+
+    public function testItReturnsNullIfMetarNotValid()
+    {
+        $mockResponse = new Response(200, [], 'EGLL 1234567');
+
+        $mockClient = Mockery::mock(Client::class);
+        $mockClient->shouldReceive('get')
+            ->with(
+                env('VATSIM_METAR_URL'),
+                [
+                    RequestOptions::ALLOW_REDIRECTS => true,
+                    RequestOptions::HTTP_ERRORS => false,
+                    RequestOptions::QUERY => [
+                        'id' => 'EGLL',
+                    ],
+                ]
+            )
+            ->andReturn($mockResponse);
+
+        $service = new MetarService($mockClient);
+        $this->assertNull($service->getQnhFromVatsimMetar('EGLL'));
+    }
+
+    public function testItReturnsQnhIfValidMetar()
+    {
+        $mockResponse = new Response(200, [], 'EGLL 02012KT Q1014');
+
+        $mockClient = Mockery::mock(Client::class);
+        $mockClient->shouldReceive('get')
+            ->with(
+                env('VATSIM_METAR_URL'),
+                [
+                    RequestOptions::ALLOW_REDIRECTS => true,
+                    RequestOptions::HTTP_ERRORS => false,
+                    RequestOptions::QUERY => [
+                        'id' => 'EGLL',
+                    ],
+                ]
+            )
+            ->andReturn($mockResponse);
+
+        $service = new MetarService($mockClient);
+        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
+    }
+
+    public function testItCachesMetars()
+    {
+        $mockResponse = new Response(200, [], 'EGLL 02012KT Q1014');
+
+        $mockClient = Mockery::mock(Client::class);
+        $mockClient->shouldReceive('get')
+            ->once()
+            ->with(
+                env('VATSIM_METAR_URL'),
+                [
+                    RequestOptions::ALLOW_REDIRECTS => true,
+                    RequestOptions::HTTP_ERRORS => false,
+                    RequestOptions::QUERY => [
+                        'id' => 'EGLL',
+                    ],
+                ]
+            )
+            ->andReturn($mockResponse);
+
+        $service = new MetarService($mockClient);
+        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
+        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
     }
 }
