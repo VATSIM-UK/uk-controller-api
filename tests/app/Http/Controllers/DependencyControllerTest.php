@@ -54,16 +54,16 @@ class DependencyControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'dependency')
             ->assertJson(
                 [
-                'manifest' => [
-                'test1.json' => [
-                    'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test1.json',
-                    'md5' => md5('test1'),
-                ],
-                'test2.json' => [
-                    'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test2.json',
-                    'md5' => md5('test2'),
-                ],
-                ]
+                    'manifest' => [
+                        'test1.json' => [
+                            'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test1.json',
+                            'md5' => md5('test1'),
+                        ],
+                        'test2.json' => [
+                            'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test2.json',
+                            'md5' => md5('test2'),
+                        ],
+                    ]
                 ]
             )
             ->assertStatus(200);

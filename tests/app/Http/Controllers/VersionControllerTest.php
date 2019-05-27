@@ -22,8 +22,8 @@ class VersionControllerTest extends BaseApiTestCase
 
     public function testGetVersionStatusDoesNotAcceptPost()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'version/1.0.0/status');
-        $this->assertEquals(405, $this->response->getStatusCode());
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'version/1.0.0/status')
+            ->assertStatus(405);
     }
 
     public function testGetVersionStatusRejectsTokensWithoutUserScope()

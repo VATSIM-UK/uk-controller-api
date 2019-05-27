@@ -19,6 +19,7 @@ class ManifestServiceTest extends BaseUnitTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(ManifestService::class);
+        $this->artisan('cache:clear');
     }
 
     public function testItConstructs()
@@ -217,9 +218,9 @@ class ManifestServiceTest extends BaseUnitTestCase
     {
         $this->expectException(Exception::class);
         Storage::shouldReceive('disk')
-        ->zeroOrMoreTimes()
-        ->with('local')
-        ->andThrow(new Exception);
+            ->zeroOrMoreTimes()
+            ->with('local')
+            ->andThrow(new Exception);
 
         $this->service->getManifest('local', 'dependencies', true);
     }

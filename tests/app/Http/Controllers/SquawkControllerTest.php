@@ -13,8 +13,8 @@ class SquawkControllerTest extends BaseApiTestCase
 
     public function testAssignGeneralSquawkDoesNotAcceptPost()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'squawk-assignment/BAW123');
-        $this->assertEquals(405, $this->response->getStatusCode());
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'squawk-assignment/BAW123')
+            ->assertStatus(405);
     }
 
     public function testGetAssignmentRejectsTokensWithoutUserScope()

@@ -180,7 +180,7 @@ class HoldControllerTest extends BaseApiTestCase
     public function testCreateUserHoldCreatesProfile()
     {
         Carbon::setTestNow(Carbon::now());
-        $this->makeAuthenticatedApiRequest(
+        $testResponse = $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
             'hold/profile',
             [
@@ -189,7 +189,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         );
 
-        $profileId = json_decode($this->response->getContent(), true)['id'];
+        $profileId = json_decode($testResponse->getContent(), true)['id'];
         $this->assertDatabaseHas(
             'hold_profile',
             [
