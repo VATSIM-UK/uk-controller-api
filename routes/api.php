@@ -1,12 +1,13 @@
 <?php
 
 use App\Providers\AuthServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 // Routes that the average user will use
-$router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], function () use ($router) {
+Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function () {
 
     // Default route, just used to check if the API is available and the user is authenticated
-    $router->get(
+    Route::get(
         '/',
         [
             'middleware' => [
@@ -17,7 +18,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
     );
     
     // Version checking
-    $router->get(
+    Route::get(
         'version/{version:[A-Za-z0-9\.\-]+}/status',
         [
             'middleware' => [
@@ -28,41 +29,41 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER], fu
     );
 
     // Holds
-    $router->get('hold', 'HoldController@getAllHolds');
-    $router->get('hold/profile', 'HoldController@getUserHoldProfiles');
-    $router->put('hold/profile', 'HoldController@createUserHoldProfile');
-    $router->put('hold/profile/{profile_id:\d+}', 'HoldController@updateUserHoldProfile');
-    $router->delete('hold/profile/{profile_id:\d+}', 'HoldController@deleteUserHoldProfile');
+    Route::get('hold', 'HoldController@getAllHolds');
+    Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
+    Route::put('hold/profile', 'HoldController@createUserHoldProfile');
+    Route::put('hold/profile/{profile_id:\d+}', 'HoldController@updateUserHoldProfile');
+    Route::delete('hold/profile/{profile_id:\d+}', 'HoldController@deleteUserHoldProfile');
 
     // Dependencies
-    $router->get('dependency', 'DependencyController@getManifest');
+    Route::get('dependency', 'DependencyController@getManifest');
     
     // Squawks
-    $router->get('squawk-assignment/{callsign:[A-Za-z0-9\-]{1,10}}', 'SquawkController@getSquawkAssignment');
-    $router->put('squawk-assignment/{callsign:[A-Za-z0-9\-]{1,10}}', 'SquawkController@assignSquawk');
-    $router->delete('squawk-assignment/{callsign:[A-Za-z0-9\-]{1,10}}', 'SquawkController@deleteSquawkAssignment');
+    Route::get('squawk-assignment/{callsign:[A-Za-z0-9\-]{1,10}}', 'SquawkController@getSquawkAssignment');
+    Route::put('squawk-assignment/{callsign:[A-Za-z0-9\-]{1,10}}', 'SquawkController@assignSquawk');
+    Route::delete('squawk-assignment/{callsign:[A-Za-z0-9\-]{1,10}}', 'SquawkController@deleteSquawkAssignment');
     
     // Regional Pressure
-    $router->get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
+    Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
 
     // Min Stack Levels
-    $router->get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
-    $router->get('msl/tma', 'MinStackController@getTmaMinStackLevels');
-    $router->get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield');
-    $router->get('msl/tma/{tma}', 'MinStackController@getMslForTma');
+    Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
+    Route::get('msl/tma', 'MinStackController@getTmaMinStackLevels');
+    Route::get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield');
+    Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma');
 
     // Broadcasting
-    $router->post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
+    Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
 });
 
 // Routes for user administration
-$router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMIN], function () use ($router) {
+Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER_ADMIN])->group(function () {
 
     // A test route for useradmin access
-    $router->get('useradmin', 'TeapotController@teapot');
+    Route::get('useradmin', 'TeapotController@teapot');
 
     // Get user
-    $router->get(
+    Route::get(
         'user/{cid:[0-9]+}',
         [
             'middleware' => 'vatsim.cid',
@@ -71,7 +72,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMI
     );
 
     // Create user
-    $router->post(
+    Route::post(
         'user/{cid:[0-9]+}',
         [
             'middleware' => 'vatsim.cid',
@@ -80,7 +81,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMI
     );
 
     // Reactivate user account
-    $router->put(
+    Route::put(
         'user/{cid:[0-9]+}/reactivate',
         [
             'middleware' => 'vatsim.cid',
@@ -89,7 +90,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMI
     );
 
     // Ban user account
-    $router->put(
+    Route::put(
         'user/{cid:[0-9]+}/ban',
         [
             'middleware' => 'vatsim.cid',
@@ -98,7 +99,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMI
     );
 
     // Disable user account
-    $router->put(
+    Route::put(
         'user/{cid:[0-9]+}/disable',
         [
             'middleware' => 'vatsim.cid',
@@ -107,7 +108,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMI
     );
 
     // Create user token
-    $router->post(
+    Route::post(
         'user/{cid:[0-9]+}/token',
         [
             'middleware' => 'vatsim.cid',
@@ -116,7 +117,7 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMI
     );
 
     // Delete user token
-    $router->delete(
+    Route::delete(
         'token/{tokenId}',
         [
             'uses' => 'UserController@deleteUserToken',
@@ -128,12 +129,12 @@ $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_USER_ADMI
 $router->group(['middleware' => 'scopes:' . AuthServiceProvider::SCOPE_VERSION_ADMIN], function () use ($router) {
 
         // A test route for useradmin access
-    $router->get('versionadmin', 'TeapotController@teapot');
+    Route::get('versionadmin', 'TeapotController@teapot');
 
     // Routes for returning information about versions
-    $router->get('version', 'VersionController@getAllVersions');
-    $router->get('version/{version:[A-Za-z0-9\.\-]+}', 'VersionController@getVersion');
+    Route::get('version', 'VersionController@getAllVersions');
+    Route::get('version/{version:[A-Za-z0-9\.\-]+}', 'VersionController@getVersion');
 
     // Route for updating and creating versions
-    $router->put('version/{version:[A-Za-z0-9\.\-]+}', 'VersionController@createOrUpdateVersion');
+    Route::put('version/{version:[A-Za-z0-9\.\-]+}', 'VersionController@createOrUpdateVersion');
 });
