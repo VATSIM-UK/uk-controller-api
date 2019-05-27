@@ -28,7 +28,7 @@ class RecordSquawkAllocationHistoryTest extends BaseFunctionalTestCase
 
     public function testItCreatesAnAllocationHistory()
     {
-        $this->notSeeInDatabase('squawk_allocation_history', ['callsign' => 'NAX5XX']);
+        $this->assertDatabaseMissing('squawk_allocation_history', ['callsign' => 'NAX5XX']);
         $allocation = Allocation::create(
             [
                 'callsign' => 'NAX5XX',
@@ -39,7 +39,7 @@ class RecordSquawkAllocationHistoryTest extends BaseFunctionalTestCase
         );
         $this->listener->handle(new SquawkAllocationEvent($allocation));
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'squawk_allocation_history',
             [
                 'callsign' => $allocation->callsign,

@@ -31,7 +31,7 @@ class TeapotControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItSetsUsersLastLogin()

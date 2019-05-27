@@ -21,14 +21,14 @@ class SquawkControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'squawk-assignment/BAW123')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testCreateAssignmentRejectsTokensWithoutUserScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'squawk-assignment/BAW123')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItRejectGetAssignmentRequestsWithMissingCallsigns()

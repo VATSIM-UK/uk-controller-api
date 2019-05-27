@@ -39,7 +39,7 @@ class SquawkGeneralTest extends BaseFunctionalTestCase
                 'squawk_range_owner_id' => $this->rangeOwner->id
             ]
         );
-        $this->seeInDatabase($model->getTable(), ['id' => $model->id]);
+        $this->assertDatabaseHas($model->getTable(), ['id' => $model->id]);
     }
 
     public function testItHasOneRangeOwner()

@@ -30,7 +30,7 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/1.0.0/status')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testGetVersionStatusFailsIfVersionInvalid()
@@ -66,7 +66,7 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItFindsAllVersions()
@@ -103,7 +103,7 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'version/9.0.0', [])
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testCreateUpdateVersionFailsIfMissingAllowable()
@@ -112,7 +112,7 @@ class VersionControllerTest extends BaseApiTestCase
             self::METHOD_PUT,
             'version/9.0.0',
             []
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testCreateUpdateVersionReturnsCreatedOnNewVersion()
@@ -123,7 +123,7 @@ class VersionControllerTest extends BaseApiTestCase
             [
                 'allowed' => true,
             ]
-        )->seeStatusCode(201);
+        )->assertStatus(201);
     }
 
     public function testCreateUpdateVersionReturnsUpdatedOnUpdatedVersion()
@@ -134,7 +134,7 @@ class VersionControllerTest extends BaseApiTestCase
             [
                 'allowed' => false,
             ]
-        )->seeStatusCode(204);
+        )->assertStatus(204);
     }
 
     public function testCreateUpdateVersionReturnsUpdateModifiesVersion()
@@ -154,7 +154,7 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/9.0.0', [])
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     

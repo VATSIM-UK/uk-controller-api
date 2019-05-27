@@ -15,7 +15,7 @@ class DependencyControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'dependency')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItReturnsAManifest()
@@ -66,6 +66,6 @@ class DependencyControllerTest extends BaseApiTestCase
                 ]
                 ]
             )
-            ->seeStatusCode(200);
+            ->assertStatus(200);
     }
 }

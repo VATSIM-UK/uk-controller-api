@@ -15,7 +15,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItReturns200OnHoldDataSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->seeStatusCode(200);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->assertStatus(200);
     }
 
     public function testItReturnsHoldData()
@@ -62,12 +62,12 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItReturns200OnGenericHoldProfileSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeStatusCode(200);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->assertStatus(200);
     }
 
     public function testItReturns200OnUserHoldProfileSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->seeStatusCode(200);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->assertStatus(200);
     }
 
     public function testItReturnsUserHoldProfiles()
@@ -85,19 +85,19 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testDeleteUserHoldProfilesReturnsNoContent()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/1')->seeStatusCode(204);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/1')->assertStatus(204);
     }
 
     public function testDeleteUserHoldProfilesDeletesTheHoldProfile()
     {
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile',
             [
                 'id' => 1,
             ]
         );
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/profile/1');
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'hold_profile',
             [
                 'id' => 1,
@@ -113,7 +113,7 @@ class HoldControllerTest extends BaseApiTestCase
             [
                 'holds' => [1, 2],
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testCreateUserHoldProfileReturns400NameNotAString()
@@ -125,7 +125,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'name' => 123,
                 'holds' => [1, 2],
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testCreateUserHoldProfileReturns400NoHolds()
@@ -136,7 +136,7 @@ class HoldControllerTest extends BaseApiTestCase
             [
                 'name' => 'Newly Created Profile',
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testCreateUserHoldProfileReturns400HoldsNotAnArray()
@@ -148,7 +148,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'name' => 'Newly Created Profile',
                 'holds' => 123,
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testCreateUserHoldProfileReturns400HoldsNonNumeric()
@@ -160,7 +160,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'name' => 'Newly Created Profile',
                 'holds' => ['abc', 1, 2, 3],
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testCreateUserHoldProfileReturnsResponse()
@@ -174,7 +174,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         )
             ->seeJson(['id' => HoldProfile::orderBy('id', 'DESC')->get()->first()->id])
-            ->seeStatusCode(201);
+            ->assertStatus(201);
     }
 
     public function testCreateUserHoldCreatesProfile()
@@ -190,7 +190,7 @@ class HoldControllerTest extends BaseApiTestCase
         );
 
         $profileId = json_decode($this->response->getContent(), true)['id'];
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile',
             [
                 'id' => $profileId,
@@ -200,7 +200,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile_hold',
             [
                 'hold_profile_id' => $profileId,
@@ -208,7 +208,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile_hold',
             [
                 'hold_profile_id' => $profileId,
@@ -225,7 +225,7 @@ class HoldControllerTest extends BaseApiTestCase
             [
                 'holds' => [1, 2],
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testUpdateUserHoldProfileReturns400NameNotAString()
@@ -237,7 +237,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'name' => 123,
                 'holds' => [1, 2],
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testUpdateUserHoldProfileReturns400NoHolds()
@@ -248,7 +248,7 @@ class HoldControllerTest extends BaseApiTestCase
             [
                 'name' => 'Newly Created Profile',
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testUpdateUserHoldProfileReturns400HoldsNotAnArray()
@@ -260,7 +260,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'name' => 'Newly Created Profile',
                 'holds' => 123,
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testUpdateUserHoldProfileReturns400HoldsNonNumeric()
@@ -272,7 +272,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'name' => 'Newly Created Profile',
                 'holds' => ['abc', 1, 2, 3],
             ]
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testUpdateUserHoldProfileReturnsResponse()
@@ -285,7 +285,7 @@ class HoldControllerTest extends BaseApiTestCase
                 'holds' => [1],
             ]
         )
-            ->seeStatusCode(204);
+            ->assertStatus(204);
     }
 
     public function testUpdateUserHoldUpdatesProfile()
@@ -300,7 +300,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile',
             [
                 'id' => 1,
@@ -310,7 +310,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile_hold',
             [
                 'hold_profile_id' => 1,
@@ -318,7 +318,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         );
 
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'hold_profile_hold',
             [
                 'hold_profile_id' => 1,

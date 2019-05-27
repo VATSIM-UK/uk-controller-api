@@ -29,7 +29,7 @@ class SquawkAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testCreateOrUpdateAllocationCreatesAnAllocation()
     {
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'squawk_allocation',
             [
                 'callsign' => 'BAW123AF',
@@ -42,7 +42,7 @@ class SquawkAllocationServiceTest extends BaseFunctionalTestCase
             '1234'
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'squawk_allocation',
             [
                 'callsign' => 'BAW123AF',
@@ -55,7 +55,7 @@ class SquawkAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testCreateOrUpdateAllocationReturnsCreatedAllocation()
     {
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'squawk_allocation',
             [
                 'callsign' => 'BAW123AF',
@@ -87,7 +87,7 @@ class SquawkAllocationServiceTest extends BaseFunctionalTestCase
             '1234'
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'squawk_allocation',
             [
                 'callsign' => 'BAW123AF',
@@ -126,7 +126,7 @@ class SquawkAllocationServiceTest extends BaseFunctionalTestCase
             '1234'
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'squawk_allocation_history',
             [
                 'callsign' => 'BAW123AF',
@@ -140,10 +140,10 @@ class SquawkAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testDeleteOldHistoryDeletesAnythingOlderThanAllowedNumberOfMonths()
     {
-        $this->seeInDatabase('squawk_allocation_history', ['callsign' => 'NAX123']);
-        $this->seeInDatabase('squawk_allocation_history', ['callsign' => 'NAX456']);
+        $this->assertDatabaseHas('squawk_allocation_history', ['callsign' => 'NAX123']);
+        $this->assertDatabaseHas('squawk_allocation_history', ['callsign' => 'NAX456']);
         $this->service->deleteOldAuditHistory();
-        $this->seeInDatabase('squawk_allocation_history', ['callsign' => 'NAX123']);
-        $this->notSeeInDatabase('squawk_allocation_history', ['callsign' => 'NAX456']);
+        $this->assertDatabaseHas('squawk_allocation_history', ['callsign' => 'NAX123']);
+        $this->assertDatabaseMissing('squawk_allocation_history', ['callsign' => 'NAX456']);
     }
 }

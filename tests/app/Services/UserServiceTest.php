@@ -42,13 +42,13 @@ class UserServiceTest extends BaseFunctionalTestCase
     public function testItCreatesANewActiveUser()
     {
         $this->service->createUser(1402313);
-        $this->seeInDatabase('user', ['id' => 1402313, 'status' => UserStatus::ACTIVE]);
+        $this->assertDatabaseHas('user', ['id' => 1402313, 'status' => UserStatus::ACTIVE]);
     }
 
     public function testItCreatesAnAccessToken()
     {
         $this->service->createUser(1402313);
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 1402313,
@@ -70,13 +70,13 @@ class UserServiceTest extends BaseFunctionalTestCase
     public function testTheCreatedTokenWorks()
     {
         $accessToken = $this->service->createUser(1402313)->apiKey();
-        $this->get('/', ['Authorization' => 'Bearer ' . $accessToken])->seeStatusCode(418);
+        $this->get('/', ['Authorization' => 'Bearer ' . $accessToken])->assertStatus(418);
     }
 
     public function testItCreatesAnAdminUser()
     {
         $this->service->createAdminUser();
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 2,
@@ -90,7 +90,7 @@ class UserServiceTest extends BaseFunctionalTestCase
     {
         $this->service->createAdminUser();
         $this->service->createAdminUser();
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 3,
@@ -103,13 +103,13 @@ class UserServiceTest extends BaseFunctionalTestCase
     public function testItCreatesAnAdminAccessToken()
     {
         $accessToken = $this->service->createAdminUser();
-        $this->get('/useradmin', ['Authorization' => 'Bearer ' . $accessToken])->seeStatusCode(418);
+        $this->get('/useradmin', ['Authorization' => 'Bearer ' . $accessToken])->assertStatus(418);
     }
 
     public function testItAVersionAdminAccessToken()
     {
         $accessToken = $this->service->createAdminUser();
-        $this->get('/versionadmin', ['Authorization' => 'Bearer ' . $accessToken])->seeStatusCode(418);
+        $this->get('/versionadmin', ['Authorization' => 'Bearer ' . $accessToken])->assertStatus(418);
     }
 
     public function testBanUserThrowsExceptionIfUserDoesntExist()

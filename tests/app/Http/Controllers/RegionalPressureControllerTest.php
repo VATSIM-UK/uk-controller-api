@@ -18,7 +18,7 @@ class RegionalPressureControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'regional-pressure')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItReturnsCachedPressures()
@@ -36,7 +36,7 @@ class RegionalPressureControllerTest extends BaseApiTestCase
                     ],
                 ]
             )
-            ->seeStatusCode(200);
+            ->assertStatus(200);
     }
 
     public function testItReturnsFailureOnNonCachedPressures()
@@ -52,11 +52,11 @@ class RegionalPressureControllerTest extends BaseApiTestCase
                 'data' => [],
                 ]
             )
-            ->seeStatusCode(503);
+            ->assertStatus(503);
     }
 
     public function testItDoesntAcceptPost()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'regional-pressure')->seeStatusCode(405);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'regional-pressure')->assertStatus(405);
     }
 }
