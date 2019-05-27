@@ -12,6 +12,10 @@ use SimpleXMLElement;
 
 class RegionalPressureServiceTest extends BaseUnitTestCase
 {
+    /**
+     * @var MetarService
+     */
+    private $metarService;
 
     /**
      * Convert an array to XML for utils purposes.
@@ -36,9 +40,15 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         }
     }
 
+    public function setUp() : void
+    {
+        parent::setUp();
+        $this->metarService = new MetarService(new Client());
+    }
+
     public function testItConstructs()
     {
-        $service = new RegionalPressureService(new Client(), 'http://test.com', new MetarService(), []);
+        $service = new RegionalPressureService(new Client(), 'http://test.com', $this->metarService, []);
         $this->assertInstanceOf(RegionalPressureService::class, $service);
     }
 
@@ -53,7 +63,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $client = new Client(['handler' => $handler]);
 
 
-        $service = new RegionalPressureService($client, 'http://test.com', new MetarService(), []);
+        $service = new RegionalPressureService($client, 'http://test.com', $this->metarService, []);
         $this->assertFalse($service->generateRegionalPressures());
         $this->assertEquals($service->getLastError(), $service::ERROR_REQUEST_FAILED);
     }
@@ -69,7 +79,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $client = new Client(['handler' => $handler]);
 
 
-        $service = new RegionalPressureService($client, 'http://test.com', new MetarService(), []);
+        $service = new RegionalPressureService($client, 'http://test.com', $this->metarService, []);
         $this->assertFalse($service->generateRegionalPressures());
         $this->assertEquals($service->getLastError(), $service::ERROR_INVALID_XML);
     }
@@ -95,7 +105,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $client = new Client(['handler' => $handler]);
 
 
-        $service = new RegionalPressureService($client, 'http://test.com', new MetarService(), []);
+        $service = new RegionalPressureService($client, 'http://test.com', $this->metarService, []);
 
         Cache::shouldReceive('forever')
             ->once()
@@ -128,7 +138,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $service = new RegionalPressureService(
             $client,
             'http://test.com',
-            new MetarService(),
+            $this->metarService,
             [
                 new AltimeterSettingRegion('Bobbington', 0, ['EGLL', 'EGGD']),
                 new AltimeterSettingRegion('Toppington', 0, ['EGFF', 'EGKK']),
@@ -169,7 +179,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $service = new RegionalPressureService(
             $client,
             'http://test.com',
-            new MetarService(),
+            $this->metarService,
             [
                 new AltimeterSettingRegion('Toppington', 0, ['EGKK']),
             ]
@@ -191,7 +201,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $service = new RegionalPressureService(
             new Client(),
             'http://test.com',
-            new MetarService(),
+            $this->metarService,
             []
         );
 
@@ -208,7 +218,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $service = new RegionalPressureService(
             new Client(),
             'http://test.com',
-            new MetarService(),
+            $this->metarService,
             []
         );
 

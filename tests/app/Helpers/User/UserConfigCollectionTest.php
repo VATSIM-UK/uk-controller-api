@@ -21,7 +21,7 @@ class UserConfigCollectionTest extends BaseUnitTestCase
      */
     private $configs;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->configs = [

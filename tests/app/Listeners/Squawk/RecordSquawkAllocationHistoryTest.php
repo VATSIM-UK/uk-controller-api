@@ -15,7 +15,7 @@ class RecordSquawkAllocationHistoryTest extends BaseFunctionalTestCase
      */
     private $listener;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->listener = $this->app->make(RecordSquawkAllocationHistory::class);

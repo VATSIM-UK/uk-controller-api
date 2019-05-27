@@ -13,7 +13,7 @@ class AuthServiceProviderTest extends BaseFunctionalTestCase
      */
     private $provider;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->provider = new AuthServiceProvider($this->app);

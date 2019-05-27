@@ -13,7 +13,7 @@ class UserControllerTest extends BaseApiTestCase
         AuthServiceProvider::SCOPE_USER_ADMIN,
     ];
 
-    protected static $tokenUser = 0;
+    protected static $tokenUser = 1;
 
     public function testItConstructs()
     {

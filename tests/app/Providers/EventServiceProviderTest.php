@@ -13,7 +13,7 @@ class EventServiceProviderTest extends BaseUnitTestCase
      */
     private $provider;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->provider = $this->app->make(EventServiceProvider::class);

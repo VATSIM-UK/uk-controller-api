@@ -68,16 +68,4 @@ class DependencyControllerTest extends BaseApiTestCase
             )
             ->seeStatusCode(200);
     }
-
-    public function testItReturnsErrorIfEnvironmentNotSet()
-    {
-        putenv('DEPENDENCY_PUBLIC_FOLDER=');
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'dependency')
-            ->seeJson(
-                [
-                'message' => 'Dependencies are not currently available',
-                ]
-            )
-            ->seeStatusCode(503);
-    }
 }

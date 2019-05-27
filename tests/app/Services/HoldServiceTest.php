@@ -16,7 +16,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
      */
     private $holdService;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->holdService = $this->app->make(HoldService::class);
