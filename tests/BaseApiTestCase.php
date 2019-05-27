@@ -4,7 +4,7 @@ namespace App;
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
 use InvalidArgumentException;
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use UserTableSeeder;
 
 abstract class BaseApiTestCase extends BaseTestCase
