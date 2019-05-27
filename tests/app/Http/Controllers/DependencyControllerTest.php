@@ -52,7 +52,7 @@ class DependencyControllerTest extends BaseApiTestCase
             ->andReturn("test2");
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'dependency')
-            ->seeJson(
+            ->assertJson(
                 [
                 'manifest' => [
                 'test1.json' => [

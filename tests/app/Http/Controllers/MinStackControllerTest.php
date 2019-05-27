@@ -13,7 +13,7 @@ class MinStackControllerTest extends BaseApiTestCase
             'EGLL' => 7000,
         ];
 
-        $response->seeJson($expected)->assertStatus(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturnsAllTmaMinStacks()
@@ -23,7 +23,7 @@ class MinStackControllerTest extends BaseApiTestCase
             'MTMA' => 6000,
         ];
 
-        $response->seeJson($expected)->assertStatus(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturnsMinStackForAirfield()
@@ -33,7 +33,7 @@ class MinStackControllerTest extends BaseApiTestCase
             'msl' => 7000,
         ];
 
-        $response->seeJson($expected)->assertStatus(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturns404IfAirfieldMslNotFound()
@@ -49,7 +49,7 @@ class MinStackControllerTest extends BaseApiTestCase
             'msl' => 6000,
         ];
 
-        $response->seeJson($expected)->assertStatus(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturns404IfTmaMslNotFound()

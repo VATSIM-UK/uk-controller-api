@@ -19,12 +19,12 @@ class TeapotControllerTest extends BaseApiTestCase
     public function testItAcceptsGet()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/')
-            ->seeJson(
+            ->assertJson(
                 [
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
-            ->assertResponseStatus(418);
+            ->assertStatus(418);
     }
 
     public function testGetAssignmentRejectsTokensWithoutUserScope()
@@ -43,16 +43,16 @@ class TeapotControllerTest extends BaseApiTestCase
 
     public function testItDoesntAcceptPut()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, '/')->assertResponseStatus(405);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, '/')->assertStatus(405);
     }
 
     public function testItDoesntAcceptPatch()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, '/')->assertResponseStatus(405);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, '/')->assertStatus(405);
     }
 
     public function testItDoesntAcceptDelete()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, '/')->assertResponseStatus(405);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, '/')->assertStatus(405);
     }
 }

@@ -17,13 +17,13 @@ class AuthenticateTest extends BaseApiTestCase
 
     public function testItRejectsUsersWithNoKey()
     {
-        $this->json('GET', '/')->assertResponseStatus(401);
+        $this->json('GET', '/')->assertStatus(401);
     }
 
     public function testItRejectsUsersWithInvalidKey()
     {
         $this->json('GET', '/', [], ['Authorization' => 'nope'])
-            ->assertResponseStatus(403);
+            ->assertStatus(403);
     }
 
     public function testItAllowsActiveUsersWithValidKey()
@@ -35,11 +35,11 @@ class AuthenticateTest extends BaseApiTestCase
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
-            ->assertResponseStatus(418);
+            ->assertStatus(418);
     }
 }

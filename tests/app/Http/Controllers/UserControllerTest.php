@@ -29,7 +29,7 @@ class UserControllerTest extends BaseApiTestCase
 
     public function testCreateUserReturnsTheCorrectJsonStructure()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203532')->seeJsonStructure(
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203532')->assertJsonStructure(
             [
                 'api-url',
                 'api-key',
@@ -81,7 +81,7 @@ class UserControllerTest extends BaseApiTestCase
     public function testItReturnsAUser()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533')
-        ->seeJsonStructure(
+        ->assertJsonStructure(
             [
                 'id',
                 'status',
@@ -100,7 +100,7 @@ class UserControllerTest extends BaseApiTestCase
     public function testItReturnsAUserToken()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203533/token')
-            ->seeJsonStructure(
+            ->assertJsonStructure(
                 [
                     'api-key',
                     'api-url',

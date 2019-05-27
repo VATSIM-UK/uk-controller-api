@@ -29,7 +29,7 @@ class RegionalPressureControllerTest extends BaseApiTestCase
             ->andReturn(['Toddington' => 1011]);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'regional-pressure')
-            ->seeJson(
+            ->assertJson(
                 [
                     'data' => [
                         'Toddington' => 1011,
@@ -47,7 +47,7 @@ class RegionalPressureControllerTest extends BaseApiTestCase
             ->andReturn([]);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'regional-pressure')
-            ->seeJson(
+            ->assertJson(
                 [
                 'data' => [],
                 ]
