@@ -56,10 +56,6 @@ $app->bind(
     }
 );
 
-$app->bind(\App\Services\SquawkService::class, function ($app) {
-    return new \App\Services\SquawkService();
-});
-
 $app->bind(
     \App\Services\VersionService::class,
     function ($app) {
