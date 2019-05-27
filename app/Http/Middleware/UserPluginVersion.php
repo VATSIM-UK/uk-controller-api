@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Models\Version\Version;
-use Auth;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * A class to track the latest version of the plugin that the user
