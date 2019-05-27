@@ -55,9 +55,9 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
     Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
     Route::get('msl/tma', 'MinStackController@getTmaMinStackLevels');
     Route::get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield')
-        ->where('icao', ['[A-Z]{4}']);
+        ->where('icao', '[A-Z]{4}');
     Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
-        ->where('tma', ['[A-Z]{4}']);
+        ->where('tma', '[A-Z]{4}');
 
     // Broadcasting
     Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
