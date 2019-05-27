@@ -24,7 +24,7 @@ class UserIsDisabled
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        if ($request->user()->accountStatus->disabled) {
+        if (auth()->user()->accountStatus->disabled) {
             Log::info(
                 'Disabled user ' . $request->user()->id . " attempted access but was blocked.",
                 [
