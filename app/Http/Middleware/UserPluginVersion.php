@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Auth;
  */
 class UserPluginVersion
 {
-    use UsesRouteParameters;
-
     /**
      * Handles the request
      *
@@ -26,7 +24,7 @@ class UserPluginVersion
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        $version = Version::where('version', '=', $this->getRouteParameter($request, 'version'))->first();
+        $version = Version::where('version', '=', $request->route('version'))->first();
 
         if ($version !== null) {
             Auth::user()->setLastVersion($version->id);
