@@ -165,7 +165,6 @@ return [
         /*
          * Package Service Providers...
          */
-        Illuminate\Redis\RedisServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
 

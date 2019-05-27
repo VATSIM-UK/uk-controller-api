@@ -8,8 +8,6 @@ use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    protected $defer = true;
-
     // Scopes
     const SCOPE_USER = 'user';
     const SCOPE_USER_ADMIN = 'user-admin';
@@ -21,11 +19,6 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_VERSION_ADMIN => 'Can perform plugin version administration functions',
     ];
 
-    public function __construct($app)
-    {
-        parent::__construct($app);
-    }
-
     /**
      * Register services.
      *
@@ -33,7 +26,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
     }
 
     /**
@@ -43,7 +36,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        dd('HIT AUTH SERVICE PROVIDER');
         $this->registerPolicies();
         Passport::tokensExpireIn(Carbon::now()->addYear());
         Passport::tokensCan(self::AUTH_SCOPES);
