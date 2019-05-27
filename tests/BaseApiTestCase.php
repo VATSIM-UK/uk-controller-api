@@ -3,6 +3,7 @@ namespace App;
 
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
+use Illuminate\Foundation\Testing\TestResponse;
 use InvalidArgumentException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use UserTableSeeder;
@@ -68,7 +69,7 @@ abstract class BaseApiTestCase extends BaseTestCase
      * @param  string $method HTTP verb to use
      * @param  string $route  API route to use
      * @param  array  $data   Array to pass as JSON
-     * @return $this
+     * @return TestResponse
      */
     protected function makeAuthenticatedApiRequest(string $method, string $route, array $data = [])
     {

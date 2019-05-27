@@ -57,7 +57,7 @@ class HoldControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->assertJsonEquals($expected);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->assertJson($expected);
     }
 
     public function testItReturns200OnGenericHoldProfileSuccess()
@@ -80,7 +80,7 @@ class HoldControllerTest extends BaseApiTestCase
             ]
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->assertJsonEquals($expected);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold/profile')->assertJson($expected);
     }
 
     public function testDeleteUserHoldProfilesReturnsNoContent()

@@ -42,7 +42,7 @@ class VersionControllerTest extends BaseApiTestCase
     public function testGetVersionStatusResponseValid()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.1/status')
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'update_available' => false,
                     'version_disabled' => false,
@@ -53,7 +53,7 @@ class VersionControllerTest extends BaseApiTestCase
     public function testItSetsUserVersionInformation()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.1/status')
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'update_available' => false,
                     'version_disabled' => false,
@@ -72,7 +72,7 @@ class VersionControllerTest extends BaseApiTestCase
     public function testItFindsAllVersions()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version')
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     [
                         'id' => 1,
@@ -161,7 +161,7 @@ class VersionControllerTest extends BaseApiTestCase
     public function testItFindsAVersion()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/1.0.0')
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'id' => 1,
                     'version' => '1.0.0',

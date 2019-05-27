@@ -53,7 +53,7 @@ class SquawkControllerTest extends BaseApiTestCase
             self::METHOD_GET,
             'squawk-assignment/BAW123'
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'squawk' => '4723',
                 ]
@@ -66,7 +66,7 @@ class SquawkControllerTest extends BaseApiTestCase
             self::METHOD_GET,
             'squawk-assignment/BAW12AZ'
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Squawk assignment not found for BAW12AZ',
                 ]
@@ -80,7 +80,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['origin' => 'EGLL', 'destination' => 'LFPG']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -95,7 +95,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'special', 'origin' => 'EGLL', 'destination' => 'LFPG']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -109,7 +109,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'notOrigin' => 'EGLL', 'destination' => 'LFPG']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -123,7 +123,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'origin' => 'EGLL', 'notdestination' => 'LFPG']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -137,7 +137,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'origin' => 'EGLL', 'destination' => '1234']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -151,7 +151,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'origin' => '1234', 'destination' => 'EGKK']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -221,7 +221,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'notUnit' => 'EGLL', 'rules' => 'I']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -235,7 +235,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGLL', 'notrules' => 'I']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -249,7 +249,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGLL', 'rules' => 'X']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -263,7 +263,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGLL', 'rules' => 'A']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
@@ -277,7 +277,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW9AX',
             ['type' => 'local', 'unit' => 'EGKA', 'rules' => 'I']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'squawk' => '3762',
                 ]
@@ -291,7 +291,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGKA', 'rules' => 'I']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'squawk' => '3762',
                 ]
@@ -305,7 +305,7 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW9AX',
             ['type' => 'local', 'unit' => 'EGNA', 'rules' => 'I']
         )
-            ->assertJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Unable to allocate local squawk for BAW9AX',
                     'squawk' => SquawkController::FAILURE_SQUAWK,
