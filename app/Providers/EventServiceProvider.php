@@ -4,14 +4,14 @@ namespace App\Providers;
 
 use App\Events\SquawkAllocationEvent;
 use App\Listeners\Squawk\RecordSquawkAllocationHistory;
-use Laravel\Lumen\Application;
-use Laravel\Lumen\Providers\EventServiceProvider as BaseEventServiceProvider;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
  * Class EventServiceProvider
  * @package App\Providers
  */
-class EventServiceProvider extends BaseEventServiceProvider
+class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
         SquawkAllocationEvent::class => [

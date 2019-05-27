@@ -7,7 +7,7 @@ use App\Services\MetarService;
 use App\Services\RegionalPressureService;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Lumen\Application;
+use Illuminate\Foundation\Application;
 
 /**
  * Service Provider for regional pressure settings.

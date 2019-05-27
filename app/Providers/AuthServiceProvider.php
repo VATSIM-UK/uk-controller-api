@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Carbon;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
-use Carbon\Carbon;
 
-/**
- * Provides the authentication serivce and configures scopes.
- */
 class AuthServiceProvider extends ServiceProvider
 {
     protected $defer = true;
@@ -24,11 +21,30 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_VERSION_ADMIN => 'Can perform plugin version administration functions',
     ];
 
+    public function __construct($app)
+    {
+        parent::__construct($app);
+    }
+
     /**
-     * Sets up the token scopes
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
      */
     public function boot()
     {
+        dd('HIT AUTH SERVICE PROVIDER');
+        $this->registerPolicies();
         Passport::tokensExpireIn(Carbon::now()->addYear());
         Passport::tokensCan(self::AUTH_SCOPES);
     }

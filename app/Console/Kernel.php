@@ -10,7 +10,7 @@ use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
 use Illuminate\Console\Scheduling\Schedule;
-use Laravel\Lumen\Console\Kernel as ConsoleKernel;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
 use App\Console\Commands\DeleteUserTokens;
 use App\Console\Commands\CreateUserToken;
