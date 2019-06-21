@@ -170,4 +170,76 @@ class SidControllerTest extends BaseApiTestCase
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
     }
+
+    public function testItUpdatesASid()
+    {
+        $data = [
+            'id' => 1,
+            'identifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data);
+        $this->assertDatabaseHas('sid', $data);
+    }
+
+    public function testItReturnsOkOnSidUpdate()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(200);
+    }
+
+    public function testItFailsSidUpdateMissingIdentifier()
+    {
+        $data = [
+            'notidentifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidUpdateMissingAirfield()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'notairfield_id' => 1,
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidUpdateAirfieldIdNotInteger()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'airfield_id' => 'test',
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidUpdateMissingInitialAltitude()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'notinitial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidUpdateInitialAltitudeNotInteger()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'initial_altitude' => 'test',
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+    }
 }
