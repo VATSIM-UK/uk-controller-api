@@ -37,6 +37,23 @@ class SidService
     }
 
     /**
+     * @return array
+     */
+    public function getAllSids() : array
+    {
+        return Sid::all()->toArray();
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getSid(int $id) : array
+    {
+        return Sid::findOrFail($id)->toArray();
+    }
+
+    /**
      * @param int $sidId
      */
     public function deleteSid(int $sidId) : void

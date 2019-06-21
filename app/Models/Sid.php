@@ -19,6 +19,11 @@ class Sid extends Model
         'updated_at',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * @return HasOne
      */

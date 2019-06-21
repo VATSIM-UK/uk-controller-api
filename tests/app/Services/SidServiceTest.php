@@ -68,6 +68,43 @@ class SidServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->service->getInitialAltitudeDependency());
     }
 
+    public function testItGetsASid()
+    {
+        $expected = [
+            'id' => 1,
+            'identifier' => 'TEST1X',
+            'airfield_id' => 1,
+            'initial_altitude' => 3000,
+        ];
+        $this->assertEquals($expected, $this->service->getSid(1));
+    }
+
+    public function testItGetsAllSids()
+    {
+        $expected =
+            [
+                [
+                    'id' => 1,
+                    'identifier' => 'TEST1X',
+                    'airfield_id' => 1,
+                    'initial_altitude' => 3000,
+                ],
+                [
+                    'id' => 2,
+                    'identifier' => 'TEST1Y',
+                    'airfield_id' => 1,
+                    'initial_altitude' => 4000,
+                ],
+                [
+                    'id' => 3,
+                    'identifier' => 'TEST1A',
+                    'airfield_id' => 2,
+                    'initial_altitude' => 5000,
+                ],
+            ];
+        $this->assertEquals($expected, $this->service->getAllSids());
+    }
+
     public function testItDeletesSids()
     {
         $this->assertDatabaseHas('sid', ['id' => 1]);
@@ -90,7 +127,7 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'id' => 1,
                 'identifier' => 'TEST1M',
                 'initial_altitude' => 55000,
-                'airfield_id' => 2
+                'airfield_id' => 2,
             ]
         );
     }
