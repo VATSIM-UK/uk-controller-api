@@ -6,6 +6,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Laravel\Passport\HasApiTokens;
 
@@ -40,9 +41,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function accountStatus()
+    public function accountStatus() : HasOne
     {
         return $this->hasOne(UserStatus::class, 'id', 'status');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function admin() : HasOne
+    {
+        return $this->hasOne(Admin::class, 'user_id', 'id');
     }
 
     /**
