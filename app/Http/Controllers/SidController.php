@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\SidService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class SidController extends BaseController
 {
@@ -41,5 +42,23 @@ class SidController extends BaseController
     {
         $deleted = $this->sidService->deleteSid($id);
         return response()->json(null, $deleted ? 204 : 404);
+    }
+
+    public function createSid(Request $request) : JsonResponse
+    {
+        $expectedData = [
+            'airfield_id' => 'integer',
+            'identifier' => 'string',
+            'initial_altitude' => 'integer',
+        ];
+
+        $this->checkForSuppliedData($request, $expectedData);
+        $this->sidService->createSid(
+            $request->json('airfield_id'),
+            $request->json('identifier'),
+            $request->json('initial_altitude')
+        );
+
+        return response()->json(null, 201);
     }
 }
