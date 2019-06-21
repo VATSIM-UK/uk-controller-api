@@ -47,12 +47,16 @@ class SidController extends BaseController
     public function createSid(Request $request) : JsonResponse
     {
         $expectedData = [
-            'airfield_id' => 'integer',
-            'identifier' => 'string',
-            'initial_altitude' => 'integer',
+            'airfield_id' => 'integer|required',
+            'identifier' => 'string|required',
+            'initial_altitude' => 'integer|required',
         ];
 
-        $this->checkForSuppliedData($request, $expectedData);
+        $badDataResponse = $this->checkForSuppliedData($request, $expectedData);
+        if ($badDataResponse) {
+            return $badDataResponse;
+        }
+
         $this->sidService->createSid(
             $request->json('airfield_id'),
             $request->json('identifier'),

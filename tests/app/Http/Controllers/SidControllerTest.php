@@ -120,4 +120,54 @@ class SidControllerTest extends BaseApiTestCase
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(201);
     }
+
+    public function testItFailsSidCreationMissingIdentifier()
+    {
+        $data = [
+            'notidentifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidCreationMissingAirfield()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'notairfield_id' => 1,
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidCreationAirfieldIdNotInteger()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'airfield_id' => 'test',
+            'initial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidCreationMissingInitialAltitude()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'notinitial_altitude' => 10000,
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
+    }
+
+    public function testItFailsSidCreationInitialAltitudeNotInteger()
+    {
+        $data = [
+            'identifier' => 'TEST1U',
+            'airfield_id' => 1,
+            'initial_altitude' => 'test',
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
+    }
 }
