@@ -49,7 +49,10 @@ class DatabaseSeeder extends Seeder
             'hold_profile_hold',
         ],
         HoldRestrictionTableSeeder::class => [
-            'hold_restriction'
+            'hold_restriction',
+        ],
+        SidTableSeeder::class => [
+            'sid',
         ],
     ];
 
