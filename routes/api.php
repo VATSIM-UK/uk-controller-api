@@ -61,6 +61,12 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
 
     // Initial Altitudes
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
+    Route::get('sid', 'SidController@getAllSids');
+    Route::get('sid/{id}', 'SidController@getSid')
+        ->where('sid', 'd+');
+    Route::put('sid', 'SidController@createSid');
+    Route::put('sid/{id}', 'SidController@updateSid')
+        ->where('sid', 'd+');
 
     // Broadcasting
     Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
