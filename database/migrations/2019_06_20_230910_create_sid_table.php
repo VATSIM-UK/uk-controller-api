@@ -15,11 +15,12 @@ class CreateSidTable extends Migration
     {
         Schema::create('sid', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('identifier');
-            $table->unsignedInteger('airfield_id');
-            $table->unsignedSmallInteger('initial_altitude');
+            $table->string('identifier')->comment('SID identifier, may or may not have a deprecation character');
+            $table->unsignedInteger('airfield_id')->comment('The airfield the SID is tied to');
+            $table->unsignedSmallInteger('initial_altitude')->comment('The initial altitude on the SID');
             $table->timestamps();
 
+            $table->unique(['identifier', 'airfield_id']);
             $table->foreign('airfield_id')->references('id')->on('airfield');
         });
     }
