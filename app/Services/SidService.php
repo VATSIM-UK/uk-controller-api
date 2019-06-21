@@ -58,10 +58,12 @@ class SidService
 
     /**
      * @param int $sidId
+     * @return bool
      */
-    public function deleteSid(int $sidId) : void
+    public function deleteSid(int $sidId) : bool
     {
-        Sid::findOrFail($sidId)->delete();
+        $sid = Sid::find($sidId);
+        return $sid ? $sid->delete() : false;
     }
 
     /**

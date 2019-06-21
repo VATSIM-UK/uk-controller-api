@@ -89,4 +89,14 @@ class SidControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'sid')->assertStatus(200);
     }
+
+    public function testDeletingSidReturns204OnSuccess()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'sid/1')->assertStatus(204);
+    }
+
+    public function testDeletingSidReturns404OnNotFound()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'sid/55')->assertStatus(404);
+    }
 }

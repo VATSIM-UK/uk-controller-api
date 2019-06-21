@@ -64,6 +64,8 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
     Route::get('sid', 'SidController@getAllSids');
     Route::get('sid/{id}', 'SidController@getSid')
         ->where('sid', 'd+');
+    Route::delete('sid/{id}', 'SidController@deleteSid')
+        ->where('sid', 'd+');
     Route::put('sid', 'SidController@createSid');
     Route::put('sid/{id}', 'SidController@updateSid')
         ->where('sid', 'd+');

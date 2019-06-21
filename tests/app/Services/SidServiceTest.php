@@ -116,6 +116,16 @@ class SidServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing('sid', ['id' => 1]);
     }
 
+    public function testDeletingSidsReturnsTrue()
+    {
+        $this->assertTrue($this->service->deleteSid(1));
+    }
+
+    public function testDeletingNonExsistantSidsReturnsFalse()
+    {
+        $this->assertFalse($this->service->deleteSid(55));
+    }
+
     public function testItAddsNewSids()
     {
         $this->service->createSid(1, 'TEST1M', 3000);

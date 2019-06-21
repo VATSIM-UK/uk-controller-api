@@ -36,4 +36,10 @@ class SidController extends BaseController
     {
         return response()->json($this->sidService->getAllSids());
     }
+
+    public function deleteSid(int $id) : JsonResponse
+    {
+        $deleted = $this->sidService->deleteSid($id);
+        return response()->json(null, $deleted ? 204 : 404);
+    }
 }
