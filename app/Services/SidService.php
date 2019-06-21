@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Airfield;
 use App\Models\Sid;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class SidService
@@ -33,5 +34,45 @@ class SidService
 
         Cache::forever(self::DEPENDENCY_CACHE_KEY, $altitudes);
         return $altitudes;
+    }
+
+    /**
+     * @param int $sidId
+     */
+    public function deleteSid(int $sidId) : void
+    {
+        Sid::findOrFail($sidId)->delete();
+    }
+
+    /**
+     * @param int $airfieldId
+     * @param string $identifier
+     * @param int $initialAltitude
+     */
+    public function createSid(int $airfieldId, string $identifier, int $initialAltitude) : void
+    {
+        Sid::create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => $identifier,
+                'initial_altitude' => $initialAltitude,
+                'created_at' => Carbon::now(),
+            ]
+        );
+    }
+
+    /**
+     * @param int $id
+     * @param int $airfieldId
+     * @param string $identifier
+     * @param int $initialAltitude
+     */
+    public function updateSid(int $id, int $airfieldId, string $identifier, int $initialAltitude) : void
+    {
+        $sid = Sid::findOrFail($id);
+        $sid->airfield_id = $airfieldId;
+        $sid->identifier = $identifier;
+        $sid->initial_altitude = $initialAltitude;
+        $sid->save();
     }
 }
