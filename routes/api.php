@@ -59,6 +59,9 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
     Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
         ->where('tma', '[A-Z]{4}');
 
+    // Initial Altitudes
+    Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
+
     // Broadcasting
     Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
 });

@@ -16,6 +16,7 @@ class SidServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(SidService::class);
+        Cache::forget(SidService::DEPENDENCY_CACHE_KEY);
     }
 
     public function testItGeneratesAndCachesSidDependency()
