@@ -25,4 +25,10 @@ class SidController extends BaseController
     {
         return response()->json($this->sidService->getInitialAltitudeDependency());
     }
+
+    public function getSid(int $id) : JsonResponse
+    {
+        $sid = $this->sidService->getSid($id);
+        return response()->json($sid, $sid ? 200 : 404);
+    }
 }
