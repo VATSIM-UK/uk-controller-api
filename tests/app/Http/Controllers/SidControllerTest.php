@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Providers\AuthServiceProvider;
 use App\Services\SidService;
 use Illuminate\Support\Facades\Cache;
 
 class SidControllerTest extends BaseApiTestCase
 {
+    protected static $tokenScope = [
+        AuthServiceProvider::SCOPE_USER,
+        AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
+    ];
+
     public function setUp(): void
     {
         parent::setUp();
