@@ -163,3 +163,7 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN])->gr
     Route::put('sid/{id}', 'SidController@updateSid')
         ->where('sid', 'd+');
 });
+
+Route::prefix('admin')->group(function () {
+    Route::post('login', 'UserController@adminLogin');
+});

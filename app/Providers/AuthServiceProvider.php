@@ -21,6 +21,12 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_DEPENDENCY_ADMIN => 'Can perform dependency administration functions',
     ];
 
+    const ADMIN_SCOPES = [
+        self::SCOPE_USER_ADMIN,
+        self::SCOPE_DEPENDENCY_ADMIN,
+        self::SCOPE_VERSION_ADMIN,
+    ];
+
     /**
      * Register services.
      *
