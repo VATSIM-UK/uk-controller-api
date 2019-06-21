@@ -31,4 +31,9 @@ class SidController extends BaseController
         $sid = $this->sidService->getSid($id);
         return response()->json($sid, $sid ? 200 : 404);
     }
+
+    public function getAllSids() : JsonResponse
+    {
+        return response()->json($this->sidService->getAllSids());
+    }
 }
