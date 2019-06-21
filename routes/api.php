@@ -61,14 +61,6 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
 
     // Initial Altitudes
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
-    Route::get('sid', 'SidController@getAllSids');
-    Route::get('sid/{id}', 'SidController@getSid')
-        ->where('sid', 'd+');
-    Route::delete('sid/{id}', 'SidController@deleteSid')
-        ->where('sid', 'd+');
-    Route::put('sid', 'SidController@createSid');
-    Route::put('sid/{id}', 'SidController@updateSid')
-        ->where('sid', 'd+');
 
     // Broadcasting
     Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
@@ -156,4 +148,18 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_VERSION_ADMIN])->group
     // Route for updating and creating versions
     Route::put('version/{version}', 'VersionController@createOrUpdateVersion')
         ->where('version', '[A-Za-z0-9\.\-]+');
+});
+
+// Routes for dependency administration
+Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN])->group(function () {
+
+    // Initial altitudes and sids
+    Route::get('sid', 'SidController@getAllSids');
+    Route::get('sid/{id}', 'SidController@getSid')
+        ->where('sid', 'd+');
+    Route::delete('sid/{id}', 'SidController@deleteSid')
+        ->where('sid', 'd+');
+    Route::put('sid', 'SidController@createSid');
+    Route::put('sid/{id}', 'SidController@updateSid')
+        ->where('sid', 'd+');
 });
