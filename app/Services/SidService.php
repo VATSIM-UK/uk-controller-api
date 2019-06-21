@@ -7,6 +7,7 @@ use App\Models\Sid;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class SidService
 {
@@ -33,6 +34,7 @@ class SidService
         });
 
         Cache::forever(self::DEPENDENCY_CACHE_KEY, $altitudes);
+        Log::info('Regenerated initial altitude dependency');
         return $altitudes;
     }
 
@@ -48,9 +50,10 @@ class SidService
      * @param int $id
      * @return array
      */
-    public function getSid(int $id) : array
+    public function getSid(int $id) : ?array
     {
-        return Sid::findOrFail($id)->toArray();
+        $sid = Sid::find($id);
+        return $sid ? $sid->toArray() : null;
     }
 
     /**
@@ -76,6 +79,8 @@ class SidService
                 'created_at' => Carbon::now(),
             ]
         );
+
+        Cache::forget(self::DEPENDENCY_CACHE_KEY);
     }
 
     /**
@@ -86,10 +91,12 @@ class SidService
      */
     public function updateSid(int $id, int $airfieldId, string $identifier, int $initialAltitude) : void
     {
-        $sid = Sid::findOrFail($id);
+        $sid = Sid::find($id);
         $sid->airfield_id = $airfieldId;
         $sid->identifier = $identifier;
         $sid->initial_altitude = $initialAltitude;
         $sid->save();
+
+        Cache::forget(self::DEPENDENCY_CACHE_KEY);
     }
 }

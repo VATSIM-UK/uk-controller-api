@@ -79,10 +79,14 @@ class SidServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->service->getSid(1));
     }
 
+    public function testItReturnsNullOnSidNotFound()
+    {
+        $this->assertNull($this->service->getSid(55));
+    }
+
     public function testItGetsAllSids()
     {
-        $expected =
-            [
+        $expected = [
                 [
                     'id' => 1,
                     'identifier' => 'TEST1X',
@@ -118,6 +122,14 @@ class SidServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas('sid', ['identifier' => 'TEST1M', 'initial_altitude' => 3000, 'airfield_id' => 1]);
     }
 
+    public function testAddingSidClearsDependencyCache()
+    {
+        Cache::shouldReceive('forget')
+            ->with(SidService::DEPENDENCY_CACHE_KEY)
+            ->once();
+        $this->service->createSid(1, 'TEST1M', 3000);
+    }
+
     public function testItUpdatesSids()
     {
         $this->service->updateSid(1, 2, 'TEST1M', 55000);
@@ -130,5 +142,13 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 2,
             ]
         );
+    }
+
+    public function testUpdatingSidsClearsDependencyCache()
+    {
+        Cache::shouldReceive('forget')
+            ->with(SidService::DEPENDENCY_CACHE_KEY)
+            ->once();
+        $this->service->updateSid(1, 2, 'TEST1M', 55000);
     }
 }
