@@ -27,7 +27,7 @@ class SidControllerTest extends BaseApiTestCase
 
     public function testItReturns200OnInitialAltitudeDataSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'initial-altitude')->assertStatus(200);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'initial-altitude')->assertStatus(200);
     }
 
     public function testItReturnsInitialAltitudeData()
@@ -42,7 +42,7 @@ class SidControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'initial-altitude')->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'initial-altitude')->assertJson($expected);
     }
 
     public function testItReturnsASid()
@@ -53,12 +53,12 @@ class SidControllerTest extends BaseApiTestCase
             'airfield_id' => 1,
             'initial_altitude' => 3000,
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'sid/1')->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/1')->assertJson($expected);
     }
 
     public function testItReturns200OnGetSid()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'sid/1')->assertStatus(200);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/1')->assertStatus(200);
     }
 
     public function testItReturns404OnGetSidNotFound()
@@ -88,12 +88,12 @@ class SidControllerTest extends BaseApiTestCase
                 'initial_altitude' => 5000,
             ],
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'sid')->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->assertJson($expected);
     }
 
     public function testItReturns200OnGetAllSids()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'sid')->assertStatus(200);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->assertStatus(200);
     }
 
     public function testDeletingSidReturns204OnSuccess()

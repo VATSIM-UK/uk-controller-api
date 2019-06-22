@@ -58,9 +58,6 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
         ->where('tma', '[A-Z]{4}');
 
-    // Initial Altitudes
-    Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
-
     // Broadcasting
     Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
 });
@@ -153,9 +150,6 @@ Route::middleware('admin.version')->group(function () {
 Route::middleware('admin.dependency')->group(function () {
 
     // Initial altitudes and sids
-    Route::get('sid', 'SidController@getAllSids');
-    Route::get('sid/{id}', 'SidController@getSid')
-        ->where('sid', 'd+');
     Route::delete('sid/{id}', 'SidController@deleteSid')
         ->where('sid', 'd+');
     Route::put('sid', 'SidController@createSid');
@@ -165,6 +159,12 @@ Route::middleware('admin.dependency')->group(function () {
 
 // Routes that can be hit by anybody at all, mostly login and informational routes
 Route::middleware('public')->group(function () {
+
+    // Initial altitudes and sids
+    Route::get('sid', 'SidController@getAllSids');
+    Route::get('sid/{id}', 'SidController@getSid')
+        ->where('sid', 'd+');
+    Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
 
     // Admin login
     Route::prefix('admin')->group(function () {
