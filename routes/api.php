@@ -163,6 +163,11 @@ Route::middleware('admin.dependency')->group(function () {
         ->where('sid', 'd+');
 });
 
-Route::prefix('admin')->group(function () {
-    Route::post('login', 'UserController@adminLogin');
+// Routes that can be hit by anybody at all, mostly login and informational routes
+Route::middleware('public')->group(function () {
+
+    // Admin login
+    Route::prefix('admin')->group(function () {
+        Route::post('login', 'UserController@adminLogin');
+    });
 });
