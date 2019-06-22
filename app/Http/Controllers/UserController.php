@@ -227,8 +227,8 @@ class UserController extends BaseController
         $token->token->save();
 
         $returnValue = [
-            'token' => $token->accessToken,
-            'expires_at' => $token->token->expires_at,
+            'access_token' => $token->accessToken,
+            'expires_at' => $token->token->expires_at->timestamp,
         ];
 
         return response()->json($returnValue, 201);
