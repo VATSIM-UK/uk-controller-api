@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
         UserTableSeeder::class => [
             'user'
         ],
+        AdminTableSeeder::class => [
+            'admin'
+        ],
         SquawkTableSeeder::class => [
             'squawk_general',
             'squawk_unit',
