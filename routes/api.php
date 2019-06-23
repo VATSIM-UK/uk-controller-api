@@ -16,17 +16,6 @@ Route::middleware('plugin.user')->group(function () {
         ]
     );
 
-    // Version checking
-    Route::get(
-        'version/{version}/status',
-        [
-            'middleware' => [
-                'user.version',
-            ],
-            'uses' => 'VersionController@getVersionStatus',
-        ]
-    )->where('version', '[A-Za-z0-9\.\-]+');
-
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
@@ -165,6 +154,17 @@ Route::middleware('public')->group(function () {
     Route::get('sid/{id}', 'SidController@getSid')
         ->where('sid', 'd+');
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
+
+    // Version checking
+    Route::get(
+        'version/{version}/status',
+        [
+            'middleware' => [
+                'user.version',
+            ],
+            'uses' => 'VersionController@getVersionStatus',
+        ]
+    )->where('version', '[A-Za-z0-9\.\-]+');
 
     // Admin login
     Route::prefix('admin')->group(function () {
