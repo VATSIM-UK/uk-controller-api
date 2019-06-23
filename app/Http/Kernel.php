@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\LogAdminAction;
 use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
 use App\Http\Middleware\UserLastLogin;
@@ -20,6 +21,7 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         'auth' => Authenticate::class,
+        'admin.log' => LogAdminAction::class,
         'user.banned' => UserIsBanned::class,
         'user.disabled' => UserIsDisabled::class,
         'user.lastlogin' => UserLastLogin::class,
@@ -39,14 +41,17 @@ class Kernel extends HttpKernel
         'admin.user' => [
             'auth',
             'scopes:' . AuthServiceProvider::SCOPE_USER_ADMIN,
+            'admin.log',
         ],
         'admin.version' => [
             'auth',
             'scopes:' . AuthServiceProvider::SCOPE_VERSION_ADMIN,
+            'admin.log',
         ],
         'admin.dependency' => [
             'auth',
             'scopes:' . AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
+            'admin.log',
         ],
         'public' => [
 
