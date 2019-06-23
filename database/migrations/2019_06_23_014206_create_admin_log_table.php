@@ -18,7 +18,7 @@ class CreateAdminLogTable extends Migration
             $table->unsignedInteger('user_id')->comment('The user who performed the action');
             $table->text('request_uri')->comment('The uri that was hit');
             $table->text('request_body')->comment('The body of the request, if any')->nullable();
-            $table->timestamp('log_time')->comment('The time the action occurred');
+            $table->timestamp('log_time')->useCurrent()->comment('The time the action occurred');
             $table->foreign('user_id')->references('id')->on('user');
         });
     }
