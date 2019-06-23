@@ -19,7 +19,7 @@ class CreateAdminTable extends Migration
             $table->string('password')->comment('Hashed admin password for the user');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('user');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
         });
     }
 
