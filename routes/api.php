@@ -58,9 +58,6 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
         ->where('icao', '[A-Z]{4}');
     Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
         ->where('tma', '[A-Z]{4}');
-
-    // Broadcasting
-    Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
 });
 
 // Routes for user administration

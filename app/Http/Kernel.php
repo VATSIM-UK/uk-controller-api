@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
     ];
 
     protected $routeMiddleware = [
+        'auth' => Authenticate::class,
         'user.lastlogin' => UserLastLogin::class,
         'user.version' => UserPluginVersion::class,
         'scopes' => CheckScopes::class,

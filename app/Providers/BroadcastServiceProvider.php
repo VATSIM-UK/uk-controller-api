@@ -9,7 +9,7 @@ class BroadcastServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Broadcast::routes(['middleware' => 'auth']);
+        Broadcast::routes(['middleware' => 'auth:api']);
         require_once(__DIR__ . '/../../routes/channels.php');
     }
 }
