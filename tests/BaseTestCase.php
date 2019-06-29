@@ -1,7 +1,9 @@
 <?php
 namespace App;
 
-use Laravel\Lumen\Testing\TestCase;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Testing\TestCase;
 
 abstract class BaseTestCase extends TestCase
 {
@@ -12,11 +14,13 @@ abstract class BaseTestCase extends TestCase
     /**
      * Creates the application.
      *
-     * @return \Laravel\Lumen\Application
+     * @return Application
      */
     public function createApplication()
     {
-        return require __DIR__.'/../bootstrap/app.php';
+        $app = require __DIR__.'/../bootstrap/app.php';
+        $app->make(Kernel::class)->bootstrap();
+        return $app;
     }
 
     /**

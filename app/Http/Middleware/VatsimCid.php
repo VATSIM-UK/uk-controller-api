@@ -11,8 +11,6 @@ use App\Helpers\Vatsim\VatsimCidValidator;
  */
 class VatsimCid
 {
-    use UsesRouteParameters;
-
     // The failure message
     const FAILURE_MESSAGE = 'Invalid VATSIM Certificate ID provided';
 
@@ -43,7 +41,7 @@ class VatsimCid
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        if (!$this->cidValidator->isValid($this->getRouteParameter($request, 'cid'))) {
+        if (!$this->cidValidator->isValid($request->route('cid'))) {
             return response()->json(
                 [
                     'message' => self::FAILURE_MESSAGE,

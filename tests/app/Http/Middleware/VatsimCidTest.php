@@ -16,7 +16,7 @@ class VatsimCidTest extends BaseUnitTestCase
      */
     private $middleware;
     
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->middleware = $this->app->make(VatsimCid::class);
@@ -30,7 +30,7 @@ class VatsimCidTest extends BaseUnitTestCase
     public function testItRejectsInvalidCids()
     {
         $request = Mockery::mock(Request::class);
-        $request->shouldReceive('route')->andReturn([2 => ['cid' => VatsimCidValidator::MINIMUM_CID - 1]]);
+        $request->shouldReceive('route')->with('cid')->once()->andReturn(VatsimCidValidator::MINIMUM_CID - 1);
 
         $expected = 400;
         $actual = $this->middleware->handle($request, function () {
@@ -43,7 +43,7 @@ class VatsimCidTest extends BaseUnitTestCase
     public function testItAllowsValidCids()
     {
         $request = Mockery::mock(Request::class);
-        $request->shouldReceive('route')->andReturn([2 => ['cid' => VatsimCidValidator::MINIMUM_MEMBER_CID]]);
+        $request->shouldReceive('route')->with('cid')->once()->andReturn(VatsimCidValidator::MINIMUM_MEMBER_CID);
 
         $expected = 418;
         $actual = $this->middleware->handle($request, function () {

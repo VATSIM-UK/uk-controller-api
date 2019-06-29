@@ -13,7 +13,7 @@ class AuthServiceProviderTest extends BaseFunctionalTestCase
      */
     private $provider;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->provider = new AuthServiceProvider($this->app);
@@ -35,6 +35,9 @@ class AuthServiceProviderTest extends BaseFunctionalTestCase
     public function testTokensExpireInOneYear()
     {
         Carbon::setTestNow(Carbon::now());
-        $this->assertEquals(Carbon::now()->addYear(), Passport::$tokensExpireAt);
+        $this->assertEquals(
+            Carbon::now()->addYear()->startOfMinute(),
+            Carbon::createFromTimestamp(Passport::$tokensExpireAt->getTimestamp())->startOfMinute()
+        );
     }
 }

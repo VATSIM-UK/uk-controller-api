@@ -22,8 +22,8 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
     public function testItCreatesAUser()
     {
         Artisan::call('user:create-admin');
-        $userId = User::where('id', 1)->first()->id;
-        $this->seeInDatabase(
+        $userId = User::where('id', 2)->first()->id;
+        $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => $userId,
@@ -37,6 +37,6 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
     {
         Artisan::call('user:create-admin');
         $token = explode(PHP_EOL, Artisan::output())[1];
-        $this->get('/useradmin', ['Authorization' => 'Bearer ' . $token])->seeStatusCode(418);
+        $this->get('/useradmin', ['Authorization' => 'Bearer ' . $token])->assertStatus(418);
     }
 }

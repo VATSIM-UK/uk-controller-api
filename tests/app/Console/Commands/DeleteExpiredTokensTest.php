@@ -46,13 +46,13 @@ class DeleteExpiredTokensTest extends BaseFunctionalTestCase
         );
 
         // Check tokens are in the database
-        $this->seeInDatabase('oauth_access_tokens', ['id' => '1']);
-        $this->seeInDatabase('oauth_access_tokens', ['id' => '2']);
-        $this->seeInDatabase('oauth_access_tokens', ['id' => '3']);
+        $this->assertDatabaseHas('oauth_access_tokens', ['id' => '1']);
+        $this->assertDatabaseHas('oauth_access_tokens', ['id' => '2']);
+        $this->assertDatabaseHas('oauth_access_tokens', ['id' => '3']);
 
         Artisan::call('tokens:delete-expired');
-        $this->seeInDatabase('oauth_access_tokens', ['id' => '1']);
-        $this->seeInDatabase('oauth_access_tokens', ['id' => '2']);
-        $this->notSeeInDatabase('oauth_access_tokens', ['id' => '3']);
+        $this->assertDatabaseHas('oauth_access_tokens', ['id' => '1']);
+        $this->assertDatabaseHas('oauth_access_tokens', ['id' => '2']);
+        $this->assertDatabaseMissing('oauth_access_tokens', ['id' => '3']);
     }
 }

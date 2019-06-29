@@ -21,7 +21,7 @@ class SquawkAllocationTest extends BaseFunctionalTestCase
         ];
         $allocation = Allocation::create($data);
 
-        $this->seeInDatabase("squawk_allocation", $data);
+        $this->assertDatabaseHas("squawk_allocation", $data);
     }
 
     public function testAllocatedCanBeTouched()
@@ -34,7 +34,7 @@ class SquawkAllocationTest extends BaseFunctionalTestCase
         ];
         $allocation = Allocation::create($data);
 
-        Carbon::setTestNow(Carbon::now()); // Set the carbon object to return a constant now for testings
+        Carbon::setTestNow(Carbon::now()->startOfHour());
 
         $allocation->touchAllocated();
 

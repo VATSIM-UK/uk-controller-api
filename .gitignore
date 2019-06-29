@@ -8,3 +8,6 @@ tests/_coverage
 storage/*
 !storage/app
 public/storage
+laravel-echo-server.json
+laravel-echo-server.lock
+bootstrap/cache/

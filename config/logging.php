@@ -1,6 +1,7 @@
 <?php
 
 use App\Log\LoggerFactory;
+use App\Log\NullLoggerFactory;
 
 return [
     'default' => env('LOG_CHANNEL', 'stack'),
@@ -14,10 +15,10 @@ return [
             'via' => LoggerFactory::class,
             'name' => 'UKCP',
         ],
-        'null' => [
+        'null_logger' => [
             'driver' => 'custom',
-            'via' => \App\Log\NullLoggerFactory::class,
-            'name' => 'NULL',
+            'via' => NullLoggerFactory::class,
+            'name' => 'NullLogger',
         ],
         'bugsnag' => [
             'driver' => 'bugsnag'

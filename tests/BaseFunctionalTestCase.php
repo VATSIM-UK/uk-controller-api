@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 abstract class BaseFunctionalTestCase extends BaseTestCase
 {

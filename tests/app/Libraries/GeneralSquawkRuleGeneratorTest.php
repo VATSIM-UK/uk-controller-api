@@ -13,7 +13,7 @@ class GeneralSquawkRuleGeneratorTest extends BaseUnitTestCase
      */
     private $rulesGenerator;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->rulesGenerator = $this->app->make(GeneralSquawkRuleGenerator::class);

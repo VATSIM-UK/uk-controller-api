@@ -9,7 +9,7 @@ class SquawkGeneralTest extends BaseFunctionalTestCase
     private $rangeOwner;
     private $range;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->rangeOwner = SquawkRangeOwner::create();
@@ -39,7 +39,7 @@ class SquawkGeneralTest extends BaseFunctionalTestCase
                 'squawk_range_owner_id' => $this->rangeOwner->id
             ]
         );
-        $this->seeInDatabase($model->getTable(), ['id' => $model->id]);
+        $this->assertDatabaseHas($model->getTable(), ['id' => $model->id]);
     }
 
     public function testItHasOneRangeOwner()

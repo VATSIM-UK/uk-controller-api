@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\RegionalPressureService;
-use Laravel\Lumen\Routing\Controller;
 
 /**
  * A controller for handling requests in relation to regional pressure settings.
@@ -10,7 +9,7 @@ use Laravel\Lumen\Routing\Controller;
  * Class RegionalPressureController
  * @package App\Http\Controllers
  */
-class RegionalPressureController extends Controller
+class RegionalPressureController extends BaseController
 {
     // The cache key
     const RPS_CACHE_KEY = 'regional_pressures';

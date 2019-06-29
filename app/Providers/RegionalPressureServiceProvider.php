@@ -7,6 +7,7 @@ use App\Services\MetarService;
 use App\Services\RegionalPressureService;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Application;
 
 /**
  * Service Provider for regional pressure settings.
@@ -23,11 +24,11 @@ class RegionalPressureServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(RegionalPressureService::class, function ($app) {
+        $this->app->bind(RegionalPressureService::class, function (Application $app) {
             // Create dependencies
             $metarUri = env('APP_REGIONAL_PRESSURES_URL', '');
             $http = new Client();
-            $metarParser = new MetarService();
+            $metarParser = $app->make(MetarService::class);
 
             // Get all the altimeter setting regions
             $regions = [];

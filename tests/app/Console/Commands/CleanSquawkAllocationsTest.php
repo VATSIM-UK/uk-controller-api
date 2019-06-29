@@ -41,14 +41,14 @@ class CleanSquawkAllocationsTest extends BaseFunctionalTestCase
             ]
         );
         
-        $this->seeInDatabase('squawk_allocation', ['callsign' => 'VIR25E']);
-        $this->seeInDatabase('squawk_allocation', ['callsign' => 'UAL242']);
-        $this->seeInDatabase('squawk_allocation', ['callsign' => 'TCX125']);
+        $this->assertDatabaseHas('squawk_allocation', ['callsign' => 'VIR25E']);
+        $this->assertDatabaseHas('squawk_allocation', ['callsign' => 'UAL242']);
+        $this->assertDatabaseHas('squawk_allocation', ['callsign' => 'TCX125']);
         Artisan::call('allocations:clean');
 
         // We should lose the allocations that are too old
-        $this->seeInDatabase('squawk_allocation', ['callsign' => 'VIR25E']);
-        $this->notSeeInDatabase('squawk_allocation', ['callsign' => 'UAL242']);
-        $this->notSeeInDatabase('squawk_allocation', ['callsign' => 'TCX125']);
+        $this->assertDatabaseHas('squawk_allocation', ['callsign' => 'VIR25E']);
+        $this->assertDatabaseMissing('squawk_allocation', ['callsign' => 'UAL242']);
+        $this->assertDatabaseMissing('squawk_allocation', ['callsign' => 'TCX125']);
     }
 }

@@ -39,7 +39,7 @@ class SquawkAllocationService
             ]
         )->touchAllocated();
 
-        Event::fire(new SquawkAllocationEvent($allocation));
+        Event::dispatch(new SquawkAllocationEvent($allocation));
         return new SquawkAllocation($allocation->squawk, $allocation->wasRecentlyCreated);
     }
 

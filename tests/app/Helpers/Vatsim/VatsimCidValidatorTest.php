@@ -13,7 +13,7 @@ class VatsimCidValidatorTest extends BaseUnitTestCase
      */
     private $validator;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->validator = $this->app->make(VatsimCidValidator::class);

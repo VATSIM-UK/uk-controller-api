@@ -20,7 +20,7 @@ class UserTokenServiceTest extends BaseApiTestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->service = $this->app->make(UserTokenService::class);
@@ -51,7 +51,7 @@ class UserTokenServiceTest extends BaseApiTestCase
     public function testItCreatesAUserToken()
     {
         $token = $this->service->create(1203533);
-        $this->get('/', ['Authorization' => 'Bearer ' . $token])->seeStatusCode(418);
+        $this->get('/', ['Authorization' => 'Bearer ' . $token])->assertStatus(418);
     }
 
     public function testDeleteRemovesAToken()
@@ -82,6 +82,6 @@ class UserTokenServiceTest extends BaseApiTestCase
     public function testDeleteAllTokensForUserThrowsExceptionIfUserDoesNotExist()
     {
         $this->expectException(ModelNotFoundException::class);
-        $this->service->deleteAllForUser(1);
+        $this->service->deleteAllForUser(55);
     }
 }

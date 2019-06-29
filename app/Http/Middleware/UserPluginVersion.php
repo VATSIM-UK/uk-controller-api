@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Models\Version\Version;
-use Auth;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * A class to track the latest version of the plugin that the user
@@ -14,8 +14,6 @@ use Illuminate\Http\Request;
  */
 class UserPluginVersion
 {
-    use UsesRouteParameters;
-
     /**
      * Handles the request
      *
@@ -26,7 +24,7 @@ class UserPluginVersion
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        $version = Version::where('version', '=', $this->getRouteParameter($request, 'version'))->first();
+        $version = Version::where('version', '=', $request->route('version'))->first();
 
         if ($version !== null) {
             Auth::user()->setLastVersion($version->id);
