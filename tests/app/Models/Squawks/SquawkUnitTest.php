@@ -33,7 +33,7 @@ class SquawkUnitTest extends BaseFunctionalTestCase
     public function testItCanCreateANewRange()
     {
         $model = SquawkUnit::create(['unit' => 'ABCD', 'squawk_range_owner_id' => $this->rangeOwner->id]);
-        $this->seeInDatabase($model->getTable(), ['id' => $model->id]);
+        $this->assertDatabaseHas($model->getTable(), ['id' => $model->id]);
     }
 
     public function testItHasOneRangeOwner()

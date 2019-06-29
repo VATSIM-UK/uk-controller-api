@@ -26,12 +26,12 @@ class UserIsDisabledTest extends BaseApiTestCase
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'message' => UserIsDisabled::FAILURE_MESSAGE,
                 ]
             )
-            ->assertResponseStatus(403);
+            ->assertStatus(403);
     }
 
     public function testItAllowsActiveUsers()
@@ -43,11 +43,11 @@ class UserIsDisabledTest extends BaseApiTestCase
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
-            ->assertResponseStatus(418);
+            ->assertStatus(418);
     }
 }

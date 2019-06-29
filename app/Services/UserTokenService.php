@@ -28,7 +28,7 @@ class UserTokenService
         if ($user->tokens->count() >= self::MAXIMUM_ALLOWED_TOKENS) {
             throw new TooManyTokensException('Too many tokens created for user');
         }
-
+        
         return $user->createToken('access', [AuthServiceProvider::SCOPE_USER])->accessToken;
     }
 

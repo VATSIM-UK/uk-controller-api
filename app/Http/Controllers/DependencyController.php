@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Services\ManifestService;
 use Illuminate\Support\Facades\Log;
-use Laravel\Lumen\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -13,7 +12,7 @@ use Illuminate\Http\JsonResponse;
  *
  * @package App\Http\Controllers
  */
-class DependencyController extends Controller
+class DependencyController extends BaseController
 {
     /**
      * Get a file manifest for the plugin dependencies.

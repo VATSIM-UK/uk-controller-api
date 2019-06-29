@@ -93,7 +93,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
     {
         Carbon::setTestNow(Carbon::now());
         $this->assertTrue($this->service->createOrUpdateVersion('3.0.0', true));
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'version',
             [
                 'version' => '3.0.0',
@@ -108,7 +108,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
     {
         Carbon::setTestNow(Carbon::now());
         $this->assertFalse($this->service->createOrUpdateVersion('2.0.0', false));
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'version',
             [
                 'version' => '2.0.0',

@@ -25,7 +25,7 @@ class UserIsBanned
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        if ($request->user()->accountStatus->banned) {
+        if (auth()->user()->accountStatus->banned) {
             Log::info(
                 'Banned user ' . $request->user()->id . " attempted access but was blocked.",
                 [

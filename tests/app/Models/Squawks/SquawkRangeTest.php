@@ -29,7 +29,7 @@ class SquawkRangeTest extends BaseFunctionalTestCase
     public function testItCanCreateANewRange()
     {
         Range::create($this->range);
-        $this->seeInDatabase("squawk_range", $this->range);
+        $this->assertDatabaseHas("squawk_range", $this->range);
     }
 
     public function testItGetsCorrectRangeOfRange()

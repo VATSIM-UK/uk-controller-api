@@ -21,7 +21,7 @@ class SquawkAllocationTest extends BaseFunctionalTestCase
         ];
         $allocation = Allocation::create($data);
 
-        $this->seeInDatabase("squawk_allocation", $data);
+        $this->assertDatabaseHas("squawk_allocation", $data);
     }
 
     public function testAllocatedCanBeTouched()

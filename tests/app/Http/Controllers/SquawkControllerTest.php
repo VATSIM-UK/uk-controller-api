@@ -13,22 +13,22 @@ class SquawkControllerTest extends BaseApiTestCase
 
     public function testAssignGeneralSquawkDoesNotAcceptPost()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'squawk-assignment/BAW123');
-        $this->assertEquals(405, $this->response->getStatusCode());
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'squawk-assignment/BAW123')
+            ->assertStatus(405);
     }
 
     public function testGetAssignmentRejectsTokensWithoutUserScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'squawk-assignment/BAW123')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testCreateAssignmentRejectsTokensWithoutUserScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'squawk-assignment/BAW123')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItRejectGetAssignmentRequestsWithMissingCallsigns()
@@ -36,7 +36,7 @@ class SquawkControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(
             self::METHOD_GET,
             'squawk-assignment/'
-        )->assertResponseStatus(404);
+        )->assertStatus(404);
     }
 
     public function testItRejectsGetAssignmentRequestsWithCallsignTooLong()
@@ -44,7 +44,7 @@ class SquawkControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(
             self::METHOD_GET,
             'squawk-assignment/01234567890'
-        )->assertResponseStatus(404);
+        )->assertStatus(404);
     }
 
     public function testAssignGeneralSquawkReturnsSquawk()
@@ -53,11 +53,11 @@ class SquawkControllerTest extends BaseApiTestCase
             self::METHOD_GET,
             'squawk-assignment/BAW123'
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'squawk' => '4723',
                 ]
-            )->assertResponseStatus(200);
+            )->assertStatus(200);
     }
 
     public function testAssignGeneralSquawkAssignemtnReturnsNotFoundIfAssignementNotFound()
@@ -66,11 +66,11 @@ class SquawkControllerTest extends BaseApiTestCase
             self::METHOD_GET,
             'squawk-assignment/BAW12AZ'
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Squawk assignment not found for BAW12AZ',
                 ]
-            )->assertResponseStatus(404);
+            )->assertStatus(404);
     }
 
     public function testCheckAssignGeneralSquawkFailsIfNoType()
@@ -80,11 +80,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['origin' => 'EGLL', 'destination' => 'LFPG']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     
@@ -95,11 +95,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'special', 'origin' => 'EGLL', 'destination' => 'LFPG']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckGetGeneralSquawkFailsIfOriginMissing()
@@ -109,11 +109,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'notOrigin' => 'EGLL', 'destination' => 'LFPG']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckAssignGeneralSquawkFailsIfDestinationMissing()
@@ -123,11 +123,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'origin' => 'EGLL', 'notdestination' => 'LFPG']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckAssignGeneralSquawkFailsIfDestinationGivenIncorrectly()
@@ -137,11 +137,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'origin' => 'EGLL', 'destination' => '1234']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckAssignGeneralSquawkFailsIfOriginGivenIncorrectly()
@@ -151,11 +151,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'origin' => '1234', 'destination' => 'EGKK']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testAssignGeneralSquawkReturnsSquawkOnNewAssignment()
@@ -165,11 +165,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW436',
             ['type' => 'general', 'origin' => 'EGKK', 'destination' => 'EGCC']
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'squawk' => '1234',
                 ]
-            )->assertResponseStatus(201);
+            )->assertStatus(201);
     }
 
     public function testAssignGeneralSquawkReturnsSquawkOnUpdateExistingAssignment()
@@ -179,11 +179,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'general', 'origin' => 'EGKK', 'destination' => 'EGCC']
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'squawk' => '1234',
                 ]
-            )->assertResponseStatus(200);
+            )->assertStatus(200);
     }
 
     public function testAssignGeneralSquawkResponseReturnsErrorIfFailureToAssign()
@@ -195,23 +195,23 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW436',
             ['type' => 'general', 'origin' => 'EGKK', 'destination' => 'EGCC']
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'squawk' => '1234',
                 ]
-            )->assertResponseStatus(201);
+            )->assertStatus(201);
 
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
             'squawk-assignment/BAW437',
             ['type' => 'general', 'origin' => 'EGKK', 'destination' => 'EGCC']
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'message' => 'Unable to allocate squawk from available ranges for BAW437',
                     'squawk' => SquawkController::FAILURE_SQUAWK,
                 ]
-            )->assertResponseStatus(500);
+            )->assertStatus(500);
     }
 
     public function testCheckAssignLocalSquawkFailsIfUnitMissing()
@@ -221,11 +221,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'notUnit' => 'EGLL', 'rules' => 'I']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckAssignLocalSquawkFailsIfRulesMissing()
@@ -235,11 +235,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGLL', 'notrules' => 'I']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckAssignLocalSquawkFailsIfRulesInvalid()
@@ -249,11 +249,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGLL', 'rules' => 'X']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckAssignLocalSquawkDoesNotAcceptAnyRules()
@@ -263,11 +263,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGLL', 'rules' => 'A']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Request is missing required data',
                 ]
-            )->assertResponseStatus(400);
+            )->assertStatus(400);
     }
 
     public function testCheckAssignLocalSquawkReturnsSquawkWhenNewAssignmentCreated()
@@ -277,11 +277,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW9AX',
             ['type' => 'local', 'unit' => 'EGKA', 'rules' => 'I']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'squawk' => '3762',
                 ]
-            )->assertResponseStatus(201);
+            )->assertStatus(201);
     }
 
     public function testCheckAssignLocalSquawkReturnsSquawkWhenExistingAssignmentUpdated()
@@ -291,11 +291,11 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW123',
             ['type' => 'local', 'unit' => 'EGKA', 'rules' => 'I']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'squawk' => '3762',
                 ]
-            )->assertResponseStatus(200);
+            )->assertStatus(200);
     }
 
     public function testCheckAssignLocalSquawkReturnsErrorWhenSquawkNotFound()
@@ -305,12 +305,12 @@ class SquawkControllerTest extends BaseApiTestCase
             'squawk-assignment/BAW9AX',
             ['type' => 'local', 'unit' => 'EGNA', 'rules' => 'I']
         )
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'message' => 'Unable to allocate local squawk for BAW9AX',
                     'squawk' => SquawkController::FAILURE_SQUAWK,
                 ]
-            )->assertResponseStatus(500);
+            )->assertStatus(500);
     }
 
     public function testItRejectsAssignmentDeletionRequestsWithMissingCallsigns()
@@ -318,7 +318,7 @@ class SquawkControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(
             self::METHOD_DELETE,
             'squawk-assignment/'
-        )->assertResponseStatus(404);
+        )->assertStatus(404);
     }
 
     public function testItRejectsAssignmentDeletionRequestsWithCallsignTooLong()
@@ -326,7 +326,7 @@ class SquawkControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(
             self::METHOD_DELETE,
             'squawk-assignment/01234567890'
-        )->assertResponseStatus(404);
+        )->assertStatus(404);
     }
 
     public function testResponseWhenAssignmentIsSuccessfullyDeleted()
@@ -334,7 +334,7 @@ class SquawkControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(
             self::METHOD_DELETE,
             'squawk-assignment/BAW123'
-        )->assertResponseStatus(204);
+        )->assertStatus(204);
     }
 
     public function testResponseWhenAssignmentIsNotDeleted()
@@ -342,6 +342,6 @@ class SquawkControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(
             self::METHOD_DELETE,
             'squawk-assignment/NOTREALCS'
-        )->assertResponseStatus(204);
+        )->assertStatus(204);
     }
 }
