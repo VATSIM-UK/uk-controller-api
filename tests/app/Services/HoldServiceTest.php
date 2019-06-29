@@ -158,7 +158,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
     public function testItDeletesHoldProfiles()
     {
         $this->actingAs(User::find(self::ACTIVE_USER_CID));
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile',
             [
                 'id' => 1,
@@ -168,7 +168,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         $this->holdService->deleteUserHoldProfile(1);
 
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'hold_profile',
             [
                 'id' => 1,
@@ -180,7 +180,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
     public function testItDeletesRelatedHolds()
     {
         $this->actingAs(User::find(self::ACTIVE_USER_CID));
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile_hold',
             [
                 'hold_profile_id' => 1,
@@ -190,7 +190,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         $this->holdService->deleteUserHoldProfile(1);
 
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'hold_profile_hold',
             [
                 'hold_profile_id' => 1,
@@ -205,7 +205,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now());
         $holdProfile = $this->holdService->createUserHoldProfile('New User Profile', [1, 2]);
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile',
             [
                 'id' => $holdProfile->id,
@@ -222,7 +222,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now());
         $holdProfile = $this->holdService->createUserHoldProfile('New User Profile', [1, 2]);
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile_hold',
             [
                 'hold_profile_id' => $holdProfile->id,
@@ -230,7 +230,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile_hold',
             [
                 'hold_profile_id' => $holdProfile->id,
@@ -245,7 +245,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now());
         $this->holdService->updateUserHoldProfile(1, 'Super New User Profile', [2]);
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile',
             [
                 'id' => 1,
@@ -262,7 +262,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now());
         $this->holdService->updateUserHoldProfile(1, 'Super New User Profile', [2]);
 
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'hold_profile_hold',
             [
                 'hold_profile_id' => 1,
@@ -270,7 +270,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'hold_profile_hold',
             [
                 'hold_profile_id' => 1,

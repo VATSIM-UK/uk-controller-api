@@ -22,43 +22,43 @@ class VersionControllerTest extends BaseApiTestCase
 
     public function testGetVersionStatusDoesNotAcceptPost()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'version/1.0.0/status');
-        $this->assertEquals(405, $this->response->getStatusCode());
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'version/1.0.0/status')
+            ->assertStatus(405);
     }
 
     public function testGetVersionStatusRejectsTokensWithoutUserScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/1.0.0/status')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testGetVersionStatusFailsIfVersionInvalid()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.1.2^^^^/status')
-            ->assertResponseStatus(404);
+            ->assertStatus(404);
     }
 
     public function testGetVersionStatusResponseValid()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.1/status')
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'update_available' => false,
                     'version_disabled' => false,
                 ]
-            )->assertResponseStatus(200);
+            )->assertStatus(200);
     }
 
     public function testItSetsUserVersionInformation()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.1/status')
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'update_available' => false,
                     'version_disabled' => false,
                 ]
-            )->assertResponseStatus(200);
+            )->assertStatus(200);
         $this->assertEquals(3, $this->activeUser()->last_version);
     }
 
@@ -66,13 +66,13 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItFindsAllVersions()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version')
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     [
                         'id' => 1,
@@ -96,14 +96,14 @@ class VersionControllerTest extends BaseApiTestCase
                         'updated_at' => null,
                     ],
                 ]
-            )->assertResponseStatus(200);
+            )->assertStatus(200);
     }
 
     public function testCreateUpdateVersionFailsWithoutVersionAdminScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'version/9.0.0', [])
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testCreateUpdateVersionFailsIfMissingAllowable()
@@ -112,7 +112,7 @@ class VersionControllerTest extends BaseApiTestCase
             self::METHOD_PUT,
             'version/9.0.0',
             []
-        )->seeStatusCode(400);
+        )->assertStatus(400);
     }
 
     public function testCreateUpdateVersionReturnsCreatedOnNewVersion()
@@ -123,7 +123,7 @@ class VersionControllerTest extends BaseApiTestCase
             [
                 'allowed' => true,
             ]
-        )->seeStatusCode(201);
+        )->assertStatus(201);
     }
 
     public function testCreateUpdateVersionReturnsUpdatedOnUpdatedVersion()
@@ -134,7 +134,7 @@ class VersionControllerTest extends BaseApiTestCase
             [
                 'allowed' => false,
             ]
-        )->seeStatusCode(204);
+        )->assertStatus(204);
     }
 
     public function testCreateUpdateVersionReturnsUpdateModifiesVersion()
@@ -154,14 +154,14 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/9.0.0', [])
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     
     public function testItFindsAVersion()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/1.0.0')
-            ->seeJsonEquals(
+            ->assertJson(
                 [
                     'id' => 1,
                     'version' => '1.0.0',
@@ -169,11 +169,11 @@ class VersionControllerTest extends BaseApiTestCase
                     'created_at' => '2017-12-02 00:00:00',
                     'updated_at' => '2017-12-03 00:00:00',
                 ]
-            )->assertResponseStatus(200);
+            )->assertStatus(200);
     }
 
     public function testItReturnsNotFoundIfVersionNotFound()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/9.0.0')->assertResponseStatus(404);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/9.0.0')->assertStatus(404);
     }
 }

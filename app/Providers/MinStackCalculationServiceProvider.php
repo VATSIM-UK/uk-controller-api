@@ -9,7 +9,7 @@ use App\Helpers\MinStack\MinStackCalculableInterface;
 use App\Models\Airfield;
 use App\Services\MetarService;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Lumen\Application;
+use Illuminate\Foundation\Application;
 
 class MinStackCalculationServiceProvider extends ServiceProvider
 {

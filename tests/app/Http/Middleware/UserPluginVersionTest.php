@@ -17,7 +17,7 @@ class UserPluginVersionTest extends BaseApiTestCase
 
     public function testItSetsUserVersion()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.0/status')->seeStatusCode(200);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.0/status')->assertStatus(200);
         $this->assertEquals(2, $this->activeUser()->last_version);
     }
 }

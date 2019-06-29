@@ -47,7 +47,7 @@ class HoldController extends BaseController
      * Delete the given user hold profile
      *
      * @param int $holdProfileId Profile to delete
-     * @return Response|\Laravel\Lumen\Http\ResponseFactory
+     * @return Response
      */
     public function deleteUserHoldProfile(int $holdProfileId) : Response
     {

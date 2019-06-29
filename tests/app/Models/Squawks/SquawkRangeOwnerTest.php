@@ -14,6 +14,6 @@ class SquawkRangeOwnerTest extends BaseFunctionalTestCase
     public function testItCanCreateANewOwner()
     {
         $model = SquawkRangeOwner::create();
-        $this->seeInDatabase($model->getTable(), ['id' => $model->id]);
+        $this->assertDatabaseHas($model->getTable(), ['id' => $model->id]);
     }
 }

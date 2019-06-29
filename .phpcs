@@ -1,5 +1,5 @@
 app/
-bootstrap/
+bootstrap/app.php
 config/
 public/
 resources/

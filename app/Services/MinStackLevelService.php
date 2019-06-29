@@ -8,7 +8,7 @@ use App\Models\MinStack\MslAirfield;
 use App\Models\MinStack\MslTma;
 use App\Models\Tma;
 use Carbon\Carbon;
-use Laravel\Lumen\Application;
+use Illuminate\Foundation\Application;
 
 class MinStackLevelService
 {

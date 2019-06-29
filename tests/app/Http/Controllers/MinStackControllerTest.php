@@ -13,7 +13,7 @@ class MinStackControllerTest extends BaseApiTestCase
             'EGLL' => 7000,
         ];
 
-        $response->seeJson($expected)->seeStatusCode(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturnsAllTmaMinStacks()
@@ -23,7 +23,7 @@ class MinStackControllerTest extends BaseApiTestCase
             'MTMA' => 6000,
         ];
 
-        $response->seeJson($expected)->seeStatusCode(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturnsMinStackForAirfield()
@@ -33,13 +33,13 @@ class MinStackControllerTest extends BaseApiTestCase
             'msl' => 7000,
         ];
 
-        $response->seeJson($expected)->seeStatusCode(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturns404IfAirfieldMslNotFound()
     {
         $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'msl/airfield/EGKK');
-        $response->seeStatusCode(404);
+        $response->assertStatus(404);
     }
 
     public function testItReturnsMinStackForTma()
@@ -49,12 +49,12 @@ class MinStackControllerTest extends BaseApiTestCase
             'msl' => 6000,
         ];
 
-        $response->seeJson($expected)->seeStatusCode(200);
+        $response->assertJson($expected)->assertStatus(200);
     }
 
     public function testItReturns404IfTmaMslNotFound()
     {
         $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'msl/tma/STMA');
-        $response->seeStatusCode(404);
+        $response->assertStatus(404);
     }
 }

@@ -3,10 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
-use Laravel\Lumen\Routing\Controller as LumenController;
+use Illuminate\Routing\Controller as LaravelController;
 
 /**
  * Our base controller.
@@ -14,7 +13,7 @@ use Laravel\Lumen\Routing\Controller as LumenController;
  * Class BaseController
  * @package App\Http\Controllers
  */
-class BaseController extends LumenController
+class BaseController extends LaravelController
 {
 
     /**

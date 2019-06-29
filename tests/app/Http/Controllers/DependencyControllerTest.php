@@ -15,7 +15,7 @@ class DependencyControllerTest extends BaseApiTestCase
     {
         $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'dependency')
-            ->seeStatusCode(403);
+            ->assertStatus(403);
     }
 
     public function testItReturnsAManifest()
@@ -52,20 +52,20 @@ class DependencyControllerTest extends BaseApiTestCase
             ->andReturn("test2");
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'dependency')
-            ->seeJson(
+            ->assertJson(
                 [
-                'manifest' => [
-                'test1.json' => [
-                    'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test1.json',
-                    'md5' => md5('test1'),
-                ],
-                'test2.json' => [
-                    'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test2.json',
-                    'md5' => md5('test2'),
-                ],
-                ]
+                    'manifest' => [
+                        'test1.json' => [
+                            'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test1.json',
+                            'md5' => md5('test1'),
+                        ],
+                        'test2.json' => [
+                            'uri' => 'http://ukcp.vatsim.uk/storage/dependencies/test2.json',
+                            'md5' => md5('test2'),
+                        ],
+                    ]
                 ]
             )
-            ->seeStatusCode(200);
+            ->assertStatus(200);
     }
 }

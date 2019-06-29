@@ -27,12 +27,12 @@ class UserIsBannedTest extends BaseApiTestCase
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'message' => UserIsBanned::FAILURE_MESSAGE,
                 ]
             )
-            ->assertResponseStatus(403);
+            ->assertStatus(403);
     }
 
     public function testItAllowsUnbannedUsers()
@@ -44,11 +44,11 @@ class UserIsBannedTest extends BaseApiTestCase
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
-            ->seeJson(
+            ->assertJson(
                 [
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
-            ->assertResponseStatus(418);
+            ->assertStatus(418);
     }
 }

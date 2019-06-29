@@ -87,7 +87,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
         $this->app->instance(MetarService::class, $metarService);
         $this->service->updateAirfieldMinStackLevelsFromVatsimMetarServer();
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'msl_airfield',
             [
                 'airfield_id' => 1,
@@ -96,7 +96,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'msl_airfield',
             [
                 'airfield_id' => 2,
@@ -105,7 +105,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->notSeeInDatabase(
+        $this->assertDatabaseMissing(
             'msl_airfield',
             [
                 'airfield_id' => 3,
@@ -162,7 +162,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
         $this->app->instance(MetarService::class, $metarService);
         $this->service->updateTmaMinStackLevelsFromVatsimMetarServer();
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'msl_tma',
             [
                 'tma_id' => 1,
@@ -171,7 +171,7 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->seeInDatabase(
+        $this->assertDatabaseHas(
             'msl_tma',
             [
                 'tma_id' => 2,
