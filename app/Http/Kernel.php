@@ -16,8 +16,7 @@ use Laravel\Passport\Http\Middleware\CheckScopes;
 
 class Kernel extends HttpKernel
 {
-    protected $middleware = [
-    ];
+    protected $middleware = [];
 
     protected $routeMiddleware = [
         'auth' => Authenticate::class,

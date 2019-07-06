@@ -26,6 +26,13 @@ class VersionControllerTest extends BaseApiTestCase
             ->assertStatus(405);
     }
 
+    public function testGetVersionStatusRejectsTokensWithoutUserScope()
+    {
+        $this->regenerateAccessToken([], static::$tokenUser);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/1.0.0/status')
+            ->assertStatus(403);
+    }
+
     public function testGetVersionStatusFailsIfVersionInvalid()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.1.2^^^^/status')
