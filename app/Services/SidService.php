@@ -25,10 +25,10 @@ class SidService
         $sidGroups = Sid::all()->groupBy('airfield_id');
 
         $altitudes = [];
-        $sidGroups->each(function(Collection $airfieldGroup) use (&$altitudes) {
+        $sidGroups->each(function (Collection $airfieldGroup) use (&$altitudes) {
             $airfieldModel = Airfield::find($airfieldGroup->first()->airfield_id);
 
-            $airfieldGroup->each(function(Sid $sid) use (&$altitudes, $airfieldModel) {
+            $airfieldGroup->each(function (Sid $sid) use (&$altitudes, $airfieldModel) {
                 $altitudes[$airfieldModel->code][$sid->identifier] = $sid->initial_altitude;
             });
         });

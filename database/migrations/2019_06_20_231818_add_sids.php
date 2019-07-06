@@ -409,6 +409,5 @@ class AddSids extends Migration
                 'SUMIN1L' => 6000,
             ],
         ];
-
     }
 }
