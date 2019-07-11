@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\CleanSquawkAllocationHistory;
 use App\Console\Commands\CleanSquawkAllocations;
 use App\Console\Commands\ClearSquawkAllocations;
+use App\Console\Commands\GenerateLegacyDependencies;
 use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\UserAdminCreate;
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
         UserCreate::class,
         \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
         GenerateMinStackLevels::class,
+        GenerateLegacyDependencies::class,
     ];
 
     /**

@@ -11,7 +11,7 @@ use UserTableSeeder;
 abstract class BaseApiTestCase extends BaseTestCase
 {
     use DatabaseTransactions;
-    
+
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
     const METHOD_POST_NO_JSON = 'POST';
@@ -44,7 +44,7 @@ abstract class BaseApiTestCase extends BaseTestCase
      *
      * @return void
      */
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->regenerateAccessToken(static::$tokenScope, static::$tokenUser);
@@ -61,14 +61,14 @@ abstract class BaseApiTestCase extends BaseTestCase
     {
         $this->accessToken = User::findOrFail($userId)->createToken('access', $tokenScope)->accessToken;
     }
-    
+
     /**
      * Makes an authenticated request to the API and returns the
      * utils object so that assertions may be made.
      *
      * @param  string $method HTTP verb to use
-     * @param  string $route  API route to use
-     * @param  array  $data   Array to pass as JSON
+     * @param  string $route API route to use
+     * @param  array $data Array to pass as JSON
      * @return TestResponse
      */
     protected function makeAuthenticatedApiRequest(string $method, string $route, array $data = [])
@@ -78,6 +78,36 @@ abstract class BaseApiTestCase extends BaseTestCase
             'Accept' => 'application/json'
         ];
 
+        return $this->makeApiRequest($method, $route, $headers, $data);
+    }
+
+    /**
+     * Makes an unauthenticated request to the API and returns the
+     * utils object so that assertions may be made.
+     *
+     * @param  string $method HTTP verb to use
+     * @param  string $route API route to use
+     * @param  array $data Array to pass as JSON
+     * @return TestResponse
+     */
+    protected function makeUnauthenticatedApiRequest(string $method, string $route, array $data = [])
+    {
+        $headers = [
+            'Accept' => 'application/json'
+        ];
+
+        return $this->makeApiRequest($method, $route, $headers, $data);
+    }
+
+    /**
+     * @param string $method
+     * @param string $route
+     * @param array $headers
+     * @param array $data
+     * @return TestResponse
+     */
+    private function makeApiRequest(string $method, string $route, array $headers = [], array $data = [])
+    {
         switch ($method) {
             case self::METHOD_GET:
                 return $this->get($route, $headers);

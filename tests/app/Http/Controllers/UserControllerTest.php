@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\User\Admin;
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
 use App\Services\UserTokenService;
@@ -81,14 +82,14 @@ class UserControllerTest extends BaseApiTestCase
     public function testItReturnsAUser()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533')
-        ->assertJsonStructure(
-            [
-                'id',
-                'status',
-                'tokens',
-            ]
-        )
-        ->assertStatus(200);
+            ->assertJsonStructure(
+                [
+                    'id',
+                    'status',
+                    'tokens',
+                ]
+            )
+            ->assertStatus(200);
     }
 
     public function testItReturns404OnUserNotFound()
@@ -137,5 +138,47 @@ class UserControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'token/abc')
             ->assertStatus(404);
+    }
+
+    public function testItRejectsAdminLoginIfUserNotAdmin()
+    {
+        Admin::find(\UserTableSeeder::ACTIVE_USER_CID)->delete();
+        $this->makeUnauthenticatedApiRequest(
+            self::METHOD_POST,
+            'admin/login',
+            ['email' => 'ukcp@vatsim.uk', 'password' => 'letmein']
+        )
+            ->assertStatus(403);
+    }
+
+    public function testItRejectsAdminLoginIfAdminPasswordWrong()
+    {
+        $this->makeUnauthenticatedApiRequest(
+            self::METHOD_POST,
+            'admin/login',
+            ['email' => 'ukcp@vatsim.uk', 'password' => 'dontletmein']
+        )
+            ->assertStatus(403);
+    }
+
+    public function testItRejectsAdminLoginIfNoEmail()
+    {
+        $this->makeUnauthenticatedApiRequest(
+            self::METHOD_POST,
+            'admin/login',
+            ['emailnot' => 'ukcp@vatsim.uk', 'password' => 'dontletmein']
+        )
+            ->assertStatus(403);
+    }
+
+    public function testItIssuesAnAdminTokenIfPasswordCorrect()
+    {
+        $this->makeUnauthenticatedApiRequest(
+            self::METHOD_POST,
+            'admin/login',
+            ['email' => 'ukcp@vatsim.uk', 'password' => 'letmein']
+        )
+            ->assertStatus(201)
+            ->assertJsonStructure(['access_token', 'expires_at']);
     }
 }

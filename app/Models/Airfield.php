@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Airfield extends Model implements MinStackDataProviderInterface
@@ -31,6 +32,14 @@ class Airfield extends Model implements MinStackDataProviderInterface
     public function msl() : HasOne
     {
         return $this->hasOne(MslAirfield::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function sids() : HasMany
+    {
+        return $this->hasMany(Sid::class);
     }
 
     /**

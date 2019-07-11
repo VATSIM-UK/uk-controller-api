@@ -1,10 +1,9 @@
 <?php
 
-use App\Providers\AuthServiceProvider;
 use Illuminate\Support\Facades\Route;
 
-// Routes that the average user will use
-Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function () {
+// Routes that the plugin user will use
+Route::middleware('plugin.user')->group(function () {
 
     // Default route, just used to check if the API is available and the user is authenticated
     Route::get(
@@ -16,17 +15,6 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
             'uses' => 'TeapotController@teapot',
         ]
     );
-    
-    // Version checking
-    Route::get(
-        'version/{version}/status',
-        [
-            'middleware' => [
-                'user.version',
-            ],
-            'uses' => 'VersionController@getVersionStatus'
-        ]
-    )->where('version', '[A-Za-z0-9\.\-]+');
 
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
@@ -39,7 +27,7 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
 
     // Dependencies
     Route::get('dependency', 'DependencyController@getManifest');
-    
+
     // Squawks
     Route::get('squawk-assignment/{callsign}', 'SquawkController@getSquawkAssignment')
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
@@ -47,7 +35,7 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
-    
+
     // Regional Pressure
     Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
 
@@ -61,7 +49,7 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER])->group(function
 });
 
 // Routes for user administration
-Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER_ADMIN])->group(function () {
+Route::middleware('admin.user')->group(function () {
 
     // A test route for useradmin access
     Route::get('useradmin', 'TeapotController@teapot');
@@ -130,7 +118,7 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_USER_ADMIN])->group(fu
 });
 
 // Routes for user administration
-Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_VERSION_ADMIN])->group(function () {
+Route::middleware('admin.version')->group(function () {
     // A test route for useradmin access
     Route::get('versionadmin', 'TeapotController@teapot');
 
@@ -142,4 +130,41 @@ Route::middleware(['scopes:' . AuthServiceProvider::SCOPE_VERSION_ADMIN])->group
     // Route for updating and creating versions
     Route::put('version/{version}', 'VersionController@createOrUpdateVersion')
         ->where('version', '[A-Za-z0-9\.\-]+');
+});
+
+// Routes for dependency administration
+Route::middleware('admin.dependency')->group(function () {
+
+    // Initial altitudes and sids
+    Route::delete('sid/{id}', 'SidController@deleteSid')
+        ->where('sid', 'd+');
+    Route::put('sid', 'SidController@createSid');
+    Route::put('sid/{id}', 'SidController@updateSid')
+        ->where('sid', 'd+');
+});
+
+// Routes that can be hit by anybody at all, mostly login and informational routes
+Route::middleware('public')->group(function () {
+
+    // Initial altitudes and sids
+    Route::get('sid', 'SidController@getAllSids');
+    Route::get('sid/{id}', 'SidController@getSid')
+        ->where('sid', 'd+');
+    Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
+
+    // Version checking
+    Route::get(
+        'version/{version}/status',
+        [
+            'middleware' => [
+                'user.version',
+            ],
+            'uses' => 'VersionController@getVersionStatus',
+        ]
+    )->where('version', '[A-Za-z0-9\.\-]+');
+
+    // Admin login
+    Route::prefix('admin')->group(function () {
+        Route::post('login', 'UserController@adminLogin');
+    });
 });
