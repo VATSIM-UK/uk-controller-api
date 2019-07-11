@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
         UserTableSeeder::class => [
             'user'
         ],
+        AdminTableSeeder::class => [
+            'admin'
+        ],
         SquawkTableSeeder::class => [
             'squawk_general',
             'squawk_unit',
@@ -49,7 +52,10 @@ class DatabaseSeeder extends Seeder
             'hold_profile_hold',
         ],
         HoldRestrictionTableSeeder::class => [
-            'hold_restriction'
+            'hold_restriction',
+        ],
+        SidTableSeeder::class => [
+            'sid',
         ],
     ];
 

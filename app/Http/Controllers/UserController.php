@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\TooManyTokensException;
 use App\Exceptions\UserAlreadyExistsException;
+use App\Models\User\Admin;
+use App\Providers\AuthServiceProvider;
 use App\Services\UserConfigService;
 use App\Services\UserService;
 use App\Services\UserTokenService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
-class UserController
+class UserController extends BaseController
 {
     /**
      * Service for administering users.
@@ -200,5 +205,32 @@ class UserController
                 ]
             )->setStatusCode(404);
         }
+    }
+
+    /**
+     * Allows us to authenticate admin users
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function adminLogin(Request $request) : JsonResponse
+    {
+        $admin = Admin::where('email', $request->json('email'))->first();
+
+        if (!$admin || !Hash::check($request->json('password'), $admin->password)) {
+            return response()->json(null, 403);
+        }
+
+        $user = $admin->user;
+        $token = $user->createToken('access', AuthServiceProvider::ADMIN_SCOPES);
+        $token->token->expires_at = Carbon::now()->addMinutes(20);
+        $token->token->save();
+
+        $returnValue = [
+            'access_token' => $token->accessToken,
+            'expires_at' => $token->token->expires_at->timestamp,
+        ];
+
+        return response()->json($returnValue, 201);
     }
 }
