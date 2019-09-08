@@ -40,6 +40,7 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
 
     // Min Stack Levels
+    Route::get('msl', 'MinStackController@getAllMinStackLevels');
     Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
     Route::get('msl/tma', 'MinStackController@getTmaMinStackLevels');
     Route::get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield')
