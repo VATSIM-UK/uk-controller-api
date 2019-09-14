@@ -338,23 +338,27 @@
     "EGPA": [
         "EGPA_TWR",
         "EGPA_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
     "EGPB": [
         "EGPB_TWR",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
     "EGPB": [
         "EGPB_TWR",
         "EGPB_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
     "EGPC": [
         "EGPC_TWR",
         "EGPC_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
@@ -370,6 +374,7 @@
         "EGPE_TWR",
         "EGPE_R_APP",
         "EGPE_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
@@ -408,6 +413,7 @@
     "EGPM": [
         "EGPM_TWR",
         "EGPM_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
@@ -420,6 +426,7 @@
     "EGPO": [
         "EGPO_TWR",
         "EGPO_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],

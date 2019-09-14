@@ -1469,6 +1469,17 @@
             "EGPM"
         ]
     },
+    "SCO_N_CTR": {
+        "frequency": 129.220,
+        "top-down": [
+            "EGPA",
+            "EGPB",
+            "EGPC",
+            "EGPE",
+            "EGPM",
+            "EGPO"
+        ]
+    },
     "SCO_R_CTR": {
         "frequency": 129.1,
         "top-down": [
