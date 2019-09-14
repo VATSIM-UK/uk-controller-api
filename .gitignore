@@ -12,3 +12,4 @@ laravel-echo-server.json
 laravel-echo-server.lock
 bootstrap/cache/
 storage/app/public/dependencies/*
+.phpunit.result.cache
