@@ -1488,6 +1488,16 @@
             "EGAE"
         ]
     },
+    "SCO_S_CTR": {
+        "frequency": 134.77,
+        "top-down": [
+            "EGPD",
+            "EGPF",
+            "EGPH",
+            "EGPK",
+            "EGPN"
+        ]
+    },
     "SCO_WD_CTR": {
         "frequency": 133.2,
         "top-down": [
