@@ -1509,7 +1509,7 @@
         ]
     },
     "STC_CTR": {
-        "frequency": 124.82,
+        "frequency": 126.3,
         "top-down": [
             "EGNC",
             "EGPF",
@@ -1525,7 +1525,7 @@
         ]
     },
     "STC_W_CTR": {
-        "frequency": 121.37,
+        "frequency": 124.82,
         "top-down": [
             "EGPF",
             "EGPK"
