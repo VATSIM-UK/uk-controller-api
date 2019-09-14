@@ -1451,6 +1451,10 @@
             "EGPM"
         ]
     },
+    "SCO_C_CTR": {
+        "frequency": 127.27,
+        "top-down": []
+    },
     "SCO_D_CTR": {
         "frequency": 135.85,
         "top-down": [
