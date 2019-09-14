@@ -5,15 +5,15 @@
     "license": "GPL 3.0",
     "type": "project",
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "ext-json": "*",
         "vlucas/phpdotenv": "^3.0",
         "league/flysystem": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
-        "bugsnag/bugsnag-laravel": "^2.15",
+        "bugsnag/bugsnag-laravel": "^2.17",
         "predis/predis": "~1.0",
         "laravel/passport": "^7.2",
-        "laravel/framework": "^5.8"
+        "laravel/framework": "^6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
