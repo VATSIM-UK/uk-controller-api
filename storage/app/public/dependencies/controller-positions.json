@@ -774,10 +774,6 @@
         "frequency": 119.7,
         "top-down": []
     },
-    "EGPC_ATIS": {
-        "frequency": 119.7,
-        "top-down": []
-    },
     "EGPC_TWR": {
         "frequency": 119.7,
         "top-down": []

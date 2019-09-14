@@ -335,8 +335,26 @@
         "LON_SC_CTR",
         "LON_CTR"
     ],
+    "EGPA": [
+        "EGPA_TWR",
+        "EGPA_APP",
+        "SCO_E_CTR",
+        "SCO_CTR"
+    ],
     "EGPB": [
         "EGPB_TWR",
+        "SCO_E_CTR",
+        "SCO_CTR"
+    ],
+    "EGPB": [
+        "EGPB_TWR",
+        "EGPB_APP",
+        "SCO_E_CTR",
+        "SCO_CTR"
+    ],
+    "EGPC": [
+        "EGPC_TWR",
+        "EGPC_APP",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
