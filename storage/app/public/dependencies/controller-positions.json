@@ -1399,6 +1399,13 @@
             "EGNS"
         ]
     },
+    "MAN_WL_CTR": {
+        "frequency": 125.95,
+        "top-down": [
+            "EGCC",
+            "EGGP"
+        ]
+    },
     "MAN_E_CTR": {
         "frequency": 133.8,
         "top-down": [
