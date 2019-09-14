@@ -2,8 +2,8 @@
     "EGAA": [
         "EGAA_GND",
         "EGAA_TWR",
-        "EGAA_R_APP",
         "EGAA_APP",
+        "EGAA_R_APP",
         "STC_A_CTR",
         "SCO_R_CTR",
         "SCO_W_CTR",
@@ -13,6 +13,7 @@
     "EGAC": [
         "EGAC_TWR",
         "EGAC_APP",
+        "EGAA_R_APP",
         "STC_A_CTR",
         "SCO_R_CTR",
         "SCO_W_CTR",

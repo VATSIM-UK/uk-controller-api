@@ -2,8 +2,7 @@
     "EGAA_APP": {
         "frequency": 120.9,
         "top-down": [
-            "EGAA",
-            "EGAC"
+            "EGAA"
         ]
     },
     "EGAA_GND": {
@@ -15,7 +14,8 @@
     "EGAA_R_APP": {
         "frequency": 128.5,
         "top-down": [
-            "EGAA"
+            "EGAA",
+            "EGAC"
         ]
     },
     "EGAA_TWR": {
