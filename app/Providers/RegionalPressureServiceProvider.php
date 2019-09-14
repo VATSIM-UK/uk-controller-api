@@ -17,8 +17,6 @@ use Illuminate\Foundation\Application;
  */
 class RegionalPressureServiceProvider extends ServiceProvider
 {
-    protected $defer = true;
-
     /**
      * Registers the RegionalPressureService with the app.
      */
