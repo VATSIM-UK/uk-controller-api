@@ -1392,6 +1392,7 @@
     "MAN_W_CTR": {
         "frequency": 128.05,
         "top-down": [
+            "EGCC",
             "EGGP",
             "EGNR",
             "EGNH",
@@ -1401,7 +1402,6 @@
     "MAN_E_CTR": {
         "frequency": 133.8,
         "top-down": [
-            "EGCC",
             "EGNM",
             "EGNJ",
             "EGNC",
