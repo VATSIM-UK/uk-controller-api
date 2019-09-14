@@ -2,8 +2,7 @@
     "EGAA_APP": {
         "frequency": 120.9,
         "top-down": [
-            "EGAA",
-            "EGAC"
+            "EGAA"
         ]
     },
     "EGAA_GND": {
@@ -15,7 +14,8 @@
     "EGAA_R_APP": {
         "frequency": 128.5,
         "top-down": [
-            "EGAA"
+            "EGAA",
+            "EGAC"
         ]
     },
     "EGAA_TWR": {
@@ -774,10 +774,6 @@
         "frequency": 119.7,
         "top-down": []
     },
-    "EGPC_ATIS": {
-        "frequency": 119.7,
-        "top-down": []
-    },
     "EGPC_TWR": {
         "frequency": 119.7,
         "top-down": []
@@ -1336,6 +1332,14 @@
         "frequency": 129.6,
         "top-down": []
     },
+    "LTC_ER_CTR": {
+        "frequency": 133.52,
+        "top-down": []
+    },
+    "LTC_ES_CTR": {
+        "frequency": 135.42,
+        "top-down": []
+    },
     "LTC_NE_CTR": {
         "frequency": 118.82,
         "top-down": []
@@ -1392,16 +1396,23 @@
     "MAN_W_CTR": {
         "frequency": 128.05,
         "top-down": [
+            "EGCC",
             "EGGP",
             "EGNR",
             "EGNH",
             "EGNS"
         ]
     },
+    "MAN_WL_CTR": {
+        "frequency": 125.95,
+        "top-down": [
+            "EGCC",
+            "EGGP"
+        ]
+    },
     "MAN_E_CTR": {
         "frequency": 133.8,
         "top-down": [
-            "EGCC",
             "EGNM",
             "EGNJ",
             "EGNC",
@@ -1440,6 +1451,10 @@
             "EGPM"
         ]
     },
+    "SCO_C_CTR": {
+        "frequency": 127.27,
+        "top-down": []
+    },
     "SCO_D_CTR": {
         "frequency": 135.85,
         "top-down": [
@@ -1458,12 +1473,33 @@
             "EGPM"
         ]
     },
+    "SCO_N_CTR": {
+        "frequency": 129.220,
+        "top-down": [
+            "EGPA",
+            "EGPB",
+            "EGPC",
+            "EGPE",
+            "EGPM",
+            "EGPO"
+        ]
+    },
     "SCO_R_CTR": {
         "frequency": 129.1,
         "top-down": [
             "EGAA",
             "EGAC",
             "EGAE"
+        ]
+    },
+    "SCO_S_CTR": {
+        "frequency": 134.77,
+        "top-down": [
+            "EGPD",
+            "EGPF",
+            "EGPH",
+            "EGPK",
+            "EGPN"
         ]
     },
     "SCO_WD_CTR": {
@@ -1494,7 +1530,7 @@
         ]
     },
     "STC_CTR": {
-        "frequency": 124.82,
+        "frequency": 126.3,
         "top-down": [
             "EGNC",
             "EGPF",
@@ -1510,7 +1546,7 @@
         ]
     },
     "STC_W_CTR": {
-        "frequency": 121.37,
+        "frequency": 124.82,
         "top-down": [
             "EGPF",
             "EGPK"

@@ -2,8 +2,8 @@
     "EGAA": [
         "EGAA_GND",
         "EGAA_TWR",
-        "EGAA_R_APP",
         "EGAA_APP",
+        "EGAA_R_APP",
         "STC_A_CTR",
         "SCO_R_CTR",
         "SCO_W_CTR",
@@ -13,6 +13,7 @@
     "EGAC": [
         "EGAC_TWR",
         "EGAC_APP",
+        "EGAA_R_APP",
         "STC_A_CTR",
         "SCO_R_CTR",
         "SCO_W_CTR",
@@ -57,7 +58,8 @@
         "EGCC_F_APP",
         "EGCC_S_APP",
         "EGCC_N_APP",
-        "MAN_E_CTR",
+        "MAN_WL_CTR",
+        "MAN_W_CTR",
         "MAN_CTR",
         "LON_N_CTR",
         "LON_CTR"
@@ -333,8 +335,24 @@
         "LON_SC_CTR",
         "LON_CTR"
     ],
+    "EGPA": [
+        "EGPA_TWR",
+        "EGPA_APP",
+        "SCO_N_CTR",
+        "SCO_E_CTR",
+        "SCO_CTR"
+    ],
     "EGPB": [
         "EGPB_TWR",
+        "EGPB_APP",
+        "SCO_N_CTR",
+        "SCO_E_CTR",
+        "SCO_CTR"
+    ],
+    "EGPC": [
+        "EGPC_TWR",
+        "EGPC_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
@@ -343,6 +361,7 @@
         "EGPD_TWR",
         "EGPD_APP",
         "EGPD_F_APP",
+        "SCO_S_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
@@ -350,6 +369,7 @@
         "EGPE_TWR",
         "EGPE_R_APP",
         "EGPE_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
@@ -362,6 +382,7 @@
         "STC_CTR",
         "SCO_D_CTR",
         "SCO_WD_CTR",
+        "SCO_S_CTR",
         "SCO_CTR"
     ],
     "EGPH": [
@@ -372,6 +393,7 @@
         "STC_CTR",
         "SCO_D_CTR",
         "SCO_WD_CTR",
+        "SCO_S_CTR",
         "SCO_CTR"
     ],
     "EGPK": [
@@ -383,23 +405,27 @@
         "STC_CTR",
         "SCO_D_CTR",
         "SCO_WD_CTR",
+        "SCO_S_CTR",
         "SCO_CTR"
     ],
     "EGPM": [
         "EGPM_TWR",
         "EGPM_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
     "EGPN": [
         "EGPN_TWR",
         "EGPN_APP",
+        "SCO_S_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
     "EGPO": [
         "EGPO_TWR",
         "EGPO_APP",
+        "SCO_N_CTR",
         "SCO_E_CTR",
         "SCO_CTR"
     ],
