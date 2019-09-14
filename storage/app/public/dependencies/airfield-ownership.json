@@ -344,12 +344,6 @@
     ],
     "EGPB": [
         "EGPB_TWR",
-        "SCO_N_CTR",
-        "SCO_E_CTR",
-        "SCO_CTR"
-    ],
-    "EGPB": [
-        "EGPB_TWR",
         "EGPB_APP",
         "SCO_N_CTR",
         "SCO_E_CTR",
