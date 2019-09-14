@@ -1336,6 +1336,14 @@
         "frequency": 129.6,
         "top-down": []
     },
+    "LTC_ER_CTR": {
+        "frequency": 133.52,
+        "top-down": []
+    },
+    "LTC_ES_CTR": {
+        "frequency": 135.42,
+        "top-down": []
+    },
     "LTC_NE_CTR": {
         "frequency": 118.82,
         "top-down": []
