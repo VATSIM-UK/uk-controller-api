@@ -30,7 +30,7 @@ class MinStackControllerTest extends BaseApiTestCase
     {
         $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'msl');
         $expected = [
-            'airfield ' => [
+            'airfield' => [
                 'EGLL' => 7000,
             ],
             'tma' => [
