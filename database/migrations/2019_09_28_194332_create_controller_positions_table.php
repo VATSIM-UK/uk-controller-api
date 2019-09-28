@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateControllerPositionTable extends Migration
+class CreateControllerPositionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,7 +16,7 @@ class CreateControllerPositionTable extends Migration
         Schema::create('controller_positions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('callsign');
-            $table->decimal('frequency', 3);
+            $table->decimal('frequency', 6, 3);
             $table->timestamps();
 
             $table->unique('callsign');
