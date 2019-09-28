@@ -32,6 +32,10 @@ class CreateTopDownsTable extends Migration
                 ->on('controller_positions')
                 ->onDelete('cascade');
             $table->index('controller_position_id');
+
+            // Unique keys
+            $table->unique(['airfield_id', 'controller_position_id']);
+            $table->unique(['airfield_id', 'order']);
         });
     }
 
