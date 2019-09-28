@@ -13,7 +13,7 @@ class CreateControllerPositionTable extends Migration
      */
     public function up()
     {
-        Schema::create('controller_position', function (Blueprint $table) {
+        Schema::create('controller_positions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('callsign');
             $table->decimal('frequency', 3);
@@ -30,6 +30,6 @@ class CreateControllerPositionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('controller_position');
+        Schema::dropIfExists('controller_positions');
     }
 }
