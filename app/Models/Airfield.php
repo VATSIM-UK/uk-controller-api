@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
+use App\Models\Controller\ControllerPosition;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -83,5 +85,15 @@ class Airfield extends Model implements MinStackDataProviderInterface
         }
 
         return json_decode($this->attributes['msl_calculation'], true);
+    }
+
+    public function controllers() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            ControllerPosition::class,
+            'top_downs',
+            'airfield_id',
+            'controller_position_id'
+        );
     }
 }
