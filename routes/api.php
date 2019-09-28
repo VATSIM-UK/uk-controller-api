@@ -40,15 +40,13 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
 
     // Min Stack Levels
+    Route::get('msl', 'MinStackController@getAllMinStackLevels');
     Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
     Route::get('msl/tma', 'MinStackController@getTmaMinStackLevels');
     Route::get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield')
         ->where('icao', '[A-Z]{4}');
     Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
         ->where('tma', '[A-Z]{4}');
-
-    // Broadcasting
-    Route::post('broadcasting/auth', ['uses' => 'BroadcastController@authenticate']);
 });
 
 // Routes for user administration
