@@ -38,6 +38,19 @@ class MinStackController extends BaseController
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function getAllMinStackLevels() : JsonResponse
+    {
+        $return = [
+            'airfield' => $this->minStackLevelService->getAllAirfieldMinStackLevels(),
+            'tma' => $this->minStackLevelService->getAllTmaMinStackLevels()
+        ];
+
+        return response()->json($return);
+    }
+
+    /**
      * @param string $icao
      * @return JsonResponse
      */
