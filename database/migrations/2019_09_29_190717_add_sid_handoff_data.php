@@ -558,6 +558,199 @@ class AddSidHandoffData extends Migration
                 'identifier' => 'OLNEY1C',
                 'handoff' => 'EGGW_SID_WEST_08',
             ],
+
+            // EGCC
+            [
+                'identifier' => 'ASMIM1Z',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'ASMIM1S',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'DESIG1Z',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'DESIG1S',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'EKLAD1R',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'EKLAD1Y',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'KUXEM1R',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'KUXEM1Y',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'LISTO2R',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'LISTO2Y',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'LISTO2S',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'LISTO2Z',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'MONTY1R',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'MONTY1Y',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'MONTY1Z',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'MONTY1S',
+                'handoff' => 'EGCC_SID_WEST',
+            ],
+            [
+                'identifier' => 'POL5R',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'POL1Z',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'POL4S',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'POL1Y',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'SANBA1R',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'SANBA1Y',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'SONEX1R',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+            [
+                'identifier' => 'SONEX1Y',
+                'handoff' => 'EGCC_SID_EAST_NORTH',
+            ],
+
+            // EGGP
+            [
+                'identifier' => 'BARTN1T',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'BARTN1V',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'NANTI2T',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'NANTI2V',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'POL4T',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'POL5V',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'REXAM2T',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'REXAM2V',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'WAL2T',
+                'handoff' => 'EGGP_SID',
+            ],
+            [
+                'identifier' => 'WAL2V',
+                'handoff' => 'EGGP_SID',
+            ],
+
+            // EGNM
+            [
+                'identifier' => 'DOPEK2W',
+                'handoff' => 'EGNM_SID',
+            ],
+            [
+                'identifier' => 'DOPEK2X',
+                'handoff' => 'EGNM_SID',
+            ],
+            [
+                'identifier' => 'LAMIX2W',
+                'handoff' => 'EGNM_SID',
+            ],
+            [
+                'identifier' => 'LAMIX2X',
+                'handoff' => 'EGNM_SID',
+            ],
+            [
+                'identifier' => 'NELSA3W',
+                'handoff' => 'EGNM_SID',
+            ],
+            [
+                'identifier' => 'POL2X',
+                'handoff' => 'EGNM_SID',
+            ],
+
+            // EGCN
+            [
+                'identifier' => 'ROGA20N',
+                'handoff' => 'EGCN_SID',
+            ],
+            [
+                'identifier' => 'ROGA20S',
+                'handoff' => 'EGCN_SID',
+            ],
+            [
+                'identifier' => 'ROGAG02',
+                'handoff' => 'EGCN_SID',
+            ],
+            [
+                'identifier' => 'UPTON1A',
+                'handoff' => 'EGCN_SID',
+            ],
+            [
+                'identifier' => 'UPTON1B',
+                'handoff' => 'EGCN_SID',
+            ],
+            [
+                'identifier' => 'UPTON1C',
+                'handoff' => 'EGCN_SID',
+            ],
+
         ];
     }
 }
