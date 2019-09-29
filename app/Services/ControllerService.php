@@ -21,7 +21,7 @@ class ControllerService
                 'frequency' => (float) $controller->frequency,
             ];
 
-            $controller->topDownAirfields->each(function(Airfield $airfield) use ($controller, &$dependency) {
+            $controller->topDownAirfields->each(function (Airfield $airfield) use ($controller, &$dependency) {
                 $dependency[$controller->callsign]['top-down'][] = $airfield->code;
             });
         });

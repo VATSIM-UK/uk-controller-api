@@ -29,8 +29,6 @@ class GetDeletedSidsFromSectorFile extends Command
         );
 
         fclose($file);
-
-
     }
 
     /**

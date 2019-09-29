@@ -27,7 +27,7 @@ class AddTopDownOrders extends Migration
     public function down()
     {
         $airfields = Airfield::all();
-        $airfields->each(function(Airfield $airfield) {
+        $airfields->each(function (Airfield $airfield) {
             $airfield->controllers()->detach($airfield->controllers->pluck('id')->toArray());
         });
     }
