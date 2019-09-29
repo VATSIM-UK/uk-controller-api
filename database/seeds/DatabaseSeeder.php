@@ -57,6 +57,10 @@ class DatabaseSeeder extends Seeder
         SidTableSeeder::class => [
             'sid',
         ],
+        ControllerPositionsTableSeeder::class => [
+            'controller_positions',
+            'top_downs',
+        ],
     ];
 
 
