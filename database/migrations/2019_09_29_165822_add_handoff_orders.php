@@ -1119,6 +1119,201 @@ class AddHandoffOrders extends Migration
                     'created_at' => Carbon::now(),
                 ],
             ],
+
+            // EGGD
+            'EGGD_SID_27_BADIM' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGGD_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_WN_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGGD_SID_27_EXMOR' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGGD_APP')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGGD_SID_27_BCN' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_WN_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGGD_APP')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGGD_SID_09_WOTAN' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGGD_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_WN_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGGD_SID_09_BCN' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGGD_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_WN_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGGD_SID_09_EXMOR' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGGD_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+
+            // EGFF
+            'EGFF_SID_NORTH' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_WN_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGFF_SID_SOUTH' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGFF_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
         ];
     }
 }

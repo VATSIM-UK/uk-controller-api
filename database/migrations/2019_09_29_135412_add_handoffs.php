@@ -23,7 +23,9 @@ class AddHandoffs extends Migration
      */
     public function down()
     {
-        Handoff::truncate();
+        Handoff::all()->each(function (Handoff $handoff) {
+            $handoff->delete();
+        });
     }
 
     private function getHandoffData(): array
@@ -160,18 +162,38 @@ class AddHandoffs extends Migration
                 'created_at' => Carbon::now(),
             ],
             [
-                'key' => 'EGGD_SID_27',
-                'description' => 'Bristol Departures on 27',
+                'key' => 'EGGD_SID_27_BCN',
+                'description' => 'Bristol Brecon Departures on 27',
                 'created_at' => Carbon::now(),
             ],
             [
-                'key' => 'EGGD_SID_09',
-                'description' => 'Bristol Departures on 09',
+                'key' => 'EGGD_SID_27_EXMOR',
+                'description' => 'Bristol EXMOR Departures on 27',
                 'created_at' => Carbon::now(),
             ],
             [
-                'key' => 'EGFF_SID',
-                'description' => 'Cardiff Departures',
+                'key' => 'EGGD_SID_09_WOTAN',
+                'description' => 'Bristol WOTAN Departures on 09',
+                'created_at' => Carbon::now(),
+            ],
+            [
+                'key' => 'EGGD_SID_09_BCN',
+                'description' => 'Bristol BCN Departures on 09',
+                'created_at' => Carbon::now(),
+            ],
+            [
+                'key' => 'EGGD_SID_09_EXMOR',
+                'description' => 'Bristol BCN Departures on 09',
+                'created_at' => Carbon::now(),
+            ],
+            [
+                'key' => 'EGFF_SID_NORTH',
+                'description' => 'Cardiff Northbound Departures',
+                'created_at' => Carbon::now(),
+            ],
+            [
+                'key' => 'EGFF_SID_SOUTH',
+                'description' => 'Cardiff Southbound Departures',
                 'created_at' => Carbon::now(),
             ],
             [
