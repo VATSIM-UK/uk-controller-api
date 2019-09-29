@@ -31,7 +31,7 @@ class Sid extends Model
      */
     public function airfield() : HasOne
     {
-        return $this->hasOne(Airfield::class);
+        return $this->hasOne(Airfield::class, 'id', 'airfield_id');
     }
 
     public function handoffs() : BelongsToMany
