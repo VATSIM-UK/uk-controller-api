@@ -1596,6 +1596,111 @@ class AddHandoffOrders extends Migration
                     'created_at' => Carbon::now(),
                 ],
             ],
+
+            // EGNT
+            'EGNT_SID' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGNT_R_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'MAN_E_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'MAN_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_N_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+
+            // EGWU
+            'EGWU_SID_WEST' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LTC_NW_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LTC_N_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LTC_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_C_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_SC_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 6,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGWU_SID_EAST' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LTC_NE_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LTC_N_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LTC_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LTC_E_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_E_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_C_CTR')->firstOrFail()->id,
+                    'order' => 6,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_SC_CTR')->firstOrFail()->id,
+                    'order' => 7,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 8,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
         ];
     }
 }

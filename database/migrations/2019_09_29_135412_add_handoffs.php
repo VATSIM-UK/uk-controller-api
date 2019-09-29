@@ -257,13 +257,13 @@ class AddHandoffs extends Migration
                 'created_at' => Carbon::now(),
             ],
             [
-                'key' => 'EGWU_SID',
-                'description' => 'Northolt Departures',
+                'key' => 'EGWU_SID_WEST',
+                'description' => 'Northolt Westbound Departures',
                 'created_at' => Carbon::now(),
             ],
             [
-                'key' => 'EGPD_DEPARTURE',
-                'description' => 'Aberdeen Departures',
+                'key' => 'EGWU_SID_EAST',
+                'description' => 'Northolt Eastbound Departures',
                 'created_at' => Carbon::now(),
             ],
         ];
