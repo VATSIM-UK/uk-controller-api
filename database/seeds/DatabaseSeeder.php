@@ -61,6 +61,10 @@ class DatabaseSeeder extends Seeder
             'controller_positions',
             'top_downs',
         ],
+        HandoffTableSeeder::class => [
+            'handoffs',
+            'handoff_orders',
+        ],
     ];
 
 

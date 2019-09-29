@@ -15,6 +15,11 @@ class Handoff extends Model
         'created_at',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function controllers() : BelongsToMany
     {
         return $this->belongsToMany(
