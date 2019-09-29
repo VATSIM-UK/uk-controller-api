@@ -71,7 +71,6 @@ class GetDeletedSidsFromSectorFile extends Command
         $sids = [];
         $inSidSection = false;
         while (($line = fgets($file)) !== false) {
-
             // Dont do anything until we find the SID section
             if ($this->enteringSidSection($line)) {
                 $inSidSection = true;
