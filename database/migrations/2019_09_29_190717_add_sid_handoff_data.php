@@ -3,8 +3,6 @@
 use App\Models\Controller\Handoff;
 use App\Models\Sid;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddSidHandoffData extends Migration
@@ -227,6 +225,222 @@ class AddSidHandoffData extends Migration
             [
                 'identifier' => 'WIZAD4V',
                 'handoff' => 'EGKK_SID_EAST',
+            ],
+
+            // EGLL
+            [
+                'identifier' => 'BPK5K',
+                'handoff' => 'EGLL_SID_NORTH_EAST',
+            ],
+            [
+                'identifier' => 'BPK6J',
+                'handoff' => 'EGLL_SID_NORTH_EAST',
+            ],
+            [
+                'identifier' => 'BPK7G',
+                'handoff' => 'EGLL_SID_NORTH_EAST',
+            ],
+            [
+                'identifier' => 'BPK7F',
+                'handoff' => 'EGLL_SID_NORTH_EAST',
+            ],
+            [
+                'identifier' => 'BUZAD3K',
+                'handoff' => 'EGLL_SID_NORTH_EAST',
+            ],
+            [
+                'identifier' => 'BUZAD4J',
+                'handoff' => 'EGLL_SID_NORTH_EAST',
+            ],
+            [
+                'identifier' => 'CHK',
+                'handoff' => 'EGLL_SID_CPT_09',
+            ],
+            [
+                'identifier' => 'CPT3F',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'CPT3G',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'CPT4K',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'CPT5J',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'DET1J',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'DET1K',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'DET2F',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'DET2G',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'GASGU1J',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'GASGU1K',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'GOGSI1F',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'GOGSI1G',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'MAY2G',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'MAY2J',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'MAY2K',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'MAY3F',
+                'handoff' => 'EGLL_SID_SOUTH_EAST',
+            ],
+            [
+                'identifier' => 'MID3G',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'MID3J',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'MID3K',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'MID4F',
+                'handoff' => 'EGLL_SID_SOUTH_WEST',
+            ],
+            [
+                'identifier' => 'ULTIB1J',
+                'handoff' => 'EGLL_SID_NORTH_WEST',
+            ],
+            [
+                'identifier' => 'ULTIB1K',
+                'handoff' => 'EGLL_SID_NORTH_WEST',
+            ],
+            [
+                'identifier' => 'UMLAT1F',
+                'handoff' => 'EGLL_SID_NORTH_WEST',
+            ],
+            [
+                'identifier' => 'UMLAT1G',
+                'handoff' => 'EGLL_SID_NORTH_WEST',
+            ],
+            [
+                'identifier' => 'WOBUN3F',
+                'handoff' => 'EGLL_SID_NORTH_WEST',
+            ],
+            [
+                'identifier' => 'WOBUN3G',
+                'handoff' => 'EGLL_SID_NORTH_WEST',
+            ],
+
+            // EGLC
+            [
+                'identifier' => 'BPK1A',
+                'handoff' => 'EGLC_SID_BPK_CPT_27',
+            ],
+            [
+                'identifier' => 'BPK1H',
+                'handoff' => 'EGLC_SID_BPK_CPT_09',
+            ],
+            [
+                'identifier' => 'BPK5T',
+                'handoff' => 'EGLC_SID_BPK_CPT_27',
+            ],
+            [
+                'identifier' => 'BPK5U',
+                'handoff' => 'EGLC_SID_BPK_CPT_09',
+            ],
+            [
+                'identifier' => 'CLN1A',
+                'handoff' => 'EGLC_SID_CLN',
+            ],
+            [
+                'identifier' => 'CLN1H',
+                'handoff' => 'EGLC_SID_CLN',
+            ],
+            [
+                'identifier' => 'CLN7T',
+                'handoff' => 'EGLC_SID_CLN',
+            ],
+            [
+                'identifier' => 'CLN7U',
+                'handoff' => 'EGLC_SID_CLN',
+            ],
+            [
+                'identifier' => 'CPT1A',
+                'handoff' => 'EGLC_SID_BPK_CPT_27',
+            ],
+            [
+                'identifier' => 'CPT1H',
+                'handoff' => 'EGLC_SID_BPK_CPT_09',
+            ],
+            [
+                'identifier' => 'CPT6T',
+                'handoff' => 'EGLC_SID_BPK_CPT_27',
+            ],
+            [
+                'identifier' => 'CPT6U',
+                'handoff' => 'EGLC_SID_BPK_CPT_09',
+            ],
+            [
+                'identifier' => 'DVR5T',
+                'handoff' => 'EGLC_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'DVR5U',
+                'handoff' => 'EGLC_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'EKNIV1A',
+                'handoff' => 'EGLC_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'EKNIV1H',
+                'handoff' => 'EGLC_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'LYD5T',
+                'handoff' => 'EGLC_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'LYD5U',
+                'handoff' => 'EGLC_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'SAM6T',
+                'handoff' => 'EGLC_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'SAM6U',
+                'handoff' => 'EGLC_SID_SOUTH',
             ],
         ];
     }
