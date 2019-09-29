@@ -10,10 +10,19 @@ class ControllerPosition extends Model
 {
     public $timestamps = true;
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     protected $fillable = [
         'callsign',
         'frequency',
         'created_at',
+    ];
+
+    protected $casts = [
+        'frequency' => 'float',
     ];
 
     public function topDownAirfields() : BelongsToMany

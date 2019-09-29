@@ -28,6 +28,13 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'updated_at'
     ];
 
+    protected $hidden = [
+        'standard_high',
+        'msl_calculation',
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * @return HasOne
      */

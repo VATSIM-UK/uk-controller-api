@@ -164,6 +164,12 @@ Route::middleware('public')->group(function () {
         ]
     )->where('version', '[A-Za-z0-9\.\-]+');
 
+    // Controller positions
+    Route::get('controller', 'ControllerPositionController@getAllControllers');
+
+    // Airfields positions
+    Route::get('airfield', 'AirfieldController@getAllAirfields');
+
     // Admin login
     Route::prefix('admin')->group(function () {
         Route::post('login', 'UserController@adminLogin');
