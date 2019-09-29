@@ -15,7 +15,7 @@ class AddSidHandoffData extends Migration
     public function up()
     {
         foreach ($this->getHandoffData() as $data) {
-            Sid::where('identifier', $data['identifier'])
+            Sid::where(['identifier' => $data['identifier'], 'handoff_id' => null])
                 ->update(['handoff_id' => Handoff::where('key', $data['handoff'])->firstOrFail()->id]);
         }
     }
@@ -913,6 +913,54 @@ class AddSidHandoffData extends Migration
             [
                 'identifier' => 'SKERY3W',
                 'handoff' => 'EGJB_SID',
+            ],
+
+            // EGGD
+            [
+                'identifier' => 'BADIM1X',
+                'handoff' => 'EGGD_SID_27_BADIM',
+            ],
+            [
+                'identifier' => 'WOTAN1Z',
+                'handoff' => 'EGGD_SID_09_WOTAN',
+            ],
+            [
+                'identifier' => 'BCN1X',
+                'handoff' => 'EGGD_SID_27_BCN',
+            ],
+            [
+                'identifier' => 'BCN1Z',
+                'handoff' => 'EGGD_SID_09_BCN',
+            ],
+            [
+                'identifier' => 'EXMOR1X',
+                'handoff' => 'EGGD_SID_27_EXMOR',
+            ],
+            [
+                'identifier' => 'EXMOR1Z',
+                'handoff' => 'EGGD_SID_09_EXMOR',
+            ],
+
+            // EGFF
+            [
+                'identifier' => 'ALVIN1B',
+                'handoff' => 'EGFF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'BCN1A',
+                'handoff' => 'EGFF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'BCN1B',
+                'handoff' => 'EGFF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'EXMOR1A',
+                'handoff' => 'EGFF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'EXMOR1B',
+                'handoff' => 'EGFF_SID_SOUTH',
             ],
         ];
     }
