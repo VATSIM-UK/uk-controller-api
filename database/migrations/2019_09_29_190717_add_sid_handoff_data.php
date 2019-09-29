@@ -1070,6 +1070,140 @@ class AddSidHandoffData extends Migration
                 'identifier' => 'TNT3P',
                 'handoff' => 'EGNX_SID_NORTH_09',
             ],
+
+            // EGPH
+            [
+                'identifier' => 'GOSAM1C',
+                'handoff' => 'EGPH_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'GOSAM1D',
+                'handoff' => 'EGPH_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'GRICE3C',
+                'handoff' => 'EGPH_SID_NORTH',
+            ],
+            [
+                'identifier' => 'GRICE4D',
+                'handoff' => 'EGPH_SID_NORTH',
+            ],
+            [
+                'identifier' => 'TLA6C',
+                'handoff' => 'EGPH_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'TLA6D',
+                'handoff' => 'EGPH_SID_SOUTH',
+            ],
+
+            // EGPF
+            [
+                'identifier' => 'CLYDE3A',
+                'handoff' => 'EGPF_SID_WEST',
+            ],
+            [
+                'identifier' => 'CLYDE3B',
+                'handoff' => 'EGPF_SID_WEST',
+            ],
+            [
+                'identifier' => 'FOYLE3A',
+                'handoff' => 'EGPF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'FOYLE3B',
+                'handoff' => 'EGPF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'LOMON3A',
+                'handoff' => 'EGPF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'LOMON3B',
+                'handoff' => 'EGPF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'LUSIV1A',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'LUSIV1B',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'NORBO1H',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'NORBO1J',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'PTH4A',
+                'handoff' => 'EGPF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'PTH4B',
+                'handoff' => 'EGPF_SID_NORTH',
+            ],
+            [
+                'identifier' => 'ROBBO2A',
+                'handoff' => 'EGPF_SID_WEST',
+            ],
+            [
+                'identifier' => 'ROBBO2B',
+                'handoff' => 'EGPF_SID_WEST',
+            ],
+            [
+                'identifier' => 'TLA5A',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'TLA6B',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'TRN3A',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+            [
+                'identifier' => 'TRN6B',
+                'handoff' => 'EGPF_SID_SOUTH',
+            ],
+
+            // EGPK
+            [
+                'identifier' => 'DAUNT1K',
+                'handoff' => 'EGPK_SID',
+            ],
+            [
+                'identifier' => 'LUCCO1K',
+                'handoff' => 'EGPK_SID',
+            ],
+            [
+                'identifier' => 'NGY1K',
+                'handoff' => 'EGPK_SID',
+            ],
+            [
+                'identifier' => 'NGY1L',
+                'handoff' => 'EGPK_SID',
+            ],
+            [
+                'identifier' => 'SUDBY1L',
+                'handoff' => 'EGPK_SID',
+            ],
+            [
+                'identifier' => 'SUMIN1L',
+                'handoff' => 'EGPK_SID',
+            ],
+            [
+                'identifier' => 'TRN2K',
+                'handoff' => 'EGPK_SID',
+            ],
+            [
+                'identifier' => 'TRN2L',
+                'handoff' => 'EGPK_SID',
+            ],
         ];
     }
 }
