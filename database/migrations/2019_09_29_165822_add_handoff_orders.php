@@ -1071,6 +1071,54 @@ class AddHandoffOrders extends Migration
                     'created_at' => Carbon::now(),
                 ],
             ],
+
+            // EGJJ
+            'EGJJ_SID' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGJJ_C_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGJJ_APP')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+
+            // EGJB
+            'EGJB_SID' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGJJ_C_APP')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_W_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'LON_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGJB_APP')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
         ];
     }
 }
