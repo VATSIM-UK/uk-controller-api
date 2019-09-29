@@ -2,8 +2,10 @@
 
 namespace App\Models\Controller;
 
+use App\Models\Sid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Handoff extends Model
 {
@@ -21,5 +23,10 @@ class Handoff extends Model
             'handoff_id',
             'controller_position_id'
         );
+    }
+
+    public function sids() : HasMany
+    {
+        return $this->hasMany(Sid::class);
     }
 }
