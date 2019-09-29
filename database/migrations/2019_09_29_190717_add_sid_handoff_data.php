@@ -751,6 +751,169 @@ class AddSidHandoffData extends Migration
                 'handoff' => 'EGCN_SID',
             ],
 
+            // EGJJ
+            [
+                'identifier' => 'BENIX3B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'BENIX5A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'CAN2A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'CAN2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'DIN2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'DIN3A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'KOKOS2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'KOKOS3A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'LERAK2A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'LERAK2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'ORIST1C',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'ORIST1D',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'ORTAC2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'ORTAC3A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'ORVAL1A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'ORVAL1B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'OYSTA2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'SKERY2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'SKERY3A',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'TUNIT2B',
+                'handoff' => 'EGJJ_SID',
+            ],
+            [
+                'identifier' => 'TUNIT3A',
+                'handoff' => 'EGJJ_SID',
+            ],
+
+            // EGJB
+            [
+                'identifier' => 'CAN1E',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'CAN1W',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'DIN2E',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'DIN2W',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'GULDA1E',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'GULDA1W',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'KOKOS2E',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'KOKOS2W',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'LERAK1F',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'LERAK1X',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'ORIST1F',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'ORIST1X',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'ORTAC2W',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'ORTAC3E',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'ORTAC3W',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'ORVAL1E',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'ORVAL1W',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'SKERY3E',
+                'handoff' => 'EGJB_SID',
+            ],
+            [
+                'identifier' => 'SKERY3W',
+                'handoff' => 'EGJB_SID',
+            ],
         ];
     }
 }
