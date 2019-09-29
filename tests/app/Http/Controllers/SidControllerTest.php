@@ -114,7 +114,7 @@ class SidControllerTest extends BaseApiTestCase
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data);
-        $this->assertDatabaseHas('sid', $data);
+        $this->assertDatabaseHas('sids', $data);
     }
 
     public function testItReturnsCreatedOnSidCreation()
@@ -186,7 +186,7 @@ class SidControllerTest extends BaseApiTestCase
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data);
-        $this->assertDatabaseHas('sid', $data);
+        $this->assertDatabaseHas('sids', $data);
     }
 
     public function testItReturnsOkOnSidUpdate()

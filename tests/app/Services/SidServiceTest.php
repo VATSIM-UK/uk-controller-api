@@ -74,6 +74,7 @@ class SidServiceTest extends BaseFunctionalTestCase
             'id' => 1,
             'identifier' => 'TEST1X',
             'airfield_id' => 1,
+            'handoff_id' => null,
             'initial_altitude' => 3000,
         ];
         $this->assertEquals($expected, $this->service->getSid(1));
@@ -91,18 +92,21 @@ class SidServiceTest extends BaseFunctionalTestCase
                     'id' => 1,
                     'identifier' => 'TEST1X',
                     'airfield_id' => 1,
+                    'handoff_id' => null,
                     'initial_altitude' => 3000,
                 ],
                 [
                     'id' => 2,
                     'identifier' => 'TEST1Y',
                     'airfield_id' => 1,
+                    'handoff_id' => null,
                     'initial_altitude' => 4000,
                 ],
                 [
                     'id' => 3,
                     'identifier' => 'TEST1A',
                     'airfield_id' => 2,
+                    'handoff_id' => null,
                     'initial_altitude' => 5000,
                 ],
             ];
@@ -111,9 +115,9 @@ class SidServiceTest extends BaseFunctionalTestCase
 
     public function testItDeletesSids()
     {
-        $this->assertDatabaseHas('sid', ['id' => 1]);
+        $this->assertDatabaseHas('sids', ['id' => 1]);
         $this->service->deleteSid(1);
-        $this->assertDatabaseMissing('sid', ['id' => 1]);
+        $this->assertDatabaseMissing('sids', ['id' => 1]);
     }
 
     public function testDeletingSidsReturnsTrue()
@@ -129,7 +133,7 @@ class SidServiceTest extends BaseFunctionalTestCase
     public function testItAddsNewSids()
     {
         $this->service->createSid(1, 'TEST1M', 3000);
-        $this->assertDatabaseHas('sid', ['identifier' => 'TEST1M', 'initial_altitude' => 3000, 'airfield_id' => 1]);
+        $this->assertDatabaseHas('sids', ['identifier' => 'TEST1M', 'initial_altitude' => 3000, 'airfield_id' => 1]);
     }
 
     public function testAddingSidClearsDependencyCache()
@@ -144,7 +148,7 @@ class SidServiceTest extends BaseFunctionalTestCase
     {
         $this->service->updateSid(1, 2, 'TEST1M', 55000);
         $this->assertDatabaseHas(
-            'sid',
+            'sids',
             [
                 'id' => 1,
                 'identifier' => 'TEST1M',
