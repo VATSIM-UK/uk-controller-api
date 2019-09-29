@@ -11,8 +11,6 @@ class Sid extends Model
 {
     public $timestamps = true;
 
-    public $table = 'sid';
-
     protected $fillable = [
         'airfield_id',
         'identifier',
