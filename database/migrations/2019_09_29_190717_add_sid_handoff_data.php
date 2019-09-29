@@ -1204,6 +1204,54 @@ class AddSidHandoffData extends Migration
                 'identifier' => 'TRN2L',
                 'handoff' => 'EGPK_SID',
             ],
+
+            // EGNT
+            [
+                'identifier' => 'GIRLI1T',
+                'handoff' => 'EGNT_SID',
+            ],
+            [
+                'identifier' => 'GIRLI1Y',
+                'handoff' => 'EGNT_SID',
+            ],
+            [
+                'identifier' => 'GIRLI3X',
+                'handoff' => 'EGNT_SID',
+            ],
+
+            // EGWU
+            [
+                'identifier' => 'BUZAD1Y',
+                'handoff' => 'EGWU_SID_WEST',
+            ],
+            [
+                'identifier' => 'BUZAD3X',
+                'handoff' => 'EGWU_SID_WEST',
+            ],
+            [
+                'identifier' => 'CPT4Y',
+                'handoff' => 'EGWU_SID_WEST',
+            ],
+            [
+                'identifier' => 'CPT5X',
+                'handoff' => 'EGWU_SID_WEST',
+            ],
+            [
+                'identifier' => 'DET4X',
+                'handoff' => 'EGWU_SID_EAST',
+            ],
+            [
+                'identifier' => 'DET4Y',
+                'handoff' => 'EGWU_SID_EAST',
+            ],
+            [
+                'identifier' => 'MATCH1X',
+                'handoff' => 'EGWU_SID_EAST',
+            ],
+            [
+                'identifier' => 'MATCH1Y',
+                'handoff' => 'EGWU_SID_EAST',
+            ],
         ];
     }
 }
