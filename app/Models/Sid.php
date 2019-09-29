@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Sid extends Model
 {
     public $timestamps = true;
+
+    public $table = 'sid';
 
     protected $fillable = [
         'airfield_id',

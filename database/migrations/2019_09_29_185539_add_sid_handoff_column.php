@@ -13,8 +13,7 @@ class AddSidHandoffColumn extends Migration
      */
     public function up()
     {
-        Schema::rename('sid', 'sids');
-        Schema::table('sids', function (Blueprint $table) {
+        Schema::table('sid', function (Blueprint $table) {
             $table->unsignedBigInteger('handoff_id')
                 ->after('initial_altitude')
                 ->nullable()
@@ -33,10 +32,9 @@ class AddSidHandoffColumn extends Migration
      */
     public function down()
     {
-        Schema::table('sids', function (Blueprint $table) {
+        Schema::table('sid', function (Blueprint $table) {
             $table->dropForeign('sids_handoff_id_foreign');
             $table->dropColumn('handoff_id');
         });
-        Schema::rename('sids', 'sid');
     }
 }

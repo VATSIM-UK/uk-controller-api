@@ -167,8 +167,11 @@ Route::middleware('public')->group(function () {
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
 
-    // Airfields positions
+    // Airfields
     Route::get('airfield', 'AirfieldController@getAllAirfields');
+
+    // Handoffs
+    Route::get('handoff', 'HandoffController@getAllHandoffs');
 
     // Admin login
     Route::prefix('admin')->group(function () {

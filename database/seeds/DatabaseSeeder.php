@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
             'hold_restriction',
         ],
         SidTableSeeder::class => [
-            'sids',
+            'sid',
         ],
         ControllerPositionsTableSeeder::class => [
             'controller_positions',
