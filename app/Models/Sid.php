@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Sid extends Model
@@ -30,5 +32,15 @@ class Sid extends Model
     public function airfield() : HasOne
     {
         return $this->hasOne(Airfield::class);
+    }
+
+    public function handoffs() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            ControllerPosition::class,
+            'handoffs',
+            'sid_id',
+            'controller_position_id'
+        );
     }
 }
