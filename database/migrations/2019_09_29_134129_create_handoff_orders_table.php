@@ -26,6 +26,17 @@ class CreateHandoffOrdersTable extends Migration
 
             $table->timestamps();
 
+            // Foreign keys
+            $table->foreign('handoff_id')
+                ->references('id')
+                ->on('handoffs')
+                ->onDelete('cascade');
+
+            $table->foreign('controller_position_id')
+                ->references('id')
+                ->on('controller_positions')
+                ->onDelete('cascade');
+
             // Unique keys
             $table->unique(['handoff_id', 'controller_position_id']);
             $table->unique(['handoff_id', 'order']);

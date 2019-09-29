@@ -45,4 +45,14 @@ class ControllerPosition extends Model
             'sid_id'
         );
     }
+
+    public function handoffs() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Handoff::class,
+            'handoff_orders',
+            'handoff_id',
+            'controller_position_id'
+        );
+    }
 }
