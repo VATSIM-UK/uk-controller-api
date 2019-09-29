@@ -17,7 +17,7 @@ class CreateTopDownsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('airfield_id');
             $table->unsignedBigInteger('controller_position_id');
-            $table->unsignedTinyInteger('order');
+            $table->unsignedTinyInteger('order')->comment('The place in the top down order of this controller');
             $table->timestamps();
 
             // Foreign keys
