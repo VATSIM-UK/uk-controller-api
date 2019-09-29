@@ -23,6 +23,10 @@ class CreateHandoffsTable extends Migration
             // Foreign references
             $table->foreign('sid_id')->references('id')->on('sid')->onDelete('cascade');
             $table->foreign('controller_id')->references('id')->on('controller_positions')->onDelete('cascade');
+
+            // Unique keys
+            $table->unique(['sid_id', 'order']);
+            $table->unique(['sid_id', 'controller_position_id']);
         });
     }
 
