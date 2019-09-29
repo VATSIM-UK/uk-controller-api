@@ -1438,6 +1438,164 @@ class AddHandoffOrders extends Migration
                     'created_at' => Carbon::now(),
                 ],
             ],
+
+            // EGPH
+            'EGPH_SID_SOUTH' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'STC_W_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'STC_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_D_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_WD_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGPH_APP')->firstOrFail()->id,
+                    'order' => 6,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGPH_SID_NORTH' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_E_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGPH_APP')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+
+            // EGPF
+            'EGPF_SID_SOUTH' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'STC_W_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'STC_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_D_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_WD_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGPF_APP')->firstOrFail()->id,
+                    'order' => 6,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGPF_SID_NORTH' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_E_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGPF_APP')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+            'EGPF_SID_WEST' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_W_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_WD_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGPF_APP')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
+
+            // EGPK
+            'EGPK_SID' => [
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'STC_W_CTR')->firstOrFail()->id,
+                    'order' => 1,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'STC_CTR')->firstOrFail()->id,
+                    'order' => 2,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_D_CTR')->firstOrFail()->id,
+                    'order' => 3,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_WD_CTR')->firstOrFail()->id,
+                    'order' => 4,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'SCO_CTR')->firstOrFail()->id,
+                    'order' => 5,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'controller_position_id' => ControllerPosition::where('callsign', 'EGPK_APP')->firstOrFail()->id,
+                    'order' => 6,
+                    'created_at' => Carbon::now(),
+                ],
+            ],
         ];
     }
 }
