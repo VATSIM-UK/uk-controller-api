@@ -962,6 +962,114 @@ class AddSidHandoffData extends Migration
                 'identifier' => 'EXMOR1B',
                 'handoff' => 'EGFF_SID_SOUTH',
             ],
+
+            // EGBB
+            [
+                'identifier' => 'ADMEX1D',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'ADMEX1M',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'COWLY2Y',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'CPT2Y',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'DTY2Y',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'DTY2Y',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'DTY4F',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'LUVUM1L',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'LUVUM1M',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'TNT1K',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'TNT4D',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'TNT4G',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'TNT6E',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'UMLUX1M',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'UNGAP1D',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'UNGAP1M',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'WCO2Y',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'WCO5D',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'WHI1L',
+                'handoff' => 'EGBB_SID',
+            ],
+            [
+                'identifier' => 'WHI4D',
+                'handoff' => 'EGBB_SID',
+            ],
+
+            // EGNX
+            [
+                'identifier' => 'BPK2P',
+                'handoff' => 'EGNX_SID_SOUTH_09',
+            ],
+            [
+                'identifier' => 'DTY3N',
+                'handoff' => 'EGNX_SID_SOUTH_27',
+            ],
+            [
+                'identifier' => 'DTY4P',
+                'handoff' => 'EGNX_SID_SOUTH_09',
+            ],
+            [
+                'identifier' => 'POL2P',
+                'handoff' => 'EGNX_SID_NORTH_09',
+            ],
+            [
+                'identifier' => 'TNT2N',
+                'handoff' => 'EGNX_SID_NORTH_27',
+            ],
+            [
+                'identifier' => 'TNT3P',
+                'handoff' => 'EGNX_SID_NORTH_09',
+            ],
         ];
     }
 }
