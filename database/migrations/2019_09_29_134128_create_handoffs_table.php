@@ -21,8 +21,15 @@ class CreateHandoffsTable extends Migration
             $table->timestamps();
 
             // Foreign references
-            $table->foreign('sid_id')->references('id')->on('sid')->onDelete('cascade');
-            $table->foreign('controller_id')->references('id')->on('controller_positions')->onDelete('cascade');
+            $table->foreign('sid_id')
+                ->references('id')
+                ->on('sid')
+                ->onDelete('cascade');
+
+            $table->foreign('controller_position_id')
+                ->references('id')
+                ->on('controller_positions')
+                ->onDelete('cascade');
 
             // Unique keys
             $table->unique(['sid_id', 'order']);
