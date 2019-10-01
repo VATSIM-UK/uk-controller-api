@@ -15,9 +15,9 @@ class AddDependenciesTable extends Migration
     {
         Schema::create('dependencies', function(Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->string('location')->comment('Where the dependency can be downloaded from');
+            $table->string('uri')->comment('Where the dependency can be downloaded from');
             $table->string('local_file')->comment('The local file where the dependency should be stored');
-            $table->timestamps();
+            $table->dateTime('updated_at');
 
             // Keys
             $table->unique('local_file');
