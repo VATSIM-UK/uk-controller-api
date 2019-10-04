@@ -17,7 +17,7 @@ class AddDependenciesTable extends Migration
             $table->mediumIncrements('id');
             $table->string('uri')->comment('Where the dependency can be downloaded from');
             $table->string('local_file')->comment('The local file where the dependency should be stored');
-            $table->dateTime('updated_at');
+            $table->timestamps();
 
             // Keys
             $table->unique('local_file');
