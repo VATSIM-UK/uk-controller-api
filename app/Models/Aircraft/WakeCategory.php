@@ -3,6 +3,7 @@
 namespace App\Models\Aircraft;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WakeCategory extends Model
 {
@@ -11,4 +12,9 @@ class WakeCategory extends Model
         'description',
         'created_at'
     ];
+
+    public function aircraft() : HasMany
+    {
+        return $this->hasMany(Aircraft::class);
+    }
 }
