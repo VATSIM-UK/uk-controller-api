@@ -23,7 +23,7 @@ class CreateAirfieldPairingPrenotesTable extends Migration
             $table->timestamps();
 
             // Keys
-            $table->unique(['origin_airfield_id', 'destination_airfield_id'], 'unique_pairing');
+            $table->unique(['origin_airfield_id', 'destination_airfield_id', 'prenote_id'], 'unique_pairing');
             $table->foreign('origin_airfield_id', 'origin_airfield')
                 ->references('id')
                 ->on('airfield')
