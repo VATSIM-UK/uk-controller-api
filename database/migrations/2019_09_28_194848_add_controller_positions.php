@@ -1166,6 +1166,16 @@ class AddControllerPositions extends Migration
                     'created_at' => Carbon::now(),
                 ],
                 [
+                    'callsign' => 'LTC_ED_CTR',
+                    'frequency' => 124.92,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'callsign' => 'LTC_EJ_CTR',
+                    'frequency' => 135.42,
+                    'created_at' => Carbon::now(),
+                ],
+                [
                     'callsign' => 'LTC_NE_CTR',
                     'frequency' => 118.82,
                     'created_at' => Carbon::now(),
