@@ -1177,7 +1177,7 @@
         "top-down": []
     },
     "LON_CTR": {
-        "frequency": 123.9,
+        "frequency": 127.82,
         "top-down": [
             "EGBB",
             "EGBE",
@@ -1242,7 +1242,7 @@
         ]
     },
     "LON_E_CTR": {
-        "frequency": 121.22,
+        "frequency": 118.47,
         "top-down": []
     },
     "LON_N_CTR": {
@@ -1312,7 +1312,7 @@
         ]
     },
     "LTC_CTR": {
-        "frequency": 124.92,
+        "frequency": 135.8,
         "top-down": [
             "EGGW",
             "EGKA",
@@ -1329,7 +1329,7 @@
         ]
     },
     "LTC_E_CTR": {
-        "frequency": 129.6,
+        "frequency": 121.22,
         "top-down": []
     },
     "LTC_ER_CTR": {
@@ -1337,7 +1337,7 @@
         "top-down": []
     },
     "LTC_ES_CTR": {
-        "frequency": 135.42,
+        "frequency": 129.6,
         "top-down": []
     },
     "LTC_NE_CTR": {
