@@ -25,9 +25,6 @@ Route::middleware('plugin.user')->group(function () {
     Route::delete('hold/profile/{profile_id}', 'HoldController@deleteUserHoldProfile')
         ->where('profile_id', '\d+');
 
-    // Dependencies
-    Route::get('dependency', 'DependencyController@getManifest');
-
     // Squawks
     Route::get('squawk-assignment/{callsign}', 'SquawkController@getSquawkAssignment')
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
@@ -163,6 +160,9 @@ Route::middleware('public')->group(function () {
             'uses' => 'VersionController@getVersionStatus',
         ]
     )->where('version', '[A-Za-z0-9\.\-]+');
+
+    // Dependencies
+    Route::get('dependency', 'DependencyController@getAllDependencies');
 
     // Admin login
     Route::prefix('admin')->group(function () {

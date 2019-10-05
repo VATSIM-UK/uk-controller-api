@@ -12,4 +12,9 @@ class Dependency extends Model
         'local_file',
         'created_at',
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

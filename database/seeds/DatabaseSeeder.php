@@ -57,6 +57,9 @@ class DatabaseSeeder extends Seeder
         SidTableSeeder::class => [
             'sid',
         ],
+        DependencyTableSeeder::class => [
+            'dependencies',
+        ],
     ];
 
 
