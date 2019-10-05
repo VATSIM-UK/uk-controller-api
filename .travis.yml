@@ -34,4 +34,3 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit
-  - php script/lint-dependencies.php
