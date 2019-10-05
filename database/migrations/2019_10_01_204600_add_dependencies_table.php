@@ -15,12 +15,14 @@ class AddDependenciesTable extends Migration
     {
         Schema::create('dependencies', function(Blueprint $table) {
             $table->mediumIncrements('id');
+            $table->string('key')->comment('Key used in the plugin to retrieve data');
             $table->string('uri')->comment('Where the dependency can be downloaded from');
             $table->string('local_file')->comment('The local file where the dependency should be stored');
             $table->timestamps();
 
             // Keys
             $table->unique('local_file');
+            $table->unique('key');
         });
     }
 
