@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAirfieldPairingsTable extends Migration
+class CreateAirfieldPairingPrenotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAirfieldPairingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('airfield_pairings', function (Blueprint $table) {
+        Schema::create('airfield_pairing_prenotes', function (Blueprint $table) {
 
             $table->bigIncrements('id');
             $table->unsignedInteger('origin_airfield_id')->comment('The origin airfield');
@@ -46,6 +46,6 @@ class CreateAirfieldPairingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('airfield_pairings');
+        Schema::dropIfExists('airfield_pairing_prenotes');
     }
 }
