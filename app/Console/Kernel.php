@@ -37,7 +37,6 @@ class Kernel extends ConsoleKernel
         UserCreate::class,
         \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
         GenerateMinStackLevels::class,
-        GenerateLegacyDependencies::class,
         GetDeletedSidsFromSectorFile::class,
     ];
 
