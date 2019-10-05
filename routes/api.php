@@ -167,6 +167,14 @@ Route::middleware('public')->group(function () {
 
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
+    // Controller positions
+    Route::get('controller', 'ControllerPositionController@getAllControllers');
+
+    // Airfields
+    Route::get('airfield', 'AirfieldController@getAllAirfields');
+
+    // Handoffs
+    Route::get('handoff', 'HandoffController@getAllHandoffs');
 
     // Admin login
     Route::prefix('admin')->group(function () {

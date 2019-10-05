@@ -7,13 +7,13 @@ class DatabaseSeeder extends Seeder
     // The seeders and the tables they affect
     const SEEDERS = [
         VersionTableSeeder::class => [
-            'version'
+            'version',
         ],
         UserTableSeeder::class => [
-            'user'
+            'user',
         ],
         AdminTableSeeder::class => [
-            'admin'
+            'admin',
         ],
         SquawkTableSeeder::class => [
             'squawk_general',
@@ -63,6 +63,14 @@ class DatabaseSeeder extends Seeder
         AircraftTableSeeder::class => [
             'aircraft',
             'wake_categories',
+        ],
+        ControllerPositionsTableSeeder::class => [
+            'controller_positions',
+            'top_downs',
+        ],
+        HandoffTableSeeder::class => [
+            'handoffs',
+            'handoff_orders',
         ],
     ];
 
