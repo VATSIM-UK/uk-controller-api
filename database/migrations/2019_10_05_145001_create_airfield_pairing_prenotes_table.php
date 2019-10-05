@@ -14,7 +14,6 @@ class CreateAirfieldPairingPrenotesTable extends Migration
     public function up()
     {
         Schema::create('airfield_pairing_prenotes', function (Blueprint $table) {
-
             $table->bigIncrements('id');
             $table->unsignedInteger('origin_airfield_id')->comment('The origin airfield');
             $table->unsignedInteger('destination_airfield_id')->comment('The destination airfield');

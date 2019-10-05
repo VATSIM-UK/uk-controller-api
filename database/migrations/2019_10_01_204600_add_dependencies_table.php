@@ -13,7 +13,7 @@ class AddDependenciesTable extends Migration
      */
     public function up()
     {
-        Schema::create('dependencies', function(Blueprint $table) {
+        Schema::create('dependencies', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->string('key')->comment('Key used in the plugin to retrieve data');
             $table->string('uri')->comment('Where the dependency can be downloaded from');
