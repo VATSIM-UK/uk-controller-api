@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Sid extends Model
@@ -41,8 +42,13 @@ class Sid extends Model
         return $this->hasOne(Handoff::class);
     }
 
-    public function prenote() : HasOne
+    public function prenotes() : BelongsToMany
     {
-        return $this->hasOne(Prenote::class);
+        return $this->belongsToMany(
+            Prenote::class,
+            'sid_prenotes',
+            'sid_id',
+            'prenote_id'
+        );
     }
 }

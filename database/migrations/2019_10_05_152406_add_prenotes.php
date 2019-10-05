@@ -52,13 +52,8 @@ class AddPrenotes extends Migration
                 'created_at' => Carbon::now(),
             ],
             [
-                'key' => 'EGSS_SID_DET',
-                'description' => 'London Stansted Detling Departures',
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'key' => 'EGSS_SID_LYD',
-                'description' => 'London Stansted Lydd Departures',
+                'key' => 'EGSS_SID_DET_LYD',
+                'description' => 'London Stansted Detling and Lydd Departures',
                 'created_at' => Carbon::now(),
             ],
             [

@@ -20,6 +20,7 @@ class CreateSidPrenotesTable extends Migration
             $table->timestamps();
 
             // Foreign keys
+            $table->unique(['sid_id', 'prenote_id']);
             $table->foreign('sid_id')
                 ->references('id')
                 ->on('sid')
