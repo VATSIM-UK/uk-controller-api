@@ -60,6 +60,10 @@ class DatabaseSeeder extends Seeder
         DependencyTableSeeder::class => [
             'dependencies',
         ],
+        AircraftTableSeeder::class => [
+            'aircraft',
+            'wake_categories',
+        ],
     ];
 
 

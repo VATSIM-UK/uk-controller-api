@@ -16,6 +16,12 @@ class AddDependencies extends Migration
         Dependency::insert(
             [
                 [
+                    'key' => 'DEPENDENCY_AIRCRAFT',
+                    'uri' => '/aircraft',
+                    'local_file' => 'aircraft.json',
+                    'created_at' => Carbon::now(),
+                ],
+                [
                     'key' => 'DEPENDENCY_SID',
                     'uri' => '/sid',
                     'local_file' => 'sids.json',
@@ -53,7 +59,7 @@ class AddDependencies extends Migration
                 ],
                 [
                     'key' => 'DEPENDENCY_WAKE',
-                    'uri' => '/storage/dependencies/wake-categories.json',
+                    'uri' => '/wake-category',
                     'local_file' => 'wake-categories.json',
                     'created_at' => Carbon::now(),
                 ],

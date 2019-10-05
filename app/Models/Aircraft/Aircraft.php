@@ -15,6 +15,11 @@ class Aircraft extends Model
         'created_at'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function wakeCategory() : BelongsTo
     {
         return $this->belongsTo(WakeCategory::class);

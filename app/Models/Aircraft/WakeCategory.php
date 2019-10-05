@@ -13,6 +13,11 @@ class WakeCategory extends Model
         'created_at'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function aircraft() : HasMany
     {
         return $this->hasMany(Aircraft::class);

@@ -144,6 +144,10 @@ Route::middleware('admin.dependency')->group(function () {
 // Routes that can be hit by anybody at all, mostly login and informational routes
 Route::middleware('public')->group(function () {
 
+    // Aircraft
+    Route::get('aircraft', 'AircraftController@getAllAircraft');
+    Route::get('wake-category', 'AircraftController@getAllWakeCategories');
+
     // Initial altitudes and sids
     Route::get('sid', 'SidController@getAllSids');
     Route::get('sid/{id}', 'SidController@getSid')
