@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Services\AirfieldService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

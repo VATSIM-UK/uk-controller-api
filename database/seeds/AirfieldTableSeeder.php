@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 
 class AirfieldService
 {

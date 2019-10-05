@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Airfield;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\Controller\ControllerPosition;
@@ -101,6 +101,16 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'top_downs',
             'airfield_id',
             'controller_position_id'
+        );
+    }
+
+    public function pairings() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Airfield::class,
+            'airfield_pairings',
+            'destination_airfield_id',
+            'origin_airfield_id'
         );
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\MinStack\MinStackCalculableInterface;
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Models\MinStack\MslAirfield;
 use App\Models\MinStack\MslTma;
 use App\Models\Tma;

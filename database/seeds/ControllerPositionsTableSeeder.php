@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Seeder;
 

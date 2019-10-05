@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Models\Sid;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
