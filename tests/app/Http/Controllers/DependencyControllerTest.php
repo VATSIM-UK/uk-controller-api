@@ -1,8 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
-use Illuminate\Support\Facades\Storage;
 
 class DependencyControllerTest extends BaseApiTestCase
 {

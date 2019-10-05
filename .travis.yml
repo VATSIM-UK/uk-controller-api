@@ -34,5 +34,4 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit
-  - ./vendor/bin/phpcs --file-list=.phpcs --standard=PSR2
   - php script/lint-dependencies.php
