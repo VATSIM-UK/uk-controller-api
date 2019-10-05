@@ -1,8 +1,9 @@
 <?php
 
 use App\Models\Dependency\Dependency;
+use Illuminate\Database\Seeder;
 
-class DependencyTableSeeder extends \Illuminate\Database\Seeder
+class DependencyTableSeeder extends Seeder
 {
     public function run()
     {
