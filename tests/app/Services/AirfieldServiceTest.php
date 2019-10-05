@@ -21,32 +21,39 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
     {
         $expected = [
             [
-                "id" => 1,
-                "code" => "EGLL",
-                "transition_altitude" => 6000,
-                "controllers" => [
+                'id' => 1,
+                'code' => 'EGLL',
+                'transition_altitude' => 6000,
+                'controllers' => [
                     1,
                     2,
                     3,
                 ],
-            ],
-            [
-                "id" => 2,
-                "code" => "EGBB",
-                "transition_altitude" => 6000,
-                "controllers" => [
-                    4,
+                'pairing-prenotes' => [
+                    2 => [
+                        1,
+                    ],
                 ],
             ],
             [
-                "id" => 3,
-                "code" => "EGKR",
-                "transition_altitude" => 6000,
-                "controllers" => [],
+                'id' => 2,
+                'code' => 'EGBB',
+                'transition_altitude' => 6000,
+                'controllers' => [
+                    4,
+                ],
+                'pairing-prenotes' => [],
+            ],
+            [
+                'id' => 3,
+                'code' => 'EGKR',
+                'transition_altitude' => 6000,
+                'controllers' => [],
+                'pairing-prenotes' => [],
             ],
         ];
 
-        $actual = $this->service->getAllAirfieldsWithTopDown();
+        $actual = $this->service->getAllAirfieldsWithRelations();
         $this->assertEquals($expected, $actual);
     }
 }

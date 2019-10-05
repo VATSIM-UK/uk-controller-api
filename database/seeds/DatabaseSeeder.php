@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         ],
         AirfieldTableSeeder::class => [
             'airfield',
+            'airfield_pairing_prenotes',
         ],
         TmaTableSeeder::class => [
             'tma',
@@ -56,6 +57,7 @@ class DatabaseSeeder extends Seeder
         ],
         SidTableSeeder::class => [
             'sid',
+            'sid_prenotes',
         ],
         DependencyTableSeeder::class => [
             'dependencies',
@@ -71,6 +73,10 @@ class DatabaseSeeder extends Seeder
         HandoffTableSeeder::class => [
             'handoffs',
             'handoff_orders',
+        ],
+        PrenoteTableSeeder::class => [
+            'prenotes',
+            'prenote_orders',
         ],
     ];
 
@@ -89,11 +95,11 @@ class DatabaseSeeder extends Seeder
                 DB::table($table)->truncate();
             }
         }
-        DB::statement("SET foreign_key_checks=1");
 
         // Seed
         foreach (self::SEEDERS as $seeder => $tables) {
             $this->call($seeder);
         }
+        DB::statement("SET foreign_key_checks=1");
     }
 }

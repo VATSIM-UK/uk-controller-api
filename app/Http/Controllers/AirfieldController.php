@@ -29,10 +29,6 @@ class AirfieldController extends BaseController
      */
     public function getAllAirfields(Request $request) : JsonResponse
     {
-        $airfields = $request->get('controllers') === '1'
-            ? $this->airfieldService->getAllAirfieldsWithTopDown()
-            : Airfield::all();
-
-        return response()->json($airfields);
+        return response()->json($this->airfieldService->getAllAirfieldsWithRelations());
     }
 }

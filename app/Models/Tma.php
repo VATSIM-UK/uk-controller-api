@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
+use App\Models\Airfield\Airfield;
 use App\Models\MinStack\MslTma;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;

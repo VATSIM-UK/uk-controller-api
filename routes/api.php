@@ -176,6 +176,9 @@ Route::middleware('public')->group(function () {
     // Handoffs
     Route::get('handoff', 'HandoffController@getAllHandoffs');
 
+    // Prenotes
+    Route::get('prenote', 'PrenoteController@getAllPrenotes');
+
     // Admin login
     Route::prefix('admin')->group(function () {
         Route::post('login', 'UserController@adminLogin');

@@ -62,6 +62,26 @@ class AddSidPrenoteData extends Migration
                 'created_at' => Carbon::now(),
             ],
             [
+                'sid_id' => $sids['BIG3P'],
+                'prenote_id' => $prenotes['EGKK_SID_BIG_APP'],
+                'created_at' => Carbon::now(),
+            ],
+            [
+                'sid_id' => $sids['BIG3P'],
+                'prenote_id' => $prenotes['EGKK_SID_BIG_LON'],
+                'created_at' => Carbon::now(),
+            ],
+            [
+                'sid_id' => $sids['BIG8M'],
+                'prenote_id' => $prenotes['EGKK_SID_BIG_APP'],
+                'created_at' => Carbon::now(),
+            ],
+            [
+                'sid_id' => $sids['BIG8M'],
+                'prenote_id' => $prenotes['EGKK_SID_BIG_LON'],
+                'created_at' => Carbon::now(),
+            ],
+            [
                 'sid_id' => $sids['CLN1A'],
                 'prenote_id' => $prenotes['EGLC_SID_CLN'],
                 'created_at' => Carbon::now(),

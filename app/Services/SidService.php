@@ -43,7 +43,17 @@ class SidService
      */
     public function getAllSids() : array
     {
-        return Sid::all()->toArray();
+        $sids = [];
+        Sid::all()->each(function (Sid $sid) use (&$sids) {
+            $sids[] = array_merge(
+                $sid->toArray(),
+                [
+                    'prenotes' => $sid->prenotes()->pluck('prenote_id')->toArray(),
+                ]
+            );
+        });
+
+        return $sids;
     }
 
     /**

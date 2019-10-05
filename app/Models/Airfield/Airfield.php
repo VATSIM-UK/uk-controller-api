@@ -104,13 +104,13 @@ class Airfield extends Model implements MinStackDataProviderInterface
         );
     }
 
-    public function pairings() : BelongsToMany
+    public function prenotePairings() : BelongsToMany
     {
         return $this->belongsToMany(
             Airfield::class,
-            'airfield_pairings',
-            'destination_airfield_id',
-            'origin_airfield_id'
+            'airfield_pairing_prenotes',
+            'origin_airfield_id',
+            'destination_airfield_id'
         );
     }
 }

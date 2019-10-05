@@ -73,22 +73,32 @@ class SidControllerTest extends BaseApiTestCase
                 'id' => 1,
                 'identifier' => 'TEST1X',
                 'airfield_id' => 1,
+                'handoff_id' => null,
                 'initial_altitude' => 3000,
+                'prenotes' => [
+                    1,
+                ],
             ],
             [
                 'id' => 2,
                 'identifier' => 'TEST1Y',
                 'airfield_id' => 1,
+                'handoff_id' => null,
                 'initial_altitude' => 4000,
+                'prenotes' => [],
             ],
             [
                 'id' => 3,
                 'identifier' => 'TEST1A',
                 'airfield_id' => 2,
+                'handoff_id' => null,
                 'initial_altitude' => 5000,
+                'prenotes' => [],
             ],
         ];
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->
+        assertStatus(200)
+        ->assertExactJson($expected);
     }
 
     public function testItReturns200OnGetAllSids()
