@@ -1102,7 +1102,7 @@ class AddControllerPositions extends Migration
                 ],
                 [
                     'callsign' => 'LON_CTR',
-                    'frequency' => 123.9,
+                    'frequency' => 127.82,
                     'created_at' => Carbon::now(),
                 ],
                 [
@@ -1117,7 +1117,7 @@ class AddControllerPositions extends Migration
                 ],
                 [
                     'callsign' => 'LON_E_CTR',
-                    'frequency' => 121.22,
+                    'frequency' => 118.47,
                     'created_at' => Carbon::now(),
                 ],
                 [
@@ -1147,12 +1147,12 @@ class AddControllerPositions extends Migration
                 ],
                 [
                     'callsign' => 'LTC_CTR',
-                    'frequency' => 124.92,
+                    'frequency' => 135.8,
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'callsign' => 'LTC_E_CTR',
-                    'frequency' => 129.6,
+                    'frequency' => 121.22,
                     'created_at' => Carbon::now(),
                 ],
                 [
@@ -1162,6 +1162,16 @@ class AddControllerPositions extends Migration
                 ],
                 [
                     'callsign' => 'LTC_ES_CTR',
+                    'frequency' => 129.6,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'callsign' => 'LTC_ED_CTR',
+                    'frequency' => 124.92,
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'callsign' => 'LTC_EJ_CTR',
                     'frequency' => 135.42,
                     'created_at' => Carbon::now(),
                 ],
