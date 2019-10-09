@@ -8,11 +8,15 @@ class HandoffService
 {
     public function getAllHandoffsWithControllers() : array
     {
-        return Handoff::with('controllers')->get()->map(function (Handoff $handoff) {
+        $handoffs = Handoff::with(['controllers' => function ($query) {
+            $query->orderBy('order');
+        }])->get();
+
+        return $handoffs->map(function (Handoff $handoff) {
             return array_merge(
                 $handoff->toArray(),
                 [
-                    'controllers' => $handoff->controllers()->orderBy('order')->pluck('controller_position_id')->toArray()
+                    'controllers' => array_column($handoff->controllers->toArray(), 'id'),
                 ]
             );
         })->toArray();
