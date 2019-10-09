@@ -53,12 +53,9 @@ class GetDeletedSidsFromSectorFile extends Command
 
     private function processPlugin() : array
     {
-        $sidArray = [];
-        $sids = Sid::all();
-        $sids->each(function (Sid $sid) use (&$sidArray) {
-            $sidArray[] = $this->generateSidKey($sid->airfield->code, $sid->identifier);
-        });
-        return $sidArray;
+        return Sid::all()->map(function (Sid $sid) use (&$sidArray) {
+            return $this->generateSidKey($sid->airfield->code, $sid->identifier);
+        })->toArray();
     }
 
     /**
@@ -128,6 +125,18 @@ class GetDeletedSidsFromSectorFile extends Command
         return substr($line, 0, 4) === 'STAR';
     }
 
+    /**
+     * Explode indexes:
+     *
+     * 0 - SID/STAR
+     * 1 - Airfield
+     * 2 - Runway
+     * 3 - Designator
+     * 4 - Route String
+     *
+     * @param string $line
+     * @return string
+     */
     private function parseSidData(string $line) : string
     {
         $sidDetails = explode(':', $line);
