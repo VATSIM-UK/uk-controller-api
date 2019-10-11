@@ -3,6 +3,7 @@
 namespace App\Models\Airfield;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
+use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Models\Controller\ControllerPosition;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
@@ -111,6 +112,16 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'airfield_pairing_prenotes',
             'origin_airfield_id',
             'destination_airfield_id'
+        );
+    }
+
+    public function altimeterSettingRegions() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            AltimeterSettingRegion::class,
+            'altimeter_setting_region_airfield',
+            'airfield_id',
+            'altimeter_setting_region_id'
         );
     }
 }
