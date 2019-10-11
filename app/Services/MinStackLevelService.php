@@ -117,6 +117,10 @@ class MinStackLevelService
         });
 
         foreach ($minStackLevels as $airfield => $minStack) {
+            if (!isset($minStack)) {
+                continue;
+            }
+
             MslAirfield::updateOrCreate(
                 [
                     'airfield_id' => $airfield,
@@ -156,6 +160,10 @@ class MinStackLevelService
         });
 
         foreach ($minStackLevels as $tma => $minStack) {
+            if (!isset($minStack)) {
+                continue;
+            }
+
             MslTma::updateOrCreate(
                 [
                     'tma_id' => $tma,

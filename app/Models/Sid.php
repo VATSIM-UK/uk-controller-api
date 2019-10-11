@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Controller\Handoff;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -29,6 +30,11 @@ class Sid extends Model
      */
     public function airfield() : HasOne
     {
-        return $this->hasOne(Airfield::class);
+        return $this->hasOne(Airfield::class, 'id', 'airfield_id');
+    }
+
+    public function handoff() : HasOne
+    {
+        return $this->hasOne(Handoff::class);
     }
 }

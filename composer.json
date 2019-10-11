@@ -1,5 +1,5 @@
 {
-    "name": "VATSIM-UK/uk-controller-api",
+    "name": "vatsim-uk/uk-controller-api",
     "description": "The web api backend to the UK Controller Plugin.",
     "keywords": ["vatsim", "uk", "ukcp", "uk-controller-api", "controller", "vatuk", "plugin"],
     "license": "GPL 3.0",
