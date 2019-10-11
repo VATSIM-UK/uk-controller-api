@@ -69,6 +69,12 @@ class AddDependencies extends Migration
                     'local_file' => 'prenotes.json',
                     'created_at' => Carbon::now(),
                 ],
+                [
+                    'key' => 'DEPENDENCY_ASR',
+                    'uri' => '/altimeter-setting-region',
+                    'local_file' => 'altimeter-setting-regions.json',
+                    'created_at' => Carbon::now(),
+                ],
             ]
         );
     }

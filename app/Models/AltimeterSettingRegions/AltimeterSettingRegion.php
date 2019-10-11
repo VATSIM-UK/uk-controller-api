@@ -3,7 +3,6 @@
 namespace App\Models\AltimeterSettingRegions;
 
 use App\Models\Airfield\Airfield;
-use App\Models\AltimeterSettingRegions\RegionalPressureSetting;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
