@@ -8,6 +8,7 @@ use App\Console\Commands\ClearSquawkAllocations;
 use App\Console\Commands\GenerateLegacyDependencies;
 use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
+use App\Console\Commands\GetDeletedSidsFromSectorFile;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
 use Illuminate\Console\Scheduling\Schedule;
@@ -37,6 +38,7 @@ class Kernel extends ConsoleKernel
         \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
         GenerateMinStackLevels::class,
         GenerateLegacyDependencies::class,
+        GetDeletedSidsFromSectorFile::class,
     ];
 
     /**
