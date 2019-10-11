@@ -20,7 +20,7 @@ class CreateAltimeterSettingRegionAirfieldTable extends Migration
 
             // Keys
             $table->unique(['altimeter_setting_region_id', 'airfield_id'], 'asr_airfield');
-            $table->foreign('altimeter_setting_region_id', 'asr_id')
+            $table->foreign('altimeter_setting_region_id', 'asr_asr_id')
                 ->references('id')
                 ->on('altimeter_setting_region')
                 ->onDelete('cascade');
