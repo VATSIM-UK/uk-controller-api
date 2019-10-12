@@ -1,15 +1,17 @@
 <?php
+
 namespace App\Services;
 
-use App\BaseUnitTestCase;
+use App\BaseFunctionalTestCase;
 use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
+use App\Models\AltimeterSettingRegions\RegionalPressureSetting;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use SimpleXMLElement;
 
-class RegionalPressureServiceTest extends BaseUnitTestCase
+class RegionalPressureServiceTest extends BaseFunctionalTestCase
 {
     /**
      * @var MetarService
@@ -39,7 +41,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         }
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->metarService = new MetarService(new Client());
@@ -55,7 +57,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
     {
         $mock = new MockHandler(
             [
-                new Response(404, [])
+                new Response(404, []),
             ]
         );
         $handler = HandlerStack::create($mock);
@@ -71,7 +73,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
     {
         $mock = new MockHandler(
             [
-                new Response(202, [], 'reallyNotXml')
+                new Response(202, [], 'reallyNotXml'),
             ]
         );
         $handler = HandlerStack::create($mock);
@@ -97,7 +99,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
 
         $mock = new MockHandler(
             [
-            new Response(202, [], $fakeXml->asXML())
+                new Response(202, [], $fakeXml->asXML()),
             ]
         );
         $handler = HandlerStack::create($mock);
@@ -129,7 +131,7 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
 
         $mock = new MockHandler(
             [
-                new Response(202, [], $fakeXml->asXML())
+                new Response(202, [], $fakeXml->asXML()),
             ]
         );
         $handler = HandlerStack::create($mock);
@@ -154,12 +156,12 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $expected = 999;
         $airfieldQnhs = [
             'EGLL' => 1000,
-            'EGKR' => 1001
+            'EGKR' => 1001,
         ];
 
         $mock = new MockHandler(
             [
-                new Response(202, [], '')
+                new Response(202, [], ''),
             ]
         );
         $handler = HandlerStack::create($mock);
@@ -183,12 +185,12 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
         $expected = RegionalPressureService::LOWEST_QNH_DEFAULT;
         $airfieldQnhs = [
             'EGLL' => 1000,
-            'EGKR' => 1001
+            'EGKR' => 1001,
         ];
 
         $mock = new MockHandler(
             [
-                new Response(202, [], '')
+                new Response(202, [], ''),
             ]
         );
         $handler = HandlerStack::create($mock);
@@ -205,5 +207,44 @@ class RegionalPressureServiceTest extends BaseUnitTestCase
             $expected,
             $service->calculateRegionalPressure(AltimeterSettingRegion::findOrFail(2), $airfieldQnhs)
         );
+    }
+
+    public function testItReturnsRegionalPressureSettings()
+    {
+        $expected = [
+            'ASR_BOBBINGTON' => 986,
+            'ASR_TOPPINGTON' => 988,
+        ];
+
+        $mock = new MockHandler(
+            [
+                new Response(202, [], ''),
+            ]
+        );
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
+
+
+        $service = new RegionalPressureService(
+            $client,
+            'http://test.com',
+            $this->metarService
+        );
+
+        RegionalPressureSetting::create(
+            [
+                'altimeter_setting_region_id' => 1,
+                'value' => 986,
+            ]
+        );
+
+        RegionalPressureSetting::create(
+            [
+                'altimeter_setting_region_id' => 2,
+                'value' => 988,
+            ]
+        );
+
+        $this->assertEquals($expected, $service->getRegionalPressureArray());
     }
 }

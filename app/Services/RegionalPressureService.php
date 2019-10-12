@@ -109,6 +109,17 @@ class RegionalPressureService
         return $lowestQnh !== self::LOWEST_QNH_DEFAULT ? $lowestQnh - 1 : self::LOWEST_QNH_DEFAULT;
     }
 
+    public function getRegionalPressureArray() : array
+    {
+        return RegionalPressureSetting::with('altimeterSettingRegion')->get()->mapWithKeys(
+            function (RegionalPressureSetting $rps) {
+                return [
+                    $rps->altimeterSettingRegion->key => $rps->value,
+                ];
+            }
+        )->toArray();
+    }
+
     /**
      * Parses all the pressures from the XML.
      *
