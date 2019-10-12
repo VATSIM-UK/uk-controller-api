@@ -7,29 +7,22 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MinStacksUpdatedEvent implements ShouldBroadcast
+class RegionalPressuresUpdatedEvent implements ShouldBroadcast
 {
-    const CHANNEL = 'minstack-updates';
+    const CHANNEL = 'rps-updates';
 
     /**
      * @var array
      */
-    public $airfield;
-
-    /**
-     * @var array
-     */
-    public $tma;
+    private $pressures;
 
     /**
      * AirfieldMinStacksUpdatedEvent constructor.
-     * @param array $airfield
-     * @param array $tma
+     * @param array $pressures
      */
-    public function __construct(array $airfield, array $tma)
+    public function __construct(array $pressures)
     {
-        $this->airfield = $airfield;
-        $this->tma = $tma;
+        $this->pressures = $pressures;
     }
 
     /**

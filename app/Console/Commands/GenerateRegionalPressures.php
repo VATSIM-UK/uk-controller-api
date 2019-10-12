@@ -29,6 +29,7 @@ class GenerateRegionalPressures extends Command
         $this->info('Generating regional pressure settings');
         $regionalPressures = $service->generateRegionalPressures();
         if (!is_null($regionalPressures) && count($regionalPressures) !== 0) {
+            event(new RegionalPressuresUpdatedEvent($regionalPressures));
             Log::info('Regional pressure settings updated successfully.');
             $this->info('Regional pressure settings updated successfully.');
             return 0;
