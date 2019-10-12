@@ -33,9 +33,6 @@ Route::middleware('plugin.user')->group(function () {
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
 
-    // Regional Pressure
-    Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
-
     // Min Stack Levels
     Route::get('msl', 'MinStackController@getAllMinStackLevels');
     Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
@@ -179,6 +176,9 @@ Route::middleware('public')->group(function () {
 
     // Prenotes
     Route::get('prenote', 'PrenoteController@getAllPrenotes');
+
+    // Regional Pressure
+    Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
 
     // Admin login
     Route::prefix('admin')->group(function () {

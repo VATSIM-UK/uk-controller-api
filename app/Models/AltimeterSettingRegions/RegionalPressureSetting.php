@@ -2,9 +2,8 @@
 
 namespace App\Models\AltimeterSettingRegions;
 
-use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RegionalPressureSetting extends Model
 {
@@ -13,8 +12,8 @@ class RegionalPressureSetting extends Model
         'value',
     ];
 
-    public function altimeterSettingRegion() : HasOne
+    public function altimeterSettingRegion() : BelongsTo
     {
-        return $this->hasOne(AltimeterSettingRegion::class);
+        return $this->belongsTo(AltimeterSettingRegion::class);
     }
 }
