@@ -14,7 +14,7 @@ class AddAsrKeys extends Migration
      */
     public function up()
     {
-        Schema::table('altimeter_setting_region', function(Blueprint $table) {
+        Schema::table('altimeter_setting_region', function (Blueprint $table) {
             $table->string('key')->after('id')->comment('String key to identify the ASR');
             $table->dropColumn('variation');
 
@@ -23,10 +23,9 @@ class AddAsrKeys extends Migration
 
         $this->updateAsrKeys();
 
-        Schema::table('altimeter_setting_region', function(Blueprint $table) {
+        Schema::table('altimeter_setting_region', function (Blueprint $table) {
             $table->unique('key');
         });
-
     }
 
     /**
@@ -36,7 +35,7 @@ class AddAsrKeys extends Migration
      */
     public function down()
     {
-        Schema::table('altimeter_setting_region', function(Blueprint $table) {
+        Schema::table('altimeter_setting_region', function (Blueprint $table) {
             $table->smallInteger('variation')->after('station');
             $table->dropUnique('altimeter_setting_region_key_unique');
             $table->dropColumn('key');
