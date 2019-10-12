@@ -1,6 +1,7 @@
 <?php
 namespace App\Console\Commands;
 
+use App\Events\RegionalPressuresUpdatedEvent;
 use App\Services\RegionalPressureService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Log;
  */
 class GenerateRegionalPressures extends Command
 {
-    protected $signature = 'regionals:generate';
+    protected $signature = 'regional:generate';
 
     protected $description = 'Regenerate the regional pressure settings';
 
