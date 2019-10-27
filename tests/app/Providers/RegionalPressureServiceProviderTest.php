@@ -11,12 +11,6 @@ class RegionalPressureServiceProviderTest extends \App\BaseUnitTestCase
         $this->assertInstanceOf(RegionalPressureServiceProvider::class, $provider);
     }
 
-    public function testItDefersLoading()
-    {
-        $provider = new RegionalPressureServiceProvider($this->app);
-        $this->assertTrue($provider->isDeferred());
-    }
-
     public function testItProvidesTheService()
     {
         $provider = new RegionalPressureServiceProvider($this->app);
