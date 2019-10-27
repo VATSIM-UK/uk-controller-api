@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 use App\BaseFunctionalTestCase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
 use Mockery;
 use Symfony\Component\Console\Exception\RuntimeException;
 
@@ -14,57 +15,52 @@ class UserCreateTest extends BaseFunctionalTestCase
         $this->assertInstanceOf(UserCreate::class, $this->app->make(UserCreate::class));
     }
 
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Not enough arguments (missing: "vatsim_cid").
-     */
     public function testItFailsIfVatsimCidNotGiven()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Not enough arguments (missing: "vatsim_cid").');
+
         Artisan::call('user:create');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid VATSIM CID provided.
-     */
     public function testItFailsIfVatsimCidString()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+
         Artisan::call(
             'user:create',
             ['vatsim_cid' => 'notacid']
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid VATSIM CID provided.
-     */
     public function testItFailsIfVatsimCidFloat()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+
         Artisan::call(
             'user:create',
             ['vatsim_cid' => 120353.3]
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid VATSIM CID provided.
-     */
     public function testItFailsIfVatsimCidTooLow()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+
         Artisan::call(
             'user:create',
             ['vatsim_cid' => 400000]
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid VATSIM CID provided.
-     */
     public function testItFailsIfVatsimCidTooLowBoundary()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+
         Artisan::call(
             'user:create',
             ['vatsim_cid' => 799999]
