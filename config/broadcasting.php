@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default' => env('BROADCAST_DRIVER', 'null'),
+    'default' => env('BROADCAST_DRIVER', null),
     'connections' => [
         'redis' => [
             'driver' => 'redis',
@@ -21,7 +21,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => true,
-                'host' => '127.0.0.1',
+                'host' => env('WEBSOCKET_BROADCAST_HOST') ?? '127.0.0.1',
                 'port' => 6001,
                 'scheme' => env('WEBSOCKET_ENV'),
                 'curl_options' => [
