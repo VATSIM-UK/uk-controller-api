@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Services\RegionalPressureService;
 use Illuminate\Http\JsonResponse;
 
@@ -30,5 +31,10 @@ class RegionalPressureController extends BaseController
     public function getRegionalPressures() : JsonResponse
     {
         return response()->json($this->regionalPressureService->getRegionalPressureArray());
+    }
+
+    public function getAltimeterSettingRegions() : JsonResponse
+    {
+        return response()->json(AltimeterSettingRegion::all());
     }
 }

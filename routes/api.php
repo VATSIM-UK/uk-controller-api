@@ -179,6 +179,7 @@ Route::middleware('public')->group(function () {
 
     // Regional Pressure
     Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
+    Route::get('altimeter-setting-region', 'RegionalPressureController@getAltimeterSettingRegions');
 
     // Admin login
     Route::prefix('admin')->group(function () {

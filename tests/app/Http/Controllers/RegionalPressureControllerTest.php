@@ -34,6 +34,26 @@ class RegionalPressureControllerTest extends BaseApiTestCase
             ->assertStatus(200);
     }
 
+    public function testItReturnsAsrs()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'altimeter-setting-region')
+            ->assertJson(
+                [
+                    [
+                        'id' => 1,
+                        'name' => 'Bobbington',
+                        'key' => 'ASR_BOBBINGTON',
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Toppington',
+                        'key' => 'ASR_TOPPINGTON',
+                    ],
+                ]
+            )
+            ->assertStatus(200);
+    }
+
     public function testItDoesntAcceptPost()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'regional-pressure')->assertStatus(405);
