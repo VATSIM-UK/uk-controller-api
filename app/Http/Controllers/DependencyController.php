@@ -13,6 +13,13 @@ class DependencyController extends BaseController
      */
     public function getAllDependencies() : JsonResponse
     {
-        return response()->json(Dependency::all());
+        $dependencies = Dependency::all()->map(function (Dependency $dependency) {
+            return [
+                'key' => $dependency->key,
+                'uri' => sprintf('%s/dependency/%s', config('app.url'), $dependency->key),
+                'local_file' => $dependency->local_file,
+            ];
+        });
+        return response()->json($dependencies);
     }
 }

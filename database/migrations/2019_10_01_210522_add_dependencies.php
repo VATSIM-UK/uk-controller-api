@@ -16,62 +16,47 @@ class AddDependencies extends Migration
         Dependency::insert(
             [
                 [
-                    'key' => 'DEPENDENCY_AIRCRAFT',
-                    'uri' => '/aircraft',
-                    'local_file' => 'aircraft.json',
+                    'key' => 'DEPENDENCY_AIRFIELD_OWNERSHIP',
+                    'local_file' => 'airfield-ownership.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
-                    'key' => 'DEPENDENCY_SID',
-                    'uri' => '/sid',
-                    'local_file' => 'sids.json',
+                    'key' => 'DEPENDENCY_CONTROLLER_POSITIONS',
+                    'local_file' => 'controller-positions.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
-                    'key' => 'DEPENDENCY_AIRFIELD',
-                    'uri' => '/airfield',
-                    'local_file' => 'airfields.json',
-                    'created_at' => Carbon::now(),
-                ],
-                [
-                    'key' => 'DEPENDENCY_CONTROLLER',
-                    'uri' => '/controller',
-                    'local_file' => 'controllers.json',
-                    'created_at' => Carbon::now(),
-                ],
-                [
-                    'key' => 'DEPENDENCY_HANDOFF',
-                    'uri' => '/handoff',
-                    'local_file' => 'handoffs.json',
-                    'created_at' => Carbon::now(),
-                ],
-                [
-                    'key' => 'DEPENDENCY_HOLD',
-                    'uri' => '/hold',
+                    'key' => 'DEPENDENCY_HOLDS',
                     'local_file' => 'holds.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
+                    'key' => 'DEPENDENCY_INITIAL_ALTITUDES',
+                    'local_file' => 'initial-altitudes.json',
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'key' => 'DEPENDENCY_HANDOFF',
+                    'local_file' => 'handoffs.json',
+                    'created_at' => Carbon::now(),
+                ],
+                [
                     'key' => 'DEPENDENCY_HOLD_PROFILE',
-                    'uri' => '/hold/profile',
                     'local_file' => 'holds-profiles.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_WAKE',
-                    'uri' => '/wake-category',
                     'local_file' => 'wake-categories.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_PRENOTE',
-                    'uri' => '/prenote',
                     'local_file' => 'prenotes.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_ASR',
-                    'uri' => '/altimeter-setting-region',
                     'local_file' => 'altimeter-setting-regions.json',
                     'created_at' => Carbon::now(),
                 ],

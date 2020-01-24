@@ -164,6 +164,7 @@ Route::middleware('public')->group(function () {
 
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
+    Route::get('dependency/{key}', 'DependencyController@getDependency');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');

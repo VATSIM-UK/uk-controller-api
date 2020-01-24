@@ -8,7 +8,6 @@ class Dependency extends Model
 {
     protected $fillable = [
         'key',
-        'uri',
         'local_file',
         'created_at',
     ];
