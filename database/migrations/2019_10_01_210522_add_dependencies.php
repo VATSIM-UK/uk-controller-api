@@ -35,14 +35,8 @@ class AddDependencies extends Migration
                 ],
                 [
                     'key' => 'DEPENDENCY_INITIAL_ALTITUDES',
-                    'uri' => '',
+                    'uri' => 'initial-altitude',
                     'local_file' => 'initial-altitudes.json',
-                    'created_at' => Carbon::now(),
-                ],
-                [
-                    'key' => 'DEPENDENCY_HANDOFF',
-                    'uri' => '',
-                    'local_file' => 'handoffs.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
