@@ -158,6 +158,7 @@ Route::middleware('public')->group(function () {
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
+    Route::get('controller-positions', 'ControllerPositionController@getControllerPositionsDependency');
 
     // Airfields
     Route::get('airfield', 'AirfieldController@getAllAirfields');

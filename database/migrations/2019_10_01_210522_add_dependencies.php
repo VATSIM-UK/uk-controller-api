@@ -23,7 +23,7 @@ class AddDependencies extends Migration
                 ],
                 [
                     'key' => 'DEPENDENCY_CONTROLLER_POSITIONS',
-                    'uri' => '',
+                    'uri' => 'controller-positions',
                     'local_file' => 'controller-positions.json',
                     'created_at' => Carbon::now(),
                 ],
