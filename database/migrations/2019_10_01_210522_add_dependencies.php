@@ -59,7 +59,7 @@ class AddDependencies extends Migration
                 ],
                 [
                     'key' => 'DEPENDENCY_PRENOTE',
-                    'uri' => '',
+                    'uri' => 'prenote',
                     'local_file' => 'prenotes.json',
                     'created_at' => Carbon::now(),
                 ],

@@ -10,23 +10,23 @@ class PrenoteControllerTest extends BaseApiTestCase
     {
         $expected = [
             [
-                'id' => 1,
-                'key' => 'PRENOTE_ONE',
-                'description' => 'Prenote One',
-                'controllers' => [
-                    1,
-                    2
-                ]
+                'airfield' => 'EGLL',
+                'departure' => 'TEST1X',
+                'type' => 'sid',
+                'recipient' => [
+                    'EGLL_S_TWR',
+                    'EGLL_N_APP',
+                ],
             ],
             [
-                'id' => 2,
-                'key' => 'PRENOTE_TWO',
-                'description' => 'Prenote Two',
-                'controllers' => [
-                    2,
-                    3
-                ]
-            ],
+                'origin' => 'EGLL',
+                'destination' => 'EGBB',
+                'type' => 'airfieldPairing',
+                'recipient' => [
+                    'EGLL_S_TWR',
+                    'EGLL_N_APP',
+                ],
+            ]
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'prenote')
