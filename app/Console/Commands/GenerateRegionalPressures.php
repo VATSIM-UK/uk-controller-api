@@ -18,6 +18,9 @@ class GenerateRegionalPressures extends Command
 
     protected $description = 'Regenerate the regional pressure settings';
 
+    const SUCCESS_MESSAGE = 'Regional pressure settings updated successfully';
+    const FAILURE_MESSAGE = 'Unable to retrieve Regional Pressure Settings';
+
     /**
      * Generates regional pressures and logs the response
      *
@@ -30,12 +33,12 @@ class GenerateRegionalPressures extends Command
         $regionalPressures = $service->generateRegionalPressures();
         if (!is_null($regionalPressures) && count($regionalPressures) !== 0) {
             event(new RegionalPressuresUpdatedEvent($regionalPressures));
-            Log::info('Regional pressure settings updated successfully.');
-            $this->info('Regional pressure settings updated successfully.');
+            Log::info(self::SUCCESS_MESSAGE);
+            $this->info(self::SUCCESS_MESSAGE);
             return 0;
         } else {
-            Log::error('Unable to retrieve Regional Pressure Settings: ' . $service->getLastError());
-            $this->error('Unable to retrieve Regional Pressure Settings.');
+            Log::error(self::FAILURE_MESSAGE . ': ' . $service->getLastError());
+            $this->error(self::FAILURE_MESSAGE);
             return 1;
         }
     }
