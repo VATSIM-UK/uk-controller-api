@@ -17,7 +17,6 @@ Route::middleware('plugin.user')->group(function () {
     );
 
     // Holds
-    Route::get('hold', 'HoldController@getAllHolds');
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
     Route::put('hold/profile', 'HoldController@createUserHoldProfile');
     Route::put('hold/profile/{profile_id}', 'HoldController@updateUserHoldProfile')
@@ -34,7 +33,6 @@ Route::middleware('plugin.user')->group(function () {
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
 
     // Dependencies
-    Route::get('dependency/hold', 'HoldController@getAllHolds');
     Route::get('dependency/hold-profiles', 'HoldController@getUserHoldProfiles');
 });
 
@@ -160,12 +158,16 @@ Route::middleware('public')->group(function () {
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
     Route::get('dependency/wake-categories', 'AircraftController@getWakeCategoriesDependency');
+    Route::get('dependency/hold', 'HoldController@getAllHolds');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
 
     // Airfields
     Route::get('airfield', 'AirfieldController@getAllAirfields');
+
+    // Holds
+    Route::get('hold', 'HoldController@getAllHolds');
 
     // Handoffs
     Route::get('handoff', 'HandoffController@getAllHandoffs');
