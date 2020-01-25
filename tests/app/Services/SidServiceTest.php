@@ -88,28 +88,33 @@ class SidServiceTest extends BaseFunctionalTestCase
     public function testItGetsAllSids()
     {
         $expected = [
-                [
-                    'id' => 1,
-                    'identifier' => 'TEST1X',
-                    'airfield_id' => 1,
-                    'handoff_id' => null,
-                    'initial_altitude' => 3000,
+            [
+                'id' => 1,
+                'identifier' => 'TEST1X',
+                'airfield_id' => 1,
+                'handoff_id' => null,
+                'initial_altitude' => 3000,
+                'prenotes' => [
+                    1,
                 ],
-                [
-                    'id' => 2,
-                    'identifier' => 'TEST1Y',
-                    'airfield_id' => 1,
-                    'handoff_id' => null,
-                    'initial_altitude' => 4000,
-                ],
-                [
-                    'id' => 3,
-                    'identifier' => 'TEST1A',
-                    'airfield_id' => 2,
-                    'handoff_id' => null,
-                    'initial_altitude' => 5000,
-                ],
-            ];
+            ],
+            [
+                'id' => 2,
+                'identifier' => 'TEST1Y',
+                'airfield_id' => 1,
+                'handoff_id' => null,
+                'initial_altitude' => 4000,
+                'prenotes' => [],
+            ],
+            [
+                'id' => 3,
+                'identifier' => 'TEST1A',
+                'airfield_id' => 2,
+                'handoff_id' => null,
+                'initial_altitude' => 5000,
+                'prenotes' => [],
+            ],
+        ];
         $this->assertEquals($expected, $this->service->getAllSids());
     }
 

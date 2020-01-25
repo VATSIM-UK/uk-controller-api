@@ -14,4 +14,18 @@ class ControllerPositionController extends BaseController
     {
         return response()->json(ControllerPosition::all());
     }
+
+    public function getControllerPositionsDependency() : JsonResponse
+    {
+        $positions = ControllerPosition::all()->mapWithKeys(function (ControllerPosition $position) {
+            return [
+                $position->callsign => [
+                    'frequency' => $position->frequency,
+                    'top-down' => $position->topDownAirfields->pluck('code')->toArray()
+                ],
+            ];
+        });
+
+        return response()->json($positions);
+    }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Services\AirfieldService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use function React\Promise\reject;
 
 class AirfieldController extends BaseController
 {
@@ -29,10 +30,17 @@ class AirfieldController extends BaseController
      */
     public function getAllAirfields(Request $request) : JsonResponse
     {
-        $airfields = $request->get('controllers') === '1'
-            ? $this->airfieldService->getAllAirfieldsWithTopDown()
-            : Airfield::all();
+        return response()->json($this->airfieldService->getAllAirfieldsWithRelations());
+    }
 
-        return response()->json($airfields);
+    public function getAirfieldOwnershipDependency() : JsonResponse
+    {
+        $ownership = Airfield::all()->mapWithKeys(function (Airfield $airfield) {
+            return [
+                $airfield->code => $airfield->controllers->pluck('callsign')->toArray()
+            ];
+        });
+
+        return response()->json($ownership);
     }
 }

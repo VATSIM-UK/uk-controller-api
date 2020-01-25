@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -38,5 +38,8 @@ class AirfieldTableSeeder extends Seeder
                 'updated_at' => Carbon::now(),
             ]
         );
+
+        Airfield::findOrFail(1)->prenotePairings()
+            ->attach(1, ['destination_airfield_id' => 2, 'prenote_id' => 1]);
     }
 }

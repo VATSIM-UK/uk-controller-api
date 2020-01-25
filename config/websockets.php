@@ -95,6 +95,12 @@ return [
         /*
          * Passphrase for your local_cert file.
          */
-        'passphrase' => env('WEBSOCKET_CERT_PASSPHRASE', null)
+        'passphrase' => env('WEBSOCKET_CERT_PASSPHRASE', null),
+
+        /*
+         * Do we verify the SSL certificate peer. When developing and using self
+         * signed, we should not verify.
+         */
+        'verify_peer' => env('APP_ENV') !== 'local',
     ],
 ];

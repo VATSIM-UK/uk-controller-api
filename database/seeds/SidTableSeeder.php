@@ -34,5 +34,11 @@ class SidTableSeeder extends Seeder
                 ],
             ]
         );
+
+        Sid::find(1)->prenotes()->attach(
+            [
+                'prenote_id' => 1,
+            ]
+        );
     }
 }

@@ -27,15 +27,7 @@ class RegionalPressureServiceProvider extends ServiceProvider
             $metarUri = env('APP_REGIONAL_PRESSURES_URL', '');
             $http = new Client();
             $metarParser = $app->make(MetarService::class);
-
-            // Get all the altimeter setting regions
-            $regions = [];
-            $allRegions = RegionModel::all();
-            foreach ($allRegions as $region) {
-                $regions[] = new RegionHelper($region->name, $region->variation, json_decode($region->station));
-            }
-
-            return new RegionalPressureService($http, $metarUri, $metarParser, $regions);
+            return new RegionalPressureService($http, $metarUri, $metarParser);
         });
     }
 

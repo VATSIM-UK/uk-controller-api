@@ -7,6 +7,8 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
+        "ext-curl": "*",
+        "ext-simplexml": "*",
         "vlucas/phpdotenv": "^3.0",
         "league/flysystem": "^1.0",
         "guzzlehttp/guzzle": "^6.3",

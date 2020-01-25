@@ -4,55 +4,54 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
-use Illuminate\Support\Facades\Cache;
+use App\Models\AltimeterSettingRegions\RegionalPressureSetting;
 
 class RegionalPressureControllerTest extends BaseApiTestCase
 {
-    public function testItConstructs()
+    public function testItReturnsPressures()
     {
-        $controller = new RegionalPressureController();
-        $this->assertInstanceOf(RegionalPressureController::class, $controller);
-    }
+        RegionalPressureSetting::create(
+            [
+                'altimeter_setting_region_id' => 1,
+                'value' => 986,
+            ]
+        );
 
-    public function testItRejectsTokensWithoutUserScope()
-    {
-        $this->regenerateAccessToken([], static::$tokenUser);
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'regional-pressure')
-            ->assertStatus(403);
-    }
+        RegionalPressureSetting::create(
+            [
+                'altimeter_setting_region_id' => 2,
+                'value' => 988,
+            ]
+        );
 
-    public function testItReturnsCachedPressures()
-    {
-        Cache::shouldReceive('get')
-            ->once()
-            ->with(RegionalPressureController::RPS_CACHE_KEY, [])
-            ->andReturn(['Toddington' => 1011]);
-
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'regional-pressure')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'regional-pressure')
             ->assertJson(
                 [
-                    'data' => [
-                        'Toddington' => 1011,
-                    ],
+                    'ASR_BOBBINGTON' => 986,
+                    'ASR_TOPPINGTON' => 988,
                 ]
             )
             ->assertStatus(200);
     }
 
-    public function testItReturnsFailureOnNonCachedPressures()
+    public function testItReturnsAsrs()
     {
-        Cache::shouldReceive('get')
-            ->once()
-            ->with(RegionalPressureController::RPS_CACHE_KEY, [])
-            ->andReturn([]);
-
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'regional-pressure')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'altimeter-setting-region')
             ->assertJson(
                 [
-                'data' => [],
+                    [
+                        'id' => 1,
+                        'name' => 'Bobbington',
+                        'key' => 'ASR_BOBBINGTON',
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Toppington',
+                        'key' => 'ASR_TOPPINGTON',
+                    ],
                 ]
             )
-            ->assertStatus(503);
+            ->assertStatus(200);
     }
 
     public function testItDoesntAcceptPost()

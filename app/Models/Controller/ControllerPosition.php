@@ -2,7 +2,7 @@
 
 namespace App\Models\Controller;
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Models\Sid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
