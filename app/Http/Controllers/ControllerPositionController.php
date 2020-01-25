@@ -17,7 +17,7 @@ class ControllerPositionController extends BaseController
 
     public function getControllerPositionsDependency() : JsonResponse
     {
-        $positions = ControllerPosition::all()->mapWithKeys(function (ControllerPosition $position){
+        $positions = ControllerPosition::all()->mapWithKeys(function (ControllerPosition $position) {
             return [
                 $position->callsign => [
                     'frequency' => $position->frequency,
