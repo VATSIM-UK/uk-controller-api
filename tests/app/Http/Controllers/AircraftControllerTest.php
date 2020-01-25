@@ -75,7 +75,7 @@ class AircraftControllerTest extends BaseApiTestCase
             'A333' => 'H'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'dependency/wake-categories')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'wake-category/dependency')
             ->assertStatus(200)
             ->assertJson($expected);
     }

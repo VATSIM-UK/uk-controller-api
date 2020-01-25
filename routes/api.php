@@ -31,9 +31,6 @@ Route::middleware('plugin.user')->group(function () {
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
-
-    // Dependencies
-    Route::get('dependency/hold-profiles', 'HoldController@getUserHoldProfiles');
 });
 
 // Routes for user administration
@@ -137,6 +134,7 @@ Route::middleware('public')->group(function () {
     // Aircraft
     Route::get('aircraft', 'AircraftController@getAllAircraft');
     Route::get('wake-category', 'AircraftController@getAllWakeCategories');
+    Route::get('wake-category/dependency', 'AircraftController@getWakeCategoriesDependency');
 
     // Initial altitudes and sids
     Route::get('sid', 'SidController@getAllSids');
@@ -157,8 +155,6 @@ Route::middleware('public')->group(function () {
 
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
-    Route::get('dependency/wake-categories', 'AircraftController@getWakeCategoriesDependency');
-    Route::get('dependency/hold', 'HoldController@getAllHolds');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
