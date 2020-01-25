@@ -35,9 +35,10 @@ class AirfieldController extends BaseController
 
     public function getAirfieldOwnershipDependency() : JsonResponse
     {
-        $ownership = [];
-        Airfield::all()->each(function (Airfield $airfield) use (&$ownership) {
-            $ownership[$airfield->code] = $airfield->controllers->pluck('callsign')->toArray();
+        $ownership = Airfield::all()->mapWithKeys(function (Airfield $airfield)  {
+            return [
+                $airfield->code => $airfield->controllers->pluck('callsign')->toArray()
+            ];
         });
 
         return response()->json($ownership);

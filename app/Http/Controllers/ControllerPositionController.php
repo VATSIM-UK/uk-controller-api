@@ -17,11 +17,12 @@ class ControllerPositionController extends BaseController
 
     public function getControllerPositionsDependency() : JsonResponse
     {
-        $positions = [];
-        ControllerPosition::all()->each(function (ControllerPosition $position) use (&$positions) {
-            $positions[$position->callsign] = [
-                'frequency' => $position->frequency,
-                'top-down' => $position->topDownAirfields->pluck('code')->toArray()
+        $positions = ControllerPosition::all()->mapWithKeys(function (ControllerPosition $position){
+            return [
+                $position->callsign => [
+                    'frequency' => $position->frequency,
+                    'top-down' => $position->topDownAirfields->pluck('code')->toArray()
+                ],
             ];
         });
 
