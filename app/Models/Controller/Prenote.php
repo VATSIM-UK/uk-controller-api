@@ -25,6 +25,7 @@ class Prenote extends Model
             'prenote_orders',
             'prenote_id',
             'controller_position_id'
-        );
+        )->withPivot('order')
+            ->orderBy('order', 'asc');
     }
 }
