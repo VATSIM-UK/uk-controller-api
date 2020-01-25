@@ -11,10 +11,12 @@ class DependencyTableSeeder extends Seeder
             [
                 [
                     'key' => 'DEPENDENCY_ONE',
+                    'uri' => 'dependency/one',
                     'local_file' => 'one.json',
                 ],
                 [
                     'key' => 'DEPENDENCY_TWO',
+                    'uri' => 'dependency/two',
                     'local_file' => 'two.json',
                 ]
             ]

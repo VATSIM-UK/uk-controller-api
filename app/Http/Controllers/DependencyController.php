@@ -16,7 +16,7 @@ class DependencyController extends BaseController
         $dependencies = Dependency::all()->map(function (Dependency $dependency) {
             return [
                 'key' => $dependency->key,
-                'uri' => sprintf('%s/dependency/%s', config('app.url'), $dependency->key),
+                'uri' => sprintf('%s/%s', config('app.url'), $dependency->uri),
                 'local_file' => $dependency->local_file,
             ];
         });

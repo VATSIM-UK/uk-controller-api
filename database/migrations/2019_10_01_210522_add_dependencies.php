@@ -17,46 +17,55 @@ class AddDependencies extends Migration
             [
                 [
                     'key' => 'DEPENDENCY_AIRFIELD_OWNERSHIP',
+                    'uri' => '',
                     'local_file' => 'airfield-ownership.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_CONTROLLER_POSITIONS',
+                    'uri' => '',
                     'local_file' => 'controller-positions.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_HOLDS',
+                    'uri' => '',
                     'local_file' => 'holds.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_INITIAL_ALTITUDES',
+                    'uri' => '',
                     'local_file' => 'initial-altitudes.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_HANDOFF',
+                    'uri' => '',
                     'local_file' => 'handoffs.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_HOLD_PROFILE',
+                    'uri' => '',
                     'local_file' => 'holds-profiles.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_WAKE',
+                    'uri' => 'dependency/wake-categories',
                     'local_file' => 'wake-categories.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_PRENOTE',
+                    'uri' => '',
                     'local_file' => 'prenotes.json',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'key' => 'DEPENDENCY_ASR',
+                    'uri' => '',
                     'local_file' => 'altimeter-setting-regions.json',
                     'created_at' => Carbon::now(),
                 ],

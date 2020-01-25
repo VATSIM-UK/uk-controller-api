@@ -17,4 +17,14 @@ class AircraftController extends BaseController
     {
         return response()->json(WakeCategory::all());
     }
+
+    public function getWakeCategoriesDependency()
+    {
+        $categories = [];
+        Aircraft::all()->each(function (Aircraft $aircraft) use (&$categories) {
+            $categories[$aircraft->code] = $aircraft->wakeCategory->code;
+        });
+
+        return response()->json($categories);
+    }
 }

@@ -67,4 +67,16 @@ class AircraftControllerTest extends BaseApiTestCase
             ->assertStatus(200)
             ->assertJson($expected);
     }
+
+    public function testItGetsWakeCategoryDependencies()
+    {
+        $expected = [
+            'B738' => 'LM',
+            'A333' => 'H'
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'dependency/wake-categories')
+            ->assertStatus(200)
+            ->assertJson($expected);
+    }
 }
