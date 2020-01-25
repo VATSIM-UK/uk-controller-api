@@ -41,6 +41,10 @@ Route::middleware('plugin.user')->group(function () {
         ->where('icao', '[A-Z]{4}');
     Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
         ->where('tma', '[A-Z]{4}');
+
+    // Dependencies
+    Route::get('dependency/hold', 'HoldController@getAllHolds');
+    Route::get('dependency/hold-profiles', 'HoldController@getUserHoldProfiles');
 });
 
 // Routes for user administration

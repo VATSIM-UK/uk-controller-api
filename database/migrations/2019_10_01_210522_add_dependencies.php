@@ -29,7 +29,7 @@ class AddDependencies extends Migration
                 ],
                 [
                     'key' => 'DEPENDENCY_HOLDS',
-                    'uri' => '',
+                    'uri' => 'dependency/hold',
                     'local_file' => 'holds.json',
                     'created_at' => Carbon::now(),
                 ],
@@ -47,7 +47,7 @@ class AddDependencies extends Migration
                 ],
                 [
                     'key' => 'DEPENDENCY_HOLD_PROFILE',
-                    'uri' => '',
+                    'uri' => 'dependency/hold-profiles',
                     'local_file' => 'holds-profiles.json',
                     'created_at' => Carbon::now(),
                 ],
