@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Airfield\Airfield;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
 use Illuminate\Database\Eloquent\Model;
