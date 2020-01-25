@@ -37,7 +37,7 @@ class AirfieldController extends BaseController
     {
         $ownership = [];
         Airfield::all()->each(function (Airfield $airfield) use (&$ownership) {
-           $ownership[$airfield->code] = $airfield->controllers->pluck('callsign')->toArray();
+            $ownership[$airfield->code] = $airfield->controllers->pluck('callsign')->toArray();
         });
 
         return response()->json($ownership);
