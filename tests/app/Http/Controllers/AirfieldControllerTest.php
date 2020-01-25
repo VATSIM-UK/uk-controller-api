@@ -47,4 +47,23 @@ class AirfieldControllerTest extends BaseApiTestCase
             ->assertStatus(200);
 
     }
+
+    public function testItReturnsAirfieldOwnershipDependency()
+    {
+        $expected = [
+            'EGLL' => [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+            ],
+            'EGBB' => [
+                'LON_C_CTR',
+            ],
+            'EGKR' => []
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'airfield-ownership')
+            ->assertExactJson($expected)
+            ->assertStatus(200);
+    }
 }

@@ -17,7 +17,7 @@ class AddDependencies extends Migration
             [
                 [
                     'key' => 'DEPENDENCY_AIRFIELD_OWNERSHIP',
-                    'uri' => '',
+                    'uri' => 'airfield-ownership',
                     'local_file' => 'airfield-ownership.json',
                     'created_at' => Carbon::now(),
                 ],

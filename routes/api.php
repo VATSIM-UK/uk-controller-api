@@ -162,6 +162,7 @@ Route::middleware('public')->group(function () {
 
     // Airfields
     Route::get('airfield', 'AirfieldController@getAllAirfields');
+    Route::get('airfield-ownership', 'AirfieldController@getAirfieldOwnershipDependency');
 
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
