@@ -5,6 +5,7 @@ namespace App\Models\Airfield;
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Prenote;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -112,7 +113,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'airfield_pairing_prenotes',
             'origin_airfield_id',
             'destination_airfield_id'
-        );
+        )->withPivot('prenote_id');
     }
 
     public function altimeterSettingRegions() : BelongsToMany
