@@ -1237,6 +1237,33 @@
             "EGWU"
         ]
     },
+    "LON_CW_CTR": {
+        "frequency": 134.400,
+        "top-down": [
+            "EGBB",
+            "EGTK"
+        ]
+    },
+    "LON_CE_CTR": {
+        "frequency": 127.87,
+        "top-down": [
+            "EGNX",
+            "EGTC",
+            "EGSS",
+            "EGGW",
+            "EGSC"
+        ]
+    },
+    "LON_CL_CTR": {
+        "frequency": 133.97,
+        "top-down": [
+            "EGNX",
+            "EGTC",
+            "EGSS",
+            "EGGW",
+            "EGSC"
+        ]
+    },
     "LON_D_CTR": {
         "frequency": 134.9,
         "top-down": [
