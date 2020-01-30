@@ -1342,6 +1342,18 @@
             "EGWU"
         ]
     },
+    "LTC_M_CTR": {
+        "frequency": 121.02,
+        "top-down": []
+    },
+    "LTC_MW_CTR": {
+        "frequency": 130.92,
+        "top-down": []
+    },
+    "LTC_MC_CTR": {
+        "frequency": 133.07,
+        "top-down": []
+    },
     "LTC_E_CTR": {
         "frequency": 121.22,
         "top-down": []
