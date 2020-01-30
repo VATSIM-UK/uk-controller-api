@@ -1358,6 +1358,14 @@
         "frequency": 118.82,
         "top-down": []
     },
+    "LTC_NL_CTR": {
+        "frequency": 123.9,
+        "top-down": []
+    },
+    "LTC_NR_CTR": {
+        "frequency": 129.72,
+        "top-down": []
+    },
     "LTC_NW_CTR": {
         "frequency": 121.27,
         "top-down": [
