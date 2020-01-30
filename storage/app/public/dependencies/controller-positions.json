@@ -80,7 +80,7 @@
         ]
     },
     "EGBB_TWR": {
-        "frequency": 118.3,
+        "frequency": 123.97,
         "top-down": [
             "EGBB"
         ]
@@ -566,7 +566,7 @@
         "top-down": []
     },
     "EGMC_TWR": {
-        "frequency": 126.72,
+        "frequency": 127.75,
         "top-down": [
             "EGMC"
         ]
