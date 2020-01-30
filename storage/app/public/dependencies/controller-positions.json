@@ -1251,6 +1251,14 @@
         "frequency": 118.47,
         "top-down": []
     },
+    "LON_EN_CTR": {
+        "frequency": 133.95,
+        "top-down": []
+    },
+    "LON_ES_CTR": {
+        "frequency": 128.15,
+        "top-down": []
+    },
     "LON_N_CTR": {
         "frequency": 133.7,
         "top-down": [
