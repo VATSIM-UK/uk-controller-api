@@ -13,14 +13,14 @@ class Airac202002TcneSplits extends Migration
     public function up()
     {
         // Create the positions
-        $tcLam = ControllerPosition::create(
+        ControllerPosition::create(
             [
                 'callsign' => 'LTC_NL_CTR',
                 'frequency' => 123.9,
             ]
         );
 
-        $tcLorel = ControllerPosition::create(
+        ControllerPosition::create(
             [
                 'callsign' => 'LTC_NR_CTR',
                 'frequency' => 129.72,
