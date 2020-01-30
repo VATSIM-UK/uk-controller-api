@@ -26,6 +26,8 @@ class Airac202002TcneSplits extends Migration
                 'frequency' => 129.72,
             ]
         );
+
+        // TODO: PRENOTE DATA
     }
 
     /**
@@ -38,5 +40,7 @@ class Airac202002TcneSplits extends Migration
         // Delete the positions
         ControllerPosition::where('callsign', 'LTC_NL_CTR')->firstOrFail()->delete();
         ControllerPosition::where('callsign', 'LTC_NR_CTR')->firstOrFail()->delete();
+
+        // TODO: PRENOTE DATA
     }
 }
