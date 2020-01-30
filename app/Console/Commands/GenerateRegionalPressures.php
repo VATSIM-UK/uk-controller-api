@@ -1,6 +1,7 @@
 <?php
 namespace App\Console\Commands;
 
+use App\Events\RegionalPressuresUpdatedEvent;
 use App\Services\RegionalPressureService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -13,26 +14,31 @@ use Illuminate\Support\Facades\Log;
  */
 class GenerateRegionalPressures extends Command
 {
-    protected $signature = 'regionals:generate';
+    protected $signature = 'regional:generate';
 
-    protected $description = 'Regenerate the regional pressures file';
+    protected $description = 'Regenerate the regional pressure settings';
 
-    const RPS_CACHE_KEY = 'regional_pressures';
+    const SUCCESS_MESSAGE = 'Regional pressure settings updated successfully';
+    const FAILURE_MESSAGE = 'Unable to retrieve Regional Pressure Settings';
 
     /**
      * Generates regional pressures and logs the response
      *
      * @param RegionalPressureService $service Service for generation
+     * @return int
      */
     public function handle(RegionalPressureService $service)
     {
-        if ($service->generateRegionalPressures()) {
-            Log::info('Regional pressure settings updated and cached successfully.');
-            $this->info('Regional pressure settings updated and cached successfully.');
+        $this->info('Generating regional pressure settings');
+        $regionalPressures = $service->generateRegionalPressures();
+        if (!is_null($regionalPressures) && count($regionalPressures) !== 0) {
+            event(new RegionalPressuresUpdatedEvent($regionalPressures));
+            Log::info(self::SUCCESS_MESSAGE);
+            $this->info(self::SUCCESS_MESSAGE);
             return 0;
         } else {
-            Log::error('Unable to retrieve Regional Pressure Settings.');
-            $this->error('Unable to retrieve Regional Pressure Settings.');
+            Log::error(self::FAILURE_MESSAGE . ': ' . $service->getLastError());
+            $this->error(self::FAILURE_MESSAGE);
             return 1;
         }
     }

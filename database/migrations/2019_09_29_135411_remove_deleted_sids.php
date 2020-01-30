@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Sid;
 use Carbon\Carbon;

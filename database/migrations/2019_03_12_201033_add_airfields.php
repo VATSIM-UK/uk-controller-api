@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use Illuminate\Database\Migrations\Migration;
 
 class AddAirfields extends Migration

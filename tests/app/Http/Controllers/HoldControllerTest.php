@@ -15,7 +15,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItReturns200OnHoldDataSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->assertStatus(200);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'hold')->assertStatus(200);
     }
 
     public function testItReturnsHoldData()
@@ -57,7 +57,7 @@ class HoldControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'hold')->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'hold')->assertJson($expected);
     }
 
     public function testItReturns200OnGenericHoldProfileSuccess()

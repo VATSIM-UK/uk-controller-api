@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Airfield;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
+use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Prenote;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -101,6 +103,27 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'top_downs',
             'airfield_id',
             'controller_position_id'
+        )
+            ->orderBy('order', 'asc');
+    }
+
+    public function prenotePairings() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Airfield::class,
+            'airfield_pairing_prenotes',
+            'origin_airfield_id',
+            'destination_airfield_id'
+        )->withPivot('prenote_id');
+    }
+
+    public function altimeterSettingRegions() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            AltimeterSettingRegion::class,
+            'altimeter_setting_region_airfield',
+            'airfield_id',
+            'altimeter_setting_region_id'
         );
     }
 }

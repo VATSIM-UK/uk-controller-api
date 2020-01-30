@@ -17,16 +17,12 @@ Route::middleware('plugin.user')->group(function () {
     );
 
     // Holds
-    Route::get('hold', 'HoldController@getAllHolds');
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
     Route::put('hold/profile', 'HoldController@createUserHoldProfile');
     Route::put('hold/profile/{profile_id}', 'HoldController@updateUserHoldProfile')
         ->where('profile_id', '\d+');
     Route::delete('hold/profile/{profile_id}', 'HoldController@deleteUserHoldProfile')
         ->where('profile_id', '\d+');
-
-    // Dependencies
-    Route::get('dependency', 'DependencyController@getManifest');
 
     // Squawks
     Route::get('squawk-assignment/{callsign}', 'SquawkController@getSquawkAssignment')
@@ -35,18 +31,6 @@ Route::middleware('plugin.user')->group(function () {
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', '[A-Za-z0-9\-]{1,10}');
-
-    // Regional Pressure
-    Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
-
-    // Min Stack Levels
-    Route::get('msl', 'MinStackController@getAllMinStackLevels');
-    Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
-    Route::get('msl/tma', 'MinStackController@getTmaMinStackLevels');
-    Route::get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield')
-        ->where('icao', '[A-Z]{4}');
-    Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
-        ->where('tma', '[A-Z]{4}');
 });
 
 // Routes for user administration
@@ -147,6 +131,11 @@ Route::middleware('admin.dependency')->group(function () {
 // Routes that can be hit by anybody at all, mostly login and informational routes
 Route::middleware('public')->group(function () {
 
+    // Aircraft
+    Route::get('aircraft', 'AircraftController@getAllAircraft');
+    Route::get('wake-category', 'AircraftController@getAllWakeCategories');
+    Route::get('wake-category/dependency', 'AircraftController@getWakeCategoriesDependency');
+
     // Initial altitudes and sids
     Route::get('sid', 'SidController@getAllSids');
     Route::get('sid/{id}', 'SidController@getSid')
@@ -164,14 +153,38 @@ Route::middleware('public')->group(function () {
         ]
     )->where('version', '[A-Za-z0-9\.\-]+');
 
+    // Dependencies
+    Route::get('dependency', 'DependencyController@getAllDependencies');
+
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
+    Route::get('controller-positions', 'ControllerPositionController@getControllerPositionsDependency');
 
     // Airfields
     Route::get('airfield', 'AirfieldController@getAllAirfields');
+    Route::get('airfield-ownership', 'AirfieldController@getAirfieldOwnershipDependency');
+
+    // Holds
+    Route::get('hold', 'HoldController@getAllHolds');
 
     // Handoffs
     Route::get('handoff', 'HandoffController@getAllHandoffs');
+
+    // Prenotes
+    Route::get('prenote', 'PrenoteController@getAllPrenotes');
+
+    // Regional Pressure
+    Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
+    Route::get('altimeter-setting-region', 'RegionalPressureController@getAltimeterSettingRegions');
+
+    // Minimum stack levels
+    Route::get('msl', 'MinStackController@getAllMinStackLevels');
+    Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
+    Route::get('msl/tma', 'MinStackController@getTmaMinStackLevels');
+    Route::get('msl/airfield/{icao}', 'MinStackController@getMslForAirfield')
+        ->where('icao', '[A-Z]{4}');
+    Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
+        ->where('tma', '[A-Z]{4}');
 
     // Admin login
     Route::prefix('admin')->group(function () {

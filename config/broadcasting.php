@@ -23,7 +23,11 @@ return [
                 'encrypted' => true,
                 'host' => env('WEBSOCKET_BROADCAST_HOST') ?? '127.0.0.1',
                 'port' => 6001,
-                'scheme' => env('APP_ENV') !== 'local' ? 'https' : 'http'
+                'scheme' => env('WEBSOCKET_ENV'),
+                'curl_options' => [
+                    CURLOPT_SSL_VERIFYHOST => env('APP_ENV') !== 'local' ? 1 : 0,
+                    CURLOPT_SSL_VERIFYPEER => env('APP_ENV') !== 'local' ? 1 : 0,
+                ],
             ],
         ],
     ],
