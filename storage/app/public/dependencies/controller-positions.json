@@ -1371,15 +1371,26 @@
     },
     "LTC_M_CTR": {
         "frequency": 121.02,
-        "top-down": []
+        "top-down": [
+            "EGBB",
+            "EGTK",
+            "EGNX",
+            "EGTC"
+        ]
     },
     "LTC_MW_CTR": {
         "frequency": 130.92,
-        "top-down": []
+        "top-down": [
+            "EGNX",
+            "EGTC"
+        ]
     },
     "LTC_MC_CTR": {
         "frequency": 133.07,
-        "top-down": []
+        "top-down": [
+            "EGBB",
+            "EGTK"
+        ]
     },
     "LTC_E_CTR": {
         "frequency": 121.22,
