@@ -208,6 +208,7 @@
         "LON_CTR"
     ],
     "EGLF": [
+        "EGLF_GND",
         "EGLF_TWR",
         "EGLF_APP",
         "LTC_SW_CTR",
