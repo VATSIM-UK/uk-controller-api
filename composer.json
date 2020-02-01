@@ -22,7 +22,6 @@
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "^8.0",
         "mockery/mockery": "~0.9",
-        "squizlabs/php_codesniffer": "*",
         "seld/jsonlint": "^1.7"
     },
     "autoload": {
