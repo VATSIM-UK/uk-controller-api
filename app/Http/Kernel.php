@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\GithubAuth;
 use App\Http\Middleware\LogAdminAction;
 use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
@@ -20,6 +21,7 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         'auth' => Authenticate::class,
+        'auth.github' => GithubAuth::class,
         'admin.log' => LogAdminAction::class,
         'user.banned' => UserIsBanned::class,
         'user.disabled' => UserIsDisabled::class,
@@ -51,6 +53,9 @@ class Kernel extends HttpKernel
             'auth',
             'scopes:' . AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
             'admin.log',
+        ],
+        'admin.github' => [
+            'auth.github',
         ],
         'public' => [
 
