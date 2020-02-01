@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
 use OutOfRangeException;
 
 class HandoffService
@@ -28,8 +27,11 @@ class HandoffService
         })->toArray();
     }
 
-    public function insertIntoOrderBefore(string $handoffKey, string $positionToInsert, string $insertBefore): void
-    {
+    public static function insertIntoOrderBefore(
+        string $handoffKey,
+        string $positionToInsert,
+        string $insertBefore
+    ): void {
         // Get the models
         $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();
         $beforePosition = ControllerPosition::where('callsign', $insertBefore)->firstOrFail();
@@ -57,7 +59,7 @@ class HandoffService
         $handoff->controllers()->attach($insertPosition->id, ['order' => $handoffBefore->pivot->order]);
     }
 
-    public function insertIntoOrderAfter(string $handoffKey, string $positionToInsert, string $insertAfter): void
+    public static function insertIntoOrderAfter(string $handoffKey, string $positionToInsert, string $insertAfter): void
     {
         // Get the models
         $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();
@@ -86,7 +88,7 @@ class HandoffService
         $handoff->controllers()->attach($insertPosition->id, ['order' => $handoffAfter->pivot->order + 1]);
     }
 
-    public function removeFromHandoffOrder(string $handoffKey, string $positionToRemove): void
+    public static function removeFromHandoffOrder(string $handoffKey, string $positionToRemove): void
     {
         // Get the models
         $removePosition = ControllerPosition::where('callsign', $positionToRemove)->firstOrFail();
@@ -115,7 +117,7 @@ class HandoffService
         });
     }
 
-    public function updateAllHandoffsWithPosition(string $callsign, string $callsignToAdd, bool $before): void
+    public static function updateAllHandoffsWithPosition(string $callsign, string $callsignToAdd, bool $before): void
     {
         $positionToAdd = ControllerPosition::where('callsign', $callsignToAdd)->firstOrFail();
         $positionToAddAdjacent = ControllerPosition::where('callsign', $callsign)->firstOrFail();
@@ -129,11 +131,11 @@ class HandoffService
 
         $method = $before ? 'insertIntoOrderBefore' : 'insertIntoOrderAfter';
         foreach ($handoffs as $handoff) {
-            $this->$method($handoff, $positionToAdd->callsign, $positionToAddAdjacent->callsign);
+            self::$method($handoff, $positionToAdd->callsign, $positionToAddAdjacent->callsign);
         }
     }
 
-    public function removePositionFromAllHandoffs(string $callsign): void
+    public static function removePositionFromAllHandoffs(string $callsign): void
     {
         $postionToRemove = ControllerPosition::where('callsign', $callsign)->firstOrFail();
 
@@ -145,7 +147,7 @@ class HandoffService
             ->pluck('handoffs.key');
 
         foreach ($handoffs as $handoff) {
-            $this->removeFromHandoffOrder($handoff, $callsign);
+            self::removeFromHandoffOrder($handoff, $callsign);
         }
     }
 }
