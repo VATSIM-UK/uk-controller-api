@@ -33,6 +33,9 @@
         "EGBB_GND",
         "EGBB_TWR",
         "EGBB_APP",
+        "LTC_MC_CTR",
+        "LTC_M_CTR",
+        "LON_CW_CTR",
         "LON_C_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -105,6 +108,8 @@
         "LTC_NW_CTR",
         "LTC_N_CTR",
         "LTC_CTR",
+        "LON_CL_CTR",
+        "LON_CE_CTR",
         "LON_C_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -208,6 +213,7 @@
         "LON_CTR"
     ],
     "EGLF": [
+        "EGLF_GND",
         "EGLF_TWR",
         "EGLF_APP",
         "LTC_SW_CTR",
@@ -331,6 +337,10 @@
         "EGNX_GND",
         "EGNX_TWR",
         "EGNX_APP",
+        "LTC_MW_CTR",
+        "LTC_M_CTR",
+        "LON_CL_CTR",
+        "LON_CE_CTR",
         "LON_C_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -437,6 +447,8 @@
         "LTC_NW_CTR",
         "LTC_N_CTR",
         "LTC_CTR",
+        "LON_CL_CTR",
+        "LON_CE_CTR",
         "LON_C_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -456,6 +468,8 @@
         "LTC_NW_CTR",
         "LTC_N_CTR",
         "LTC_CTR",
+        "LON_CL_CTR",
+        "LON_CE_CTR",
         "LON_C_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -463,6 +477,10 @@
     "EGTC": [
         "EGTC_TWR",
         "EGTC_APP",
+        "LTC_MW_CTR",
+        "LTC_M_CTR",
+        "LON_CL_CTR",
+        "LON_CE_CTR",
         "LON_C_CTR",
         "LON_SC_CTR",
         "LON_CTR"
@@ -477,6 +495,9 @@
         "EGTK_GND",
         "EGTK_TWR",
         "EGTK_APP",
+        "LTC_MC_CTR",
+        "LTC_M_CTR",
+        "LON_CW_CTR",
         "LON_C_CTR",
         "LON_SC_CTR",
         "LON_CTR"

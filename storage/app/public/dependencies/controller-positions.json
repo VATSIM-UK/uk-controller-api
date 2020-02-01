@@ -80,7 +80,7 @@
         ]
     },
     "EGBB_TWR": {
-        "frequency": 118.3,
+        "frequency": 123.97,
         "top-down": [
             "EGBB"
         ]
@@ -492,6 +492,12 @@
             "EGLF"
         ]
     },
+    "EGLF_GND": {
+        "frequency": 121.820,
+        "top-down": [
+            "EGLF"
+        ]
+    },
     "EGLL_1_GND": {
         "frequency": 121.9,
         "top-down": [
@@ -566,7 +572,7 @@
         "top-down": []
     },
     "EGMC_TWR": {
-        "frequency": 126.72,
+        "frequency": 127.75,
         "top-down": [
             "EGMC"
         ]
@@ -1231,6 +1237,33 @@
             "EGWU"
         ]
     },
+    "LON_CW_CTR": {
+        "frequency": 134.400,
+        "top-down": [
+            "EGBB",
+            "EGTK"
+        ]
+    },
+    "LON_CE_CTR": {
+        "frequency": 127.87,
+        "top-down": [
+            "EGNX",
+            "EGTC",
+            "EGSS",
+            "EGGW",
+            "EGSC"
+        ]
+    },
+    "LON_CL_CTR": {
+        "frequency": 133.97,
+        "top-down": [
+            "EGNX",
+            "EGTC",
+            "EGSS",
+            "EGGW",
+            "EGSC"
+        ]
+    },
     "LON_D_CTR": {
         "frequency": 134.9,
         "top-down": [
@@ -1243,6 +1276,14 @@
     },
     "LON_E_CTR": {
         "frequency": 118.47,
+        "top-down": []
+    },
+    "LON_EN_CTR": {
+        "frequency": 133.95,
+        "top-down": []
+    },
+    "LON_ES_CTR": {
+        "frequency": 128.15,
         "top-down": []
     },
     "LON_N_CTR": {
@@ -1328,6 +1369,29 @@
             "EGWU"
         ]
     },
+    "LTC_M_CTR": {
+        "frequency": 121.02,
+        "top-down": [
+            "EGBB",
+            "EGTK",
+            "EGNX",
+            "EGTC"
+        ]
+    },
+    "LTC_MW_CTR": {
+        "frequency": 130.92,
+        "top-down": [
+            "EGNX",
+            "EGTC"
+        ]
+    },
+    "LTC_MC_CTR": {
+        "frequency": 133.07,
+        "top-down": [
+            "EGBB",
+            "EGTK"
+        ]
+    },
     "LTC_E_CTR": {
         "frequency": 121.22,
         "top-down": []
@@ -1350,6 +1414,14 @@
     },
     "LTC_NE_CTR": {
         "frequency": 118.82,
+        "top-down": []
+    },
+    "LTC_NL_CTR": {
+        "frequency": 123.9,
+        "top-down": []
+    },
+    "LTC_NR_CTR": {
+        "frequency": 129.72,
         "top-down": []
     },
     "LTC_NW_CTR": {
