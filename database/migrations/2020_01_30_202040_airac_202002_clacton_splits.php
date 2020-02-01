@@ -1,20 +1,13 @@
 <?php
 
 use App\Models\Controller\ControllerPosition;
-use App\Models\Controller\Handoff;
+use App\Services\HandoffService;
+use App\Services\PrenoteService;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class Airac202002ClactonSplits extends Migration
 {
-    const HANDOFF_KEYS = [
-        'EGLL_SID_NORTH_EAST',
-        'EGLC_SID_CLN',
-        'EGSS_SID_EAST_SOUTH',
-        'EGGW_SID_SOUTH_EAST',
-        'EGLC_SID_BPK_CPT_09',
-        'EGLC_SID_BPK_CPT_27',
-    ];
-
     /**
      * Run the migrations.
      *
@@ -22,22 +15,35 @@ class Airac202002ClactonSplits extends Migration
      */
     public function up()
     {
-        // Add the positions
-        $north = ControllerPosition::create(
-            [
-                'callsign' => 'LON_EN_CTR',
-                'frequency' => 133.95
-            ]
-        );
+        DB::beginTransaction();
 
-        $south = ControllerPosition::create(
-            [
-                'callsign' => 'LON_ES_CTR',
-                'frequency' => 133.95
-            ]
-        );
+        try {
+            // Add the positions
+            ControllerPosition::create(
+                [
+                    'callsign' => 'LON_EN_CTR',
+                    'frequency' => 133.95
+                ]
+            );
 
-        // Handoff orders
+            ControllerPosition::create(
+                [
+                    'callsign' => 'LON_ES_CTR',
+                    'frequency' => 133.95
+                ]
+            );
+
+            // Handoff orders
+            HandoffService::updateAllHandoffsWithPosition('LON_E_CTR', 'LON_EN_CTR', true);
+
+            // Prenotes
+            PrenoteService::updateAllPrenotesWithPosition('LON_E_CTR', 'LON_EN_CTR', true);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+
+        DB::commit();
     }
 
     /**
@@ -47,28 +53,22 @@ class Airac202002ClactonSplits extends Migration
      */
     public function down()
     {
-        // Delete the positions
-        ControllerPosition::where('callsign', 'LON_EN_CTR')->firstOrFail()->delete();
-        ControllerPosition::where('callsign', 'LON_ES_CTR')->firstOrFail()->delete();
-    }
+        DB::beginTransaction();
+        try {
+            // Remove handoff orders
+            HandoffService::removePositionFromAllHandoffs('LON_EN_CTR');
 
-    private function updateHandoffOrdersUp()
-    {
-        foreach (self::HANDOFF_KEYS as $key) {
-            // Find out the orders that have TC east. (DO IT BY QUERY)
-            // Bump up TC East and above
-            // Insert TC East Redfa in the gap
+            // Remove prenote orders
+            PrenoteService::removePositionFromAllPrenotes('LON_EN_CTR');
 
-            // Find all orders that have AC Clacton
-            // Bump up Clacton and above
-            // Insert AC Clacton North in the gap.
+            // Delete the positions
+            ControllerPosition::where('callsign', 'LON_EN_CTR')->firstOrFail()->delete();
+            ControllerPosition::where('callsign', 'LON_ES_CTR')->firstOrFail()->delete();
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
         }
-    }
 
-    private function updateHandoffOrdersDown()
-    {
-        foreach (self::HANDOFF_KEYS as $key) {
-            // Opposite of the above
-        }
+        DB::commit();
     }
 }
