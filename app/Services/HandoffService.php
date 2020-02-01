@@ -114,4 +114,22 @@ class HandoffService
                 ->update(['order' => DB::raw('`order` - 1')]);
         });
     }
+
+    public function updateAllHandoffsWithPosition(string $callsign, string $callsignToAdd, bool $before)
+    {
+        $positionToAdd = ControllerPosition::where('callsign', $callsignToAdd)->firstOrFail();
+        $positionToAddAdjacent = ControllerPosition::where('callsign', $callsign)->firstOrFail();
+
+        $handoffs = DB::table('handoff_orders')
+            ->join('handoffs', 'handoff_id', '=', 'handoffs.id')
+            ->where('controller_position_id', $positionToAddAdjacent->id)
+            ->distinct()
+            ->select('handoffs.key')
+            ->pluck('handoffs.key');
+
+        $method = $before ? 'insertIntoOrderBefore' : 'insertIntoOrderAfter';
+        foreach ($handoffs as $handoff) {
+            $this->$method($handoff, $positionToAdd->callsign, $positionToAddAdjacent->callsign);
+        }
+    }
 }
