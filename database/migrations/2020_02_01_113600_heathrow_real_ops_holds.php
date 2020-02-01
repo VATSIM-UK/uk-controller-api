@@ -10,7 +10,6 @@ use App\Models\Hold\HoldRestriction;
 
 class HeathrowRealOpsHolds extends Migration
 {
-
     private $holds = [
         [
             'fix' => 'BILNI',
@@ -78,7 +77,7 @@ class HeathrowRealOpsHolds extends Migration
     public function up()
     {
         $now = Carbon::now();
-        foreach($this->holds as $key => $hold) {
+        foreach ($this->holds as $key => $hold) {
             $this->holds[$key]['created_at'] = $now;
         }
 
