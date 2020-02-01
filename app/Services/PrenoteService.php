@@ -6,6 +6,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
@@ -57,6 +58,8 @@ class PrenoteService
         string $positionToInsert,
         string $insertBefore
     ): void {
+        try{
+        DB::beginTransaction();
         // Get the models
         $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();
         $beforePosition = ControllerPosition::where('callsign', $insertBefore)->firstOrFail();
@@ -82,10 +85,17 @@ class PrenoteService
 
         // Pop the new position in
         $prenote->controllers()->attach($insertPosition->id, ['order' => $prenoteBefore->pivot->order]);
+        DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 
     public static function insertIntoOrderAfter(string $prenoteKey, string $positionToInsert, string $insertAfter): void
     {
+        try{
+            DB::beginTransaction();
         // Get the models
         $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();
         $afterPosition = ControllerPosition::where('callsign', $insertAfter)->firstOrFail();
@@ -111,10 +121,17 @@ class PrenoteService
 
         // Pop the new position in
         $prenote->controllers()->attach($insertPosition->id, ['order' => $prenoteAfter->pivot->order + 1]);
+        DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 
     public static function removeFromPrenoteOrder(string $prenoteKey, string $positionToRemove): void
     {
+        try {
+            DB::beginTransaction();
         // Get the models
         $removePosition = ControllerPosition::where('callsign', $positionToRemove)->firstOrFail();
         $prenote = Prenote::where('key', $prenoteKey)->firstOrFail();
@@ -140,6 +157,11 @@ class PrenoteService
                 ->where(['controller_position_id' => $position->id, 'prenote_id' => $prenote->id])
                 ->update(['order' => DB::raw('`order` - 1')]);
         });
+        DB::commit();
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
     }
 
     public static function updateAllPrenotesWithPosition(string $callsign, string $callsignToAdd, bool $before): void
