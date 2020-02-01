@@ -37,7 +37,7 @@ class AirfieldController extends BaseController
     {
         $ownership = Airfield::all()->mapWithKeys(function (Airfield $airfield) {
             return [
-                $airfield->code => $airfield->controllers->pluck('callsign')->toArray()
+                $airfield->code => $airfield->controllers()->orderBy('order')->pluck('callsign')->toArray()
             ];
         });
 
