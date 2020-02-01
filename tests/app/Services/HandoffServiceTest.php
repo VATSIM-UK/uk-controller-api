@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use OutOfRangeException;
 
 class HandoffServiceTest extends BaseFunctionalTestCase
 {
@@ -76,36 +77,10 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItThrowsException()
+    public function testItThrowsAnExceptionIfBeforePositionNotInHandoffOrder()
     {
-        $this->service->insertIntoOrderBefore('HANDOFF_ORDER_1', 'LON_C_CTR', 'EGLL_S_TWR');
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 4,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 3,
-            ]
-        );
+        $this->expectException(OutOfRangeException::class);
+        $this->service->insertIntoOrderBefore('HANDOFF_ORDER_1', 'LON_C_CTR', 'LON_S_CTR');
     }
 
     public function testItInsertsIntoHandoffOrderAfter()
@@ -140,36 +115,10 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItInsertsIntoOrderBefore()
+    public function testItThrowsAnExceptionIfAfterPositionNotInHandoffOrder()
     {
-        $this->service->insertIntoOrderAfter('HANDOFF_ORDER_1', 'LON_C_CTR', 'EGLL_S_TWR');
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 4,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 3,
-            ]
-        );
+        $this->expectException(OutOfRangeException::class);
+        $this->service->insertIntoOrderAfter('HANDOFF_ORDER_1', 'LON_C_CTR', 'LON_S_CTR');
     }
 
     public function testItDeletesFromHandoffOrder()
@@ -202,5 +151,11 @@ class HandoffServiceTest extends BaseFunctionalTestCase
                 'controller_position_id' => 4,
             ]
         );
+    }
+
+    public function testItThrowsAnExceptionIfDeletePositionNotInHandoffOrder()
+    {
+        $this->expectException(OutOfRangeException::class);
+        $this->service->removeFromHandoffOrder('HANDOFF_ORDER_1', 'LON_C_CTR');
     }
 }
