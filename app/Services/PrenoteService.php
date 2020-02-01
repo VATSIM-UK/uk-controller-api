@@ -65,7 +65,7 @@ class PrenoteService
         $beforePosition = ControllerPosition::where('callsign', $insertBefore)->firstOrFail();
         $prenote = Prenote::where('key', $prenoteKey)->firstOrFail();
 
-        // Check the insert before is in the handoff order
+        // Check the insert before is in the prenote order
         $prenoteBefore = $prenote->controllers->where('id', $beforePosition->id)->first();
         if (!$prenoteBefore) {
             throw new OutOfRangeException('Position to insert before not found in prenote order');
@@ -101,7 +101,7 @@ class PrenoteService
         $afterPosition = ControllerPosition::where('callsign', $insertAfter)->firstOrFail();
         $prenote = Prenote::where('key', $prenoteKey)->firstOrFail();
 
-        // Check the insert before is in the handoff order
+        // Check the insert before is in the prenote order
         $prenoteAfter = $prenote->controllers->where('id', $afterPosition->id)->first();
         if (!$prenoteAfter) {
             throw new OutOfRangeException('Position to insert after not found in prenote order');
@@ -136,7 +136,7 @@ class PrenoteService
         $removePosition = ControllerPosition::where('callsign', $positionToRemove)->firstOrFail();
         $prenote = Prenote::where('key', $prenoteKey)->firstOrFail();
 
-        // Check the insert before is in the handoff order
+        // Check the insert before is in the prenote order
         $prenoteRemove = $prenote->controllers->where('id', $removePosition->id)->first();
         if (!$prenoteRemove) {
             throw new OutOfRangeException('Position to remove not found in prenote order');

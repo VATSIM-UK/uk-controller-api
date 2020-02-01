@@ -104,7 +104,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'airfield_id',
             'controller_position_id'
         )
-            ->orderBy('order', 'asc');
+            ->withPivot('order');
     }
 
     public function prenotePairings() : BelongsToMany
