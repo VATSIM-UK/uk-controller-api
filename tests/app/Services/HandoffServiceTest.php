@@ -280,4 +280,33 @@ class HandoffServiceTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItRemovesFromAllHandoffs()
+    {
+        $this->service->removePositionFromAllHandoffs('EGLL_N_APP');
+        $this->assertDatabaseMissing(
+            'handoff_orders',
+            [
+                'controller_position_id' => 2,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 3,
+                'order' => 1
+            ]
+        );
+    }
 }
