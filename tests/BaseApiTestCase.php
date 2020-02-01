@@ -39,6 +39,18 @@ abstract class BaseApiTestCase extends BaseTestCase
      */
     protected static $tokenUser = UserTableSeeder::ACTIVE_USER_CID;
 
+    private static $hasSeeded = false;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        if (!self::$hasSeeded) {
+            self::$hasSeeded = true;
+            shell_exec('php artisan db:seed');
+        }
+    }
+
     /**
      * Setup Function
      *
