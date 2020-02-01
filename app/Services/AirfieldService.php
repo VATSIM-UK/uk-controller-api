@@ -41,7 +41,7 @@ class AirfieldService
         string $positionToInsert,
         string $insertBefore
     ): void {
-        try{
+        try {
             DB::beginTransaction();
             // Get the models
             $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();
@@ -77,7 +77,7 @@ class AirfieldService
 
     public static function insertIntoOrderAfter(string $airfieldKey, string $positionToInsert, string $insertAfter): void
     {
-        try{
+        try {
             DB::beginTransaction();
             // Get the models
             $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();

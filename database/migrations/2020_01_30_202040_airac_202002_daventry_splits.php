@@ -118,8 +118,7 @@ class Airac202002DaventrySplits extends Migration
     {
         try {
             DB::beginTransaction();
-            foreach (self::POSITION_DATA as $position)
-            {
+            foreach (self::POSITION_DATA as $position) {
                 ControllerPosition::create(
                     [
                         'callsign' => $position['callsign'],
@@ -127,13 +126,11 @@ class Airac202002DaventrySplits extends Migration
                     ]
                 );
 
-                foreach ($position['top_down'] as $airfield => $insertBefore)
-                {
+                foreach ($position['top_down'] as $airfield => $insertBefore) {
                     AirfieldService::insertIntoOrderBefore($airfield, $position['callsign'], $insertBefore);
                 }
 
-                foreach ($position['handoff'] as $handoff => $insertBefore)
-                {
+                foreach ($position['handoff'] as $handoff => $insertBefore) {
                     HandoffService::insertIntoOrderBefore($handoff, $position['callsign'], $insertBefore);
                 }
 
