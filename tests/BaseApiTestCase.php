@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use UserTableSeeder;
 
-abstract class BaseApiTestCase extends BaseTestCase
+abstract class BaseApiTestCase extends BaseFunctionalTestCase
 {
     use DatabaseTransactions;
 
@@ -38,18 +38,6 @@ abstract class BaseApiTestCase extends BaseTestCase
      * @var integer
      */
     protected static $tokenUser = UserTableSeeder::ACTIVE_USER_CID;
-
-    private static $hasSeeded = false;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        if (!self::$hasSeeded) {
-            self::$hasSeeded = true;
-            shell_exec('php artisan db:seed');
-        }
-    }
 
     /**
      * Setup Function
