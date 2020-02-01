@@ -21,27 +21,33 @@ class HandoffServiceTest extends BaseFunctionalTestCase
     public function testItReturnsHandoffsWithControllers()
     {
         $expected = [
-            [
-                "id" => 1,
-                "key" => "HANDOFF_ORDER_1",
-                "description" => "foo",
-                "controllers" => [
-                    1,
-                    2,
-                ],
+            'HANDOFF_ORDER_1' => [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
             ],
-            [
-                "id" => 2,
-                "key" => "HANDOFF_ORDER_2",
-                "description" => "foo",
-                "controllers" => [
-                    2,
-                    3,
-                ],
+            'HANDOFF_ORDER_2' => [
+                'EGLL_N_APP',
+                'LON_S_CTR',
             ],
         ];
 
         $actual = $this->service->getAllHandoffsWithControllers();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testItMapsSidsToHandoffs()
+    {
+        $expected = [
+            'EGLL' => [
+                'TEST1X' => 'HANDOFF_ORDER_1',
+                'TEST1Y' => 'HANDOFF_ORDER_1',
+            ],
+            'EGBB' => [
+                'TEST1A' => 'HANDOFF_ORDER_2',
+            ],
+        ];
+
+        $actual = $this->service->mapSidsToHandoffs();
         $this->assertSame($expected, $actual);
     }
 

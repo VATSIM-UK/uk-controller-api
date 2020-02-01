@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
+use App\Models\Sid;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
@@ -12,20 +13,21 @@ class HandoffService
 {
     public function getAllHandoffsWithControllers(): array
     {
-        $handoffs = Handoff::with([
-            'controllers' => function ($query) {
-                $query->orderBy('order');
-            },
-        ])->get();
-
-        return $handoffs->map(function (Handoff $handoff) {
-            return array_merge(
-                $handoff->toArray(),
-                [
-                    'controllers' => array_column($handoff->controllers->toArray(), 'id'),
-                ]
-            );
+        return Handoff::all()->mapWithKeys(function (Handoff $handoff) {
+            return [
+                $handoff->key => $handoff->controllers()->orderBy('order', 'asc')->pluck('callsign')->toArray(),
+            ];
         })->toArray();
+    }
+
+    public function mapSidsToHandoffs(): array
+    {
+        $sidMap = [];
+        Sid::whereHas('handoff')->each(function (Sid $sid) use (&$sidMap) {
+            $sidMap[$sid->airfield->code][$sid->identifier] = $sid->handoff->key;
+        });
+
+        return $sidMap;
     }
 
     public static function insertIntoOrderBefore(

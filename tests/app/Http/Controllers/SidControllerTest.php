@@ -30,6 +30,21 @@ class SidControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'initial-altitude')->assertStatus(200);
     }
 
+    public function testItReturnsHandoffData()
+    {
+        $expected = [
+            'EGLL' => [
+                'TEST1X' => 'HANDOFF_ORDER_1',
+                'TEST1Y' => 'HANDOFF_ORDER_1',
+            ],
+            'EGBB' => [
+                'TEST1A' => 'HANDOFF_ORDER_2',
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'handoffs')->assertJson($expected);
+    }
+
     public function testItReturnsInitialAltitudeData()
     {
         $expected = [
@@ -52,6 +67,7 @@ class SidControllerTest extends BaseApiTestCase
             'identifier' => 'TEST1X',
             'airfield_id' => 1,
             'initial_altitude' => 3000,
+            'handoff_id' => 1,
         ];
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/1')->assertJson($expected);
     }
@@ -75,6 +91,7 @@ class SidControllerTest extends BaseApiTestCase
                 'airfield_id' => 1,
                 'handoff_id' => null,
                 'initial_altitude' => 3000,
+                'handoff_id' => 1,
                 'prenotes' => [
                     1,
                 ],
@@ -85,6 +102,7 @@ class SidControllerTest extends BaseApiTestCase
                 'airfield_id' => 1,
                 'handoff_id' => null,
                 'initial_altitude' => 4000,
+                'handoff_id' => 1,
                 'prenotes' => [],
             ],
             [
@@ -93,6 +111,7 @@ class SidControllerTest extends BaseApiTestCase
                 'airfield_id' => 2,
                 'handoff_id' => null,
                 'initial_altitude' => 5000,
+                'handoff_id' => 2,
                 'prenotes' => [],
             ],
         ];
