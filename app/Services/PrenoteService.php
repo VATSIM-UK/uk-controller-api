@@ -22,7 +22,7 @@ class PrenoteService
                     'airfield' => $sid->airfield->code,
                     'departure' => $sid->identifier,
                     'type' => 'sid',
-                    'recipient' => $prenote->controllers->pluck('callsign')->toArray(),
+                    'recipient' => $prenote->controllers()->orderBy('order')->pluck('callsign')->toArray(),
                 ];
             });
         });
@@ -40,6 +40,7 @@ class PrenoteService
                     'type' => 'airfieldPairing',
                     'recipient' => Prenote::findOrFail($pairedAirfield->pivot->prenote_id)
                         ->controllers()
+                        ->orderBy('order')
                         ->pluck('callsign')
                         ->toArray(),
                 ];
