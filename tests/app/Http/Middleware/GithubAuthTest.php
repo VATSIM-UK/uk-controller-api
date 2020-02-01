@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Mockery;
 use TestingUtils\Traits\WithSeedUsers;
 
-class AuthenticateTest extends BaseTestCase
+class GithubAuthTest extends BaseTestCase
 {
     /**
      * @var GithubAuth
