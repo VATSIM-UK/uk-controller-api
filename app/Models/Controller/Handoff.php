@@ -27,7 +27,7 @@ class Handoff extends Model
             'handoff_orders',
             'handoff_id',
             'controller_position_id'
-        );
+        )->withPivot('order');
     }
 
     public function sids() : HasMany
