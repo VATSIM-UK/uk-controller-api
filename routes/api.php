@@ -144,7 +144,7 @@ Route::middleware('admin.dependency')->group(function () {
         ->where('sid', 'd+');
 });
 
-Route::middleware('admin.github')->group(function() {
+Route::middleware('admin.github')->group(function () {
     Route::post('github', 'GithubController@processGithubWebhook');
 });
 
