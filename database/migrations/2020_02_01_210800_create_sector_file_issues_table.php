@@ -19,11 +19,11 @@ class CreateSectorFileIssuesTable extends Migration
     {
         Schema::create('sector_file_issues', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('issue_number')->comment('The github issue number');
-            $table->string('issue_url')->comment('The github issue url');
+            $table->unsignedInteger('number')->comment('The github issue number');
+            $table->boolean('plugin')->comment('Whether or not the issue has been recorded as a plugin issue');
+            $table->boolean('api')->comment('Whether or not the issue has been recorded as a api issue');
 
-            $table->unique('issue_number');
-            $table->unique('issue_url');
+            $table->unique('number');
             $table->timestamps();
         });
     }

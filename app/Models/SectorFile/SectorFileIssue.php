@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class SectorFileIssue extends Model
 {
     protected $fillable = [
-        'issue_number',
-        'issue_url'
+        'number',
+        'plugin',
+        'api',
+    ];
+
+    protected $casts = [
+        'plugin' => 'boolean',
+        'api' => 'boolean',
+        'number' => 'integer',
     ];
 }
