@@ -19,8 +19,14 @@ class GithubAuth
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-        if (hash_hmac('sha1', $request->getContent(),
-                config('github.secret')) !== $request->header('X-Hub-Signature')) {
+        $signatureParts = explode('=', $request->header('X-Hub-Signature'));
+        if (count($signatureParts) != 2) {
+            Log::error('Invalid GitHub request signature format');
+            return response()->json(['message' => 'Invalid request signature format'])->setStatusCode(400);
+        }
+
+        if (hash_hmac($signatureParts[0], $request->getContent(),
+                config('github.secret')) !== $signatureParts[1]) {
             Log::error('Invalid GitHub request signature');
             return response()->json(['message' => 'Invalid request signature'])->setStatusCode(403);
         }
