@@ -69,15 +69,15 @@ class GithubController
         $numCreated = 0;
         foreach ($labels as $label) {
             if ($label['name'] == config('github.plugin.label') && !$databaseIssue->plugin) {
-                $created = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
-                $databaseIssue->plugin = $created;
-                $numCreated = $numCreated + ($created ? 1 : -10);
+                $createdPlugin = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
+                $databaseIssue->plugin = $createdPlugin;
+                $numCreated = $numCreated + ($createdPlugin ? 1 : -10);
             }
 
             if ($label['name'] == config('github.api.label') && !$databaseIssue->api) {
-                $created = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
-                $databaseIssue->api = $created;
-                $numCreated = $numCreated + ($created ? 1 : -10);
+                $createdApi = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
+                $databaseIssue->api = $createdApi;
+                $numCreated = $numCreated + ($createdApi ? 1 : -10);
             }
         }
 
