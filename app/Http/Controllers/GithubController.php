@@ -6,6 +6,7 @@ use App\Models\SectorFile\SectorFileIssue;
 use Exception;
 use Github\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Log;
 
 class GithubController
@@ -67,7 +68,7 @@ class GithubController
     {
         $labels = $issue['labels'] ?? [];
         $numCreated = 0;
-        dump('env', env('UKSF_LABEL_NAME_API'));
+        dump('env', Env::getVariables());
         dump(config());
         foreach ($labels as $label) {
             if ($label['name'] == config('github.plugin.label') && !$databaseIssue->plugin) {
