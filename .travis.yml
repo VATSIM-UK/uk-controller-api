@@ -19,14 +19,14 @@ branches:
 before_install:
   - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
   - sudo apt-get update
-  - composer self-update
 
 install:
   - mysql -e 'create database IF NOT EXISTS uk_plugin;' -uroot
+  - cp .env.travis .env
+  - composer self-update
+  - composer install
 
 before_script:
-  - cp .env.travis .env
-  - composer install
   - php artisan key:generate
   - php artisan migrate
   - php artisan passport:install
