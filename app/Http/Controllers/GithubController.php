@@ -82,6 +82,7 @@ class GithubController
         }
 
         // Update the database with what succeeded
+        dump($databaseIssue->toArray());
         $databaseIssue->save();
 
         if ($numCreated < 0) {
