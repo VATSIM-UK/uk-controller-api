@@ -31,7 +31,6 @@ before_script:
   - php artisan migrate
   - php artisan passport:install
   - php artisan db:seed
-  - php artisan config:clear
 
 script:
   - ./vendor/bin/phpunit
