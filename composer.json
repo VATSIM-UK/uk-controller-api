@@ -16,13 +16,14 @@
         "predis/predis": "~1.0",
         "laravel/passport": "^7.2",
         "laravel/framework": "^6.0",
-        "beyondcode/laravel-websockets": "^1.1"
+        "beyondcode/laravel-websockets": "^1.1",
+        "knplabs/github-api": "^2.12",
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "^8.0",
         "mockery/mockery": "~0.9",
-        "squizlabs/php_codesniffer": "*",
         "seld/jsonlint": "^1.7"
     },
     "autoload": {

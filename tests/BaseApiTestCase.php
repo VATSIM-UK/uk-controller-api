@@ -80,6 +80,25 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
     }
 
     /**
+     * Makes an authenticated request to the API on a github webhook and returns the
+     * utils object so that assertions may be made.
+     *
+     * @param  string $method HTTP verb to use
+     * @param  string $route API route to use
+     * @param  array $data Array to pass as JSON
+     * @return TestResponse
+     */
+    protected function makeAuthenticatedApiGithubRequest(string $route, array $data)
+    {
+        $headers = [
+            'X-Hub-Signature' => hash_hmac('sha1', json_encode($data), config('github.secret')),
+            'Accept' => 'application/json'
+        ];
+
+        return $this->makeApiRequest('POST', $route, $headers, $data);
+    }
+
+    /**
      * Makes an unauthenticated request to the API and returns the
      * utils object so that assertions may be made.
      *
