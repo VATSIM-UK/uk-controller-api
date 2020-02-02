@@ -67,7 +67,6 @@ class GithubController
     {
         $labels = $issue['labels'] ?? [];
         $numCreated = 0;
-        dump('env file', file_get_contents(__DIR__ . '/../../../.env'));
         dump('env', env('UKSF_LABEL_NAME_API'));
         dump(config('github'));
         foreach ($labels as $label) {
