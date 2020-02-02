@@ -46,17 +46,13 @@ class GithubController
      */
     private function getDatabaseIssue(array $issue) : SectorFileIssue
     {
-        $databaseIssue = SectorFileIssue::where('number', $issue['number'])->first();
-
-        return $databaseIssue
-            ? $databaseIssue
-            : SectorFileIssue::make(
-                [
-                    'number' => $issue['number'],
-                    'api' => false,
-                    'plugin' => false
-                ]
-            );
+        return SectorFileIssue::firstOrNew(
+            ['number' => $issue['number']],
+            [
+                'api' => false,
+                'plugin' => false
+            ]
+        );
     }
 
     /**
