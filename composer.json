@@ -5,7 +5,7 @@
     "license": "GPL 3.0",
     "type": "project",
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "ext-json": "*",
         "ext-curl": "*",
         "ext-simplexml": "*",
