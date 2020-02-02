@@ -93,7 +93,7 @@ abstract class BaseApiTestCase extends BaseTestCase
     protected function makeAuthenticatedApiGithubRequest(string $route, array $data)
     {
         $headers = [
-            'X-Hub-Signature' => hash_hmac('sha1', json_encode($data), config('github.secret')),
+            'X-Hub-Signature' => 'sha1=' . hash_hmac('sha1', json_encode($data), config('github.secret')),
             'Accept' => 'application/json'
         ];
 
