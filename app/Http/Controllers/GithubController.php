@@ -68,7 +68,7 @@ class GithubController
         $labels = $issue['labels'] ?? [];
         $numCreated = 0;
         dump('env', env('UKSF_LABEL_NAME_API'));
-        dump(config('github'));
+        dump(config());
         foreach ($labels as $label) {
             if ($label['name'] == config('github.plugin.label') && !$databaseIssue->plugin) {
                 $createdPlugin = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
