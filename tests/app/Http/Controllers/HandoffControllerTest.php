@@ -9,23 +9,13 @@ class HandoffControllerTest extends BaseApiTestCase
     public function testItGetsHandoffs()
     {
         $expected = [
-            [
-                "id" => 1,
-                "key" => "HANDOFF_ORDER_1",
-                "description" => "foo",
-                "controllers" => [
-                    1,
-                    2,
-                ],
+            'HANDOFF_ORDER_1' => [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
             ],
-            [
-                "id" => 2,
-                "key" => "HANDOFF_ORDER_2",
-                "description" => "foo",
-                "controllers" => [
-                    2,
-                    3,
-                ],
+            'HANDOFF_ORDER_2' => [
+                'EGLL_N_APP',
+                'LON_S_CTR',
             ],
         ];
 

@@ -16,12 +16,12 @@ class DependencyControllerTest extends BaseApiTestCase
         $expected = [
             [
                 'key' => 'DEPENDENCY_ONE',
-                'uri' => 'http://ukcp.devapp/dependency/one',
+                'uri' => sprintf('%s/dependency/one', config('app.url')),
                 'local_file' => 'one.json',
             ],
             [
                 'key' => 'DEPENDENCY_TWO',
-                'uri' => 'http://ukcp.devapp/dependency/two',
+                'uri' => sprintf('%s/dependency/two', config('app.url')),
                 'local_file' => 'two.json',
             ]
         ];

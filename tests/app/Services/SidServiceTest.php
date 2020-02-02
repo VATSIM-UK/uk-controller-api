@@ -74,7 +74,7 @@ class SidServiceTest extends BaseFunctionalTestCase
             'id' => 1,
             'identifier' => 'TEST1X',
             'airfield_id' => 1,
-            'handoff_id' => null,
+            'handoff_id' => 1,
             'initial_altitude' => 3000,
         ];
         $this->assertEquals($expected, $this->service->getSid(1));
@@ -92,7 +92,7 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'id' => 1,
                 'identifier' => 'TEST1X',
                 'airfield_id' => 1,
-                'handoff_id' => null,
+                'handoff_id' => 1,
                 'initial_altitude' => 3000,
                 'prenotes' => [
                     1,
@@ -102,7 +102,7 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'id' => 2,
                 'identifier' => 'TEST1Y',
                 'airfield_id' => 1,
-                'handoff_id' => null,
+                'handoff_id' => 1,
                 'initial_altitude' => 4000,
                 'prenotes' => [],
             ],
@@ -110,7 +110,7 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'id' => 3,
                 'identifier' => 'TEST1A',
                 'airfield_id' => 2,
-                'handoff_id' => null,
+                'handoff_id' => 2,
                 'initial_altitude' => 5000,
                 'prenotes' => [],
             ],

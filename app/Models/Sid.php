@@ -40,7 +40,7 @@ class Sid extends Model
 
     public function handoff() : HasOne
     {
-        return $this->hasOne(Handoff::class);
+        return $this->hasOne(Handoff::class, 'id', 'handoff_id');
     }
 
     public function prenotes() : BelongsToMany

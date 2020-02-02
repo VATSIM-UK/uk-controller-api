@@ -141,6 +141,7 @@ Route::middleware('public')->group(function () {
     Route::get('sid/{id}', 'SidController@getSid')
         ->where('sid', 'd+');
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
+    Route::get('handoffs', 'SidController@getSidHandoffsDependency');
 
     // Version checking
     Route::get(

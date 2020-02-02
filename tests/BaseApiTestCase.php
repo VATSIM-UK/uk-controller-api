@@ -8,10 +8,8 @@ use InvalidArgumentException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use UserTableSeeder;
 
-abstract class BaseApiTestCase extends BaseTestCase
+abstract class BaseApiTestCase extends BaseFunctionalTestCase
 {
-    use DatabaseTransactions;
-
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
     const METHOD_POST_NO_JSON = 'POST';

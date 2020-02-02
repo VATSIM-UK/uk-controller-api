@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\HandoffService;
 use App\Services\SidService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,19 +13,29 @@ class SidController extends BaseController
      * @var SidService
      */
     private $sidService;
+    /**
+     * @var HandoffService
+     */
+    private $handoffService;
 
     /**
      * SidController constructor.
      * @param SidService $sidService
      */
-    public function __construct(SidService $sidService)
+    public function __construct(SidService $sidService, HandoffService $handoffService)
     {
         $this->sidService = $sidService;
+        $this->handoffService = $handoffService;
     }
 
     public function getInitialAltitudeDependency(): JsonResponse
     {
         return response()->json($this->sidService->getInitialAltitudeDependency());
+    }
+
+    public function getSidHandoffsDependency(): JsonResponse
+    {
+        return response()->json($this->handoffService->mapSidsToHandoffs());
     }
 
     public function getSid(int $id): JsonResponse

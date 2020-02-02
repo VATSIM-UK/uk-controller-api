@@ -19,18 +19,21 @@ class SidTableSeeder extends Seeder
                     'identifier' => 'TEST1X',
                     'airfield_id' => 1,
                     'initial_altitude' => 3000,
+                    'handoff_id' => 1,
                 ],
                 [
                     'id' => 2,
                     'identifier' => 'TEST1Y',
                     'airfield_id' => 1,
                     'initial_altitude' => 4000,
+                    'handoff_id' => 1,
                 ],
                 [
                     'id' => 3,
                     'identifier' => 'TEST1A',
                     'airfield_id' => 2,
                     'initial_altitude' => 5000,
+                    'handoff_id' => 2,
                 ],
             ]
         );

@@ -5,7 +5,6 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Exceptions\UserAlreadyExistsException;
-use App\Models\User\User;
 use App\Models\User\UserStatus;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use TestingUtils\Traits\WithSeedUsers;
@@ -62,7 +61,7 @@ class UserServiceTest extends BaseFunctionalTestCase
     {
         $actual = $this->service->createUser(1402313);
 
-        $expectedApiUrl = 'http://ukcp.devapp';
+        $expectedApiUrl = config('app.url');
         $this->assertEquals($expectedApiUrl, $actual->apiUrl());
         $this->assertNotNull($actual->apiKey());
     }
