@@ -17,7 +17,6 @@ class GithubControllerTest extends BaseApiTestCase
         parent::setUp();
         $this->client = Mockery::mock(Client::class);
         $this->app[Client::class] = $this->client;
-        dump($this->getName());
     }
 
     private function doMocks(bool $api, bool $shouldBeCalled = true)

@@ -68,26 +68,21 @@ class GithubController
     {
         $labels = $issue['labels'] ?? [];
         $numCreated = 0;
-        dump(config('github'));
         foreach ($labels as $label) {
             if ($label['name'] == config('github.plugin.label') && !$databaseIssue->plugin) {
                 $createdPlugin = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
-                dump('plugin_create', $createdPlugin);
                 $databaseIssue->plugin = $createdPlugin;
                 $numCreated = $numCreated + ($createdPlugin ? 1 : -10);
             }
 
             if ($label['name'] == config('github.api.label') && !$databaseIssue->api) {
                 $createdApi = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
-                dump('api_create', $createdApi);
                 $databaseIssue->api = $createdApi;
                 $numCreated = $numCreated + ($createdApi ? 1 : -10);
             }
         }
 
         // Update the database with what succeeded
-        dump('all', SectorFileIssue::all()->toArray());
-        dump($databaseIssue->toArray());
         $databaseIssue->save();
 
         if ($numCreated < 0) {
