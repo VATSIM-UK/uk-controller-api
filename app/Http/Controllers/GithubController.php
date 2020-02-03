@@ -6,7 +6,6 @@ use App\Models\SectorFile\SectorFileIssue;
 use Exception;
 use Github\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Log;
 
 class GithubController
@@ -47,7 +46,7 @@ class GithubController
      */
     private function getDatabaseIssue(array $issue) : SectorFileIssue
     {
-        return SectorFileIssue::firstOrNew(
+        return SectorFileIssue::lockForUpdate()->firstOrNew(
             ['number' => $issue['number']],
             [
                 'api' => false,
@@ -82,9 +81,6 @@ class GithubController
             }
         }
 
-        // Update the database with what succeeded
-        $databaseIssue->save();
-
         if ($numCreated < 0) {
             Log::error('Error creating github issue(s)');
             return response('', 502);
@@ -93,6 +89,9 @@ class GithubController
         if ($numCreated == 0) {
             return response('', 200);
         }
+
+        // Update the database with what succeeded
+        $databaseIssue->save();
 
         Log::info('Created GitHub issues');
         return response('', 201);
