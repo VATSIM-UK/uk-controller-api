@@ -6,6 +6,7 @@ use App\Models\SectorFile\SectorFileIssue;
 use Exception;
 use Github\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class GithubController
@@ -46,7 +47,10 @@ class GithubController
      */
     private function getDatabaseIssue(array $issue) : SectorFileIssue
     {
-        return SectorFileIssue::lockForUpdate()->firstOrNew(
+        // Lock the table for atomic goodness
+        DB::raw('LOCK TABLES sector_file_issues WRITE');
+
+        return SectorFileIssue::firstOrNew(
             ['number' => $issue['number']],
             [
                 'api' => false,
