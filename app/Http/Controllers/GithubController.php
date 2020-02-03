@@ -85,17 +85,17 @@ class GithubController
             }
         }
 
-        if ($numCreated < 0) {
-            Log::error('Error creating github issue(s)');
-            return response('', 502);
-        }
-
         if ($numCreated == 0) {
             return response('', 200);
         }
 
         // Update the database with what succeeded
         $databaseIssue->save();
+
+        if ($numCreated < 0) {
+            Log::error('Error creating github issue(s)');
+            return response('', 502);
+        }
 
         Log::info('Created GitHub issues');
         return response('', 201);
