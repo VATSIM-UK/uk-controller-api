@@ -2,11 +2,7 @@ language: php
 php:
   - '7.3'
   - '7.4'
-
-matrix:
-  allow_failures:
-    - php: '7.4'
-
+  -
 addons:
   mariadb: '10.2'
 
