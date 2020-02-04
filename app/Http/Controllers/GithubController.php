@@ -36,8 +36,15 @@ class GithubController
 
     private function handleEvent(array $issue)
     {
+        // Lock the table for atomic goodness
+        DB::unprepared('LOCK TABLES sector_file_issues WRITE');
+
         $databaseIssue = $this->getDatabaseIssue($issue);
-        return $this->processLabels($databaseIssue, $issue);
+        $response =  $this->processLabels($databaseIssue, $issue);
+
+        // Unlock it
+        DB::unprepared('UNLOCK TABLES');
+        return $response;
     }
     /**
      * Create a blank database issue if we dont have one, or get the current
@@ -47,9 +54,6 @@ class GithubController
      */
     private function getDatabaseIssue(array $issue) : SectorFileIssue
     {
-        // Lock the table for atomic goodness
-        DB::unprepared('LOCK TABLES sector_file_issues WRITE');
-
         return SectorFileIssue::firstOrNew(
             ['number' => $issue['number']],
             [
