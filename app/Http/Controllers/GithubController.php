@@ -48,7 +48,7 @@ class GithubController
     private function getDatabaseIssue(array $issue) : SectorFileIssue
     {
         // Lock the table for atomic goodness
-        DB::raw('LOCK TABLES sector_file_issues WRITE');
+        DB::unprepared('LOCK TABLES sector_file_issues WRITE');
 
         return SectorFileIssue::firstOrNew(
             ['number' => $issue['number']],
