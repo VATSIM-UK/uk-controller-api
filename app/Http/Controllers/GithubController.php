@@ -139,7 +139,6 @@ class GithubController
             Log::info('Created GitHub issue');
             return true;
         } catch (Exception $exception) {
-            dd($exception->getMessage());
             Log::error(
                 'Unable to create GitHub issue',
                 [$exception->getMessage()]
