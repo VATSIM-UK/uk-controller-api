@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SectorFile\SectorFileIssue;
 use Exception;
 use Github\Client;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -27,24 +28,45 @@ class GithubController
             return response('', 422);
         }
 
+        // Check for the events we care about
         if (!in_array($request->json()->get('action'), ['created', 'labeled'])) {
             return response('', 200);
         }
 
-        return $this->handleEvent($request->json()->get('issue'));
+        // Check for the presence of a valid label and only process if there's a label to work with
+        $labelNames = isset($request->json()->get('issue')['labels'])
+            ? array_column($request->json()->get('issue')['labels'], 'name')
+            : [];
+
+        foreach ($labelNames as $labelName) {
+            if ($labelName === config('github.plugin.label') || $labelName === config('github.api.label')) {
+                return $this->handleEvent($request->json()->get('issue'));
+            }
+        }
+
+        return response('', 200);
     }
 
     private function handleEvent(array $issue)
     {
-        // Lock the table for atomic goodness
-        DB::unprepared('LOCK TABLES sector_file_issues WRITE');
+        // Create the database issue or find it, if there's a duplicate request, handle the exception.
+        try {
+            $databaseIssue = SectorFileIssue::firstOrCreate(
+                ['number' => $issue['number']],
+                [
+                    'api' => false,
+                    'plugin' => false
+                ]
+            );
+        } catch (QueryException $queryException) {
+            if ($queryException->errorInfo[1] === 1062) {
+                return response('', 200);
+            }
 
-        $databaseIssue = $this->getDatabaseIssue($issue);
-        $response =  $this->processLabels($databaseIssue, $issue);
+            throw $queryException;
+        }
 
-        // Unlock it
-        DB::unprepared('UNLOCK TABLES');
-        return $response;
+        return $this->processLabels($databaseIssue, $issue);
     }
     /**
      * Create a blank database issue if we dont have one, or get the current

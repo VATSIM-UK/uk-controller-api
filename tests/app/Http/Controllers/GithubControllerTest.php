@@ -7,7 +7,6 @@ use App\Models\SectorFile\SectorFileIssue;
 use Github\Api\Issue;
 use Github\Client;
 use Mockery;
-use Throwable;
 
 class GithubControllerTest extends BaseApiTestCase
 {
@@ -18,18 +17,6 @@ class GithubControllerTest extends BaseApiTestCase
         parent::setUp();
         $this->client = Mockery::mock(Client::class);
         $this->app[Client::class] = $this->client;
-    }
-
-    /**
-     * Using table locks kills any existing transaction, which breaks tests.
-     * Therefore we need to truncate tables between tests.
-     *
-     * @throws Throwable
-     */
-    public function tearDown(): void
-    {
-        SectorFileIssue::truncate();
-        parent::tearDown();
     }
 
     private function doMocks(bool $api, bool $shouldBeCalled = true)
@@ -356,5 +343,50 @@ class GithubControllerTest extends BaseApiTestCase
                 ]
             ]
         )->assertStatus(422);
+    }
+
+    public function testItHandlesNoValidLabels()
+    {
+        $this->makeAuthenticatedApiGithubRequest(
+            'github',
+            [
+                'action' => 'created',
+                'issue' => [
+                    'title' => 'Test Title',
+                    'html_url' => 'Test Body',
+                    'labels' => [
+                        [
+                            'name' => 'nope',
+                        ]
+                    ]
+                ]
+            ]
+        )->assertStatus(200);
+        $this->assertDatabaseMissing(
+            'sector_file_issues',
+            [
+                'number' => 22,
+            ]
+        );
+    }
+
+    public function testItHandlesNoLabels()
+    {
+        $this->makeAuthenticatedApiGithubRequest(
+            'github',
+            [
+                'action' => 'created',
+                'issue' => [
+                    'title' => 'Test Title',
+                    'html_url' => 'Test Body',
+                ]
+            ]
+        )->assertStatus(200);
+        $this->assertDatabaseMissing(
+            'sector_file_issues',
+            [
+                'number' => 22,
+            ]
+        );
     }
 }
