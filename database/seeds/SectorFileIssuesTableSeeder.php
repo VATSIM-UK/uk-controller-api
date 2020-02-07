@@ -13,6 +13,5 @@ class SectorFileIssuesTableSeeder extends Seeder
      */
     public function run()
     {
-
     }
 }
