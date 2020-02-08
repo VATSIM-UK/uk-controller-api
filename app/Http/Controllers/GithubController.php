@@ -55,7 +55,7 @@ class GithubController
                 ['number' => $issue['number']],
                 [
                     'api' => false,
-                    'plugin' => false
+                    'plugin' => false,
                 ]
             )->id;
         } catch (QueryException $queryException) {
