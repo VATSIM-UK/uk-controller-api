@@ -51,13 +51,13 @@ class GithubController
     {
         // Create the database issue or find it, if there's a duplicate request, handle the exception.
         try {
-            $databaseIssue = SectorFileIssue::firstOrCreate(
+            $issueId = SectorFileIssue::firstOrCreate(
                 ['number' => $issue['number']],
                 [
                     'api' => false,
-                    'plugin' => false
+                    'plugin' => false,
                 ]
-            );
+            )->id;
         } catch (QueryException $queryException) {
             if ($queryException->errorInfo[1] === 1062) {
                 return response('', 200);
@@ -66,7 +66,7 @@ class GithubController
             throw $queryException;
         }
 
-        return $this->processLabels($databaseIssue, $issue);
+        return $this->processLabels(SectorFileIssue::lockForUpdate()->find($issueId), $issue);
     }
     /**
      * Create a blank database issue if we dont have one, or get the current
