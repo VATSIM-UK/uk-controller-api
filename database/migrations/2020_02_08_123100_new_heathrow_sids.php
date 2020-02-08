@@ -50,7 +50,6 @@ class NewHeathrowSids extends Migration
             ->where('identifier', 'LIKE', 'GASGU%')
             ->orWhere('identifier', 'LIKE', 'GOGSI%')
             ->update(['identifier' => DB::raw('REPLACE(`identifier`, "1", "2")')]);
-
     }
 
     /**
