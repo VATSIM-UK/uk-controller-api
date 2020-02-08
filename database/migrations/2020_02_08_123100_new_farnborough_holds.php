@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Airfield;
+use App\Models\Hold\Hold;
+use App\Models\Hold\HoldRestriction;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +48,18 @@ class NewFarnboroughHolds extends Migration
                 ],
             ]
         );
+
+        // Add some restrictions
+        $restrictionData = [
+            'restriction' => [
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLF',
+            ],
+        ];
+
+        Hold::where('fix', 'PEPIS')->firstOrFail()->restrictions()->save(HoldRestriction::make($restrictionData));
+        Hold::where('fix', 'RUDMO')->firstOrFail()->restrictions()->save(HoldRestriction::make($restrictionData));
     }
 
     /**
