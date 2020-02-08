@@ -57,6 +57,9 @@ class DatabaseSeeder extends Seeder
         SidTableSeeder::class => [
             'sid',
         ],
+        SectorFileIssuesTableSeeder::class => [
+            'sector_file_issues',
+        ],
     ];
 
 
