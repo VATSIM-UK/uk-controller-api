@@ -14,7 +14,7 @@ class RegionalPressuresUpdatedEvent implements ShouldBroadcast
     /**
      * @var array
      */
-    private $pressures;
+    public $pressures;
 
     /**
      * AirfieldMinStacksUpdatedEvent constructor.
