@@ -84,13 +84,6 @@ class AddMoreMissingAirfields extends Migration
                 'created_at' => Carbon::now(),
             ],
             [
-                'code' => 'EGLF',
-                'transition_altitude' => 6000,
-                'standard_high' => true,
-                'msl_calculation' => '{"type": "direct", "airfield": "EGLF"}',
-                'created_at' => Carbon::now(),
-            ],
-            [
                 'code' => 'EGMD',
                 'transition_altitude' => 6000,
                 'standard_high' => true,
