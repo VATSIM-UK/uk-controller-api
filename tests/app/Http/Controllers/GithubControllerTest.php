@@ -344,4 +344,49 @@ class GithubControllerTest extends BaseApiTestCase
             ]
         )->assertStatus(422);
     }
+
+    public function testItHandlesNoValidLabels()
+    {
+        $this->makeAuthenticatedApiGithubRequest(
+            'github',
+            [
+                'action' => 'created',
+                'issue' => [
+                    'title' => 'Test Title',
+                    'html_url' => 'Test Body',
+                    'labels' => [
+                        [
+                            'name' => 'nope',
+                        ]
+                    ]
+                ]
+            ]
+        )->assertStatus(200);
+        $this->assertDatabaseMissing(
+            'sector_file_issues',
+            [
+                'number' => 22,
+            ]
+        );
+    }
+
+    public function testItHandlesNoLabels()
+    {
+        $this->makeAuthenticatedApiGithubRequest(
+            'github',
+            [
+                'action' => 'created',
+                'issue' => [
+                    'title' => 'Test Title',
+                    'html_url' => 'Test Body',
+                ]
+            ]
+        )->assertStatus(200);
+        $this->assertDatabaseMissing(
+            'sector_file_issues',
+            [
+                'number' => 22,
+            ]
+        );
+    }
 }

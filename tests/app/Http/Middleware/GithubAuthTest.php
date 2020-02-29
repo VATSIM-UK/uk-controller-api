@@ -32,7 +32,7 @@ class GithubAuthTest extends BaseTestCase
         $request = Mockery::mock(Request::class);
         $request->shouldReceive('header')
             ->with('X-Hub-Signature')
-            ->andReturn(hash_hmac('sha1', $requestBody, config('github.secret')));
+            ->andReturn('sha1=' . hash_hmac('sha1', $requestBody, config('github.secret')));
         $request->shouldReceive('getContent')->andReturn($requestBody);
 
         $this->assertEquals(
@@ -53,11 +53,32 @@ class GithubAuthTest extends BaseTestCase
         $request = Mockery::mock(Request::class);
         $request->shouldReceive('header')
             ->with('X-Hub-Signature')
-            ->andReturn(hash_hmac('sha1', $requestBody, 'notgithubsecret'));
+            ->andReturn('sha1=' . hash_hmac('sha1', $requestBody, 'notgithubsecret'));
         $request->shouldReceive('getContent')->andReturn($requestBody);
 
         $this->assertEquals(
             403,
+            $this->middleware->handle(
+                $request,
+                function (Request $request) {
+                    return response('', 418);
+                }
+            )->getStatusCode()
+        );
+    }
+
+    public function testItRejectsInvalidXHubSignatureFormat()
+    {
+        $requestBody = json_encode(['test1' => 'test1', 'test2' => 'what']);
+
+        $request = Mockery::mock(Request::class);
+        $request->shouldReceive('header')
+            ->with('X-Hub-Signature')
+            ->andReturn(hash_hmac('sha1', $requestBody, config('github.secret')));
+        $request->shouldReceive('getContent')->andReturn($requestBody);
+
+        $this->assertEquals(
+            400,
             $this->middleware->handle(
                 $request,
                 function (Request $request) {
