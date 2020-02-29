@@ -88,6 +88,9 @@ class DatabaseSeeder extends Seeder
             'handoffs',
             'handoff_orders',
         ],
+        SectorFileIssuesTableSeeder::class => [
+            'sector_file_issues',
+        ],
     ];
 
 

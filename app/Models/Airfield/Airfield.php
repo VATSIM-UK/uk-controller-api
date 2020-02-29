@@ -5,7 +5,6 @@ namespace App\Models\Airfield;
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Models\Controller\ControllerPosition;
-use App\Models\Controller\Prenote;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
