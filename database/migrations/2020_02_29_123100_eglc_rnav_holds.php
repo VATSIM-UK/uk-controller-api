@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Airfield;
 use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
 use Carbon\Carbon;
