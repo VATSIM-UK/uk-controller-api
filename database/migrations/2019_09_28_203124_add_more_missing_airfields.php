@@ -14,6 +14,19 @@ class AddMoreMissingAirfields extends Migration
     public function up()
     {
         Airfield::insert($this->getAirfieldData());
+
+        // EGLF is special as it got introduced midway through the work, so skip it if it's already there
+        Airfield::firstOrCreate(
+            [
+                'code' => 'EGLF',
+            ],
+            [
+                'transition_altitude' => 6000,
+                'standard_high' => true,
+                'msl_calculation' => '{"type": "direct", "airfield": "EGLF"}',
+                'created_at' => Carbon::now(),
+            ],
+        );
     }
 
     /**
