@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
@@ -15,15 +15,7 @@ class NewFarnboroughSids extends Migration
     public function up()
     {
         // Create Farnborough (whoops)
-        $farnborough = DB::table('airfield')->insertGetId(
-            [
-                'code' => 'EGLF',
-                'transition_altitude' => 6000,
-                'standard_high' => true,
-                'msl_calculation' => '{"type": "direct", "airfield": "EGLL"}',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $farnborough = Airfield::where('code', 'EGLF')->firstOrFail()->id;
 
         // Create the new SIDs
         DB::table('sid')->insert(
@@ -65,8 +57,5 @@ class NewFarnboroughSids extends Migration
     {
         // Delete new SIDs
         DB::table('sid')->whereIn('identifier', ['GWC1L', 'GWC1F', 'HAZEL1L', 'HAZEL1F'])->delete();
-
-        // Delete farnborough
-        DB::table('airfield')->where('identifier', 'EGLF')->delete();
     }
 }
