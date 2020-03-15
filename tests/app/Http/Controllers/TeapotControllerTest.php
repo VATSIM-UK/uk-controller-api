@@ -24,6 +24,17 @@ class TeapotControllerTest extends BaseApiTestCase
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
+            ->assertStatus(418);
+    }
+
+    public function testItAcceptsGetToNormalRoutes()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/')
+            ->assertJson(
+                [
+                    'message' => 'Nothing here but us teapots...',
+                ]
+            )
             ->assertStatus(200);
     }
 

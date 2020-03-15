@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 // Routes that the plugin user will use
 Route::middleware('plugin.user')->group(function () {
 
-    // Default route, just used to check if the API is available and the user is authenticated
+    // Default routes, just used to check if the API is available and the user is authenticated
     Route::get(
         '/',
         [
@@ -13,6 +13,16 @@ Route::middleware('plugin.user')->group(function () {
                 'user.lastlogin',
             ],
             'uses' => 'TeapotController@teapot',
+        ]
+    );
+
+    Route::get(
+        '/authorise',
+        [
+            'middleware' => [
+                'user.lastlogin',
+            ],
+            'uses' => 'TeapotController@normalTeapots',
         ]
     );
 

@@ -25,6 +25,21 @@ class TeapotController
             [
                 'message' => 'Nothing here but us teapots...',
             ]
+        )->setStatusCode(418);
+    }
+
+    /**
+     * A holding page that simply tells the user that they really need to go and
+     * rethink what they're doing. Also tracks last login.
+     *
+     * @return Response
+     */
+    public function normalTeapots() : JsonResponse
+    {
+        return response()->json(
+            [
+                'message' => 'Nothing here but us teapots...',
+            ]
         )->setStatusCode(200);
     }
 }
