@@ -24,7 +24,7 @@ class TeapotControllerTest extends BaseApiTestCase
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
-            ->assertStatus(418);
+            ->assertStatus(200);
     }
 
     public function testGetAssignmentRejectsTokensWithoutUserScope()

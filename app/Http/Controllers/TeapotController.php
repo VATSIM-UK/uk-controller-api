@@ -25,6 +25,6 @@ class TeapotController
             [
                 'message' => 'Nothing here but us teapots...',
             ]
-        )->setStatusCode(418);
+        )->setStatusCode(200);
     }
 }
