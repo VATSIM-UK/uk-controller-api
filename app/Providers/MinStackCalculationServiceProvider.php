@@ -6,7 +6,7 @@ use App\Exceptions\InvalidMslCalculationException;
 use App\Helpers\MinStack\DirectMinStackCalculation;
 use App\Helpers\MinStack\LowestMinStackCalculation;
 use App\Helpers\MinStack\MinStackCalculableInterface;
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Services\MetarService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application;

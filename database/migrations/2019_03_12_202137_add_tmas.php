@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use App\Models\Tma;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;

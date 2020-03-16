@@ -2,7 +2,7 @@
 
 namespace App\Models\MinStack;
 
-use App\Models\Airfield;
+use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
