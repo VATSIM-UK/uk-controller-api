@@ -27,6 +27,17 @@ class TeapotControllerTest extends BaseApiTestCase
             ->assertStatus(418);
     }
 
+    public function testItAcceptsGetAndReturns200()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise')
+            ->assertJson(
+                [
+                    'message' => 'Nothing here but us teapots...',
+                ]
+            )
+            ->assertStatus(200);
+    }
+
     public function testGetAssignmentRejectsTokensWithoutUserScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
