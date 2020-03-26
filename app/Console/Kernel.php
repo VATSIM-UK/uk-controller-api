@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('allocations:clean')->everyFifteenMinutes();
-        $schedule->command('regionals:generate')->hourlyAt([25, 55]);
+        $schedule->command('regional:generate')->hourlyAt([25, 55]);
         $schedule->command('tokens:delete-expired')->daily();
         $schedule->command('allocations:clean-history')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
