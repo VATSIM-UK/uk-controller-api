@@ -16,6 +16,8 @@ class AllocationHistoryTest extends BaseFunctionalTestCase
         $allocation = Allocation::find(1);
         $historyItem = AllocationHistory::create($allocation->toArray());
 
+        exit(var_dump($allocation->allocated_at, $historyItem->allocated_at));
+
         $this->assertEquals($allocation->callsign, $historyItem->callsign);
         $this->assertEquals($allocation->squawk, $historyItem->squawk);
         $this->assertEquals($allocation->allocated_by, $historyItem->allocated_by);
