@@ -13,14 +13,13 @@ class AllocationHistoryTest extends BaseFunctionalTestCase
 
     public function testItIsMassAssignableFromAllocationDataArray()
     {
-        $allocationData = Allocation::find(1)->toArray();
-        $allocationData['new'] = false;
-        $historyItem = AllocationHistory::create($allocationData);
+        $allocation = Allocation::find(1);
+        $historyItem = AllocationHistory::create($allocation->toArray());
 
-        $this->assertEquals($allocationData['callsign'], $historyItem->callsign);
-        $this->assertEquals($allocationData['squawk'], $historyItem->squawk);
-        $this->assertEquals($allocationData['allocated_by'], $historyItem->allocated_by);
-        $this->assertEquals($allocationData['allocated_at'], $historyItem->allocated_at);
+        $this->assertEquals($allocation->callsign, $historyItem->callsign);
+        $this->assertEquals($allocation->squawk, $historyItem->squawk);
+        $this->assertEquals($allocation->allocated_by, $historyItem->allocated_by);
+        $this->assertEquals($allocation->allocated_at, $historyItem->allocated_at);
         $this->assertEquals(0, $historyItem->new);
     }
 }
