@@ -19,8 +19,8 @@ class AllocationHistoryTest extends BaseFunctionalTestCase
 
         $this->assertEquals($allocationData['callsign'], $historyItem->callsign);
         $this->assertEquals($allocationData['squawk'], $historyItem->squawk);
-        $this->assertEquals($allocationData['allocated_by'], $historyItem->allocated_by);
-        $this->assertEquals($allocationData['allocated_at'], $historyItem->allocated_at);
+        $this->assertEquals($allocationData['allocated_by'], $historyItem->allocated_by->toIso8601ZuluString());
+        $this->assertEquals($allocationData['allocated_at'], $historyItem->allocated_at->toIso8601ZuluString());
         $this->assertEquals(0, $historyItem->new);
     }
 }
