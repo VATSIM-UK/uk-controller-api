@@ -18,6 +18,7 @@ class DependencyController extends BaseController
                 'key' => $dependency->key,
                 'uri' => sprintf('%s/%s', config('app.url'), $dependency->uri),
                 'local_file' => $dependency->local_file,
+                'updated_at' => $dependency->updated_at->timestamp,
             ];
         });
         return response()->json($dependencies);

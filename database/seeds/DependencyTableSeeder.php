@@ -13,11 +13,13 @@ class DependencyTableSeeder extends Seeder
                     'key' => 'DEPENDENCY_ONE',
                     'uri' => 'dependency/one',
                     'local_file' => 'one.json',
+                    'updated_at' => '2020-04-02 21:00:00',
                 ],
                 [
                     'key' => 'DEPENDENCY_TWO',
                     'uri' => 'dependency/two',
                     'local_file' => 'two.json',
+                    'updated_at' => '2020-04-03 21:00:00',
                 ]
             ]
         );
