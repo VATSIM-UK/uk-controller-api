@@ -26,6 +26,9 @@ Route::middleware('plugin.user')->group(function () {
         ]
     );
 
+    // Dependencies
+    Route::get('dependency', 'DependencyController@getAllDependencies');
+
     // Holds
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
     Route::put('hold/profile', 'HoldController@createUserHoldProfile');
@@ -167,9 +170,6 @@ Route::middleware('public')->group(function () {
             'uses' => 'VersionController@getVersionStatus',
         ]
     )->where('version', '[A-Za-z0-9\.\-]+');
-
-    // Dependencies
-    Route::get('dependency', 'DependencyController@getAllDependencies');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
