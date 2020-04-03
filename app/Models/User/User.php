@@ -1,11 +1,13 @@
 <?php
 namespace App\Models\User;
 
+use App\Models\Dependency\Dependency;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Laravel\Passport\HasApiTokens;
@@ -19,7 +21,7 @@ use Laravel\Passport\HasApiTokens;
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use HasApiTokens, Authenticatable, Authorizable;
-    
+
     // The table name
     protected $table = 'user';
 
@@ -135,5 +137,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
             'status' => $this->accountStatus->status,
             'tokens' => $this->tokens,
         ];
+    }
+
+    public function dependencies(): BelongsToMany
+    {
+        return $this->belongsToMany(Dependency::class);
     }
 }
