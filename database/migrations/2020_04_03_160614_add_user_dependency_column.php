@@ -14,7 +14,10 @@ class AddUserDependencyColumn extends Migration
     public function up()
     {
         Schema::table('dependencies', function (Blueprint $table) {
-            $table->boolean('per_user')->after('local_file')->comment('If the dependency is per-user');
+            $table->boolean('per_user')
+                ->default(false)
+                ->after('local_file')
+                ->comment('If the dependency is per-user');
         });
     }
 
