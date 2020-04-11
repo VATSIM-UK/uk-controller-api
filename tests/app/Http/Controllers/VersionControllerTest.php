@@ -71,21 +71,21 @@ class VersionControllerTest extends BaseApiTestCase
                         'id' => 1,
                         'version' => '1.0.0',
                         'allowed' => false,
-                        'created_at' => '2017-12-02 00:00:00',
-                        'updated_at' => '2017-12-03 00:00:00',
+                        'created_at' => '2017-12-02T00:00:00.000000Z',
+                        'updated_at' => '2017-12-03T00:00:00.000000Z',
                     ],
                     [
                         'id' => 2,
                         'version' => '2.0.0',
                         'allowed' => true,
-                        'created_at' => '2017-12-03 00:00:00',
+                        'created_at' => '2017-12-03T00:00:00.000000Z',
                         'updated_at' => null,
                     ],
                     [
                         'id' => 3,
                         'version' => '2.0.1',
                         'allowed' => true,
-                        'created_at' => '2017-12-04 00:00:00',
+                        'created_at' => '2017-12-04T00:00:00.000000Z',
                         'updated_at' => null,
                     ],
                 ]
@@ -150,7 +150,7 @@ class VersionControllerTest extends BaseApiTestCase
             ->assertStatus(403);
     }
 
-    
+
     public function testItFindsAVersion()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/1.0.0')
@@ -159,8 +159,8 @@ class VersionControllerTest extends BaseApiTestCase
                     'id' => 1,
                     'version' => '1.0.0',
                     'allowed' => false,
-                    'created_at' => '2017-12-02 00:00:00',
-                    'updated_at' => '2017-12-03 00:00:00',
+                    'created_at' => '2017-12-02T00:00:00.000000Z',
+                    'updated_at' => '2017-12-03T00:00:00.000000Z',
                 ]
             )->assertStatus(200);
     }
