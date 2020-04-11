@@ -24,7 +24,7 @@ class CleanSquawkAllocations extends Command
         DB::table('squawk_allocation')->where(
             'allocated_at',
             '<',
-            Carbon::now()->subMinutes(env('APP_SQUAWK_ALLOCATION_MIN'))->format('Y-m-d H:i:s')
+            Carbon::now()->subMinutes(config('squawk.allocation_min'))->format('Y-m-d H:i:s')
         )->delete();
 
         Log::Info('Squawk allocations cleaned successfully');
