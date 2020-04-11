@@ -31,6 +31,14 @@ class DependencyController extends BaseController
                 }
 
                 $updatedAt = $dependency->user->first()->pivot->updated_at;
+            } else if(!$updatedAt) {
+
+            }
+
+            if (!$updatedAt) {
+                $dependency->updated_at = Carbon::now();
+                $dependency->save();
+                $updatedAt = $dependency->updated_at;
             }
 
             return [

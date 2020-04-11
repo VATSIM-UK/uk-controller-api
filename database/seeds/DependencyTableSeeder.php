@@ -45,6 +45,13 @@ class DependencyTableSeeder extends Seeder
                     'updated_at' => '2020-04-01 21:00:00',
                     'per_user' => true,
                 ],
+                [
+                    'key' => 'DEPENDENCY_THREE',
+                    'uri' => 'dependency/three',
+                    'local_file' => 'three.json',
+                    'updated_at' => null,
+                    'per_user' => false,
+                ],
             ]
         );
 

@@ -47,6 +47,12 @@ class DependencyControllerTest extends BaseApiTestCase
                 'local_file' => 'userthree.json',
                 'updated_at' => Carbon::now()->timestamp,
             ],
+            [
+                'key' => 'DEPENDENCY_THREE',
+                'uri' => sprintf('%s/dependency/three', config('app.url')),
+                'local_file' => 'three.json',
+                'updated_at' => Carbon::now()->timestamp,
+            ],
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'dependency')
