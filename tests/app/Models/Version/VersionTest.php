@@ -18,8 +18,8 @@ class VersionTest extends BaseFunctionalTestCase
         $expected = [
             'id' => 1,
             'version' => '1.0.0',
-            'created_at' => '2017-12-02 00:00:00',
-            'updated_at' => '2017-12-03 00:00:00',
+            'created_at' => '2017-12-02T00:00:00.000000Z',
+            'updated_at' => '2017-12-03T00:00:00.000000Z',
             'allowed' => false,
         ];
 
