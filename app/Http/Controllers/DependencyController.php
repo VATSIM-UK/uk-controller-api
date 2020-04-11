@@ -16,7 +16,6 @@ class DependencyController extends BaseController
     public function getAllDependencies() : JsonResponse
     {
         $dependencies = Dependency::with('user')->get()->map(function (Dependency $dependency) {
-
             $updatedAt = $dependency->updated_at;
             if ($dependency->per_user) {
                 if (!$dependency->user->first()) {
@@ -31,7 +30,7 @@ class DependencyController extends BaseController
                 }
 
                 $updatedAt = $dependency->user->first()->pivot->updated_at;
-            } else if (!$updatedAt) {
+            } elseif (!$updatedAt) {
                 $dependency->updated_at = Carbon::now();
                 $dependency->save();
                 $updatedAt = $dependency->updated_at;
