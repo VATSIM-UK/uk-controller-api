@@ -24,7 +24,7 @@ class RegionalPressureServiceProvider extends ServiceProvider
     {
         $this->app->bind(RegionalPressureService::class, function (Application $app) {
             // Create dependencies
-            $metarUri = env('APP_REGIONAL_PRESSURES_URL', '');
+            $metarUri = config('metar.regional_url');
             $http = new Client();
             $metarParser = $app->make(MetarService::class);
             return new RegionalPressureService($http, $metarUri, $metarParser);
