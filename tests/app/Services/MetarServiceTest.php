@@ -61,7 +61,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('vatsim.metar_url'),
+                config('metar.vatsim_url'),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -83,7 +83,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('vatsim.metar_url'),
+                config('metar.vatsim_url'),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -105,7 +105,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('vatsim.metar_url'),
+                config('metar.vatsim_url'),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -127,7 +127,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('vatsim.metar_url'),
+                config('metar.vatsim_url'),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -150,7 +150,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient->shouldReceive('get')
             ->once()
             ->with(
-                config('vatsim.metar_url'),
+                config('metar.vatsim_url'),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
