@@ -44,7 +44,7 @@ class UserConfig implements JsonSerializable
      */
     public function apiUrl() : string
     {
-        return env('APP_URL');
+        return config('app.url');
     }
 
     /**
@@ -56,7 +56,7 @@ class UserConfig implements JsonSerializable
     public function jsonSerialize()
     {
         return  [
-            'api-url' => env('APP_URL'),
+            'api-url' => config('app.url'),
             'api-key' => $this->accessToken,
         ];
     }
