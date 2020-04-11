@@ -100,7 +100,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->save();
         return $this;
     }
-    
+
     /**
      * Marks the user as disabled
      *
@@ -141,6 +141,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function dependencies(): BelongsToMany
     {
-        return $this->belongsToMany(Dependency::class);
+        return $this->belongsToMany(Dependency::class)->withTimestamps();
     }
 }
