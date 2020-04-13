@@ -10,22 +10,25 @@ use LogicException;
 
 class DependencyServiceTest extends BaseFunctionalTestCase
 {
+    private const GLOBAL_DEPENDENCY = 'DEPENDENCY_ONE';
+    private const USER_DEPENDENCY = 'USER_DEPENDENCY_ONE';
+
     public function testItDoesntTouchDependenciesIfNotFound()
     {
         DependencyService::touchDependencyByKey('NOT_DEPENDENCY_ONE', User::find(self::ACTIVE_USER_CID));
         $this->assertEquals(
             '2020-04-02 21:00:00',
-            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at
+            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first()->updated_at
         );
     }
 
     public function testItDoesntTouchUserDependenciesIfNoUser()
     {
-        DependencyService::touchDependencyByKey('USER_DEPENDENCY_ONE', null);
+        DependencyService::touchDependencyByKey(self::USER_DEPENDENCY, null);
 
         $timestamp = User::find(self::ACTIVE_USER_CID)
             ->dependencies()
-            ->where('key', 'USER_DEPENDENCY_ONE')
+            ->where('key', self::USER_DEPENDENCY)
             ->first()
             ->pivot
             ->updated_at;
@@ -37,10 +40,10 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     {
         $now = Carbon::now();
 
-        DependencyService::touchDependencyByKey('DEPENDENCY_ONE', User::find(self::ACTIVE_USER_CID));
+        DependencyService::touchDependencyByKey(self::GLOBAL_DEPENDENCY, User::find(self::ACTIVE_USER_CID));
         $this->assertGreaterThanOrEqual(
             $now->timestamp,
-            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at->timestamp
+            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first()->updated_at->timestamp
         );
     }
 
@@ -48,11 +51,11 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     {
         $now = Carbon::now();
 
-        DependencyService::touchDependencyByKey('USER_DEPENDENCY_ONE', User::find(self::ACTIVE_USER_CID));
+        DependencyService::touchDependencyByKey(self::USER_DEPENDENCY, User::find(self::ACTIVE_USER_CID));
 
         $timestamp = User::find(self::ACTIVE_USER_CID)
             ->dependencies()
-            ->where('key', 'USER_DEPENDENCY_ONE')
+            ->where('key', self::USER_DEPENDENCY)
             ->first()
             ->pivot
             ->updated_at
@@ -65,10 +68,10 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     {
         $now = Carbon::now();
 
-        DependencyService::touchGlobalDependency(Dependency::where('key', 'DEPENDENCY_ONE')->first());
+        DependencyService::touchGlobalDependency(Dependency::where('key', self::GLOBAL_DEPENDENCY)->first());
         $this->assertGreaterThanOrEqual(
             $now->timestamp,
-            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at->timestamp
+            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first()->updated_at->timestamp
         );
     }
 
@@ -76,7 +79,7 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     {
         $this->expectException(LogicException::class);
         DependencyService::touchUserDependency(
-            Dependency::where('key', 'DEPENDENCY_ONE')->first(),
+            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first(),
             User::find(self::ACTIVE_USER_CID)
         );
     }
@@ -86,13 +89,13 @@ class DependencyServiceTest extends BaseFunctionalTestCase
         $now = Carbon::now();
 
         DependencyService::touchUserDependency(
-            Dependency::where('key', 'USER_DEPENDENCY_ONE')->first(),
+            Dependency::where('key', self::USER_DEPENDENCY)->first(),
             User::find(self::ACTIVE_USER_CID)
         );
 
         $timestamp = User::find(self::ACTIVE_USER_CID)
             ->dependencies()
-            ->where('key', 'USER_DEPENDENCY_ONE')
+            ->where('key', self::USER_DEPENDENCY)
             ->first()
             ->pivot
             ->updated_at
