@@ -10,7 +10,7 @@ use LogicException;
 
 class DependencyService
 {
-    public static function touchDependencyByKey(string $key, ?User $user)
+    public static function touchDependencyByKey(string $key, ?User $user): void
     {
         $dependency = Dependency::where('key', $key)->first();
 
@@ -31,12 +31,12 @@ class DependencyService
         }
     }
 
-    public static function touchGlobalDependency(Dependency $dependency)
+    public static function touchGlobalDependency(Dependency $dependency): void
     {
         $dependency->touch();
     }
 
-    public static function touchUserDependency(Dependency $dependency, User $user)
+    public static function touchUserDependency(Dependency $dependency, User $user): void
     {
         if (!$dependency->per_user) {
             throw new LogicException(sprintf('Dependency %s is not a per-user dependency', $dependency->key));
