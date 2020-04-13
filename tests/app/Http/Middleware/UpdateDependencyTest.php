@@ -5,9 +5,10 @@ namespace App\Http\Middleware;
 use App\BaseFunctionalTestCase;
 use App\Models\Dependency\Dependency;
 use App\Services\DependencyService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use Mockery;
 
 class UpdateDependencyTest extends BaseFunctionalTestCase
@@ -50,14 +51,16 @@ class UpdateDependencyTest extends BaseFunctionalTestCase
         );
 
         $now = Carbon::now();
+        Date::shouldReceive('now')->andReturn($now);
+
         DependencyService::touchGlobalDependency(Dependency::where('key', 'DEPENDENCY_ONE')->first());
         $this->assertGreaterThanOrEqual(
-            $now->timestamp,
-            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at->timestamp
+            $now,
+            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at
         );
         $this->assertGreaterThanOrEqual(
-            $now->timestamp,
-            Dependency::where('key', 'DEPENDENCY_TWO')->first()->updated_at->timestamp
+            $now,
+            Dependency::where('key', 'DEPENDENCY_TWO')->first()->updated_at
         );
     }
 }
