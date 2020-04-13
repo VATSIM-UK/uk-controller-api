@@ -51,16 +51,16 @@ class UpdateDependencyTest extends BaseFunctionalTestCase
         );
 
         $now = Carbon::now();
-        Date::shouldReceive('now')->andReturn($now);
+        Date::setTestNow($now);
 
         DependencyService::touchGlobalDependency(Dependency::where('key', 'DEPENDENCY_ONE')->first());
-        $this->assertGreaterThanOrEqual(
-            $now,
-            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at
+        $this->assertEquals(
+            $now->timestamp,
+            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at->timestamp
         );
-        $this->assertGreaterThanOrEqual(
-            $now,
-            Dependency::where('key', 'DEPENDENCY_TWO')->first()->updated_at
+        $this->assertEquals(
+            $now->timestamp,
+            Dependency::where('key', 'DEPENDENCY_TWO')->first()->updated_at->timestamp
         );
     }
 }

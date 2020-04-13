@@ -40,19 +40,19 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     public function testItTouchesGlobalDependenciesByKey()
     {
         $now = Carbon::now();
-        Date::shouldReceive('now')->andReturn($now);
+        Date::setTestNow($now);
 
         DependencyService::touchDependencyByKey(self::GLOBAL_DEPENDENCY, User::find(self::ACTIVE_USER_CID));
         $this->assertEquals(
-            $now,
-            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first()->updated_at
+            $now->timestamp,
+            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first()->updated_at->timestamp
         );
     }
 
     public function testItTouchesUserDependenciesByKey()
     {
         $now = Carbon::now();
-        Date::shouldReceive('now')->andReturn($now);
+        Date::setTestNow($now);
 
         DependencyService::touchDependencyByKey(self::USER_DEPENDENCY, User::find(self::ACTIVE_USER_CID));
 
@@ -61,20 +61,21 @@ class DependencyServiceTest extends BaseFunctionalTestCase
             ->where('key', self::USER_DEPENDENCY)
             ->first()
             ->pivot
-            ->updated_at;
+            ->updated_at
+            ->timestamp;
 
-        $this->assertEquals($now, $now);
+        $this->assertEquals($now->timestamp, $timestamp);
     }
 
     public function testItTouchesGlobalDependencies()
     {
         $now = Carbon::now();
-        Date::shouldReceive('now')->andReturn($now);
+        Date::setTestNow($now);
 
         DependencyService::touchGlobalDependency(Dependency::where('key', self::GLOBAL_DEPENDENCY)->first());
         $this->assertEquals(
-            $now,
-            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first()->updated_at
+            $now->timestamp,
+            Dependency::where('key', self::GLOBAL_DEPENDENCY)->first()->updated_at->timestamp
         );
     }
 
@@ -90,7 +91,7 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     public function testItTouchesUserDependencies()
     {
         $now = Carbon::now();
-        Date::shouldReceive('now')->andReturn($now);
+        Date::setTestNow($now);
 
         DependencyService::touchUserDependency(
             Dependency::where('key', self::USER_DEPENDENCY)->first(),
@@ -102,8 +103,9 @@ class DependencyServiceTest extends BaseFunctionalTestCase
             ->where('key', self::USER_DEPENDENCY)
             ->first()
             ->pivot
-            ->updated_at;
+            ->updated_at
+            ->timestamp;
 
-        $this->assertGreaterThanOrEqual($now, $timestamp);
+        $this->assertEquals($now->timestamp, $timestamp);
     }
 }
