@@ -25,7 +25,7 @@ class DependencyServiceTest extends BaseFunctionalTestCase
 
         $timestamp = User::find(self::ACTIVE_USER_CID)
             ->dependencies()
-            ->where('dependency_id', 3)
+            ->where('key', 'USER_DEPENDENCY_ONE')
             ->first()
             ->pivot
             ->updated_at;
@@ -52,7 +52,7 @@ class DependencyServiceTest extends BaseFunctionalTestCase
 
         $timestamp = User::find(self::ACTIVE_USER_CID)
             ->dependencies()
-            ->where('dependency_id', 3)
+            ->where('key', 'USER_DEPENDENCY_ONE')
             ->first()
             ->pivot
             ->updated_at
@@ -92,7 +92,7 @@ class DependencyServiceTest extends BaseFunctionalTestCase
 
         $timestamp = User::find(self::ACTIVE_USER_CID)
             ->dependencies()
-            ->where('dependency_id', 3)
+            ->where('key', 'USER_DEPENDENCY_ONE')
             ->first()
             ->pivot
             ->updated_at
