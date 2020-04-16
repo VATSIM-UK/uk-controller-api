@@ -17,8 +17,8 @@ class CreateSrdRoutesTable extends Migration
             $table->id();
             $table->string('origin')->comment('The origin navaid or airport for the route');
             $table->string('destination')->comment('The destination navaid or airport for the route');
-            $table->string('min_level')->comment('The minimum flight level for the route');
-            $table->string('max_level')->comment('The maximum flight level for the route');
+            $table->integer('min_level')->comment('The minimum flight level for the route');
+            $table->integer('max_level')->comment('The maximum flight level for the route');
             $table->string('route_segment')->comment('The route segment');
             $table->string('sid')->comment('The SID used at the start of the route')->nullable();
             $table->string('star')->comment('The STAR used at the end of the route')->nullable();
