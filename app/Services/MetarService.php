@@ -71,7 +71,7 @@ class MetarService
         }
 
         $metar = $this->httpClient->get(
-            env('VATSIM_METAR_URL'),
+            config('metar.vatsim_url'),
             [
                 RequestOptions::ALLOW_REDIRECTS => true,
                 RequestOptions::HTTP_ERRORS => false,

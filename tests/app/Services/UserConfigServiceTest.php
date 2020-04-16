@@ -34,7 +34,7 @@ class UserConfigServiceTest extends BaseApiTestCase
     public function testcreateReturnsConfig()
     {
         $config = $this->service->create(1203533);
-        $this->assertEquals(env('APP_URL'), $config->apiUrl());
+        $this->assertEquals(config('app.url'), $config->apiUrl());
         $this->assertNotNull($config->apiKey());
     }
 }

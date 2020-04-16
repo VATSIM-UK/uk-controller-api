@@ -21,7 +21,7 @@ class CleanSquawkAllocationsTest extends BaseFunctionalTestCase
                 'callsign' => 'VIR25E',
                 'squawk' => '2321',
                 'allocated_by' => self::ACTIVE_USER_CID,
-                'allocated_at' => Carbon::now()->subMinutes(env('APP_SQUAWK_ALLOCATION_MIN') - 1),
+                'allocated_at' => Carbon::now()->subMinutes(config('squawk.allocation_min') - 1),
             ]
         );
         Allocation::create(
@@ -29,7 +29,7 @@ class CleanSquawkAllocationsTest extends BaseFunctionalTestCase
                 'callsign' => 'UAL242',
                 'squawk' => '4325',
                 'allocated_by' => self::ACTIVE_USER_CID,
-                'allocated_at' => Carbon::now()->subMinutes(env('APP_SQUAWK_ALLOCATION_MIN') + 10),
+                'allocated_at' => Carbon::now()->subMinutes(config('squawk.allocation_min') + 10),
             ]
         );
         Allocation::create(
@@ -37,10 +37,10 @@ class CleanSquawkAllocationsTest extends BaseFunctionalTestCase
                 'callsign' => 'TCX125',
                 'squawk' => '5436',
                 'allocated_by' => self::ACTIVE_USER_CID,
-                'allocated_at' => Carbon::now()->subMinutes(env('APP_SQUAWK_ALLOCATION_MIN') + 1),
+                'allocated_at' => Carbon::now()->subMinutes(config('squawk.allocation_min') + 1),
             ]
         );
-        
+
         $this->assertDatabaseHas('squawk_allocation', ['callsign' => 'VIR25E']);
         $this->assertDatabaseHas('squawk_allocation', ['callsign' => 'UAL242']);
         $this->assertDatabaseHas('squawk_allocation', ['callsign' => 'TCX125']);

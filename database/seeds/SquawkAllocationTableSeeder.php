@@ -27,21 +27,21 @@ class SquawkAllocationTableSeeder extends Seeder
                     'callsign' => 'BAW456',
                     'squawk' => '2321',
                     'allocated_by' => 1203533,
-                    'allocated_at' => Carbon::now()->subMinutes(env('APP_SQUAWK_ALLOCATION_MIN') - 1),
+                    'allocated_at' => Carbon::now()->subMinutes(config('squawk.allocation_min') - 1),
                 ],
                 [
                     'id' => 3,
                     'callsign' => 'NAX1431',
                     'squawk' => '4325',
                     'allocated_by' => 1203533,
-                    'allocated_at' => Carbon::now()->subMinutes(env('APP_SQUAWK_ALLOCATION_MIN')),
+                    'allocated_at' => Carbon::now()->subMinutes(config('squawk.allocation_min')),
                 ],
                 [
                     'id' => 4,
                     'callsign' => 'TOM43E',
                     'squawk' => '5436',
                     'allocated_by' => 1203533,
-                    'allocated_at' => Carbon::now()->subMinutes(env('APP_SQUAWK_ALLOCATION_MIN') + 1),
+                    'allocated_at' => Carbon::now()->subMinutes(config('squawk.allocation_min') + 1),
                 ],
             ]
         );

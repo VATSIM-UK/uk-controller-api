@@ -31,13 +31,13 @@ class UserConfigTest extends BaseUnitTestCase
 
     public function testItHasAnApiUrl()
     {
-        $this->assertEquals(env('APP_URL'), $this->userConfig->apiUrl());
+        $this->assertEquals(config('app.url'), $this->userConfig->apiUrl());
     }
 
     public function testItSerializesToJson()
     {
         $expected = [
-            'api-url' => env('APP_URL'),
+            'api-url' => config('app.url'),
             'api-key' => 'user-api-key',
         ];
 
