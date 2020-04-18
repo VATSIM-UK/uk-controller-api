@@ -5,10 +5,12 @@ namespace App\Imports;
 use App\Models\Srd\SrdRoute;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Events\BeforeSheet;
 
-class SrdRoutesImport implements ToModel, WithStartRow, WithProgressBar
+class SrdRoutesImport implements ToModel, WithStartRow, WithProgressBar, WithEvents
 {
     use Importable;
 
@@ -41,5 +43,14 @@ class SrdRoutesImport implements ToModel, WithStartRow, WithProgressBar
     public function startRow(): int
     {
         return 2;
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            BeforeSheet::class => function (BeforeSheet $sheet) {
+                $this->output->section('Importing SRD Routes');
+            },
+        ];
     }
 }

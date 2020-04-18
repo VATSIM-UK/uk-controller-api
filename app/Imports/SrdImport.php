@@ -14,6 +14,7 @@ class SrdImport implements WithProgressBar, WithMultipleSheets, SkipsUnknownShee
     public function sheets(): array
     {
         return [
+            'Notes' => (new SrdNotesImport())->withOutput($this->output),
             'Routes' => (new SrdRoutesImport())->withOutput($this->output),
         ];
     }

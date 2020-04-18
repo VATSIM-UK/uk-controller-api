@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Imports\SrdImport as ImportHelper;
+use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -36,9 +37,11 @@ class SrdImport extends Command
         }
 
         $this->output->title('Starting SRD import');
-        $this->output->comment('Dropping existing SRD routes');
+        $this->output->section('Dropping existing SRD data');
+        $this->output->comment('Dropping SRD notes');
+        SrdNote::truncate();
+        $this->output->comment('Dropping SRD routes');
         SrdRoute::truncate();
-        $this->output->comment('Importing new SRD routes');
         (new ImportHelper())->withOutput($this->output)->import($this->argument('file_name'), 'imports');
         $this->output->success('SRD import complete');
     }

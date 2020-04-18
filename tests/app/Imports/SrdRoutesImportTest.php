@@ -3,6 +3,7 @@
 namespace app\Imports;
 
 use App\BaseUnitTestCase;
+use Maatwebsite\Excel\Events\BeforeSheet;
 
 class SrdRoutesImportTest extends BaseUnitTestCase
 {
@@ -75,5 +76,10 @@ class SrdRoutesImportTest extends BaseUnitTestCase
     public function testItStartsOnRowTwo()
     {
         $this->assertEquals(2, (new SrdRoutesImport())->startRow());
+    }
+
+    public function testItSubscribesToBeforeSheetEvents()
+    {
+        $this->assertArrayHasKey(BeforeSheet::class, (new SrdRoutesImport())->registerEvents());
     }
 }
