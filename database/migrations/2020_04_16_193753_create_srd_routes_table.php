@@ -14,7 +14,7 @@ class CreateSrdRoutesTable extends Migration
     public function up()
     {
         Schema::create('srd_routes', function (Blueprint $table) {
-            $table->id();
+            $table->smallIncrements('id');
             $table->string('origin')->comment('The origin navaid or airport for the route');
             $table->string('destination')->comment('The destination navaid or airport for the route');
             $table->integer('min_level')->nullable()->comment('The minimum flight level for the route');

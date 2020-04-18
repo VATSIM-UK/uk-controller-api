@@ -14,9 +14,12 @@ class CreateSrdNoteSrdRouteTable extends Migration
     public function up()
     {
         Schema::create('srdnote_srdroute', function (Blueprint $table) {
-            $table->unsignedBigInteger('srdnote_id');
-            $table->unsignedBigInteger('srdroute_id');
+            $table->unsignedSmallInteger('srdnote_id');
+            $table->unsignedSmallInteger('srdroute_id');
             $table->timestamps();
+
+            $table->foreign('srdnote_id')->references('id')->on('srd_notes');
+            $table->foreign('srdroute_id')->references('id')->on('srd_routes');
         });
     }
 
