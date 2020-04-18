@@ -6,6 +6,7 @@ use App\Imports\SrdImport as ImportHelper;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 
@@ -38,10 +39,13 @@ class SrdImport extends Command
 
         $this->output->title('Starting SRD import');
         $this->output->section('Dropping existing SRD data');
+        Schema::disableForeignKeyConstraints();
         $this->output->comment('Dropping SRD notes');
         SrdNote::truncate();
         $this->output->comment('Dropping SRD routes');
         SrdRoute::truncate();
+        Schema::enableForeignKeyConstraints();
+
         (new ImportHelper())->withOutput($this->output)->import($this->argument('file_name'), 'imports');
         $this->output->success('SRD import complete');
     }
