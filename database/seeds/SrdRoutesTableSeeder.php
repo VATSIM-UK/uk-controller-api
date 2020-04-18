@@ -16,8 +16,8 @@ class SrdRoutesTableSeeder extends Seeder
         SrdRoute::create([
             'origin' => 'EGGD',
             'destination' => 'EGLL',
-            'min_level' => null,
-            'max_level' => 28000,
+            'minimum_level' => null,
+            'maximum_level' => 28000,
             'route_segment' => 'L9 KENET',
             'sid' => 'WOTAN',
             'star' => 'OCK1A',
@@ -25,8 +25,8 @@ class SrdRoutesTableSeeder extends Seeder
         SrdRoute::create([
             'origin' => 'EGGD',
             'destination' => 'EGLL',
-            'min_level' => 10000,
-            'max_level' => 19500,
+            'minimum_level' => 10000,
+            'maximum_level' => 19500,
             'route_segment' => 'L9 KENET',
             'sid' => 'WOTAN',
             'star' => 'OCK1A',
@@ -34,8 +34,8 @@ class SrdRoutesTableSeeder extends Seeder
         SrdRoute::create([
             'origin' => 'EGGD',
             'destination' => 'EGLL',
-            'min_level' => 24500,
-            'max_level' => 66000,
+            'minimum_level' => 24500,
+            'maximum_level' => 66000,
             'route_segment' => 'UL9 KENET',
             'sid' => 'WOTAN',
             'star' => 'OCK1A',
@@ -44,8 +44,8 @@ class SrdRoutesTableSeeder extends Seeder
         SrdRoute::create([
             'origin' => 'EGAA',
             'destination' => 'EGLL',
-            'min_level' => 24500,
-            'max_level' => 66000,
+            'minimum_level' => 24500,
+            'maximum_level' => 66000,
             'route_segment' => 'LISBO DCT RINGA Q39 NOMSU UQ4 WAL UY53 NUGRA',
             'sid' => null,
             'star' => 'BNN1B',
