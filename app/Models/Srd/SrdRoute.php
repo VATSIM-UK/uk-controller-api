@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SrdRoute extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'origin',
         'destination',

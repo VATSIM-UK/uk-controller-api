@@ -22,7 +22,6 @@ class CreateSrdRoutesTable extends Migration
             $table->string('route_segment')->comment('The route segment');
             $table->string('sid')->comment('The SID used at the start of the route')->nullable();
             $table->string('star')->comment('The STAR used at the end of the route')->nullable();
-            $table->timestamps();
 
             // Indexes for optimised searching
             $table->index('origin');

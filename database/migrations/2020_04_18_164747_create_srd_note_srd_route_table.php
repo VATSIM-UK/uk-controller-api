@@ -13,13 +13,12 @@ class CreateSrdNoteSrdRouteTable extends Migration
      */
     public function up()
     {
-        Schema::create('srdnote_srdroute', function (Blueprint $table) {
-            $table->unsignedSmallInteger('srdnote_id');
-            $table->unsignedSmallInteger('srdroute_id');
-            $table->timestamps();
+        Schema::create('srd_note_srd_route', function (Blueprint $table) {
+            $table->unsignedSmallInteger('srd_note_id');
+            $table->unsignedSmallInteger('srd_route_id');
 
-            $table->foreign('srdnote_id')->references('id')->on('srd_notes');
-            $table->foreign('srdroute_id')->references('id')->on('srd_routes');
+            $table->foreign('srd_note_id')->references('id')->on('srd_notes');
+            $table->foreign('srd_route_id')->references('id')->on('srd_routes');
         });
     }
 
@@ -30,6 +29,6 @@ class CreateSrdNoteSrdRouteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('srdnote_srdroute');
+        Schema::dropIfExists('srd_note_srd_route');
     }
 }

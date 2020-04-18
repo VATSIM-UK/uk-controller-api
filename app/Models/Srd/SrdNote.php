@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SrdNote extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'id',
         'note_text',

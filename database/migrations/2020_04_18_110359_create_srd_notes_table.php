@@ -16,7 +16,6 @@ class CreateSrdNotesTable extends Migration
         Schema::create('srd_notes', function (Blueprint $table) {
             $table->unsignedSmallInteger('id');
             $table->text('note_text');
-            $table->timestamps();
 
             $table->primary('id');
         });
