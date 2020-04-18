@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\WithStartRow;
 class SrdRoutesImport implements ToModel, WithStartRow
 {
     const FL_CONVERSION_FACTOR = 100;
+    const FL_MIN_CRUISE = 'MC';
 
     /**
     * @param array $row
@@ -20,7 +21,7 @@ class SrdRoutesImport implements ToModel, WithStartRow
         return new SrdRoute([
             'origin' => $row[0],
             'destination' => $row[6],
-            'min_level' => $this->convertFlightLevel($row[2] === 'MC' ? 0 : $row[2]),
+            'min_level' => $this->convertFlightLevel($row[2]),
             'max_level' => $this->convertFlightLevel($row[3]),
             'route_segment' => $row[4] ?? '',
             'sid' => $row[1],
@@ -28,9 +29,9 @@ class SrdRoutesImport implements ToModel, WithStartRow
         ]);
     }
 
-    private function convertFlightLevel($flightLevel): int
+    private function convertFlightLevel(string $flightLevel): ?int
     {
-        return ((int) $flightLevel) * self::FL_CONVERSION_FACTOR;
+        return $flightLevel === self::FL_MIN_CRUISE ? null : ((int) $flightLevel) * self::FL_CONVERSION_FACTOR;
     }
 
     public function startRow(): int

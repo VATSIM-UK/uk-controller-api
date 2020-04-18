@@ -45,7 +45,7 @@ class SrdRoutesImportTest extends BaseUnitTestCase
         $this->assertEquals('EGLL', $model->destomatopm);
         $this->assertEquals('WOTAN', $model->sid);
         $this->assertEquals('OCK1A', $model->star);
-        $this->assertSame(0, $model->minimum_level);
+        $this->assertNull($model->minimum_level);
         $this->assertSame(15000, $model->minimum_level);
         $this->assertEquals('L9 KENET', $model->route_segment);
     }
