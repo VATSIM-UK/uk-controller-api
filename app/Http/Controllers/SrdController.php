@@ -55,5 +55,4 @@ class SrdController
 
         return response()->json($results);
     }
-
 }
