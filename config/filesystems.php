@@ -32,7 +32,7 @@ return [
             ],
             'imports' => [
                 'driver' => 'local',
-                'root' => storage_path('imports'),
+                'root' => storage_path('app/imports'),
             ],
             'public' => [
                 'driver' => 'local',

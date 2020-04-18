@@ -3,11 +3,15 @@
 namespace App\Imports;
 
 use App\Models\Srd\SrdRoute;
+use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class SrdRoutesImport implements ToModel, WithStartRow
+class SrdRoutesImport implements ToModel, WithStartRow, WithProgressBar
 {
+    use Importable;
+
     const FL_CONVERSION_FACTOR = 100;
     const FL_MIN_CRUISE = 'MC';
 
