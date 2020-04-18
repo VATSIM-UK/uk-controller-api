@@ -79,16 +79,19 @@ class SrdControllerTest extends BaseApiTestCase
                 'minimum_level' => null,
                 'maximum_level' => 28000,
                 'route_string' => 'WOTAN L9 KENET',
+                'notes' => [],
             ],
             [
                 'minimum_level' => 10000,
                 'maximum_level' => 19500,
                 'route_string' => 'WOTAN L9 KENET',
+                'notes' => [],
             ],
             [
                 'minimum_level' => 24500,
                 'maximum_level' => 66000,
                 'route_string' => 'WOTAN UL9 KENET',
+                'notes' => [],
             ],
         ];
 
@@ -109,6 +112,7 @@ class SrdControllerTest extends BaseApiTestCase
                 'minimum_level' => null,
                 'maximum_level' => 28000,
                 'route_string' => 'WOTAN L9 KENET',
+                'notes' => [],
             ],
         ];
 
@@ -130,11 +134,13 @@ class SrdControllerTest extends BaseApiTestCase
                 'minimum_level' => null,
                 'maximum_level' => 28000,
                 'route_string' => 'WOTAN L9 KENET',
+                'notes' => [],
             ],
             [
                 'minimum_level' => 10000,
                 'maximum_level' => 19500,
                 'route_string' => 'WOTAN L9 KENET',
+                'notes' => [],
             ],
         ];
 
@@ -156,6 +162,7 @@ class SrdControllerTest extends BaseApiTestCase
                 'minimum_level' => 24500,
                 'maximum_level' => 66000,
                 'route_string' => 'WOTAN UL9 KENET',
+                'notes' => [],
             ],
         ];
 
@@ -163,6 +170,31 @@ class SrdControllerTest extends BaseApiTestCase
             'origin' => 'EGGD',
             'destination' => 'EGLL',
             'maxLevel' => '30000'
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+            ->assertStatus(200)
+            ->assertJson($expected);
+    }
+
+    public function testItFormatsNotes()
+    {
+        $expected = [
+            [
+                'minimum_level' => 24500,
+                'maximum_level' => 66000,
+                'route_string' => 'LISBO DCT RINGA Q39 NOMSU UQ4 WAL UY53 NUGRA',
+                'notes' => [
+                    'Text 1',
+                    'Text 2',
+                    'Text 3',
+                ]
+            ],
+        ];
+
+        $queryParams = [
+            'origin' => 'EGAA',
+            'destination' => 'EGLL',
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)

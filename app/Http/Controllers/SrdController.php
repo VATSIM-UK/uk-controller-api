@@ -43,10 +43,13 @@ class SrdController
                 ? $route->route_segment
                 : sprintf('%s %s', $route->sid, $route->route_segment);
 
+            $notesArray = $route->notes()->pluck('note_text');
+
             return [
                 'minimum_level' => $route->minimum_level,
                 'maximum_level' => $route->maximum_level,
                 'route_string' => $routeString,
+                'notes' => $notesArray,
             ];
         });
 
