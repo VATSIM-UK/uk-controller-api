@@ -1,10 +1,10 @@
 <?php
 
+use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
-use App\Models\Version\Version;
 use Illuminate\Database\Seeder;
 
-class SrdRoutesTableSeeder extends Seeder
+class SrdTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -41,7 +41,7 @@ class SrdRoutesTableSeeder extends Seeder
             'star' => 'OCK1A',
         ]);
 
-        SrdRoute::create([
+        $noteRoute = SrdRoute::create([
             'origin' => 'EGAA',
             'destination' => 'EGLL',
             'minimum_level' => 24500,
@@ -50,5 +50,22 @@ class SrdRoutesTableSeeder extends Seeder
             'sid' => null,
             'star' => 'BNN1B',
         ]);
+
+        SrdNote::create([
+            'id' => 1,
+            'note_text' => 'Text 1',
+        ]);
+
+        SrdNote::create([
+            'id' => 2,
+            'note_text' => 'Text 2',
+        ]);
+
+        SrdNote::create([
+            'id' => 3,
+            'note_text' => 'Text 3',
+        ]);
+
+        $noteRoute->notes()->attach([1, 2, 3]);
     }
 }

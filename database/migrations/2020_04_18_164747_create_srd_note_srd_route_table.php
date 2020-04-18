@@ -17,8 +17,8 @@ class CreateSrdNoteSrdRouteTable extends Migration
             $table->unsignedSmallInteger('srd_note_id');
             $table->unsignedSmallInteger('srd_route_id');
 
-            $table->foreign('srd_note_id')->references('id')->on('srd_notes');
-            $table->foreign('srd_route_id')->references('id')->on('srd_routes');
+            $table->foreign('srd_note_id')->references('id')->on('srd_notes')->onDelete('cascade');
+            $table->foreign('srd_route_id')->references('id')->on('srd_routes')->onDelete('cascade');
         });
     }
 
