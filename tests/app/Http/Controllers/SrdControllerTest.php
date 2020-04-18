@@ -76,18 +76,18 @@ class SrdControllerTest extends BaseApiTestCase
     {
         $expected = [
             [
-                'min_level' => null,
-                'max_level' => 28000,
+                'minimum_level' => null,
+                'maximum_level' => 28000,
                 'route_string' => 'WOTAN L9 KENET',
             ],
             [
-                'min_level' => 10000,
-                'max_level' => 19500,
+                'minimum_level' => 10000,
+                'maximum_level' => 19500,
                 'route_string' => 'WOTAN L9 KENET',
             ],
             [
-                'min_level' => 24500,
-                'max_level' => 66000,
+                'minimum_level' => 24500,
+                'maximum_level' => 66000,
                 'route_string' => 'WOTAN UL9 KENET',
             ],
         ];
@@ -106,8 +106,8 @@ class SrdControllerTest extends BaseApiTestCase
     {
         $expected = [
             [
-                'min_level' => null,
-                'max_level' => 28000,
+                'minimum_level' => null,
+                'maximum_level' => 28000,
                 'route_string' => 'WOTAN L9 KENET',
             ],
         ];
@@ -127,13 +127,13 @@ class SrdControllerTest extends BaseApiTestCase
     {
         $expected = [
             [
-                'min_level' => null,
-                'max_level' => 28000,
+                'minimum_level' => null,
+                'maximum_level' => 28000,
                 'route_string' => 'WOTAN L9 KENET',
             ],
             [
-                'min_level' => 10000,
-                'max_level' => 19500,
+                'minimum_level' => 10000,
+                'maximum_level' => 19500,
                 'route_string' => 'WOTAN L9 KENET',
             ],
         ];
@@ -153,8 +153,8 @@ class SrdControllerTest extends BaseApiTestCase
     {
         $expected = [
             [
-                'min_level' => 24500,
-                'max_level' => 66000,
+                'minimum_level' => 24500,
+                'maximum_level' => 66000,
                 'route_string' => 'WOTAN UL9 KENET',
             ],
         ];

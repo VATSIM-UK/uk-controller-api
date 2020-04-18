@@ -29,12 +29,12 @@ class SrdController
             ->where('destination', $request->query('destination'));
 
         if ($request->query('minLevel')) {
-            $query->where('min_level', '<=', $request->query('minLevel'))
-                ->orWhereNull('min_level');
+            $query->where('minimum_level', '<=', $request->query('minLevel'))
+                ->orWhereNull('minimum_level');
         }
 
         if ($request->query('maxLevel')) {
-            $query->where('max_level', '>=', $request->query('maxLevel'));
+            $query->where('maximum_level', '>=', $request->query('maxLevel'));
         }
 
         // Format the results
@@ -44,8 +44,8 @@ class SrdController
                 : sprintf('%s %s', $route->sid, $route->route_segment);
 
             return [
-                'min_level' => $route->min_level,
-                'max_level' => $route->max_level,
+                'minimum_level' => $route->minimum_level,
+                'maximum_level' => $route->maximum_level,
                 'route_string' => $routeString,
             ];
         });
