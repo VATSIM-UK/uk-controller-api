@@ -39,13 +39,28 @@ class SrdImport extends Command
 
         $this->output->title('Starting SRD import');
         $this->output->section('Dropping existing SRD data');
-        Schema::disableForeignKeyConstraints();
-        $this->output->comment('Dropping SRD notes');
-        SrdNote::truncate();
-        $this->output->comment('Dropping SRD routes');
-        SrdRoute::truncate();
-        Schema::enableForeignKeyConstraints();
 
+        // Drop the SRD Notes
+        $this->output->comment('Dropping SRD notes');
+        $notes = SrdNote::all();
+        $this->output->progressStart($notes->count());
+        $notes->each(function (SrdNote $note) {
+            $note->delete();
+            $this->output->progressAdvance();
+        });
+        $this->output->progressFinish();
+
+        // Drop the SRD routes
+        $this->output->comment('Dropping SRD routes');
+        $routes = SrdRoute::all();
+        $this->output->progressStart($routes->count());
+        $notes->each(function (SrdRoute $route) {
+            $route->delete();
+            $this->output->progressAdvance();
+        });
+        $this->output->progressFinish();
+
+        // Import the data
         (new ImportHelper())->withOutput($this->output)->import($this->argument('file_name'), 'imports');
         $this->output->success('SRD import complete');
     }
