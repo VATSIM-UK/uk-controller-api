@@ -4,11 +4,18 @@ namespace App\Imports;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Srd\SrdRoute;
+use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Events\BeforeSheet;
+use Mockery;
 
 class SrdRoutesImportTest extends BaseFunctionalTestCase
 {
+    /**
+     * @var SrdRoutesImport
+     */
+    private $import;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -16,6 +23,8 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
         SrdRoute::all()->each(function (SrdRoute $route) {
             $route->delete();
         });
+        $this->import = new SrdRoutesImport();
+        $this->import->withOutput(Mockery::spy(OutputStyle::class));
     }
 
     public function testItProcessesModel()
@@ -33,7 +42,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
             ]
         );
 
-        (new SrdRoutesImport())->collection($collection);
+        $this->import->collection($collection);
         $this->assertCount(1, SrdRoute::all());
 
         $model = SrdRoute::where('origin', 'EGGD')->first();
@@ -61,7 +70,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
             ]
         );
 
-        (new SrdRoutesImport())->collection($collection);
+        $this->import->collection($collection);
         $this->assertCount(1, SrdRoute::all());
 
         $model = SrdRoute::where('origin', 'EGGD')->first();
@@ -87,7 +96,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
             'EGLL',
         ]);
 
-        (new SrdRoutesImport())->collection($collection);
+        $this->import->collection($collection);
         $this->assertCount(1, SrdRoute::all());
 
         $model = SrdRoute::where('origin', 'EGGD')->first();
@@ -126,7 +135,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
             ]
         );
 
-        (new SrdRoutesImport())->collection($collection);
+        $this->import->collection($collection);
         $this->assertCount(2, SrdRoute::all());
 
         $model1 = SrdRoute::where('origin', 'EGGD')->first();

@@ -7,10 +7,9 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Events\BeforeSheet;
 
-class SrdNotesImport implements WithEvents, WithProgressBar, ToCollection
+class SrdNotesImport implements WithEvents, ToCollection
 {
     use Importable;
 
@@ -20,6 +19,7 @@ class SrdNotesImport implements WithEvents, WithProgressBar, ToCollection
     {
         $foundFirst = false;
         $row = 0;
+        $this->output->progressStart($rows->count());
         while ($row < $rows->count()) {
 
             // Find the first one
@@ -35,8 +35,11 @@ class SrdNotesImport implements WithEvents, WithProgressBar, ToCollection
             // Get the note id, process a row and then increment the counter by rows processed (+1 for the header line)
             $matchArray = [];
             preg_match(self::NEW_ROW_REGEX, $rows[$row][0], $matchArray);
+            $rowBefore = $row;
             $row += $this->processNote($rows, ++$row, (int)$matchArray[1]);
+            $this->output->progressAdvance($row - $rowBefore);
         }
+        $this->output->progressFinish();
     }
 
     private function processNote(Collection $rows, int $row, int $noteId): int

@@ -6,13 +6,11 @@ use App\Models\Srd\SrdRoute;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Events\BeforeSheet;
 
-class SrdRoutesImport implements ToCollection, WithStartRow, WithProgressBar, WithEvents
+class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
 {
     use Importable;
 
@@ -21,6 +19,7 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithProgressBar, Wi
 
     public function collection(Collection $rows)
     {
+        $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
             $route = SrdRoute::create([
                 'origin' => $row[0],
@@ -31,7 +30,9 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithProgressBar, Wi
                 'sid' => $row[1],
                 'star' => $row[5],
             ]);
+            $this->output->progressAdvance();
         }
+        $this->output->progressFinish();
     }
 
     private function convertFlightLevel(string $flightLevel): ?int

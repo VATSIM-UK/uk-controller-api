@@ -4,11 +4,18 @@ namespace App\Imports;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Srd\SrdNote;
+use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Events\BeforeSheet;
+use Mockery;
 
 class SrdNotesImportTest extends BaseFunctionalTestCase
 {
+    /**
+     * @var SrdNotesImport
+     */
+    private $import;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -16,6 +23,8 @@ class SrdNotesImportTest extends BaseFunctionalTestCase
         SrdNote::all()->each(function (SrdNote $note) {
             $note->delete();
         });
+        $this->import = new SrdNotesImport();
+        $this->import->withOutput(Mockery::spy(OutputStyle::class));
     }
 
     public function testItImportsASingleNote()
@@ -24,7 +33,7 @@ class SrdNotesImportTest extends BaseFunctionalTestCase
             ->push(['This is the first line of the note'])
             ->push(['This is the second line of the note']);
 
-        (new SrdNotesImport())->collection($rows);
+        $this->import->collection($rows);
         $notes = SrdNote::all();
 
         $this->assertCount(1, $notes);
@@ -47,7 +56,7 @@ class SrdNotesImportTest extends BaseFunctionalTestCase
             ->push(['This is the second line of the note'])
             ->push(['']);
 
-        (new SrdNotesImport())->collection($rows);
+        $this->import->collection($rows);
         $notes = SrdNote::all();
 
         $this->assertCount(1, $notes);
@@ -72,7 +81,7 @@ class SrdNotesImportTest extends BaseFunctionalTestCase
             ->push(['This is the first line of the second note'])
             ->push(['This is the second line of the second note']);
 
-        (new SrdNotesImport())->collection($rows);
+        $this->import->collection($rows);
         $notes = SrdNote::all();
 
         $this->assertCount(2, $notes);
@@ -101,6 +110,6 @@ class SrdNotesImportTest extends BaseFunctionalTestCase
 
     public function testItSubscribesToBeforeSheetEvents()
     {
-        $this->assertArrayHasKey(BeforeSheet::class, (new SrdNotesImport())->registerEvents());
+        $this->assertArrayHasKey(BeforeSheet::class, $this->import->registerEvents());
     }
 }
