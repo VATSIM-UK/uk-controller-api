@@ -54,7 +54,7 @@ class SrdImport extends Command
         $this->output->comment('Dropping SRD routes');
         $routes = SrdRoute::all();
         $this->output->progressStart($routes->count());
-        $notes->each(function (SrdRoute $route) {
+        $routes->each(function (SrdRoute $route) {
             $route->delete();
             $this->output->progressAdvance();
         });
