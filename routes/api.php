@@ -201,6 +201,9 @@ Route::middleware('public')->group(function () {
     Route::get('msl/tma/{tma}', 'MinStackController@getMslForTma')
         ->where('tma', '[A-Z]{4}');
 
+    // Standard Route Document
+    Route::get('srd/route/search', 'SrdController@searchRoutes');
+
     // Admin login
     Route::prefix('admin')->group(function () {
         Route::post('login', 'UserController@adminLogin');

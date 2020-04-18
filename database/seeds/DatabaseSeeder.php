@@ -94,6 +94,9 @@ class DatabaseSeeder extends Seeder
         SectorFileIssuesTableSeeder::class => [
             'sector_file_issues',
         ],
+        SrdRoutesTableSeeder::class => [
+            'srd_routes',
+        ],
     ];
 
 
