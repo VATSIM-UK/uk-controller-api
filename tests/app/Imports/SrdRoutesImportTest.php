@@ -39,6 +39,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'L9 KENET',
                 'OCK1A',
                 'EGLL',
+                'Notes: 1 - 2',
             ]
         );
 
@@ -53,6 +54,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
         $this->assertSame(14000, $model->minimum_level);
         $this->assertSame(15000, $model->maximum_level);
         $this->assertEquals('L9 KENET', $model->route_segment);
+        $this->assertEquals([1, 2], $model->notes()->pluck('id')->toArray());
     }
 
     public function testItProcessesMinimumCruise()
@@ -67,6 +69,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'L9 KENET',
                 'OCK1A',
                 'EGLL',
+                ''
             ]
         );
 
@@ -94,6 +97,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
             null,
             'OCK1A',
             'EGLL',
+            ''
         ]);
 
         $this->import->collection($collection);
@@ -121,6 +125,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'L9 KENET',
                 'OCK1A',
                 'EGLL',
+                ''
             ]
         );
         $collection->push(
@@ -132,6 +137,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'L9 KENET',
                 'OCK1A',
                 'EGLL',
+                ''
             ]
         );
 

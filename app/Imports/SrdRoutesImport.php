@@ -16,6 +16,7 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
 
     const FL_CONVERSION_FACTOR = 100;
     const FL_MIN_CRUISE = 'MC';
+    const NOTES_DELIMETER = '-';
 
     public function collection(Collection $rows)
     {
@@ -30,9 +31,19 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
                 'sid' => $row[1],
                 'star' => $row[5],
             ]);
+
+            // Attach notes
+            if ($row[7]) {
+                $route->notes()->attach($this->getNoteIds($row[7]));
+            }
             $this->output->progressAdvance();
         }
         $this->output->progressFinish();
+    }
+
+    private function getNoteIds(string $notes): array
+    {
+        return explode(self::NOTES_DELIMETER, substr($notes, 6));
     }
 
     private function convertFlightLevel(string $flightLevel): ?int
