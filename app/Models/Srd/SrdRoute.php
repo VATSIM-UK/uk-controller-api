@@ -3,6 +3,7 @@
 namespace App\Models\Srd;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SrdRoute extends Model
 {
@@ -20,4 +21,9 @@ class SrdRoute extends Model
         'min_level' => 'integer',
         'max_level' => 'integer'
     ];
+
+    public function notes(): BelongsToMany
+    {
+        return $this->belongsToMany(SrdNote::class);
+    }
 }

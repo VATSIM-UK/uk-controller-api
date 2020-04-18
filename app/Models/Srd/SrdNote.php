@@ -3,6 +3,7 @@
 namespace App\Models\Srd;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SrdNote extends Model
 {
@@ -14,4 +15,9 @@ class SrdNote extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
+    public function routes(): BelongsToMany
+    {
+        return $this->belongsToMany(SrdRoute::class);
+    }
 }
