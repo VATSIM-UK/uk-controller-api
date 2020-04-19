@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Srd\SrdRoute;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,8 +16,7 @@ class SrdController
         $rules = [
             'origin' => 'required|alpha',
             'destination' => 'required|alpha',
-            'minLevel' => 'integer',
-            'maxLevel' => 'integer',
+            'requestedLevel' => 'integer',
         ];
 
         $validator = Validator::make($request->query(), $rules);
@@ -28,13 +28,13 @@ class SrdController
         $query = SrdRoute::where('origin', $request->query('origin'))
             ->where('destination', $request->query('destination'));
 
-        if ($request->query('minLevel')) {
-            $query->where('minimum_level', '<=', $request->query('minLevel'))
-                ->orWhereNull('minimum_level');
-        }
+        if ($request->query('requestedLevel')) {
 
-        if ($request->query('maxLevel')) {
-            $query->where('maximum_level', '>=', $request->query('maxLevel'));
+            $query->where(function (Builder $query) use ($request) {
+                $query->where('minimum_level', '<=', $request->query('requestedLevel'))
+                    ->orWhereNull('minimum_level');
+            })
+                ->where('maximum_level', '>=', $request->query('requestedLevel'));
         }
 
         // Format the results

@@ -48,24 +48,12 @@ class SrdControllerTest extends BaseApiTestCase
             ->assertStatus(400);
     }
 
-    public function testItRejectsNonNumericMinLevel()
+    public function testItRejectsNonNumericRequestedLevel()
     {
         $queryParams = [
             'origin' => 'EGGD',
             'destination' => 'EGLL',
-            'minLevel' => 'abc',
-        ];
-
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
-            ->assertStatus(400);
-    }
-
-    public function testItRejectsNonNumericMasLevel()
-    {
-        $queryParams = [
-            'origin' => 'EGGD',
-            'destination' => 'EGLL',
-            'maxLevel' => 'abc',
+            'requestedLevel' => 'abc',
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
@@ -119,7 +107,7 @@ class SrdControllerTest extends BaseApiTestCase
         $queryParams = [
             'origin' => 'EGGD',
             'destination' => 'EGLL',
-            'minLevel' => '9000'
+            'requestedLevel' => '9000'
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
@@ -127,7 +115,7 @@ class SrdControllerTest extends BaseApiTestCase
             ->assertJson($expected);
     }
 
-    public function testItFiltersByMinimumLevel()
+    public function testItFiltersByRequestedLevel()
     {
         $expected = [
             [
@@ -147,29 +135,7 @@ class SrdControllerTest extends BaseApiTestCase
         $queryParams = [
             'origin' => 'EGGD',
             'destination' => 'EGLL',
-            'minLevel' => '22000'
-        ];
-
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
-            ->assertStatus(200)
-            ->assertJson($expected);
-    }
-
-    public function testItFiltersByMaximumLevel()
-    {
-        $expected = [
-            [
-                'minimum_level' => 24500,
-                'maximum_level' => 66000,
-                'route_string' => 'WOTAN UL9 KENET',
-                'notes' => [],
-            ],
-        ];
-
-        $queryParams = [
-            'origin' => 'EGGD',
-            'destination' => 'EGLL',
-            'maxLevel' => '30000'
+            'requestedLevel' => '15000'
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
