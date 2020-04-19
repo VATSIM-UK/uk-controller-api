@@ -29,7 +29,6 @@ class SrdController
             ->where('destination', $request->query('destination'));
 
         if ($request->query('requestedLevel')) {
-
             $query->where(function (Builder $query) use ($request) {
                 $query->where('minimum_level', '<=', $request->query('requestedLevel'))
                     ->orWhereNull('minimum_level');
