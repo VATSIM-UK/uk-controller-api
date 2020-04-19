@@ -6,6 +6,7 @@ use App\Imports\SrdImport as ImportHelper;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
@@ -40,25 +41,17 @@ class SrdImport extends Command
         $this->output->title('Starting SRD import');
         $this->output->section('Dropping existing SRD data');
 
-        // Drop the SRD Notes
-        $this->output->comment('Dropping SRD notes');
-        $notes = SrdNote::all();
-        $this->output->progressStart($notes->count());
-        $notes->each(function (SrdNote $note) {
-            $note->delete();
-            $this->output->progressAdvance();
-        });
-        $this->output->progressFinish();
+        Schema::disableForeignKeyConstraints();
 
-        // Drop the SRD routes
+        // Drop the SRD Notes
+        $this->output->comment('Dropping SRD notes and route links');
+        DB::table('srd_note_srd_route')->truncate();
+        $this->output->comment('Dropping SRD notes');
+        DB::table('srd_notes')->truncate();
         $this->output->comment('Dropping SRD routes');
-        $routes = SrdRoute::all();
-        $this->output->progressStart($routes->count());
-        $routes->each(function (SrdRoute $route) {
-            $route->delete();
-            $this->output->progressAdvance();
-        });
-        $this->output->progressFinish();
+        DB::table('srd_routes')->truncate();
+
+        Schema::enableForeignKeyConstraints();
 
         // Import the data
         (new ImportHelper())->withOutput($this->output)->import($this->argument('file_name'), 'imports');
