@@ -151,9 +151,9 @@ class SrdControllerTest extends BaseApiTestCase
                 'maximum_level' => 66000,
                 'route_string' => 'LISBO DCT RINGA Q39 NOMSU UQ4 WAL UY53 NUGRA',
                 'notes' => [
-                    'Text 1',
-                    'Text 2',
-                    'Text 3',
+                    1 => 'Text 1',
+                    2 => 'Text 2',
+                    3 => 'Text 3',
                 ]
             ],
         ];

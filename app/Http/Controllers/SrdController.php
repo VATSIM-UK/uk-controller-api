@@ -42,7 +42,7 @@ class SrdController
                 ? $route->route_segment
                 : sprintf('%s %s', $route->sid, $route->route_segment);
 
-            $notesArray = $route->notes()->pluck('note_text');
+            $notesArray = $route->notes()->pluck('note_text', 'id');
 
             return [
                 'minimum_level' => $route->minimum_level,
