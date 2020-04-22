@@ -15,7 +15,7 @@ class SrdNotesImport implements WithEvents, ToCollection
 
     const NEW_ROW_REGEX = '/^Note (\d+)$/';
 
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         $foundFirst = false;
         $row = 0;

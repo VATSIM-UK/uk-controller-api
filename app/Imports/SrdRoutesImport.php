@@ -18,7 +18,7 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
     const FL_MIN_CRUISE = 'MC';
     const NOTES_DELIMETER = '-';
 
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
