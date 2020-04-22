@@ -24,16 +24,19 @@ class SrdController
             return response()->json(['errors' => $validator->errors()->all()], 400);
         }
 
-        // Build the query
-        $query = SrdRoute::where('origin', $request->query('origin'))
-            ->where('destination', $request->query('destination'));
+        // Get the validated data
+        $requestData = $validator->validated();
 
-        if ($request->query('requestedLevel')) {
-            $query->where(function (Builder $query) use ($request) {
-                $query->where('minimum_level', '<=', $request->query('requestedLevel'))
+        // Build the query
+        $query = SrdRoute::where('origin', $requestData['origin'])
+            ->where('destination', $requestData['destination']);
+
+        if (isset($requestData['requestedLevel'])) {
+            $query->where(function (Builder $query) use ($requestData) {
+                $query->where('minimum_level', '<=', $requestData['requestedLevel'])
                     ->orWhereNull('minimum_level');
             })
-                ->where('maximum_level', '>=', $request->query('requestedLevel'));
+                ->where('maximum_level', '>=', $requestData['requestedLevel']);
         }
 
         // Format the results
