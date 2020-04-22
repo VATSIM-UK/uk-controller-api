@@ -62,6 +62,7 @@ class DatabaseSeeder extends Seeder
             'sid_prenotes',
         ],
         DependencyTableSeeder::class => [
+            'dependency_user',
             'dependencies',
         ],
         AircraftTableSeeder::class => [
