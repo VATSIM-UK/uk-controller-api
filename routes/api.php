@@ -26,13 +26,20 @@ Route::middleware('plugin.user')->group(function () {
         ]
     );
 
+    // Dependencies
+    Route::get('dependency', 'DependencyController@getAllDependencies');
+
     // Holds
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
-    Route::put('hold/profile', 'HoldController@createUserHoldProfile');
-    Route::put('hold/profile/{profile_id}', 'HoldController@updateUserHoldProfile')
-        ->where('profile_id', '\d+');
-    Route::delete('hold/profile/{profile_id}', 'HoldController@deleteUserHoldProfile')
-        ->where('profile_id', '\d+');
+
+    // Whenever a hold profile is updated, we need to reset the dependency
+    Route::middleware('dependency.update:DEPENDENCY_HOLD_PROFILE')->group(function () {
+        Route::put('hold/profile', 'HoldController@createUserHoldProfile');
+        Route::put('hold/profile/{profile_id}', 'HoldController@updateUserHoldProfile')
+            ->where('profile_id', '\d+');
+        Route::delete('hold/profile/{profile_id}', 'HoldController@deleteUserHoldProfile')
+            ->where('profile_id', '\d+');
+    });
 
     // Squawks
     Route::get('squawk-assignment/{callsign}', 'SquawkController@getSquawkAssignment')
@@ -131,11 +138,16 @@ Route::middleware('admin.version')->group(function () {
 Route::middleware('admin.dependency')->group(function () {
 
     // Initial altitudes and sids
-    Route::delete('sid/{id}', 'SidController@deleteSid')
-        ->where('sid', 'd+');
-    Route::put('sid', 'SidController@createSid');
-    Route::put('sid/{id}', 'SidController@updateSid')
-        ->where('sid', 'd+');
+    Route::middleware('dependency.update:DEPENDENCY_PRENOTE,DEPENDENCY_INITIAL_ALTITUDES,DEPENDENCY_SID_HANDOFF')
+        ->group(
+            function () {
+                Route::delete('sid/{id}', 'SidController@deleteSid')
+                    ->where('sid', 'd+');
+                Route::put('sid', 'SidController@createSid');
+                Route::put('sid/{id}', 'SidController@updateSid')
+                    ->where('sid', 'd+');
+            }
+        );
 });
 
 Route::middleware('admin.github')->group(function () {
@@ -167,9 +179,6 @@ Route::middleware('public')->group(function () {
             'uses' => 'VersionController@getVersionStatus',
         ]
     )->where('version', '[A-Za-z0-9\.\-]+');
-
-    // Dependencies
-    Route::get('dependency', 'DependencyController@getAllDependencies');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
