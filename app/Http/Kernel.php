@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\GithubAuth;
 use App\Http\Middleware\LogAdminAction;
+use App\Http\Middleware\UpdateDependency;
 use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
 use App\Http\Middleware\UserLastLogin;
@@ -23,6 +24,7 @@ class Kernel extends HttpKernel
         'auth' => Authenticate::class,
         'auth.github' => GithubAuth::class,
         'admin.log' => LogAdminAction::class,
+        'dependency.update' => UpdateDependency::class,
         'user.banned' => UserIsBanned::class,
         'user.disabled' => UserIsDisabled::class,
         'user.lastlogin' => UserLastLogin::class,
