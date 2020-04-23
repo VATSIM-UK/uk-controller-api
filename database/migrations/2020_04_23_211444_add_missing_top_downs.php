@@ -31,12 +31,18 @@ class AddMissingTopDowns extends Migration
                         'frequency' => 122.7,
                         'created_at' => Carbon::now(),
                     ],
+                    [
+                        'callsign' => 'EGPR_I_TWR',
+                        'frequency' => 118.08,
+                        'created_at' => Carbon::now(),
+                    ],
                 ]
             );
 
         // Add all the top downs
         AirfieldService::createNewTopDownOrder('EGEO', ['EGEO_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
         AirfieldService::createNewTopDownOrder('EGPU', ['EGPU_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
+        AirfieldService::createNewTopDownOrder('EGPR', ['EGPR_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
@@ -56,6 +62,7 @@ class AddMissingTopDowns extends Migration
                 [
                     'EGEO_I_TWR',
                     'EGPU_I_TWR',
+                    'EGPR_I_TWR',
                 ]
             )
             ->delete();
@@ -63,6 +70,7 @@ class AddMissingTopDowns extends Migration
         // Delete all the top-downs
         AirfieldService::deleteTopDownOrder('EGEO');
         AirfieldService::deleteTopDownOrder('EGPU');
+        AirfieldService::deleteTopDownOrder('EGPR');
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
