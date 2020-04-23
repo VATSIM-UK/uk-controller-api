@@ -21,14 +21,22 @@ class AddMissingTopDowns extends Migration
         DB::table('controller_positions')
             ->insert(
                 [
-                    'callsign' => 'EGEO_I_TWR',
-                    'frequency' => 118.05,
-                    'created_at' => Carbon::now(),
+                    [
+                        'callsign' => 'EGEO_I_TWR',
+                        'frequency' => 118.05,
+                        'created_at' => Carbon::now(),
+                    ],
+                    [
+                        'callsign' => 'EGPU_I_TWR',
+                        'frequency' => 122.7,
+                        'created_at' => Carbon::now(),
+                    ],
                 ]
             );
 
         // Add all the top downs
         AirfieldService::createNewTopDownOrder('EGEO', ['EGEO_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
+        AirfieldService::createNewTopDownOrder('EGPU', ['EGPU_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
@@ -46,13 +54,15 @@ class AddMissingTopDowns extends Migration
             ->whereIn(
                 'callsign',
                 [
-                    'EGEO_I_TWR'
+                    'EGEO_I_TWR',
+                    'EGPU_I_TWR',
                 ]
             )
             ->delete();
 
         // Delete all the top-downs
         AirfieldService::deleteTopDownOrder('EGEO');
+        AirfieldService::deleteTopDownOrder('EGPU');
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
