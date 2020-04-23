@@ -10,7 +10,7 @@ use LogicException;
 
 class DependencyService
 {
-    public static function touchDependencyByKey(string $key, ?User $user): void
+    public static function touchDependencyByKey(string $key, ?User $user = null): void
     {
         $dependency = Dependency::where('key', $key)->first();
 
