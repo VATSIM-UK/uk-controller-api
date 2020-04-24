@@ -78,13 +78,12 @@ class AddMissingTopDowns extends Migration
             'LON_CTR',
         ]);
         AirfieldService::createNewTopDownOrder('EGOV', ['EGOV_TWR', 'EGOV_P_APP', 'EGOV_R_APP', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGXC', ['EGXC_GND', 'EGXC_TWR', 'EGXC_P_APP', 'EGXC_R_APP', 'EGVV_CTR']);
+        AirfieldService::createNewTopDownOrder('EGXC', ['EGXC_GND', 'EGXC_TWR', 'EGXC_P_APP', 'EGXC_APP', 'EGVV_CTR']);
         AirfieldService::createNewTopDownOrder('EGYD', ['EGYD_GND', 'EGYD_TWR', 'EGYD_P_APP', 'EGYD_R_APP', 'EGVV_CTR']);
         AirfieldService::createNewTopDownOrder('EGFE', ['EGFE_R_TWR']);
         AirfieldService::createNewTopDownOrder('EGFH', ['EGFH_R_TWR']);
         AirfieldService::createNewTopDownOrder('EGHR', ['EGHR_I_TWR']);
         AirfieldService::createNewTopDownOrder('EGYM', ['EGYM_TWR', 'EGYM_P_APP', 'EGYM_R_APP', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGYD', ['EGYD_GND', 'EGYD_TWR', 'EGYD_P_APP', 'EGYD_R_APP', 'EGVV_CTR']);
         AirfieldService::createNewTopDownOrder('EGBP', ['EGBP_I_TWR']);
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
@@ -121,6 +120,8 @@ class AddMissingTopDowns extends Migration
         AirfieldService::deleteTopDownOrder('EGPL');
         AirfieldService::deleteTopDownOrder('EGTO');
         AirfieldService::deleteTopDownOrder('EGOV');
+        AirfieldService::deleteTopDownOrder('EGXC');
+        AirfieldService::deleteTopDownOrder('EGYD');
         AirfieldService::deleteTopDownOrder('EGFE');
         AirfieldService::deleteTopDownOrder('EGFH');
         AirfieldService::deleteTopDownOrder('EGHR');
