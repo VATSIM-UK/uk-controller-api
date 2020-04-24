@@ -79,6 +79,7 @@ class AddMissingTopDowns extends Migration
         AirfieldService::createNewTopDownOrder('EGFH', ['EGFH_R_TWR']);
         AirfieldService::createNewTopDownOrder('EGHR', ['EGHR_I_TWR']);
         AirfieldService::createNewTopDownOrder('EGYM', ['EGYM_TWR', 'EGYM_P_APP', 'EGYM_R_APP', 'EGVV_CTR']);
+        AirfieldService::createNewTopDownOrder('EGYD', ['EGYD_GND', 'EGYD_TWR', 'EGYD_P_APP', 'EGYD_R_APP', 'EGVV_CTR']);
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
@@ -116,7 +117,7 @@ class AddMissingTopDowns extends Migration
         AirfieldService::deleteTopDownOrder('EGFE');
         AirfieldService::deleteTopDownOrder('EGFH');
         AirfieldService::deleteTopDownOrder('EGHR');
-        AirfieldService::deleteTopDownOrder('EGYMM');
+        AirfieldService::deleteTopDownOrder('EGYM');
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
