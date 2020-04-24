@@ -37,21 +37,6 @@ class AddMissingTopDowns extends Migration
                         'created_at' => Carbon::now(),
                     ],
                     [
-                        'callsign' => 'EGPL_I_TWR',
-                        'frequency' => 125.900,
-                        'created_at' => Carbon::now(),
-                    ],
-                    [
-                        'callsign' => 'EGPL_TWR',
-                        'frequency' => 119.2,
-                        'created_at' => Carbon::now(),
-                    ],
-                    [
-                        'callsign' => 'EGPL_APP',
-                        'frequency' => 119.2,
-                        'created_at' => Carbon::now(),
-                    ],
-                    [
                         'callsign' => 'EGTO_I_TWR',
                         'frequency' => 122.25,
                         'created_at' => Carbon::now(),
@@ -97,9 +82,6 @@ class AddMissingTopDowns extends Migration
                     'EGEO_I_TWR',
                     'EGPU_I_TWR',
                     'EGPR_I_TWR',
-                    'EGPL_I_TWR',
-                    'EGPL_TWR',
-                    'EGPL_APP',
                     'EGTO_I_TWR',
                 ]
             )
