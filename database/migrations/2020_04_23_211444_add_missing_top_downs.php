@@ -51,6 +51,11 @@ class AddMissingTopDowns extends Migration
                         'frequency' => 119.2,
                         'created_at' => Carbon::now(),
                     ],
+                    [
+                        'callsign' => 'EGTO_I_TWR',
+                        'frequency' => 122.25,
+                        'created_at' => Carbon::now(),
+                    ],
                 ]
             );
 
@@ -58,7 +63,20 @@ class AddMissingTopDowns extends Migration
         AirfieldService::createNewTopDownOrder('EGEO', ['EGEO_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
         AirfieldService::createNewTopDownOrder('EGPU', ['EGPU_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
         AirfieldService::createNewTopDownOrder('EGPR', ['EGPR_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
-        AirfieldService::createNewTopDownOrder('EGPL', ['EGPL_I_TWR', 'EGPL_TWR', 'EGPL_APP', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
+        AirfieldService::createNewTopDownOrder('EGPL',
+            ['EGPL_I_TWR', 'EGPL_TWR', 'EGPL_APP', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
+        AirfieldService::createNewTopDownOrder(
+            'EGTO', [
+            'EGTO_I_TWR',
+            'THAMES_APP',
+            'LTC_SE_CTR',
+            'LTC_S_CTR',
+            'LTC_CTR',
+            'LON_D_CTR',
+            'LON_S_CTR',
+            'LON_SC_CTR',
+            'LON_CTR',
+        ]);
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
@@ -82,6 +100,7 @@ class AddMissingTopDowns extends Migration
                     'EGPL_I_TWR',
                     'EGPL_TWR',
                     'EGPL_APP',
+                    'EGTO_I_TWR',
                 ]
             )
             ->delete();
@@ -91,6 +110,7 @@ class AddMissingTopDowns extends Migration
         AirfieldService::deleteTopDownOrder('EGPU');
         AirfieldService::deleteTopDownOrder('EGPR');
         AirfieldService::deleteTopDownOrder('EGPL');
+        AirfieldService::deleteTopDownOrder('EGTO');
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
