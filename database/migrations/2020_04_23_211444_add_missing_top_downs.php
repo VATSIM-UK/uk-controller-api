@@ -36,11 +36,6 @@ class AddMissingTopDowns extends Migration
                         'frequency' => 118.08,
                         'created_at' => Carbon::now(),
                     ],
-                    [
-                        'callsign' => 'EGTO_I_TWR',
-                        'frequency' => 122.25,
-                        'created_at' => Carbon::now(),
-                    ],
                 ]
             );
 
@@ -82,7 +77,6 @@ class AddMissingTopDowns extends Migration
                     'EGEO_I_TWR',
                     'EGPU_I_TWR',
                     'EGPR_I_TWR',
-                    'EGTO_I_TWR',
                 ]
             )
             ->delete();
