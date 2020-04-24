@@ -125,7 +125,7 @@ class AddMissingTopDowns extends Migration
         AirfieldService::deleteTopDownOrder('EGFH');
         AirfieldService::deleteTopDownOrder('EGHR');
         AirfieldService::deleteTopDownOrder('EGYM');
-        AirfieldService::deleteTopDownOrder('EGYM');
+        AirfieldService::deleteTopDownOrder('EGBP');
 
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
