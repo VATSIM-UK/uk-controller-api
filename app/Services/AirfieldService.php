@@ -36,7 +36,7 @@ class AirfieldService
         return $airfields;
     }
 
-    public static function deleteTopDownOrder(string $airfieldKey)
+    public static function deleteTopDownOrder(string $airfieldKey): void
     {
         DB::transaction(function () use ($airfieldKey) {
             DB::table('top_downs')
@@ -45,7 +45,7 @@ class AirfieldService
         });
     }
 
-    public static function createNewTopDownOrder(string $airfieldKey, array $positions)
+    public static function createNewTopDownOrder(string $airfieldKey, array $positions): void
     {
         DB::transaction(function () use ($airfieldKey, $positions) {
             $airfieldId = Airfield::where('code', $airfieldKey)->firstOrFail()->id;
