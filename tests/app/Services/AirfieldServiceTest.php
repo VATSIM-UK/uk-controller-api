@@ -438,6 +438,6 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
     public function testItThrowsAnExceptionWhenDeletingTopDownIfAirfieldNotFound()
     {
         $this->expectException(ModelNotFoundException::class);
-        AirfieldService::createNewTopDownOrder('EGXY');
+        AirfieldService::deleteTopDownOrder('EGXY');
     }
 }
