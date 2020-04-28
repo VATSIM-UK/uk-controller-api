@@ -36,6 +36,33 @@ class AirfieldService
         return $airfields;
     }
 
+    public static function deleteTopDownOrder(string $airfieldKey): void
+    {
+        DB::transaction(function () use ($airfieldKey) {
+            DB::table('top_downs')
+                ->where('airfield_id', Airfield::where('code', $airfieldKey)->firstOrFail()->id)
+                ->delete();
+        });
+    }
+
+    public static function createNewTopDownOrder(string $airfieldKey, array $positions): void
+    {
+        DB::transaction(function () use ($airfieldKey, $positions) {
+            $airfieldId = Airfield::where('code', $airfieldKey)->firstOrFail()->id;
+            $topDown = [];
+            foreach ($positions as $index => $position) {
+                $topDown[] = [
+                    'airfield_id' => $airfieldId,
+                    'controller_position_id' => ControllerPosition::where('callsign', $position)->firstOrFail()->id,
+                    'order' => $index + 1,
+                ];
+            }
+
+            DB::table('top_downs')
+                ->insert($topDown);
+        });
+    }
+
     public static function insertIntoOrderBefore(
         string $airfieldKey,
         string $positionToInsert,

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use OutOfRangeException;
 
 class AirfieldServiceTest extends BaseFunctionalTestCase
@@ -385,5 +386,58 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'order' => 1
             ]
         );
+    }
+
+    public function testItAddsANewTopDownOrder()
+    {
+        AirfieldService::createNewTopDownOrder('EGKR', ['EGLL_S_TWR', 'EGLL_N_APP']);
+
+        $this->assertDatabaseHas(
+            'top_downs',
+            [
+                'airfield_id' => 3,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'top_downs',
+            [
+                'airfield_id' => 3,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenCreatingNewTopDownIfPositionNotFound()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        AirfieldService::createNewTopDownOrder('EGKR', ['EGLL_S_TWR', 'EGLL_S_APP']);
+    }
+
+    public function testItThrowsAnExceptionWhenCreatingNewTopDownIfAirfieldNotFound()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        AirfieldService::createNewTopDownOrder('EGXY', ['EGLL_S_TWR']);
+    }
+
+    public function testItDeletesATopDownOrder()
+    {
+        AirfieldService::deleteTopDownOrder('EGLL');
+
+        $this->assertDatabaseMissing(
+            'top_downs',
+            [
+                'airfield_id' => 1,
+            ]
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenDeletingTopDownIfAirfieldNotFound()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        AirfieldService::deleteTopDownOrder('EGXY');
     }
 }
