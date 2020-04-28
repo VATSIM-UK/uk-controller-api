@@ -102,16 +102,27 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
      * Makes an unauthenticated request to the API and returns the
      * utils object so that assertions may be made.
      *
-     * @param  string $method HTTP verb to use
-     * @param  string $route API route to use
-     * @param  array $data Array to pass as JSON
+     * @param string $method HTTP verb to use
+     * @param string $route API route to use
+     * @param array $data Array to pass as JSON
+     * @param array $query
      * @return TestResponse
      */
-    protected function makeUnauthenticatedApiRequest(string $method, string $route, array $data = [])
+    protected function makeUnauthenticatedApiRequest(string $method, string $route, array $data = [], array $query = [])
     {
         $headers = [
             'Accept' => 'application/json'
         ];
+
+        if (count($query)) {
+            $route .= '?';
+
+            foreach ($query as $key => $value) {
+                $route .= sprintf('%s=%s&', $key, $value);
+            }
+
+            $route = rtrim($route, '&');
+        }
 
         return $this->makeApiRequest($method, $route, $headers, $data);
     }
