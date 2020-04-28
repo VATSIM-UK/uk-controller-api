@@ -167,6 +167,7 @@ return [
          */
         Laravel\Passport\PassportServiceProvider::class,
         Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         BeyondCode\LaravelWebSockets\WebSocketsServiceProvider::class,
 
         /*
