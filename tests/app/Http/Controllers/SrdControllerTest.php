@@ -153,15 +153,15 @@ class SrdControllerTest extends BaseApiTestCase
                 'notes' => [
                     [
                         'id' => 1,
-                        'note_text' => 'Text 1',
+                        'text' => 'Text 1',
                     ],
                     [
                         'id' => 2,
-                        'note_text' => 'Text 2',
+                        'text' => 'Text 2',
                     ],
                     [
                         'id' => 3,
-                        'note_text' => 'Text 3',
+                        'text' => 'Text 3',
                     ],
                 ]
             ],

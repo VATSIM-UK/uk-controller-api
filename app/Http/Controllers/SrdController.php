@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +51,7 @@ class SrdController
                 'minimum_level' => $route->minimum_level,
                 'maximum_level' => $route->maximum_level,
                 'route_string' => $routeString,
-                'notes' => $route->notes->map(function (Note $note) {
+                'notes' => $route->notes->map(function (SrdNote $note) {
                     return [
                         'id' => $note->id,
                         'text' => $note->note_text
