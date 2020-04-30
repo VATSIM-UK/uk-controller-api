@@ -28,7 +28,8 @@ class SrdController
         $requestData = $validator->validated();
 
         // Build the query
-        $query = SrdRoute::where('origin', $requestData['origin'])
+        $query = SrdRoute::with('notes')
+            ->where('origin', $requestData['origin'])
             ->where('destination', $requestData['destination']);
 
         if (isset($requestData['requestedLevel'])) {
@@ -45,13 +46,16 @@ class SrdController
                 ? $route->route_segment
                 : sprintf('%s %s', $route->sid, $route->route_segment);
 
-            $notesArray = $route->notes()->pluck('note_text', 'id');
-
             return [
                 'minimum_level' => $route->minimum_level,
                 'maximum_level' => $route->maximum_level,
                 'route_string' => $routeString,
-                'notes' => $notesArray,
+                'notes' => $route->notes->map(function (Note $note) {
+                    return [
+                        'id' => $note->id,
+                        'text' => $note->note_text
+                    ];
+                }),
             ];
         });
 
