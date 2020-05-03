@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HoldRestriction extends Model
 {
-    protected $table = 'hold_restriction';
-
     public $timestamps = true;
 
     protected $hidden = [
