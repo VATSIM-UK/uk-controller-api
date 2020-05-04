@@ -15,7 +15,6 @@ class AddNavaidIdToHolds extends Migration
     {
         Schema::table('holds', function (Blueprint $table) {
             $table->unsignedBigInteger('navaid_id')->after('id')->nullable();
-            $table->foreign('navaid_id')->references('id')->on('navaids')->onDelete('cascade');
         });
     }
 
@@ -27,7 +26,6 @@ class AddNavaidIdToHolds extends Migration
     public function down()
     {
         Schema::table('holds', function (Blueprint $table) {
-            $table->dropForeign('holds_navaid_id_foreign');
             $table->dropColumn('navaid_id');
         });
     }
