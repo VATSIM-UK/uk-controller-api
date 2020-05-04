@@ -14,7 +14,7 @@ class AddNavaidIdToHolds extends Migration
     public function up()
     {
         Schema::table('holds', function (Blueprint $table) {
-            $table->unsignedBigInteger('navaid_id')->after('id')->nullable();
+            $table->unsignedBigInteger('navaid_id')->after('id');
         });
     }
 
