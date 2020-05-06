@@ -26,12 +26,15 @@ class HoldService
             return Cache::get(self::CACHE_KEY);
         }
 
-        $data = Hold::with('restrictions')->get()->toArray();
+        $data = Hold::with('restrictions', 'navaid')->get()->toArray();
         foreach ($data as $key => $hold) {
             foreach ($hold['restrictions'] as $restrictionKey => $restriction) {
                 $data[$key]['restrictions'][$restrictionKey] =
                     $data[$key]['restrictions'][$restrictionKey]['restriction'];
             }
+
+            $data[$key]['fix'] = $data[$key]['navaid']['identifier'];
+            unset($data[$key]['navaid_id'], $data[$key]['navaid']);
         }
 
         Cache::forever(self::CACHE_KEY, $data);
