@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             'msl_tma',
         ],
         HoldTableSeeder::class => [
-            'hold',
+            'holds',
         ],
         HoldProfileTableSeeder::class => [
             'hold_profile',
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
             'hold_profile_hold',
         ],
         HoldRestrictionTableSeeder::class => [
-            'hold_restriction',
+            'hold_restrictions',
         ],
         SidTableSeeder::class => [
             'sid',
@@ -99,6 +99,9 @@ class DatabaseSeeder extends Seeder
             'srd_note_srd_route',
             'srd_routes',
             'srd_notes',
+        ],
+        NavaidTableSeeder::class => [
+            'navaids',
         ],
     ];
 
