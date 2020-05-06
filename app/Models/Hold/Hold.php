@@ -1,7 +1,9 @@
 <?php
 namespace App\Models\Hold;
 
+use App\Models\Navigation\Navaid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Model for a hold
@@ -11,8 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Hold extends Model
 {
-    public $timestamps = true;
-
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -31,6 +31,11 @@ class Hold extends Model
         'turn_direction',
         'description',
     ];
+
+    public function navaid(): BelongsTo
+    {
+        return $this->belongsTo(Navaid::class);
+    }
 
     /**
      * Relationship between a hold and its restrictions
