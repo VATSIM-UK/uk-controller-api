@@ -213,6 +213,9 @@ Route::middleware('public')->group(function () {
     // Standard Route Document
     Route::get('srd/route/search', 'SrdController@searchRoutes');
 
+    // Navaids
+    Route::get('navaid/dependency', 'NavaidController@getNavaidsDependency');
+
     // Admin login
     Route::prefix('admin')->group(function () {
         Route::post('login', 'UserController@adminLogin');
