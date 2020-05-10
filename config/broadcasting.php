@@ -21,7 +21,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => true,
-                'host' => env('WEBSOCKET_BROADCAST_HOST','127.0.0.1'),
+                'host' => env('WEBSOCKET_BROADCAST_HOST', '127.0.0.1'),
                 'port' => 6001,
                 'scheme' => env('WEBSOCKET_ENV', 'https'),
                 'curl_options' => [
