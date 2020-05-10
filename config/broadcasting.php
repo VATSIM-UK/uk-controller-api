@@ -26,7 +26,7 @@ return [
                 'scheme' => env('WEBSOCKET_ENV'),
                 'curl_options' => [
                     CURLOPT_SSL_VERIFYHOST => env('APP_ENV') !== 'local' ? 2 : 0,
-                    CURLOPT_SSL_VERIFYPEER => env('APP_ENV') !== 'local' ? 2 : 0,
+                    CURLOPT_SSL_VERIFYPEER => env('APP_ENV') !== 'local' ? 1 : 0,
                 ],
             ],
         ],
