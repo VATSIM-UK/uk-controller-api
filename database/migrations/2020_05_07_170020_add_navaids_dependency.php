@@ -18,7 +18,7 @@ class AddNavaidsDependency extends Migration
                 [
                     [
                         'key' => 'DEPENDENCY_NAVAIDS',
-                        'uri' => 'navaids/dependency',
+                        'uri' => 'navaid/dependency',
                         'local_file' => 'navaids.json',
                         'created_at' => Carbon::now(),
                     ],
