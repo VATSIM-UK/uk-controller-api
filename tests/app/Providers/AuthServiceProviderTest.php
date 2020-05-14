@@ -37,7 +37,7 @@ class AuthServiceProviderTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now());
         $this->assertEquals(
             Carbon::now()->addYear()->startOfMinute(),
-            Carbon::createFromTimestamp(Passport::$tokensExpireAt->getTimestamp())->startOfMinute()
+            Carbon::createFromTimestamp(Passport::$personalAccessTokensExpireAt->getTimestamp())->startOfMinute()
         );
     }
 }
