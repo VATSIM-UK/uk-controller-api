@@ -37,15 +37,14 @@ class UserTokenServiceTest extends BaseApiTestCase
         $this->service->create(999);
     }
 
-    public function testItHasAMaximumNumberOfAllowedTokens()
+    public function testItOnlyAllwosOneActiveToken()
     {
-        // This user already has one token from the test setup
-        for ($numTokens = 0; $numTokens < UserTokenService::MAXIMUM_ALLOWED_TOKENS - 1; $numTokens++) {
-            $this->service->create(1203533);
-        }
-
-        $this->expectException(TooManyTokensException::class);
         $this->service->create(1203533);
+        $this->service->create(1203533);
+        $this->service->create(1203533);
+        $this->service->create(1203533);
+
+        $this->assertDatabaseCount('oauth_access_tokens', 1, ['user_id' => 1203533, 'revoked' => false]);
     }
 
     public function testItCreatesAUserToken()
