@@ -21,11 +21,13 @@ class UserTokenService
     {
         $user = User::findOrFail($userCid);
 
-        if ($user->tokens->count()) {
-            $user->token()->revoke();
+        // Revoke existing tokens
+        if ($user->tokens) {
+            foreach ($user->tokens as $token) {
+                $token->revoke();
+            }
         }
 
-        $user->token()->revoke();
         return $user->createToken('access', [AuthServiceProvider::SCOPE_USER])->accessToken;
     }
 
