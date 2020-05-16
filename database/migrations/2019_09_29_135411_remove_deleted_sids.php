@@ -24,7 +24,7 @@ class RemoveDeletedSids extends Migration
                     ]
                 )->firstOrFail()->delete();
             } catch (Exception $exception) {
-                dd($sid);
+
             }
         }
     }

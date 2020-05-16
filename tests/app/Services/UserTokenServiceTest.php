@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\BaseApiTestCase;
-use App\Exceptions\TooManyTokensException;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Carbon\Carbon;
+use Laravel\Passport\Token;
 use TestingUtils\Traits\WithSeedUsers;
 
 class UserTokenServiceTest extends BaseApiTestCase
@@ -37,14 +36,14 @@ class UserTokenServiceTest extends BaseApiTestCase
         $this->service->create(999);
     }
 
-    public function testItOnlyAllwosOneActiveToken()
+    public function testItOnlyAllowsOneActiveToken()
     {
         $this->service->create(1203533);
         $this->service->create(1203533);
         $this->service->create(1203533);
         $this->service->create(1203533);
 
-        $this->assertDatabaseCount('oauth_access_tokens', 1, ['user_id' => 1203533, 'revoked' => false]);
+        $this->assertEquals(1, Token::where('user_id', 1203533)->where('revoked', false)->get()->count());
     }
 
     public function testItCreatesAUserToken()
