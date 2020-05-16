@@ -32,7 +32,7 @@ class AuthServiceProviderTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testTokensExpireInOneYear()
+    public function testTokensExpireInADecade()
     {
         Carbon::setTestNow(Carbon::now());
         $this->assertEquals(
