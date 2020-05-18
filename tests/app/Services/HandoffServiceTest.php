@@ -51,6 +51,37 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testItAddsANewHandoffOrder()
+    {
+        HandoffService::createNewHandoffOrder('NEW_HANDOFF_ORDER', 'New!', ['EGLL_N_APP', 'LON_S_CTR']);
+
+        $this->assertDatabaseHas(
+            'handoffs',
+            [
+                'key' => 'NEW_HANDOFF_ORDER',
+                'description' => 'New!',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'handoff_orders',
+            [
+                'handoff_id' => 3,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'handoff_orders',
+            [
+                'handoff_id' => 3,
+                'controller_position_id' => 3,
+                'order' => 2,
+            ]
+        );
+    }
+
     public function testItInsertsIntoHandoffOrderBefore()
     {
         HandoffService::insertIntoOrderBefore('HANDOFF_ORDER_1', 'LON_C_CTR', 'EGLL_S_TWR');
