@@ -116,17 +116,6 @@ class UserControllerTest extends BaseApiTestCase
             ->assertStatus(404);
     }
 
-    public function testItReturnsUnprocessableIfCreatingTooManyTokens()
-    {
-        for ($i = 0; $i < UserTokenService::MAXIMUM_ALLOWED_TOKENS; $i++) {
-            $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203533/token')
-                ->assertStatus(201);
-        }
-
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203533/token')
-            ->assertStatus(422);
-    }
-
     public function testItReturnsNoContentOnSuccessfulTokenDeletion()
     {
         $tokenId = User::findOrFail(1203533)->createToken('access', [AuthServiceProvider::SCOPE_USER])->token->id;
