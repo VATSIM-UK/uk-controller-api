@@ -116,12 +116,6 @@ class UserController extends BaseController
                     'message' => 'User with CID ' . $cid . ' does not exist',
                 ]
             )->setStatusCode(404);
-        } catch (TooManyTokensException $e) {
-            return response()->json(
-                [
-                    'message' => 'Too many tokens exist for this user',
-                ]
-            )->setStatusCode(422);
         }
     }
 

@@ -4,31 +4,30 @@ namespace App\Services;
 
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
-use App\Exceptions\TooManyTokensException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Passport\Token;
 
 class UserTokenService
 {
-    // The maximum allowed access tokens that an individual user may have
-    const MAXIMUM_ALLOWED_TOKENS = 4;
-
     /**
-     * Creates an access token for the given user
+     * Creates an access token for the given user and revokes
+     * any existing.
      *
      * @param integer $userCid
      * @throws ModelNotFoundException
-     * @throws TooManyTokensException
      * @return string
      */
     public function create(int $userCid) : string
     {
         $user = User::findOrFail($userCid);
 
-        if ($user->tokens->count() >= self::MAXIMUM_ALLOWED_TOKENS) {
-            throw new TooManyTokensException('Too many tokens created for user');
+        // Revoke existing tokens
+        if ($user->tokens) {
+            foreach ($user->tokens as $token) {
+                $token->revoke();
+            }
         }
-        
+
         return $user->createToken('access', [AuthServiceProvider::SCOPE_USER])->accessToken;
     }
 
