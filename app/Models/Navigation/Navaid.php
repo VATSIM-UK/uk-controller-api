@@ -10,6 +10,8 @@ class Navaid extends Model
 {
     protected $fillable = [
         'identifier',
+        'latitude',
+        'longitude',
     ];
 
     public function holds(): HasMany

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNavaidTypes extends Migration
+class AddNavaidCoordinates extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,13 @@ class AddNavaidTypes extends Migration
     public function up()
     {
         Schema::table('navaids', function (Blueprint $table) {
-            $table->enum('type', ['VOR', 'NDB', 'FIX'])
+            $table->string('latitude')
                 ->after('identifier')
-                ->comment('The type of the navaid, e.g. VOR, NDB');
+                ->comment('The latitude coordinate of the navaid');
+
+            $table->string('longitude')
+                ->after('latitude')
+                ->comment('The longitude coordinate of the navaid');
         });
     }
 
@@ -28,7 +32,8 @@ class AddNavaidTypes extends Migration
     public function down()
     {
         Schema::table('navaids', function (Blueprint $table) {
-            $table->dropColumn('type');
+            $table->dropColumn('latitude');
+            $table->dropColumn('longitude');
         });
     }
 }
