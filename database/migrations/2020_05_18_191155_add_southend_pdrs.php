@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Controller\Handoff;
+use App\Services\DependencyService;
 use App\Services\HandoffService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
@@ -119,6 +120,10 @@ class AddSouthendPdrs extends Migration
                 ],
             ]
         );
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_INITIAL_ALTITUDES');
+        DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFF');
+        DependencyService::touchDependencyByKey('DEPENDENCY_SID_HANDOFF');
     }
 
     /**
@@ -131,5 +136,9 @@ class AddSouthendPdrs extends Migration
         $southend = DB::table('airfield')->where('code', 'EGMC')->pluck('id')->first();
         DB::table('sid')->where('airfield_id', $southend)->delete();
         DB::table('handoffs')->whereIn('key', ['EGMC_PDR_CLACTON', 'EGMC_PDR'])->delete();
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_INITIAL_ALTITUDES');
+        DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFF');
+        DependencyService::touchDependencyByKey('DEPENDENCY_SID_HANDOFF');
     }
 }

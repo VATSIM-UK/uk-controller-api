@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\DependencyService;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
@@ -29,6 +30,9 @@ class LutonSidUpdates extends Migration
         foreach (self::SIDS as $old => $new) {
             DB::table('sid')->where('airfield_id', $luton)->where('identifier', $old)->update(['identifier' => $new]);
         }
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_INITIAL_ALTITUDES');
+        DependencyService::touchDependencyByKey('DEPENDENCY_PRENOTE');
     }
 
     /**
@@ -42,5 +46,8 @@ class LutonSidUpdates extends Migration
         foreach (self::SIDS as $old => $new) {
             DB::table('sid')->where('airfield_id', $luton)->where('identifier', $new)->update(['identifier' => $old]);
         }
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_INITIAL_ALTITUDES');
+        DependencyService::touchDependencyByKey('DEPENDENCY_PRENOTE');
     }
 }
