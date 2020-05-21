@@ -15,7 +15,7 @@ class CreateNavaidsTable extends Migration
     {
         Schema::create('navaids', function (Blueprint $table) {
             $table->id();
-            $table->string('identifier');
+            $table->string('identifier')->comment('The identifier of the navaid');
             $table->timestamps();
 
             $table->unique('identifier');
