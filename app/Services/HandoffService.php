@@ -30,6 +30,31 @@ class HandoffService
         return $sidMap;
     }
 
+    public static function createNewHandoffOrder(string $key, string $description, array $positions): void
+    {
+        DB::transaction(function () use ($key, $description, $positions) {
+            $handoff = Handoff::create(
+                [
+                    'key' => $key,
+                    'description' => $description,
+                ]
+            );
+
+
+            $handoffOrder = [];
+            foreach ($positions as $index => $position) {
+                $handoffOrder[] = [
+                    'handoff_id' => $handoff->id,
+                    'controller_position_id' => ControllerPosition::where('callsign', $position)->firstOrFail()->id,
+                    'order' => $index + 1,
+                ];
+            }
+
+            DB::table('handoff_orders')
+                ->insert($handoffOrder);
+        });
+    }
+
     public static function insertIntoOrderBefore(
         string $handoffKey,
         string $positionToInsert,
