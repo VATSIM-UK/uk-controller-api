@@ -22,25 +22,25 @@ class NewFarnboroughSids extends Migration
             [
                 [
                     'airfield_id' => $farnborough,
-                    'identifier' => 'GWC1L',
+                    'identifier' => 'GWC2L',
                     'initial_altitude' => 3000,
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'airfield_id' => $farnborough,
-                    'identifier' => 'GWC1F',
+                    'identifier' => 'GWC2F',
                     'initial_altitude' => 3000,
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'airfield_id' => $farnborough,
-                    'identifier' => 'HAZEL1L',
+                    'identifier' => 'HAZEL2L',
                     'initial_altitude' => 3000,
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'airfield_id' => $farnborough,
-                    'identifier' => 'HAZEL1F',
+                    'identifier' => 'HAZEL2F',
                     'initial_altitude' => 3000,
                     'created_at' => Carbon::now(),
                 ],
@@ -56,6 +56,6 @@ class NewFarnboroughSids extends Migration
     public function down()
     {
         // Delete new SIDs
-        DB::table('sid')->whereIn('identifier', ['GWC1L', 'GWC1F', 'HAZEL1L', 'HAZEL1F'])->delete();
+        DB::table('sid')->whereIn('identifier', ['GWC2L', 'GWC2F', 'HAZEL2L', 'HAZEL2F'])->delete();
     }
 }

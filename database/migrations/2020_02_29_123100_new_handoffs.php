@@ -57,7 +57,7 @@ class NewHandoffs extends Migration
             $i++;
         }
 
-        DB::table('sid')->whereIn('identifier', ['GWC1L', 'GWC1F', 'HAZEL1L', 'HAZEL1F'])
+        DB::table('sid')->whereIn('identifier', ['GWC2L', 'GWC2F', 'HAZEL2L', 'HAZEL2F'])
             ->update(['handoff_id' => $handoffId]);
 
         // Doncaster SIDs
@@ -83,7 +83,7 @@ class NewHandoffs extends Migration
         );
 
         // EGLF
-        DB::table('sid')->whereIn('identifier', ['GWC1L', 'GWC1F', 'HAZEL1L', 'HAZEL1F'])
+        DB::table('sid')->whereIn('identifier', ['GWC2L', 'GWC2F', 'HAZEL2L', 'HAZEL2F'])
             ->update(['handoff_id' => null]);
         DB::table('handoffs')->where('key', 'EGLF_SID')->delete();
 
