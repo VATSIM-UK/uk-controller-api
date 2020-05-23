@@ -7,6 +7,7 @@ use Exception;
 use Github\Client;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -47,9 +48,10 @@ class GithubController
         return response('', 200);
     }
 
-    private function handleEvent(array $issue)
+    private function handleEvent(array $issue): Response
     {
-        DB::transaction(function () use ($issue) {
+        $response = null;
+        DB::transaction(function () use ($issue, &$response) {
             // Create the database issue or find it, if there's a duplicate request, handle the exception.
             try {
                 $issueId = SectorFileIssue::firstOrCreate(
@@ -61,14 +63,17 @@ class GithubController
                 )->id;
             } catch (QueryException $queryException) {
                 if ($queryException->errorInfo[1] === 1062) {
-                    return response('', 200);
+                    $response = response('', 200);
+                    return;
                 }
 
                 throw $queryException;
             }
 
-            return $this->processLabels(SectorFileIssue::lockForUpdate()->find($issueId), $issue);
+            $response = $this->processLabels(SectorFileIssue::lockForUpdate()->find($issueId), $issue);
         });
+
+        return $response;
     }
 
     /**
