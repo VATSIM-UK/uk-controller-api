@@ -49,40 +49,26 @@ class GithubController
 
     private function handleEvent(array $issue)
     {
-        // Create the database issue or find it, if there's a duplicate request, handle the exception.
-        try {
-            $issueId = SectorFileIssue::firstOrCreate(
-                ['number' => $issue['number']],
-                [
-                    'api' => false,
-                    'plugin' => false,
-                ]
-            )->id;
-        } catch (QueryException $queryException) {
-            if ($queryException->errorInfo[1] === 1062) {
-                return response('', 200);
+        DB::transaction(function () use ($issue) {
+            // Create the database issue or find it, if there's a duplicate request, handle the exception.
+            try {
+                $issueId = SectorFileIssue::firstOrCreate(
+                    ['number' => $issue['number']],
+                    [
+                        'api' => false,
+                        'plugin' => false,
+                    ]
+                )->id;
+            } catch (QueryException $queryException) {
+                if ($queryException->errorInfo[1] === 1062) {
+                    return response('', 200);
+                }
+
+                throw $queryException;
             }
 
-            throw $queryException;
-        }
-
-        return $this->processLabels(SectorFileIssue::lockForUpdate()->find($issueId), $issue);
-    }
-    /**
-     * Create a blank database issue if we dont have one, or get the current
-     *
-     * @param array $issue
-     * @return SectorFileIssue
-     */
-    private function getDatabaseIssue(array $issue) : SectorFileIssue
-    {
-        return SectorFileIssue::firstOrNew(
-            ['number' => $issue['number']],
-            [
-                'api' => false,
-                'plugin' => false
-            ]
-        );
+            return $this->processLabels(SectorFileIssue::lockForUpdate()->find($issueId), $issue);
+        });
     }
 
     /**
