@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\AirfieldService;
+use App\Services\DependencyService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +58,9 @@ class AddStAthan extends Migration
                 'allow_duplicate' => false,
             ]
         );
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
+        DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
     }
 
     /**
@@ -70,5 +74,8 @@ class AddStAthan extends Migration
         DB::table('squawk_range_owner')->where('id', $rangeOwner)->delete();
         DB::table('airfield')->where('code', 'EGSY')->delete();
         DB::table('controller_positions')->where('callsign', 'EGSY_TWR')->delete();
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
+        DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
     }
 }
