@@ -7,6 +7,7 @@ use Exception;
 use Github\Client;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -47,42 +48,32 @@ class GithubController
         return response('', 200);
     }
 
-    private function handleEvent(array $issue)
+    private function handleEvent(array $issue): Response
     {
-        // Create the database issue or find it, if there's a duplicate request, handle the exception.
-        try {
-            $issueId = SectorFileIssue::firstOrCreate(
-                ['number' => $issue['number']],
-                [
-                    'api' => false,
-                    'plugin' => false,
-                ]
-            )->id;
-        } catch (QueryException $queryException) {
-            if ($queryException->errorInfo[1] === 1062) {
-                return response('', 200);
+        $response = null;
+        DB::transaction(function () use ($issue, &$response) {
+            // Create the database issue or find it, if there's a duplicate request, handle the exception.
+            try {
+                $issueId = SectorFileIssue::firstOrCreate(
+                    ['number' => $issue['number']],
+                    [
+                        'api' => false,
+                        'plugin' => false,
+                    ]
+                )->id;
+            } catch (QueryException $queryException) {
+                if ($queryException->errorInfo[1] === 1062) {
+                    $response = response('', 200);
+                    return;
+                }
+
+                throw $queryException;
             }
 
-            throw $queryException;
-        }
+            $response = $this->processLabels(SectorFileIssue::lockForUpdate()->find($issueId), $issue);
+        });
 
-        return $this->processLabels(SectorFileIssue::lockForUpdate()->find($issueId), $issue);
-    }
-    /**
-     * Create a blank database issue if we dont have one, or get the current
-     *
-     * @param array $issue
-     * @return SectorFileIssue
-     */
-    private function getDatabaseIssue(array $issue) : SectorFileIssue
-    {
-        return SectorFileIssue::firstOrNew(
-            ['number' => $issue['number']],
-            [
-                'api' => false,
-                'plugin' => false
-            ]
-        );
+        return $response;
     }
 
     /**
