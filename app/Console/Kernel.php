@@ -10,6 +10,7 @@ use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\GetDeletedSidsFromSectorFile;
 use App\Console\Commands\SrdImport;
+use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
 use Illuminate\Console\Scheduling\Schedule;
@@ -40,6 +41,7 @@ class Kernel extends ConsoleKernel
         GenerateMinStackLevels::class,
         GetDeletedSidsFromSectorFile::class,
         SrdImport::class,
+        UpdateVatsimNetworkData::class,
     ];
 
     /**
