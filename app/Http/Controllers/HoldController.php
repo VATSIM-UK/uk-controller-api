@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hold\AssignedHold;
+use App\Models\Navigation\Navaid;
+use App\Models\Vatsim\NetworkAircraft;
 use App\Services\HoldService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -128,5 +131,45 @@ class HoldController extends BaseController
 
         $this->holdService->updateUserHoldProfile($profileId, $request->json('name'), $request->json('holds'));
         return response()->json(null)->setStatusCode(204);
+    }
+
+    public function getAssignedHolds(): JsonResponse
+    {
+        $holdData = NetworkAircraft::with('assignedHold', 'assignedHold.navaid')
+            ->whereHas('assignedHold')
+            ->get()
+            ->map(function (NetworkAircraft $aircraft) {
+                return [
+                    'callsign' => $aircraft->callsign,
+                    'navaid' => $aircraft->assignedHold->navaid->identifier,
+                ];
+            });
+
+        return response()->json($holdData);
+    }
+
+    public function assignHold(Request $request): JsonResponse
+    {
+        $invalidRequest = $this->checkForSuppliedData(
+            $request,
+            [
+                'callsign' => 'string|required',
+                'navaid' => 'alpha|required',
+            ]
+        );
+
+        if ($invalidRequest) {
+            return $invalidRequest;
+        }
+
+        AssignedHold::updateOrCreate(
+            ['callsign' => $request->json('callsign')],
+            [
+                'callsign' => $request->json('callsign'),
+                'navaid_id' => Navaid::where('identifier', $request->json('callsign'))->id
+            ]
+        );
+
+        return response()->json([], 201);
     }
 }

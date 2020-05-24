@@ -30,6 +30,7 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('dependency', 'DependencyController@getAllDependencies');
 
     // Holds
+    Route::put('hold/assigned', 'HoldController@assignHold');
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
 
     // Whenever a hold profile is updated, we need to reset the dependency
@@ -190,6 +191,7 @@ Route::middleware('public')->group(function () {
 
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
+    Route::get('hold/assigned', 'HoldController@getAssignedHolds');
 
     // Handoffs
     Route::get('handoff', 'HandoffController@getAllHandoffs');
