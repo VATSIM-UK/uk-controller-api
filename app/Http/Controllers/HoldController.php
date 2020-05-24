@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\HoldAssignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
@@ -162,7 +163,7 @@ class HoldController extends BaseController
             return $invalidRequest;
         }
 
-        AssignedHold::updateOrCreate(
+        $assignedHold = AssignedHold::updateOrCreate(
             ['callsign' => $request->json('callsign')],
             [
                 'callsign' => $request->json('callsign'),
@@ -170,6 +171,7 @@ class HoldController extends BaseController
             ]
         );
 
+        event(new HoldAssignedEvent($assignedHold));
         return response()->json([], 201);
     }
 }
