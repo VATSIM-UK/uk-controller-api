@@ -14,7 +14,7 @@ class RecordHoldAssignment
             ->insert(
                 [
                     'callsign' => $allocationEvent->getHold()->callsign,
-                    'navaid_id' => $allocationEvent->getHold()->navaid->id,
+                    'navaid_id' => $allocationEvent->getHold()->navaid_id,
                     'assigned_by' => Auth::user()->id,
                     'assigned_at' => $allocationEvent->updated_at ?? $allocationEvent->created_at,
                 ]

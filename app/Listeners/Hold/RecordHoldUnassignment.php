@@ -3,12 +3,13 @@
 namespace App\Listeners\Hold;
 
 use App\Events\HoldAssignedEvent;
+use App\Events\HoldUnassignedEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RecordHoldUnassignment
 {
-    public function handle(HoldAssignedEvent $allocationEvent) : bool
+    public function handle(HoldUnassignedEvent $allocationEvent) : bool
     {
         DB::table('hold_assignment_history')
             ->insert(

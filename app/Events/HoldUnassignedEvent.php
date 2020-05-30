@@ -37,4 +37,12 @@ class HoldUnassignedEvent implements ShouldBroadcast
     {
         return [new PrivateChannel(self::CHANNEL)];
     }
+
+    /**
+     * @return AssignedHold
+     */
+    public function getHold(): AssignedHold
+    {
+        return $this->hold;
+    }
 }

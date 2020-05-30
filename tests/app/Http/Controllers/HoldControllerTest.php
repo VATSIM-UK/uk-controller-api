@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Events\HoldAssignedEvent;
+use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\HoldProfile;
 use Carbon\Carbon;
 
@@ -325,5 +327,175 @@ class HoldControllerTest extends BaseApiTestCase
                 'hold_id' => 2,
             ]
         );
+    }
+
+    public function testItGetsAssignedHolds()
+    {
+        $expected = [
+            [
+                'callsign' => 'BAW123',
+                'navaid' => 'WILLO',
+            ],
+            [
+                'callsign' => 'BAW456',
+                'navaid' => 'TIMBA',
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'hold/assigned')
+            ->assertStatus(200)
+            ->assertJson($expected);
+    }
+
+    public function testItDeletesAssignedHolds()
+    {
+        $this->expectsEvents(HoldUnassignedEvent::class);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+            ->assertStatus(204);
+
+        $this->assertDatabaseMissing(
+            'assigned_holds',
+            [
+                'callsign' => 'BAW123'
+            ]
+        );
+    }
+
+    public function testItCanDeleteRepeatedly()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+            ->assertStatus(204);
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+            ->assertStatus(204);
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+            ->assertStatus(204);
+    }
+
+    public function testItAssignsHoldsUnknownCallsign()
+    {
+        $data = [
+            'callsign' => 'BAW898',
+            'navaid' => 'MAY'
+        ];
+
+        $this->expectsEvents(HoldAssignedEvent::class);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas(
+            'assigned_holds',
+            [
+                'callsign' => 'BAW898',
+                'navaid_id' => 3,
+            ]
+        );
+    }
+
+    public function testItAssignsHoldsKnownCallsign()
+    {
+        $data = [
+            'callsign' => 'BAW789',
+            'navaid' => 'MAY'
+        ];
+
+        $this->expectsEvents(HoldAssignedEvent::class);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas(
+            'assigned_holds',
+            [
+                'callsign' => 'BAW789',
+                'navaid_id' => 3,
+            ]
+        );
+    }
+
+    public function testItUpdatesExistingHold()
+    {
+        $data = [
+            'callsign' => 'BAW123',
+            'navaid' => 'MAY'
+        ];
+
+        $this->expectsEvents(HoldAssignedEvent::class);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas(
+            'assigned_holds',
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 3,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'assigned_holds',
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 1,
+            ]
+        );
+    }
+
+    public function testItRejectsAssignedHoldNavaidDoesntExist()
+    {
+        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        $data = [
+            'callsign' => 'BAW123',
+            'navaid' => 'NOTMAY'
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(422);
+    }
+
+    public function testItRejectsAssignedHoldInvalidNavaid()
+    {
+        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        $data = [
+            'callsign' => 'BAW123',
+            'navaid' => '123'
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(400);
+    }
+
+    public function testItRejectsAssignedHoldMissingNavaid()
+    {
+        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        $data = [
+            'callsign' => 'BAW123',
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(400);
+    }
+
+    public function testItRejectsAssignedHoldInvalidCallsign()
+    {
+        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        $data = [
+            'callsign' => '[][]}]',
+            'navaid' => 'TIMBA'
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(400);
+    }
+
+    public function testItRejectsAssignedHoldMissingCallsign()
+    {
+        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        $data = [
+            'navaid' => 'TIMBA'
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+            ->assertStatus(400);
     }
 }

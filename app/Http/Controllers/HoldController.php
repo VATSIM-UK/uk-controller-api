@@ -7,6 +7,7 @@ use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Rules\VatsimCallsign;
 use App\Services\HoldService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -155,7 +156,7 @@ class HoldController extends BaseController
         $invalidRequest = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => 'string|required',
+                'callsign' => ['string' , 'required', new VatsimCallsign()],
                 'navaid' => 'alpha|required',
             ]
         );
@@ -164,11 +165,16 @@ class HoldController extends BaseController
             return $invalidRequest;
         }
 
+        $navaid = Navaid::where('identifier', $request->json('callsign'))->first;
+        if (!is_null($navaid)) {
+            return response()->json([], 422);
+        }
+
         $assignedHold = AssignedHold::updateOrCreate(
             ['callsign' => $request->json('callsign')],
             [
                 'callsign' => $request->json('callsign'),
-                'navaid_id' => Navaid::where('identifier', $request->json('callsign'))->id
+                'navaid_id' => $navaid->id
             ]
         );
 
