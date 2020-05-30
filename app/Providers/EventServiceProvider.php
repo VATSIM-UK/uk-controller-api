@@ -6,6 +6,7 @@ use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Events\SquawkAllocationEvent;
 use App\Listeners\Hold\RecordHoldAssignment;
+use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Squawk\RecordSquawkAllocationHistory;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,7 +25,7 @@ class EventServiceProvider extends ServiceProvider
             RecordHoldAssignment::class,
         ],
         HoldUnassignedEvent::class => [
-            RecordHoldAssignment::class,
+            RecordHoldUnassignment::class,
         ]
     ];
 
