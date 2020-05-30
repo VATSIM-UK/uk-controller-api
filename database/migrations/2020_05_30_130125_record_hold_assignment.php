@@ -17,7 +17,7 @@ class RecordHoldAssignment extends Migration
             $blueprint->id();
             $blueprint->string('callsign')->comment('The callsign of the aircraft');
             $blueprint->unsignedBigInteger('navaid_id')->nullable()->comment('The navaid the aircraft was assigned to hold at');
-            $blueprint->unsignedInteger('assigned_by')->comment('The user who made the assignment');
+            $blueprint->unsignedInteger('assigned_by')->nullable()->comment('The user who made the assignment');
             $blueprint->timestamp('assigned_at')->comment('The time the assignment was made');
 
             $blueprint->foreign('navaid_id')->references('id')->on('navaids')->onDelete('cascade');

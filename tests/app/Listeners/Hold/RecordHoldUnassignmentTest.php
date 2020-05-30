@@ -20,26 +20,14 @@ class RecordHoldUnassignmentTest extends BaseFunctionalTestCase
         parent::setUp();
         $this->listener = $this->app->make(RecordHoldUnassignment::class);
         Carbon::setTestNow(Carbon::now());
-        $this->actingAs(User::findOrFail(self::ACTIVE_USER_CID));
-    }
-
-    private function getAssignment(): AssignedHold
-    {
-        $assignment = new AssignedHold(
-            [
-                'callsign' => 'NAX5XX',
-                'navaid_id' => 1,
-            ]
-        );
-        $assignment->created_at = Carbon::now();
-        return $assignment;
     }
 
     public function testItRecordsUnHoldAssignment()
     {
+        $this->actingAs(User::findOrFail(self::ACTIVE_USER_CID));
         Carbon::setTestNow(Carbon::now());
         $this->assertDatabaseMissing('assigned_holds_history', ['callsign' => 'NAX5XX']);
-        $this->listener->handle(new HoldUnassignedEvent($this->getAssignment()));
+        $this->listener->handle(new HoldUnassignedEvent('NAX5XX'));
 
         $this->assertDatabaseHas(
             'assigned_holds_history',
@@ -52,27 +40,27 @@ class RecordHoldUnassignmentTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItPrefersUpdatedAtTime()
+    public function testItHandlesSystemUnassignments()
     {
         Carbon::setTestNow(Carbon::now());
         $this->assertDatabaseMissing('assigned_holds_history', ['callsign' => 'NAX5XX']);
-        $assignment = $this->getAssignment();
-        $assignment->setUpdatedAt(Carbon::now()->addHour());
-        $this->listener->handle(new HoldUnassignedEvent($assignment));
+        $this->listener->handle(new HoldUnassignedEvent('NAX5XX'));
 
         $this->assertDatabaseHas(
             'assigned_holds_history',
             [
                 'callsign' => 'NAX5XX',
                 'navaid_id' => null,
-                'assigned_at' => Carbon::now()->addHour(),
-                'assigned_by' => self::ACTIVE_USER_CID,
+                'assigned_at' => Carbon::now(),
+                'assigned_by' => null,
             ]
         );
     }
 
     public function testItStopsEventPropogation()
     {
-        $this->assertFalse($this->listener->handle(new HoldUnassignedEvent($this->getAssignment())));
+        $this->assertFalse($this->listener->handle(
+            new HoldUnassignedEvent($this->listener->handle(new HoldUnassignedEvent('NAX5XX'))))
+        );
     }
 }

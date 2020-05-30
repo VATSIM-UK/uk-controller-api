@@ -23,8 +23,8 @@ class NetworkAircraftTableSeeder extends Seeder
                     'transponder' => '1234',
                     'planned_flighttype' => 'I',
                     'planned_route' => 'DIRECT',
-                    'created_at' => Carbon::now()->subMinutes(40),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => '2020-05-30 17:30:00',
+                    'updated_at' => Carbon::now()->subMinutes(9),
                 ],
                 [
                     'callsign' => 'BAW456',
@@ -56,7 +56,7 @@ class NetworkAircraftTableSeeder extends Seeder
                     'planned_flighttype' => 'I',
                     'planned_route' => 'DIRECT',
                     'created_at' => Carbon::now()->subMinutes(31),
-                    'updated_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()->subMinutes(10),
                 ],
             ]
         );

@@ -40,7 +40,7 @@ class UpdateVatsimNetworkData extends Command
     public function handle()
     {
         $this->info('Starting network data update');
-        $this->dataService->downloadNetworkData();
+        $this->dataService->updateNetworkData();
         $this->info('Network data successfully updated');
     }
 }

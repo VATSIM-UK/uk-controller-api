@@ -12,19 +12,19 @@ class HoldUnassignedEvent implements ShouldBroadcast
     const CHANNEL = 'hold-assignments';
 
     /**
-     * @var AssignedHold
+     * @var string
      */
-    private $hold;
+    private $callsign;
 
-    public function __construct(AssignedHold $hold)
+    public function __construct(string $callsign)
     {
-        $this->hold = $hold;
+        $this->callsign = $callsign;
     }
 
     public function broadcastWith()
     {
         return [
-            'callsign' => $this->hold->callsign,
+            'callsign' => $this->callsign,
         ];
     }
 
@@ -39,10 +39,10 @@ class HoldUnassignedEvent implements ShouldBroadcast
     }
 
     /**
-     * @return AssignedHold
+     * @return string
      */
-    public function getHold(): AssignedHold
+    public function getCallsign(): string
     {
-        return $this->hold;
+        return $this->callsign;
     }
 }
