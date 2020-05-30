@@ -184,7 +184,6 @@ class HoldController extends BaseController
 
     public function deleteAssignedHold(Request $request): JsonResponse
     {
-
         $hold = AssignedHold::where('callsign', $request->route('callsign'))->first();
         if (!is_null($hold)) {
             $hold->delete();

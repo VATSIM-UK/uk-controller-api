@@ -15,7 +15,7 @@ class AddHoldsToNavaids extends Migration
      */
     public function up()
     {
-        DB::transaction(function() {
+        DB::transaction(function () {
             DB::table('navaids')->insertUsing(
                 ['identifier', 'created_at'],
                 DB::table('holds')
@@ -46,7 +46,7 @@ class AddHoldsToNavaids extends Migration
      */
     public function down()
     {
-        DB::transaction(function() {
+        DB::transaction(function () {
             DB::table('navaids')->delete();
         });
     }

@@ -3,7 +3,6 @@
 
 namespace App\Listeners\Hold;
 
-
 use App\Events\HoldUnassignedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 
