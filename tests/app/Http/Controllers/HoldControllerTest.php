@@ -350,7 +350,7 @@ class HoldControllerTest extends BaseApiTestCase
     public function testItDeletesAssignedHolds()
     {
         $this->expectsEvents(HoldUnassignedEvent::class);
-        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
             ->assertStatus(204);
 
         $this->assertDatabaseMissing(
@@ -363,13 +363,14 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItCanDeleteRepeatedly()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->expectsEvents(HoldUnassignedEvent::class);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
             ->assertStatus(204);
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
             ->assertStatus(204);
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
             ->assertStatus(204);
     }
 
@@ -381,7 +382,7 @@ class HoldControllerTest extends BaseApiTestCase
         ];
 
         $this->expectsEvents(HoldAssignedEvent::class);
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(201);
 
         $this->assertDatabaseHas(
@@ -401,7 +402,7 @@ class HoldControllerTest extends BaseApiTestCase
         ];
 
         $this->expectsEvents(HoldAssignedEvent::class);
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(201);
 
         $this->assertDatabaseHas(
@@ -421,7 +422,7 @@ class HoldControllerTest extends BaseApiTestCase
         ];
 
         $this->expectsEvents(HoldAssignedEvent::class);
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(201);
 
         $this->assertDatabaseHas(
@@ -449,7 +450,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'NOTMAY'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(422);
     }
 
@@ -461,7 +462,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => '123'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(400);
     }
 
@@ -472,7 +473,7 @@ class HoldControllerTest extends BaseApiTestCase
             'callsign' => 'BAW123',
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(400);
     }
 
@@ -484,7 +485,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'TIMBA'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(400);
     }
 
@@ -495,7 +496,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'TIMBA'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
             ->assertStatus(400);
     }
 }

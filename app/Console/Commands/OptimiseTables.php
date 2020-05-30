@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Services\SquawkAllocationService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -24,11 +23,7 @@ class OptimiseTables extends Command
 
     protected $description = 'Optimise database tables';
 
-    /**
-     * Handles the command
-     * @param SquawkAllocationService $squawkAllocationService
-     */
-    public function handle(SquawkAllocationService $squawkAllocationService)
+    public function handle()
     {
         $this->info('Optimising database tables');
         foreach (self::TABLES_TO_OPTIMISE as $table) {

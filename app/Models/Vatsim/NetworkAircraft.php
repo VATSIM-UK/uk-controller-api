@@ -5,7 +5,7 @@ namespace App\Models\Vatsim;
 use App\Models\Hold\AssignedHold;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NetworkAircraft extends Model
 {
@@ -32,8 +32,8 @@ class NetworkAircraft extends Model
         });
     }
 
-    public function assignedHold(): HasOne
+    public function assignedHold(): BelongsTo
     {
-        return $this->hasOne(AssignedHold::class, 'callsign', 'callsign');
+        return $this->belongsTo(AssignedHold::class, 'callsign', 'callsign');
     }
 }

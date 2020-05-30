@@ -25,7 +25,7 @@ class HoldAssignedEvent implements ShouldBroadcast
     {
         return [
             'callsign' => $this->hold->callsign,
-            'navaid' => $this->hold->navaid->identifer,
+            'navaid' => $this->hold->navaid->identifier,
         ];
     }
 

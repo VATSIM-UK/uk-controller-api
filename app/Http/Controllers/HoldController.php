@@ -90,7 +90,7 @@ class HoldController extends BaseController
         );
 
         if (!$holdsValid) {
-            Log::error('Invalid holds submitted');
+            Log::debug('Invalid holds submitted');
             return response()->json(null)->setStatusCode(400);
         }
 
@@ -128,7 +128,7 @@ class HoldController extends BaseController
         );
 
         if (!$holdsValid) {
-            Log::error('Invalid holds submitted');
+            Log::debug('Invalid holds submitted');
             return response()->json(null)->setStatusCode(400);
         }
 
@@ -138,13 +138,12 @@ class HoldController extends BaseController
 
     public function getAssignedHolds(): JsonResponse
     {
-        $holdData = NetworkAircraft::with('assignedHold', 'assignedHold.navaid')
-            ->whereHas('assignedHold')
+        $holdData = AssignedHold::with('navaid')
             ->get()
-            ->map(function (NetworkAircraft $aircraft) {
+            ->map(function (AssignedHold $assignedHold) {
                 return [
-                    'callsign' => $aircraft->callsign,
-                    'navaid' => $aircraft->assignedHold->navaid->identifier,
+                    'callsign' => $assignedHold->callsign,
+                    'navaid' => $assignedHold->navaid->identifier,
                 ];
             });
 
@@ -156,7 +155,7 @@ class HoldController extends BaseController
         $invalidRequest = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['string' , 'required', new VatsimCallsign()],
+                'callsign' => ['string' , 'required', new VatsimCallsign],
                 'navaid' => 'alpha|required',
             ]
         );
@@ -165,15 +164,16 @@ class HoldController extends BaseController
             return $invalidRequest;
         }
 
-        $navaid = Navaid::where('identifier', $request->json('callsign'))->first;
-        if (!is_null($navaid)) {
+        $navaid = Navaid::where('identifier', $request->json('navaid'))->first();
+        if (is_null($navaid)) {
             return response()->json([], 422);
         }
 
+        $networkAircraft = NetworkAircraft::firstOrCreate(['callsign' => $request->json('callsign')]);
         $assignedHold = AssignedHold::updateOrCreate(
             ['callsign' => $request->json('callsign')],
             [
-                'callsign' => $request->json('callsign'),
+                'callsign' => $networkAircraft->callsign,
                 'navaid_id' => $navaid->id
             ]
         );
@@ -184,7 +184,8 @@ class HoldController extends BaseController
 
     public function deleteAssignedHold(Request $request): JsonResponse
     {
-        $hold = AssignedHold::where('callsign', $request->input('callsign'))->first();
+
+        $hold = AssignedHold::where('callsign', $request->route('callsign'))->first();
         if (!is_null($hold)) {
             $hold->delete();
             event(new HoldUnassignedEvent($hold));

@@ -19,42 +19,60 @@ class RecordHoldUnassignmentTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->listener = $this->app->make(RecordHoldUnassignment::class);
+        Carbon::setTestNow(Carbon::now());
+        $this->actingAs(User::findOrFail(self::ACTIVE_USER_CID));
     }
 
-    public function testItRecordsHoldAssignment()
+    private function getAssignment(): AssignedHold
     {
-        $this->actingAs(User::findOrFail(self::ACTIVE_USER_CID));
-        Carbon::setTestNow(Carbon::now());
-        $this->assertDatabaseMissing('hold_assignments_history', ['callsign' => 'NAX5XX']);
-        $assignment = AssignedHold::new(
+        $assignment = new AssignedHold(
             [
                 'callsign' => 'NAX5XX',
                 'navaid_id' => 1,
-                'created_at' => Carbon::now(),
             ]
         );
-        $this->listener->handle(new HoldUnassignedEvent($assignment));
+        $assignment->created_at = Carbon::now();
+        return $assignment;
+    }
+
+    public function testItRecordsUnHoldAssignment()
+    {
+        Carbon::setTestNow(Carbon::now());
+        $this->assertDatabaseMissing('assigned_holds_history', ['callsign' => 'NAX5XX']);
+        $this->listener->handle(new HoldUnassignedEvent($this->getAssignment()));
 
         $this->assertDatabaseHas(
-            'hold_assignments_history',
+            'assigned_holds_history',
             [
-                'callsign' => $assignment->callsign,
-                'navaid_id' => $assignment->navaid_id,
-                'allocated_at' => null,
-                'allocated_by' => self::ACTIVE_USER_CID,
+                'callsign' => 'NAX5XX',
+                'navaid_id' => null,
+                'assigned_at' => Carbon::now(),
+                'assigned_by' => self::ACTIVE_USER_CID,
+            ]
+        );
+    }
+
+    public function testItPrefersUpdatedAtTime()
+    {
+        Carbon::setTestNow(Carbon::now());
+        $this->assertDatabaseMissing('assigned_holds_history', ['callsign' => 'NAX5XX']);
+        $assignment = $this->getAssignment();
+        $assignment->setUpdatedAt(Carbon::now()->addHour());
+        $this->listener->handle(new HoldUnassignedEvent($this->getAssignment()));
+
+        $this->assertDatabaseHas(
+            'assigned_holds_history',
+            [
+                'callsign' => 'NAX5XX',
+                'navaid_id' => null,
+                'assigned_at' => Carbon::now()->addHour(),
+                'assigned_by' => self::ACTIVE_USER_CID,
             ]
         );
     }
 
     public function testItStopsEventPropogation()
     {
-        $assignment = AssignedHold::new(
-            [
-                'callsign' => 'NAX5XX',
-                'navaid_id' => 1,
-                'created_at' => Carbon::now(),
-            ]
-        );
-        $this->assertFalse($this->listener->handle(new HoldUnassignedEvent($assignment)));
+        $this->assertFalse($this->listener->handle(new HoldUnassignedEvent($this->getAssignment())));
     }
 }

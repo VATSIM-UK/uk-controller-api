@@ -15,10 +15,10 @@ class AddNetworkAircraftTable extends Migration
     {
         Schema::create('network_aircraft', function (Blueprint $table) {
             $table->string('callsign')->comment('The aircrafts callsign');
-            $table->string('latitude')->comment('The aircrafts latitude');
-            $table->string('longitude')->comment('The aircrafts longitude');
-            $table->integer('altitude')->comment('The aircrafts current altitude');
-            $table->unsignedInteger('groundspeed')->comment('The aircrafts current ground speed');
+            $table->string('latitude')->nullable()->comment('The aircrafts latitude');
+            $table->string('longitude')->nullable()->comment('The aircrafts longitude');
+            $table->integer('altitude')->nullable()->comment('The aircrafts current altitude');
+            $table->unsignedInteger('groundspeed')->nullable()->comment('The aircrafts current ground speed');
             $table->string('planned_aircraft')->nullable()->comment('The aircraft type');
             $table->string('planned_depairport')->nullable()->comment('The departure airport');
             $table->string('planned_destairport')->nullable()->comment('The destination airport');
