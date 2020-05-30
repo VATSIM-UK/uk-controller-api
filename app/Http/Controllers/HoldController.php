@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\HoldAssignedEvent;
+use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
@@ -173,5 +174,16 @@ class HoldController extends BaseController
 
         event(new HoldAssignedEvent($assignedHold));
         return response()->json([], 201);
+    }
+
+    public function deleteAssignedHold(Request $request): JsonResponse
+    {
+        $hold = AssignedHold::where('callsign', $request->input('callsign'))->first();
+        if (!is_null($hold)) {
+            $hold->delete();
+            event(new HoldUnassignedEvent($hold));
+        }
+
+        return response()->json([], 204);
     }
 }

@@ -31,6 +31,8 @@ Route::middleware('plugin.user')->group(function () {
 
     // Holds
     Route::put('hold/assigned', 'HoldController@assignHold');
+    Route::delete('hold/assigned/{callsign}', 'HoldController@deleteAssignedHold')
+        ->where('callsign', '[A-Za-z0-9\-]{1,10}');;
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
 
     // Whenever a hold profile is updated, we need to reset the dependency
