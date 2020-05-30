@@ -12,6 +12,10 @@ class AssignedHold extends Model
 {
     protected $primaryKey = 'callsign';
 
+    public $incrementing = false;
+
+    public $keyType = 'string';
+
     protected $fillable = [
         'callsign',
         'navaid_id',

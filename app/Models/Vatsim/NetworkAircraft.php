@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NetworkAircraft extends Model
 {
+    protected $primaryKey = 'callsign';
+
+    public $incrementing = false;
+
+    public $keyType = 'string';
+
     protected $fillable = [
         'callsign',
         'latitude',
