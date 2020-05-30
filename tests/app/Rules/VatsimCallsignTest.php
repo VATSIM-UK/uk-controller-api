@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Rules;
+namespace App\Rules;
 
 use App\BaseUnitTestCase;
 
