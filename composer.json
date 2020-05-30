@@ -35,7 +35,11 @@
             "tests/",
             "database/seeds",
             "database/migrations"
-        ]
+        ],
+        "psr-4": {
+            "App\\": ["app/" ,"tests/app/"]
+        }
+
     },
     "scripts": {
         "post-root-package-install": [
