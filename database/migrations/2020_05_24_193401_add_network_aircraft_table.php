@@ -23,7 +23,7 @@ class AddNetworkAircraftTable extends Migration
             $table->string('planned_depairport')->nullable()->comment('The departure airport');
             $table->string('planned_destairport')->nullable()->comment('The destination airport');
             $table->string('planned_altitude')->nullable()->comment('The filed cruise altitude');
-            $table->string('transponder')->comment('The aircrafts current squawk code');
+            $table->string('transponder')->nullable()->comment('The aircrafts current squawk code');
             $table->string('planned_flighttype')->nullable()->comment('The aircrafts flight rules');
             $table->text('planned_route')->nullable()->comment('The aircrafts planned route');
             $table->timestamps();
