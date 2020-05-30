@@ -58,7 +58,7 @@ class RecordHoldUnassignmentTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing('assigned_holds_history', ['callsign' => 'NAX5XX']);
         $assignment = $this->getAssignment();
         $assignment->setUpdatedAt(Carbon::now()->addHour());
-        $this->listener->handle(new HoldUnassignedEvent($this->getAssignment()));
+        $this->listener->handle(new HoldUnassignedEvent($assignment));
 
         $this->assertDatabaseHas(
             'assigned_holds_history',
