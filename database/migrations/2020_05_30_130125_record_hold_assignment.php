@@ -13,7 +13,7 @@ class RecordHoldAssignment extends Migration
      */
     public function up()
     {
-        Schema::create('hold_assignment_history', function (Blueprint $blueprint) {
+        Schema::create('assigned_holds_history', function (Blueprint $blueprint) {
             $blueprint->id();
             $blueprint->string('callsign')->comment('The callsign of the aircraft');
             $blueprint->unsignedBigInteger('navaid_id')->nullable()->comment('The navaid the aircraft was assigned to hold at');
@@ -32,6 +32,6 @@ class RecordHoldAssignment extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hold_assignment_history');
+        Schema::dropIfExists('assigned_holds_history');
     }
 }
