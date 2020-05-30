@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\CleanSquawkAllocationHistory;
 use App\Console\Commands\CleanSquawkAllocations;
+use App\Console\Commands\ClearAssignedHoldsHistory;
 use App\Console\Commands\ClearSquawkAllocations;
 use App\Console\Commands\GenerateLegacyDependencies;
 use App\Console\Commands\GenerateMinStackLevels;
@@ -42,6 +43,7 @@ class Kernel extends ConsoleKernel
         GetDeletedSidsFromSectorFile::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
+        ClearAssignedHoldsHistory::class,
     ];
 
     /**
@@ -57,6 +59,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('regional:generate')->hourlyAt([25, 55]);
         $schedule->command('tokens:delete-expired')->daily();
         $schedule->command('allocations:clean-history')->daily();
+        $schedule->command('holds:clean-history')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute();
     }
