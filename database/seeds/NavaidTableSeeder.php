@@ -17,16 +17,22 @@ class NavaidTableSeeder extends Seeder
             [
                 [
                     'id' => 1,
+                    'latitude' => 'abc',
+                    'longitude' => 'def',
                     'identifier' => 'WILLO',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'id' => 2,
+                    'latitude' => 'abc',
+                    'longitude' => 'def',
                     'identifier' => 'TIMBA',
                     'created_at' => Carbon::now(),
                 ],
                 [
                     'id' => 3,
+                    'latitude' => 'abc',
+                    'longitude' => 'def',
                     'identifier' => 'MAY',
                     'created_at' => Carbon::now(),
                 ],

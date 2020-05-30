@@ -69,14 +69,6 @@ class DatabaseSeeder extends Seeder
             'aircraft',
             'wake_categories',
         ],
-        ControllerPositionsTableSeeder::class => [
-            'controller_positions',
-            'top_downs',
-        ],
-        HandoffTableSeeder::class => [
-            'handoffs',
-            'handoff_orders',
-        ],
         PrenoteTableSeeder::class => [
             'prenotes',
             'prenote_orders',
@@ -92,9 +84,6 @@ class DatabaseSeeder extends Seeder
         SectorFileIssuesTableSeeder::class => [
             'sector_file_issues',
         ],
-        SectorFileIssuesTableSeeder::class => [
-            'sector_file_issues',
-        ],
         SrdTableSeeder::class => [
             'srd_note_srd_route',
             'srd_routes',
@@ -102,6 +91,9 @@ class DatabaseSeeder extends Seeder
         ],
         NavaidTableSeeder::class => [
             'navaids',
+        ],
+        NetworkAircraftTableSeeder::class => [
+            'network_aircraft',
         ],
     ];
 
