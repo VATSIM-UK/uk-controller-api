@@ -11,17 +11,11 @@ use Illuminate\Support\Facades\Log;
 
 class SidService
 {
-    const DEPENDENCY_CACHE_KEY = 'initial_altitude_dependency';
-
     /**
      * @return array
      */
     public function getInitialAltitudeDependency() : array
     {
-        if (Cache::has(self::DEPENDENCY_CACHE_KEY)) {
-            return Cache::get(self::DEPENDENCY_CACHE_KEY);
-        }
-
         $sidGroups = Sid::all()->groupBy('airfield_id');
 
         $altitudes = [];
@@ -33,8 +27,6 @@ class SidService
             });
         });
 
-        Cache::forever(self::DEPENDENCY_CACHE_KEY, $altitudes);
-        Log::info('Regenerated initial altitude dependency');
         return $altitudes;
     }
 
@@ -91,8 +83,6 @@ class SidService
                 'created_at' => Carbon::now(),
             ]
         );
-
-        Cache::forget(self::DEPENDENCY_CACHE_KEY);
     }
 
     /**
@@ -108,7 +98,5 @@ class SidService
         $sid->identifier = $identifier;
         $sid->initial_altitude = $initialAltitude;
         $sid->save();
-
-        Cache::forget(self::DEPENDENCY_CACHE_KEY);
     }
 }
