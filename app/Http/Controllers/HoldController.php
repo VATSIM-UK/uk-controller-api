@@ -187,7 +187,7 @@ class HoldController extends BaseController
         $hold = AssignedHold::where('callsign', $request->route('callsign'))->first();
         if (!is_null($hold)) {
             $hold->delete();
-            event(new HoldUnassignedEvent($hold));
+            event(new HoldUnassignedEvent($request->route('callsign')));
         }
 
         return response()->json([], 204);
