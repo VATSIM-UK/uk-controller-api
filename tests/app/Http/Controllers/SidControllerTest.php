@@ -17,7 +17,6 @@ class SidControllerTest extends BaseApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        Cache::forget(SidService::DEPENDENCY_CACHE_KEY);
     }
 
     public function testItConstructs()
