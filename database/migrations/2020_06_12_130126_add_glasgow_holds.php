@@ -56,7 +56,7 @@ class AddGlasgowHolds extends Migration
             ]
         );
 
-        DB::table('hold_restriction')->insert(
+        DB::table('hold_restrictions')->insert(
             [
                 [
                     'hold_id' => $foylePublished,
