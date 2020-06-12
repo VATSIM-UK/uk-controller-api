@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\DependencyService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,7 @@ class AddExtraNavaids extends Migration
                 ],
             ]
         );
+        DependencyService::touchDependencyByKey('DEPENDENCY_NAVAIDS');
     }
 
     /**
@@ -51,5 +53,6 @@ class AddExtraNavaids extends Migration
     public function down()
     {
         DB::table('navaids')->whereIn('identifier', ['TNT', 'SITKU', 'PENIL', 'BHD'])->delete();
+        DependencyService::touchDependencyByKey('DEPENDENCY_NAVAIDS');
     }
 }
