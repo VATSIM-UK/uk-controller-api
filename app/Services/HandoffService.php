@@ -206,6 +206,6 @@ class HandoffService
     {
         /** @var Sid */
         $sid = Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)->firstOrFail();
-        $sid->handoff()->save($handoff);
+        $sid->handoff()->save(Handoff::where('key', $handoff)->firstOrFail());
     }
 }
