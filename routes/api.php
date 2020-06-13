@@ -220,7 +220,7 @@ Route::middleware('public')->group(function () {
     Route::get('srd/route/search', 'SrdController@searchRoutes');
 
     // Navaids
-    Route::get('navaid/dependency', 'NavaidController@getNavaidsDependency');
+    Route::get('navaid/dependency', 'NavaidController');
 
     // Admin login
     Route::prefix('admin')->group(function () {

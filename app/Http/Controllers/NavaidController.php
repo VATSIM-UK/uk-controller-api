@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Navigation\Navaid;
 use Illuminate\Http\JsonResponse;
 
-class NavaidController
+class NavaidController extends BaseController
 {
-    public function getNavaidsDependency(): JsonResponse
+    public function __invoke(): JsonResponse
     {
         $navaids = Navaid::all()->each(function (Navaid $navaid) {
             $navaid->setHidden(['created_at', 'updated_at']);
