@@ -29,12 +29,5 @@ class AddMissingPrimaryKeys extends Migration
      */
     public function down()
     {
-        Schema::table('hold_profile_hold', function(Blueprint $table) {
-            $table->dropPrimary();
-        });
-
-        Schema::table('srd_note_srd_route', function(Blueprint $table) {
-            $table->dropPrimary();
-        });
     }
 }
