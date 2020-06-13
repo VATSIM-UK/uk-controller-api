@@ -13,11 +13,11 @@ class AddMissingPrimaryKeys extends Migration
      */
     public function up()
     {
-        Schema::table('hold_profile_hold', function(Blueprint $table) {
+        Schema::table('hold_profile_hold', function (Blueprint $table) {
             $table->primary(['hold_profile_id', 'hold_id']);
         });
 
-        Schema::table('srd_note_srd_route', function(Blueprint $table) {
+        Schema::table('srd_note_srd_route', function (Blueprint $table) {
             $table->primary(['srd_note_id', 'srd_route_id']);
         });
     }
