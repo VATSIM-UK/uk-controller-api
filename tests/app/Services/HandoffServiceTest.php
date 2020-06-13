@@ -346,4 +346,17 @@ class HandoffServiceTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItSetsHandoffForSid()
+    {
+        HandoffService::setHandoffForSid('EGLL', 'TEST1X', 'HANDOFF_ORDER_2');
+        $this->assertDatabaseHas(
+            'sid',
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST1X',
+                'handoff_id' => 2,
+            ]
+        );
+    }
 }

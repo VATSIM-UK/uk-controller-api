@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Sid;
@@ -199,5 +200,12 @@ class HandoffService
         foreach ($handoffs as $handoff) {
             self::removeFromHandoffOrder($handoff, $callsign);
         }
+    }
+
+    public static function setHandoffForSid(string $airfield, string $identifier, string $handoff)
+    {
+        /** @var Sid */
+        $sid = Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)->firstOrFail();
+        $sid->handoff()->save($handoff);
     }
 }
