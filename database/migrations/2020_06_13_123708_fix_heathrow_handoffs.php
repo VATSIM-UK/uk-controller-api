@@ -4,7 +4,7 @@ use App\Services\DependencyService;
 use App\Services\HandoffService;
 use Illuminate\Database\Migrations\Migration;
 
-class FixSouthendHandoffs extends Migration
+class FixHeathrowHandoffs extends Migration
 {
     /**
      * Run the migrations.
