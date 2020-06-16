@@ -14,11 +14,10 @@ class CreateAssignedHoldsTable extends Migration
     public function up()
     {
         Schema::create('assigned_holds', function (Blueprint $table) {
-            $table->string('callsign')->comment('The aircraft that is holding');
+            $table->string('callsign')->comment('The aircraft that is holding')->primary();
             $table->unsignedBigInteger('navaid_id')->comment('The navaid that the aircraft has been assigned to hold');
             $table->timestamps();
 
-            $table->primary('callsign');
             $table->foreign('callsign')->references('callsign')->on('network_aircraft')->onDelete('cascade');
             $table->foreign('navaid_id')->references('id')->on('navaids')->onDelete('cascade');
         });

@@ -23,7 +23,7 @@ install:
   - composer install
 
 before_script:
-  # Install MySQL 8
+  # Install MySQL 8 and apply the primary key rules
   - wget https://repo.mysql.com//mysql-apt-config_0.8.10-1_all.deb
   - sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb
   - sudo apt-get update -q
@@ -36,6 +36,9 @@ before_script:
   - php artisan migrate
   - php artisan passport:install
   - php artisan db:seed
+  # Force MySQL primary keys to be on
+  - echo -e "[mysqld]\nsql_require_primary_key=on" | sudo tee -a /etc/mysql/my.cnf
+  - sudo systemctl restart mysql
 
 script:
   - ./vendor/bin/phpunit
