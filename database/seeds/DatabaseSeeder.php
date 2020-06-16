@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             'msl_tma',
         ],
         HoldTableSeeder::class => [
-            'hold',
+            'holds',
         ],
         HoldProfileTableSeeder::class => [
             'hold_profile',
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
             'hold_profile_hold',
         ],
         HoldRestrictionTableSeeder::class => [
-            'hold_restriction',
+            'hold_restrictions',
         ],
         SidTableSeeder::class => [
             'sid',
@@ -68,14 +68,6 @@ class DatabaseSeeder extends Seeder
         AircraftTableSeeder::class => [
             'aircraft',
             'wake_categories',
-        ],
-        ControllerPositionsTableSeeder::class => [
-            'controller_positions',
-            'top_downs',
-        ],
-        HandoffTableSeeder::class => [
-            'handoffs',
-            'handoff_orders',
         ],
         PrenoteTableSeeder::class => [
             'prenotes',
@@ -92,13 +84,20 @@ class DatabaseSeeder extends Seeder
         SectorFileIssuesTableSeeder::class => [
             'sector_file_issues',
         ],
-        SectorFileIssuesTableSeeder::class => [
-            'sector_file_issues',
-        ],
         SrdTableSeeder::class => [
             'srd_note_srd_route',
             'srd_routes',
             'srd_notes',
+        ],
+        NavaidTableSeeder::class => [
+            'navaids',
+        ],
+        NetworkAircraftTableSeeder::class => [
+            'network_aircraft',
+        ],
+        AssignedHoldsTableSeeder::class => [
+            'assigned_holds',
+            'assigned_holds_history'
         ],
     ];
 

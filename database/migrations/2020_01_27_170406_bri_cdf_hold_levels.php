@@ -1,10 +1,7 @@
 <?php
 
-use App\Models\Hold\Hold;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\Hold\HoldRestriction;
 
 class BriCdfHoldLevels extends Migration
 {
@@ -15,23 +12,26 @@ class BriCdfHoldLevels extends Migration
      */
     public function up()
     {
-        $bristol = Hold::where('fix', 'BRI')->firstOrfail();
-        $cardiff = Hold::where('fix', 'CDF')->firstOrfail();
+        $bristol = DB::table('hold')->where('fix', 'BRI')->get()[0];
+        $cardiff = DB::table('hold')->where('fix', 'CDF')->get()[0];
 
         $bristolRestriction = [
             'type' => 'minimum_level',
             'level' => 'MSL',
             'target' => 'EGGD',
         ];
-        HoldRestriction::where('hold_id', $bristol->id)
+
+        DB::table('hold_restriction')->where('hold_id', $bristol->id)
             ->update(['restriction' => json_encode($bristolRestriction)]);
+
 
         $cardiffRestriction = [
             'type' => 'minimum_level',
             'level' => 'MSL',
             'target' => 'EGFF',
         ];
-        HoldRestriction::where('hold_id', $cardiff->id)
+
+        DB::table('hold_restriction')->where('hold_id', $cardiff->id)
             ->update(['restriction' => json_encode($cardiffRestriction)]);
     }
 
@@ -42,15 +42,16 @@ class BriCdfHoldLevels extends Migration
      */
     public function down()
     {
-        $bristol = Hold::where('fix', 'BRI')->firstOrfail();
-        $cardiff = Hold::where('fix', 'CDF')->firstOrfail();
+        $bristol = DB::table('hold')->where('fix', 'BRI')->get()[0];
+        $cardiff = DB::table('hold')->where('fix', 'CDF')->get()[0];
 
         $bristolRestriction = [
             'type' => 'minimum_level',
             'level' => 'MSL+1',
             'target' => 'EGGD',
         ];
-        HoldRestriction::where('hold_id', $bristol->id)
+
+        DB::table('hold_restriction')->where('hold_id', $bristol->id)
             ->update(['restriction' => json_encode($bristolRestriction)]);
 
         $cardiffRestriction = [
@@ -58,7 +59,8 @@ class BriCdfHoldLevels extends Migration
             'level' => 'MSL+1',
             'target' => 'EGFF',
         ];
-        HoldRestriction::where('hold_id', $cardiff->id)
+
+        DB::table('hold_restriction')->where('hold_id', $cardiff->id)
             ->update(['restriction' => json_encode($cardiffRestriction)]);
     }
 }

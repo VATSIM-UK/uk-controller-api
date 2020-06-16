@@ -15,7 +15,7 @@ class HoldTableSeeder extends Seeder
     {
         $holds = [
             [
-                'fix' => 'WILLO',
+                'navaid_id' => 1,
                 'inbound_heading' => 285,
                 'minimum_altitude' => 7000,
                 'maximum_altitude' => 15000,
@@ -24,7 +24,7 @@ class HoldTableSeeder extends Seeder
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'fix' => 'TIMBA',
+                'navaid_id' => 2,
                 'inbound_heading' => 309,
                 'minimum_altitude' => 7000,
                 'maximum_altitude' => 15000,
@@ -33,7 +33,7 @@ class HoldTableSeeder extends Seeder
                 'created_at' => Carbon::now()->toDateTimeString(),
             ],
             [
-                'fix' => 'MAY',
+                'navaid_id' => 3,
                 'inbound_heading' => 90,
                 'minimum_altitude' => 3000,
                 'maximum_altitude' => 5000,
