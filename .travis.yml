@@ -28,8 +28,6 @@ before_script:
   - sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb
   - sudo apt-get update -q
   - sudo apt-get install -q -y --allow-unauthenticated -o Dpkg::Options::=--force-confnew mysql-server
-  - echo -e "[mysqld]\nsql_require_primary_key=on" | sudo tee -a /etc/mysql/my.cnf
-  - sudo systemctl restart mysql
   - sudo mysql_upgrade
   - mysql --version
   # Generate all the keys
@@ -37,6 +35,9 @@ before_script:
   - php artisan migrate
   - php artisan passport:install
   - php artisan db:seed
+  # Force MySQL primary keys to be on
+  - echo -e "[mysqld]\nsql_require_primary_key=on" | sudo tee -a /etc/mysql/my.cnf
+  - sudo systemctl restart mysql
 
 script:
   - ./vendor/bin/phpunit
