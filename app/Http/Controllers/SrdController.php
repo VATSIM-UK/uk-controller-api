@@ -18,7 +18,7 @@ class SrdController
             'origin' => 'required|alpha',
             'destination' => 'required|alpha',
             'requestedLevel' => 'integer',
-            'exit_pont' => 'required|alpha',
+            'exit_point' => 'required|alpha',
         ];
 
         $validator = Validator::make($request->query(), $rules);
