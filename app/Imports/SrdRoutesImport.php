@@ -30,6 +30,7 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
                 'route_segment' => $row[4] ?? '',
                 'sid' => $row[1],
                 'star' => $row[5],
+                'exit_point' => $row[6],
             ]);
 
             // Attach notes
