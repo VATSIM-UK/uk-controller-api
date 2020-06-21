@@ -41,15 +41,11 @@ class SrdController
                 ->where('maximum_level', '>=', $requestData['requestedLevel']);
         }
         
-        if (strlen($requestData['destination']) > 4) {
-            $exit = $requestData['destination'];
-        } 
-        else {
-            $exit = null; 
-        }
+        // exit fix
+       $exit = strlen($requestData['destination']) == 4 ? null : $requestData['destination'];
 
         // Format the results
-        $results = $query->get()->map(function (SrdRoute $route) {
+        $results = $query->get()->map(function (SrdRoute $route) use ($exit) {
             $routeString = is_null($route->sid)
                 ? $route->route_segment
                 : sprintf('%s %s', $route->sid, $route->route_segment, $exit);
