@@ -18,7 +18,6 @@ class SrdController
             'origin' => 'required|alpha',
             'destination' => 'required|alpha',
             'requestedLevel' => 'integer',
-            'exit_point' => 'required|alpha',
         ];
 
         $validator = Validator::make($request->query(), $rules);
@@ -43,7 +42,7 @@ class SrdController
         }
         
         if (strlen($requestData['destination']) > 4) {
-            $exit = $requestData['exit_point'];
+            $exit = $requestData['destination'];
         } 
         else {
             $exit = null; 
