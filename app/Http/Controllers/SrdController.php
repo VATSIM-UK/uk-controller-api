@@ -18,6 +18,7 @@ class SrdController
             'origin' => 'required|alpha',
             'destination' => 'required|alpha',
             'requestedLevel' => 'integer',
+            'exit_pont' => 'required|alpha',
         ];
 
         $validator = Validator::make($request->query(), $rules);
@@ -40,12 +41,19 @@ class SrdController
             })
                 ->where('maximum_level', '>=', $requestData['requestedLevel']);
         }
+        
+        if (strlen($requestData['destination']) > 4) {
+            $exit = $requestData['exit_point'];
+        } 
+        else {
+            $exit = null; 
+        }
 
         // Format the results
         $results = $query->get()->map(function (SrdRoute $route) {
             $routeString = is_null($route->sid)
                 ? $route->route_segment
-                : sprintf('%s %s', $route->sid, $route->route_segment);
+                : sprintf('%s %s', $route->sid, $route->route_segment, $exit);
 
             return [
                 'minimum_level' => $route->minimum_level,
