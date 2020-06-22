@@ -186,6 +186,6 @@ class SetNavaidCoordinates extends Migration
      */
     public function down()
     {
-        DB::table('navaids')->update(['latitude' => null, 'longitude' => null]);
+        DB::table('navaids')->update(['latitude' => '', 'longitude' => '']);
     }
 }

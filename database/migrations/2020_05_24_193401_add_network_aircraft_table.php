@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddNetworkAircraftTable extends Migration
@@ -13,21 +13,25 @@ class AddNetworkAircraftTable extends Migration
      */
     public function up()
     {
-        Schema::create('network_aircraft', function (Blueprint $table) {
-            $table->string('callsign')->primary()->comment('The aircrafts callsign');
-            $table->string('latitude')->nullable()->comment('The aircrafts latitude');
-            $table->string('longitude')->nullable()->comment('The aircrafts longitude');
-            $table->integer('altitude')->nullable()->comment('The aircrafts current altitude');
-            $table->unsignedInteger('groundspeed')->nullable()->comment('The aircrafts current ground speed');
-            $table->string('planned_aircraft')->nullable()->comment('The aircraft type');
-            $table->string('planned_depairport')->nullable()->comment('The departure airport');
-            $table->string('planned_destairport')->nullable()->comment('The destination airport');
-            $table->string('planned_altitude')->nullable()->comment('The filed cruise altitude');
-            $table->string('transponder')->nullable()->comment('The aircrafts current squawk code');
-            $table->string('planned_flighttype')->nullable()->comment('The aircrafts flight rules');
-            $table->text('planned_route')->nullable()->comment('The aircrafts planned route');
-            $table->timestamps();
-        });
+        DB::statement(
+            "CREATE TABLE `network_aircraft` (
+                `callsign` VARCHAR(255) NOT NULL COMMENT 'The aircrafts callsign',
+                `latitude` VARCHAR(255) NULL COMMENT 'The aircrafts latitude',
+                `longitude` VARCHAR(255) NULL COMMENT 'The aircrafts longitude',
+                `altitude` int NULL COMMENT 'The aircrafts current altitude',
+                `groundspeed` INT UNSIGNED NULL COMMENT 'The aircrafts current ground speed',
+                `planned_aircraft` VARCHAR(255) NULL COMMENT 'The aircraft type',
+                `planned_depairport` VARCHAR(255) NULL COMMENT 'The departure airport',
+                `planned_destairport` VARCHAR(255) NULL COMMENT 'The destination airport',
+                `planned_altitude` VARCHAR(255) NULL COMMENT 'The filed cruise altitude',
+                `transponder` VARCHAR(255) NULL COMMENT 'The aircrafts current squawk code',
+                `planned_flighttype` VARCHAR(255) NULL COMMENT 'The aircrafts flight rules',
+                `planned_route` text NULL COMMENT 'The aircrafts planned route',
+                `created_at` TIMESTAMP NULL, `updated_at` TIMESTAMP NULL,
+                PRIMARY KEY (`callsign`) USING BTREE
+            )
+            DEFAULT CHARACTER SET utf8mb4 COLLATE 'utf8mb4_unicode_ci';"
+        );
     }
 
     /**

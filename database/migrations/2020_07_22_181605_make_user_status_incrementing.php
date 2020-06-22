@@ -12,7 +12,7 @@ class MakeUserStatusIncrementing extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE `user_status` MODIFY COLUMN `id` UNSIGNED TINYINT AUTO_INCREMENT');
+        DB::statement('ALTER TABLE `user_status` MODIFY COLUMN `id` TINYINT UNSIGNED AUTO_INCREMENT');
     }
 
     /**

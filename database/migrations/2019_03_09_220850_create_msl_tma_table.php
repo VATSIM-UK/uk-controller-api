@@ -1,7 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateMslTmaTable extends Migration
@@ -13,14 +13,16 @@ class CreateMslTmaTable extends Migration
      */
     public function up()
     {
-        Schema::create('msl_tma', function (Blueprint $table) {
-            $table->unsignedInteger('tma_id');
-            $table->unsignedSmallInteger('msl');
-            $table->timestamp('generated_at');
-
-            $table->primary('tma_id');
-            $table->foreign('tma_id')->references('id')->on('tma');
-        });
+        DB::statement(
+            "CREATE TABLE `msl_tma` (
+                `tma_id` INT(10) UNSIGNED NOT NULL,
+                `msl` SMALLINT(5) UNSIGNED NOT NULL,
+                `generated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`tma_id`) USING BTREE,
+                CONSTRAINT `msl_tma_tma_id_foreign` FOREIGN KEY (`tma_id`) REFERENCES `tma` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION
+            )
+            COLLATE='utf8mb4_unicode_ci';"
+        );
     }
 
     /**
