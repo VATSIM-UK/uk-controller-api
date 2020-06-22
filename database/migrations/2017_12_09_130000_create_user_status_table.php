@@ -17,7 +17,7 @@ class CreateUserStatusTable extends Migration
         Schema::create(
             'user_status',
             function (Blueprint $table) {
-                $table->unsignedTinyInteger('id')->primary();
+                $table->tinyIncrements('id');
                 $table->string('status');
             }
         );
