@@ -6,8 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUserTable extends Migration
 {
-    public $withinTransaction = false;
-
     /**
      * Run the migrations.
      *
@@ -17,7 +15,7 @@ class CreateUserTable extends Migration
     {
         DB::statement(
             "CREATE TABLE `user` (
-                `id` INT(10) NOT NULL,
+                `id` INT(10) UNSIGNED NOT NULL,
                 `status` TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
                 `created_at` TIMESTAMP NULL DEFAULT NULL,
                 `updated_at` TIMESTAMP NULL DEFAULT NULL,
