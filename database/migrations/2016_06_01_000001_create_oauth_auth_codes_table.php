@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
  * Custom version of the Laravel Passport migration
  * required due to string primary keys.
  */
-class CreateAuthCodesTable extends Migration
+class CreateOauthAuthCodesTable extends Migration
 {
     /**
      * Run the migrations.
