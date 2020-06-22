@@ -21,7 +21,6 @@ class AddMissingPrimaryKeys extends Migration
         });
 
         Schema::table('srd_note_srd_route', function (Blueprint $table) {
-
             if (count(DB::select(DB::raw('SHOW KEYS FROM srd_note_srd_route WHERE Key_name = "PRIMARY"'))) == 0) {
                 $table->primary(['srd_note_id', 'srd_route_id']);
             }
