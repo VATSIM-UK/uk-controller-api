@@ -27,7 +27,7 @@ class SouthendPdrUpdates extends Migration
             DB::table('sid')->where('identifier', $old)->update(['identifier' => $new]);
         }
         DependencyService::touchDependencyByKey('DEPENDENCY_INITIAL_ALTITUDES');
-        DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFFS');
+        DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFF');
     }
 
     /**
@@ -42,6 +42,6 @@ class SouthendPdrUpdates extends Migration
         }
 
         DependencyService::touchDependencyByKey('DEPENDENCY_INITIAL_ALTITUDES');
-        DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFFS');
+        DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFF');
     }
 }
