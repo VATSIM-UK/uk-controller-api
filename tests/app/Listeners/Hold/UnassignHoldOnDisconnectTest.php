@@ -4,6 +4,7 @@ namespace App\Listeners\Hold;
 
 use App\BaseUnitTestCase;
 use App\Events\HoldUnassignedEvent;
+use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 
 class UnassignHoldOnDisconnectTest extends BaseUnitTestCase
@@ -12,6 +13,6 @@ class UnassignHoldOnDisconnectTest extends BaseUnitTestCase
     {
         $this->expectsEvents(HoldUnassignedEvent::class);
         $event =  new UnassignHoldOnDisconnect();
-        $event->handle(new NetworkAircraft(['BAW123']));
+        $event->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['BAW123'])));
     }
 }
