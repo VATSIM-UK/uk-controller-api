@@ -14,7 +14,7 @@ class UnassignHoldOnDisconnect
     {
         $assignedHold = AssignedHold::find($event->getAircraft()->callsign);
         if (!$assignedHold) {
-            return;
+            return false;
         }
 
         $assignedHold->delete();
