@@ -1,5 +1,6 @@
 <?php
 
+use App\Rules\VatsimCallsign;
 use Illuminate\Support\Facades\Route;
 
 // Routes that the plugin user will use
@@ -30,6 +31,10 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('dependency', 'DependencyController@getAllDependencies');
 
     // Holds
+    Route::put('hold/assigned', 'HoldController@assignHold');
+    Route::delete('hold/assigned/{callsign}', 'HoldController@deleteAssignedHold')
+        ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+    ;
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
 
     // Whenever a hold profile is updated, we need to reset the dependency
@@ -43,11 +48,11 @@ Route::middleware('plugin.user')->group(function () {
 
     // Squawks
     Route::get('squawk-assignment/{callsign}', 'SquawkController@getSquawkAssignment')
-        ->where('callsign', '[A-Za-z0-9\-]{1,10}');
+        ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
     Route::put('squawk-assignment/{callsign}', 'SquawkController@assignSquawk')
-        ->where('callsign', '[A-Za-z0-9\-]{1,10}');
+        ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
-        ->where('callsign', '[A-Za-z0-9\-]{1,10}');
+        ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 });
 
 // Routes for user administration
@@ -190,6 +195,7 @@ Route::middleware('public')->group(function () {
 
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
+    Route::get('hold/assigned', 'HoldController@getAssignedHolds');
 
     // Handoffs
     Route::get('handoff', 'HandoffController@getAllHandoffs');
@@ -212,6 +218,9 @@ Route::middleware('public')->group(function () {
 
     // Standard Route Document
     Route::get('srd/route/search', 'SrdController@searchRoutes');
+
+    // Navaids
+    Route::get('navaid/dependency', 'NavaidController');
 
     // Admin login
     Route::prefix('admin')->group(function () {

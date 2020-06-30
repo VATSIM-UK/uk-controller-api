@@ -1,7 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateUserTable extends Migration
@@ -13,18 +13,17 @@ class CreateUserTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'user',
-            function (Blueprint $table) {
-                $table->unsignedInteger('id')->primary();
-                $table->unsignedTinyInteger('status')
-                    ->default(1);
-                $table->timestamps();
-
-                $table->foreign('status')
-                    ->references('id')
-                    ->on('user_status');
-            }
+        DB::statement(
+            "CREATE TABLE `user` (
+                `id` INT(10) UNSIGNED NOT NULL,
+                `status` TINYINT(3) UNSIGNED NOT NULL DEFAULT '1',
+                `created_at` TIMESTAMP NULL DEFAULT NULL,
+                `updated_at` TIMESTAMP NULL DEFAULT NULL,
+                PRIMARY KEY (`id`) USING BTREE,
+                INDEX `user_status_foreign` (`status`) USING BTREE,
+                CONSTRAINT `user_status_foreign` FOREIGN KEY (`status`) REFERENCES `user_status` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION
+            )
+            COLLATE='utf8mb4_unicode_ci';"
         );
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateSrdNotesTable extends Migration
@@ -13,12 +13,14 @@ class CreateSrdNotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('srd_notes', function (Blueprint $table) {
-            $table->unsignedSmallInteger('id');
-            $table->text('note_text');
-
-            $table->primary('id');
-        });
+        DB::statement(
+            "CREATE TABLE `srd_notes` (
+                `id` SMALLINT(5) UNSIGNED NOT NULL,
+                `note_text` TEXT(65535) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+                PRIMARY KEY (`id`) USING BTREE
+            )
+            COLLATE='utf8mb4_unicode_ci';"
+        );
     }
 
     /**

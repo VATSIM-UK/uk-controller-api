@@ -29,7 +29,7 @@ class BaseController extends LaravelController
         $validator = Validator::make($request->json()->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            Log::error(
+            Log::debug(
                 $request->path().' requested, but some data was not provided',
                 ['cid' => $request->user()->id, 'errors' => $validator->errors()->all()]
             );

@@ -1,7 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateMslAirfieldTable extends Migration
@@ -13,14 +13,16 @@ class CreateMslAirfieldTable extends Migration
      */
     public function up()
     {
-        Schema::create('msl_airfield', function (Blueprint $table) {
-            $table->unsignedInteger('airfield_id');
-            $table->unsignedSmallInteger('msl');
-            $table->timestamp('generated_at');
-
-            $table->primary('airfield_id');
-            $table->foreign('airfield_id')->references('id')->on('airfield');
-        });
+        DB::statement(
+            "CREATE TABLE `msl_airfield` (
+                `airfield_id` INT(10) UNSIGNED NOT NULL,
+                `msl` SMALLINT(5) NOT NULL,
+                `generated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`airfield_id`) USING BTREE,
+                CONSTRAINT `msl_airfield_airfield_id_foreign` FOREIGN KEY (`airfield_id`) REFERENCES `airfield` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION
+            )
+            COLLATE='utf8mb4_unicode_ci';"
+        );
     }
 
     /**

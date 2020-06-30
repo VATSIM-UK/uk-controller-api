@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\Hold\Hold;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateStandardHolds extends Migration
@@ -302,7 +300,7 @@ class CreateStandardHolds extends Migration
             ],
         ];
 
-        Hold::insert($holds);
+        DB::table('hold')->insert($holds);
     }
 
     /**
@@ -312,6 +310,6 @@ class CreateStandardHolds extends Migration
      */
     public function down()
     {
-        Hold::truncate();
+        DB::table('hold')->truncate();
     }
 }

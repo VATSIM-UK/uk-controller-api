@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Hold\HoldRestriction;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddHoldRestrictions extends Migration
 {
@@ -209,7 +209,7 @@ class AddHoldRestrictions extends Migration
             ],
         ];
 
-        HoldRestriction::insert($restrictions);
+        DB::table('hold_restriction')->insert($restrictions);
     }
 
     /**
@@ -219,7 +219,7 @@ class AddHoldRestrictions extends Migration
      */
     public function down()
     {
-        HoldRestriction::truncate();
+        DB::table('hold_restriction')->truncate();
     }
 
     /**
