@@ -2,12 +2,13 @@
 
 namespace App\Listeners\Hold;
 
+use App\BaseFunctionalTestCase;
 use App\BaseUnitTestCase;
 use App\Events\HoldUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 
-class UnassignHoldOnDisconnectTest extends BaseUnitTestCase
+class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
 {
     public function testItDoesNotTriggerAHoldUnassignedEventIfAircraftNotHolding()
     {
