@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Hold\AssignedHold;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
