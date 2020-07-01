@@ -19,6 +19,7 @@ class UpdateHeathrowSidHandoffs extends Migration
             ->where('key', 'EGLL_SID_SOUTH_WEST')
             ->update(['description' => 'Heathrow South-westbound Departures']);
 
+        // Update the handoffs for the Heathrow SIDs
         $handoffId = DB::table('handoffs')
                 ->where('key', 'EGLL_SID_SOUTH_WEST')
                 ->select('id')
