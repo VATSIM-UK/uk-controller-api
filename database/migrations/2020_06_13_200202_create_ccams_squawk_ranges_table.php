@@ -15,8 +15,8 @@ class CreateCcamsSquawkRangesTable extends Migration
     {
         Schema::create('ccams_squawk_ranges', function (Blueprint $table) {
             $table->id();
-            $table->string('start')->comment('The start of the range');
-            $table->string('stop')->comment('The end of the range');
+            $table->string('first', 4)->comment('The first squawk in the range of the range');
+            $table->string('last', 4)->comment('The last squawk in the range');
             $table->timestamps();
         });
     }
