@@ -228,6 +228,6 @@ class AddCcamsRangeData extends Migration
      */
     public function down()
     {
-        DB::table('ccams_squawk_ranges')->delete();
+        DB::table('ccams_squawk_ranges')->truncate();
     }
 }
