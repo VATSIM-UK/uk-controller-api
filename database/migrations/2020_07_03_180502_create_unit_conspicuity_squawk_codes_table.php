@@ -15,9 +15,11 @@ class CreateUnitConspicuitySquawkCodesTable extends Migration
     {
         Schema::create('unit_conspicuity_squawk_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('unit', 4)->comment('The unit to which the code applies');
+            $table->string('unit')->comment('The unit to which the code applies');
             $table->string('code', 4)->comment('The squawk code');
             $table->timestamps();
+
+            $table->unique(['unit', 'code'], 'unit_conspicuity_squawk_codes_unit_code');
         });
     }
 
