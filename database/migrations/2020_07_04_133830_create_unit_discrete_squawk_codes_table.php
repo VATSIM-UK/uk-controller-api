@@ -19,6 +19,8 @@ class CreateUnitDiscreteSquawkCodesTable extends Migration
             $table->string('first', 4)->comment('The first squawk in the range');
             $table->string('last', 4)->comment('The last squawk in the range');
             $table->timestamps();
+
+            $table->index('unit');
         });
     }
 

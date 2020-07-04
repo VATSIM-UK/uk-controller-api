@@ -19,6 +19,7 @@ class CreateUnitConspicuitySquawkCodesTable extends Migration
             $table->string('code', 4)->comment('The squawk code');
             $table->timestamps();
 
+            $table->index('unit');
             $table->unique(['unit', 'code'], 'unit_conspicuity_squawk_codes_unit_code');
         });
     }
