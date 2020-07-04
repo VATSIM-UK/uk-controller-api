@@ -2,9 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AddConspicuitySquawkData extends Migration
 {
@@ -35,10 +33,22 @@ class AddConspicuitySquawkData extends Migration
             [
                 'unit' => 'EGNH',
                 'code' => '0450',
+                'rules' => [
+                    [
+                        'type' => 'SERVICE',
+                        'rule' => 'BASIC',
+                    ],
+                ],
             ],
             [
                 'unit' => 'EGNH',
                 'code' => '0451',
+                'rules' => [
+                    [
+                        'type' => 'SERVICE',
+                        'rule' => 'PROCEDURAL',
+                    ],
+                ],
             ],
             [
                 'unit' => 'EGLF',
@@ -89,16 +99,32 @@ class AddConspicuitySquawkData extends Migration
                 'code' => '3650',
             ],
             [
-                'unit' => 'SOLENT_APP',
+                'unit' => 'SOLENT',
                 'code' => '3666',
+                'rules' => [
+                    [
+                        'type' => 'UNIT_TYPE',
+                        'rule' => 'APP',
+                    ],
+                ],
             ],
             [
                 'unit' => 'EGYM',
                 'code' => '3667',
             ],
             [
-                'unit' => 'EGVN_APP',
+                'unit' => 'EGVN',
                 'code' => '3737',
+                'rules' => [
+                    [
+                        'type' => 'UNIT_TYPE',
+                        'rule' => 'APP',
+                    ],
+                ],
+            ],
+            [
+                'unit' => 'EGSH',
+                'code' => '3707',
             ],
             [
                 'unit' => 'EGXT',
@@ -108,16 +134,20 @@ class AddConspicuitySquawkData extends Migration
                 'unit' => 'EGKA',
                 'code' => '3762',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'IFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'IFR',
+                    ],
                 ],
             ],
             [
                 'unit' => 'EGKA',
                 'code' => '3763',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'VFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
                 ],
             ],
             [
@@ -125,8 +155,14 @@ class AddConspicuitySquawkData extends Migration
                 'code' => '3767',
             ],
             [
-                'unit' => 'EGNT_APP',
+                'unit' => 'EGNT',
                 'code' => '3767',
+                'rules' => [
+                    [
+                        'type' => 'UNIT_TYPE',
+                        'rule' => 'APP',
+                    ],
+                ],
             ],
             [
                 'unit' => 'EGDY',
@@ -142,6 +178,10 @@ class AddConspicuitySquawkData extends Migration
             ],
             [
                 'unit' => 'EGPK',
+                'code' => '4520',
+            ],
+            [
+                'unit' => 'EGTK',
                 'code' => '4520',
             ],
             [
@@ -176,32 +216,40 @@ class AddConspicuitySquawkData extends Migration
                 'unit' => 'EGGD',
                 'code' => '5070',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'VFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
                 ],
             ],
             [
                 'unit' => 'EGGD',
                 'code' => '5071',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'VFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
                 ],
             ],
             [
                 'unit' => 'EGXY',
                 'code' => '5070',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'VFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
                 ],
             ],
             [
                 'unit' => 'EGXY',
                 'code' => '5071',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'VFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
                 ],
             ],
             [
@@ -212,16 +260,20 @@ class AddConspicuitySquawkData extends Migration
                 'unit' => 'EGSC',
                 'code' => '6176',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'VFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
                 ],
             ],
             [
                 'unit' => 'EGSC',
                 'code' => '6177',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'IFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'IFR',
+                    ],
                 ],
             ],
             [
@@ -241,8 +293,36 @@ class AddConspicuitySquawkData extends Migration
                 'code' => '7057',
             ],
             [
+                'unit' => 'EGMD',
+                'code' => '7066',
+                'rules' => [
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
+                    [
+                        'type' => 'UNIT_TYPE',
+                        'rule' => 'APP',
+                    ],
+                ],
+            ],
+            [
                 'unit' => 'EGNV',
                 'code' => '7067',
+            ],
+            [
+                'unit' => 'EGMD',
+                'code' => '7067',
+                'rules' => [
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'IFR',
+                    ],
+                    [
+                        'type' => 'UNIT_TYPE',
+                        'rule' => 'APP',
+                    ],
+                ],
             ],
             [
                 'unit' => 'EGLW',
@@ -256,13 +336,21 @@ class AddConspicuitySquawkData extends Migration
                 'unit' => 'EGPN',
                 'code' => '7376',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'VFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'VFR',
+                    ],
                 ],
             ],
             [
-                'unit' => 'EGHH_APP',
+                'unit' => 'EGHH',
                 'code' => '7377',
+                'rules' => [
+                    [
+                        'type' => 'UNIT_TYPE',
+                        'rule' => 'APP',
+                    ],
+                ],
             ],
             [
                 'unit' => 'EGQL',
@@ -272,8 +360,10 @@ class AddConspicuitySquawkData extends Migration
                 'unit' => 'EGTC',
                 'code' => '7417',
                 'rules' => [
-                    'type' => 'FLIGHT_RULES',
-                    'rule' => 'IFR',
+                    [
+                        'type' => 'FLIGHT_RULES',
+                        'rule' => 'IFR',
+                    ],
                 ],
             ],
             [
@@ -283,7 +373,7 @@ class AddConspicuitySquawkData extends Migration
         ];
 
         foreach ($codeData as $index => $code) {
-            $rules['created_at'] = Carbon::now();
+            $code['created_at'] = Carbon::now();
             $rules = $code['rules'] ?? [];
             unset($code['rules']);
 
