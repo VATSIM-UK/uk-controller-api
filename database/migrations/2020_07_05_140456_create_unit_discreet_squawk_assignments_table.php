@@ -19,7 +19,6 @@ class CreateUnitDiscreetSquawkAssignmentsTable extends Migration
                 `code` VARCHAR(4) NOT NULL COMMENT 'The assigned code',
                 `unit` VARCHAR(255) NOT NULL COMMENT 'The unit that assigned the code',
                 `created_at` TIMESTAMP NULL DEFAULT NULL,
-                `updated_at` TIMESTAMP NULL DEFAULT NULL,
                 PRIMARY KEY (`callsign`) USING BTREE,
                 CONSTRAINT `unit_discreet_squawk_assignments_callsign_foreign` FOREIGN KEY (`callsign`) REFERENCES `network_aircraft`(`callsign`) ON DELETE CASCADE,
                 UNIQUE INDEX `unit_discreet_squawk_assignments_code_unit_unique` (`code`, `unit`) USING BTREE,

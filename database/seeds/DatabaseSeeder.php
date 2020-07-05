@@ -99,6 +99,18 @@ class DatabaseSeeder extends Seeder
             'assigned_holds',
             'assigned_holds_history'
         ],
+        SquawkRangeTablesSeeder::class => [
+            'ccams_squawk_ranges',
+            'orcam_squawk_ranges',
+            'airfield_pairing_squawk_ranges',
+            'unit_discrete_squawk_ranges',
+        ],
+        SquawkAssignmentTablesSeeder::class => [
+            'ccams_squawk_assignments',
+            'orcam_squawk_assignments',
+            'airfield_pairing_squawk_assignments',
+            'unit_discrete_squawk_assignments',
+        ]
     ];
 
 
