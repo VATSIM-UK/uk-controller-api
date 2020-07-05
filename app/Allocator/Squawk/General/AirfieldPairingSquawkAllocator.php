@@ -2,6 +2,7 @@
 
 namespace App\Allocator\Squawk\General;
 
+use App\Allocator\Squawk\SquawkAllocationCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkAssignment;
@@ -69,5 +70,10 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface
     public function fetch(string $callsign): ?SquawkAssignmentInterface
     {
         return AirfieldPairingSquawkAssignment::find($callsign);
+    }
+
+    public function canAllocateForCategory(string $category): bool
+    {
+        return $category === SquawkAllocationCategories::CATEGORY_GENERAL;
     }
 }
