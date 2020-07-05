@@ -49,4 +49,14 @@ class ControllerService
 
         return $dependency;
     }
+
+    public static function getControllerLevelFromCallsign(string $callsign): string
+    {
+        return strtoupper(strpos($callsign, '_') === false ? '' : substr($callsign, strrpos($callsign, '_') + 1));
+    }
+
+    public static function getControllerFacilityFromCallsign(string $callsign): string
+    {
+        return strtoupper(strpos($callsign, '_') === false ? $callsign : substr($callsign, 0, strpos($callsign, '_')));
+    }
 }

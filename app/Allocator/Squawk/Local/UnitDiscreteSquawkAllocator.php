@@ -8,15 +8,30 @@ use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\ControllerService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 
 class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
 {
-    private function getApplicableRanges(string $unit): Collection
+    private function getApplicableRanges(string $unit, array $details): Collection
     {
-        return UnitDiscreteSquawkRange::whereIn('unit', $this->getApplicableUnits($unit))
+        $ranges = UnitDiscreteSquawkRange::with('rules')
+            ->whereIn('unit', $this->getApplicableUnits($unit))
             ->get();
+        return $ranges->filter(function (UnitDiscreteSquawkRange $range) use ($details) {
+            if($range->rules->isEmpty()) {
+                return true;
+            }
+
+            foreach ($range->rules as $rule) {
+                if (!$rule->rule->passes('', $details)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 
     private function getApplicableUnits(string $unit): array
@@ -36,14 +51,19 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
 
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
-        $unit = isset($details['unit']) ? $this->getUnitString($details['unit']) : null;
+        $unit = isset($details['unit']) ? ControllerService::getControllerFacilityFromCallsign($details['unit']) : null;
         if (!$unit) {
             Log::error('Unit not provided for local squawk assignment');
             return null;
         }
 
+        // Add the unit level for validation rules
+        $details['unit_type'] = isset($details['unit'])
+            ? ControllerService::getControllerLevelFromCallsign($details['unit'])
+            : '';
+
         $assignment = null;
-        $this->getApplicableRanges($unit)->each(function (UnitDiscreteSquawkRange $range) use (
+        $this->getApplicableRanges($unit, $details)->each(function (UnitDiscreteSquawkRange $range) use (
             &$assignment,
             $callsign
         ) {

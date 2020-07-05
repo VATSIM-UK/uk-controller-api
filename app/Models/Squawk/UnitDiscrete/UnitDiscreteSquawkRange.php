@@ -3,7 +3,6 @@
 namespace App\Models\Squawk\UnitDiscrete;
 
 use App\Models\Squawk\AbstractSquawkRange;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UnitDiscreteSquawkRange extends AbstractSquawkRange
@@ -29,8 +28,8 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
         return $this->attributes['last'];
     }
 
-    public function guests(): BelongsTo
+    public function rules(): HasMany
     {
-        return $this->belongsTo(UnitDiscreteSquawkRangeGuest::class, 'guest_unit', 'unit');
+        return $this->hasMany(UnitDiscreteSquawkRangeRule::class);
     }
 }

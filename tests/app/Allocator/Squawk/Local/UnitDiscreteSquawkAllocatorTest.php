@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
+use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeRule;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -179,9 +180,31 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItFiltersRangesWhereRulesDoNotPass()
+    {
+        $range = UnitDiscreteSquawkRange::create(
+            [
+                'unit' => 'EGFF',
+                'first' => '7201',
+                'last' => '7210',
+            ]
+        );
+
+        UnitDiscreteSquawkRangeRule::create(
+            [
+                'unit_discrete_squawk_range_id' => $range->id,
+                'rule' => [
+                    'rule' => 'TWR',
+                    'type' => 'UNIT_TYPE',
+                ],
+            ]
+        );
+        $this->assertNull($this->allocator->allocate('BMI11A', ['unit' => 'EGFF_APP']));
+    }
+
     public function testItReturnsNullNoUnitProvided()
     {
-        $this->assertNull( $this->allocator->allocate('BMI11A', []));
+        $this->assertNull($this->allocator->allocate('BMI11A', []));
     }
 
     public function testItReturnsNullOnNoApplicableRange()
@@ -238,7 +261,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing(
             'unit_discrete_squawk_assignments',
             [
-                'callsign' => 'VIR25F'
+                'callsign' => 'VIR25F',
             ]
         );
     }
