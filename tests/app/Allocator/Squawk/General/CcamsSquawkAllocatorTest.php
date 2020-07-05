@@ -105,7 +105,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
             ],
         );
 
-        $expected = CcamsSquawkAssignment::create(
+        CcamsSquawkAssignment::create(
             [
                 'callsign' => 'VIR25F',
                 'code' => '0001',

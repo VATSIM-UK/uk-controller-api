@@ -8,7 +8,7 @@ class CcamsSquawkAssignmentTest extends BaseFunctionalTestCase
 {
     public function testItReturnsTheAssignedCode()
     {
-        $assignment = CcamsSquawkAssignment::create(
+        $assignment = new CcamsSquawkAssignment(
             [
                 'callsign' => 'BAW123',
                 'code' => '0101',
@@ -20,7 +20,7 @@ class CcamsSquawkAssignmentTest extends BaseFunctionalTestCase
 
     public function testItReturnsTheAssignemntType()
     {
-        $assignment = CcamsSquawkAssignment::create(
+        $assignment = new CcamsSquawkAssignment(
             [
                 'callsign' => 'BAW123',
                 'code' => '0101',
