@@ -916,14 +916,14 @@ class AddUnitDiscreteSquawkCodeData extends Migration
             $rules = $code['rules'] ?? [];
             unset($code['rules']);
 
-            $codeId = DB::table('unit_discrete_squawk_codes')
+            $codeId = DB::table('unit_discrete_squawk_ranges')
                 ->insertGetId($code);
 
             foreach ($rules as $rule) {
-                DB::table('unit_discrete_squawk_code_rules')
+                DB::table('unit_discrete_squawk_range_rules')
                     ->insert(
                         [
-                            'unit_discrete_squawk_code_id' => $codeId,
+                            'unit_discrete_squawk_range_id' => $codeId,
                             'rule' => json_encode($rule),
                             'created_at' => Carbon::now(),
                         ]
@@ -939,6 +939,6 @@ class AddUnitDiscreteSquawkCodeData extends Migration
      */
     public function down()
     {
-        DB::table('unit_discrete_squawk_codes')->delete();
+        DB::table('unit_discrete_squawk_ranges')->delete();
     }
 }

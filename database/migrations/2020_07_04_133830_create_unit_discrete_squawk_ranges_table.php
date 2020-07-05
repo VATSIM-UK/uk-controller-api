@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUnitDiscreteSquawkCodesTable extends Migration
+class CreateUnitDiscreteSquawkRangesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateUnitDiscreteSquawkCodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('unit_discrete_squawk_codes', function (Blueprint $table) {
+        Schema::create('unit_discrete_squawk_ranges', function (Blueprint $table) {
             $table->id();
             $table->string('unit')->comment('The unit to which the code applies');
             $table->string('first', 4)->comment('The first squawk in the range');
@@ -31,6 +31,6 @@ class CreateUnitDiscreteSquawkCodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unit_discrete_squawk_codes');
+        Schema::dropIfExists('unit_discrete_squawk_ranges');
     }
 }

@@ -13,16 +13,16 @@ class CreateUnitDiscreteSquawkCodeRulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('unit_discrete_squawk_code_rules', function (Blueprint $table) {
+        Schema::create('unit_discrete_squawk_range_rules', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('unit_discrete_squawk_code_id')
+            $table->unsignedBigInteger('unit_discrete_squawk_range_id')
                 ->comment('The squawk code that is referenced');
             $table->json('rule')->comment('Data about the rule');
             $table->timestamps();
 
-            $table->foreign('unit_discrete_squawk_code_id', 'unit_discrete_squawk_code_id')
+            $table->foreign('unit_discrete_squawk_range_id', 'unit_discrete_squawk_range_id')
                 ->references('id')
-                ->on('unit_discrete_squawk_codes')
+                ->on('unit_discrete_squawk_ranges')
                 ->onDelete('cascade');
         });
     }
@@ -34,6 +34,6 @@ class CreateUnitDiscreteSquawkCodeRulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unit_discrete_squawk_code_rules');
+        Schema::dropIfExists('unit_discrete_squawk_range_rules');
     }
 }
