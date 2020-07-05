@@ -13,7 +13,7 @@ class CreateUnitSquawkRangeGuestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('unit_squawk_range_guests', function (Blueprint $table) {
+        Schema::create('unit_discrete_squawk_range_guests', function (Blueprint $table) {
             $table->id();
             $table->string('primary_unit')->comment('The unit that owns the squawk range');
             $table->string('guest_unit')->comment('The unit that is a squawk range guest of the other');
@@ -28,6 +28,6 @@ class CreateUnitSquawkRangeGuestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unit_squawk_range_guests');
+        Schema::dropIfExists('unit_discrete_squawk_range_guests');
     }
 }

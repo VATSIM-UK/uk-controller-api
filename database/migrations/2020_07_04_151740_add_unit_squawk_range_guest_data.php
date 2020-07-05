@@ -15,7 +15,7 @@ class AddUnitSquawkRangeGuestData extends Migration
      */
     public function up()
     {
-        DB::table('unit_squawk_range_guests')->insert(
+        DB::table('unit_discrete_squawk_range_guests')->insert(
             [
                 [
                     'primary_unit' => 'ESSEX',
@@ -43,6 +43,6 @@ class AddUnitSquawkRangeGuestData extends Migration
      */
     public function down()
     {
-        DB::table('unit_squawk_range_guests')->delete();
+        DB::table('unit_discrete_squawk_range_guests')->delete();
     }
 }

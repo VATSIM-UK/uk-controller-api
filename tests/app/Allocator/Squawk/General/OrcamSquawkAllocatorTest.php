@@ -217,11 +217,6 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItReturnsNullIfAllocationFails()
-    {
-        $this->assertNull($this->allocator->allocate('BAW123', []));
-    }
-
     public function testItReturnsNullIfAllocationNotFound()
     {
         $this->assertNull($this->allocator->fetch('MMMMM'));

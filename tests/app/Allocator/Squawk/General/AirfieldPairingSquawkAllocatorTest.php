@@ -124,11 +124,6 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate('BMI11A', ['origin' => 'EGFF']));
     }
 
-    public function testItReturnsNullIfAllocationFails()
-    {
-        $this->assertNull($this->allocator->allocate('BAW123', []));
-    }
-
     public function testItReturnsNullIfAllocationNotFound()
     {
         $this->assertNull($this->allocator->fetch('MMMMM'));
