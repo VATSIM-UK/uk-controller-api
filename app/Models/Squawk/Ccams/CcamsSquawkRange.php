@@ -2,7 +2,6 @@
 
 namespace App\Models\Squawk\Ccams;
 
-use App\Allocator\Squawk\SquawkRangeInterface;
 use App\Models\Squawk\AbstractSquawkRange;
 
 class CcamsSquawkRange extends AbstractSquawkRange

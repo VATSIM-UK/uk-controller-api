@@ -2,7 +2,6 @@
 
 namespace App\Models\Squawk\AirfieldPairing;
 
-use App\Allocator\Squawk\SquawkRangeInterface;
 use App\Models\Squawk\AbstractSquawkRange;
 
 class AirfieldPairingSquawkRange extends AbstractSquawkRange

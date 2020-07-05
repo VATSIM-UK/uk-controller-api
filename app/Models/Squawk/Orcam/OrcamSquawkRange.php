@@ -2,7 +2,6 @@
 
 namespace App\Models\Squawk\Orcam;
 
-use App\Allocator\Squawk\SquawkRangeInterface;
 use App\Models\Squawk\AbstractSquawkRange;
 
 class OrcamSquawkRange extends AbstractSquawkRange
