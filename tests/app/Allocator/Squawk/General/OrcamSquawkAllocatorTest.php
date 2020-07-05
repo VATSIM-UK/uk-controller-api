@@ -2,7 +2,7 @@
 
 namespace App\Allocator\Squawk\General;
 
-use App\Allocator\Squawk\SquawkAllocationCategories;
+use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\BaseFunctionalTestCase;
 use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
@@ -287,8 +287,8 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
     public function categoryProvider(): array
     {
         return [
-            [SquawkAllocationCategories::CATEGORY_GENERAL, true],
-            [SquawkAllocationCategories::CATEGORY_LOCAL, false],
+            [SquawkAssignmentCategories::CATEGORY_GENERAL, true],
+            [SquawkAssignmentCategories::CATEGORY_LOCAL, false],
         ];
     }
 }

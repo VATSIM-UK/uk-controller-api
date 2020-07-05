@@ -2,7 +2,7 @@
 
 namespace App\Allocator\Squawk\Local;
 
-use App\Allocator\Squawk\SquawkAllocationCategories;
+use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkAssignment;
@@ -111,6 +111,6 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
 
     public function canAllocateForCategory(string $category): bool
     {
-        return $category === SquawkAllocationCategories::CATEGORY_LOCAL;
+        return $category === SquawkAssignmentCategories::CATEGORY_LOCAL;
     }
 }

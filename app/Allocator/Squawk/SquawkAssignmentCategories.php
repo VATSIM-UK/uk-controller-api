@@ -2,7 +2,7 @@
 
 namespace App\Allocator\Squawk;
 
-class SquawkAllocationCategories
+class SquawkAssignmentCategories
 {
     const CATEGORY_LOCAL = 'LOCAL';
     const CATEGORY_GENERAL = 'GENERAL';

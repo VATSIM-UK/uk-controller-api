@@ -56,19 +56,20 @@ class SquawkController extends BaseController
      */
     public function getSquawkAssignment(string $callsign) : JsonResponse
     {
-        try {
+        $assignment = $this->squawkService->getAssignedSquawk($callsign);
+        if (!$assignment) {
             return response()->json(
                 [
-                    'squawk' => $this->squawkService->getAssignedSquawk($callsign)->squawk(),
-                ]
-            )->setStatusCode(200);
-        } catch (SquawkNotAssignedException $exception) {
-            return response()->json(
-                [
-                    'message' => $exception->getMessage(),
+                    'message' => 'Assignment not found',
                 ]
             )->setStatusCode(404);
         }
+
+        return response()->json(
+            [
+                'squawk' => $assignment->getCode(),
+            ]
+        )->setStatusCode(200);
     }
 
     /**
@@ -93,8 +94,9 @@ class SquawkController extends BaseController
             return $typeCheck;
         }
 
-        return $request->json('type') === 'general' ?
-            $this->assignGeneralSquawk($request, $callsign) : $this->assignLocalSquawk($request, $callsign);
+        return $request->json('type') === 'general'
+            ? $this->assignGeneralSquawk($request, $callsign) :
+            $this->assignLocalSquawk($request, $callsign);
     }
 
     /**
@@ -119,32 +121,30 @@ class SquawkController extends BaseController
             return $check;
         }
 
-        $squawk = null;
+        $assignment = $this->squawkService->assignGeneralSquawk(
+            $callsign,
+            $request->json('origin'),
+            $request->json('destination')
+        );
 
-        try {
-            $assignment = $this->squawkService->assignGeneralSquawk(
-                $callsign,
-                $request->json('origin'),
-                $request->json('destination')
-            );
-            return response()->json(
-                [
-                    'squawk' => $assignment->squawk(),
-                ]
-            )->setStatusCode($assignment->isNewAllocation() ? 201 : 200);
-        } catch (SquawkNotAllocatedException $notFoundException) {
-            // We've run out of squawks or passed in some dodgy data
+        if (!$assignment)  {
             Log::error(
-                'Unable to allocate general squawk for aircraft: ' . $notFoundException->getMessage(),
+                'Unable to allocate general squawk for aircraft: ' . $callsign,
                 $request->json()->all()
             );
             return response()->json(
                 [
-                    'message' => $notFoundException->getMessage(),
+                    'message' => 'Unable to allocate general squawk for aircraft: ' . $callsign,
                     'squawk' => self::FAILURE_SQUAWK,
                 ]
             )->setStatusCode(500);
         }
+
+        return response()->json(
+            [
+                'squawk' => $assignment->squawk(),
+            ]
+        )->setStatusCode(201);
     }
 
     /**
@@ -172,30 +172,29 @@ class SquawkController extends BaseController
         $squawk = null;
 
         // Get the squawk
-        try {
-            $assignment = $this->squawkService->assignLocalSquawk(
-                $callsign,
-                $request->json('unit'),
-                $request->json('rules')
-            );
-            return response()->json(
-                [
-                    'squawk' => $assignment->squawk(),
-                ]
-            )->setStatusCode($assignment->isNewAllocation() ? 201 : 200);
-        } catch (SquawkNotAllocatedException $notFoundException) {
-            // We've run out of squawks or passed in some dodgy data
+        $assignment = $this->squawkService->assignLocalSquawk(
+            $callsign,
+            $request->json('unit'),
+            $request->json('rules')
+        );
+        if (!$assignment) {
             Log::error(
-                'Unable to allocate local squawk for aircraft: ' . $notFoundException->getMessage(),
+                'Unable to allocate local squawk for aircraft: ' . $callsign,
                 $request->json()->all()
             );
             return response()->json(
                 [
-                    'message' => $notFoundException->getMessage(),
+                    'message' => 'Unable to allocate local squawk for aircraft: ' . $callsign,
                     'squawk' => self::FAILURE_SQUAWK,
                 ]
             )->setStatusCode(500);
         }
+
+        return response()->json(
+            [
+                'squawk' => $assignment->getCode(),
+            ]
+        )->setStatusCode(201);
     }
 
     /**
@@ -207,12 +206,7 @@ class SquawkController extends BaseController
      */
     public function deleteSquawkAssignment(string $callsign, SquawkService $squawkService) : Response
     {
-        // De-allocate and give message depending on how it went.
-        $deallocate = $squawkService->deleteSquawkAssignment($callsign);
-        $message = ($deallocate) ?
-            self::DEALLOCATE_SUCCESS_PREFIX . $callsign :
-            self::DEALLOCATE_FAILURE_PREFIX . $callsign;
-
+        $squawkService->deleteSquawkAssignment($callsign);
         return response('', 204);
     }
 }

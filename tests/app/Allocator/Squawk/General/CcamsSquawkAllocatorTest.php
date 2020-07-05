@@ -2,7 +2,7 @@
 
 namespace App\Allocator\Squawk\General;
 
-use App\Allocator\Squawk\SquawkAllocationCategories;
+use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\BaseFunctionalTestCase;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
@@ -145,8 +145,8 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
     public function categoryProvider(): array
     {
         return [
-            [SquawkAllocationCategories::CATEGORY_GENERAL, true],
-            [SquawkAllocationCategories::CATEGORY_LOCAL, false],
+            [SquawkAssignmentCategories::CATEGORY_GENERAL, true],
+            [SquawkAssignmentCategories::CATEGORY_LOCAL, false],
         ];
     }
 }
