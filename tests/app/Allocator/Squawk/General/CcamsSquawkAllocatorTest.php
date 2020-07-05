@@ -119,7 +119,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
             ],
         );
 
-        $this->allocator->delete('VIR25F');
+        $this->assertTrue($this->allocator->delete('VIR25F'));
         $this->assertDatabaseMissing(
             'ccams_squawk_assignments',
             [
@@ -127,6 +127,12 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItReturnsFalseForNonDeletedAllocations()
+    {
+        $this->assertFalse($this->allocator->delete('LALALA'));
+    }
+
 
     /**
      * @dataProvider categoryProvider

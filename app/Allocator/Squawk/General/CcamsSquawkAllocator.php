@@ -42,9 +42,9 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface
         return $assignment;
     }
 
-    public function delete(string $callsign): void
+    public function delete(string $callsign): bool
     {
-        CcamsSquawkAssignment::find($callsign)->delete();
+        return CcamsSquawkAssignment::destroy($callsign);
     }
 
     public function fetch(string $callsign): ?SquawkAssignmentInterface

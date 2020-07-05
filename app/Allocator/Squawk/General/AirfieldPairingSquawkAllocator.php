@@ -62,9 +62,9 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface
         return $assignment;
     }
 
-    public function delete(string $callsign): void
+    public function delete(string $callsign): bool
     {
-        AirfieldPairingSquawkAssignment::find($callsign)->delete();
+        return AirfieldPairingSquawkAssignment::destroy($callsign);
     }
 
     public function fetch(string $callsign): ?SquawkAssignmentInterface

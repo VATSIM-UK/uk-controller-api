@@ -261,7 +261,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             ],
         );
 
-        $this->allocator->delete('VIR25F');
+        $this->assertTrue($this->allocator->delete('VIR25F'));
         $this->assertDatabaseMissing(
             'orcam_squawk_assignments',
             [
@@ -269,6 +269,12 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItReturnsFalseForNonDeletedAllocations()
+    {
+        $this->assertFalse($this->allocator->delete('LALALA'));
+    }
+
 
     /**
      * @dataProvider categoryProvider

@@ -29,7 +29,7 @@ interface SquawkAllocatorInterface
      * @param string $callsign
      * @return mixed
      */
-    public function delete(string $callsign): void;
+    public function delete(string $callsign): bool;
 
     /**
      * Fetches the allocation for a given callsign.

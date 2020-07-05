@@ -168,13 +168,18 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
             ],
         );
 
-        $this->allocator->delete('VIR25F');
+        $this->assertTrue($this->allocator->delete('VIR25F'));
         $this->assertDatabaseMissing(
             'ccams_squawk_assignments',
             [
                 'callsign' => 'VIR25F'
             ]
         );
+    }
+
+    public function testItReturnsFalseForNonDeletedAllocations()
+    {
+        $this->assertFalse($this->allocator->delete('LALALA'));
     }
 
     /**

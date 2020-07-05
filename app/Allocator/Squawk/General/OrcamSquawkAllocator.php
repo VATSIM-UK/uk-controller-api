@@ -71,9 +71,9 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
         return $assignment;
     }
 
-    public function delete(string $callsign): void
+    public function delete(string $callsign): bool
     {
-        OrcamSquawkAssignment::find($callsign)->delete();
+        return OrcamSquawkAssignment::destroy($callsign);
     }
 
     public function fetch(string $callsign): ?SquawkAssignmentInterface

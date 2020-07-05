@@ -99,9 +99,9 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
         return $assignment;
     }
 
-    public function delete(string $callsign): void
+    public function delete(string $callsign): bool
     {
-        UnitDiscreteSquawkAssignment::find($callsign)->delete();
+        return UnitDiscreteSquawkAssignment::destroy($callsign);
     }
 
     public function fetch(string $callsign): ?SquawkAssignmentInterface

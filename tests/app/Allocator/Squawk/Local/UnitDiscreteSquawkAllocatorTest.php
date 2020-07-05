@@ -258,7 +258,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             ],
         );
 
-        $this->allocator->delete('VIR25F');
+        $this->assertTrue($this->allocator->delete('VIR25F'));
         $this->assertDatabaseMissing(
             'unit_discrete_squawk_assignments',
             [
@@ -266,6 +266,12 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItReturnsFalseForNonDeletedAllocations()
+    {
+        $this->assertFalse($this->allocator->delete('LALALA'));
+    }
+
 
     /**
      * @dataProvider categoryProvider

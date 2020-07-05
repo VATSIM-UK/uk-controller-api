@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Exceptions\SquawkNotAllocatedException;
 use App\Exceptions\SquawkNotAssignedException;
 use App\Helpers\Squawks\SquawkAllocation;
@@ -22,39 +23,19 @@ use InvalidArgumentException;
 class SquawkService
 {
     /**
-     * Constant deemed to mean Any Flight Rules.
-     *
-     * @var String
+     * @var SquawkAllocatorInterface[]
      */
-    const RULES_ANY = 'A';
-
-    /**
-     * Converts origin and destination to rules to check
-     * when allocating general squawks.
-     *
-     * @var GeneralSquawkRuleGenerator
-     */
-    private $rulesGenerator;
-
-    /**
-     * For creating and auditing squawk allocations.
-     *
-     * @var SquawkAllocationService
-     */
-    private $squawkAllocationService;
+    private $allocators;
 
     /**
      * Constructor
      *
-     * @param GeneralSquawkRuleGenerator $rulesGenerator
-     * @param SquawkAllocationService $squawkAllocationService
+     * @param SquawkAllocatorInterface[] $allocators
      */
     public function __construct(
-        GeneralSquawkRuleGenerator $rulesGenerator,
-        SquawkAllocationService $squawkAllocationService
+        array $allocators
     ) {
-        $this->rulesGenerator = $rulesGenerator;
-        $this->squawkAllocationService = $squawkAllocationService;
+        $this->allocators = $allocators;
     }
 
     /**
