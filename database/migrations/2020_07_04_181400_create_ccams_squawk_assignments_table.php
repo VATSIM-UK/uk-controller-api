@@ -15,8 +15,8 @@ class CreateCcamsSquawkAssignmentsTable extends Migration
     {
         DB::statement(
             "CREATE TABLE `ccams_squawk_assignments` (
-                `callsign` VARCHAR(255) NOT NULL,
-                `code` VARCHAR(4) NOT NULL,
+                `callsign` VARCHAR(255) NOT NULL COMMENT 'The aircraft to which the code is assigned',
+                `code` VARCHAR(4) NOT NULL COMMENT 'The assigned code',
                 `created_at` TIMESTAMP NULL DEFAULT NULL,
                 `updated_at` TIMESTAMP NULL DEFAULT NULL,
                 PRIMARY KEY (`callsign`) USING BTREE,
