@@ -17,7 +17,7 @@ class CreateSquawkAssignmentsHistoryTable extends Migration
             $table->id();
             $table->string('callsign')->comment('The callsign to which the squawk was assigned');
             $table->string('code')->comment('The code that was assigned');
-            $table->enum('type', ['CCAMS', 'ORCAM', 'PAIR', 'UNIT'])->comment('The type of allocation');
+            $table->string('type')->comment('The type of allocation');
             $table->unsignedInteger('user_id')->nullable()->comment('The user that allocated the squawk');
             $table->timestamp('allocated_at')->comment('The time the squawk was allocated');
 

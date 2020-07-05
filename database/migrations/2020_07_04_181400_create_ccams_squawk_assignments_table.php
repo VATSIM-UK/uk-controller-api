@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSquawkAssignmentsTable extends Migration
+class CreateCcamsSquawkAssignmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,16 +14,14 @@ class CreateSquawkAssignmentsTable extends Migration
     public function up()
     {
         DB::statement(
-            "CREATE TABLE `squawk_assignments` (
+            "CREATE TABLE `ccams_squawk_assignments` (
                 `callsign` VARCHAR(255) NOT NULL,
                 `code` VARCHAR(4) NOT NULL,
-                `type` ENUM('CCAMS', 'ORCAM', 'PAIR', 'UNIT') NOT NULL,
                 `created_at` TIMESTAMP NULL DEFAULT NULL,
                 `updated_at` TIMESTAMP NULL DEFAULT NULL,
                 PRIMARY KEY (`callsign`) USING BTREE,
-                CONSTRAINT `squawk_assignments_callsign_foreign` FOREIGN KEY (`callsign`) REFERENCES `network_aircraft`(`callsign`) ON DELETE CASCADE,
-                INDEX `squawk_assignments_type`  (`type`) USING BTREE,
-                UNIQUE INDEX `squawk_assignments_code_type` (`code`, `type`) USING BTREE
+                CONSTRAINT `ccams_squawk_assignments_callsign_foreign` FOREIGN KEY (`callsign`) REFERENCES `network_aircraft`(`callsign`) ON DELETE CASCADE,
+                UNIQUE INDEX `ccams_squawk_assignments` (`code`) USING BTREE
             )
             COLLATE='utf8mb4_unicode_ci';"
         );
@@ -36,6 +34,6 @@ class CreateSquawkAssignmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('squawk_assignments');
+        Schema::dropIfExists('ccams_squawk_assignments');
     }
 }
