@@ -201,6 +201,11 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItReturnsNullOnNoApplicableRange()
+    {
+        $this->assertNull($this->allocator->allocate('BMI11A', ['origin' => 'EGGD']));
+    }
+
     public function testItReturnsNullOnMissingOrigin()
     {
         $this->assertNull($this->allocator->allocate('BMI11A', []));

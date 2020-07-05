@@ -65,6 +65,11 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItReturnsNullOnNoApplicableRange()
+    {
+        $this->assertNull($this->allocator->allocate('BMI11A', []));
+    }
+
     public function testItReturnsNullIfAllocationFails()
     {
         $this->assertNull($this->allocator->allocate('BAW123', []));

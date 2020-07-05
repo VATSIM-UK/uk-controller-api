@@ -4,7 +4,6 @@ namespace App\Models\Squawk\Orcam;
 
 use App\Allocator\Squawk\SquawkRangeInterface;
 use App\Models\Squawk\AbstractSquawkRange;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrcamSquawkRange extends AbstractSquawkRange
 {

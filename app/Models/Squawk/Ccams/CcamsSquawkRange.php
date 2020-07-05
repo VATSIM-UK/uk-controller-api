@@ -4,7 +4,6 @@ namespace App\Models\Squawk\Ccams;
 
 use App\Allocator\Squawk\SquawkRangeInterface;
 use App\Models\Squawk\AbstractSquawkRange;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CcamsSquawkRange extends AbstractSquawkRange
 {

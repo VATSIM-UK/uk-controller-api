@@ -4,7 +4,6 @@ namespace App\Models\Squawk\Ccams;
 
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CcamsSquawkAssignment extends Model implements SquawkAssignmentInterface
 {
