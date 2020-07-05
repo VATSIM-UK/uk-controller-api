@@ -16,18 +16,12 @@ class CcamsSquawkAssignment extends Model implements SquawkAssignmentInterface
 
     protected $dates = [
         'created_at',
-        'updated_at'
     ];
 
     protected $fillable = [
         'callsign',
         'code',
     ];
-
-    public function squawkRange(): BelongsTo
-    {
-        return $this->belongsTo(CcamsSquawkRange::class);
-    }
 
     public function getCode(): string
     {

@@ -18,11 +18,6 @@ class CcamsSquawkRange extends AbstractSquawkRange
         'last',
     ];
 
-    public function assignments(): HasMany
-    {
-        return $this->hasMany(CcamsSquawkAssignment::class);
-    }
-
     public function first(): string
     {
         return $this->attributes['first'];
