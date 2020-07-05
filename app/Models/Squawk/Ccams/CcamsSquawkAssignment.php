@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CcamsSquawkAssignment extends Model implements SquawkAssignmentInterface
 {
+    protected $primaryKey = 'callsign';
+
+    protected $keyType = 'string';
+
+    const UPDATED_AT = null;
+
     protected $dates = [
         'created_at',
         'updated_at'
