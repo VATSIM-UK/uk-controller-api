@@ -231,6 +231,11 @@ class AddUnitDiscreteSquawkCodeData extends Migration
                 'last' => '3367',
             ],
             [
+                'unit' => 'SCO',
+                'first' => '3601',
+                'last' => '3632',
+            ],
+            [
                 'unit' => 'EGUB',
                 'first' => '3601',
                 'last' => '3623',
@@ -501,9 +506,19 @@ class AddUnitDiscreteSquawkCodeData extends Migration
                 ],
             ],
             [
+                'unit' => 'LON',
+                'first' => '4307',
+                'last' => '4317',
+            ],
+            [
                 'unit' => 'EGYD',
                 'first' => '4320',
                 'last' => '4327',
+            ],
+            [
+                'unit' => 'SCO',
+                'first' => '4330',
+                'last' => '4337',
             ],
             [
                 'unit' => 'EGWU',
@@ -628,6 +643,11 @@ class AddUnitDiscreteSquawkCodeData extends Migration
                 ],
             ],
             [
+                'unit' => 'LON',
+                'first' => '5001',
+                'last' => '5012',
+            ],
+            [
                 'unit' => 'EGLF',
                 'first' => '5020',
                 'last' => '5036',
@@ -669,6 +689,16 @@ class AddUnitDiscreteSquawkCodeData extends Migration
                         'rule' => 'APP',
                     ],
                 ],
+            ],
+            [
+                'unit' => 'EGVV',
+                'first' => '6040',
+                'last' => '6077',
+            ],
+            [
+                'unit' => 'EGVV',
+                'first' => '6101',
+                'last' => '6157',
             ],
             [
                 'unit' => 'EGSC',
@@ -713,6 +743,11 @@ class AddUnitDiscreteSquawkCodeData extends Migration
                         'rule' => 'APP',
                     ],
                 ],
+            ],
+            [
+                'unit' => 'EGVV',
+                'first' => '6401',
+                'last' => '6457',
             ],
             [
                 'unit' => 'EGAA',

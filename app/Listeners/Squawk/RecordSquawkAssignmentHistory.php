@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Squawk;
 
-use App\Events\SquawkAllocationEvent;
+use App\Events\SquawkAssignmentEvent;
 use App\Models\Squawks\AllocationHistory;
 
 /**
@@ -14,10 +14,10 @@ class RecordSquawkAllocationHistory
     /**
      * Handle any squawk allocation event
      *
-     * @param SquawkAllocationEvent $allocationEvent
+     * @param SquawkAssignmentEvent $allocationEvent
      * @return bool
      */
-    public function handle(SquawkAllocationEvent $allocationEvent) : bool
+    public function handle(SquawkAssignmentEvent $allocationEvent) : bool
     {
         AllocationHistory::create(
             $allocationEvent->allocation()

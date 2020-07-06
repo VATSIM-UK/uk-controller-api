@@ -32,6 +32,16 @@ class AddUnitSquawkRangeGuestData extends Migration
                     'guest_unit' => 'EGLL',
                     'created_at' => Carbon::now(),
                 ],
+                [
+                    'primary_unit' => 'SCO',
+                    'guest_unit' => 'STC',
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'primary_unit' => 'LON',
+                    'guest_unit' => 'LTC',
+                    'created_at' => Carbon::now(),
+                ],
             ]
         );
     }
