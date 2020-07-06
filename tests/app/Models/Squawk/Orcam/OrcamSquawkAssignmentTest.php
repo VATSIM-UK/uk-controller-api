@@ -18,7 +18,7 @@ class OrcamSquawkAssignmentTest extends BaseFunctionalTestCase
         $this->assertEquals('0101', $assignment->getCode());
     }
 
-    public function testItReturnsTheAssignemntType()
+    public function testItReturnsTheAssignmentType()
     {
         $assignment = new OrcamSquawkAssignment(
             [
@@ -28,5 +28,17 @@ class OrcamSquawkAssignmentTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals('ORCAM', $assignment->getType());
+    }
+
+    public function testItReturnsTheCallsign()
+    {
+        $assignment = new OrcamSquawkAssignment(
+            [
+                'callsign' => 'BAW123',
+                'code' => '0101',
+            ]
+        );
+
+        $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 }

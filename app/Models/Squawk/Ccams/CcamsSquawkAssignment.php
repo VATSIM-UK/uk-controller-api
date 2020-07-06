@@ -31,4 +31,9 @@ class CcamsSquawkAssignment extends Model implements SquawkAssignmentInterface
     {
         return "CCAMS";
     }
+
+    public function getCallsign(): string
+    {
+        return $this->attributes['callsign'];
+    }
 }

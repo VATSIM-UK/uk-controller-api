@@ -31,4 +31,9 @@ class AirfieldPairingSquawkAssignment extends Model implements SquawkAssignmentI
     {
         return "AIRFIELD_PAIR";
     }
+
+    public function getCallsign(): string
+    {
+        return $this->attributes['callsign'];
+    }
 }

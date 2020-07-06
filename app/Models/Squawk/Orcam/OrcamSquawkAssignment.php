@@ -37,4 +37,9 @@ class OrcamSquawkAssignment extends Model implements SquawkAssignmentInterface
     {
         return "ORCAM";
     }
+
+    public function getCallsign(): string
+    {
+        return $this->attributes['callsign'];
+    }
 }

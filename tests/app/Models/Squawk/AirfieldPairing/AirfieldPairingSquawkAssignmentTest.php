@@ -18,7 +18,7 @@ class AirfieldPairingSquawkAssignmentTest extends BaseFunctionalTestCase
         $this->assertEquals('0101', $assignment->getCode());
     }
 
-    public function testItReturnsTheAssignemntType()
+    public function testItReturnsTheAssignmentType()
     {
         $assignment = new AirfieldPairingSquawkAssignment(
             [
@@ -28,5 +28,17 @@ class AirfieldPairingSquawkAssignmentTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals('AIRFIELD_PAIR', $assignment->getType());
+    }
+
+    public function testItReturnsTheCallsign()
+    {
+        $assignment = new AirfieldPairingSquawkAssignment(
+            [
+                'callsign' => 'BAW123',
+                'code' => '0101',
+            ]
+        );
+
+        $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 }

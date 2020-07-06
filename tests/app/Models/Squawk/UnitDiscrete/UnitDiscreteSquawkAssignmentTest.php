@@ -18,7 +18,7 @@ class UnitDiscreteSquawkAssignmentTest extends BaseFunctionalTestCase
         $this->assertEquals('0101', $assignment->getCode());
     }
 
-    public function testItReturnsTheAssignemntType()
+    public function testItReturnsTheAssignmentType()
     {
         $assignment = new UnitDiscreteSquawkAssignment(
             [
@@ -28,5 +28,18 @@ class UnitDiscreteSquawkAssignmentTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals('UNIT_DISCRETE', $assignment->getType());
+    }
+
+    public function testItReturnsTheCallsign()
+    {
+        $assignment = new UnitDiscreteSquawkAssignment(
+            [
+                'unit' => 'EGGD',
+                'callsign' => 'BAW123',
+                'code' => '0101',
+            ]
+        );
+
+        $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 }

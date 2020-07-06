@@ -18,7 +18,7 @@ class CcamsSquawkAssignmentTest extends BaseFunctionalTestCase
         $this->assertEquals('0101', $assignment->getCode());
     }
 
-    public function testItReturnsTheAssignemntType()
+    public function testItReturnsTheAssignmentType()
     {
         $assignment = new CcamsSquawkAssignment(
             [
@@ -28,5 +28,17 @@ class CcamsSquawkAssignmentTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals('CCAMS', $assignment->getType());
+    }
+
+    public function testItReturnsTheCallsign()
+    {
+        $assignment = new CcamsSquawkAssignment(
+            [
+                'callsign' => 'BAW123',
+                'code' => '0101',
+            ]
+        );
+
+        $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 }

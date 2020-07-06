@@ -32,4 +32,9 @@ class UnitDiscreteSquawkAssignment extends Model implements SquawkAssignmentInte
     {
         return "UNIT_DISCRETE";
     }
+
+    public function getCallsign(): string
+    {
+        return $this->attributes['callsign'];
+    }
 }
