@@ -10,8 +10,12 @@ use RuntimeException;
 class OptimiseTables extends Command
 {
     const TABLES_TO_OPTIMISE = [
-        'squawk_allocation',
-        'squawk_allocation_history',
+        'ccams_squawk_assignments',
+        'orcam_squawk_assignments',
+        'airfield_pairing_squawk_assignments',
+        'unit_discrete_squawk_assignments',
+        'unit_discrete_squawk_range_rules',
+        'squawk_assignments_history',
         'assigned_holds',
         'assigned_holds_history',
         'msl_airfield',
