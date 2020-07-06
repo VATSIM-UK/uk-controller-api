@@ -6,6 +6,7 @@ use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use Illuminate\Support\Collection;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * Service for converting squawk requests into data arrays that can be returned as
@@ -111,5 +112,15 @@ class SquawkService
         }
 
         return null;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAllocatorPreference(): array
+    {
+        return array_map(function (SquawkAllocatorInterface $allocator) {
+            return get_class($allocator);
+        }, $this->allocators);
     }
 }

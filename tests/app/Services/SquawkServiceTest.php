@@ -1,6 +1,10 @@
 <?php
 namespace App\Services;
 
+use App\Allocator\Squawk\General\AirfieldPairingSquawkAllocator;
+use App\Allocator\Squawk\General\CcamsSquawkAllocator;
+use App\Allocator\Squawk\General\OrcamSquawkAllocator;
+use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
 use App\BaseFunctionalTestCase;
 use App\Exceptions\SquawkNotAllocatedException;
 use App\Exceptions\SquawkNotAssignedException;
@@ -263,5 +267,17 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         $this->assertFalse(
             $this->squawkService->assignLocalSquawk('BAW123', 'EGKA', 'I')->isNewAllocation()
         );
+    }
+
+    public function testDefaultAllocatorPreference()
+    {
+        $expected = [
+            UnitDiscreteSquawkAllocator::class,
+            AirfieldPairingSquawkAllocator::class,
+            OrcamSquawkAllocator::class,
+            CcamsSquawkAllocator::class,
+        ];
+
+        $this->assertEquals($expected, $this->squawkService->getAllocatorPreference());
     }
 }
