@@ -9,7 +9,7 @@ class MarkAssignmentDeletedOnUnassignment
 {
     public function handle(SquawkUnassignedEvent $event) : bool
     {
-        SquawkAssignmentsHistory::where('callsign', $event->getDeletedAssignment()->getCallsign())->delete();
+        SquawkAssignmentsHistory::where('callsign', $event->getCallsign())->delete();
         return true;
     }
 }

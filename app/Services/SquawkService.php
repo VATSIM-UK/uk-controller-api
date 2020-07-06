@@ -5,8 +5,9 @@ namespace App\Services;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
+use App\Events\SquawkUnassignedEvent;
 use Illuminate\Support\Collection;
-use PhpParser\Node\Expr\Array_;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Service for converting squawk requests into data arrays that can be returned as
@@ -28,7 +29,7 @@ class SquawkService
      * @param SquawkAllocatorInterface[] $allocators
      */
     public function __construct(
-        Collection $allocators
+        array $allocators
     ) {
         $this->allocators = $allocators;
     }
@@ -43,6 +44,7 @@ class SquawkService
     {
         foreach ($this->allocators as $allocator) {
             if ($allocator->delete($callsign)) {
+                event(new SquawkUnassignedEvent($callsign));
                 return true;
             }
         }
@@ -77,16 +79,21 @@ class SquawkService
      */
     public function assignLocalSquawk(string $callsign, string $unit, string $rules): ?SquawkAssignmentInterface
     {
-        foreach ($this->allocators as $allocator) {
-            if (
-                $allocator->canAllocateForCategory(SquawkAssignmentCategories::CATEGORY_LOCAL) &&
-                $assignment = $allocator->allocate($callsign, ['unit' => $unit, 'rules' => $rules])
-            ) {
-                return $assignment;
-            }
-        }
+        $assignment = null;
+        DB::transaction(function() use ($callsign, $unit, $rules, &$assignment) {
+            $this->deleteSquawkAssignment($callsign);
 
-        return null;
+            foreach ($this->allocators as $allocator) {
+                if (
+                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::CATEGORY_LOCAL) &&
+                    $assignment = $allocator->allocate($callsign, ['unit' => $unit, 'rules' => $rules])
+                ) {
+                    return;
+                }
+            }
+        });
+
+        return $assignment;
     }
 
     /**
@@ -102,16 +109,21 @@ class SquawkService
         string $origin,
         string $destination
     ): ?SquawkAssignmentInterface {
-        foreach ($this->allocators as $allocator) {
-            if (
-                $allocator->canAllocateForCategory(SquawkAssignmentCategories::CATEGORY_GENERAL) &&
-                $assignment = $allocator->allocate($callsign, ['origin' => $origin, 'destination' => $destination])
-            ) {
-                return $assignment;
-            }
-        }
 
-        return null;
+        $assignment = null;
+        DB::transaction(function () use ($callsign, $origin, $destination, &$assignment) {
+            $this->deleteSquawkAssignment($callsign);
+            foreach ($this->allocators as $allocator) {
+                if (
+                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::CATEGORY_GENERAL) &&
+                    $assignment = $allocator->allocate($callsign, ['origin' => $origin, 'destination' => $destination])
+                ) {
+                    return $assignment;
+                }
+            }
+        });
+
+        return $assignment;
     }
 
     /**

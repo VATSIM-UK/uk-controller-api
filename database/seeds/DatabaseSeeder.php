@@ -21,12 +21,6 @@ class DatabaseSeeder extends Seeder
             'squawk_range_owner',
             'squawk_range',
         ],
-        SquawkAllocationTableSeeder::class => [
-            'squawk_allocation',
-        ],
-        AllocationHistorySeeder::class => [
-            'squawk_allocation_history',
-        ],
         AsrTableSeeder::class => [
             'altimeter_setting_region',
             'altimeter_setting_region_airfield',

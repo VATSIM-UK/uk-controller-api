@@ -10,7 +10,6 @@ use App\Exceptions\SquawkNotAllocatedException;
 use App\Exceptions\SquawkNotAssignedException;
 use App\Libraries\GeneralSquawkRuleGenerator;
 use App\Models\Squawks\Allocation;
-use App\Models\User\User;
 use InvalidArgumentException;
 use TestingUtils\Traits\WithSeedUsers;
 
