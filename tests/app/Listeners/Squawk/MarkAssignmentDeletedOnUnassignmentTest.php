@@ -38,7 +38,7 @@ class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->listener->handle(new SquawkUnassignedEvent(new CcamsSquawkAssignment(['callsign' => 'BAW123'])));
+        $this->listener->handle(new SquawkUnassignedEvent('BAW123'));
         $this->assertSoftDeleted(
             'squawk_assignments_history',
             [
@@ -60,7 +60,7 @@ class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
         $deletedHistory->deleted_at = '2020-05-01 00:11:22';
         $deletedHistory->save();
 
-        $this->listener->handle(new SquawkUnassignedEvent(new CcamsSquawkAssignment(['callsign' => 'BAW123'])));
+        $this->listener->handle(new SquawkUnassignedEvent('BAW123'));
         $this->assertDatabaseHas(
             'squawk_assignments_history',
             [
@@ -73,7 +73,7 @@ class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
     public function testItContinuesPropagation()
     {
         $this->assertTrue(
-            $this->listener->handle(new SquawkUnassignedEvent(new CcamsSquawkAssignment(['callsign' => 'BAW123'])))
+            $this->listener->handle(new SquawkUnassignedEvent('BAW123'))
         );
     }
 }

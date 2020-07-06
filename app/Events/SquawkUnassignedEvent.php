@@ -2,25 +2,23 @@
 
 namespace App\Events;
 
-use App\Allocator\Squawk\SquawkAssignmentInterface;
-
 class SquawkUnassignedEvent
 {
     /**
-     * @var SquawkAssignmentInterface
+     * @var string
      */
-    private $deletedAssignment;
+    private $callsign;
 
-    public function __construct(SquawkAssignmentInterface $deletedAssignment)
+    public function __construct(string $callsign)
     {
-        $this->deletedAssignment = $deletedAssignment;
+        $this->callsign = $callsign;
     }
 
     /**
-     * @return SquawkAssignmentInterface
+     * @return string
      */
-    public function getDeletedAssignment(): SquawkAssignmentInterface
+    public function getCallsign(): string
     {
-        return $this->deletedAssignment;
+        return $this->callsign;
     }
 }
