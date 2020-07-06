@@ -14,7 +14,7 @@ class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
     {
         $this->doesntExpectEvents(HoldUnassignedEvent::class);
         $listener = new UnassignHoldOnDisconnect();
-        $this->assertFalse(
+        $this->assertTrue(
             $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'AAL1234'])))
         );
     }
@@ -23,7 +23,7 @@ class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
     {
         $this->expectsEvents(HoldUnassignedEvent::class);
         $listener = new UnassignHoldOnDisconnect();
-        $this->assertFalse(
+        $this->assertTrue(
             $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])))
         );
     }
@@ -32,7 +32,7 @@ class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
     {
         $listener = new UnassignHoldOnDisconnect();
         $this->withoutEvents();
-        $this->assertFalse(
+        $this->assertTrue(
             $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])))
         );
 

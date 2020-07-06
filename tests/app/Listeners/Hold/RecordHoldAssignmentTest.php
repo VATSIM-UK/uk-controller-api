@@ -69,8 +69,8 @@ class RecordHoldAssignmentTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItStopsEventPropogation()
+    public function testItContinuesPropagation()
     {
-        $this->assertFalse($this->listener->handle(new HoldAssignedEvent($this->getAssignment())));
+        $this->assertTrue($this->listener->handle(new HoldAssignedEvent($this->getAssignment())));
     }
 }

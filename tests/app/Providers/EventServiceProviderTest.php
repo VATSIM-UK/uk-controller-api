@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\BaseUnitTestCase;
-use App\Events\SquawkAllocationEvent;
-use App\Listeners\Squawk\RecordSquawkAllocationHistory;
+use App\Events\SquawkAssignmentEvent;
+use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 
 class EventServiceProviderTest extends BaseUnitTestCase
 {
@@ -27,8 +27,8 @@ class EventServiceProviderTest extends BaseUnitTestCase
     public function testItListensForSquawkAllocations()
     {
         $this->assertEquals(
-            [RecordSquawkAllocationHistory::class],
-            $this->provider->listens()[SquawkAllocationEvent::class]
+            [RecordSquawkAssignmentHistory::class],
+            $this->provider->listens()[SquawkAssignmentEvent::class]
         );
     }
 }

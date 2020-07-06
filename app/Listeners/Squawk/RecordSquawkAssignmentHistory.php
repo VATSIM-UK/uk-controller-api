@@ -3,13 +3,10 @@
 namespace App\Listeners\Squawk;
 
 use App\Events\SquawkAssignmentEvent;
-use App\Models\Squawks\AllocationHistory;
+use App\Models\Squawk\SquawkAssignmentsHistory;
+use Illuminate\Support\Facades\Auth;
 
-/**
- * Class RecordSquawkAllocationHistory
- * @package App\Listeners
- */
-class RecordSquawkAllocationHistory
+class RecordSquawkAssignmentHistory
 {
     /**
      * Handle any squawk allocation event
@@ -19,10 +16,14 @@ class RecordSquawkAllocationHistory
      */
     public function handle(SquawkAssignmentEvent $allocationEvent) : bool
     {
-        AllocationHistory::create(
-            $allocationEvent->allocation()
+        SquawkAssignmentsHistory::create(
+            [
+                'callsign' => $allocationEvent->getAssignment()->getCallsign(),
+                'code' => $allocationEvent->getAssignment()->getCode(),
+                'type' => $allocationEvent->getAssignment()->getType(),
+                'user_id' => !is_null(Auth::user()) ? Auth::user()->id : null,
+            ]
         );
-
-        return false;
+        return true;
     }
 }

@@ -110,8 +110,8 @@ class DatabaseSeeder extends Seeder
             'orcam_squawk_assignments',
             'airfield_pairing_squawk_assignments',
             'unit_discrete_squawk_assignments',
-            'unit_discrete_squawk_ranges',
             'unit_discrete_squawk_range_rules',
+            'squawk_assignments_history',
         ]
     ];
 

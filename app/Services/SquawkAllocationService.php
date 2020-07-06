@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use App\Events\SquawkAllocationEvent;
+use App\Events\SquawkAssignmentEvent;
 use App\Helpers\Squawks\SquawkAllocation;
 use App\Models\Squawks\Allocation;
 use App\Models\Squawks\AllocationHistory;
@@ -39,7 +39,7 @@ class SquawkAllocationService
             ]
         )->touchAllocated();
 
-        Event::dispatch(new SquawkAllocationEvent($allocation));
+        Event::dispatch(new SquawkAssignmentEvent($allocation));
         return new SquawkAllocation($allocation->squawk, $allocation->wasRecentlyCreated);
     }
 

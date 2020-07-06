@@ -1,42 +1,26 @@
 <?php
 
-
 namespace App\Events;
 
-use App\Models\Squawks\Allocation;
+use App\Allocator\Squawk\SquawkAssignmentInterface;
 
-class SquawkAllocationEvent
+class SquawkAssignmentEvent
 {
     /**
-     * The squawk allocation that has just been created.
-     *
-     * @var Allocation
+     * @var SquawkAssignmentInterface
      */
-    private $allocation;
+    private $assignment;
 
-    /**
-     * SquawkAllocationEventTest constructor.
-     * @param Allocation $allocation
-     */
-    public function __construct(Allocation $allocation)
+    public function __construct(SquawkAssignmentInterface $assignment)
     {
-        $this->allocation = $allocation;
+        $this->assignment = $assignment;
     }
 
     /**
-     * Returns the array representation of the
-     * allocation. Adds whether or not it was a new
-     * allocation.
-     *
-     * @return array
+     * @return SquawkAssignmentInterface
      */
-    public function allocation() : array
+    public function getAssignment(): SquawkAssignmentInterface
     {
-        return array_merge(
-            $this->allocation->toArray(),
-            [
-                'new' => $this->allocation->wasRecentlyCreated,
-            ]
-        );
+        return $this->assignment;
     }
 }

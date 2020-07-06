@@ -20,7 +20,9 @@ class CreateSquawkAssignmentsHistoryTable extends Migration
             $table->string('type')->comment('The type of allocation');
             $table->unsignedInteger('user_id')->nullable()->comment('The user that allocated the squawk');
             $table->timestamp('allocated_at')->comment('The time the squawk was allocated');
+            $table->softDeletes();
 
+            $table->index('callsign');
             $table->foreign('user_id')->references('id')->on('user')->cascadeOnDelete();
         });
     }
