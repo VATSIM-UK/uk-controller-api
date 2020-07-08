@@ -33,7 +33,7 @@ class AddSidHandoffColumn extends Migration
     public function down()
     {
         Schema::table('sid', function (Blueprint $table) {
-            $table->dropForeign('sids_handoff_id_foreign');
+            $table->dropForeign('sid_handoff_id_foreign');
             $table->dropColumn('handoff_id');
         });
     }

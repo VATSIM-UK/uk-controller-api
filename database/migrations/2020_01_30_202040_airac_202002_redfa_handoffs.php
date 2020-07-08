@@ -38,7 +38,7 @@ class Airac202002RedfaHandoffs extends Migration
         try {
             // Handoff orders - REDFA
             HandoffService::removePositionFromAllHandoffs('LTC_ER_CTR');
-            PrenoteService::removeFromPrenoteOrder('LTC_ER_CTR');
+            PrenoteService::removePositionFromAllPrenotes('LTC_ER_CTR');
             DB::commit();
         } catch (Exception $exception) {
             DB::rollBack();

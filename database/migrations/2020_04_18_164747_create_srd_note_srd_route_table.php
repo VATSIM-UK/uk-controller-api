@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateSrdNoteSrdRouteTable extends Migration
@@ -13,13 +13,17 @@ class CreateSrdNoteSrdRouteTable extends Migration
      */
     public function up()
     {
-        Schema::create('srd_note_srd_route', function (Blueprint $table) {
-            $table->unsignedSmallInteger('srd_note_id');
-            $table->unsignedSmallInteger('srd_route_id');
-
-            $table->foreign('srd_note_id')->references('id')->on('srd_notes')->onDelete('cascade');
-            $table->foreign('srd_route_id')->references('id')->on('srd_routes')->onDelete('cascade');
-        });
+        DB::statement(
+            "CREATE TABLE `srd_note_srd_route` (
+                `srd_note_id` SMALLINT(5) UNSIGNED NOT NULL,
+                `srd_route_id` SMALLINT(5) UNSIGNED NOT NULL,
+                PRIMARY KEY (`srd_note_id`, `srd_route_id`) USING BTREE,
+                INDEX `srd_note_srd_route_srd_route_id_foreign` (`srd_route_id`) USING BTREE,
+                CONSTRAINT `srd_note_srd_route_srd_note_id_foreign` FOREIGN KEY (`srd_note_id`) REFERENCES `srd_notes` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE,
+                CONSTRAINT `srd_note_srd_route_srd_route_id_foreign` FOREIGN KEY (`srd_route_id`) REFERENCES `srd_routes` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE
+            )
+            COLLATE='utf8mb4_unicode_ci';"
+        );
     }
 
     /**

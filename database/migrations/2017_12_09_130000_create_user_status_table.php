@@ -14,12 +14,12 @@ class CreateUserStatusTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'user_status',
-            function (Blueprint $table) {
-                $table->unsignedTinyInteger('id')->primary();
-                $table->string('status');
-            }
+        DB::statement(
+            "CREATE TABLE `user_status` (
+                `id` TINYINT(3) UNSIGNED NOT NULL,
+                `status` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+                PRIMARY KEY (`id`) USING BTREE
+            )COLLATE='utf8mb4_unicode_ci';"
         );
 
         DB::table('user_status')->insert(
