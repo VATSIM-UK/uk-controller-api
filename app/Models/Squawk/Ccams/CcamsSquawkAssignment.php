@@ -13,6 +13,8 @@ class CcamsSquawkAssignment extends Model implements SquawkAssignmentInterface
 
     const UPDATED_AT = null;
 
+    public $incrementing = false;
+
     protected $dates = [
         'created_at',
     ];

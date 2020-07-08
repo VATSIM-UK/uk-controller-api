@@ -13,6 +13,8 @@ class AirfieldPairingSquawkAssignment extends Model implements SquawkAssignmentI
 
     const UPDATED_AT = null;
 
+    public $incrementing = false;
+
     protected $dates = [
         'created_at',
     ];

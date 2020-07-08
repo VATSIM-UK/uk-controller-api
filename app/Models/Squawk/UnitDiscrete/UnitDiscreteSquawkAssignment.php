@@ -13,6 +13,8 @@ class UnitDiscreteSquawkAssignment extends Model implements SquawkAssignmentInte
 
     const UPDATED_AT = null;
 
+    public $incrementing = false;
+
     protected $dates = [
         'created_at',
     ];
