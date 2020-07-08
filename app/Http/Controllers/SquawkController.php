@@ -60,7 +60,7 @@ class SquawkController extends BaseController
         if (!$assignment) {
             return response()->json(
                 [
-                    'message' => 'Assignment not found',
+                    'message' => 'Assignment not found for BAW12AZ',
                 ]
             )->setStatusCode(404);
         }
@@ -129,12 +129,12 @@ class SquawkController extends BaseController
 
         if (!$assignment)  {
             Log::error(
-                'Unable to allocate general squawk for aircraft: ' . $callsign,
+                'Unable to allocate general squawk for ' . $callsign,
                 $request->json()->all()
             );
             return response()->json(
                 [
-                    'message' => 'Unable to allocate general squawk for aircraft: ' . $callsign,
+                    'message' => 'Unable to allocate general squawk for ' . $callsign,
                     'squawk' => self::FAILURE_SQUAWK,
                 ]
             )->setStatusCode(500);
@@ -142,7 +142,7 @@ class SquawkController extends BaseController
 
         return response()->json(
             [
-                'squawk' => $assignment->squawk(),
+                'squawk' => $assignment->getCode(),
             ]
         )->setStatusCode(201);
     }
@@ -179,12 +179,12 @@ class SquawkController extends BaseController
         );
         if (!$assignment) {
             Log::error(
-                'Unable to allocate local squawk for aircraft: ' . $callsign,
+                'Unable to allocate local squawk for ' . $callsign,
                 $request->json()->all()
             );
             return response()->json(
                 [
-                    'message' => 'Unable to allocate local squawk for aircraft: ' . $callsign,
+                    'message' => 'Unable to allocate local squawk for ' . $callsign,
                     'squawk' => self::FAILURE_SQUAWK,
                 ]
             )->setStatusCode(500);

@@ -20,6 +20,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->allocator = new CcamsSquawkAllocator();
+        CcamsSquawkRange::query()->delete();
     }
 
     public function testItAllocatesFirstFreeSquawkInRange()

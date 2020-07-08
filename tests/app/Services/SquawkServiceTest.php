@@ -91,7 +91,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItAssignsAGeneralSquawkAndReturnsIt()
     {
-        $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'EDDF', 'EGLL');
+        $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'KJFK', 'EGLL');
         $this->assertEquals('0101', $assignment->getCode());
         $this->assertEquals('ORCAM', $assignment->getType());
         $this->assertEquals('BAW123', $assignment->getCallsign());
@@ -100,6 +100,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
     public function testItDoesntAssignGeneralSquawkIfAllocatorFails()
     {
         OrcamSquawkRange::getQuery()->delete();
+        CcamsSquawkRange::getQuery()->delete();
         $this->assertNull($this->squawkService->assignGeneralSquawk('BAW123', 'EGKK', 'EGLL'));
     }
 
@@ -113,7 +114,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         );
         OrcamSquawkRange::getQuery()->delete();
 
-        $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'EDDF', 'EGLL');
+        $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'KJFK', 'EGLL');
         $this->assertEquals('0303', $assignment->getCode());
         $this->assertEquals('CCAMS', $assignment->getType());
         $this->assertEquals('BAW123', $assignment->getCallsign());
