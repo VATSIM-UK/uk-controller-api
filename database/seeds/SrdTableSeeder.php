@@ -41,6 +41,16 @@ class SrdTableSeeder extends Seeder
             'star' => 'OCK1A',
         ]);
 
+        SrdRoute::create([
+            'origin' => 'EGLL',
+            'destination' => 'VEULE',
+            'minimum_level' => 24500,
+            'maximum_level' => 66000,
+            'route_segment' => 'MID UL612',
+            'sid' => null,
+            'star' => null,
+        ]);
+
         $noteRoute = SrdRoute::create([
             'origin' => 'EGAA',
             'destination' => 'EGLL',

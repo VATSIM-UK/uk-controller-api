@@ -143,6 +143,27 @@ class SrdControllerTest extends BaseApiTestCase
             ->assertJson($expected);
     }
 
+    public function testItAppendsDestinationIfNotAirport()
+    {
+        $expected = [
+            [
+                'minimum_level' => 24500,
+                'maximum_level' => 66000,
+                'route_string' => 'MID UL612 VEULE',
+                'notes' => [],
+            ],
+        ];
+
+        $queryParams = [
+            'origin' => 'EGLL',
+            'destination' => 'VEULE',
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+            ->assertStatus(200)
+            ->assertJson($expected);
+    }
+
     public function testItFormatsNotes()
     {
         $expected = [
