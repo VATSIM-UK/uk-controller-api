@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\Squawks\Range;
-use App\Models\Squawks\SquawkGeneral;
-use App\Models\Squawks\SquawkRangeOwner;
-use App\Models\Squawks\SquawkUnit;
+use App\Models\Squawk\Orcam\OrcamSquawkRange;
+use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use Illuminate\Database\Seeder;
 
 class SquawkRangeTablesSeeder extends Seeder
@@ -15,5 +13,20 @@ class SquawkRangeTablesSeeder extends Seeder
      */
     public function run()
     {
+        OrcamSquawkRange::create(
+            [
+                'origin' => 'ED',
+                'first' => '0101',
+                'last' => '0101'
+            ]
+        );
+
+        UnitDiscreteSquawkRange::create(
+            [
+                'unit' => 'EGKK',
+                'first' => '0202',
+                'last' => '0202'
+            ]
+        );
     }
 }

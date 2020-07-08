@@ -4,11 +4,15 @@ namespace App\Allocator\Squawk;
 
 class SquawkAssignmentCategories
 {
-    const CATEGORY_LOCAL = 'LOCAL';
-    const CATEGORY_GENERAL = 'GENERAL';
+    const LOCAL = 'LOCAL';
+    const GENERAL = 'GENERAL';
 
     const TYPES = [
-        self::CATEGORY_LOCAL,
-        self::CATEGORY_GENERAL
+        self::LOCAL,
+        self::GENERAL
     ];
+
+    private function __construct()
+    {
+    }
 }

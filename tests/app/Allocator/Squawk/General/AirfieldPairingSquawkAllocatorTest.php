@@ -193,8 +193,8 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
     public function categoryProvider(): array
     {
         return [
-            [SquawkAssignmentCategories::CATEGORY_GENERAL, true],
-            [SquawkAssignmentCategories::CATEGORY_LOCAL, false],
+            [SquawkAssignmentCategories::GENERAL, true],
+            [SquawkAssignmentCategories::LOCAL, false],
         ];
     }
 }

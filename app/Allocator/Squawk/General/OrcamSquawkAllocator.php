@@ -83,6 +83,6 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
 
     public function canAllocateForCategory(string $category): bool
     {
-        return $category === SquawkAssignmentCategories::CATEGORY_GENERAL;
+        return $category === SquawkAssignmentCategories::GENERAL;
     }
 }

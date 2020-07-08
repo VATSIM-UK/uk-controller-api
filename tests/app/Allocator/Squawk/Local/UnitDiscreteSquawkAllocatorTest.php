@@ -284,8 +284,8 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
     public function categoryProvider(): array
     {
         return [
-            [SquawkAssignmentCategories::CATEGORY_GENERAL, false],
-            [SquawkAssignmentCategories::CATEGORY_LOCAL, true],
+            [SquawkAssignmentCategories::GENERAL, false],
+            [SquawkAssignmentCategories::LOCAL, true],
         ];
     }
 }
