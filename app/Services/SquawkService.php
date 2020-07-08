@@ -78,21 +78,11 @@ class SquawkService
      */
     public function assignLocalSquawk(string $callsign, string $unit, string $rules): ?SquawkAssignmentInterface
     {
-        $assignment = null;
-        DB::transaction(function() use ($callsign, $unit, $rules, &$assignment) {
-            $this->deleteSquawkAssignment($callsign);
-
-            foreach ($this->allocators as $allocator) {
-                if (
-                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::CATEGORY_LOCAL) &&
-                    $assignment = $allocator->allocate($callsign, ['unit' => $unit, 'rules' => $rules])
-                ) {
-                    return;
-                }
-            }
-        });
-
-        return $assignment;
+        return $this->assignSquawk(
+            $callsign,
+            SquawkAssignmentCategories::LOCAL,
+            ['unit' => $unit, 'rules' => $rules]
+        );
     }
 
     /**
@@ -108,14 +98,22 @@ class SquawkService
         string $origin,
         string $destination
     ): ?SquawkAssignmentInterface {
+        return $this->assignSquawk(
+            $callsign,
+            SquawkAssignmentCategories::GENERAL,
+            ['origin' => $origin, 'destination' => $destination]
+        );
+    }
 
+    private function assignSquawk(string $callsign, string $category, array $details): ?SquawkAssignmentInterface
+    {
         $assignment = null;
-        DB::transaction(function () use ($callsign, $origin, $destination, &$assignment) {
+        DB::transaction(function () use ($callsign, $category, $details, &$assignment) {
             $this->deleteSquawkAssignment($callsign);
             foreach ($this->allocators as $allocator) {
                 if (
-                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::CATEGORY_GENERAL) &&
-                    $assignment = $allocator->allocate($callsign, ['origin' => $origin, 'destination' => $destination])
+                    $allocator->canAllocateForCategory($category) &&
+                    $assignment = $allocator->allocate($callsign, $details)
                 ) {
                     return $assignment;
                 }
