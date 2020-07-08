@@ -15,12 +15,6 @@ class DatabaseSeeder extends Seeder
         AdminTableSeeder::class => [
             'admin',
         ],
-        SquawkTableSeeder::class => [
-            'squawk_general',
-            'squawk_unit',
-            'squawk_range_owner',
-            'squawk_range',
-        ],
         AsrTableSeeder::class => [
             'altimeter_setting_region',
             'altimeter_setting_region_airfield',
