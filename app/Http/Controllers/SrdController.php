@@ -40,15 +40,26 @@ class SrdController
             })
                 ->where('maximum_level', '>=', $requestData['requestedLevel']);
         }
-        
-        // exit fix
-       $exit = strlen($requestData['destination']) == 4 ? null : $requestData['destination'];
 
         // Format the results
-        $results = $query->get()->map(function (SrdRoute $route) use ($exit) {
-            $routeString = is_null($route->sid)
-                ? $route->route_segment
-                : sprintf('%s %s', $route->sid, $route->route_segment, $exit);
+        $results = $query->get()->map(function (SrdRoute $route) {
+
+            // Add SID fix to start of string if it's available
+            $routeString = '';
+            if ($route->sid) {
+                $routeString .= sprintf('%s ', $route->sid);
+            }
+
+            // Add the main route segement
+            $routeString .= $route->route_segment;
+
+            /*
+             * If the destination isn't an airport, append the destination as SRD routes
+             * for these stop at the last airway.
+             */
+            if (strlen($route->destination) !== 4) {
+                $routeString .= sprintf(' %s', $route->destination);
+            }
 
             return [
                 'minimum_level' => $route->minimum_level,
