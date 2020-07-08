@@ -1,11 +1,7 @@
 <?php
 
-use App\Models\Squawks\SquawkGeneral;
-use App\Models\Squawks\Range;
-use App\Models\Squawks\SquawkRangeOwner;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddGeneralRanges extends Migration
 {
@@ -663,28 +659,30 @@ class AddGeneralRanges extends Migration
         foreach ($rangeInfo as $range) {
             // If we don't yet have range owner, create one. There should be one range owner per combination of arr/dep
             if (!isset($processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']])) {
-                $rangeOwner = new SquawkRangeOwner();
-                $rangeOwner->save();
-                $processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']] = $rangeOwner;
 
-                // Create the range information
-                $general = new SquawkGeneral();
-                $general->departure_ident = $range['departure_ident'];
-                $general->arrival_ident = $range['arrival_ident'];
-                $general->squawk_range_owner_id =
-                    $processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']]->id;
-                $general->save();
+                // Create the range owner and range information
+                $processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']] =
+                    DB::table('squawk_general')->insertGetId(
+                        [
+                            'departure_ident' => $range['departure_ident'],
+                            'arrival_ident' => $range['arrival_ident'],
+                            'squawk_range_owner_id' => DB::table('squawk_range_owner')->insertGetId([]),
+                        ]
+                    );
             }
 
             // Create the range
-            $squawkRange = new Range();
-            $squawkRange->start = $range['start'];
-            $squawkRange->stop = $range['stop'];
-            $squawkRange->rules = $range['rules'];
-            $squawkRange->allow_duplicate = false;
-            $squawkRange->squawk_range_owner_id =
-                $processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']]->id;
-            $squawkRange->save();
+            DB::table('squawk_range')->insert(
+                [
+                    'start' => $range['start'],
+                    'stop' => $range['stop'],
+                    'rules' => $range['rules'],
+                    'allow_duplicate' => false,
+                    'squawk_range_owner_id' => $processedOwners[
+                        $range['departure_ident'] . '|' . $range['arrival_ident']
+                    ],
+                ]
+            );
         }
     }
 
@@ -695,10 +693,9 @@ class AddGeneralRanges extends Migration
      */
     public function down()
     {
-        $allGeneral = SquawkGeneral::all();
-        foreach ($allGeneral as $general) {
-            $general->delete();
-            SquawkRangeOwner::where('id', $general->squawk_range_owner_id)->delete();
-        }
+        DB::table('squawk_general')->select(['id', 'squawk_range_owner_id'])->orderByDesc('id')->each(function ($value) {
+            DB::table('squawk_general')->where('id', $value->id)->delete();
+            DB::table('squawk_range_owner')->where('id', $value->squawk_range_owner_id)->delete();
+        });
     }
 }

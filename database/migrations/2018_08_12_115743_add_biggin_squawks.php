@@ -1,10 +1,6 @@
 <?php
 
-use App\Models\Squawks\Range;
-use App\Models\Squawks\SquawkRangeOwner;
-use App\Models\Squawks\SquawkUnit;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
 class AddBigginSquawks extends Migration
@@ -16,24 +12,24 @@ class AddBigginSquawks extends Migration
      */
     public function up()
     {
-        // Create the range owner
-        $rangeOwner = new SquawkRangeOwner();
-        $rangeOwner->save();
 
-        // Create the unit
-        $unit = new SquawkUnit();
-        $unit->unit = 'EGKB';
-        $unit->squawk_range_owner_id = $rangeOwner->id;
-        $unit->save();
-
+        $rangeOwner = DB::table('squawk_range_owner')->insertGetId([]);
+        DB::table('squawk_unit')->insert(
+            [
+                'unit' => 'EGKB',
+                'squawk_range_owner_id' => $rangeOwner,
+            ]
+        );
         // Create the range
-        $squawkRange = new Range();
-        $squawkRange->start = '7047';
-        $squawkRange->stop = '7047';
-        $squawkRange->rules = 'A';
-        $squawkRange->allow_duplicate = true;
-        $squawkRange->squawkRangeOwner()->associate($rangeOwner);
-        $squawkRange->save();
+        DB::table('squawk_range')->insert(
+            [
+                'start' => '7047',
+                'stop' => '7047',
+                'rules' => 'A',
+                'allow_duplicate' => true,
+                'squawk_range_owner_id' => $rangeOwner,
+            ]
+        );
     }
 
     /**
@@ -43,11 +39,8 @@ class AddBigginSquawks extends Migration
      */
     public function down()
     {
-        $unit = SquawkUnit::where('unit', '=', 'EGKB')->first();
-
-        if ($unit !== null) {
-            $unit->delete();
-            SquawkRangeOwner::where('id', '=', $unit->squawk_range_owner_id)->delete();
-        }
+        $unit = DB::table('squawk_unit')->where('unit', 'EGKB')->select('squawk_range_owner_id')->first();
+        DB::table('squawk_unit')->where('unit', 'EGKB')->delete();
+        DB::table('squawk_range_owner')->where('id', $unit->squawk_range_owner_id)->delete();
     }
 }
