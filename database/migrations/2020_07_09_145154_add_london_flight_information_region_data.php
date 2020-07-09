@@ -191,7 +191,7 @@ class AddLondonFlightInformationRegionData extends Migration
                     'start_longitude' => 'W002.00.00.000',
                     'finish_latitude' => 'N049.49.29.000',
                     'finish_longitude' => 'W003.02.03.000',
-                    'description' => 'LELNA, LORKU, SKESO',
+                    'description' => 'ORTAC, LELNA, LORKU, SKESO',
                     'created_at' => Carbon::now(),
                 ],
                 [
@@ -281,7 +281,7 @@ class AddLondonFlightInformationRegionData extends Migration
                     'start_longitude' => 'W008.00.00.000',
                     'finish_latitude' => 'N051.14.24.000',
                     'finish_longitude' => 'W007.34.05.000',
-                    'description' => 'LEDGO',
+                    'description' => 'LESLU, LEDGO',
                     'created_at' => Carbon::now(),
                 ],
                 [
