@@ -19,7 +19,7 @@ class CreateNetworkAircraftFirEventsTable extends Migration
             $table->unsignedBigInteger('flight_information_region_id')->comment('The FIR in question');
             $table->string('event_type')->comment('Entry, exit, etc');
             $table->json('metadata')->comment('Any other data, position entered etc');
-            $table->timestamps();
+            $table->timestamp('created_at');
 
 
             $table->foreign('callsign')

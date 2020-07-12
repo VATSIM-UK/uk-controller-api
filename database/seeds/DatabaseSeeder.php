@@ -82,6 +82,7 @@ class DatabaseSeeder extends Seeder
         ],
         NetworkAircraftTableSeeder::class => [
             'network_aircraft',
+            'network_aircraft_fir_events',
         ],
         AssignedHoldsTableSeeder::class => [
             'assigned_holds',
