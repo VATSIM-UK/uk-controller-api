@@ -3,13 +3,13 @@
 namespace App\Models\Vatsim;
 
 use App\Models\FlightInformationRegion\FlightInformationRegion;
-use App\Models\Hold\AssignedHold;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NetworkAircraftFirEvent extends Model
 {
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'callsign',
         'flight_information_region_id',

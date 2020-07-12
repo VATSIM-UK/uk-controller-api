@@ -21,6 +21,8 @@ class OptimiseTables extends Command
         'msl_airfield',
         'msl_tma',
         'regional_pressure_settings',
+        'network_aircraft',
+        'network_aircraft_fir_events',
     ];
 
     protected $signature = 'tables:optimise';

@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
+use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
+use App\Listeners\Network\RecordFirEntry;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Hold\UnassignHoldOnDisconnect;
@@ -31,6 +33,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NetworkAircraftDisconnectedEvent::class => [
             UnassignHoldOnDisconnect::class,
+        ],
+        NetworkAircraftUpdatedEvent::class => [
+            RecordFirEntry::class,
         ],
     ];
 
