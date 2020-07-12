@@ -36,7 +36,6 @@ class ReclaimSquawksAfterFirExit extends Command
                 $query->whereIn('identification_code', ['EGTT', 'EGPX']);
             })
             ->each(function (NetworkAircraft $aircraft) {
-
                 $lastExit = $aircraft->firEvents->where('event_type', 'FIR_EXIT')
                     ->sortByDesc('created_at')
                     ->first();

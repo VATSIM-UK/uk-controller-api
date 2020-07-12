@@ -21,7 +21,7 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
             ->whereIn('unit', $this->getApplicableUnits($unit))
             ->get();
         return $ranges->filter(function (UnitDiscreteSquawkRange $range) use ($details) {
-            if($range->rules->isEmpty()) {
+            if ($range->rules->isEmpty()) {
                 return true;
             }
 

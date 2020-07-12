@@ -58,7 +58,7 @@ class SectorfileService
     {
         if ($degrees === 90 && ($minutes !== 0 || $seconds !== 0.0)) {
             throw new InvalidArgumentException('Cannot have more than 90 degrees of latitude');
-        } else if ($degrees > 90) {
+        } elseif ($degrees > 90) {
             throw new InvalidArgumentException('Cannot have more than 90 degrees of latitude');
         }
 
@@ -69,7 +69,7 @@ class SectorfileService
     {
         if ($degrees === 180 && ($minutes !== 0 || $seconds !== 0.0)) {
             throw new InvalidArgumentException('Cannot have more than 180 degrees of longitude');
-        } else if ($degrees > 180) {
+        } elseif ($degrees > 180) {
             throw new InvalidArgumentException('Cannot have more than 180 degrees of longitude');
         }
 

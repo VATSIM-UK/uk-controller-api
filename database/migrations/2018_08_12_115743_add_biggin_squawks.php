@@ -12,7 +12,6 @@ class AddBigginSquawks extends Migration
      */
     public function up()
     {
-
         $rangeOwner = DB::table('squawk_range_owner')->insertGetId([]);
         DB::table('squawk_unit')->insert(
             [
