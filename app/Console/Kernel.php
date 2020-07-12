@@ -11,6 +11,7 @@ use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\GetDeletedSidsFromSectorFile;
 use App\Console\Commands\OptimiseTables;
+use App\Console\Commands\ReclaimSquawksAfterFirExit;
 use App\Console\Commands\SrdImport;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
@@ -44,6 +45,7 @@ class Kernel extends ConsoleKernel
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
+        ReclaimSquawksAfterFirExit::class,
     ];
 
     /**
@@ -62,5 +64,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute();
+        $schedule->command('squawks:reclaim')->hourly();
     }
 }
