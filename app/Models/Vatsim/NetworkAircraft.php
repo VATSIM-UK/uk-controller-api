@@ -6,6 +6,7 @@ use App\Models\Hold\AssignedHold;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NetworkAircraft extends Model
 {
@@ -41,5 +42,10 @@ class NetworkAircraft extends Model
     public function assignedHold(): BelongsTo
     {
         return $this->belongsTo(AssignedHold::class, 'callsign', 'callsign');
+    }
+
+    public function firEvents(): HasMany
+    {
+        return $this->hasMany(NetworkAircraftFirEvent::class, 'callsign', 'callsign');
     }
 }
