@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\NetworkAircraftDisconnectedEvent;
+use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -140,5 +141,12 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 'callsign' => 'BAW789'
             ]
         );
+    }
+
+    public function testItFiresUpdatedEvents()
+    {
+        $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
+        $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
+        $this->service->updateNetworkData();
     }
 }
