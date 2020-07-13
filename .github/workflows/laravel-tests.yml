@@ -58,14 +58,20 @@ jobs:
       - name: Generate App Key
         run: php artisan key:generate
 
+      - name: Cache Routes
+        run: php artisan route:cache
+
+      - name: Cache Config
+        run: php artisan config:cache
+
       - name: Migrate Database
         run: php artisan migrate
 
-      - name: Seed Database
-        run: php artisan db:seed
-
       - name: Install Passport
         run: php artisan passport:install
+
+      - name: Seed Database
+        run: php artisan db:seed
 
       - name: Serve Application
         run: php artisan serve -q &
