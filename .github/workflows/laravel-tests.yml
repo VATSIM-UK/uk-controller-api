@@ -17,10 +17,9 @@ jobs:
     services:
       mysql:
         image: mysql:8.0
-        ports: 3306
+        ports: '3306'
         env:
           SQL_REQUIRE_PRIMARY_KEY: ON
-        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
