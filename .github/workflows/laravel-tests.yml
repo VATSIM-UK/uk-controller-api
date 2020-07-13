@@ -75,5 +75,8 @@ jobs:
       - name: Seed Database
         run: php artisan db:seed
 
+      - name: Serve Application
+        run: php artisan serve -q &
+
       - name: Run PHPUnit Tests
         run: vendor/bin/phpunit
