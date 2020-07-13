@@ -17,6 +17,7 @@ jobs:
     services:
       mysql:
         image: mysql:8.0
+        options: --sql-require-primary-key=ON
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -51,7 +52,6 @@ jobs:
 
       - name: Create Databases
         run: |
-          echo -e "[mysqld]\nsql_require_primary_key=on" | sudo tee -a /etc/mysql/my.cnf
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -h127.0.0.1 -uroot -proot
 
