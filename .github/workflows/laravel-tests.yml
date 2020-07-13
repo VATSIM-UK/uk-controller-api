@@ -18,7 +18,6 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          SQL_REQUIRE_PRIMARY_KEY: ON
           DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password
           MYSQL_ALLOW_EMPTY_PASSWORD: false
           MYSQL_ROOT_PASSWORD: root
@@ -34,6 +33,7 @@ jobs:
           mysql -e "CREATE DATABASE IF NOT EXISTS uk_plugin;" -h127.0.0.1 -P32574 -uroot -proot
           mysql -e "CREATE USER 'ciuser'@'%' IDENTIFIED WITH mysql_native_password BY 'ciuser';" -h127.0.0.1 -P32574 -uroot -proot
           mysql -e "GRANT ALL ON *.* TO 'ciuser'@'%';" -h127.0.0.1 -P32574 -uroot -proot
+          mysql -e "SET GLOBAL sql_require_primary_key = ON;" -h127.0.0.1 -P32574 -uroot -proot
 
       - name: Configure PHP
         uses: shivammathur/setup-php@v2
