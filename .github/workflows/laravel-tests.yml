@@ -66,6 +66,9 @@ jobs:
       - name: Generate App Key
         run: php artisan key:generate
 
+      - name: Optimize
+        run: php artisan optimize
+
       - name: Migrate Database
         run: php artisan migrate
 
