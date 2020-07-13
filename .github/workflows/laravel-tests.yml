@@ -52,7 +52,8 @@ jobs:
       - name: Create Databases
         run: |
           echo -e "[mysqld]\nsql_require_primary_key = on" | sudo tee -a /etc/mysql/conf.d/mysqld.cnf
-          sudo /etc/init.d/mysql start
+          cat /etc/mysql/conf.d/mysqld.cnf
+          sudo /etc/init.d/mysql start || sudo systemctl status mysql.service
           mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -h127.0.0.1 -uroot -proot
 
       - name: Generate App Key
