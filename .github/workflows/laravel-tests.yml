@@ -21,7 +21,8 @@ jobs:
           - 3306
         env:
           SQL_REQUIRE_PRIMARY_KEY: ON
-        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+          MYSQL_DATABASE: uk_plugin
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
