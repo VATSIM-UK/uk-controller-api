@@ -26,7 +26,12 @@ jobs:
           MYSQL_USER: root
         ports:
           - 32574:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=15s --health-timeout=10s --health-retries=25
+        options:
+          healthcheck:
+            test: mysqladmin ping
+            interval: 5s
+            timeout: 10s
+            retries: 5
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
