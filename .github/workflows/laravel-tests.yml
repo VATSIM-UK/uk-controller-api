@@ -22,7 +22,6 @@ jobs:
           MYSQL_DATABASE: uk_plugin
           MYSQL_ALLOW_EMPTY_PASSWORD: false
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_PASSWORD: root
           MYSQL_USER: root
         ports:
           - 32574:3306
