@@ -18,9 +18,8 @@ jobs:
       mysql:
         image: mysql:8.0
         ports:
-          - 3306
+          - 32574:3306
         env:
-          SQL_REQUIRE_PRIMARY_KEY: ON
           MYSQL_DATABASE: uk_plugin
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
@@ -56,10 +55,8 @@ jobs:
         run: composer install --prefer-dist --no-interaction --optimize-autoloader --no-suggest
 
       - name: Create Databases
-        env:
-          PORT: ${{ job.services.mysql.ports[3306] }}
         run: |
-          mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -h127.0.0.1 -P"$PORT" -uroot -proot
+          mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -h127.0.0.1 -P32574 -uroot -proot
 
       - name: Generate App Key
         run: php artisan key:generate
