@@ -55,7 +55,7 @@ jobs:
 
       - name: Create Databases
         run: |
-          mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -hmysql -uroot -proot
+          mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -h127.0.0.1 -uroot -proot
 
       - name: Generate App Key
         run: php artisan key:generate
