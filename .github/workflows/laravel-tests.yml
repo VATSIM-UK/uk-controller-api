@@ -19,7 +19,6 @@ jobs:
         image: mysql:8.0
         env:
           SQL_REQUIRE_PRIMARY_KEY: ON
-        ports:
         # Set health checks to wait until mysql database has started (it takes some seconds to start)
         options: >-
           --health-cmd="mysqladmin ping"
