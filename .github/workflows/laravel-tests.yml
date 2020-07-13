@@ -51,7 +51,7 @@ jobs:
 
       - name: Create Databases
         run: |
-          echo -e "sql_require_primary_key=on" | sudo tee -a /etc/mysql/conf.d/mysqld.cnf
+          echo -e "[mysqld]\sql_require_primary_key=on" | sudo tee -a /etc/mysql/conf.d/primary_keys.cnf
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -h127.0.0.1 -uroot -proot
 
