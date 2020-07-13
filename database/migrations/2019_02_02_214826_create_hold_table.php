@@ -14,7 +14,7 @@ class CreateHoldTable extends Migration
     public function up()
     {
         Schema::create('hold', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedInteger('id')->primary();
             $table->string('fix')->comment('The holding fix');
             $table->smallInteger('inbound_heading')->comment('The heading');
             $table->mediumInteger('minimum_altitude')->comment('The minimum altitude allowed in the hold');
