@@ -18,7 +18,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          SQL_REQUIRE_PRIMARY_KEYS: on
+          SQL_REQUIRE_PRIMARY_KEY: on
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -54,7 +54,7 @@ jobs:
       - name: Create Databases
         run: |
           sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin; SET GLOBAL sql_require_primary_key = ON' -h127.0.0.1 -uroot -proot
+          mysql -e 'CREATE DATABASE IF NOT EXISTS uk_plugin;' -h127.0.0.1 -uroot -proot
 
       - name: Generate App Key
         run: php artisan key:generate
