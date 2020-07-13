@@ -3,7 +3,8 @@ name: Laravel Tests
 on:
   push:
     branches:
-      - *
+      - '*'
+      - '**'
   pull_request:
 
 jobs:
