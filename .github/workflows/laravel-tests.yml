@@ -32,7 +32,7 @@ jobs:
       - name: Configure MySQL
         run: |
           mysql -e "CREATE USER 'ciuser'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'ciuser';" -h127.0.0.1 -P32574 -uroot -proot
-          mysql -e "GRANT ALL PRIVILEGES ON ciuser.* TO 'ciuser'@'localhost';" -h127.0.0.1 -P32574 -uroot -proot
+          mysql -e "GRANT ALL PRIVILEGES ON ciuser.* TO 'ciuser'@'127.0.0.1';" -h127.0.0.1 -P32574 -uroot -proot
           mysql -e "CREATE DATABASE IF NOT EXISTS uk_plugin;" -h127.0.0.1 -P32574 -uroot -proot
 
       - name: Configure PHP
