@@ -62,6 +62,9 @@ jobs:
       - name: Migrate Database
         run: php artisan migrate
 
+      - name: Seed Database
+        run: php artisan db:seed
+
       - name: Install Passport
         run: php artisan passport:install
 
