@@ -60,7 +60,7 @@ class SquawkController extends BaseController
         if (!$assignment) {
             return response()->json(
                 [
-                    'message' => 'Assignment not found for BAW12AZ',
+                    'message' => 'Assignment not found for ' . $callsign,
                 ]
             )->setStatusCode(404);
         }

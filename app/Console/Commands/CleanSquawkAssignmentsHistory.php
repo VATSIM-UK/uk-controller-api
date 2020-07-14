@@ -12,7 +12,7 @@ class CleanSquawkAssignmentsHistory extends Command
 
     protected $description = 'Delete any squawk assignment history that is older than a specified age';
 
-    public function handle()
+    public function handle(): int
     {
         SquawkAssignmentsHistory::where(
             'allocated_at',
@@ -20,5 +20,6 @@ class CleanSquawkAssignmentsHistory extends Command
             Carbon::now()->subMonths(3)->toDateTimeString()
         )->forceDelete();
         $this->info('Squawk assignment audit history cleaned successfully');
+        return 0;
     }
 }

@@ -28,7 +28,7 @@ class ReclaimSquawksAfterFirExit extends Command
 
      * @return integer
      */
-    public function handle()
+    public function handle(): int
     {
         $this->info('Reclaiming squawk codes');
         NetworkAircraft::with('firEvents', 'firEvents.flightInformationRegion')
