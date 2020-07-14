@@ -39,6 +39,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          coverage: pcov
 
       - name: Create Environment File
         run: cp .env.ci .env
@@ -81,5 +82,5 @@ jobs:
       - name: Serve Application
         run: php artisan serve -q &
 
-      - name: Run PHPUnit Tests
-        run: vendor/bin/phpunit
+      - name: Execute PHPUnit Tests With Coverage
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
