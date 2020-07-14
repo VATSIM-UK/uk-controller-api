@@ -2,4 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/{path?}', 'WebInterface');
+Route::get('/{path?}', [
+    'uses' => 'WebInterface',
+    'as' => 'react',
+    'where' => ['path' => '.*']
+]);
