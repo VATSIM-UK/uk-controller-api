@@ -1,12 +1,11 @@
-[master_build_status]: https://api.travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=master
-[develop_build_status]: https://api.travis-ci.com/VATSIM-UK/uk-controller-api.svg?branch=develop
-[master_ci_status]: https://github.styleci.io/repos/163554213/shield?branch=master
-
 # uk-controller-api
+
+![Laravel Tests](https://github.com/VATSIM-UK/uk-controller-api/workflows/Laravel%20Tests/badge.svg)
+
 The API backend to the UK Controller Plugin, provides the plugin with information such
 as dependency files, squawk allocations and user authentication.
 
-The API is built on Laravel's [Lumen Framework](https://lumen.laravel.com/) and uses [PHPUnit](https://phpunit.de/) for tests.
+The API is built on [Laravel Framework](https://laravel.com/) and uses [PHPUnit](https://phpunit.de/) for tests.
 
 |      Check      |                            Provider                                          |              Status             |
 |-----------------|------------------------------------------------------------------------------|---------------------------------|
@@ -16,8 +15,8 @@ The API is built on Laravel's [Lumen Framework](https://lumen.laravel.com/) and 
 
 ## System Requirements
 
-- PHP 7.1+
-- MySQL 5.7
+- PHP 7.3+
+- MySQL 8.0
 
 # Local Deployment
 
@@ -31,7 +30,7 @@ the API. For this you will need Vagrant installed [More Information](https://www
 - Run `composer install`
 - Copy `.env.example` to `.env` and fill in the `APP_URL` and database credentials
 - Create a new database for the app to use
-- Generate an `APP_KEY` for the application to use [instructions])(https://lumen.laravel.com/docs/5.7#configuration)
+- Generate an `APP_KEY` for the application by running `php artisan key:generate`
 - Run `php artisan migrate` to run database migrations
 - Setup Laravel Passport by following the [installation guide](https://laravel.com/docs/5.7/passport#frontend-quickstart)
 - Run `php artisan db:seed` to see the database with test data
