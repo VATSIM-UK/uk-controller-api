@@ -70,7 +70,7 @@ class UserController extends BaseController
             Log::error('Attempted to ban user with CID ' . $cid . ' which does not exist.');
             return response()->json(
                 [
-                    'message' => 'User with CID ' . $cid . ' not found',
+                    'message' => $this->getNotExistsMessage($cid),
                 ]
             )->setStatusCode(404);
         }
@@ -113,7 +113,7 @@ class UserController extends BaseController
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
-                    'message' => 'User with CID ' . $cid . ' does not exist',
+                    'message' => $this->getNotExistsMessage($cid),
                 ]
             )->setStatusCode(404);
         }
@@ -155,7 +155,7 @@ class UserController extends BaseController
             Log::error('Attempted to disable user with CID ' . $cid . ' which does not exist.');
             return response()->json(
                 [
-                    'message' => 'User with CID ' . $cid . ' not found',
+                    'message' => $this->getNotExistsMessage($cid),
                 ]
             )->setStatusCode(404);
         }
@@ -174,7 +174,7 @@ class UserController extends BaseController
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
-                    'message' => 'User with CID ' . $cid . ' does not exist',
+                    'message' => $this->getNotExistsMessage($cid),
                 ]
             )->setStatusCode(404);
         }
@@ -195,7 +195,7 @@ class UserController extends BaseController
             Log::error('Unable to reactivate user with CID ' . $cid . ', does not exists');
             return response()->json(
                 [
-                    'message' => 'User with CID ' . $cid . ' does not exist',
+                    'message' => $this->getNotExistsMessage($cid),
                 ]
             )->setStatusCode(404);
         }
@@ -226,5 +226,10 @@ class UserController extends BaseController
         ];
 
         return response()->json($returnValue, 201);
+    }
+
+    private function getNotExistsMessage(int $userId): string
+    {
+        return sprintf('User with CID %d does not exist' , $userId);
     }
 }
