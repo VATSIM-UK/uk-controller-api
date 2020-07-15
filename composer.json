@@ -12,7 +12,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "bugsnag/bugsnag-laravel": "^2.17",
         "predis/predis": "~1.0",
-        "laravel/passport": "^7.2",
+        "laravel/passport": "^9.3",
         "laravel/framework": "^7.0",
         "beyondcode/laravel-websockets": "^1.4",
         "knplabs/github-api": "^2.12",
