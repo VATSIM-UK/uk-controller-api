@@ -4,10 +4,10 @@
         "es2020": true
     },
     "extends": [
-        "plugin:react/recommended",
-        "airbnb"
+        "airbnb-typescript"
     ],
     "parserOptions": {
+        "project": "./tsconfig.json",
         "ecmaFeatures": {
             "jsx": true
         },
@@ -15,8 +15,10 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "@typescript-eslint"
     ],
     "rules": {
-    }
+    },
+    "parser": "@typescript-eslint/parser"
 }

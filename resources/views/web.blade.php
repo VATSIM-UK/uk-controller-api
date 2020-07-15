@@ -13,6 +13,6 @@
 <body>
 <div id="ukcp-web-app"></div>
 
-<script src="{{ secure_asset('js/index.js') }}"></script>
+<script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

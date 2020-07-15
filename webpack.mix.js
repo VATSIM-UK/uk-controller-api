@@ -11,8 +11,12 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.react('resources/js/index.js', 'public/js');
+mix.ts('resources/js/index.ts', 'public/js/app.js');
 
 if (mix.inProduction()) {
   mix.version();
 }
+
+mix.browserSync({
+  proxy: 'ukcp.devapp/web'
+});
