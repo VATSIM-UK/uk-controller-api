@@ -88,3 +88,11 @@ jobs:
       - name: Run PHPUnit Without Coverage
         if: matrix.php != '7.4'
         run: vendor/bin/phpunit
+
+      - name: SonarCloud Scan
+        if: matrix.php-version == '7.4'
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          fetch-depth: 0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
