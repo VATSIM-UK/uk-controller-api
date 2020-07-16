@@ -81,15 +81,12 @@ class MetarService
             ]
         );
 
-        if ($metar->getStatusCode() !== 200) {
-            Log::error('Failed to download METAR for ' . $icao);
-            return null;
-        }
-
         $metarString = (string) $metar->getBody();
-
-        // No METAR available
-        if (strpos($metarString, 'No METAR available for') === 0) {
+        if (
+            $metar->getStatusCode() !== 200 ||
+            strpos($metarString, 'No METAR available for') === 0
+        ) {
+            Log::error('Failed to download METAR for ' . $icao);
             return null;
         }
 
