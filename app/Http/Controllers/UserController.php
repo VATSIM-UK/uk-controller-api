@@ -230,6 +230,6 @@ class UserController extends BaseController
 
     private function getNotExistsMessage(int $userId): string
     {
-        return sprintf('User with CID %d does not exist' , $userId);
+        return sprintf('User with CID %d does not exist', $userId);
     }
 }
