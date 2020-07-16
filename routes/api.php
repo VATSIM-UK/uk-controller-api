@@ -2,6 +2,7 @@
 
 use App\Rules\VatsimCallsign;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\MiddlewareKeys;
 
 // Routes that the plugin user will use
 Route::middleware('plugin.user')->group(function () {
@@ -34,7 +35,7 @@ Route::middleware('plugin.user')->group(function () {
     Route::put('hold/assigned', 'HoldController@assignHold');
     Route::delete('hold/assigned/{callsign}', 'HoldController@deleteAssignedHold')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
-    ;
+
     Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
 
     // Whenever a hold profile is updated, we need to reset the dependency
@@ -65,7 +66,7 @@ Route::middleware('admin.user')->group(function () {
     Route::get(
         'user/{cid}',
         [
-            'middleware' => 'vatsim.cid',
+            'middleware' => MiddlewareKeys::VATSIM_CID,
             'uses' => 'UserController@getUser',
         ]
     )->where('cid', '[0-9]+');
@@ -74,7 +75,7 @@ Route::middleware('admin.user')->group(function () {
     Route::post(
         'user/{cid}',
         [
-            'middleware' => 'vatsim.cid',
+            'middleware' => MiddlewareKeys::VATSIM_CID,
             'uses' => 'UserController@createUser',
         ]
     )->where('cid', '[0-9]+');
@@ -83,7 +84,7 @@ Route::middleware('admin.user')->group(function () {
     Route::put(
         'user/{cid}/reactivate',
         [
-            'middleware' => 'vatsim.cid',
+            'middleware' => MiddlewareKeys::VATSIM_CID,
             'uses' => 'UserController@reactivateUser',
         ]
     )->where('cid', '[0-9]+');
@@ -92,7 +93,7 @@ Route::middleware('admin.user')->group(function () {
     Route::put(
         'user/{cid}/ban',
         [
-            'middleware' => 'vatsim.cid',
+            'middleware' => MiddlewareKeys::VATSIM_CID,
             'uses' => 'UserController@banUser',
         ]
     )->where('cid', '[0-9]+');
@@ -101,7 +102,7 @@ Route::middleware('admin.user')->group(function () {
     Route::put(
         'user/{cid}/disable',
         [
-            'middleware' => 'vatsim.cid',
+            'middleware' => MiddlewareKeys::VATSIM_CID,
             'uses' => 'UserController@disableUser',
         ]
     )->where('cid', '[0-9]+');
@@ -110,7 +111,7 @@ Route::middleware('admin.user')->group(function () {
     Route::post(
         'user/{cid}/token',
         [
-            'middleware' => 'vatsim.cid',
+            'middleware' => MiddlewareKeys::VATSIM_CID,
             'uses' => 'UserController@createUserToken',
         ]
     )->where('cid', '[0-9]+');
