@@ -191,10 +191,9 @@ class HandoffService
 
     public static function setHandoffForSid(string $airfield, string $identifier, string $handoff)
     {
-        /** @var Sid */
-        $sid = Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)->firstOrFail();
-        $sid->handoff_id = Handoff::where('key', $handoff)->firstOrFail()->id;
-        $sid->save();
+        Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)
+            ->where('identifier', $identifier)
+            ->update(['handoff_id' => Handoff::where('key', $handoff)->firstOrFail()->id]);
     }
 
     private static function getHandoffsForPosition(int $positionId): Collection
