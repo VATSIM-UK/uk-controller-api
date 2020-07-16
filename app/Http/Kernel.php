@@ -39,7 +39,7 @@ class Kernel extends HttpKernel
         'plugin.user' => [
             MiddlewareKeys::AUTH,
             MiddlewareKeys::USER_BANNED,
-            MiddlewareKeys::USER_BANNED,
+            MiddlewareKeys::USER_DISABLED,
             MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_USER,
         ],
         'admin.user' => [
