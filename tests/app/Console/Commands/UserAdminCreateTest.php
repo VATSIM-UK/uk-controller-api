@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Artisan;
 
 class UserAdminCreateTest extends BaseFunctionalTestCase
 {
+    const ARTISAN_COMMAND = 'user:create-admin';
+    
     public function testItConstructs()
     {
         $instance = new UserAdminCreate();
@@ -16,12 +18,12 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
 
     public function testItReturnsSuccess()
     {
-        $this->assertEquals(0, Artisan::call('user:create-admin'));
+        $this->assertEquals(0, Artisan::call(self::ARTISAN_COMMAND));
     }
 
     public function testItCreatesAUser()
     {
-        Artisan::call('user:create-admin');
+        Artisan::call(self::ARTISAN_COMMAND);
         $userId = User::where('id', 2)->first()->id;
         $this->assertDatabaseHas(
             'oauth_access_tokens',
@@ -35,7 +37,7 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
 
     public function testItCreatesAToken()
     {
-        Artisan::call('user:create-admin');
+        Artisan::call(self::ARTISAN_COMMAND);
         $token = explode(PHP_EOL, Artisan::output())[1];
         $this->get('/useradmin', ['Authorization' => 'Bearer ' . $token])->assertStatus(418);
     }

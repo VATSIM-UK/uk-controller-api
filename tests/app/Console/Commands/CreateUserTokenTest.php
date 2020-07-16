@@ -12,6 +12,8 @@ use RuntimeException;
 
 class CreateUserTokenTest extends BaseFunctionalTestCase
 {
+    const ARTISAN_COMMAND = 'token:create';
+    
     public function testItConstructs()
     {
         $this->assertInstanceOf(CreateUserTokenTest::class, $this->app->make(CreateUserTokenTest::class));
@@ -20,7 +22,7 @@ class CreateUserTokenTest extends BaseFunctionalTestCase
     public function testItFailsIfVatsimCidInvalid()
     {
         $return = Artisan::call(
-            'token:create',
+            self::ARTISAN_COMMAND,
             ['vatsim_cid' => 'notacid']
         );
 
@@ -31,7 +33,7 @@ class CreateUserTokenTest extends BaseFunctionalTestCase
     public function testItHandlesNonExistantUser()
     {
         $return = Artisan::call(
-            'token:create',
+            self::ARTISAN_COMMAND,
             ['vatsim_cid' => 666]
         );
         $this->assertEquals(2, $return);
@@ -42,7 +44,7 @@ class CreateUserTokenTest extends BaseFunctionalTestCase
     {
         $tokensBefore = User::findOrFail(1203533)->tokens->count();
         $return = Artisan::call(
-            'token:create',
+            self::ARTISAN_COMMAND,
             ['vatsim_cid' => '1203533']
         );
 

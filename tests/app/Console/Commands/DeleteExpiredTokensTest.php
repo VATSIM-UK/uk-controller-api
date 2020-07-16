@@ -9,15 +9,17 @@ use Illuminate\Support\Facades\Artisan;
 
 class DeleteExpiredTokensTest extends BaseFunctionalTestCase
 {
+    const SCOPES = '"[user]"';
+    
     public function testItDeletesExpiredTokens()
     {
         Token::create(
             [
                 'id' => '1',
-                'user_id' => '1203533',
+                'user_id' => self::ACTIVE_USER_CID,
                 'client_id' => 1,
                 'name' => 'access',
-                'scopes' => '"[user]"',
+                'scopes' => self::SCOPES,
                 'revoked' => 0,
                 'expires_at' => Carbon::now()->addSecond(1),
             ]
@@ -25,10 +27,10 @@ class DeleteExpiredTokensTest extends BaseFunctionalTestCase
         Token::create(
             [
                 'id' => '2',
-                'user_id' => '1203533',
+                'user_id' => self::ACTIVE_USER_CID,
                 'client_id' => 1,
                 'name' => 'access',
-                'scopes' => '"[user]"',
+                'scopes' => self::SCOPES,
                 'revoked' => 0,
                 'expires_at' => Carbon::now()->addDays(1),
             ]
@@ -36,10 +38,10 @@ class DeleteExpiredTokensTest extends BaseFunctionalTestCase
         Token::create(
             [
                 'id' => '3',
-                'user_id' => '1203533',
+                'user_id' => self::ACTIVE_USER_CID,
                 'client_id' => 1,
                 'name' => 'access',
-                'scopes' => '"[user]"',
+                'scopes' => self::SCOPES,
                 'revoked' => 0,
                 'expires_at' => Carbon::now()->subHour(1),
             ]

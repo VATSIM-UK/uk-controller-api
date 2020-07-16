@@ -15,6 +15,8 @@ use InvalidArgumentException;
  */
 class UserCreate extends Command
 {
+    const INVALID_CID_MESSAGE = 'Invalid VATSIM CID provided.';
+
     protected $signature = 'user:create {vatsim_cid}';
 
     protected $description = 'Create a user and generate a personal access token';
@@ -28,7 +30,7 @@ class UserCreate extends Command
     {
         // Invalid VATSIM CID
         if (!ctype_digit($this->argument('vatsim_cid')) || $this->argument('vatsim_cid') < 800000) {
-            throw new InvalidArgumentException('Invalid VATSIM CID provided.');
+            throw new InvalidArgumentException(self::INVALID_CID_MESSAGE);
         }
 
         $userCid = $this->argument('vatsim_cid');

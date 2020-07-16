@@ -10,6 +10,8 @@ use Mockery;
 
 class GenerateMinStackLevelsTest extends BaseUnitTestCase
 {
+    const ARTISAN_COMMAND = 'msl:generate';
+    
     public function testItConstructs()
     {
         $this->assertInstanceOf(GenerateMinStackLevels::class, $this->app->make(GenerateMinStackLevels::class));
@@ -26,7 +28,7 @@ class GenerateMinStackLevelsTest extends BaseUnitTestCase
 
         $this->app->instance(MinStackLevelService::class, $serviceMock);
 
-        Artisan::call('msl:generate');
+        Artisan::call(self::ARTISAN_COMMAND);
     }
 
     public function testItReturnsSuccessOnCompletion()
@@ -36,7 +38,7 @@ class GenerateMinStackLevelsTest extends BaseUnitTestCase
         $serviceMock->shouldReceive('updateAirfieldMinStackLevelsFromVatsimMetarServer');
         $serviceMock->shouldReceive('updateTmaMinStackLevelsFromVatsimMetarServer');
         $this->app->instance(MinStackLevelService::class, $serviceMock);
-        $this->assertEquals(0, Artisan::call('msl:generate'));
+        $this->assertEquals(0, Artisan::call(self::ARTISAN_COMMAND));
     }
 
     public function testItRunsTheCorrectEvents()
@@ -46,6 +48,6 @@ class GenerateMinStackLevelsTest extends BaseUnitTestCase
         $serviceMock->shouldReceive('updateAirfieldMinStackLevelsFromVatsimMetarServer');
         $serviceMock->shouldReceive('updateTmaMinStackLevelsFromVatsimMetarServer');
         $this->app->instance(MinStackLevelService::class, $serviceMock);
-        Artisan::call('msl:generate');
+        Artisan::call(self::ARTISAN_COMMAND);
     }
 }
