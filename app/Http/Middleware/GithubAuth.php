@@ -17,7 +17,7 @@ class GithubAuth
      * @param string|null $guard
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next)
     {
         $signatureParts = explode('=', $request->header('X-Hub-Signature'));
         if (count($signatureParts) != 2) {
