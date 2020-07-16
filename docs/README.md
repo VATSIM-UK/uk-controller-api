@@ -7,12 +7,6 @@ as dependency files, squawk allocations and user authentication.
 
 The API is built on [Laravel Framework](https://laravel.com/) and uses [PHPUnit](https://phpunit.de/) for tests.
 
-|      Check      |                            Provider                                          |              Status             |
-|-----------------|------------------------------------------------------------------------------|---------------------------------|
-| Build (Master)  | [TravisCI](https://travis-ci.com/VATSIM-UK/uk-controller-api)                | ![master_build_status]          |
-| Build (Develop) | [TravisCI](https://travis-ci.com/VATSIM-UK/uk-controller-api)                | ![develop_build_status]         |
-| Style           | [StyleCI](https://github.styleci.io/repos/163554213)                         | ![master_ci_status]             |
-
 ## System Requirements
 
 - PHP 7.3+
