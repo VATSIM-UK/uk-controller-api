@@ -20,10 +20,9 @@ class UserIsBanned
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $next
-     * @param  string|null              $guard
      * @return Response
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next)
     {
         if (auth()->user()->accountStatus->banned) {
             Log::info(

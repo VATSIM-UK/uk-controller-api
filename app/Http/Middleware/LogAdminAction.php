@@ -18,10 +18,9 @@ class LogAdminAction
      *
      * @param Request $request The request
      * @param Closure $next The next middleware to run
-     * @param null $guard
      * @return Response
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next)
     {
         AdminLog::create(
             [
