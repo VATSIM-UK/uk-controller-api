@@ -6,10 +6,13 @@ use App\BaseApiTestCase;
 use App\Models\User\Admin;
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
-use App\Services\UserTokenService;
 
 class UserControllerTest extends BaseApiTestCase
 {
+    const USER_CREATE_URI = 'user/1203532';
+    const ADMIN_LOGIN_URI = 'admin/login';
+    const ADMIN_EMAIL = 'ukcp@vatsim.uk';
+
     protected static $tokenScope = [
         AuthServiceProvider::SCOPE_USER_ADMIN,
     ];
@@ -25,12 +28,12 @@ class UserControllerTest extends BaseApiTestCase
     public function testItRequiresUserAdminScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203532')->assertStatus(403);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(403);
     }
 
     public function testCreateUserReturnsTheCorrectJsonStructure()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203532')->assertJsonStructure(
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertJsonStructure(
             [
                 'api-url',
                 'api-key',
@@ -40,13 +43,13 @@ class UserControllerTest extends BaseApiTestCase
 
     public function testCreateUserReturnsCreatedOnSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203532')->assertStatus(201);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(201);
     }
 
     public function testCreateUserReturnsUnprocessableOnAlreadyExists()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203532')->assertStatus(201);
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'user/1203532')->assertStatus(422);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(201);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(422);
     }
 
     public function testItReturnsNoContentOnBanningUser()
@@ -134,8 +137,8 @@ class UserControllerTest extends BaseApiTestCase
         Admin::find(\UserTableSeeder::ACTIVE_USER_CID)->delete();
         $this->makeUnauthenticatedApiRequest(
             self::METHOD_POST,
-            'admin/login',
-            ['email' => 'ukcp@vatsim.uk', 'password' => 'letmein']
+            self::ADMIN_LOGIN_URI,
+            ['email' => self::ADMIN_EMAIL, 'password' => 'letmein']
         )
             ->assertStatus(403);
     }
@@ -144,8 +147,8 @@ class UserControllerTest extends BaseApiTestCase
     {
         $this->makeUnauthenticatedApiRequest(
             self::METHOD_POST,
-            'admin/login',
-            ['email' => 'ukcp@vatsim.uk', 'password' => 'dontletmein']
+            self::ADMIN_LOGIN_URI,
+            ['email' => self::ADMIN_EMAIL, 'password' => 'dontletmein']
         )
             ->assertStatus(403);
     }
@@ -154,8 +157,8 @@ class UserControllerTest extends BaseApiTestCase
     {
         $this->makeUnauthenticatedApiRequest(
             self::METHOD_POST,
-            'admin/login',
-            ['emailnot' => 'ukcp@vatsim.uk', 'password' => 'dontletmein']
+            self::ADMIN_LOGIN_URI,
+            ['emailnot' => self::ADMIN_EMAIL, 'password' => 'dontletmein']
         )
             ->assertStatus(403);
     }
@@ -164,8 +167,8 @@ class UserControllerTest extends BaseApiTestCase
     {
         $this->makeUnauthenticatedApiRequest(
             self::METHOD_POST,
-            'admin/login',
-            ['email' => 'ukcp@vatsim.uk', 'password' => 'letmein']
+            self::ADMIN_LOGIN_URI,
+            ['email' => self::ADMIN_EMAIL, 'password' => 'letmein']
         )
             ->assertStatus(201)
             ->assertJsonStructure(['access_token', 'expires_at']);

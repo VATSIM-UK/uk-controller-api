@@ -26,7 +26,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 'planned_aircraft' => 'B738',
                 'planned_depairport' => 'EGKK',
                 'planned_destairport' => 'EGPH',
-                'planned_altitude' => '15000',
+                'planned_altitude' => '15001',
                 'transponder' => '1234',
                 'planned_flighttype' => 'I',
                 'planned_route' => 'DIRECT',
@@ -36,12 +36,12 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 'clienttype' => 'PILOT',
                 'latitude' => 'abc',
                 'longitude' => 'def',
-                'altitude' => '35123',
+                'altitude' => '35124',
                 'groundspeed' => '123',
                 'planned_aircraft' => 'B738',
                 'planned_depairport' => 'EGKK',
                 'planned_destairport' => 'EGPH',
-                'planned_altitude' => '15000',
+                'planned_altitude' => '15002',
                 'transponder' => '1234',
                 'planned_flighttype' => 'I',
                 'planned_route' => 'DIRECT',
@@ -51,23 +51,18 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 'clienttype' => 'ATC',
                 'latitude' => 'abc',
                 'longitude' => 'def',
-                'altitude' => '35123',
+                'altitude' => '35125',
                 'groundspeed' => '123',
                 'planned_aircraft' => 'B738',
                 'planned_depairport' => 'EGKK',
                 'planned_destairport' => 'EGPH',
-                'planned_altitude' => '15000',
+                'planned_altitude' => '15003',
                 'transponder' => '1234',
                 'planned_flighttype' => 'I',
                 'planned_route' => 'DIRECT',
             ],
         ],
     ];
-
-    /**
-     * @var Client|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $client;
 
     protected function setUp(): void
     {

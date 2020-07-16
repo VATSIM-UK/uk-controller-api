@@ -9,15 +9,13 @@ use Illuminate\Support\Facades\Cache;
 
 class SidControllerTest extends BaseApiTestCase
 {
+    const SID_URI_1 = 'sid/1';
+    const SID_URI_55 = 'sid/55';
+    
     protected static $tokenScope = [
         AuthServiceProvider::SCOPE_USER,
         AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
     ];
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     public function testItConstructs()
     {
@@ -68,17 +66,17 @@ class SidControllerTest extends BaseApiTestCase
             'initial_altitude' => 3000,
             'handoff_id' => 1,
         ];
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/1')->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SID_URI_1)->assertJson($expected);
     }
 
     public function testItReturns200OnGetSid()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/1')->assertStatus(200);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SID_URI_1)->assertStatus(200);
     }
 
     public function testItReturns404OnGetSidNotFound()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'sid/55')->assertStatus(404);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, self::SID_URI_55)->assertStatus(404);
     }
 
     public function testItReturnsAllSids()
@@ -126,12 +124,12 @@ class SidControllerTest extends BaseApiTestCase
 
     public function testDeletingSidReturns204OnSuccess()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'sid/1')->assertStatus(204);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::SID_URI_1)->assertStatus(204);
     }
 
     public function testDeletingSidReturns404OnNotFound()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'sid/55')->assertStatus(404);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::SID_URI_55)->assertStatus(404);
     }
 
     public function testItCreatesASid()
@@ -213,7 +211,7 @@ class SidControllerTest extends BaseApiTestCase
             'airfield_id' => 1,
             'initial_altitude' => 10000,
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data);
         $this->assertDatabaseHas('sid', $data);
     }
 
@@ -224,7 +222,7 @@ class SidControllerTest extends BaseApiTestCase
             'airfield_id' => 1,
             'initial_altitude' => 10000,
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(200);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(200);
     }
 
     public function testItFailsSidUpdateMissingIdentifier()
@@ -234,7 +232,7 @@ class SidControllerTest extends BaseApiTestCase
             'airfield_id' => 1,
             'initial_altitude' => 10000,
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
     }
 
     public function testItFailsSidUpdateMissingAirfield()
@@ -244,7 +242,7 @@ class SidControllerTest extends BaseApiTestCase
             'notairfield_id' => 1,
             'initial_altitude' => 10000,
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
     }
 
     public function testItFailsSidUpdateAirfieldIdNotInteger()
@@ -254,7 +252,7 @@ class SidControllerTest extends BaseApiTestCase
             'airfield_id' => 'test',
             'initial_altitude' => 10000,
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
     }
 
     public function testItFailsSidUpdateMissingInitialAltitude()
@@ -264,7 +262,7 @@ class SidControllerTest extends BaseApiTestCase
             'airfield_id' => 1,
             'notinitial_altitude' => 10000,
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
     }
 
     public function testItFailsSidUpdateInitialAltitudeNotInteger()
@@ -274,6 +272,6 @@ class SidControllerTest extends BaseApiTestCase
             'airfield_id' => 1,
             'initial_altitude' => 'test',
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid/1', $data)->assertStatus(400);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
     }
 }

@@ -20,12 +20,12 @@ class LogAdminActionTest extends BaseApiTestCase
 
     public function testItRecordsAnAdminEvent()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, '/version/99.99.99', ['allowed' => true]);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $this->getVersionUri(false), ['allowed' => true]);
         $this->assertDatabaseHas(
             'admin_log',
             [
                 'user_id' => self::ACTIVE_USER_CID,
-                'request_uri' => '/version/99.99.99',
+                'request_uri' => $this->getVersionUri(false),
                 'request_body' => json_encode(['allowed' => true]),
             ]
         );
@@ -33,7 +33,12 @@ class LogAdminActionTest extends BaseApiTestCase
 
     public function testItPassesOnTheRequestToTheNextMiddleware()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, '/version/99.99.99', ['allowed' => true]);
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/version/99.99.99/status')->assertStatus(200);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $this->getVersionUri(false), ['allowed' => true]);
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, $this->getVersionUri(true))->assertStatus(200);
+    }
+
+    private function getVersionUri(bool $withStatus): string
+    {
+        return '/version/99.99.99' . $withStatus ? '/status' : '';
     }
 }

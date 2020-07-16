@@ -18,59 +18,47 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(PrenoteService::class);
     }
 
+    private function getExpectedPairing(): array
+    {
+        return [
+            'origin' => 'EGLL',
+            'destination' => 'EGBB',
+            'type' => 'airfieldPairing',
+            'recipient' => [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+            ],
+        ];
+    }
+
+    private function getExpectedSid(): array
+    {
+        return [
+            'airfield' => 'EGLL',
+            'departure' => 'TEST1X',
+            'type' => 'sid',
+            'recipient' => [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+            ],
+        ];
+    }
+
     public function testItFormatsSidPrenotes()
     {
-        $expected = [
-            [
-                'airfield' => 'EGLL',
-                'departure' => 'TEST1X',
-                'type' => 'sid',
-                'recipient' => [
-                    'EGLL_S_TWR',
-                    'EGLL_N_APP',
-                ],
-            ]
-        ];
-        $this->assertEquals($expected, $this->service->getAllSidPrenotes());
+        $this->assertEquals([$this->getExpectedSid()], $this->service->getAllSidPrenotes());
     }
 
     public function testItFormatsAirfieldPairingPrenotes()
     {
-        $expected = [
-            [
-                'origin' => 'EGLL',
-                'destination' => 'EGBB',
-                'type' => 'airfieldPairing',
-                'recipient' => [
-                    'EGLL_S_TWR',
-                    'EGLL_N_APP',
-                ],
-            ]
-        ];
-        $this->assertEquals($expected, $this->service->getAllAirfieldPrenotes());
+        $this->assertEquals([$this->getExpectedPairing()], $this->service->getAllAirfieldPrenotes());
     }
 
     public function testItFormatsAllPrenotes()
     {
         $expected = [
-            [
-                'airfield' => 'EGLL',
-                'departure' => 'TEST1X',
-                'type' => 'sid',
-                'recipient' => [
-                    'EGLL_S_TWR',
-                    'EGLL_N_APP',
-                ],
-            ],
-            [
-                'origin' => 'EGLL',
-                'destination' => 'EGBB',
-                'type' => 'airfieldPairing',
-                'recipient' => [
-                    'EGLL_S_TWR',
-                    'EGLL_N_APP',
-                ],
-            ]
+            $this->getExpectedSid(),
+            $this->getExpectedPairing(),
         ];
         $this->assertEquals($expected, $this->service->getAllPrenotesWithControllers());
     }

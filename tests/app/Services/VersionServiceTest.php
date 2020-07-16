@@ -8,6 +8,10 @@ use App\Models\Version\Version;
 
 class VersionServiceTest extends BaseFunctionalTestCase
 {
+    const CURRENT_VERSION = '2.0.1';
+    const ALLOWED_OLD_VERSION = '2.0.0';
+    const DEPRECATED_VERSION = '1.0.0';
+
     /**
      * @var VersionService
      */
@@ -44,7 +48,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version_disabled' => true,
         ];
 
-        $this->assertEquals($expected, $this->service->getVersionResponse('1.0.0'));
+        $this->assertEquals($expected, $this->service->getVersionResponse(self::DEPRECATED_VERSION));
     }
 
     public function testResponseUpdateAvailable()
@@ -55,7 +59,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version_disabled' => false,
         ];
 
-        $this->assertEquals($expected, $this->service->getVersionResponse('2.0.0'));
+        $this->assertEquals($expected, $this->service->getVersionResponse(self::ALLOWED_OLD_VERSION));
     }
 
     public function testResponseUpToDate()
@@ -65,7 +69,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version_disabled' => false,
         ];
 
-        $this->assertEquals($expected, $this->service->getVersionResponse('2.0.1'));
+        $this->assertEquals($expected, $this->service->getVersionResponse(self::CURRENT_VERSION));
     }
 
     public function testGetVersionThrowsExceptionIfDoesNotExist()
@@ -76,7 +80,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
 
     public function testGetVersionReturnsAVersion()
     {
-        $this->assertEquals(1, $this->service->getVersion('1.0.0')->id);
+        $this->assertEquals(1, $this->service->getVersion(self::DEPRECATED_VERSION)->id);
     }
 
     public function testGetAllVersionsReturnsAllVersions()
@@ -107,11 +111,11 @@ class VersionServiceTest extends BaseFunctionalTestCase
     public function testUpdateVersionUpdatesVersion()
     {
         Carbon::setTestNow(Carbon::now());
-        $this->assertFalse($this->service->createOrUpdateVersion('2.0.0', false));
+        $this->assertFalse($this->service->createOrUpdateVersion(self::ALLOWED_OLD_VERSION, false));
         $this->assertDatabaseHas(
             'version',
             [
-                'version' => '2.0.0',
+                'version' => self::ALLOWED_OLD_VERSION,
                 'allowed' => 0,
                 'created_at' => '2017-12-03 00:00:00',
                 'updated_at' => Carbon::now(),
@@ -128,9 +132,9 @@ class VersionServiceTest extends BaseFunctionalTestCase
     public function testToggleVersionAllowedTogglesAllowed()
     {
         $this->assertTrue(Version::find(2)->allowed);
-        $this->service->toggleVersionAllowed('2.0.0');
+        $this->service->toggleVersionAllowed(self::ALLOWED_OLD_VERSION);
         $this->assertFalse(Version::find(2)->allowed);
-        $this->service->toggleVersionAllowed('2.0.0');
+        $this->service->toggleVersionAllowed(self::ALLOWED_OLD_VERSION);
         $this->assertTrue(Version::find(2)->allowed);
     }
 }

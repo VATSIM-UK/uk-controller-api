@@ -39,7 +39,7 @@ class GithubAuthTest extends BaseTestCase
             418,
             $this->middleware->handle(
                 $request,
-                function (Request $request) {
+                function () {
                     return response('', 418);
                 }
             )->getStatusCode()
@@ -60,7 +60,7 @@ class GithubAuthTest extends BaseTestCase
             403,
             $this->middleware->handle(
                 $request,
-                function (Request $request) {
+                function () {
                     return response('', 418);
                 }
             )->getStatusCode()
@@ -81,7 +81,7 @@ class GithubAuthTest extends BaseTestCase
             400,
             $this->middleware->handle(
                 $request,
-                function (Request $request) {
+                function () {
                     return response('', 418);
                 }
             )->getStatusCode()
