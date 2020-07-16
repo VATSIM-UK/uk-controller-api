@@ -42,13 +42,15 @@ class GithubController
             ? array_column($request->json()->get('issue')['labels'], 'name')
             : [];
 
+        $response = null;
         foreach ($labelNames as $labelName) {
             if ($labelName === config(self::CONFIG_KEY_PLUGIN_LABEL) || $labelName === config(self::CONFIG_KEY_API_LABEL)) {
-                return $this->handleEvent($request->json()->get('issue'));
+                $response = $this->handleEvent($request->json()->get('issue'));
+                break;
             }
         }
 
-        return response('', 200);
+        return $response ?? response('', 200);
     }
 
     private function handleEvent(array $issue): Response
