@@ -38,8 +38,6 @@ class UserConfigService
      */
     public function create(int $userCid) : UserConfig
     {
-        $user = User::findOrFail($userCid);
-
         return new UserConfig(
             $this->tokenService->create($userCid)
         );
