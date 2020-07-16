@@ -48,7 +48,7 @@ class MetarService
         preg_match('/Q\d{4}/', $metar, $matches);
 
         // Check for dodgy metars
-        if (count($matches) === 0) {
+        if (empty($matches)) {
             throw new MetarException('QNH not found in METAR: ' . $metar);
         }
 

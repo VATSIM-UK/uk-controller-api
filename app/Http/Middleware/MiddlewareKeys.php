@@ -18,5 +18,6 @@ class MiddlewareKeys
 
     private function __construct()
     {
+        // Class for constants only
     }
 }
