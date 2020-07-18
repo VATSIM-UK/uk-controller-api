@@ -177,24 +177,6 @@ class SquawkControllerTest extends BaseApiTestCase
                 ]
             )->assertStatus(201);
     }
-
-    public function testAssignGeneralSquawkReturnsSquawkOnUpdateExistingAssignment()
-    {
-        // For this test only, we need to drop the possible ranges.
-        CcamsSquawkRange::query()->delete();
-        $this->makeAuthenticatedApiRequest(
-            self::METHOD_PUT,
-            'squawk-assignment/BAW437',
-            ['type' => 'general', 'origin' => 'EGKK', 'destination' => 'EGCC']
-        )
-            ->assertJson(
-                [
-                    'message' => 'Unable to allocate general squawk for BAW437',
-                    'squawk' => SquawkController::FAILURE_SQUAWK,
-                ]
-            )->assertStatus(500);
-    }
-
     public function testAssignGeneralSquawkResponseReturnsErrorIfFailureToAssign()
     {
         // For this test only, we need to drop the possible ranges.
