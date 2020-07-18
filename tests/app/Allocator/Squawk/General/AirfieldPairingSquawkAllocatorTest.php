@@ -36,14 +36,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
                 ['origin' => 'EGGD', 'destination' => 'EGFF']
             )->getCode()
         );
-        $this->assertDatabaseHas(
-            'airfield_pairing_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-                'code' => '7203',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $this->assertSquawkAsssigned('BMI11A', '7203');
     }
 
     public function testItReturnsNullNoApplicableRange()
@@ -53,6 +46,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull(
             $this->allocator->allocate('BMI11A', ['origin' => 'EGGD', 'destination' => 'EGKK'])
         );
+        $this->assertSquawkNotAsssigned('BMI11A');
     }
 
     public function testItReturnsNullMissingOrigin()
@@ -60,6 +54,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkRange('EGGD', 'EGFF', '7201', '7210');
 
         $this->assertNull($this->allocator->allocate('BMI11A', ['destination' => 'EGFF']));
+        $this->assertSquawkNotAsssigned('BMI11A');
     }
 
     public function testItReturnsNullMissingDestination()
@@ -67,6 +62,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkRange('EGGD', 'EGFF', '7201', '7210');
 
         $this->assertNull($this->allocator->allocate('BMI11A', ['origin' => 'EGFF']));
+        $this->assertSquawkNotAsssigned('BMI11A');
     }
 
     public function testItReturnsNullIfAllocationNotFound()
@@ -87,12 +83,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkAssignment('VIR25F', '7201');
 
         $this->assertTrue($this->allocator->delete('VIR25F'));
-        $this->assertDatabaseMissing(
-            'ccams_squawk_assignments',
-            [
-                'callsign' => 'VIR25F'
-            ]
-        );
+        $this->assertSquawkNotAsssigned('VIR25F');
     }
 
     public function testItReturnsFalseForNonDeletedAllocations()
@@ -145,6 +136,28 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'code' => $code,
+            ]
+        );
+    }
+
+    private function assertSquawkNotAsssigned(string $callsign)
+    {
+        $this->assertDatabaseMissing(
+            'airfield_pairing_squawk_assignments',
+            [
+                'callsign' => $callsign
+            ]
+        );
+    }
+
+    private function assertSquawkAsssigned(string $callsign, string $code)
+    {
+        $this->assertDatabaseMissing(
+            'airfield_pairing_squawk_assignments',
+            [
+                'callsign' => $callsign,
+                'code' => $code,
+                'created_at' => Carbon::now(),
             ]
         );
     }

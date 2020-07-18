@@ -30,14 +30,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkAssignment('BAW92A', '7202');
 
         $this->assertEquals('7203', $this->allocator->allocate('BMI11A', [])->getCode());
-        $this->assertDatabaseHas(
-            'ccams_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-                'code' => '7203',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $this->assertSquawkAsssigned('BMI11A', '7203');
     }
 
     public function testItReturnsNullOnNoApplicableRange()
@@ -68,12 +61,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkAssignment('VIR25F', '0001');
 
         $this->assertTrue($this->allocator->delete('VIR25F'));
-        $this->assertDatabaseMissing(
-            'ccams_squawk_assignments',
-            [
-                'callsign' => 'VIR25F'
-            ]
-        );
+        $this->assertSquawkNotAsssigned('VIR25F');
     }
 
     public function testItReturnsFalseForNonDeletedAllocations()
@@ -123,6 +111,28 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'code' => $code,
+            ]
+        );
+    }
+
+    private function assertSquawkNotAsssigned(string $callsign)
+    {
+        $this->assertDatabaseMissing(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => $callsign
+            ]
+        );
+    }
+
+    private function assertSquawkAsssigned(string $callsign, string $code)
+    {
+        $this->assertDatabaseMissing(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => $callsign,
+                'code' => $code,
+                'created_at' => Carbon::now(),
             ]
         );
     }

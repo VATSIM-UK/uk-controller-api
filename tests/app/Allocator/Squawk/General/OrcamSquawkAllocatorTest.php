@@ -32,14 +32,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7203',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-                'code' => '7203',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $this->assertSquawkAsssigned('BMI11A', '7203');
     }
 
     public function testItAllocatesSingleCharacterRange()
@@ -50,14 +43,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7201',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-                'code' => '7201',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $this->assertSquawkAsssigned('BMI11A', '7201');
     }
 
     public function testItPrefersDoubleCharacterMatchOverSingle()
@@ -69,14 +55,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7202',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-                'code' => '7202',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $this->assertSquawkAsssigned('BMI11A', '7202');
     }
 
     public function testItPrefersTripleCharacterMatchOverDouble()
@@ -89,14 +68,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7203',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-                'code' => '7203',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $this->assertSquawkAsssigned('BMI11A', '7203');
     }
 
     public function testItPrefersFullMatch()
@@ -110,30 +82,19 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7204',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-                'code' => '7204',
-                'created_at' => Carbon::now(),
-            ]
-        );
+        $this->assertSquawkAsssigned('BMI11A', '7204');
     }
 
     public function testItReturnsNullOnNoApplicableRange()
     {
         $this->assertNull($this->allocator->allocate('BMI11A', ['origin' => 'EGGD']));
+        $this->assertSquawkNotAsssigned('BMI11A');
     }
 
     public function testItReturnsNullOnMissingOrigin()
     {
         $this->assertNull($this->allocator->allocate('BMI11A', []));
-        $this->assertDatabaseMissing(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BMI11A',
-            ]
-        );
+        $this->assertSquawkNotAsssigned('BMI11A');
     }
 
     public function testItReturnsNullIfAllocationNotFound()
@@ -154,12 +115,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkAssignment('VIR25F', '0001');
 
         $this->assertTrue($this->allocator->delete('VIR25F'));
-        $this->assertDatabaseMissing(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'VIR25F'
-            ]
-        );
+        $this->assertSquawkNotAsssigned('VIR25F');
     }
 
     public function testItReturnsFalseForNonDeletedAllocations()
@@ -211,6 +167,28 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'code' => $code,
+            ]
+        );
+    }
+
+    private function assertSquawkNotAsssigned(string $callsign)
+    {
+        $this->assertDatabaseMissing(
+            'orcam_squawk_assignments',
+            [
+                'callsign' => $callsign
+            ]
+        );
+    }
+
+    private function assertSquawkAsssigned(string $callsign, string $code)
+    {
+        $this->assertDatabaseMissing(
+            'orcam_squawk_assignments',
+            [
+                'callsign' => $callsign,
+                'code' => $code,
+                'created_at' => Carbon::now(),
             ]
         );
     }
