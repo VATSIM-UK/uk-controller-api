@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Artisan;
 
 class GenerateRegionalPressuresTest extends BaseUnitTestCase
 {
+    const ARTISAN_COMMAND = 'regional:generate';
+    
     /**
      * Command under test
      *
@@ -30,7 +32,7 @@ class GenerateRegionalPressuresTest extends BaseUnitTestCase
         $this->app[RegionalPressureService::class] = $service;
         $this->expectsEvents(RegionalPressuresUpdatedEvent::class);
 
-        $this->assertEquals(0, Artisan::call('regional:generate'));
+        $this->assertEquals(0, Artisan::call(self::ARTISAN_COMMAND));
     }
 
     public function testCommandFailureNoPressures()
@@ -40,7 +42,7 @@ class GenerateRegionalPressuresTest extends BaseUnitTestCase
         $service->shouldReceive('getLastError')->andReturn('Test');
         $this->app[RegionalPressureService::class] = $service;
 
-        $this->assertEquals(1, Artisan::call('regional:generate'));
+        $this->assertEquals(1, Artisan::call(self::ARTISAN_COMMAND));
     }
 
     public function testCommandFailure()
@@ -50,6 +52,6 @@ class GenerateRegionalPressuresTest extends BaseUnitTestCase
         $service->shouldReceive('getLastError')->andReturn('Test');
         $this->app[RegionalPressureService::class] = $service;
 
-        $this->assertEquals(1, Artisan::call('regional:generate'));
+        $this->assertEquals(1, Artisan::call(self::ARTISAN_COMMAND));
     }
 }

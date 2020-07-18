@@ -358,5 +358,13 @@ class HandoffServiceTest extends BaseFunctionalTestCase
                 'handoff_id' => 2,
             ]
         );
+        $this->assertDatabaseHas(
+            'sid',
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST1Y',
+                'handoff_id' => 1,
+            ]
+        );
     }
 }

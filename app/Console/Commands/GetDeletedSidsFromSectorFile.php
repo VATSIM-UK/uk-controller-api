@@ -53,7 +53,7 @@ class GetDeletedSidsFromSectorFile extends Command
 
     private function processPlugin() : array
     {
-        return Sid::all()->map(function (Sid $sid) use (&$sidArray) {
+        return Sid::all()->map(function (Sid $sid) {
             return $this->generateSidKey($sid->airfield->code, $sid->identifier);
         })->toArray();
     }

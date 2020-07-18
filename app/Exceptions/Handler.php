@@ -31,31 +31,4 @@ class Handler extends ExceptionHandler
         ValidationException::class,
         OAuthServerException::class,
     ];
-
-    /**
-     * Report or log an exception.
-     *
-     * @param  Throwable  $exception
-     * @return void
-     *
-     * @throws Exception
-     */
-    public function report(Throwable $exception)
-    {
-        parent::report($exception);
-    }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Throwable  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws Throwable
-     */
-    public function render($request, Throwable $exception)
-    {
-        return parent::render($request, $exception);
-    }
 }

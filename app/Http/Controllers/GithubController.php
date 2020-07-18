@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Log;
 
 class GithubController
 {
+    const CONFIG_KEY_PLUGIN_LABEL = 'github.plugin.label';
+    const CONFIG_KEY_API_LABEL = 'github.api.label';
+    
     /**
      * @var Client
      */
@@ -39,13 +42,15 @@ class GithubController
             ? array_column($request->json()->get('issue')['labels'], 'name')
             : [];
 
+        $response = null;
         foreach ($labelNames as $labelName) {
-            if ($labelName === config('github.plugin.label') || $labelName === config('github.api.label')) {
-                return $this->handleEvent($request->json()->get('issue'));
+            if ($labelName === config(self::CONFIG_KEY_PLUGIN_LABEL) || $labelName === config(self::CONFIG_KEY_API_LABEL)) {
+                $response = $this->handleEvent($request->json()->get('issue'));
+                break;
             }
         }
 
-        return response('', 200);
+        return $response ?? response('', 200);
     }
 
     private function handleEvent(array $issue): Response
@@ -89,13 +94,13 @@ class GithubController
         $labels = $issue['labels'] ?? [];
         $numCreated = 0;
         foreach ($labels as $label) {
-            if ($label['name'] == config('github.plugin.label') && !$databaseIssue->plugin) {
+            if ($label['name'] == config(self::CONFIG_KEY_PLUGIN_LABEL) && !$databaseIssue->plugin) {
                 $createdPlugin = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
                 $databaseIssue->plugin = $createdPlugin;
                 $numCreated = $numCreated + ($createdPlugin ? 1 : -10);
             }
 
-            if ($label['name'] == config('github.api.label') && !$databaseIssue->api) {
+            if ($label['name'] == config(self::CONFIG_KEY_API_LABEL) && !$databaseIssue->api) {
                 $createdApi = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
                 $databaseIssue->api = $createdApi;
                 $numCreated = $numCreated + ($createdApi ? 1 : -10);
@@ -121,11 +126,11 @@ class GithubController
     private function createGithubIssue(string $sourceLabel, string $title, string $url): bool
     {
         // Do it
-        $pushOrg = $sourceLabel == config('github.plugin.label')
+        $pushOrg = $sourceLabel == config(self::CONFIG_KEY_PLUGIN_LABEL)
             ? config('github.plugin.org')
             : config('github.api.org');
 
-        $pushRepo = $sourceLabel == config('github.plugin.label')
+        $pushRepo = $sourceLabel == config(self::CONFIG_KEY_PLUGIN_LABEL)
             ? config('github.plugin.repo')
             : config('github.api.repo');
 

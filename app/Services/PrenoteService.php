@@ -7,6 +7,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
@@ -169,15 +170,8 @@ class PrenoteService
         $positionToAdd = ControllerPosition::where('callsign', $callsignToAdd)->firstOrFail();
         $positionToAddAdjacent = ControllerPosition::where('callsign', $callsign)->firstOrFail();
 
-        $prenotes = DB::table('prenote_orders')
-            ->join('prenotes', 'prenote_id', '=', 'prenotes.id')
-            ->where('controller_position_id', $positionToAddAdjacent->id)
-            ->distinct()
-            ->select('prenotes.key')
-            ->pluck('prenotes.key');
-
         $method = $before ? 'insertIntoOrderBefore' : 'insertIntoOrderAfter';
-        foreach ($prenotes as $prenote) {
+        foreach (self::getPrenotesForPosition($positionToAddAdjacent->id) as $prenote) {
             self::$method($prenote, $positionToAdd->callsign, $positionToAddAdjacent->callsign);
         }
     }
@@ -186,15 +180,18 @@ class PrenoteService
     {
         $postionToRemove = ControllerPosition::where('callsign', $callsign)->firstOrFail();
 
-        $prenotes = DB::table('prenote_orders')
+        foreach (self::getPrenotesForPosition($postionToRemove->id) as $prenote) {
+            self::removeFromPrenoteOrder($prenote, $callsign);
+        }
+    }
+
+    private static function getPrenotesForPosition(int $positionId): Collection
+    {
+        return DB::table('prenote_orders')
             ->join('prenotes', 'prenote_id', '=', 'prenotes.id')
-            ->where('controller_position_id', $postionToRemove->id)
+            ->where('controller_position_id', $positionId)
             ->distinct()
             ->select('prenotes.key')
             ->pluck('prenotes.key');
-
-        foreach ($prenotes as $prenote) {
-            self::removeFromPrenoteOrder($prenote, $callsign);
-        }
     }
 }

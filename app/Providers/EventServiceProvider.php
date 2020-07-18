@@ -38,9 +38,4 @@ class EventServiceProvider extends ServiceProvider
             RecordFirEntry::class,
         ],
     ];
-
-    public function __construct(Application $app)
-    {
-        parent::__construct($app);
-    }
 }

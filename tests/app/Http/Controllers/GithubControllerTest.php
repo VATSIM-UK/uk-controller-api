@@ -10,6 +10,9 @@ use Mockery;
 
 class GithubControllerTest extends BaseApiTestCase
 {
+    const ISSUE_TITLE = 'Test Title';
+    const ISSUE_BODY = 'Test Body';
+
     private $client;
 
     public function setUp(): void
@@ -42,8 +45,8 @@ class GithubControllerTest extends BaseApiTestCase
                     config(sprintf('github.%s.org', $api ? 'api': 'plugin')),
                     config(sprintf('github.%s.repo', $api ? 'api': 'plugin')),
                     [
-                        'title' => 'Test Title',
-                        'body' => 'Test Body',
+                        'title' => self::ISSUE_TITLE,
+                        'body' => self::ISSUE_BODY,
                         'labels' => [
                             'dependency'
                         ],
@@ -61,12 +64,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'created',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.api.label'),
+                            'name' => config(GithubController::CONFIG_KEY_API_LABEL),
                         ]
                     ]
                 ]
@@ -91,12 +94,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'created',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.plugin.label'),
+                            'name' => config(GithubController::CONFIG_KEY_PLUGIN_LABEL),
                         ]
                     ]
                 ]
@@ -121,12 +124,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'labeled',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.api.label'),
+                            'name' => config(GithubController::CONFIG_KEY_API_LABEL),
                         ]
                     ]
                 ]
@@ -151,12 +154,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'labeled',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.plugin.label'),
+                            'name' => config(GithubController::CONFIG_KEY_PLUGIN_LABEL),
                         ]
                     ]
                 ]
@@ -189,12 +192,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'labeled',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.api.label'),
+                            'name' => config(GithubController::CONFIG_KEY_API_LABEL),
                         ]
                     ]
                 ]
@@ -218,12 +221,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'labeled',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.plugin.label'),
+                            'name' => config(GithubController::CONFIG_KEY_PLUGIN_LABEL),
                         ]
                     ]
                 ]
@@ -247,12 +250,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'labeled',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.api.label'),
+                            'name' => config(GithubController::CONFIG_KEY_API_LABEL),
                         ]
                     ]
                 ]
@@ -285,12 +288,12 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'labeled',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'number' => 22,
                     'labels' => [
                         [
-                            'name' => config('github.plugin.label'),
+                            'name' => config(GithubController::CONFIG_KEY_PLUGIN_LABEL),
                         ]
                     ]
                 ]
@@ -314,11 +317,11 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'updated',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'labels' => [
                         [
-                            'name' => config('github.plugin.label'),
+                            'name' => config(GithubController::CONFIG_KEY_PLUGIN_LABEL),
                         ]
                     ]
                 ]
@@ -333,11 +336,11 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'created',
                 'notissue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'labels' => [
                         [
-                            'name' => config('github.plugin.label'),
+                            'name' => config(GithubController::CONFIG_KEY_PLUGIN_LABEL),
                         ]
                     ]
                 ]
@@ -352,8 +355,8 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'created',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                     'labels' => [
                         [
                             'name' => 'nope',
@@ -377,8 +380,8 @@ class GithubControllerTest extends BaseApiTestCase
             [
                 'action' => 'created',
                 'issue' => [
-                    'title' => 'Test Title',
-                    'html_url' => 'Test Body',
+                    'title' => self::ISSUE_TITLE,
+                    'html_url' => self::ISSUE_BODY,
                 ]
             ]
         )->assertStatus(200);

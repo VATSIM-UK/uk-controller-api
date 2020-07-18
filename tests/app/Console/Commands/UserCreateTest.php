@@ -10,6 +10,8 @@ use Symfony\Component\Console\Exception\RuntimeException;
 
 class UserCreateTest extends BaseFunctionalTestCase
 {
+    const ARTISAN_COMMAND = 'user:create';
+    
     public function testItConstructs()
     {
         $this->assertInstanceOf(UserCreate::class, $this->app->make(UserCreate::class));
@@ -20,16 +22,16 @@ class UserCreateTest extends BaseFunctionalTestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Not enough arguments (missing: "vatsim_cid").');
 
-        Artisan::call('user:create');
+        Artisan::call(self::ARTISAN_COMMAND);
     }
 
     public function testItFailsIfVatsimCidString()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+        $this->expectExceptionMessage(UserCreate::INVALID_CID_MESSAGE);
 
         Artisan::call(
-            'user:create',
+            self::ARTISAN_COMMAND,
             ['vatsim_cid' => 'notacid']
         );
     }
@@ -37,10 +39,10 @@ class UserCreateTest extends BaseFunctionalTestCase
     public function testItFailsIfVatsimCidFloat()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+        $this->expectExceptionMessage(UserCreate::INVALID_CID_MESSAGE);
 
         Artisan::call(
-            'user:create',
+            self::ARTISAN_COMMAND,
             ['vatsim_cid' => 120353.3]
         );
     }
@@ -48,10 +50,10 @@ class UserCreateTest extends BaseFunctionalTestCase
     public function testItFailsIfVatsimCidTooLow()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+        $this->expectExceptionMessage(UserCreate::INVALID_CID_MESSAGE);
 
         Artisan::call(
-            'user:create',
+            self::ARTISAN_COMMAND,
             ['vatsim_cid' => 400000]
         );
     }
@@ -59,10 +61,10 @@ class UserCreateTest extends BaseFunctionalTestCase
     public function testItFailsIfVatsimCidTooLowBoundary()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid VATSIM CID provided.');
+        $this->expectExceptionMessage(UserCreate::INVALID_CID_MESSAGE);
 
         Artisan::call(
-            'user:create',
+            self::ARTISAN_COMMAND,
             ['vatsim_cid' => 799999]
         );
     }
@@ -79,7 +81,7 @@ class UserCreateTest extends BaseFunctionalTestCase
             ->with('access/api-settings-800000.txt', Mockery::any())
             ->andReturnSelf();
 
-        $this->assertEquals(0, Artisan::call('user:create', ['vatsim_cid' => 800000]));
+        $this->assertEquals(0, Artisan::call(self::ARTISAN_COMMAND, ['vatsim_cid' => 800000]));
     }
 
     public function testItPassesNormalCid()
@@ -94,7 +96,7 @@ class UserCreateTest extends BaseFunctionalTestCase
             ->with('access/api-settings-1203555.txt', Mockery::any())
             ->andReturnSelf();
 
-        $this->assertEquals(0, Artisan::call('user:create', ['vatsim_cid' => 1203555]));
+        $this->assertEquals(0, Artisan::call(self::ARTISAN_COMMAND, ['vatsim_cid' => 1203555]));
     }
 
     public function testItPassesNewMember()
@@ -109,6 +111,6 @@ class UserCreateTest extends BaseFunctionalTestCase
             ->with('access/api-settings-1402313.txt', Mockery::any())
             ->andReturnSelf();
 
-        $this->assertEquals(0, Artisan::call('user:create', ['vatsim_cid' => 1402313]));
+        $this->assertEquals(0, Artisan::call(self::ARTISAN_COMMAND, ['vatsim_cid' => 1402313]));
     }
 }

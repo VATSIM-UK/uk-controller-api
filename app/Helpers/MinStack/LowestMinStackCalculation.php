@@ -34,10 +34,9 @@ class LowestMinStackCalculation implements MinStackCalculableInterface
      */
     public function calculateMinStack(): ?int
     {
-        $pressures = [];
         $minQnh = 9999;
         $minQnhProvider = null;
-        foreach ($this->dataProviders as $index => $dataProvider) {
+        foreach ($this->dataProviders as $dataProvider) {
             $qnh = $this->metarService->getQnhFromVatsimMetar($dataProvider->calculationFacility());
             if ($qnh === null) {
                 continue;

@@ -48,7 +48,7 @@ class MetarService
         preg_match('/Q\d{4}/', $metar, $matches);
 
         // Check for dodgy metars
-        if (count($matches) === 0) {
+        if (empty($matches)) {
             throw new MetarException('QNH not found in METAR: ' . $metar);
         }
 
@@ -81,15 +81,12 @@ class MetarService
             ]
         );
 
-        if ($metar->getStatusCode() !== 200) {
-            Log::error('Failed to download METAR for ' . $icao);
-            return null;
-        }
-
         $metarString = (string) $metar->getBody();
-
-        // No METAR available
-        if (strpos($metarString, 'No METAR available for') === 0) {
+        if (
+            $metar->getStatusCode() !== 200 ||
+            strpos($metarString, 'No METAR available for') === 0
+        ) {
+            Log::error('Failed to download METAR for ' . $icao);
             return null;
         }
 

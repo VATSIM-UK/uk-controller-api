@@ -7,6 +7,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Sid;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
@@ -172,16 +173,9 @@ class HandoffService
         $positionToAdd = ControllerPosition::where('callsign', $callsignToAdd)->firstOrFail();
         $positionToAddAdjacent = ControllerPosition::where('callsign', $callsign)->firstOrFail();
 
-        $handoffs = DB::table('handoff_orders')
-            ->join('handoffs', 'handoff_id', '=', 'handoffs.id')
-            ->where('controller_position_id', $positionToAddAdjacent->id)
-            ->distinct()
-            ->select('handoffs.key')
-            ->pluck('handoffs.key');
-
         $method = $before ? 'insertIntoOrderBefore' : 'insertIntoOrderAfter';
 
-        foreach ($handoffs as $handoff) {
+        foreach (self::getHandoffsForPosition($positionToAddAdjacent->id) as $handoff) {
             self::$method($handoff, $positionToAdd->callsign, $positionToAddAdjacent->callsign);
         }
     }
@@ -190,23 +184,25 @@ class HandoffService
     {
         $postionToRemove = ControllerPosition::where('callsign', $callsign)->firstOrFail();
 
-        $handoffs = DB::table('handoff_orders')
-            ->join('handoffs', 'handoff_id', '=', 'handoffs.id')
-            ->where('controller_position_id', $postionToRemove->id)
-            ->distinct()
-            ->select('handoffs.key')
-            ->pluck('handoffs.key');
-
-        foreach ($handoffs as $handoff) {
+        foreach (self::getHandoffsForPosition($postionToRemove->id) as $handoff) {
             self::removeFromHandoffOrder($handoff, $callsign);
         }
     }
 
     public static function setHandoffForSid(string $airfield, string $identifier, string $handoff)
     {
-        /** @var Sid */
-        $sid = Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)->firstOrFail();
-        $sid->handoff_id = Handoff::where('key', $handoff)->firstOrFail()->id;
-        $sid->save();
+        Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)
+            ->where('identifier', $identifier)
+            ->update(['handoff_id' => Handoff::where('key', $handoff)->firstOrFail()->id]);
+    }
+
+    private static function getHandoffsForPosition(int $positionId): Collection
+    {
+        return  DB::table('handoff_orders')
+            ->join('handoffs', 'handoff_id', '=', 'handoffs.id')
+            ->where('controller_position_id', $positionId)
+            ->distinct()
+            ->select('handoffs.key')
+            ->pluck('handoffs.key');
     }
 }

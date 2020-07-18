@@ -6,13 +6,16 @@ use App\BaseApiTestCase;
 
 class SrdControllerTest extends BaseApiTestCase
 {
+    const L9_ROUTE_KENET = 'WOTAN L9 KENET';
+    const SRD_SEARCH_URI = 'srd/route/search';
+    
     public function testItRejectsMissingOrigin()
     {
         $queryParams = [
             'destination' => 'EGLL'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(400);
     }
 
@@ -23,7 +26,7 @@ class SrdControllerTest extends BaseApiTestCase
             'destination' => 'EGLL'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(400);
     }
 
@@ -33,7 +36,7 @@ class SrdControllerTest extends BaseApiTestCase
             'origin' => 'EGLL'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(400);
     }
 
@@ -44,7 +47,7 @@ class SrdControllerTest extends BaseApiTestCase
             'destination' => '123'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(400);
     }
 
@@ -56,7 +59,7 @@ class SrdControllerTest extends BaseApiTestCase
             'requestedLevel' => 'abc',
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(400);
     }
 
@@ -66,13 +69,13 @@ class SrdControllerTest extends BaseApiTestCase
             [
                 'minimum_level' => null,
                 'maximum_level' => 28000,
-                'route_string' => 'WOTAN L9 KENET',
+                'route_string' => self::L9_ROUTE_KENET,
                 'notes' => [],
             ],
             [
                 'minimum_level' => 10000,
                 'maximum_level' => 19500,
-                'route_string' => 'WOTAN L9 KENET',
+                'route_string' => self::L9_ROUTE_KENET,
                 'notes' => [],
             ],
             [
@@ -88,7 +91,7 @@ class SrdControllerTest extends BaseApiTestCase
             'destination' => 'EGLL'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(200)
             ->assertJson($expected);
     }
@@ -99,7 +102,7 @@ class SrdControllerTest extends BaseApiTestCase
             [
                 'minimum_level' => null,
                 'maximum_level' => 28000,
-                'route_string' => 'WOTAN L9 KENET',
+                'route_string' => self::L9_ROUTE_KENET,
                 'notes' => [],
             ],
         ];
@@ -110,7 +113,7 @@ class SrdControllerTest extends BaseApiTestCase
             'requestedLevel' => '9000'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(200)
             ->assertJson($expected);
     }
@@ -121,13 +124,13 @@ class SrdControllerTest extends BaseApiTestCase
             [
                 'minimum_level' => null,
                 'maximum_level' => 28000,
-                'route_string' => 'WOTAN L9 KENET',
+                'route_string' => self::L9_ROUTE_KENET,
                 'notes' => [],
             ],
             [
                 'minimum_level' => 10000,
                 'maximum_level' => 19500,
-                'route_string' => 'WOTAN L9 KENET',
+                'route_string' => self::L9_ROUTE_KENET,
                 'notes' => [],
             ],
         ];
@@ -138,7 +141,7 @@ class SrdControllerTest extends BaseApiTestCase
             'requestedLevel' => '15000'
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(200)
             ->assertJson($expected);
     }
@@ -159,7 +162,7 @@ class SrdControllerTest extends BaseApiTestCase
             'destination' => 'VEULE',
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(200)
             ->assertJson($expected);
     }
@@ -193,7 +196,7 @@ class SrdControllerTest extends BaseApiTestCase
             'destination' => 'EGLL',
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'srd/route/search', [], $queryParams)
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::SRD_SEARCH_URI, [], $queryParams)
             ->assertStatus(200)
             ->assertJson($expected);
     }
