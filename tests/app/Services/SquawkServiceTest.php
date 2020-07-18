@@ -1,13 +1,18 @@
 <?php
+
 namespace App\Services;
 
+use App\Allocator\Squawk\General\AirfieldPairingSquawkAllocator;
+use App\Allocator\Squawk\General\CcamsSquawkAllocator;
+use App\Allocator\Squawk\General\OrcamSquawkAllocator;
+use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
 use App\BaseFunctionalTestCase;
-use App\Exceptions\SquawkNotAllocatedException;
-use App\Exceptions\SquawkNotAssignedException;
-use App\Libraries\GeneralSquawkRuleGenerator;
-use App\Models\Squawks\Allocation;
-use App\Models\User\User;
-use InvalidArgumentException;
+use App\Events\SquawkUnassignedEvent;
+use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
+use App\Models\Squawk\Ccams\CcamsSquawkRange;
+use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
+use App\Models\Squawk\Orcam\OrcamSquawkRange;
+use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use TestingUtils\Traits\WithSeedUsers;
 
 class SquawkServiceTest extends BaseFunctionalTestCase
@@ -21,247 +26,109 @@ class SquawkServiceTest extends BaseFunctionalTestCase
      */
     private $squawkService;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
-        $this->actingAs($this->activeUser());
         $this->squawkService = $this->app->make(SquawkService::class);
     }
 
-    public function testItConstructs()
+    public function testItDeletesSquawks()
     {
-        $this->assertInstanceOf(SquawkService::class, $this->squawkService);
-    }
+        $this->expectsEvents(SquawkUnassignedEvent::class);
 
-    public function testItDeletesSquawkAssignments()
-    {
+        // CCAMS shouldn't be called because ORCAM deleted a squawk
+        OrcamSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123']);
+        CcamsSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123']);
+
         $this->assertTrue($this->squawkService->deleteSquawkAssignment('BAW123'));
-    }
 
-    public function testItDoesntDeleteNonExistantAssignments()
-    {
-        $this->assertFalse($this->squawkService->deleteSquawkAssignment('BAW2302'));
-    }
-
-    public function testItFindsAssignedSquawks()
-    {
-        $this->assertSame(
-            '4723',
-            $this->squawkService->getAssignedSquawk('BAW123')->squawk()
-        );
-    }
-
-    public function testItMarksExistingAllocationsAsNotNew()
-    {
-        $this->assertFalse(
-            $this->squawkService->getAssignedSquawk('BAW123')->isNewAllocation()
-        );
-    }
-
-
-    public function testItThrowsAnExceptionIfNoSquawkAssignmentExists()
-    {
-        $this->expectException(SquawkNotAssignedException::class);
-        $this->expectExceptionMessage('Squawk assignment not found for BAW75AZ');
-        $this->squawkService->getAssignedSquawk('BAW75AZ');
-    }
-
-    public function testItGeneratesNewGeneralSquawkIfAllocationExists()
-    {
-        $this->assertSame(
-            '1234',
-            $this->squawkService->assignGeneralSquawk(
-                'BAW123',
-                'EGKK',
-                'EGCC'
-            )->squawk()
-        );
-    }
-
-    public function testGeneralAllocationsAreUpdatedIfSquawkExists()
-    {
-        $this->assertFalse(
-            $this->squawkService->assignGeneralSquawk(
-                'BAW123',
-                'EGKK',
-                'EGCC'
-            )->isNewAllocation()
-        );
-    }
-
-    public function testItWontDuplicateGeneralSquawks()
-    {
-        $this->assertSame(
-            '1234',
-            $this->squawkService->assignGeneralSquawk(
-                'TCX1234',
-                "EGKK",
-                "EGCC"
-            )->squawk()
-        );
-        $this->assertNotEquals(
-            '1234',
-            $this->squawkService->assignGeneralSquawk(
-                'TCX1235',
-                "EGKK",
-                "EGCC"
-            )->squawk()
-        );
-    }
-
-    public function testItAssignsGeneralSquawksFromCorrectRange()
-    {
-        $squawk = $this->squawkService->assignGeneralSquawk(
-            'IBK2314',
-            "EGKK",
-            "LFPG"
-        )->squawk();
-        $this->assertLessThanOrEqual(3333, $squawk);
-        $this->assertGreaterThanOrEqual(2222, $squawk);
-    }
-
-    public function testItAuditsWhoAssignsGeneralSquawks()
-    {
-        $this->squawkService->assignGeneralSquawk(
-            'IBK2314',
-            "EGKK",
-            "LFPG"
-        );
-        $this->assertEquals(
-            self::ACTIVE_USER_CID,
-            Allocation::where('callsign', '=', 'IBK2314')->first()->allocated_by
-        );
-    }
-
-    public function testItUsesRulesInOrder()
-    {
-        $rulesMock = $this->createMock(GeneralSquawkRuleGenerator::class);
-        $rulesMock->expects($this->once())->method('generateRules')->willReturn(
+        $this->assertDatabaseMissing(
+            'orcam_squawk_assignments',
             [
-                ['departure_ident' => 'EGKK', 'arrival_ident' => 'EGCC'],
-                ['departure_ident' => 'EGKK', 'arrival_ident' => 'LG']
+                'callsign' => 'BAW123',
             ]
         );
-        $service = new SquawkService($rulesMock, new SquawkAllocationService);
-
-        $squawk = $service->assignGeneralSquawk(
-            'IBK2314',
-            'EGKK',
-            'EGCC'
-        )->squawk();
-        $this->assertSame("1234", $squawk);
-    }
-
-    public function testItWontAssignNonOctalGeneralCodes()
-    {
-        $digitsoctal = true;
-
-        $squawk = $this->squawkService->assignGeneralSquawk(
-            'IBK2314',
-            "EGJJ",
-            "EGJB"
-        )->squawk();
-
-        // Check if it is octal
-        foreach (str_split($squawk) as $digit) {
-            if ($digit > 7) {
-                $digitsoctal = false;
-            }
-        }
-
-        $this->assertTrue($digitsoctal);
-    }
-
-    public function testItWontAssignReservedCodesGeneral()
-    {
-        $this->assertNotEquals(
-            7700,
-            $this->squawkService->assignGeneralSquawk(
-                'IBK2314',
-                "KJFK",
-                "KJFK"
-            )->squawk()
+        $this->assertDatabaseHas(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+            ]
         );
     }
 
-    public function testItThrowsAnExceptionIfItCantFindAGeneralSquawk()
+    public function testReturnsFalseOnNoSquawkDeleted()
     {
-        $rulesMock = $this->createMock(GeneralSquawkRuleGenerator::class);
-        $rulesMock->expects($this->once())->method('generateRules')->willReturn([]);
-        $service = new SquawkService($rulesMock, new SquawkAllocationService);
-
-        $this->expectException(SquawkNotAllocatedException::class);
-        $this->expectExceptionMessage('Unable to allocate squawk from available ranges for IBK2315');
-        $service->assignGeneralSquawk('IBK2315', "ABCD", "EFGH");
+        $this->doesntExpectEvents(SquawkUnassignedEvent::class);
+        $this->assertFalse($this->squawkService->deleteSquawkAssignment('BAW123'));
     }
 
-    public function testItThrowsAnExceptionIfTheUnitCannotBeFound()
+    public function testItReturnsAssignedSquawk()
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unit not found');
-        $this->squawkService->assignLocalSquawk('BAW9AZ', 'ZZZZ', 'I');
-    }
-
-    public function testItAssignsFlightRuleSpecificLocalSquawks()
-    {
-        $this->assertSame('3762', $this->squawkService->assignLocalSquawk('BAW9AZ', 'EGKA', 'I')->squawk());
-    }
-
-    public function testLocalSquawksTreatsSvfrAsVfr()
-    {
-        $this->assertSame('3763', $this->squawkService->assignLocalSquawk('BAW9AZ', 'EGKA', 'S')->squawk());
-    }
-
-    public function testItAuditsWhoAssignsLocalSquawks()
-    {
-        $this->squawkService->assignLocalSquawk('BAW9AZ', 'EGKA', 'I');
-        $this->assertSame(
-            self::ACTIVE_USER_CID,
-            Allocation::where('callsign', '=', 'BAW9AZ')->first()->allocated_by
+        $assignment = OrcamSquawkAssignment::find(
+            OrcamSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123'])->callsign
         );
+        $this->assertEquals($assignment, $this->squawkService->getAssignedSquawk('BAW123'));
     }
 
-    public function testItAssignsDuplicateLocalSquawksWhereAllowed()
+    public function testItReturnsNullOnNoAssignmentFound()
     {
-        $this->assertSame('3762', $this->squawkService->assignLocalSquawk('BAW9AZ', 'EGKA', 'I')->squawk());
-        $this->assertSame('3762', $this->squawkService->assignLocalSquawk('BAW9AX', 'EGKA', 'I')->squawk());
+        $this->assertNull($this->squawkService->getAssignedSquawk('BAW123'));
     }
 
-    public function testItFallsBackToNonRuleSpecificLocalSquawks()
+    public function testItAssignsALocalSquawkAndReturnsIt()
     {
-        $this->assertSame('6666', $this->squawkService->assignLocalSquawk('BAW9AX', 'EGXY', 'V')->squawk());
+        $assignment = $this->squawkService->assignLocalSquawk('BAW123', 'EGKK_APP', 'I');
+        $this->assertEquals('0202', $assignment->getCode());
+        $this->assertEquals('UNIT_DISCRETE', $assignment->getType());
+        $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 
-
-    public function testItPrefersRuleSpecificLocalSquawksWhereAvailable()
+    public function testItDoesntAssignLocalSquawkIfAllocatorFails()
     {
-        $this->assertSame('5555', $this->squawkService->assignLocalSquawk('BAW9AX', 'EGXY', 'I')->squawk());
+        UnitDiscreteSquawkRange::getQuery()->delete();
+        $this->assertNull($this->squawkService->assignLocalSquawk('BAW123', 'EGKK_APP', 'I'));
     }
 
-    public function testItWillTryAnotherAvailableLocalSquawk()
+    public function testItAssignsAGeneralSquawkAndReturnsIt()
     {
-        $this->assertNotSame('4723', $this->squawkService->assignLocalSquawk('BAW9AX', 'EGPX', 'I')->squawk());
+        $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'KJFK', 'EGLL');
+        $this->assertEquals('0101', $assignment->getCode());
+        $this->assertEquals('ORCAM', $assignment->getType());
+        $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 
-    public function testItThrowsAnExceptionIfALocalSquawkCannotBeFound()
+    public function testItDoesntAssignGeneralSquawkIfAllocatorFails()
     {
-        $this->expectException(SquawkNotAllocatedException::class);
-        $this->expectExceptionMessage('Unable to allocate local squawk for BAW9AX');
-        $this->squawkService->assignLocalSquawk('BAW9AX', 'EGNA', 'I');
+        OrcamSquawkRange::getQuery()->delete();
+        CcamsSquawkRange::getQuery()->delete();
+        $this->assertNull($this->squawkService->assignGeneralSquawk('BAW123', 'EGKK', 'EGLL'));
     }
 
-    public function testItGeneratesNewLocalSquawkIfAllocationExists()
+    public function testItTriesNextAllocatorIfGeneralAllocationFails()
     {
-        $this->assertSame(
-            '3762',
-            $this->squawkService->assignLocalSquawk('BAW123', 'EGKA', 'I')->squawk()
+        CcamsSquawkRange::create(
+            [
+                'first' => '0303',
+                'last' => '0303',
+            ]
         );
+        OrcamSquawkRange::getQuery()->delete();
+
+        $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'KJFK', 'EGLL');
+        $this->assertEquals('0303', $assignment->getCode());
+        $this->assertEquals('CCAMS', $assignment->getType());
+        $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 
-    public function testLocalAllocationsAreUpdatedIfSquawkExists()
+    public function testDefaultAllocatorPreference()
     {
-        $this->assertFalse(
-            $this->squawkService->assignLocalSquawk('BAW123', 'EGKA', 'I')->isNewAllocation()
-        );
+        $expected = [
+            UnitDiscreteSquawkAllocator::class,
+            AirfieldPairingSquawkAllocator::class,
+            OrcamSquawkAllocator::class,
+            CcamsSquawkAllocator::class,
+        ];
+
+        $this->assertEquals($expected, $this->squawkService->getAllocatorPreference());
     }
 }

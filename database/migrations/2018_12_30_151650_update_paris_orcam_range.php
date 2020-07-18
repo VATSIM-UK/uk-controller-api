@@ -1,8 +1,6 @@
 <?php
 
-use App\Models\Squawks\SquawkGeneral;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
 class UpdateParisOrcamRange extends Migration
@@ -14,9 +12,7 @@ class UpdateParisOrcamRange extends Migration
      */
     public function up()
     {
-        $range = SquawkGeneral::find(4);
-        $range->departure_ident = 'LF';
-        $range->save();
+        DB::table('squawk_general')->where('id', 4)->update(['departure_ident' => 'LF']);
     }
 
     /**

@@ -20,6 +20,6 @@ class RecordHoldAssignment
                 ]
         );
 
-        return false;
+        return true;
     }
 }

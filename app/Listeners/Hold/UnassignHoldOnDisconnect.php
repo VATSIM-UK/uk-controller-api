@@ -1,12 +1,10 @@
 <?php
 
-
 namespace App\Listeners\Hold;
 
 use App\Events\HoldUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Models\Hold\AssignedHold;
-use App\Models\Vatsim\NetworkAircraft;
 
 class UnassignHoldOnDisconnect
 {
@@ -14,11 +12,12 @@ class UnassignHoldOnDisconnect
     {
         $assignedHold = AssignedHold::find($event->getAircraft()->callsign);
         if (!$assignedHold) {
-            return false;
+            return true;
         }
 
         $assignedHold->delete();
         event(new HoldUnassignedEvent($event->getAircraft()->callsign));
-        return false;
+
+        return true;
     }
 }

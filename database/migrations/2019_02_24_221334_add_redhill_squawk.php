@@ -16,23 +16,21 @@ class AddRedhillSquawk extends Migration
      */
     public function up()
     {
-        $owner = new SquawkRangeOwner;
-        $owner->save();
-
-        SquawkUnit::create(
+        $rangeOwner = DB::table('squawk_range_owner')->insertGetId([]);
+        DB::table('squawk_unit')->insert(
             [
                 'unit' => 'EGKR',
-                'squawk_range_owner_id' => $owner->id,
+                'squawk_range_owner_id' => $rangeOwner,
             ]
         );
-
-        Range::create(
+        // Create the range
+        DB::table('squawk_range')->insert(
             [
-                'squawk_range_owner_id' => $owner->id,
                 'start' => '3767',
                 'stop' => '3767',
                 'rules' => 'A',
                 'allow_duplicate' => true,
+                'squawk_range_owner_id' => $rangeOwner,
             ]
         );
     }
@@ -44,9 +42,8 @@ class AddRedhillSquawk extends Migration
      */
     public function down()
     {
-        $unit = SquawkUnit::where('unit', '=', 'EGKR')->first();
-        $unit->delete();
-        Range::where('squawk_range_owner_id', '=', $unit->squawk_range_owner_id);
-        SquawkRangeOwner::find($unit->squawk_range_owner_id)->delete();
+        $unit = DB::table('squawk_unit')->where('unit', 'EGKR')->select('squawk_range_owner_id')->first();
+        DB::table('squawk_unit')->where('unit', 'EGKR')->delete();
+        DB::table('squawk_range_owner')->where('id', $unit->squawk_range_owner_id)->delete();
     }
 }

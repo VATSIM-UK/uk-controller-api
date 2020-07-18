@@ -181,7 +181,9 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RegionalPressureServiceProvider::class,
+        App\Providers\SquawkServiceProvider::class,
         App\Providers\MinStackCalculationServiceProvider::class,
+        App\Providers\NetworkServiceProvider::class,
     ],
 
     /*

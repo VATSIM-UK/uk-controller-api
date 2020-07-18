@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\NetworkAircraftDisconnectedEvent;
+use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -41,10 +42,11 @@ class NetworkDataService
                 continue;
             }
 
-            NetworkAircraft::updateOrCreate(
+            $aircraft = NetworkAircraft::updateOrCreate(
                 ['callsign' => $client['callsign']],
                 $client
             );
+            event(new NetworkAircraftUpdatedEvent($aircraft));
         }
     }
 

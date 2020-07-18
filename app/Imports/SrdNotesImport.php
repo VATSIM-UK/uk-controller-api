@@ -70,7 +70,7 @@ class SrdNotesImport implements WithEvents, ToCollection
     public function registerEvents(): array
     {
         return [
-            BeforeSheet::class => function (BeforeSheet $sheet) {
+            BeforeSheet::class => function () {
                 $this->output->section('Importing SRD Notes');
             },
         ];

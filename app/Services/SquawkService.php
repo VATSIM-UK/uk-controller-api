@@ -2,15 +2,11 @@
 
 namespace App\Services;
 
-use App\Exceptions\SquawkNotAllocatedException;
-use App\Exceptions\SquawkNotAssignedException;
-use App\Helpers\Squawks\SquawkAllocation;
-use App\Libraries\GeneralSquawkRuleGenerator;
-use App\Models\Squawks\Allocation;
-use App\Models\Squawks\Range;
-use App\Models\Squawks\SquawkGeneral;
-use App\Models\Squawks\SquawkUnit;
-use InvalidArgumentException;
+use App\Allocator\Squawk\SquawkAllocatorInterface;
+use App\Allocator\Squawk\SquawkAssignmentCategories;
+use App\Allocator\Squawk\SquawkAssignmentInterface;
+use App\Events\SquawkUnassignedEvent;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Service for converting squawk requests into data arrays that can be returned as
@@ -22,39 +18,19 @@ use InvalidArgumentException;
 class SquawkService
 {
     /**
-     * Constant deemed to mean Any Flight Rules.
-     *
-     * @var String
+     * @var SquawkAllocatorInterface[]
      */
-    const RULES_ANY = 'A';
-
-    /**
-     * Converts origin and destination to rules to check
-     * when allocating general squawks.
-     *
-     * @var GeneralSquawkRuleGenerator
-     */
-    private $rulesGenerator;
-
-    /**
-     * For creating and auditing squawk allocations.
-     *
-     * @var SquawkAllocationService
-     */
-    private $squawkAllocationService;
+    private $allocators;
 
     /**
      * Constructor
      *
-     * @param GeneralSquawkRuleGenerator $rulesGenerator
-     * @param SquawkAllocationService $squawkAllocationService
+     * @param SquawkAllocatorInterface[] $allocators
      */
     public function __construct(
-        GeneralSquawkRuleGenerator $rulesGenerator,
-        SquawkAllocationService $squawkAllocationService
+        array $allocators
     ) {
-        $this->rulesGenerator = $rulesGenerator;
-        $this->squawkAllocationService = $squawkAllocationService;
+        $this->allocators = $allocators;
     }
 
     /**
@@ -63,27 +39,33 @@ class SquawkService
      * @param string $callsign The callsign to deallocate for
      * @return bool True if successful, false otherwise.
      */
-    public function deleteSquawkAssignment(string $callsign) : bool
+    public function deleteSquawkAssignment(string $callsign): bool
     {
-        return (Allocation::where(['callsign' => $callsign])->delete() === 1) ? true : false;
+        foreach ($this->allocators as $allocator) {
+            if ($allocator->delete($callsign)) {
+                event(new SquawkUnassignedEvent($callsign));
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * Returns the squawk allocated to the given callsign.
      *
      * @param string $callsign The callsign to check
-     * @throws SquawkNotAssignedException If no squawk is assigned
-     * @return string
+     * @return SquawkAssignmentInterface|null
      */
-    public function getAssignedSquawk(string $callsign) : SquawkAllocation
+    public function getAssignedSquawk(string $callsign): ?SquawkAssignmentInterface
     {
-        $allocation = Allocation::where('callsign', '=', $callsign)->first();
-
-        if (!$allocation) {
-            throw new SquawkNotAssignedException("Squawk assignment not found for " . $callsign);
+        $assignment = null;
+        foreach ($this->allocators as $allocator) {
+            if ($assignment = $allocator->fetch($callsign)) {
+                break;
+            }
         }
-
-        return new SquawkAllocation($allocation->squawk, false);
+        return $assignment;
     }
 
     /**
@@ -92,39 +74,15 @@ class SquawkService
      * @param string $callsign Aircraft callsign
      * @param string $unit The ATC unit to search for squawks in
      * @param string $rules The flight rules
-     * @return SquawkAllocation If squawk found and allocated
-     * @throws SquawkNotAllocatedException If a squawk cannot be allocated.
+     * @return SquawkAssignmentInterface|null
      */
-    public function assignLocalSquawk(string $callsign, string $unit, string $rules) : SquawkAllocation
+    public function assignLocalSquawk(string $callsign, string $unit, string $rules): ?SquawkAssignmentInterface
     {
-        // Try to find rule specific ranges first, otherwise use general ones
-        $unit = SquawkUnit::where('unit', $unit)->first();
-        if (!$unit) {
-            throw new InvalidArgumentException('Unit not found');
-        }
-
-        if ($rules === 'S') {
-            $rules = 'V';
-        }
-
-        $allRanges = $unit->ranges;
-        $ruleSpecificRanges = $allRanges->where('rules', $rules)->shuffle();
-        $rangesToUse = ($ruleSpecificRanges->isNotEmpty())
-            ? $ruleSpecificRanges : $allRanges->where('rules', self::RULES_ANY)->shuffle();
-
-        // Allocate a squawk from a random applicable range
-        if ($rangesToUse && $rangesToUse->isNotEmpty()) {
-            foreach ($rangesToUse as $localSquawkRange) {
-                // Check the applicable ranges for a squawk and see if we can find one.
-                $squawk = $this->searchForSquawkInRange($localSquawkRange);
-                if ($squawk !== false) {
-                    return $this->squawkAllocationService->createOrUpdateAllocation($callsign, $squawk);
-                }
-            }
-        }
-
-        // Throw an exception if we can't find a squawk.
-        throw new SquawkNotAllocatedException('Unable to allocate local squawk for ' . $callsign);
+        return $this->assignSquawk(
+            $callsign,
+            SquawkAssignmentCategories::LOCAL,
+            ['unit' => $unit, 'rules' => $rules]
+        );
     }
 
     /**
@@ -133,75 +91,45 @@ class SquawkService
      * @param string $callsign The aircraft's callsign
      * @param string $origin The origin ICAO
      * @param string $destination The destination ICAO
-     * @return SquawkAllocation If squawk found and allocated
-     * @throws SquawkNotAllocatedException If the squawk isn't found.
+     * @return SquawkAssignmentInterface
      */
-    public function assignGeneralSquawk(string $callsign, string $origin, string $destination) : SquawkAllocation
-    {
-        $searches = $this->rulesGenerator->generateRules($origin, $destination);
-        foreach ($searches as $search) {
-            $ranges = SquawkGeneral::where($search)->get()->shuffle();
+    public function assignGeneralSquawk(
+        string $callsign,
+        string $origin,
+        string $destination
+    ): ?SquawkAssignmentInterface {
+        return $this->assignSquawk(
+            $callsign,
+            SquawkAssignmentCategories::GENERAL,
+            ['origin' => $origin, 'destination' => $destination]
+        );
+    }
 
-            if ($ranges && $ranges->isNotEmpty()) {
-                foreach ($ranges as $generalSquawkRanges) {
-                    $possibleRanges = $generalSquawkRanges->ranges->shuffle();
-                    foreach ($possibleRanges as $possibleRange) {
-                        // Check the applicable ranges for a squawk and see if we can find one.
-                        $squawk = $this->searchForSquawkInRange($possibleRange);
-                        if ($squawk !== false) {
-                            return $this->squawkAllocationService->createOrUpdateAllocation($callsign, $squawk);
-                        }
-                    }
+    private function assignSquawk(string $callsign, string $category, array $details): ?SquawkAssignmentInterface
+    {
+        $assignment = null;
+        DB::transaction(function () use ($callsign, $category, $details, &$assignment) {
+            $this->deleteSquawkAssignment($callsign);
+            foreach ($this->allocators as $allocator) {
+                if (
+                    $allocator->canAllocateForCategory($category) &&
+                    $assignment = $allocator->allocate($callsign, $details)
+                ) {
+                    return $assignment;
                 }
             }
-        }
+        });
 
-        // No squawk found, throw exception.
-        throw new SquawkNotAllocatedException('Unable to allocate squawk from available ranges for ' . $callsign);
+        return $assignment;
     }
 
     /**
-     * Searches through a range to find an unallocated squawk
-     *
-     * @param  Range $range The range to check.
-     * @return array|boolean Returns false when unable to find a squawk, else a success array
+     * @return string[]
      */
-    private function searchForSquawkInRange(Range $range)
+    public function getAllocatorPreference(): array
     {
-        $squawk = null;
-        $found_unallocated_squawk = false;
-        $count = 0;
-        $unsuitable_squawks = [];
-
-        while (!$found_unallocated_squawk) {
-            $squawk = $range->random_squawk;
-            if (!$squawk) {
-                // Lets not just loop forever
-                $squawk = null;
-                $found_unallocated_squawk = true;
-            }
-            $count++;
-
-            // Check to make sure we haven't already tried this squawk
-            if (array_search($squawk, $unsuitable_squawks) === false) {
-                $unsuitable_squawks[] = $squawk;
-
-                //Check if the squawk is already allocated
-                $num_results = Allocation::where('squawk', '=', $squawk)->count();
-
-                // Not already allocated OR duplicates allowed then we're good.
-                if ($num_results == 0 || $range->allow_duplicate) {
-                    $found_unallocated_squawk = true;
-                }
-            }
-
-            if ($range->number_of_possibilities < $count) {
-                // Lets not just loop forever
-                $squawk = null;
-                $found_unallocated_squawk = true;
-            }
-        }
-
-        return $squawk ?: false;
+        return array_map(function (SquawkAllocatorInterface $allocator) {
+            return get_class($allocator);
+        }, $this->allocators);
     }
 }
