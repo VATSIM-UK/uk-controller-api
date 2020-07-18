@@ -8,6 +8,10 @@ use TestingUtils\Traits\WithSeedUsers;
 
 class VersionControllerTest extends BaseApiTestCase
 {
+    const CREATION_DATE_FIRST = '2017-12-02T00:00:00.000000Z';
+    const CREATION_DATE_SECOND = '2017-12-03T00:00:00.000000Z';
+    const CREATION_DATE_THIRD = '2017-12-04T00:00:00.000000Z';
+
     use WithSeedUsers;
 
     protected static $tokenScope = [
@@ -71,21 +75,21 @@ class VersionControllerTest extends BaseApiTestCase
                         'id' => 1,
                         'version' => '1.0.0',
                         'allowed' => false,
-                        'created_at' => '2017-12-02T00:00:00.000000Z',
-                        'updated_at' => '2017-12-03T00:00:00.000000Z',
+                        'created_at' => self::CREATION_DATE_FIRST,
+                        'updated_at' => self::CREATION_DATE_SECOND,
                     ],
                     [
                         'id' => 2,
                         'version' => '2.0.0',
                         'allowed' => true,
-                        'created_at' => '2017-12-03T00:00:00.000000Z',
+                        'created_at' => self::CREATION_DATE_SECOND,
                         'updated_at' => null,
                     ],
                     [
                         'id' => 3,
                         'version' => '2.0.1',
                         'allowed' => true,
-                        'created_at' => '2017-12-04T00:00:00.000000Z',
+                        'created_at' => self::CREATION_DATE_THIRD,
                         'updated_at' => null,
                     ],
                 ]
@@ -95,7 +99,7 @@ class VersionControllerTest extends BaseApiTestCase
     public function testCreateUpdateVersionFailsWithoutVersionAdminScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'version/9.0.0', [])
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'version/9.6.0', [])
             ->assertStatus(403);
     }
 
@@ -103,7 +107,7 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'version/9.0.0',
+            'version/9.0.1',
             []
         )->assertStatus(400);
     }
@@ -112,7 +116,7 @@ class VersionControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_PUT,
-            'version/9.0.0',
+            'version/9.5.0',
             [
                 'allowed' => true,
             ]
@@ -146,7 +150,7 @@ class VersionControllerTest extends BaseApiTestCase
     public function testGetVersionVersionFailsWithoutVersionAdminScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/9.0.0', [])
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/9.1.0', [])
             ->assertStatus(403);
     }
 
@@ -159,8 +163,8 @@ class VersionControllerTest extends BaseApiTestCase
                     'id' => 1,
                     'version' => '1.0.0',
                     'allowed' => false,
-                    'created_at' => '2017-12-02T00:00:00.000000Z',
-                    'updated_at' => '2017-12-03T00:00:00.000000Z',
+                    'created_at' => self::CREATION_DATE_FIRST,
+                    'updated_at' => self::CREATION_DATE_SECOND,
                 ]
             )->assertStatus(200);
     }

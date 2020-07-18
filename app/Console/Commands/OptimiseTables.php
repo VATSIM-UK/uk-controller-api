@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\TableDoesNotExistException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use RuntimeException;
 
 class OptimiseTables extends Command
 {
@@ -28,7 +28,7 @@ class OptimiseTables extends Command
         $this->info('Optimising database tables');
         foreach (self::TABLES_TO_OPTIMISE as $table) {
             if (!Schema::hasTable($table)) {
-                throw new RuntimeException('Table doesnt exist to be optimised ' . $table);
+                throw new TableDoesNotExistException('Table doesnt exist to be optimised ' . $table);
             }
 
             DB::statement('OPTIMIZE TABLE ' . $table);

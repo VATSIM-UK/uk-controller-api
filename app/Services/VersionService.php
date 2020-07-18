@@ -53,7 +53,7 @@ class VersionService extends ServiceProvider
      */
     private function getPossibleVersionResponse(Version $userVersion, Version $latestVersion)
     {
-        if ($userVersion->allowed == false) {
+        if (!$userVersion->allowed) {
             // They're using a deprecated version
             Log::info('Attempt to use deprecated version ' . $userVersion->version . ', which was rejected by the API');
             $jsonArray = [

@@ -13,6 +13,8 @@ use SimpleXMLElement;
 
 class RegionalPressureServiceTest extends BaseFunctionalTestCase
 {
+    const METAR_URI = 'http://test.com';
+    
     /**
      * @var MetarService
      */
@@ -49,7 +51,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
     public function testItConstructs()
     {
-        $service = new RegionalPressureService(new Client(), 'http://test.com', $this->metarService);
+        $service = new RegionalPressureService(new Client(), self::METAR_URI, $this->metarService);
         $this->assertInstanceOf(RegionalPressureService::class, $service);
     }
 
@@ -64,7 +66,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
         $client = new Client(['handler' => $handler]);
 
 
-        $service = new RegionalPressureService($client, 'http://test.com', $this->metarService);
+        $service = new RegionalPressureService($client, self::METAR_URI, $this->metarService);
         $this->assertNull($service->generateRegionalPressures());
         $this->assertEquals($service->getLastError(), $service::ERROR_REQUEST_FAILED);
     }
@@ -80,7 +82,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
         $client = new Client(['handler' => $handler]);
 
 
-        $service = new RegionalPressureService($client, 'http://test.com', $this->metarService);
+        $service = new RegionalPressureService($client, self::METAR_URI, $this->metarService);
         $this->assertNull($service->generateRegionalPressures());
         $this->assertEquals($service->getLastError(), $service::ERROR_INVALID_XML);
     }
@@ -108,7 +110,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $service = new RegionalPressureService(
             $client,
-            'http://test.com',
+            self::METAR_URI,
             $this->metarService
         );
 
@@ -140,7 +142,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $service = new RegionalPressureService(
             $client,
-            'http://test.com',
+            self::METAR_URI,
             $this->metarService
         );
 
@@ -170,7 +172,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $service = new RegionalPressureService(
             $client,
-            'http://test.com',
+            self::METAR_URI,
             $this->metarService
         );
 
@@ -199,7 +201,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $service = new RegionalPressureService(
             $client,
-            'http://test.com',
+            self::METAR_URI,
             $this->metarService
         );
 
@@ -227,7 +229,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $service = new RegionalPressureService(
             $client,
-            'http://test.com',
+            self::METAR_URI,
             $this->metarService
         );
 

@@ -10,6 +10,9 @@ use Carbon\Carbon;
 
 class HoldControllerTest extends BaseApiTestCase
 {
+    const HOLD_ASSIGNED_URI = 'hold/assigned';
+    const HOLD_ASSIGNED_URI_AIRCRAFT = 'hold/assigned/BAW123';
+    
     public function testItConstructs()
     {
         $this->assertInstanceOf(HoldController::class, $this->app->make(HoldController::class));
@@ -342,7 +345,7 @@ class HoldControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'hold/assigned')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, self::HOLD_ASSIGNED_URI)
             ->assertStatus(200)
             ->assertJson($expected);
     }
@@ -350,7 +353,7 @@ class HoldControllerTest extends BaseApiTestCase
     public function testItDeletesAssignedHolds()
     {
         $this->expectsEvents(HoldUnassignedEvent::class);
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::HOLD_ASSIGNED_URI_AIRCRAFT)
             ->assertStatus(204);
 
         $this->assertDatabaseMissing(
@@ -364,13 +367,13 @@ class HoldControllerTest extends BaseApiTestCase
     public function testItCanDeleteRepeatedly()
     {
         $this->expectsEvents(HoldUnassignedEvent::class);
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::HOLD_ASSIGNED_URI_AIRCRAFT)
             ->assertStatus(204);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::HOLD_ASSIGNED_URI_AIRCRAFT)
             ->assertStatus(204);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'hold/assigned/BAW123')
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::HOLD_ASSIGNED_URI_AIRCRAFT)
             ->assertStatus(204);
     }
 
@@ -382,7 +385,7 @@ class HoldControllerTest extends BaseApiTestCase
         ];
 
         $this->expectsEvents(HoldAssignedEvent::class);
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(201);
 
         $this->assertDatabaseHas(
@@ -402,7 +405,7 @@ class HoldControllerTest extends BaseApiTestCase
         ];
 
         $this->expectsEvents(HoldAssignedEvent::class);
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(201);
 
         $this->assertDatabaseHas(
@@ -422,7 +425,7 @@ class HoldControllerTest extends BaseApiTestCase
         ];
 
         $this->expectsEvents(HoldAssignedEvent::class);
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(201);
 
         $this->assertDatabaseHas(
@@ -450,7 +453,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'NOTMAY'
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(422);
     }
 
@@ -462,7 +465,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => '123'
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(400);
     }
 
@@ -473,7 +476,7 @@ class HoldControllerTest extends BaseApiTestCase
             'callsign' => 'BAW123',
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(400);
     }
 
@@ -485,7 +488,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'TIMBA'
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(400);
     }
 
@@ -496,7 +499,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'TIMBA'
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'hold/assigned', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(400);
     }
 }

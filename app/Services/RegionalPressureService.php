@@ -129,7 +129,7 @@ class RegionalPressureService
     private function parsePressuresFromXML(SimpleXMLElement $xml) : array
     {
         $pressures = [];
-        // Loop each airfield and find its QNH;
+        // Loop each airfield and find its QNH
         foreach ($xml->data->children() as $airfield) {
             try {
                 $pressures[(string) $airfield->station_id] =

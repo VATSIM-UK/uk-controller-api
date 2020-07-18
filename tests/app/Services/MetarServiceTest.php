@@ -5,12 +5,13 @@ use App\BaseUnitTestCase;
 use App\Exceptions\MetarException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Stream;
 use GuzzleHttp\RequestOptions;
 use Mockery;
 
 class MetarServiceTest extends BaseUnitTestCase
 {
+    const URL_CONFIG_KEY = 'metar.vatsim_url';
+
     /**
      * @var MetarService
      */
@@ -61,7 +62,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('metar.vatsim_url'),
+                config(self::URL_CONFIG_KEY),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -72,8 +73,8 @@ class MetarServiceTest extends BaseUnitTestCase
             )
             ->andReturn($mockResponse);
 
-        $service = new MetarService($mockClient);
-        $this->assertNull($service->getQnhFromVatsimMetar('EGLL'));
+        $serviceWithMockedHttp = new MetarService($mockClient);
+        $this->assertNull($serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
     }
 
     public function testItReturnsNullIfNoMetarAvailable()
@@ -83,7 +84,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('metar.vatsim_url'),
+                config(self::URL_CONFIG_KEY),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -94,8 +95,8 @@ class MetarServiceTest extends BaseUnitTestCase
             )
             ->andReturn($mockResponse);
 
-        $service = new MetarService($mockClient);
-        $this->assertNull($service->getQnhFromVatsimMetar('EGLL'));
+        $serviceWithMockedHttp = new MetarService($mockClient);
+        $this->assertNull($serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
     }
 
     public function testItReturnsNullIfMetarNotValid()
@@ -105,7 +106,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('metar.vatsim_url'),
+                config(self::URL_CONFIG_KEY),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -116,8 +117,8 @@ class MetarServiceTest extends BaseUnitTestCase
             )
             ->andReturn($mockResponse);
 
-        $service = new MetarService($mockClient);
-        $this->assertNull($service->getQnhFromVatsimMetar('EGLL'));
+        $serviceWithMockedHttp = new MetarService($mockClient);
+        $this->assertNull($serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
     }
 
     public function testItReturnsQnhIfValidMetar()
@@ -127,7 +128,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient = Mockery::mock(Client::class);
         $mockClient->shouldReceive('get')
             ->with(
-                config('metar.vatsim_url'),
+                config(self::URL_CONFIG_KEY),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -138,8 +139,8 @@ class MetarServiceTest extends BaseUnitTestCase
             )
             ->andReturn($mockResponse);
 
-        $service = new MetarService($mockClient);
-        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
+        $serviceWithMockedHttp = new MetarService($mockClient);
+        $this->assertEquals(1014, $serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
     }
 
     public function testItCachesMetars()
@@ -150,7 +151,7 @@ class MetarServiceTest extends BaseUnitTestCase
         $mockClient->shouldReceive('get')
             ->once()
             ->with(
-                config('metar.vatsim_url'),
+                config(self::URL_CONFIG_KEY),
                 [
                     RequestOptions::ALLOW_REDIRECTS => true,
                     RequestOptions::HTTP_ERRORS => false,
@@ -161,8 +162,8 @@ class MetarServiceTest extends BaseUnitTestCase
             )
             ->andReturn($mockResponse);
 
-        $service = new MetarService($mockClient);
-        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
-        $this->assertEquals(1014, $service->getQnhFromVatsimMetar('EGLL'));
+        $serviceWithMockedHttp = new MetarService($mockClient);
+        $this->assertEquals(1014, $serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
+        $this->assertEquals(1014, $serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
     }
 }

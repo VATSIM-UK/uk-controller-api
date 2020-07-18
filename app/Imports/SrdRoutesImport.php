@@ -59,7 +59,7 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
     public function registerEvents(): array
     {
         return [
-            BeforeSheet::class => function (BeforeSheet $sheet) {
+            BeforeSheet::class => function () {
                 $this->output->section('Importing SRD Routes');
             },
         ];

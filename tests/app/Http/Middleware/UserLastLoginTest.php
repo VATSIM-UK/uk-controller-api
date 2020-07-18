@@ -30,11 +30,7 @@ class UserLastLoginTest extends BaseApiTestCase
 
     public function testItDoesntSetIpIfRecentLogin()
     {
-        $user = $this->activeUser();
-        $user->last_login_ip = '192.168.0.1';
-        $user->last_login = Carbon::now()->subMinutes(30);
-        $user->save();
-
+        $this->updateUser(Carbon::now()->subMinutes(30));
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
         $this->assertEquals('192.168.0.1', $this->activeUser()->last_login_ip);
     }
@@ -44,10 +40,7 @@ class UserLastLoginTest extends BaseApiTestCase
         Carbon::setTestNow(Carbon::now());
         $loginTime = Carbon::now()->subMinutes(30);
 
-        $user = $this->activeUser();
-        $user->last_login_ip = '192.168.0.1';
-        $user->last_login = $loginTime;
-        $user->save();
+        $this->updateUser($loginTime);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
         $this->assertEquals($loginTime, $this->activeUser()->last_login);
@@ -56,10 +49,7 @@ class UserLastLoginTest extends BaseApiTestCase
     public function testItSetsLoginIpIfLoginNotRecent()
     {
         Carbon::setTestNow(Carbon::now());
-        $user = $this->activeUser();
-        $user->last_login_ip = '192.168.0.1';
-        $user->last_login = Carbon::now()->subMinutes(61);
-        $user->save();
+        $this->updateUser(Carbon::now()->subMinutes(61));
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
         $this->assertEquals('127.0.0.1', $this->activeUser()->last_login_ip);
@@ -68,12 +58,17 @@ class UserLastLoginTest extends BaseApiTestCase
     public function testItSetsSetLoginTimeIfLoginNotRecent()
     {
         Carbon::setTestNow(Carbon::now());
-        $user = $this->activeUser();
-        $user->last_login_ip = '192.168.0.1';
-        $user->last_login = Carbon::now()->subMinutes(61);
-        $user->save();
+        $this->updateUser(Carbon::now()->subMinutes(61));
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
         $this->assertEquals(Carbon::now(), $this->activeUser()->last_login);
+    }
+
+    private function updateUser(Carbon $lastLoginTime)
+    {
+        $user = $this->activeUser();
+        $user->last_login_ip = '192.168.0.1';
+        $user->last_login = $lastLoginTime;
+        $user->save();
     }
 }

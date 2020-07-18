@@ -1,15 +1,15 @@
 <?php
+
 namespace App;
 
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
-use Illuminate\Foundation\Testing\TestResponse;
 use InvalidArgumentException;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use UserTableSeeder;
 
 abstract class BaseApiTestCase extends BaseFunctionalTestCase
 {
+    const JSON_TYPE = 'application/json';
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
     const METHOD_POST_NO_JSON = 'POST';
@@ -64,16 +64,16 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
      * Makes an authenticated request to the API and returns the
      * utils object so that assertions may be made.
      *
-     * @param  string $method HTTP verb to use
-     * @param  string $route API route to use
-     * @param  array $data Array to pass as JSON
+     * @param string $method HTTP verb to use
+     * @param string $route API route to use
+     * @param array $data Array to pass as JSON
      * @return TestResponse
      */
     protected function makeAuthenticatedApiRequest(string $method, string $route, array $data = [])
     {
         $headers = [
             'Authorization' => 'Bearer ' . $this->accessToken,
-            'Accept' => 'application/json'
+            'Accept' => self::JSON_TYPE
         ];
 
         return $this->makeApiRequest($method, $route, $headers, $data);
@@ -92,7 +92,7 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
     {
         $headers = [
             'X-Hub-Signature' => 'sha1=' . hash_hmac('sha1', json_encode($data), config('github.secret')),
-            'Accept' => 'application/json'
+            'Accept' => self::JSON_TYPE
         ];
 
         return $this->makeApiRequest('POST', $route, $headers, $data);
@@ -111,7 +111,7 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
     protected function makeUnauthenticatedApiRequest(string $method, string $route, array $data = [], array $query = [])
     {
         $headers = [
-            'Accept' => 'application/json'
+            'Accept' => self::JSON_TYPE
         ];
 
         if (count($query)) {
@@ -136,31 +136,40 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
      */
     private function makeApiRequest(string $method, string $route, array $headers = [], array $data = [])
     {
+        $response = null;
         switch ($method) {
             case self::METHOD_GET:
-                return $this->get($route, $headers);
+                $response = $this->get($route, $headers);
+                break;
             case self::METHOD_POST:
-                return $this->json(
+                $response = $this->json(
                     self::METHOD_POST,
                     $route,
                     $data,
                     $headers
                 );
+                break;
             case self::METHOD_POST_NO_JSON:
-                return $this->post($route, $data, $headers);
+                $response = $this->post($route, $data, $headers);
+                break;
             case self::METHOD_PATCH:
-                return $this->patch($route, $data, $headers);
+                $response = $this->patch($route, $data, $headers);
+                break;
             case self::METHOD_PUT:
-                return $this->json(
+                $response = $this->json(
                     self::METHOD_PUT,
                     $route,
                     $data,
                     $headers
                 );
+                break;
             case self::METHOD_DELETE:
-                return $this->delete($route, $data, $headers);
+                $response = $this->delete($route, $data, $headers);
+                break;
             default:
                 throw new InvalidArgumentException('Invalid HTTP Verb');
         }
+
+        return $response;
     }
 }

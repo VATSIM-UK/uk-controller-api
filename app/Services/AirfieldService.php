@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
@@ -179,15 +180,8 @@ class AirfieldService
         $positionToAdd = ControllerPosition::where('callsign', $callsignToAdd)->firstOrFail();
         $positionToAddAdjacent = ControllerPosition::where('callsign', $callsign)->firstOrFail();
 
-        $airfields = DB::table('top_downs')
-            ->join('airfield', 'airfield_id', '=', 'airfield.id')
-            ->where('controller_position_id', $positionToAddAdjacent->id)
-            ->distinct()
-            ->select('airfield.code')
-            ->pluck('airfield.code');
-
         $method = $before ? 'insertIntoOrderBefore' : 'insertIntoOrderAfter';
-        foreach ($airfields as $airfield) {
+        foreach (self::getTopDownAirfieldsForPosition($positionToAddAdjacent->id) as $airfield) {
             self::$method($airfield, $positionToAdd->callsign, $positionToAddAdjacent->callsign);
         }
     }
@@ -196,15 +190,18 @@ class AirfieldService
     {
         $postionToRemove = ControllerPosition::where('callsign', $callsign)->firstOrFail();
 
-        $airfields = DB::table('top_downs')
+        foreach (self::getTopDownAirfieldsForPosition($postionToRemove->id) as $airfield) {
+            self::removeFromTopDownsOrder($airfield, $callsign);
+        }
+    }
+
+    private static function getTopDownAirfieldsForPosition(int $positionId): Collection
+    {
+        return DB::table('top_downs')
             ->join('airfield', 'airfield_id', '=', 'airfield.id')
-            ->where('controller_position_id', $postionToRemove->id)
+            ->where('controller_position_id', $positionId)
             ->distinct()
             ->select('airfield.code')
             ->pluck('airfield.code');
-
-        foreach ($airfields as $airfield) {
-            self::removeFromTopDownsOrder($airfield, $callsign);
-        }
     }
 }

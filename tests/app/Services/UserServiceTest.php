@@ -69,7 +69,7 @@ class UserServiceTest extends BaseFunctionalTestCase
     public function testTheCreatedTokenWorks()
     {
         $accessToken = $this->service->createUser(1402313)->apiKey();
-        $this->get('/', ['Authorization' => 'Bearer ' . $accessToken])->assertStatus(418);
+        $this->maketestRequest('/', $accessToken);
     }
 
     public function testItCreatesAnAdminUser()
@@ -102,13 +102,13 @@ class UserServiceTest extends BaseFunctionalTestCase
     public function testItCreatesAnAdminAccessToken()
     {
         $accessToken = $this->service->createAdminUser();
-        $this->get('/useradmin', ['Authorization' => 'Bearer ' . $accessToken])->assertStatus(418);
+        $this->maketestRequest('/useradmin', $accessToken);
     }
 
     public function testItAVersionAdminAccessToken()
     {
         $accessToken = $this->service->createAdminUser();
-        $this->get('/versionadmin', ['Authorization' => 'Bearer ' . $accessToken])->assertStatus(418);
+        $this->maketestRequest('/versionadmin', $accessToken);
     }
 
     public function testBanUserThrowsExceptionIfUserDoesntExist()
@@ -156,5 +156,10 @@ class UserServiceTest extends BaseFunctionalTestCase
     public function testItFindsAUser()
     {
         $this->assertEquals(1203533, $this->service->getUser(1203533)->id);
+    }
+
+    private function maketestRequest(string $uri, string $token)
+    {
+        $this->get($uri, ['Authorization' => 'Bearer ' . $token])->assertStatus(418);
     }
 }

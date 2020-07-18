@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\GithubAuth;
 use App\Http\Middleware\LogAdminAction;
+use App\Http\Middleware\MiddlewareKeys;
 use App\Http\Middleware\UpdateDependency;
 use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
@@ -21,43 +22,43 @@ class Kernel extends HttpKernel
     protected $middleware = [];
 
     protected $routeMiddleware = [
-        'auth' => Authenticate::class,
-        'auth.github' => GithubAuth::class,
-        'admin.log' => LogAdminAction::class,
-        'dependency.update' => UpdateDependency::class,
-        'user.banned' => UserIsBanned::class,
-        'user.disabled' => UserIsDisabled::class,
-        'user.lastlogin' => UserLastLogin::class,
-        'user.version' => UserPluginVersion::class,
-        'scopes' => CheckScopes::class,
-        'scope' => CheckForAnyScope::class,
-        'vatsim.cid' => VatsimCid::class,
+        MiddlewareKeys::AUTH => Authenticate::class,
+        MiddlewareKeys::GITHUB_AUTH => GithubAuth::class,
+        MiddlewareKeys::ADMIN_LOG => LogAdminAction::class,
+        MiddlewareKeys::UPDATE_DEPENDENCY => UpdateDependency::class,
+        MiddlewareKeys::USER_BANNED => UserIsBanned::class,
+        MiddlewareKeys::USER_DISABLED => UserIsDisabled::class,
+        MiddlewareKeys::USER_LASTLOGIN => UserLastLogin::class,
+        MiddlewareKeys::USER_PLUGIN_VERSION => UserPluginVersion::class,
+        MiddlewareKeys::SCOPES => CheckScopes::class,
+        MiddlewareKeys::SCOPE => CheckForAnyScope::class,
+        MiddlewareKeys::VATSIM_CID => VatsimCid::class,
     ];
 
     protected $middlewareGroups = [
         'plugin.user' => [
-            'auth',
-            'user.banned',
-            'user.disabled',
-            'scopes:' . AuthServiceProvider::SCOPE_USER,
+            MiddlewareKeys::AUTH,
+            MiddlewareKeys::USER_BANNED,
+            MiddlewareKeys::USER_DISABLED,
+            MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_USER,
         ],
         'admin.user' => [
-            'auth',
-            'scopes:' . AuthServiceProvider::SCOPE_USER_ADMIN,
-            'admin.log',
+            MiddlewareKeys::AUTH,
+            MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_USER_ADMIN,
+            MiddlewareKeys::ADMIN_LOG,
         ],
         'admin.version' => [
-            'auth',
-            'scopes:' . AuthServiceProvider::SCOPE_VERSION_ADMIN,
-            'admin.log',
+            MiddlewareKeys::AUTH,
+            MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_VERSION_ADMIN,
+            MiddlewareKeys::ADMIN_LOG,
         ],
         'admin.dependency' => [
-            'auth',
-            'scopes:' . AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
-            'admin.log',
+            MiddlewareKeys::AUTH,
+            MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
+            MiddlewareKeys::ADMIN_LOG,
         ],
         'admin.github' => [
-            'auth.github',
+            MiddlewareKeys::GITHUB_AUTH,
         ],
         'public' => [
 

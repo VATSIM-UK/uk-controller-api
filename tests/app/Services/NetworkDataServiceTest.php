@@ -14,71 +14,29 @@ use Psr\Http\Message\StreamInterface;
 
 class NetworkDataServiceTest extends BaseFunctionalTestCase
 {
-    const NETWORK_DATA = [
-        'clients' => [
-            [
-                'callsign' => 'VIR25A',
-                'clienttype' => 'PILOT',
-                'latitude' => 'abc',
-                'longitude' => 'def',
-                'altitude' => '35123',
-                'groundspeed' => '123',
-                'planned_aircraft' => 'B738',
-                'planned_depairport' => 'EGKK',
-                'planned_destairport' => 'EGPH',
-                'planned_altitude' => '15000',
-                'transponder' => '1234',
-                'planned_flighttype' => 'I',
-                'planned_route' => 'DIRECT',
-            ],
-            [
-                'callsign' => 'BAW123',
-                'clienttype' => 'PILOT',
-                'latitude' => 'abc',
-                'longitude' => 'def',
-                'altitude' => '35123',
-                'groundspeed' => '123',
-                'planned_aircraft' => 'B738',
-                'planned_depairport' => 'EGKK',
-                'planned_destairport' => 'EGPH',
-                'planned_altitude' => '15000',
-                'transponder' => '1234',
-                'planned_flighttype' => 'I',
-                'planned_route' => 'DIRECT',
-            ],
-            [
-                'callsign' => 'LON_S_CTR',
-                'clienttype' => 'ATC',
-                'latitude' => 'abc',
-                'longitude' => 'def',
-                'altitude' => '35123',
-                'groundspeed' => '123',
-                'planned_aircraft' => 'B738',
-                'planned_depairport' => 'EGKK',
-                'planned_destairport' => 'EGPH',
-                'planned_altitude' => '15000',
-                'transponder' => '1234',
-                'planned_flighttype' => 'I',
-                'planned_route' => 'DIRECT',
-            ],
-        ],
-    ];
-
     /**
-     * @var Client|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var array[]
      */
-    private $client;
-
+    private $networkData;
+    
     protected function setUp(): void
     {
         parent::setUp();
+        $this->networkData = [
+            'clients' => [
+                $this->getClientData('VIR25A', true),
+                $this->getClientData('BAW123', true),
+                $this->getClientData('LON_S_CTR', false),
+            ]
+        ];
+
         $client = Mockery::mock(Client::class);
         $this->service = new NetworkDataService($client);
         Carbon::setTestNow(Carbon::now());
         Date::setTestNow(Carbon::now());
 
         $mockStream = Mockery::mock(StreamInterface::class);
-        $mockStream->allows('__toString')->andReturn(json_encode(self::NETWORK_DATA));
+        $mockStream->allows('__toString')->andReturn(json_encode($this->networkData));
         $mockMessage = Mockery::mock(MessageInterface::class);
         $mockMessage->allows('getBody')->andReturn($mockStream);
         $client->allows('get')->with(NetworkDataService::NETWORK_DATA_URL)->andReturn($mockMessage);
@@ -92,7 +50,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'network_aircraft',
             array_merge(
                 array_filter(
-                    self::NETWORK_DATA['clients'][0],
+                    $this->networkData['clients'][0],
                     function ($value) { return $value !== 'clienttype';},
                     ARRAY_FILTER_USE_KEY
                 ),
@@ -109,7 +67,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'network_aircraft',
             array_merge(
                 array_filter(
-                    self::NETWORK_DATA['clients'][1],
+                    $this->networkData['clients'][1],
                     function ($value) { return $value !== 'clienttype';},
                     ARRAY_FILTER_USE_KEY
                 ),
@@ -140,5 +98,24 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 'callsign' => 'BAW789'
             ]
         );
+    }
+
+    private function getClientData(string $callsign, bool $isAircraft): array
+    {
+        return [
+            'callsign' => $callsign,
+            'clienttype' => $isAircraft ? 'PILOT' : 'ATC',
+            'latitude' => 'abc',
+            'longitude' => 'def',
+            'altitude' => '35123',
+            'groundspeed' => '123',
+            'planned_aircraft' => 'B738',
+            'planned_depairport' => 'EGKK',
+            'planned_destairport' => 'EGPH',
+            'planned_altitude' => '15001',
+            'transponder' => '1234',
+            'planned_flighttype' => 'I',
+            'planned_route' => 'DIRECT',
+        ];
     }
 }

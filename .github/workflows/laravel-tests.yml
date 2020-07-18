@@ -1,4 +1,4 @@
-name: Laravel Tests
+name: Build and Test
 
 on:
   push:
@@ -81,5 +81,10 @@ jobs:
       - name: Serve Application
         run: php artisan serve -q &
 
-      - name: Run PHPUnit Tests
+      - name: Run PHPUnit With Coverage
+        if: matrix.php == '7.4'
+        run: vendor/bin/phpunit --coverage-clover=phpunit.coverage.xml
+
+      - name: Run PHPUnit Without Coverage
+        if: matrix.php != '7.4'
         run: vendor/bin/phpunit

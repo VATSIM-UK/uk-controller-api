@@ -19,10 +19,9 @@ class UserPluginVersion
      *
      * @param Request $request The request
      * @param Closure $next The next middleware to run
-     * @param null $guard
      * @return Response
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next)
     {
         $version = Version::where('version', '=', $request->route('version'))->first();
 
