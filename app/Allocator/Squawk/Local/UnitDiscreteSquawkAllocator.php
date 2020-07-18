@@ -45,11 +45,6 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
         );
     }
 
-    private function getUnitString(string $unit): string
-    {
-        return substr($unit, 0, 4);
-    }
-
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         $unit = isset($details['unit']) ? ControllerService::getControllerFacilityFromCallsign($details['unit']) : null;

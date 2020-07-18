@@ -29,7 +29,7 @@ class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
 
     public function testItMarksHistoryAsDeleted()
     {
-        $test = SquawkAssignmentsHistory::create(
+        SquawkAssignmentsHistory::create(
             [
                 'callsign' => 'BAW123',
                 'code' => '0001',

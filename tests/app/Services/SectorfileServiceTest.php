@@ -7,6 +7,13 @@ use InvalidArgumentException;
 
 class SectorfileServiceTest extends BaseUnitTestCase
 {
+    const VALID_TIMBA_LATITUDE = 'N050.56.44.000';
+    const VALID_TIMBA_LONGITUDE = 'E000.15.42.000';
+    const LATITUDE_DEGREES_ERROR_MESSAGE = 'Cannot have more than 90 degrees of latitude';
+    const LONGITUDE_DEGREES_ERROR_MESSAGE = 'Cannot have more than 180 degrees of longitude';
+    const MINUTES_ERROR_MESSAGE = 'Cannot have more than 60 minutes';
+    const SECONDS_ERROR_MESSAGE = 'Cannot have more than 60 seconds';
+    
     /**
      * @dataProvider invalidSectorfileLatitudeFormatProvider
      */
@@ -21,18 +28,18 @@ class SectorfileServiceTest extends BaseUnitTestCase
     {
         return [
             ['', ''],
-            ['absdeasdsadas', 'E000.15.42.000'],
-            ['054.38.58.000', 'E000.15.42.000'],
-            ['N54.38.58.000', 'E000.15.42.000'],
-            ['N5.38.58.000', 'E000.15.42.000'],
-            ['N054.8.58.000', 'E000.15.42.000'],
-            ['N054.38.8.000', 'E000.15.42.000'],
-            ['N054.38.58.00', 'E000.15.42.000'],
-            ['N054.38.58.0', 'E000.15.42.000'],
-            ['N054.38.58', 'E000.15.42.000'],
-            ['N054,38,58,000', 'E000.15.42.000'],
-            ['M054 38 58 000', 'E000.15.42.000'],
-            ['N054.038.058.000', 'E000.15.42.000'],
+            ['absdeasdsadas', self::VALID_TIMBA_LONGITUDE],
+            ['054.38.58.000', self::VALID_TIMBA_LONGITUDE],
+            ['N54.38.58.000', self::VALID_TIMBA_LONGITUDE],
+            ['N5.38.58.000', self::VALID_TIMBA_LONGITUDE],
+            ['N054.8.58.000', self::VALID_TIMBA_LONGITUDE],
+            ['N054.38.8.000', self::VALID_TIMBA_LONGITUDE],
+            ['N054.38.58.00', self::VALID_TIMBA_LONGITUDE],
+            ['N054.38.58.0', self::VALID_TIMBA_LONGITUDE],
+            ['N054.38.58', self::VALID_TIMBA_LONGITUDE],
+            ['N054,38,58,000', self::VALID_TIMBA_LONGITUDE],
+            ['M054 38 58 000', self::VALID_TIMBA_LONGITUDE],
+            ['N054.038.058.000', self::VALID_TIMBA_LONGITUDE],
         ];
     }
 
@@ -49,19 +56,19 @@ class SectorfileServiceTest extends BaseUnitTestCase
     public function invalidSectorfileLongitudeFormatProvider(): array
     {
         return [
-            ['N050.56.44.000', ''],
-            ['N050.56.44.000', 'asdsadsadsa'],
-            ['N050.56.44.000', '000.15.42.000'],
-            ['N050.56.44.000', 'E00.15.42.000'],
-            ['N050.56.44.000', 'E0.15.42.000'],
-            ['N050.56.44.000', 'E000.1.42.000'],
-            ['N050.56.44.000', 'E000.15.4.000'],
-            ['N050.56.44.000', 'E000.15.42.00'],
-            ['N050.56.44.000', 'E000.15.42.0'],
-            ['N050.56.44.000', 'E000.15.42'],
-            ['N050.56.44.000', 'E000,15,42,000'],
-            ['N050.56.44.000', 'E000 15 42 000'],
-            ['N050.56.44.000', 'E000.015.042.000'],
+            [self::VALID_TIMBA_LATITUDE, ''],
+            [self::VALID_TIMBA_LATITUDE, 'asdsadsadsa'],
+            [self::VALID_TIMBA_LATITUDE, '000.15.42.000'],
+            [self::VALID_TIMBA_LATITUDE, 'E00.15.42.000'],
+            [self::VALID_TIMBA_LATITUDE, 'E0.15.42.000'],
+            [self::VALID_TIMBA_LATITUDE, 'E000.1.42.000'],
+            [self::VALID_TIMBA_LATITUDE, 'E000.15.4.000'],
+            [self::VALID_TIMBA_LATITUDE, 'E000.15.42.00'],
+            [self::VALID_TIMBA_LATITUDE, 'E000.15.42.0'],
+            [self::VALID_TIMBA_LATITUDE, 'E000.15.42'],
+            [self::VALID_TIMBA_LATITUDE, 'E000,15,42,000'],
+            [self::VALID_TIMBA_LATITUDE, 'E000 15 42 000'],
+            [self::VALID_TIMBA_LATITUDE, 'E000.015.042.000'],
         ];
     }
 
@@ -81,20 +88,20 @@ class SectorfileServiceTest extends BaseUnitTestCase
     public function invalidDegreesMinuteSecondProvider(): array
     {
         return [
-            ['N090.00.00.001', 'E000.15.42.000', 'Cannot have more than 90 degrees of latitude'],
-            ['N090.00.01.000', 'E000.15.42.000', 'Cannot have more than 90 degrees of latitude'],
-            ['N090.01.00.000', 'E000.15.42.000', 'Cannot have more than 90 degrees of latitude'],
-            ['N091.00.00.000', 'E000.15.42.000', 'Cannot have more than 90 degrees of latitude'],
-            ['N050.56.44.000', 'W180.00.00.001', 'Cannot have more than 180 degrees of longitude'],
-            ['N050.56.44.000', 'W180.00.01.000', 'Cannot have more than 180 degrees of longitude'],
-            ['N050.56.44.000', 'W180.01.00.000', 'Cannot have more than 180 degrees of longitude'],
-            ['N050.56.44.000', 'W181.00.00.000', 'Cannot have more than 180 degrees of longitude'],
-            ['N050.56.44.000', 'W170.61.00.000', 'Cannot have more than 60 minutes'],
-            ['N050.56.44.000', 'W170.00.61.000', 'Cannot have more than 60 seconds'],
-            ['N050.56.44.000', 'W170.00.60.001', 'Cannot have more than 60 seconds'],
-            ['N080.61.00.000', 'E000.15.42.000', 'Cannot have more than 60 minutes'],
-            ['N080.00.61.000', 'E000.15.42.000', 'Cannot have more than 60 seconds'],
-            ['N080.00.60.001', 'E000.15.42.000', 'Cannot have more than 60 seconds'],
+            ['N090.00.00.001', self::VALID_TIMBA_LONGITUDE, self::LATITUDE_DEGREES_ERROR_MESSAGE],
+            ['N090.00.01.000', self::VALID_TIMBA_LONGITUDE, self::LATITUDE_DEGREES_ERROR_MESSAGE],
+            ['N090.01.00.000', self::VALID_TIMBA_LONGITUDE, self::LATITUDE_DEGREES_ERROR_MESSAGE],
+            ['N091.00.00.000', self::VALID_TIMBA_LONGITUDE, self::LATITUDE_DEGREES_ERROR_MESSAGE],
+            [self::VALID_TIMBA_LATITUDE, 'W180.00.00.001', self::LONGITUDE_DEGREES_ERROR_MESSAGE],
+            [self::VALID_TIMBA_LATITUDE, 'W180.00.01.000', self::LONGITUDE_DEGREES_ERROR_MESSAGE],
+            [self::VALID_TIMBA_LATITUDE, 'W180.01.00.000', self::LONGITUDE_DEGREES_ERROR_MESSAGE],
+            [self::VALID_TIMBA_LATITUDE, 'W181.00.00.000', self::LONGITUDE_DEGREES_ERROR_MESSAGE],
+            [self::VALID_TIMBA_LATITUDE, 'W170.61.00.000', self::MINUTES_ERROR_MESSAGE],
+            [self::VALID_TIMBA_LATITUDE, 'W170.00.61.000', self::SECONDS_ERROR_MESSAGE],
+            [self::VALID_TIMBA_LATITUDE, 'W170.00.60.001', self::SECONDS_ERROR_MESSAGE],
+            ['N080.61.00.000', self::VALID_TIMBA_LONGITUDE, self::MINUTES_ERROR_MESSAGE],
+            ['N080.00.61.000', self::VALID_TIMBA_LONGITUDE, self::SECONDS_ERROR_MESSAGE],
+            ['N080.00.60.001', self::VALID_TIMBA_LONGITUDE, self::SECONDS_ERROR_MESSAGE],
         ];
     }
 
@@ -115,7 +122,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
     public function validCoordinatesProvider(): array
     {
         return [
-            ['N050.56.44.000', 'E000.15.42.000', 50.94556, 0.26167], // TIMBA
+            [self::VALID_TIMBA_LATITUDE, self::VALID_TIMBA_LONGITUDE, 50.94556, 0.26167], // TIMBA
             ['S050.59.06.000', 'W000.11.30.000', -50.985, -0.19167], // WILLO down under
         ];
     }

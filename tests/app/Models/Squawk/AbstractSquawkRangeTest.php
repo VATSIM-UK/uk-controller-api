@@ -30,19 +30,9 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
     }
 
     /**
-     * @dataProvider withinBoundaryProvider
+     * @dataProvider rangeProvider
      */
-    public function testItReturnsCorrectSquawksInRangeNoBoundary(string $first, string $last, array $expected)
-    {
-        $range = new CcamsSquawkRange(['first' => $first, 'last' => $last]);
-        $expected = new Collection($expected);
-        $this->assertEquals($expected, $range->getAllSquawksInRange());
-    }
-
-    /**
-     * @dataProvider acrossBoundaryProvider
-     */
-    public function testItReturnsCorrectSquawksInRangeAcrossBoundary(string $first, string $last, array $expected)
+    public function testItReturnsCorrectSquawksInRange(string $first, string $last, array $expected)
     {
         $range = new CcamsSquawkRange(['first' => $first, 'last' => $last]);
         $expected = new Collection($expected);
@@ -65,24 +55,21 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
         ];
     }
 
-    public function acrossBoundaryProvider(): array
+    public function rangeProvider(): array
     {
         return [
-            ['0105', '0112', ['0105', '0106', '0107', '0110', '0111', '0112']],
-            ['0176', '0202', ['0176', '0177', '0200', '0201', '0202']],
-            ['1776', '2003', ['1776', '1777', '2000', '2001', '2002', '2003']],
-        ];
-    }
-
-    public function withinBoundaryProvider(): array
-    {
-        return [
+            // Within boundary
             ['0000', '0000', ['0000']],
             ['7777', '7777', ['7777']],
             ['0000', '0001', ['0000', '0001']],
             ['0000', '0007', ['0000', '0001', '0002', '0003', '0004', '0005', '0006', '0007']],
             ['0010', '0017', ['0010', '0011', '0012', '0013', '0014', '0015', '0016', '0017']],
             ['0170', '0177', ['0170', '0171', '0172', '0173', '0174', '0175', '0176', '0177']],
+
+            // Across boundary
+            ['0105', '0112', ['0105', '0106', '0107', '0110', '0111', '0112']],
+            ['0176', '0202', ['0176', '0177', '0200', '0201', '0202']],
+            ['1776', '2003', ['1776', '1777', '2000', '2001', '2002', '2003']],
         ];
     }
 }

@@ -22,11 +22,10 @@ class UnitDiscreteSquawkRangeRuleCaster implements CastsAttributes
     public function get($model, string $key, $value, array $attributes)
     {
         $rule = json_decode($value, true);
-        switch ($rule['type']) {
-            case 'UNIT_TYPE':
-                return new UnitType($rule['rule']);
-            case 'FLIGHT_RULES':
-                return new FlightRules($rule['rule']);
+        if ($rule['type'] === 'UNIT_TYPE') {
+            return new UnitType($rule['rule']);
+        } else if ($rule['type'] === 'FLIGHT_RULES') {
+            return new FlightRules($rule['rule']);
         }
 
         throw new InvalidArgumentException('Invalid rule type');

@@ -10,6 +10,8 @@ use Carbon\Carbon;
 
 class ReclaimSquawksAfterFirExitTest extends BaseFunctionalTestCase
 {
+    const ARTISAN_COMMAND = 'squawks:reclaim';
+    
     /**
      * @var NetworkAircraft
      */
@@ -59,7 +61,7 @@ class ReclaimSquawksAfterFirExitTest extends BaseFunctionalTestCase
 
         $exitEvent->created_at = Carbon::now()->subHours(1)->subSecond();
         $exitEvent->save();
-        $this->artisan('squawks:reclaim');
+        $this->artisan(self::ARTISAN_COMMAND);
         $this->assertDatabaseMissing(
             'ccams_squawk_assignments',
             [
@@ -92,7 +94,7 @@ class ReclaimSquawksAfterFirExitTest extends BaseFunctionalTestCase
 
         $exitEvent->created_at = Carbon::now()->subHours(1)->addSecond();
         $exitEvent->save();
-        $this->artisan('squawks:reclaim');
+        $this->artisan(self::ARTISAN_COMMAND);
         $this->assertDatabaseHas(
             'ccams_squawk_assignments',
             [
@@ -127,7 +129,7 @@ class ReclaimSquawksAfterFirExitTest extends BaseFunctionalTestCase
         $entryEvent->save();
 
         $entryEvent->save();
-        $this->artisan('squawks:reclaim');
+        $this->artisan(self::ARTISAN_COMMAND);
         $this->assertDatabaseHas(
             'ccams_squawk_assignments',
             [
@@ -150,7 +152,7 @@ class ReclaimSquawksAfterFirExitTest extends BaseFunctionalTestCase
         $entryEvent->save();
 
         $entryEvent->save();
-        $this->artisan('squawks:reclaim');
+        $this->artisan(self::ARTISAN_COMMAND);
         $this->assertDatabaseHas(
             'ccams_squawk_assignments',
             [

@@ -25,36 +25,9 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesFirstFreeSquawkInRange()
     {
-        CcamsSquawkRange::create(
-            [
-                'first' => '7201',
-                'last' => '7210',
-            ]
-        );
-
-        NetworkAircraft::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                ],
-            ]
-        );
-
-        CcamsSquawkAssignment::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                    'code' => '7201',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                    'code' => '7202',
-                ],
-            ]
-        );
+        $this->createSquawkRange('7201', '7210');
+        $this->createSquawkAssignment('VIR25F', '7201');
+        $this->createSquawkAssignment('BAW92A', '7202');
 
         $this->assertEquals('7203', $this->allocator->allocate('BMI11A', [])->getCode());
         $this->assertDatabaseHas(
@@ -84,20 +57,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReturnsAllocationIfExists()
     {
-        NetworkAircraft::create(
-            [
-                'callsign' => 'VIR25F',
-                'created_at' => Carbon::now(),
-            ],
-        );
-
-        CcamsSquawkAssignment::create(
-            [
-                'callsign' => 'VIR25F',
-                'code' => '0001',
-                'created_at' => Carbon::now(),
-            ],
-        );
+        $this->createSquawkAssignment('VIR25F', '0001');
         $expected = CcamsSquawkAssignment::find('VIR25F');
 
         $this->assertEquals($expected, $this->allocator->fetch('VIR25F'));
@@ -105,20 +65,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItDeletesAllocations()
     {
-        NetworkAircraft::create(
-            [
-                'callsign' => 'VIR25F',
-                'created_at' => Carbon::now(),
-            ],
-        );
-
-        CcamsSquawkAssignment::create(
-            [
-                'callsign' => 'VIR25F',
-                'code' => '0001',
-                'created_at' => Carbon::now(),
-            ],
-        );
+        $this->createSquawkAssignment('VIR25F', '0001');
 
         $this->assertTrue($this->allocator->delete('VIR25F'));
         $this->assertDatabaseMissing(
@@ -149,5 +96,34 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
             [SquawkAssignmentCategories::GENERAL, true],
             [SquawkAssignmentCategories::LOCAL, false],
         ];
+    }
+
+    private function createSquawkRange(
+        string $first,
+        string $last
+    ) {
+        CcamsSquawkRange::create(
+            [
+                'first' => $first,
+                'last' => $last,
+            ]
+        );
+    }
+
+    private function createSquawkAssignment(
+        string $callsign,
+        string $code
+    ) {
+        NetworkAircraft::create(
+            [
+                'callsign' => $callsign
+            ]
+        );
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => $callsign,
+                'code' => $code,
+            ]
+        );
     }
 }

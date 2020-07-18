@@ -24,42 +24,13 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         parent::setUp();
         $this->allocator = new UnitDiscreteSquawkAllocator();
 
-        UnitDiscreteSquawkRange::create(
-            [
-                'unit' => 'EGGD',
-                'first' => '7201',
-                'last' => '7210',
-            ]
-        );
+        $this->createSquawkRange('EGGD', '7201', '7210');
     }
 
     public function testItAllocatesFirstFreeSquawkInRange()
     {
-        NetworkAircraft::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                ],
-            ]
-        );
-
-        UnitDiscreteSquawkAssignment::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                    'code' => '7201',
-                    'unit' => 'EGGD',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                    'code' => '7202',
-                    'unit' => 'EGGD',
-                ],
-            ]
-        );
+        $this->createSquawkAssignment('VIR25F', 'EGGD', '7201');
+        $this->createSquawkAssignment('BAW92A', 'EGGD', '7202');
 
         $this->assertEquals('7203', $this->allocator->allocate('BMI11A', ['unit' => 'EGGD'])->getCode());
         $this->assertDatabaseHas(
@@ -75,31 +46,8 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReducesUnitToBaseForm()
     {
-        NetworkAircraft::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                ],
-            ]
-        );
-
-        UnitDiscreteSquawkAssignment::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                    'code' => '7201',
-                    'unit' => 'EGGD',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                    'code' => '7202',
-                    'unit' => 'EGGD',
-                ],
-            ]
-        );
+        $this->createSquawkAssignment('VIR25F', 'EGGD', '7201');
+        $this->createSquawkAssignment('BAW92A', 'EGGD', '7202');
 
         $this->assertEquals('7203', $this->allocator->allocate('BMI11A', ['unit' => 'EGGD_APP'])->getCode());
         $this->assertDatabaseHas(
@@ -135,39 +83,9 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItIgnoresOverlappingIfDifferentUnits()
     {
-        UnitDiscreteSquawkRange::create(
-            [
-                'unit' => 'EGFF',
-                'first' => '7201',
-                'last' => '7210',
-            ]
-        );
-
-        NetworkAircraft::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                ],
-            ]
-        );
-
-        UnitDiscreteSquawkAssignment::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                    'code' => '7201',
-                    'unit' => 'EGFF',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                    'code' => '7202',
-                    'unit' => 'EGFF',
-                ],
-            ]
-        );
+        $this->createSquawkRange('EGFF', '7201', '7210');
+        $this->createSquawkAssignment('VIR25F', 'EGFF', '7201');
+        $this->createSquawkAssignment('BAW92A', 'EGFF', '7202');
 
         $this->assertEquals('7201', $this->allocator->allocate('BMI11A', ['unit' => 'EGGD'])->getCode());
         $this->assertDatabaseHas(
@@ -183,14 +101,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItFiltersRangesWhereRulesDoNotPass()
     {
-        $range = UnitDiscreteSquawkRange::create(
-            [
-                'unit' => 'EGFF',
-                'first' => '7201',
-                'last' => '7210',
-            ]
-        );
-
+        $range = $this->createSquawkRange('EGFF', '7201', '7210');
         UnitDiscreteSquawkRangeRule::create(
             [
                 'unit_discrete_squawk_range_id' => $range->id,
@@ -220,21 +131,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReturnsAllocationIfExists()
     {
-        NetworkAircraft::create(
-            [
-                'callsign' => 'VIR25F',
-                'created_at' => Carbon::now(),
-            ],
-        );
-
-        UnitDiscreteSquawkAssignment::create(
-            [
-                'callsign' => 'VIR25F',
-                'unit' => 'EGGD',
-                'code' => '0001',
-                'created_at' => Carbon::now(),
-            ],
-        );
+        $this->createSquawkAssignment('VIR25F', 'EGGD', '0001');
         $expected = UnitDiscreteSquawkAssignment::find('VIR25F');
 
         $this->assertEquals($expected, $this->allocator->fetch('VIR25F'));
@@ -242,21 +139,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItDeletesAllocations()
     {
-        NetworkAircraft::create(
-            [
-                'callsign' => 'VIR25F',
-                'created_at' => Carbon::now(),
-            ],
-        );
-
-        UnitDiscreteSquawkAssignment::create(
-            [
-                'callsign' => 'VIR25F',
-                'unit' => 'EGGD',
-                'code' => '0001',
-                'created_at' => Carbon::now(),
-            ],
-        );
+        $this->createSquawkAssignment('VIR25F', 'EGGD', '0001');
 
         $this->assertTrue($this->allocator->delete('VIR25F'));
         $this->assertDatabaseMissing(
@@ -287,5 +170,38 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             [SquawkAssignmentCategories::GENERAL, false],
             [SquawkAssignmentCategories::LOCAL, true],
         ];
+    }
+
+    private function createSquawkRange(
+        string $unit,
+        string $first,
+        string $last
+    ): UnitDiscreteSquawkRange {
+        return UnitDiscreteSquawkRange::create(
+            [
+                'unit' => $unit,
+                'first' => $first,
+                'last' => $last,
+            ]
+        );
+    }
+
+    private function createSquawkAssignment(
+        string $callsign,
+        string $unit,
+        string $code
+    ) {
+        NetworkAircraft::create(
+            [
+                'callsign' => $callsign
+            ]
+        );
+        UnitDiscreteSquawkAssignment::create(
+            [
+                'callsign' => $callsign,
+                'unit' => $unit,
+                'code' => $code,
+            ]
+        );
     }
 }

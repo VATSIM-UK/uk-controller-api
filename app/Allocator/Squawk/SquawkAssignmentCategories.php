@@ -14,5 +14,6 @@ class SquawkAssignmentCategories
 
     private function __construct()
     {
+        // Private constructor as class is only for constants.
     }
 }

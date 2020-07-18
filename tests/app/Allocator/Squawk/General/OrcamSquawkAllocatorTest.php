@@ -24,37 +24,9 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesFirstFreeSquawkInRange()
     {
-        OrcamSquawkRange::create(
-            [
-                'origin' => 'E',
-                'first' => '7201',
-                'last' => '7210',
-            ]
-        );
-
-        NetworkAircraft::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                ],
-            ]
-        );
-
-        OrcamSquawkAssignment::insert(
-            [
-                [
-                    'callsign' => 'VIR25F',
-                    'code' => '7201',
-                ],
-                [
-                    'callsign' => 'BAW92A',
-                    'code' => '7202',
-                ],
-            ]
-        );
+        $this->createSquawkRange('E', '7201', '7210');
+        $this->createSquawkAssignment('VIR25F', '7201');
+        $this->createSquawkAssignment('BAW92A', '7202');
 
         $this->assertEquals(
             '7203',
@@ -72,13 +44,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesSingleCharacterRange()
     {
-        OrcamSquawkRange::create(
-            [
-                'origin' => 'E',
-                'first' => '7201',
-                'last' => '7210',
-            ]
-        );
+        $this->createSquawkRange('E', '7201', '7210');
 
         $this->assertEquals(
             '7201',
@@ -96,20 +62,8 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItPrefersDoubleCharacterMatchOverSingle()
     {
-        OrcamSquawkRange::insert(
-            [
-                [
-                    'origin' => 'E',
-                    'first' => '7201',
-                    'last' => '7201',
-                ],
-                [
-                    'origin' => 'ED',
-                    'first' => '7202',
-                    'last' => '7202',
-                ]
-            ]
-        );
+        $this->createSquawkRange('E', '7201', '7201');
+        $this->createSquawkRange('ED', '7202', '7202');
 
         $this->assertEquals(
             '7202',
@@ -127,25 +81,9 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItPrefersTripleCharacterMatchOverDouble()
     {
-        OrcamSquawkRange::insert(
-            [
-                [
-                    'origin' => 'E',
-                    'first' => '7201',
-                    'last' => '7201',
-                ],
-                [
-                    'origin' => 'ED',
-                    'first' => '7202',
-                    'last' => '7202',
-                ],
-                [
-                    'origin' => 'EDD',
-                    'first' => '7203',
-                    'last' => '7203',
-                ]
-            ]
-        );
+        $this->createSquawkRange('E', '7201', '7201');
+        $this->createSquawkRange('ED', '7202', '7202');
+        $this->createSquawkRange('EDD', '7203', '7203');
 
         $this->assertEquals(
             '7203',
@@ -163,30 +101,10 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItPrefersFullMatch()
     {
-        OrcamSquawkRange::insert(
-            [
-                [
-                    'origin' => 'E',
-                    'first' => '7201',
-                    'last' => '7201',
-                ],
-                [
-                    'origin' => 'ED',
-                    'first' => '7202',
-                    'last' => '7202',
-                ],
-                [
-                    'origin' => 'EDD',
-                    'first' => '7203',
-                    'last' => '7203',
-                ],
-                [
-                    'origin' => 'EDDF',
-                    'first' => '7204',
-                    'last' => '7204',
-                ],
-            ]
-        );
+        $this->createSquawkRange('E', '7201', '7201');
+        $this->createSquawkRange('ED', '7202', '7202');
+        $this->createSquawkRange('EDD', '7203', '7203');
+        $this->createSquawkRange('EDDF', '7204', '7204');
 
         $this->assertEquals(
             '7204',
@@ -225,20 +143,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReturnsAllocationIfExists()
     {
-        NetworkAircraft::create(
-            [
-                'callsign' => 'VIR25F',
-                'created_at' => Carbon::now(),
-            ],
-        );
-
-        OrcamSquawkAssignment::create(
-            [
-                'callsign' => 'VIR25F',
-                'code' => '0001',
-                'created_at' => Carbon::now(),
-            ],
-        );
+        $this->createSquawkAssignment('VIR25F', '0001');
         $expected = OrcamSquawkAssignment::find('VIR25F');
 
         $this->assertEquals($expected, $this->allocator->fetch('VIR25F'));
@@ -246,20 +151,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItDeletesAllocations()
     {
-        NetworkAircraft::create(
-            [
-                'callsign' => 'VIR25F',
-                'created_at' => Carbon::now(),
-            ],
-        );
-
-        OrcamSquawkAssignment::create(
-            [
-                'callsign' => 'VIR25F',
-                'code' => '0001',
-                'created_at' => Carbon::now(),
-            ],
-        );
+        $this->createSquawkAssignment('VIR25F', '0001');
 
         $this->assertTrue($this->allocator->delete('VIR25F'));
         $this->assertDatabaseMissing(
@@ -290,5 +182,36 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             [SquawkAssignmentCategories::GENERAL, true],
             [SquawkAssignmentCategories::LOCAL, false],
         ];
+    }
+
+    private function createSquawkRange(
+        string $origin,
+        string $first,
+        string $last
+    ) {
+        OrcamSquawkRange::create(
+            [
+                'origin' => $origin,
+                'first' => $first,
+                'last' => $last,
+            ]
+        );
+    }
+
+    private function createSquawkAssignment(
+        string $callsign,
+        string $code
+    ) {
+        NetworkAircraft::create(
+            [
+                'callsign' => $callsign
+            ]
+        );
+        OrcamSquawkAssignment::create(
+            [
+                'callsign' => $callsign,
+                'code' => $code,
+            ]
+        );
     }
 }
