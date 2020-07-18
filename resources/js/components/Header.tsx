@@ -5,25 +5,25 @@ import {
 
 const styles = {
   header: {
-    'min-height': '55px',
+    position: 'sticky',
+    minHeight: '55px',
     background: '#17375e',
-    'margin-bottom': '20px',
+    marginBottom: '20px',
     border: '1px solid transparent',
-    'border-bottom': '5px solid #00b0f0',
-    position: 'fixed',
+    borderBottom: '5px solid #00b0f0',
     right: '0',
     left: '0',
     top: '0',
-    'z-index': '1030',
+    zIndex: '1030',
     padding: '16px, 15px',
   },
   links: {
     color: 'white',
-    'font-size': '1.25rem',
-    'text-decoration': 'none',
+    fontSize: '1.25rem',
+    textDecoration: 'none',
   },
   homepage: {
-    'line-height': '20px',
+    lineHeight: '20px',
     padding: '5px',
   },
   logo: {
