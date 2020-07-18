@@ -7,15 +7,19 @@ import {
 } from 'react-router-dom';
 import Home from './components/Home';
 import Faq from './components/Faq';
+import Header from './components/Header';
 
 function App() {
   return (
-    <Router basename="/web">
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/faq" component={Faq} />
-      </Switch>
-    </Router>
+    <>
+      <Router basename="/web">
+        <Header />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/help" component={Faq} />
+        </Switch>
+      </Router>
+    </>
   );
 }
 
