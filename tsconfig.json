@@ -4,7 +4,6 @@
     "target": "es5",
     "noImplicitAny": false,
     "sourceMap": false,
-    "jsx": "react",
     "esModuleInterop": true
   },
   "include": ["resources/js/**/*"]

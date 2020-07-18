@@ -4,18 +4,17 @@
         "es2020": true
     },
     "extends": [
-        "airbnb-typescript"
+        "plugin:vue/recommended",
+        "@vue/airbnb",
+        "@vue/typescript/recommended"
     ],
     "parserOptions": {
         "project": "./tsconfig.json",
-        "ecmaVersion": 11,
-        "sourceType": "module"
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "parser": "@typescript-eslint/parser"
     },
     "plugins": [
-        "plugin:vue/recommended",
         "@typescript-eslint"
-    ],
-    "rules": {
-    },
-    "parser": "@typescript-eslint/parser"
+    ]
 }
