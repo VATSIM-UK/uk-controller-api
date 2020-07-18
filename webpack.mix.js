@@ -15,8 +15,8 @@ mix.ts('resources/js/index.ts', 'public/js/app.js');
 
 if (mix.inProduction()) {
   mix.version();
+} else {
+  mix.browserSync({
+    proxy: process.env.MIX_APP_URL
+  });
 }
-
-mix.browserSync({
-  proxy: 'ukcp.devapp/web'
-});
