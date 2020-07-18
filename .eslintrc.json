@@ -8,14 +8,11 @@
     ],
     "parserOptions": {
         "project": "./tsconfig.json",
-        "ecmaFeatures": {
-            "jsx": true
-        },
         "ecmaVersion": 11,
         "sourceType": "module"
     },
     "plugins": [
-        "react",
+        "plugin:vue/recommended",
         "@typescript-eslint"
     ],
     "rules": {
