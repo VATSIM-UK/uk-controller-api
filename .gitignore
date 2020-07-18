@@ -9,7 +9,8 @@ tests/_coverage
 storage/*
 !storage/app
 public/storage
-public/app.js
+public/js/app.js
+public/css/app.css
 bootstrap/cache/
 storage/app/public/dependencies/*
 .phpunit.result.cache
