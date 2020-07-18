@@ -157,7 +157,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'code' => $code,
-                'created_at' => Carbon::now()->startOfSecond(),
+                'created_at' => Carbon::now()->toDateTimeString(),
             ]
         );
     }
