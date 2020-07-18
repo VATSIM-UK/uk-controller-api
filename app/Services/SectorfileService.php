@@ -65,7 +65,7 @@ class SectorfileService
 
     private static function validateLongitude(int $degrees, int $minutes, float $seconds): void
     {
-        if (($degrees === 180 && ($minutes !== 0 || $seconds !== 0.0)) ||$degrees > 180 ) {
+        if (($degrees === 180 && ($minutes !== 0 || $seconds !== 0.0)) ||$degrees > 180) {
             throw new InvalidArgumentException('Cannot have more than 180 degrees of longitude');
         }
 

@@ -24,7 +24,7 @@ class UnitDiscreteSquawkRangeRuleCaster implements CastsAttributes
         $rule = json_decode($value, true);
         if ($rule['type'] === 'UNIT_TYPE') {
             return new UnitType($rule['rule']);
-        } else if ($rule['type'] === 'FLIGHT_RULES') {
+        } elseif ($rule['type'] === 'FLIGHT_RULES') {
             return new FlightRules($rule['rule']);
         }
 
