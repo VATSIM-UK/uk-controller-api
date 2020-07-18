@@ -36,7 +36,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
                 ['origin' => 'EGGD', 'destination' => 'EGFF']
             )->getCode()
         );
-        $this->assertSquawkAsssigned('BMI11A', '7203');
+        $this->assertSquawkAssigned('BMI11A', '7203');
     }
 
     public function testItReturnsNullNoApplicableRange()
@@ -150,9 +150,9 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
-    private function assertSquawkAsssigned(string $callsign, string $code)
+    private function assertSquawkAssigned(string $callsign, string $code)
     {
-        $this->assertDatabaseMissing(
+        $this->assertDatabaseHas(
             'airfield_pairing_squawk_assignments',
             [
                 'callsign' => $callsign,

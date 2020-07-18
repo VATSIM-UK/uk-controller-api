@@ -32,7 +32,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7203',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertSquawkAsssigned('BMI11A', '7203');
+        $this->assertSquawkAssigned('BMI11A', '7203');
     }
 
     public function testItAllocatesSingleCharacterRange()
@@ -43,7 +43,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7201',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertSquawkAsssigned('BMI11A', '7201');
+        $this->assertSquawkAssigned('BMI11A', '7201');
     }
 
     public function testItPrefersDoubleCharacterMatchOverSingle()
@@ -55,7 +55,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7202',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertSquawkAsssigned('BMI11A', '7202');
+        $this->assertSquawkAssigned('BMI11A', '7202');
     }
 
     public function testItPrefersTripleCharacterMatchOverDouble()
@@ -68,7 +68,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7203',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertSquawkAsssigned('BMI11A', '7203');
+        $this->assertSquawkAssigned('BMI11A', '7203');
     }
 
     public function testItPrefersFullMatch()
@@ -82,7 +82,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             '7204',
             $this->allocator->allocate('BMI11A', ['origin' => 'EDDF'])->getCode()
         );
-        $this->assertSquawkAsssigned('BMI11A', '7204');
+        $this->assertSquawkAssigned('BMI11A', '7204');
     }
 
     public function testItReturnsNullOnNoApplicableRange()
@@ -181,9 +181,9 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
-    private function assertSquawkAsssigned(string $callsign, string $code)
+    private function assertSquawkAssigned(string $callsign, string $code)
     {
-        $this->assertDatabaseMissing(
+        $this->assertDatabaseHas(
             'orcam_squawk_assignments',
             [
                 'callsign' => $callsign,

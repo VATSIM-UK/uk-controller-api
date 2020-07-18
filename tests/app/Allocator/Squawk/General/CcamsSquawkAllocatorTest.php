@@ -30,7 +30,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkAssignment('BAW92A', '7202');
 
         $this->assertEquals('7203', $this->allocator->allocate('BMI11A', [])->getCode());
-        $this->assertSquawkAsssigned('BMI11A', '7203');
+        $this->assertSquawkAssigned('BMI11A', '7203');
     }
 
     public function testItReturnsNullOnNoApplicableRange()
@@ -125,9 +125,9 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
-    private function assertSquawkAsssigned(string $callsign, string $code)
+    private function assertSquawkAssigned(string $callsign, string $code)
     {
-        $this->assertDatabaseMissing(
+        $this->assertDatabaseHas(
             'ccams_squawk_assignments',
             [
                 'callsign' => $callsign,
