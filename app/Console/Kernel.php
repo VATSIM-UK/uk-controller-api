@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Commands\CleanSquawkAllocationHistory;
+use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanSquawkAllocations;
 use App\Console\Commands\ClearAssignedHoldsHistory;
 use App\Console\Commands\ClearSquawkAllocations;
@@ -11,6 +11,7 @@ use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\GetDeletedSidsFromSectorFile;
 use App\Console\Commands\OptimiseTables;
+use App\Console\Commands\ReclaimSquawksAfterFirExit;
 use App\Console\Commands\SrdImport;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
@@ -30,9 +31,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        CleanSquawkAllocationHistory::class,
-        CleanSquawkAllocations::class,
-        ClearSquawkAllocations::class,
+        CleanSquawkAssignmentsHistory::class,
         CreateUserToken::class,
         DeleteExpiredTokens::class,
         DeleteUserTokens::class,
@@ -46,6 +45,7 @@ class Kernel extends ConsoleKernel
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
+        ReclaimSquawksAfterFirExit::class,
     ];
 
     /**
@@ -57,13 +57,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('allocations:clean')->everyFifteenMinutes();
         $schedule->command('regional:generate')->hourlyAt([25, 55]);
         $schedule->command('tokens:delete-expired')->daily();
-        $schedule->command('allocations:clean-history')->daily();
+        $schedule->command('squawks:clean-history')->daily();
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute();
+        $schedule->command('squawks:reclaim')->hourly();
     }
 }

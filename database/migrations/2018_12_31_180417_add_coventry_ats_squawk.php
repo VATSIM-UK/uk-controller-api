@@ -1,8 +1,7 @@
 <?php
 
-use App\Models\Squawks\Range;
-use App\Models\Squawks\SquawkUnit;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddCoventryAtsSquawk extends Migration
 {
@@ -13,17 +12,10 @@ class AddCoventryAtsSquawk extends Migration
      */
     public function up()
     {
-        $ranges = SquawkUnit::where([['unit', '=', 'EGBE'], ['squawk_range_owner_id', '=', 30]])
-            ->firstOrFail()
-            ->ranges;
-
-        foreach ($ranges as $range) {
-            $range->delete();
-        }
-
-        Range::Create(
+        DB::table('squawk_range')->where('squawk_range_owner_id', 30)->delete();
+        DB::table('squawk_range')->insert(
             [
-                'squawk_range_owner_id' => SquawkUnit::where('unit', '=', 'EGBE')->firstOrFail()->squawk_range_owner_id,
+                'squawk_range_owner_id' => 30,
                 'start' => '0420',
                 'stop' => '0420',
                 'rules' => 'A',
@@ -39,13 +31,6 @@ class AddCoventryAtsSquawk extends Migration
      */
     public function down()
     {
-        // Cant roll this entire thing back so just delete the new range
-        $ranges = SquawkUnit::where([['unit', '=', 'EGBE'], ['squawk_range_owner_id', '=', '30']])
-            ->firstOrFail()
-            ->ranges;
-
-        foreach ($ranges as $range) {
-            $range->delete();
-        }
+        DB::table('squawk_range')->where('squawk_range_owner_id', 30)->delete();
     }
 }

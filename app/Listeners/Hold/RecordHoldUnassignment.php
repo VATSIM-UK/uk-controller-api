@@ -22,6 +22,6 @@ class RecordHoldUnassignment
                 ]
         );
 
-        return false;
+        return true;
     }
 }

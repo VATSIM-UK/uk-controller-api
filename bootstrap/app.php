@@ -44,13 +44,6 @@ $app->singleton(
 );
 
 $app->bind(
-    \App\Services\ManifestService::class,
-    function ($app) {
-        return new \App\Services\ManifestService($app);
-    }
-);
-
-$app->bind(
     \App\Services\VersionService::class,
     function ($app) {
         return new \App\Services\VersionService($app);

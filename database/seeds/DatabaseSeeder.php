@@ -15,18 +15,6 @@ class DatabaseSeeder extends Seeder
         AdminTableSeeder::class => [
             'admin',
         ],
-        SquawkTableSeeder::class => [
-            'squawk_general',
-            'squawk_unit',
-            'squawk_range_owner',
-            'squawk_range',
-        ],
-        SquawkAllocationTableSeeder::class => [
-            'squawk_allocation',
-        ],
-        AllocationHistorySeeder::class => [
-            'squawk_allocation_history',
-        ],
         AsrTableSeeder::class => [
             'altimeter_setting_region',
             'altimeter_setting_region_airfield',
@@ -94,11 +82,26 @@ class DatabaseSeeder extends Seeder
         ],
         NetworkAircraftTableSeeder::class => [
             'network_aircraft',
+            'network_aircraft_fir_events',
         ],
         AssignedHoldsTableSeeder::class => [
             'assigned_holds',
             'assigned_holds_history'
         ],
+        SquawkRangeTablesSeeder::class => [
+            'ccams_squawk_ranges',
+            'orcam_squawk_ranges',
+            'airfield_pairing_squawk_ranges',
+            'unit_discrete_squawk_ranges',
+        ],
+        SquawkAssignmentTablesSeeder::class => [
+            'ccams_squawk_assignments',
+            'orcam_squawk_assignments',
+            'airfield_pairing_squawk_assignments',
+            'unit_discrete_squawk_assignments',
+            'unit_discrete_squawk_range_rules',
+            'squawk_assignments_history',
+        ]
     ];
 
 

@@ -66,4 +66,57 @@ class ControllerServiceTest extends BaseFunctionalTestCase
         $actual = $this->service->getLegacyAirfieldOwnershipDependency();
         $this->assertSame($expected, $actual);
     }
+
+    /**
+     * @dataProvider controllerLevelProvider
+     */
+    public function testItGetsControllerLevelFromCallsign(string $value, string $expected)
+    {
+        $this->assertEquals($expected, ControllerService::getControllerLevelFromCallsign($value));
+    }
+
+    public function controllerLevelProvider(): array
+    {
+        return [
+            ['', ''],
+            ['EGKK_DEL', 'DEL'],
+            ['EGKK_GND', 'GND'],
+            ['EGKK_TWR', 'TWR'],
+            ['EGKK_APP', 'APP'],
+            ['LON_S_CTR', 'CTR'],
+            ['egkk_del', 'DEL'],
+            ['egkk_gnd', 'GND'],
+            ['egkk_twr', 'TWR'],
+            ['egkk_app', 'APP'],
+            ['lon_s_ctr', 'CTR'],
+        ];
+    }
+
+    /**
+     * @dataProvider controllerFacilityProvider
+     */
+    public function testItGetsControllerFacilityFromCallsign(string $value, string $expected)
+    {
+        $this->assertEquals($expected, ControllerService::getControllerFacilityFromCallsign($value));
+    }
+
+    public function controllerFacilityProvider(): array
+    {
+        return [
+            ['EGKK', 'EGKK'],
+            ['EGKK_DEL', 'EGKK'],
+            ['EGKK_TWR', 'EGKK'],
+            ['SCO_CTR', 'SCO'],
+            ['LTC_CTR', 'LTC'],
+            ['STC_1_CTR', 'STC'],
+            ['LON_S_CTR', 'LON'],
+            ['egkk', 'EGKK'],
+            ['egkk_del', 'EGKK'],
+            ['egkk_twr', 'EGKK'],
+            ['sco_ctr', 'SCO'],
+            ['ltc_ctr', 'LTC'],
+            ['stc_ctr', 'STC'],
+            ['lon_s_ctr', 'LON'],
+        ];
+    }
 }

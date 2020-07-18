@@ -57,9 +57,9 @@ class RecordHoldUnassignmentTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItStopsEventPropogation()
+    public function testItContinuesPropagation()
     {
-        $this->assertFalse($this->listener->handle(
+        $this->assertTrue($this->listener->handle(
             new HoldUnassignedEvent($this->listener->handle(new HoldUnassignedEvent('NAX5XX'))))
         );
     }

@@ -1,10 +1,6 @@
 <?php
 
-use App\Models\Squawks\Range;
-use App\Models\Squawks\SquawkRangeOwner;
-use App\Models\Squawks\SquawkUnit;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
 class AddLocalRanges extends Migration
@@ -816,26 +812,25 @@ class AddLocalRanges extends Migration
         foreach ($rangeInfo as $range) {
             // Create the range owner and unit if we haven't already
             if (!isset($processedOwners[$range['unit']])) {
-                // Create the range owner
-                $rangeOwner = new SquawkRangeOwner();
-                $rangeOwner->save();
-
-                // Create the unit range
-                $unit = new SquawkUnit();
-                $unit->unit = $range['unit'];
-                $unit->squawk_range_owner_id = $rangeOwner->id;
-                $unit->save();
-                $processedOwners[$range['unit']] = $unit;
+                // Create the range owner and unit range
+                $processedOwners[$range['unit']] = DB::table('squawk_unit')->insertGetId(
+                    [
+                        'unit' => $range['unit'],
+                        'squawk_range_owner_id' => DB::table('squawk_range_owner')->insertGetId([]),
+                    ]
+                );
             }
 
             // Create the range
-            $squawkRange = new Range();
-            $squawkRange->start = $range['start'];
-            $squawkRange->stop = $range['stop'];
-            $squawkRange->rules = $range['rules'];
-            $squawkRange->allow_duplicate = $range['allow_duplicate'];
-            $squawkRange->squawkRangeOwner()->associate($processedOwners[$range['unit']]);
-            $squawkRange->save();
+            DB::table('squawk_range')->insert(
+                [
+                    'start' => $range['start'],
+                    'stop' => $range['stop'],
+                    'rules' => $range['rules'],
+                    'allow_duplicate' => $range['allow_duplicate'],
+                    'squawk_range_owner_id' => $processedOwners[$range['unit']],
+                ]
+            );
         }
     }
 
@@ -846,10 +841,9 @@ class AddLocalRanges extends Migration
      */
     public function down()
     {
-        $allUnit = SquawkUnit::all();
-        foreach ($allUnit as $unit) {
-            $unit->delete();
-            SquawkRangeOwner::where('id', $unit->squawk_range_owner_id)->delete();
-        }
+        DB::table('squawk_unit')->select(['id', 'squawk_range_owner_id'])->orderByDesc('id')->each(function ($value) {
+            DB::table('squawk_unit')->where('id', $value->id)->delete();
+            DB::table('squawk_range_owner')->where('id', $value->squawk_range_owner_id)->delete();
+        });
     }
 }
