@@ -75,7 +75,7 @@ class SrdControllerTest extends BaseApiTestCase
             [
                 'minimum_level' => 10000,
                 'maximum_level' => 19500,
-                'route_string' => 'WOTAN L9 CPT',
+                'route_string' => self::L9_ROUTE_KENET,
                 'notes' => [],
             ],
             [

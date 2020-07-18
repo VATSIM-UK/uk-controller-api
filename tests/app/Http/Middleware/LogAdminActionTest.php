@@ -39,6 +39,6 @@ class LogAdminActionTest extends BaseApiTestCase
 
     private function getVersionUri(bool $withStatus): string
     {
-        return '/version/99.99.99' . $withStatus ? '/status' : '';
+        return '/version/99.99.99' . ($withStatus ? '/status' : '');
     }
 }
