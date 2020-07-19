@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\GroundStatusAssignedEvent;
 use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
+use App\Listeners\GroundStatus\RecordGroundStatusHistory;
 use App\Listeners\Network\RecordFirEntry;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
@@ -36,6 +38,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NetworkAircraftUpdatedEvent::class => [
             RecordFirEntry::class,
+        ],
+        GroundStatusAssignedEvent::class => [
+            RecordGroundStatusHistory::class
         ],
     ];
 }

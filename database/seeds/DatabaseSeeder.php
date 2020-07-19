@@ -104,6 +104,10 @@ class DatabaseSeeder extends Seeder
         ]
     ];
 
+    const MISC_TABLES = [
+        'ground_status_history'
+    ];
+
 
     /**
      * Run the database seeds.
@@ -114,6 +118,10 @@ class DatabaseSeeder extends Seeder
     {
         // Truncate all tables
         DB::statement("SET foreign_key_checks=0");
+        foreach (self::MISC_TABLES as $table) {
+            DB::table($table)->truncate();
+        }
+
         foreach (self::SEEDERS as $seeder => $tables) {
             foreach ($tables as $table) {
                 DB::table($table)->truncate();

@@ -18,7 +18,9 @@ class CreateGroundStatusHistoryTable extends Migration
             $table->string('callsign')->comment('The callsign for assignment');
             $table->unsignedBigInteger('ground_status_id')->comment('The ground status');
             $table->timestamp('assigned_at')->comment('What time the assignment was done');
-            $table->unsignedInteger('assigned_by')->comment('Who did the assignment');
+            $table->unsignedInteger('user_id')->nullable()->comment('Who did the assignment');
+
+            $table->foreign('user_id')->references('id')->on('user')->cascadeOnDelete();
         });
     }
 
