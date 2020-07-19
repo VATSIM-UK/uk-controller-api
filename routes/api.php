@@ -54,6 +54,10 @@ Route::middleware('plugin.user')->group(function () {
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+
+    // Ground statuses
+    Route::put('ground-status/{callsign}', 'GroundStatusController@setGroundStatus')
+        ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 });
 
 // Routes for user administration
@@ -222,6 +226,10 @@ Route::middleware('public')->group(function () {
 
     // Navaids
     Route::get('navaid/dependency', 'NavaidController');
+
+    // Ground statuses
+    Route::get('ground-status/dependency', 'GroundStatusController@getGroundStatusDependency');
+    Route::get('ground-status', 'GroundStatusController@getAircraftGroundStatuses');
 
     // Admin login
     Route::prefix('admin')->group(function () {
