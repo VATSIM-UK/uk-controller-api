@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
+use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use Illuminate\Support\Facades\DB;
 
