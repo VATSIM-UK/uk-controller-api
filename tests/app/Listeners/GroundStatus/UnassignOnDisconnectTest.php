@@ -7,19 +7,19 @@ use App\Events\GroundStatusUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 
-class UnassignGroundStatusOnDisconnectTest extends BaseFunctionalTestCase
+class UnassignOnDisconnectTest extends BaseFunctionalTestCase
 {
     const CALLSIGN = 'BAW123';
 
     /**
-     * @var UnassignGroundStatusOnDisconnect
+     * @var UnassignOnDisconnect
      */
     private $listener;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->listener = new UnassignGroundStatusOnDisconnect();
+        $this->listener = new UnassignOnDisconnect();
     }
 
     public function testItFiresEventIfGroundStatusSet()

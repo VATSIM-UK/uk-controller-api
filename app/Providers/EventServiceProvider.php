@@ -9,7 +9,7 @@ use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
 use App\Listeners\GroundStatus\RecordGroundStatusHistory;
-use App\Listeners\GroundStatus\UnassignGroundStatusOnDisconnect;
+use App\Listeners\GroundStatus\UnassignOnDisconnect;
 use App\Listeners\Network\RecordFirEntry;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
@@ -36,7 +36,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         NetworkAircraftDisconnectedEvent::class => [
             UnassignHoldOnDisconnect::class,
-            UnassignGroundStatusOnDisconnect::class,
+            UnassignOnDisconnect::class,
             MarkAssignmentDeletedOnDisconnect::class,
         ],
         NetworkAircraftUpdatedEvent::class => [

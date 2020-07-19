@@ -5,7 +5,7 @@ namespace App\Listeners\GroundStatus;
 use App\Events\GroundStatusUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
 
-class UnassignGroundStatusOnDisconnect
+class UnassignOnDisconnect
 {
     public function handle(NetworkAircraftDisconnectedEvent $event) : bool
     {
