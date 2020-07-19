@@ -7,6 +7,7 @@ use App\Allocator\Squawk\General\CcamsSquawkAllocator;
 use App\Allocator\Squawk\General\OrcamSquawkAllocator;
 use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
 use App\BaseFunctionalTestCase;
+use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
@@ -77,6 +78,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItAssignsALocalSquawkAndReturnsIt()
     {
+        $this->expectsEvents(SquawkAssignmentEvent::class);
         $assignment = $this->squawkService->assignLocalSquawk('BAW123', 'EGKK_APP', 'I');
         $this->assertEquals('0202', $assignment->getCode());
         $this->assertEquals('UNIT_DISCRETE', $assignment->getType());
@@ -85,12 +87,14 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntAssignLocalSquawkIfAllocatorFails()
     {
+        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
         UnitDiscreteSquawkRange::getQuery()->delete();
         $this->assertNull($this->squawkService->assignLocalSquawk('BAW123', 'EGKK_APP', 'I'));
     }
 
     public function testItAssignsAGeneralSquawkAndReturnsIt()
     {
+        $this->expectsEvents(SquawkAssignmentEvent::class);
         $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'KJFK', 'EGLL');
         $this->assertEquals('0101', $assignment->getCode());
         $this->assertEquals('ORCAM', $assignment->getType());
@@ -99,6 +103,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntAssignGeneralSquawkIfAllocatorFails()
     {
+        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
         OrcamSquawkRange::getQuery()->delete();
         CcamsSquawkRange::getQuery()->delete();
         $this->assertNull($this->squawkService->assignGeneralSquawk('BAW123', 'EGKK', 'EGLL'));
@@ -106,6 +111,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItTriesNextAllocatorIfGeneralAllocationFails()
     {
+        $this->expectsEvents(SquawkAssignmentEvent::class);
         CcamsSquawkRange::create(
             [
                 'first' => '0303',
