@@ -2,10 +2,12 @@
 
 namespace App\Models\Vatsim;
 
+use App\Models\GroundStatus\GroundStatus;
 use App\Models\Hold\AssignedHold;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NetworkAircraft extends Model
@@ -47,5 +49,15 @@ class NetworkAircraft extends Model
     public function firEvents(): HasMany
     {
         return $this->hasMany(NetworkAircraftFirEvent::class, 'callsign', 'callsign');
+    }
+
+    public function groundStatus(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            GroundStatus::class,
+            'ground_status_network_aircraft',
+            'callsign',
+            'ground_status_id',
+        );
     }
 }

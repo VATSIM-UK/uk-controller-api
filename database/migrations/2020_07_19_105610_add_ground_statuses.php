@@ -68,6 +68,11 @@ class AddGroundStatuses extends Migration
                     'created_at' => Carbon::now(),
                 ],
                 [
+                    'display_string' => 'CROSS',
+                    'description' => 'Runway Crossing',
+                    'created_at' => Carbon::now(),
+                ],
+                [
                     'display_string' => 'DEPA',
                     'description' => 'Cleared for Takeoff',
                     'created_at' => Carbon::now(),
