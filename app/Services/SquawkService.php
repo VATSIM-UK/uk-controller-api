@@ -121,6 +121,7 @@ class SquawkService
             }
         });
 
+        // If a squawk has been assigned, let the rest of the app know so it can be audited etc
         if (!is_null($assignment)) {
             event(new SquawkAssignmentEvent($assignment));
         }
