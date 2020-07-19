@@ -57,8 +57,8 @@ class NetworkDataService
     {
         NetworkAircraft::all()->each(function (NetworkAircraft $aircraft) {
             if ($aircraft->updated_at < Carbon::now()->subMinutes(10)) {
-                $aircraft->delete();
                 event(new NetworkAircraftDisconnectedEvent($aircraft));
+                $aircraft->delete();
             }
         });
     }
