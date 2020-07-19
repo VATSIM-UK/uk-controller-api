@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanSquawkAllocations;
 use App\Console\Commands\ClearAssignedHoldsHistory;
+use App\Console\Commands\ClearGroundStatusHistory;
 use App\Console\Commands\ClearSquawkAllocations;
 use App\Console\Commands\GenerateLegacyDependencies;
 use App\Console\Commands\GenerateMinStackLevels;
@@ -46,6 +47,7 @@ class Kernel extends ConsoleKernel
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
         ReclaimSquawksAfterFirExit::class,
+        ClearGroundStatusHistory::class,
     ];
 
     /**
@@ -65,5 +67,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute();
         $schedule->command('squawks:reclaim')->hourly();
+        $schedule->command('ground-status:clean-history')->hourly();
     }
 }

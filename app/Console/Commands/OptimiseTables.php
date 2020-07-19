@@ -23,6 +23,7 @@ class OptimiseTables extends Command
         'regional_pressure_settings',
         'network_aircraft',
         'network_aircraft_fir_events',
+        'ground_status_history',
     ];
 
     protected $signature = 'tables:optimise';
