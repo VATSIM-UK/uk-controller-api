@@ -33,6 +33,11 @@ class NetworkAircraft extends Model
         'planned_route',
     ];
 
+    protected $casts = [
+        'groundspeed' => 'integer',
+        'altitude' => 'integer'
+    ];
+
     public static function boot()
     {
         parent::boot();
