@@ -10,13 +10,9 @@ class UnassignHoldOnDisconnect
 {
     public function handle(NetworkAircraftDisconnectedEvent $event) : bool
     {
-        $assignedHold = AssignedHold::find($event->getAircraft()->callsign);
-        if (!$assignedHold) {
-            return true;
+        if (AssignedHold::find($event->getAircraft()->callsign)) {
+            event(new HoldUnassignedEvent($event->getAircraft()->callsign));
         }
-
-        $assignedHold->delete();
-        event(new HoldUnassignedEvent($event->getAircraft()->callsign));
 
         return true;
     }

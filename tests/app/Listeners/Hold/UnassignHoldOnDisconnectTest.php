@@ -27,20 +27,4 @@ class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
             $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])))
         );
     }
-
-    public function testItDeletesAssignedHold()
-    {
-        $listener = new UnassignHoldOnDisconnect();
-        $this->withoutEvents();
-        $this->assertTrue(
-            $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])))
-        );
-
-        $this->assertDatabaseMissing(
-            'assigned_holds',
-            [
-                'callsign' => 'BAW123',
-            ]
-        );
-    }
 }
