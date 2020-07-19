@@ -18,8 +18,13 @@ class AddGroundStatuses extends Migration
         DB::table('ground_statuses')->insert(
             [
                 [
-                    'display_string' => 'CLR',
+                    'display_string' => 'RCLR',
                     'description' => 'Clearance Requested',
+                    'created_at' => Carbon::now(),
+                ],
+                [
+                    'display_string' => 'CLR',
+                    'description' => 'Clearance Received',
                     'created_at' => Carbon::now(),
                 ],
                 [
