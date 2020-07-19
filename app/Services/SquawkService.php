@@ -120,6 +120,10 @@ class SquawkService
             }
         });
 
+        if (!is_null($assignment)) {
+            event(new SquawkAssignmentEvent($assignment));
+        }
+
         return $assignment;
     }
 
