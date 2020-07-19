@@ -14,9 +14,8 @@ use App\Listeners\Network\RecordFirEntry;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Hold\UnassignHoldOnDisconnect;
-use App\Listeners\Squawk\MarkAssignmentDeletedOnUnassignment;
+use App\Listeners\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
-use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -38,7 +37,7 @@ class EventServiceProvider extends ServiceProvider
         NetworkAircraftDisconnectedEvent::class => [
             UnassignHoldOnDisconnect::class,
             UnassignGroundStatusOnDisconnect::class,
-            MarkAssignmentDeletedOnUnassignment::class,
+            MarkAssignmentDeletedOnDisconnect::class,
         ],
         NetworkAircraftUpdatedEvent::class => [
             RecordFirEntry::class,
