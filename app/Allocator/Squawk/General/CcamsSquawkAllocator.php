@@ -9,35 +9,26 @@ use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Vatsim\NetworkAircraft;
 
-class CcamsSquawkAllocator implements SquawkAllocatorInterface
+class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        CcamsSquawkRange::all()->shuffle()->each(function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
-            $allSquawks = $range->getAllSquawksInRange();
-            $possibleSquawks = $allSquawks->diff(
-                CcamsSquawkAssignment::whereIn('code', $allSquawks)->pluck('code')->all()
-            );
+        CcamsSquawkRange::all()->shuffle()->each(
+            function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
+                $allSquawks = $range->getAllSquawksInRange();
+                $possibleSquawks = $allSquawks->diff(
+                    CcamsSquawkAssignment::whereIn('code', $allSquawks)->pluck('code')->all()
+                );
 
-            if ($possibleSquawks->isEmpty()) {
-                return true;
+                if ($possibleSquawks->isEmpty()) {
+                    return true;
+                }
+
+                $assignment = $this->assignSquawk($possibleSquawks->first(), $callsign);
+                return false;
             }
-
-            NetworkAircraft::firstOrCreate(
-                [
-                    'callsign' => $callsign
-                ]
-            );
-
-            $assignment = CcamsSquawkAssignment::create(
-                [
-                    'callsign' => $callsign,
-                    'code' => $possibleSquawks->first()
-                ]
-            );
-            return false;
-        });
+        );
 
         return $assignment;
     }
@@ -55,5 +46,46 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface
     public function canAllocateForCategory(string $category): bool
     {
         return $category === SquawkAssignmentCategories::GENERAL;
+    }
+
+    public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface
+    {
+        $assignment = null;
+        CcamsSquawkRange::all()->each(
+            function (CcamsSquawkRange $range) use ($code, $callsign, &$assignment) {
+                if ($range->squawkInRange($code)) {
+                    // Lock the range to prevent a dupe assignment
+                    CcamsSquawkRange::lockForUpdate($range->id)->first();
+
+                    // Assign the code, if we can.
+                    if (!CcamsSquawkAssignment::where('code', $code)->first()) {
+                        $assignment = $this->assignSquawk($code, $callsign);
+                    }
+
+                    // In any case, if we've found the range with the code, we shouldn't try others.
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+        return $assignment;
+    }
+
+    private function assignSquawk(string $squawk, string $callsign): CcamsSquawkAssignment
+    {
+        NetworkAircraft::firstOrCreate(
+            [
+                'callsign' => $callsign
+            ]
+        );
+
+        return CcamsSquawkAssignment::create(
+            [
+                'callsign' => $callsign,
+                'code' => $squawk
+            ]
+        );
     }
 }
