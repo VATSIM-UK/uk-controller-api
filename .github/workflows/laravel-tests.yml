@@ -88,3 +88,7 @@ jobs:
       - name: Run PHPUnit Without Coverage
         if: matrix.php != '7.4'
         run: vendor/bin/phpunit
+
+      - name: Upload Code Coverage Report
+        if: matrix.php == '7.4'
+        run: bash <(curl -s https://codecov.io/bash)
