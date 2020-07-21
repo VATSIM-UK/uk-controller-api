@@ -34,6 +34,11 @@ abstract class AbstractSquawkRange extends Model
         return $allowedSquawks;
     }
 
+    public function squawkInRange(string $squawk): bool
+    {
+        return $this->getAllSquawksInRange()->containsStrict($squawk);
+    }
+
     /**
      * Get the first squawk in the range.
      *

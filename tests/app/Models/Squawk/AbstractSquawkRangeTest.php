@@ -29,6 +29,47 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
         $range->getAllSquawksInRange();
     }
 
+    public function exceptionTestProvider(): array
+    {
+        return [
+            ['111', '0101', InvalidArgumentException::class, 'Invalid first squawk of range: 111'],
+            [
+                '00001',
+                '0101',
+                InvalidArgumentException::class,
+                'Invalid first squawk of range: 00001'
+            ],
+            [
+                '0108',
+                '0101',
+                InvalidArgumentException::class,
+                'Invalid first squawk of range: 0108'
+            ],
+            [
+                '0190',
+                '0101',
+                InvalidArgumentException::class,
+                'Invalid first squawk of range: 0190'
+            ],
+            [
+                '0981',
+                '0101',
+                InvalidArgumentException::class,
+                'Invalid first squawk of range: 0981'
+            ],
+            ['0101', '111', InvalidArgumentException::class, 'Invalid last squawk of range: 111'],
+            [
+                '0101',
+                '00001',
+                InvalidArgumentException::class,
+                'Invalid last squawk of range: 00001'
+            ],
+            ['0101', '0108', InvalidArgumentException::class, 'Invalid last squawk of range: 0108'],
+            ['0101', '0190', InvalidArgumentException::class, 'Invalid last squawk of range: 0190'],
+            ['0101', '0981', InvalidArgumentException::class, 'Invalid last squawk of range: 0981'],
+        ];
+    }
+
     /**
      * @dataProvider rangeProvider
      */
@@ -37,22 +78,6 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
         $range = new CcamsSquawkRange(['first' => $first, 'last' => $last]);
         $expected = new Collection($expected);
         $this->assertEquals($expected, $range->getAllSquawksInRange());
-    }
-
-    public function exceptionTestProvider(): array
-    {
-        return [
-            ['111', '0101', InvalidArgumentException::class, 'Invalid first squawk of range: 111'],
-            ['00001', '0101', InvalidArgumentException::class, 'Invalid first squawk of range: 00001'],
-            ['0108', '0101', InvalidArgumentException::class, 'Invalid first squawk of range: 0108'],
-            ['0190', '0101', InvalidArgumentException::class, 'Invalid first squawk of range: 0190'],
-            ['0981', '0101', InvalidArgumentException::class, 'Invalid first squawk of range: 0981'],
-            ['0101', '111', InvalidArgumentException::class, 'Invalid last squawk of range: 111'],
-            ['0101', '00001', InvalidArgumentException::class, 'Invalid last squawk of range: 00001'],
-            ['0101', '0108', InvalidArgumentException::class, 'Invalid last squawk of range: 0108'],
-            ['0101', '0190',  InvalidArgumentException::class, 'Invalid last squawk of range: 0190'],
-            ['0101', '0981', InvalidArgumentException::class, 'Invalid last squawk of range: 0981'],
-        ];
     }
 
     public function rangeProvider(): array
@@ -70,6 +95,32 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
             ['0105', '0112', ['0105', '0106', '0107', '0110', '0111', '0112']],
             ['0176', '0202', ['0176', '0177', '0200', '0201', '0202']],
             ['1776', '2003', ['1776', '1777', '2000', '2001', '2002', '2003']],
+        ];
+    }
+
+    /**
+     * @dataProvider inRangeProvider
+     */
+    public function testItReturnsIfSquawkIsInRange(
+        string $first,
+        string $last,
+        string $code,
+        bool $inRange
+    ) {
+        $range = new CcamsSquawkRange(['first' => $first, 'last' => $last]);
+        $this->assertEquals($inRange, $range->squawkInRange($code));
+    }
+
+    public function inRangeProvider(): array
+    {
+        return [
+            ['0000', '0007', '0000', true],
+            ['0000', '0007', '0005', true],
+            ['0000', '0007', '0007', true],
+            ['1000', '1007', '0777', false],
+            ['1000', '1007', '1010', false],
+            ['1000', '1020', '1010', true],
+            ['1000', '1020', '1011', true],
         ];
     }
 }
