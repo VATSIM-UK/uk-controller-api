@@ -56,7 +56,7 @@ class NetworkAircraftTableSeeder extends Seeder
                     'planned_flighttype' => 'I',
                     'planned_route' => 'DIRECT',
                     'created_at' => Carbon::now()->subMinutes(31),
-                    'updated_at' => Carbon::now()->subMinutes(10),
+                    'updated_at' => Carbon::now()->subMinutes(21),
                 ],
             ]
         );
