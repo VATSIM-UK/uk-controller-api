@@ -59,36 +59,42 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
             : '';
 
         $assignment = null;
-        $this->getApplicableRanges($unit, $details)->each(function (UnitDiscreteSquawkRange $range) use (
-            &$assignment,
-            $callsign
-        ) {
-            $allSquawks = $range->getAllSquawksInRange();
-            $possibleSquawks = $allSquawks->diff(
-                UnitDiscreteSquawkAssignment::whereIn('code', $allSquawks)
-                    ->where('unit', $range->unit)
-                    ->pluck('code')
-                    ->all()
-            );
 
-            if ($possibleSquawks->isEmpty()) {
-                return true;
-            }
+        UnitDiscreteSquawkRange::getConnectionResolver()->connection()->transaction(function () use (&$assignment, $callsign, $details, $unit) {
+            $this->getApplicableRanges($unit, $details)->each(function (UnitDiscreteSquawkRange $range) use (
+                &$assignment,
+                $callsign
+            ) {
+                // Lock the range to prevent duplicate inserts
+                UnitDiscreteSquawkRange::lockForUpdate()->find($range->id);
 
-            NetworkAircraft::firstOrCreate(
-                [
-                    'callsign' => $callsign,
-                ]
-            );
+                $allSquawks = $range->getAllSquawksInRange();
+                $possibleSquawks = $allSquawks->diff(
+                    UnitDiscreteSquawkAssignment::whereIn('code', $allSquawks)
+                        ->where('unit', $range->unit)
+                        ->pluck('code')
+                        ->all()
+                );
 
-            $assignment = UnitDiscreteSquawkAssignment::create(
-                [
-                    'callsign' => $callsign,
-                    'unit' => $range->unit,
-                    'code' => $possibleSquawks->first(),
-                ]
-            );
-            return false;
+                if ($possibleSquawks->isEmpty()) {
+                    return true;
+                }
+
+                NetworkAircraft::firstOrCreate(
+                    [
+                        'callsign' => $callsign,
+                    ]
+                );
+
+                $assignment = UnitDiscreteSquawkAssignment::create(
+                    [
+                        'callsign' => $callsign,
+                        'unit' => $range->unit,
+                        'code' => $possibleSquawks->first(),
+                    ]
+                );
+                return false;
+            });
         });
 
         return $assignment;

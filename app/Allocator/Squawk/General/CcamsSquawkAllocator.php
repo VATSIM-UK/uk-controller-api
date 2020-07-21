@@ -14,30 +14,39 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        CcamsSquawkRange::all()->shuffle()->each(function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
-            $allSquawks = $range->getAllSquawksInRange();
-            $possibleSquawks = $allSquawks->diff(
-                CcamsSquawkAssignment::whereIn('code', $allSquawks)->pluck('code')->all()
-            );
+        CcamsSquawkRange::getConnectionResolver()->connection()->transaction(
+            function () use (&$assignment, $callsign) {
+                CcamsSquawkRange::all()->shuffle()->each(
+                    function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
+                        // Lock the range so duplicate squawk allocations cannot happen
+                        CcamsSquawkRange::lockForUpdate()->find($range->id);
 
-            if ($possibleSquawks->isEmpty()) {
-                return true;
+                        $squawks = $range->getAllSquawksInRange();
+                        $possibleSquawks = $squawks->diff(
+                            CcamsSquawkAssignment::whereIn('code', $squawks)->pluck('code')->all()
+                        );
+
+                        if ($possibleSquawks->isEmpty()) {
+                            return true;
+                        }
+
+                        NetworkAircraft::firstOrCreate(
+                            [
+                                'callsign' => $callsign
+                            ]
+                        );
+
+                        $assignment = CcamsSquawkAssignment::create(
+                            [
+                                'callsign' => $callsign,
+                                'code' => $possibleSquawks->first()
+                            ]
+                        );
+                        return false;
+                    }
+                );
             }
-
-            NetworkAircraft::firstOrCreate(
-                [
-                    'callsign' => $callsign
-                ]
-            );
-
-            $assignment = CcamsSquawkAssignment::create(
-                [
-                    'callsign' => $callsign,
-                    'code' => $possibleSquawks->first()
-                ]
-            );
-            return false;
-        });
+        );
 
         return $assignment;
     }
