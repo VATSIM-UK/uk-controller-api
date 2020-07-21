@@ -83,7 +83,7 @@ jobs:
 
       - name: Run PHPUnit With Coverage
         if: matrix.php == '7.4'
-        run: vendor/bin/phpunit --coverage-clover=phpunit.coverage.xml
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Run PHPUnit Without Coverage
         if: matrix.php != '7.4'
