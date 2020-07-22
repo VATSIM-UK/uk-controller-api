@@ -56,10 +56,9 @@ class NetworkDataService
      */
     private function handleTimeouts(): void
     {
-<<<<<<< HEAD
         NetworkAircraft::all()->each(
             function (NetworkAircraft $aircraft) {
-                if ($aircraft->updated_at < Carbon::now()->subMinutes(10)) {
+                if ($aircraft->updated_at < Carbon::now()->subMinutes(20)) {
                     $aircraft->delete();
                     event(new NetworkAircraftDisconnectedEvent($aircraft));
                 }
@@ -109,12 +108,6 @@ class NetworkDataService
         } catch (QueryException $queryException) {
             if ($queryException->errorInfo[1] !== 1062) {
                 throw $queryException;
-=======
-        NetworkAircraft::all()->each(function (NetworkAircraft $aircraft) {
-            if ($aircraft->updated_at < Carbon::now()->subMinutes(20)) {
-                $aircraft->delete();
-                event(new NetworkAircraftDisconnectedEvent($aircraft));
->>>>>>> upstream/master
             }
             $aircraft = NetworkAircraft::find($callsign);
         }
