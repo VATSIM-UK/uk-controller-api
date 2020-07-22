@@ -88,4 +88,30 @@ class NetworkDataService
 
         return $aircraft;
     }
+
+    public static function firstOrCreateNetworkAircraft(
+        string $callsign,
+        array $details = []
+    ): NetworkAircraft {
+        try {
+            $aircraft = NetworkAircraft::firstOrCreate(
+                ['callsign' => $callsign],
+                array_merge(
+                    ['callsign' => $callsign],
+                    $details
+                )
+            );
+
+            if ($aircraft->wasRecentlyCreated) {
+                $aircraft->touch();
+            }
+        } catch (QueryException $queryException) {
+            if ($queryException->errorInfo[1] !== 1062) {
+                throw $queryException;
+            }
+            $aircraft = NetworkAircraft::find($callsign);
+        }
+
+        return $aircraft;
+    }
 }
