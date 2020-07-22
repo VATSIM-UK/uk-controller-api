@@ -8,6 +8,7 @@ use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -53,12 +54,8 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
                     return true;
                 }
 
-                NetworkAircraft::firstOrCreate(
-                    [
-                        'callsign' => $callsign,
-                    ]
-                );
 
+                NetworkDataService::firstOrCreateNetworkAircraft($callsign);
                 $assignment = OrcamSquawkAssignment::create(
                     [
                         'callsign' => $callsign,

@@ -8,6 +8,7 @@ use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkDataService;
 
 class CcamsSquawkAllocator implements SquawkAllocatorInterface
 {
@@ -24,12 +25,7 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface
                 return true;
             }
 
-            NetworkAircraft::firstOrCreate(
-                [
-                    'callsign' => $callsign
-                ]
-            );
-
+            NetworkDataService::firstOrCreateNetworkAircraft($callsign);
             $assignment = CcamsSquawkAssignment::create(
                 [
                     'callsign' => $callsign,

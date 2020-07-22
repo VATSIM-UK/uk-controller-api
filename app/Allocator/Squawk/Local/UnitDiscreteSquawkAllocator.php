@@ -10,6 +10,7 @@ use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\ControllerService;
+use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -75,6 +76,7 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
                 return true;
             }
 
+            NetworkDataService::firstOrCreateNetworkAircraft($callsign);
             NetworkAircraft::firstOrCreate(
                 [
                     'callsign' => $callsign,
