@@ -9,6 +9,7 @@ use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrcamSquawkAllocator implements SquawkAllocatorInterface
@@ -42,7 +43,7 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
         }
 
         $assignment = null;
-        OrcamSquawkRange::getConnectionResolver()->connection()->transaction(
+        DB::transaction(
             function () use (&$assignment, $callsign, $details) {
                 $this->getPossibleRangesForFlight($details['origin'])->each(
                     function (OrcamSquawkRange $range) use (&$assignment, $callsign) {

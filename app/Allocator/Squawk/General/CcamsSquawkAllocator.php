@@ -8,13 +8,14 @@ use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Support\Facades\DB;
 
 class CcamsSquawkAllocator implements SquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        CcamsSquawkRange::getConnectionResolver()->connection()->transaction(
+        DB::transaction(
             function () use (&$assignment, $callsign) {
                 CcamsSquawkRange::all()->shuffle()->each(
                     function (CcamsSquawkRange $range) use (&$assignment, $callsign) {

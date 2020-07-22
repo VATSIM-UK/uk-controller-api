@@ -9,6 +9,7 @@ use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkAssignment;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface
@@ -39,7 +40,7 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface
         }
 
         $assignment = null;
-        AirfieldPairingSquawkRange::getConnectionResolver()->connection()->transaction(
+        DB::transaction(
             function () use (&$assignment, $callsign, $details) {
                 $this->getPossibleRangesForFlight(
                     $details['origin'],
