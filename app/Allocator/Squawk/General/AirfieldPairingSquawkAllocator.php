@@ -9,6 +9,7 @@ use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkAssignment;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface
@@ -23,41 +24,60 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         if (!isset($details['origin'])) {
-            Log::error('Origin not provided for airfield pairing squawk allocation', [$callsign, $details]);
+            Log::error(
+                'Origin not provided for airfield pairing squawk allocation',
+                [$callsign, $details]
+            );
             return null;
         }
 
         if (!isset($details['destination'])) {
-            Log::error('Destination not provided for airfield pairing squawk allocation', [$callsign, $details]);
+            Log::error(
+                'Destination not provided for airfield pairing squawk allocation',
+                [$callsign, $details]
+            );
             return null;
         }
 
         $assignment = null;
-        $this->getPossibleRangesForFlight($details['origin'], $details['destination'])->each(
-            function (AirfieldPairingSquawkRange $range) use (&$assignment, $callsign) {
-                $allSquawks = $range->getAllSquawksInRange();
-                $possibleSquawks = $allSquawks->diff(
-                    AirfieldPairingSquawkAssignment::whereIn('code', $allSquawks)->pluck('code')->all()
-                );
+        DB::transaction(
+            function () use (&$assignment, $callsign, $details) {
+                $this->getPossibleRangesForFlight(
+                    $details['origin'],
+                    $details['destination']
+                )->each(
+                    function (AirfieldPairingSquawkRange $range) use (&$assignment, $callsign) {
+                        // Lock the range to prevent additional inserts on this range
+                        AirfieldPairingSquawkRange::lockForUpdate()->find($range->id);
 
-                if ($possibleSquawks->isEmpty()) {
-                    return true;
-                }
+                        $allSquawks = $range->getAllSquawksInRange();
+                        $possibleSquawks = $allSquawks->diff(
+                            AirfieldPairingSquawkAssignment::whereIn('code', $allSquawks)
+                                ->pluck('code')
+                                ->all()
+                        );
 
-                NetworkAircraft::firstOrCreate(
-                    [
-                        'callsign' => $callsign,
-                    ]
-                );
+                        if ($possibleSquawks->isEmpty()) {
+                            return true;
+                        }
 
-                $assignment = AirfieldPairingSquawkAssignment::create(
-                    [
-                        'callsign' => $callsign,
-                        'code' => $possibleSquawks->first(),
-                    ]
+                        NetworkAircraft::firstOrCreate(
+                            [
+                                'callsign' => $callsign,
+                            ]
+                        );
+
+                        $assignment = AirfieldPairingSquawkAssignment::create(
+                            [
+                                'callsign' => $callsign,
+                                'code' => $possibleSquawks->first(),
+                            ]
+                        );
+                        return false;
+                    }
                 );
-                return false;
-            });
+            }
+        );
 
         return $assignment;
     }
