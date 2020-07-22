@@ -8,6 +8,7 @@
         "php": "^7.3",
         "ext-json": "*",
         "ext-curl": "*",
+        "ext-pdo": "*",
         "ext-simplexml": "*",
         "guzzlehttp/guzzle": "^6.3",
         "bugsnag/bugsnag-laravel": "^2.17",
