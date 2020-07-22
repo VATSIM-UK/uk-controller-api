@@ -101,10 +101,6 @@ class NetworkDataService
                     $details
                 )
             );
-
-            if ($aircraft->wasRecentlyCreated) {
-                $aircraft->touch();
-            }
         } catch (QueryException $queryException) {
             if ($queryException->errorInfo[1] !== 1062) {
                 throw $queryException;
