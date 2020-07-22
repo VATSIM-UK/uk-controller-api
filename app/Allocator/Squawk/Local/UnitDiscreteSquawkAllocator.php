@@ -8,7 +8,6 @@ use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
-use App\Models\Vatsim\NetworkAircraft;
 use App\Services\ControllerService;
 use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;

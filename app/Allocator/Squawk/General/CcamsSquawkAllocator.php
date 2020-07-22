@@ -7,7 +7,6 @@ use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkDataService;
 use Illuminate\Support\Facades\DB;
 
