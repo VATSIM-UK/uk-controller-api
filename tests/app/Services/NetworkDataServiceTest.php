@@ -27,6 +27,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'clients' => [
                 $this->getClientData('VIR25A', true),
                 $this->getClientData('BAW123', true),
+                $this->getClientData('RYR824', true),
                 $this->getClientData('LON_S_CTR', false),
             ]
         ];
@@ -69,6 +70,23 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             array_merge(
                 array_filter(
                     $this->networkData['clients'][1],
+                    function ($value) { return $value !== 'clienttype';},
+                    ARRAY_FILTER_USE_KEY
+                ),
+                ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
+            ),
+        );
+    }
+
+    public function testItUpdatesExistingAircraftOnTheGround()
+    {
+        $this->withoutEvents();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                array_filter(
+                    $this->networkData['clients'][2],
                     function ($value) { return $value !== 'clienttype';},
                     ARRAY_FILTER_USE_KEY
                 ),

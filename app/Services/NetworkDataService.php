@@ -46,6 +46,7 @@ class NetworkDataService
                 ['callsign' => $client['callsign']],
                 $client
             );
+            $aircraft->touch();
             event(new NetworkAircraftUpdatedEvent($aircraft));
         }
     }
