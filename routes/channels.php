@@ -15,6 +15,6 @@ Broadcast::channel('rps-updates', function (User $user) {
     return $user->exists();
 });
 
-Broadcast::channel('controller_{position}', function (User $user) {
+Broadcast::channel('enroute-releases', function (User $user) {
     return $user->exists();
 });
