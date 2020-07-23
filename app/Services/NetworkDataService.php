@@ -7,6 +7,7 @@ use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
 class NetworkDataService
@@ -42,11 +43,11 @@ class NetworkDataService
                 continue;
             }
 
-            $aircraft = NetworkAircraft::updateOrCreate(
-                ['callsign' => $client['callsign']],
-                $client
+            event(
+                new NetworkAircraftUpdatedEvent(
+                    self::createOrUpdateNetworkAircraft($client['callsign'], $client)
+                )
             );
-            event(new NetworkAircraftUpdatedEvent($aircraft));
         }
     }
 
@@ -55,11 +56,58 @@ class NetworkDataService
      */
     private function handleTimeouts(): void
     {
-        NetworkAircraft::all()->each(function (NetworkAircraft $aircraft) {
-            if ($aircraft->updated_at < Carbon::now()->subMinutes(10)) {
-                $aircraft->delete();
-                event(new NetworkAircraftDisconnectedEvent($aircraft));
+        NetworkAircraft::all()->each(
+            function (NetworkAircraft $aircraft) {
+                if ($aircraft->updated_at < Carbon::now()->subMinutes(20)) {
+                    $aircraft->delete();
+                    event(new NetworkAircraftDisconnectedEvent($aircraft));
+                }
             }
-        });
+        );
+    }
+
+    public static function createOrUpdateNetworkAircraft(
+        string $callsign,
+        array $details = []
+    ): NetworkAircraft {
+        try {
+            $aircraft = NetworkAircraft::updateOrCreate(
+                ['callsign' => $callsign],
+                array_merge(
+                    ['callsign' => $callsign],
+                    $details
+                )
+            );
+            $aircraft->touch();
+        } catch (QueryException $queryException) {
+            if ($queryException->errorInfo[1] !== 1062) {
+                throw $queryException;
+            }
+            $aircraft = NetworkAircraft::find($callsign);
+        }
+
+        return $aircraft;
+    }
+
+    public static function firstOrCreateNetworkAircraft(
+        string $callsign,
+        array $details = []
+    ): NetworkAircraft {
+        try {
+            $aircraft = NetworkAircraft::firstOrCreate(
+                ['callsign' => $callsign],
+                array_merge(
+                    ['callsign' => $callsign],
+                    $details
+                )
+            );
+        } catch (QueryException $queryException) {
+            if ($queryException->errorInfo[1] !== 1062) {
+                throw $queryException;
+            }
+            $aircraft = NetworkAircraft::find($callsign);
+        }
+
+        return $aircraft;
     }
 }

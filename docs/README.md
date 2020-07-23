@@ -5,6 +5,7 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
+[![codecov](https://codecov.io/gh/VATSIM-UK/uk-controller-api/branch/master/graph/badge.svg)](https://codecov.io/gh/VATSIM-UK/uk-controller-api)
 
 The API backend to the UK Controller Plugin, provides the plugin with information such
 as dependency files, squawk allocations and user authentication.

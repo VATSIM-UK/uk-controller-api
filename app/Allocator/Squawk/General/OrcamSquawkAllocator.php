@@ -7,8 +7,9 @@ use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
-use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrcamSquawkAllocator implements SquawkAllocatorInterface
@@ -42,31 +43,35 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
         }
 
         $assignment = null;
-        $this->getPossibleRangesForFlight($details['origin'])->each(
-            function (OrcamSquawkRange $range) use (&$assignment, $callsign) {
-                $allSquawks = $range->getAllSquawksInRange();
-                $possibleSquawks = $allSquawks->diff(
-                    OrcamSquawkAssignment::whereIn('code', $allSquawks)->pluck('code')->all()
-                );
+        DB::transaction(
+            function () use (&$assignment, $callsign, $details) {
+                $this->getPossibleRangesForFlight($details['origin'])->each(
+                    function (OrcamSquawkRange $range) use (&$assignment, $callsign) {
+                        // Lock range to prevent additional inserts
+                        OrcamSquawkRange::lockForUpdate()->find($range->id);
 
-                if ($possibleSquawks->isEmpty()) {
-                    return true;
-                }
+                        $allSquawks = $range->getAllSquawksInRange();
+                        $possibleSquawks = $allSquawks->diff(
+                            OrcamSquawkAssignment::whereIn('code', $allSquawks)
+                                ->pluck('code')->all()
+                        );
 
-                NetworkAircraft::firstOrCreate(
-                    [
-                        'callsign' => $callsign,
-                    ]
-                );
+                        if ($possibleSquawks->isEmpty()) {
+                            return true;
+                        }
 
-                $assignment = OrcamSquawkAssignment::create(
-                    [
-                        'callsign' => $callsign,
-                        'code' => $possibleSquawks->first(),
-                    ]
+                        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+                        $assignment = OrcamSquawkAssignment::create(
+                            [
+                                'callsign' => $callsign,
+                                'code' => $possibleSquawks->first(),
+                            ]
+                        );
+                        return false;
+                    }
                 );
-                return false;
-            });
+            }
+        );
 
         return $assignment;
     }

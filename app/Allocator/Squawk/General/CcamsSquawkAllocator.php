@@ -7,26 +7,34 @@ use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkDataService;
+use Illuminate\Support\Facades\DB;
 
 class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        CcamsSquawkRange::all()->shuffle()->each(
-            function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
-                $allSquawks = $range->getAllSquawksInRange();
-                $possibleSquawks = $allSquawks->diff(
-                    CcamsSquawkAssignment::whereIn('code', $allSquawks)->pluck('code')->all()
+        DB::transaction(
+            function () use (&$assignment, $callsign) {
+                CcamsSquawkRange::all()->shuffle()->each(
+                    function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
+                        // Lock the range so duplicate squawk allocations cannot happen
+                        CcamsSquawkRange::lockForUpdate()->find($range->id);
+
+                        $squawks = $range->getAllSquawksInRange();
+                        $possibleSquawks = $squawks->diff(
+                            CcamsSquawkAssignment::whereIn('code', $squawks)->pluck('code')->all()
+                        );
+
+                        if ($possibleSquawks->isEmpty()) {
+                            return true;
+                        }
+
+                        $assignment = $this->assignSquawk($possibleSquawks->first(), $callsign);
+                        return false;
+                    }
                 );
-
-                if ($possibleSquawks->isEmpty()) {
-                    return true;
-                }
-
-                $assignment = $this->assignSquawk($possibleSquawks->first(), $callsign);
-                return false;
             }
         );
 
@@ -75,12 +83,7 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
 
     private function assignSquawk(string $squawk, string $callsign): CcamsSquawkAssignment
     {
-        NetworkAircraft::firstOrCreate(
-            [
-                'callsign' => $callsign
-            ]
-        );
-
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
         return CcamsSquawkAssignment::create(
             [
                 'callsign' => $callsign,

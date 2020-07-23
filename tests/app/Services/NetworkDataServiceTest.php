@@ -8,8 +8,10 @@ use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
 use Mockery;
+use PDOException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -20,6 +22,11 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
      */
     private $networkData;
 
+    /**
+     * @var NetworkDataService
+     */
+    private $service;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -27,6 +34,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'clients' => [
                 $this->getClientData('VIR25A', true),
                 $this->getClientData('BAW123', true),
+                $this->getClientData('RYR824', true),
                 $this->getClientData('LON_S_CTR', false),
             ]
         ];
@@ -43,53 +51,58 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $client->allows('get')->with(NetworkDataService::NETWORK_DATA_URL)->andReturn($mockMessage);
     }
 
-    public function testItAddsNewAircraft()
+    public function testItAddsNewAircraftFromDataFeed()
     {
         $this->withoutEvents();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
-                array_filter(
-                    $this->networkData['clients'][0],
-                    function ($value) { return $value !== 'clienttype';},
-                    ARRAY_FILTER_USE_KEY
-                ),
+                $this->getDataWithoutClientType('VIR25A'),
                 ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
             ),
         );
     }
 
-    public function testItUpdatesExistingAircraft()
+    public function testItUpdatesExistingAircraftFromDataFeed()
     {
         $this->withoutEvents();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
-                array_filter(
-                    $this->networkData['clients'][1],
-                    function ($value) { return $value !== 'clienttype';},
-                    ARRAY_FILTER_USE_KEY
-                ),
+                $this->getDataWithoutClientType('BAW123'),
                 ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
             ),
         );
     }
 
-    public function testItDoesntAddAtc()
+    public function testItUpdatesExistingAircraftOnTheGroundFromDataFeed()
+    {
+        $this->withoutEvents();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $this->getDataWithoutClientType('RYR824'),
+                ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
+            ),
+        );
+    }
+
+    public function testItDoesntAddAtcFromDataFeed()
     {
         $this->withoutEvents();
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(
             'network_aircraft',
-           [
-               'callsign' => 'LON_S_CTR'
-           ]
+            [
+                'callsign' => 'LON_S_CTR'
+            ]
         );
     }
 
-    public function testItTimesOutAircraft()
+    public function testItTimesOutAircraftFromDataFeed()
     {
         $this->expectsEvents(NetworkAircraftDisconnectedEvent::class);
         $this->service->updateNetworkData();
@@ -101,11 +114,254 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItFiresUpdatedEvents()
+    public function testItFiresUpdatedEventsOnDataFeed()
     {
         $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
         $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
         $this->service->updateNetworkData();
+    }
+
+    public function testItCreatesNetworkAircraft()
+    {
+        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123', $expectedData);
+        $expected = NetworkAircraft::find('AAL123');
+        $this->assertEquals($expected->toArray(), $actual->toArray());
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $expectedData,
+                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+            ),
+        );
+    }
+
+    public function testItCreatesNetworkAircraftCallsignOnly()
+    {
+        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
+        $expected = NetworkAircraft::find('AAL123');
+        $this->assertEquals($this->filterBySet($expected->toArray()), $actual->toArray());
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            [
+                'callsign' => 'AAL123',
+            ]
+        );
+    }
+
+    public function testItUpdatesNetworkAircraft()
+    {
+        $expectedData = $this->getDataWithoutClientType('AAL123');
+        NetworkAircraft::create($expectedData);
+        $actual = NetworkDataService::createOrUpdateNetworkAircraft(
+            'AAL123',
+            ['groundspeed' => '456789']
+        );
+        $expected = NetworkAircraft::find('AAL123');
+        $this->assertEquals($expected->toArray(), $actual->toArray());
+
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $expectedData,
+                [
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                    'groundspeed' => '456789'
+                ]
+            ),
+        );
+    }
+
+    public function testItUpdatesNetworkAircraftCallsignOnly()
+    {
+        $expectedData = $this->getDataWithoutClientType('AAL123');
+        NetworkAircraft::create($expectedData);
+        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
+        $expected = NetworkAircraft::find('AAL123');
+        $this->assertEquals($expected->toArray(), $actual->toArray());
+
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $expectedData,
+                [
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]
+            ),
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testItReturnsExistingModelIfDuplicateInsert()
+    {
+        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
+        $mock->shouldReceive('updateOrCreate')
+            ->andReturnUsing(
+                function () {
+                    $pdoException = new PDOException();
+                    $pdoException->errorInfo = [1 => 1062];
+                    throw new QueryException('', [], $pdoException);
+                }
+            );
+        $original = new NetworkAircraft(['callsign' => 'AAL123']);
+        $mock->shouldReceive('find')->andReturn($original);
+
+        $this->assertEquals($original, NetworkDataService::createOrUpdateNetworkAircraft('AAL123'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testItThrowsQueryExceptionIfNotDuplicateViolation()
+    {
+        $this->expectException(QueryException::class);
+        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
+        $mock->shouldReceive('updateOrCreate')
+            ->andReturnUsing(
+                function () {
+                    $pdoException = new PDOException();
+                    $pdoException->errorInfo = [1 => 9999];
+                    throw new QueryException('', [], $pdoException);
+                }
+            );
+        $original = new NetworkAircraft(['callsign' => 'AAL123']);
+        $mock->shouldReceive('find')->andReturn($original);
+
+        NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
+    }
+
+    public function testItCreatesNetworkAircraftInFirstOrCreate()
+    {
+        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $actual = NetworkDataService::firstOrCreateNetworkAircraft('AAL123', $expectedData);
+        $expected = NetworkAircraft::find('AAL123');
+        $this->assertEquals($expected->toArray(), $actual->toArray());
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $expectedData,
+                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+            ),
+        );
+    }
+
+    public function testItCreatesNetworkAircraftInFirstOrCreateCallsignOnly()
+    {
+        $actual = NetworkDataService::firstOrCreateNetworkAircraft('AAL123');
+        $expected = NetworkAircraft::find('AAL123');
+        $this->assertEquals($this->filterBySet($expected->toArray()), $actual->toArray());
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                ['callsign' => 'AAL123'],
+                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+            ),
+        );
+    }
+
+    public function testItFindsNetworkAircraftFirstOrCreateWithData()
+    {
+        Carbon::setTestNow(Carbon::now());
+        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expected = NetworkAircraft::create($expectedData);
+        $expected->created_at = Carbon::now()->subHour(2);
+        $expected->updated_at = Carbon::now()->subHour(1);
+        $expected->save();
+        $expected->refresh();
+        $this->assertEquals(
+            $this->filterBySet($expected->toArray()),
+            NetworkDataService::firstOrCreateNetworkAircraft(
+                'AAL123',
+                ['groundspeed' => '234567']
+            )->toArray()
+        );
+
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $expectedData,
+                [
+                    'created_at' => Carbon::now()->subHour(2)->toDateTimeString(),
+                    'updated_at' => Carbon::now()->subHour(1)->toDateTimeString(),
+                ]
+            ),
+        );
+    }
+
+    public function testItFindsNetworkAircraftFirstOrCreateCallsignOnly()
+    {
+        Carbon::setTestNow(Carbon::now());
+        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expected = NetworkAircraft::create($expectedData);
+        $expected->created_at = Carbon::now()->subHour(2);
+        $expected->updated_at = Carbon::now()->subHour(1);
+        $expected->save();
+        $expected->refresh();
+
+        $this->assertEquals(
+            $this->filterBySet($expected->toArray()),
+            NetworkDataService::firstOrCreateNetworkAircraft('AAL123')->toArray()
+        );
+
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $expectedData,
+                [
+                    'created_at' => Carbon::now()->subHour(2)->toDateTimeString(),
+                    'updated_at' => Carbon::now()->subHour(1)->toDateTimeString(),
+                ]
+            ),
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testItReturnsExistingModelIfDuplicateInsertOnFirstOrCreate()
+    {
+        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
+        $mock->shouldReceive('firstOrCreate')
+            ->andReturnUsing(
+                function () {
+                    $pdoException = new PDOException();
+                    $pdoException->errorInfo = [1 => 1062];
+                    throw new QueryException('', [], $pdoException);
+                }
+            );
+        $original = new NetworkAircraft(['callsign' => 'AAL123']);
+        $mock->shouldReceive('find')->andReturn($original);
+
+        $this->assertEquals($original, NetworkDataService::firstOrCreateNetworkAircraft('AAL123'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testItThrowsQueryExceptionIfNotDuplicateViolationOnFirstOrCreate()
+    {
+        $this->expectException(QueryException::class);
+        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
+        $mock->shouldReceive('firstOrCreate')
+            ->andReturnUsing(
+                function () {
+                    $pdoException = new PDOException();
+                    $pdoException->errorInfo = [1 => 9999];
+                    throw new QueryException('', [], $pdoException);
+                }
+            );
+        $original = new NetworkAircraft(['callsign' => 'AAL123']);
+        $mock->shouldReceive('find')->andReturn($original);
+
+        NetworkDataService::firstOrCreateNetworkAircraft('AAL123');
     }
 
     private function getClientData(string $callsign, bool $isAircraft): array
@@ -125,5 +381,26 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'planned_flighttype' => 'I',
             'planned_route' => 'DIRECT',
         ];
+    }
+
+    private function getDataWithoutClientType(string $callsign): array
+    {
+        return array_filter(
+            $this->getClientData($callsign, true),
+            function ($value) {
+                return $value !== 'clienttype';
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+    }
+
+    private function filterBySet(array $data): array
+    {
+        return array_filter(
+            $data,
+            function ($value) {
+                return isset($value);
+            }
+        );
     }
 }
