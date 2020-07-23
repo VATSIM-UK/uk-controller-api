@@ -13,7 +13,7 @@ class CreateEnrouteReleaseHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('enroute_release_history', function (Blueprint $table) {
+        Schema::create('enroute_releases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('enroute_release_type_id')->comment('The type of release');
             $table->string('callsign')->comment('Which aircraft was the release for');
@@ -33,6 +33,6 @@ class CreateEnrouteReleaseHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('enroute_release_history');
+        Schema::dropIfExists('enroute_releases');
     }
 }
