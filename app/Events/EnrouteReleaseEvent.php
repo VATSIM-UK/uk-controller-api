@@ -25,6 +25,7 @@ class EnrouteReleaseEvent implements ShouldBroadcast
             'callsign' => $this->release->callsign,
             'type' => $this->release->enroute_release_type_id,
             'release_point' => $this->release->release_point,
+            'target_controller' => $this->release->receiving_controller
         ];
     }
 
