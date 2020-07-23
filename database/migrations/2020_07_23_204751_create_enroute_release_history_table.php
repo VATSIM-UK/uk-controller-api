@@ -19,6 +19,7 @@ class CreateEnrouteReleaseHistoryTable extends Migration
             $table->string('callsign')->comment('Which aircraft was the release for');
             $table->string('initiating_controller')->comment('Who initiated the release');
             $table->string('receiving_controller')->comment('Who received the release');
+            $table->string('release_point')->comment('The point at which the release takes effect');
             $table->unsignedInteger('user_id')->comment('Which user initiated the release');
             $table->timestamp('released_at');
 
