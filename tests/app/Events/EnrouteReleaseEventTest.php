@@ -40,7 +40,7 @@ class EnrouteReleaseEventTest extends BaseFunctionalTestCase
 
     public function testItBroadcastsToCorrectChannel()
     {
-        $this->assertEquals('controller_LON_S_CTR', $this->event->broadcastOn());
+        $this->assertEquals('enroute-releases', $this->event->broadcastOn());
     }
 
     public function testItBroadcastsWithData()

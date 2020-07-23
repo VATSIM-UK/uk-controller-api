@@ -7,6 +7,8 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class EnrouteReleaseEvent implements ShouldBroadcast
 {
+    const CHANNEL = 'enroute-releases';
+
     /**
      * @var EnrouteRelease
      */
@@ -28,9 +30,6 @@ class EnrouteReleaseEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return sprintf(
-            'controller_%s',
-            $this->release->receiving_controller
-        );
+        return self::CHANNEL;
     }
 }
