@@ -48,4 +48,9 @@ class NetworkAircraft extends Model
     {
         return $this->hasMany(NetworkAircraftFirEvent::class, 'callsign', 'callsign');
     }
+
+    public function getSquawkAttribute(): string
+    {
+        return $this->attributes['transponder'];
+    }
 }

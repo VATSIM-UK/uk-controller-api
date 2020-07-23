@@ -7,6 +7,8 @@ use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
+use App\Models\Squawk\Reserved\ReservedSquawkCode;
+use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -137,5 +139,60 @@ class SquawkService
         return array_map(function (SquawkAllocatorInterface $allocator) {
             return get_class($allocator);
         }, $this->allocators);
+    }
+
+    public function reserveSquawkForAircraft(string $callsign): void
+    {
+        DB::transaction(function () use ($callsign) {
+            $aircraft = NetworkAircraft::lockForUpdate()->find($callsign);
+
+            $currentAssignment = null;
+            $responsibleAllocator = null;
+            foreach ($this->allocators as $allocator) {
+                if (
+                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::GENERAL) &&
+                    ($currentAssignment = $allocator->fetch($callsign))
+                )  {
+                    // If the current assignment is what they're squawking, great, nothing to do.
+                    if ($currentAssignment->getCode() === $aircraft->squawk) {
+                        return;
+                    }
+
+                    $responsibleAllocator = $allocator;
+                    break;
+                }
+            }
+
+            // The current squawk has changed from what's assigned, so delete reallocate
+            $responsibleAllocator->delete($callsign);
+            event(new SquawkUnassignedEvent($callsign));
+
+            // The aircraft is squawking a reserved code, so we can't reserve it.
+            if (ReservedSquawkCode::where('code', $aircraft->squawk)->first()) {
+                return;
+            }
+
+            $allocationDetails = [
+                'callsign' => $callsign,
+                'origin' => $aircraft->planned_depairport,
+                'destination' => $aircraft->planned_destairport,
+            ];
+            $newAssignment = null;
+            foreach ($this->allocators as $allocator) {
+                if (
+                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::GENERAL) &&
+                    $newAssignment = $allocator->allocate($callsign, $allocationDetails)
+                ) {
+                    break;
+                }
+            }
+
+            // Register the new assignment if we can
+            if (is_null($newAssignment)) {
+                return;
+            }
+
+            event(new SquawkAssignmentEvent($newAssignment));
+        });
     }
 }
