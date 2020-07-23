@@ -223,6 +223,9 @@ Route::middleware('public')->group(function () {
     // Navaids
     Route::get('navaid/dependency', 'NavaidController');
 
+    // Enroute releases
+    Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
+
     // Admin login
     Route::prefix('admin')->group(function () {
         Route::post('login', 'UserController@adminLogin');
