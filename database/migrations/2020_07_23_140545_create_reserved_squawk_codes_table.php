@@ -18,7 +18,7 @@ class CreateReservedSquawkCodesTable extends Migration
             $table->string('code', 4)->comment('The code that is reserved');
             $table->string('description')->comment('Why is the code reserved');
 
-            $table->index('code');
+            $table->unique('code');
         });
     }
 
