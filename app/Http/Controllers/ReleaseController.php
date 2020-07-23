@@ -19,7 +19,7 @@ class ReleaseController extends BaseController
 
     public function enrouteRelease(Request $request): JsonResponse
     {
-        // Check that we have a valid squawk type
+        // Check that we have valid data and release type
         $invalidData = $this->checkForSuppliedData(
             $request,
             [
@@ -39,6 +39,7 @@ class ReleaseController extends BaseController
             return response()->json([], 404);
         }
 
+        // Record the release and broadcast the event
         $release = EnrouteRelease::create(
             [
                 'callsign' => $request->json('callsign'),
