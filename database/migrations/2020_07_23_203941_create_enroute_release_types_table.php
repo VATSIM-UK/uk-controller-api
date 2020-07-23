@@ -17,9 +17,6 @@ class CreateEnrouteReleaseTypesTable extends Migration
             $table->id();
             $table->string('tag_string')->comment('What to display in the TAG for this kind of release');
             $table->string('description')->comment('Description of the release to be shown in the plugin');
-            $table->timestamps();
-
-            $table->unique('key');
         });
     }
 
