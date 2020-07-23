@@ -14,15 +14,14 @@ class EnrouteRelease extends Model
 
     protected $fillable = [
         'callsign',
+        'enroute_release_type_id',
         'initiating_controller',
         'receiving_controller',
+        'release_point',
         'user_id',
     ];
 
-    /**
-     * @return BelongsTo
-     */
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
