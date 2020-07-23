@@ -116,7 +116,7 @@ class SquawkService
                     $allocator->canAllocateForCategory($category) &&
                     $assignment = $allocator->allocate($callsign, $details)
                 ) {
-                    return $assignment;
+                    return;
                 }
             }
         });
