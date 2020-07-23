@@ -48,9 +48,6 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
             function () use (&$assignment, $callsign, $details) {
                 $this->getPossibleRangesForFlight($details['origin'])->each(
                     function (OrcamSquawkRange $range) use (&$assignment, $callsign) {
-                        // Lock range to prevent additional inserts
-                        OrcamSquawkRange::lockForUpdate()->find($range->id);
-
                         $allSquawks = $range->getAllSquawksInRange();
                         $possibleSquawks = $allSquawks->diff(
                             OrcamSquawkAssignment::whereIn('code', $allSquawks)

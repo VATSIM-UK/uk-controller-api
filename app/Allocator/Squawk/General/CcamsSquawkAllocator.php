@@ -21,9 +21,6 @@ class CcamsSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
             function () use (&$assignment, $callsign) {
                 CcamsSquawkRange::all()->shuffle()->each(
                     function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
-                        // Lock the range so duplicate squawk allocations cannot happen
-                        CcamsSquawkRange::lockForUpdate()->find($range->id);
-
                         $squawks = $range->getAllSquawksInRange();
                         $possibleSquawks = $squawks->diff(
                             CcamsSquawkAssignment::whereIn('code', $squawks)->pluck('code')->all()

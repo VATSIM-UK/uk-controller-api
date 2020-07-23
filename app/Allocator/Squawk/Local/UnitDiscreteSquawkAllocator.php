@@ -74,9 +74,6 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator implements Squ
                         &$assignment,
                         $callsign
                     ) {
-                        // Lock the range to prevent duplicate inserts
-                        UnitDiscreteSquawkRange::lockForUpdate()->find($range->id);
-
                         $allSquawks = $range->getAllSquawksInRange();
                         $possibleSquawks = $allSquawks->diff(
                             UnitDiscreteSquawkAssignment::whereIn('code', $allSquawks)
