@@ -16,12 +16,24 @@ class AddReservedSquawkCodeData extends Migration
             ->insert(
                 [
                     [
+                        'code' => '7500',
+                        'description' => 'Never to be used on the VATSIM network',
+                    ],
+                    [
+                        'code' => '7600',
+                        'description' => 'Radio failure',
+                    ],
+                    [
+                        'code' => '7700',
+                        'description' => 'Mayday',
+                    ],
+                    [
                         'code' => '7000',
-                        'description' => 'VFR Conspicuity in the United Kingdom'
+                        'description' => 'VFR Conspicuity in the United Kingdom',
                     ],
                     [
                         'code' => '2000',
-                        'description' => 'IFR Conspicuity in the United Kingdom'
+                        'description' => 'IFR Conspicuity in the United Kingdom',
                     ],
                     [
                         'code' => '2200',
@@ -30,6 +42,14 @@ class AddReservedSquawkCodeData extends Migration
                     [
                         'code' => '1200',
                         'description' => 'Default code on pilot clients',
+                    ],
+                    [
+                        'code' => '0',
+                        'description' => 'Sometimes appears in VATSIM data feed',
+                    ],
+                    [
+                        'code' => '9999',
+                        'description' => 'Sometimes appears in VATSIM data feed',
                     ],
                 ],
             );
