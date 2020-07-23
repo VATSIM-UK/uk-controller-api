@@ -15,6 +15,6 @@ Broadcast::channel('rps-updates', function (User $user) {
     return $user->exists();
 });
 
-Broadcast::channel('notifications-{position}', function (User $user) {
+Broadcast::channel('controller_{position}', function (User $user) {
     return $user->exists();
 });
