@@ -54,6 +54,9 @@ Route::middleware('plugin.user')->group(function () {
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+
+    // Enroute releases
+    Route::post('release/enroute', 'ReleaseController@enrouteRelease');
 });
 
 // Routes for user administration
