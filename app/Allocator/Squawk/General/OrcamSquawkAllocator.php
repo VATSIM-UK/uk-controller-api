@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class OrcamSquawkAllocator implements SquawkAllocatorInterface
+class OrcamSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
 {
     /**
      * Generate rules to match flights by their origin in order
@@ -60,13 +60,7 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
                             return true;
                         }
 
-                        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-                        $assignment = OrcamSquawkAssignment::create(
-                            [
-                                'callsign' => $callsign,
-                                'code' => $possibleSquawks->first(),
-                            ]
-                        );
+                        $assignment = $this->assignSquawk($possibleSquawks->first(), $callsign);
                         return false;
                     }
                 );
@@ -89,5 +83,41 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
     public function canAllocateForCategory(string $category): bool
     {
         return $category === SquawkAssignmentCategories::GENERAL;
+    }
+
+    public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface
+    {
+        $assignment = null;
+        OrcamSquawkRange::all()->each(
+            function (OrcamSquawkRange $range) use ($code, $callsign, &$assignment) {
+                if ($range->squawkInRange($code)) {
+                    // Lock the range to prevent a dupe assignment
+                    OrcamSquawkRange::lockForUpdate($range->id)->first();
+
+                    // Assign the code, if we can.
+                    if (!OrcamSquawkAssignment::where('code', $code)->first()) {
+                        $assignment = $this->assignSquawk($code, $callsign);
+                    }
+
+                    // In any case, if we've found the range with the code, we shouldn't try others.
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+        return $assignment;
+    }
+
+    private function assignSquawk(string $squawk, string $callsign): OrcamSquawkAssignment
+    {
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        return OrcamSquawkAssignment::create(
+            [
+                'callsign' => $callsign,
+                'code' => $squawk
+            ]
+        );
     }
 }

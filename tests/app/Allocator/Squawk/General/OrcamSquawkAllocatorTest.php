@@ -192,4 +192,27 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItAssignsToCallsignIfFree()
+    {
+        $this->createSquawkRange('L', '0001', '0007');
+        $this->assertEquals('0002', $this->allocator->assignToCallsign('0002', 'RYR111')->getCode());
+        $this->assertSquawkAssigned('RYR111', '0002');
+    }
+
+    public function testItDoesntAssignIfNotInRange()
+    {
+        $this->createSquawkRange('L', '0001', '0007');
+        $this->assertNull($this->allocator->assignToCallsign('RYR111', '0010'));
+        $this->assertSquawkNotAsssigned('RYR111');
+    }
+
+    public function testItDoesntAssignIfAlreadyAssigned()
+    {
+        $this->createSquawkAssignment('RYR234', '0001');
+        $this->createSquawkRange('L', '0001', '0007');
+        $this->assertNull($this->allocator->assignToCallsign('RYR111', '0001'));
+        $this->assertSquawkNotAsssigned('RYR111');
+        $this->assertSquawkAssigned('RYR234', '0001');
+    }
 }
