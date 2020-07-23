@@ -2,6 +2,7 @@
 
 namespace App\Allocator\Squawk\General;
 
+use App\Allocator\Squawk\AbstractSquawkAllocator;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class OrcamSquawkAllocator implements SquawkAllocatorInterface
+class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
     /**
      * Generate rules to match flights by their origin in order
@@ -89,5 +90,28 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface
     public function canAllocateForCategory(string $category): bool
     {
         return $category === SquawkAssignmentCategories::GENERAL;
+    }
+
+    /**
+     * @param string $callsign
+     * @param \Illuminate\Support\Collection $possibleSquawks
+     * @return SquawkAssignmentInterface|null
+     */
+    private function assignSquawkFromAvailableCodes(
+        string $callsign,
+        Collection $possibleSquawks
+    ): ?SquawkAssignmentInterface {
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        return $this->assignSquawk(
+            function (string $code) use ($callsign) {
+                return OrcamSquawkAssignment::updateOrCreate(
+                    [
+                        'callsign' => $callsign,
+                        'code' => $code,
+                    ]
+                );
+            },
+            $possibleSquawks
+        );
     }
 }

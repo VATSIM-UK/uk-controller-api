@@ -2,15 +2,17 @@
 
 namespace App\Allocator\Squawk\General;
 
+use App\Allocator\Squawk\AbstractSquawkAllocator;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Services\NetworkDataService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class CcamsSquawkAllocator implements SquawkAllocatorInterface
+class CcamsSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
@@ -31,12 +33,9 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface
                             return true;
                         }
 
-                        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-                        $assignment = CcamsSquawkAssignment::create(
-                            [
-                                'callsign' => $callsign,
-                                'code' => $possibleSquawks->first()
-                            ]
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            $possibleSquawks
                         );
                         return false;
                     }
@@ -60,5 +59,28 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface
     public function canAllocateForCategory(string $category): bool
     {
         return $category === SquawkAssignmentCategories::GENERAL;
+    }
+
+    /**
+     * @param string $callsign
+     * @param Collection $possibleSquawks
+     * @return SquawkAssignmentInterface|null
+     */
+    private function assignSquawkFromAvailableCodes(
+        string $callsign,
+        Collection $possibleSquawks
+    ): ?SquawkAssignmentInterface {
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        return $this->assignSquawk(
+            function (string $code) use ($callsign) {
+                return CcamsSquawkAssignment::updateOrCreate(
+                    [
+                        'callsign' => $callsign,
+                        'code' => $code,
+                    ]
+                );
+            },
+            $possibleSquawks
+        );
     }
 }

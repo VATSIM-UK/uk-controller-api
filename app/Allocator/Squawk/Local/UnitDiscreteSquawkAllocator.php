@@ -2,6 +2,7 @@
 
 namespace App\Allocator\Squawk\Local;
 
+use App\Allocator\Squawk\AbstractSquawkAllocator;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
@@ -11,10 +12,11 @@ use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Services\ControllerService;
 use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
+class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
     private function getApplicableRanges(string $unit, array $details): Collection
     {
@@ -87,13 +89,10 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
                             return true;
                         }
 
-                        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-                        $assignment = UnitDiscreteSquawkAssignment::create(
-                            [
-                                'callsign' => $callsign,
-                                'unit' => $range->unit,
-                                'code' => $possibleSquawks->first(),
-                            ]
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            $range->unit,
+                            $possibleSquawks
                         );
                         return false;
                     }
@@ -117,5 +116,31 @@ class UnitDiscreteSquawkAllocator implements SquawkAllocatorInterface
     public function canAllocateForCategory(string $category): bool
     {
         return $category === SquawkAssignmentCategories::LOCAL;
+    }
+
+    /**
+     * @param string $callsign
+     * @param string $unit
+     * @param BaseCollection $possibleSquawks
+     * @return SquawkAssignmentInterface|null
+     */
+    private function assignSquawkFromAvailableCodes(
+        string $callsign,
+        string $unit,
+        BaseCollection $possibleSquawks
+    ): ?SquawkAssignmentInterface {
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        return $this->assignSquawk(
+            function (string $code) use ($callsign, $unit) {
+                return UnitDiscreteSquawkAssignment::updateOrCreate(
+                    [
+                        'callsign' => $callsign,
+                        'unit' => $unit,
+                        'code' => $code,
+                    ]
+                );
+            },
+            $possibleSquawks
+        );
     }
 }
