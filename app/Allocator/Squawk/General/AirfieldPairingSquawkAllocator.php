@@ -7,7 +7,7 @@ use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkAssignment;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
-use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -61,12 +61,7 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface
                             return true;
                         }
 
-                        NetworkAircraft::firstOrCreate(
-                            [
-                                'callsign' => $callsign,
-                            ]
-                        );
-
+                        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
                         $assignment = AirfieldPairingSquawkAssignment::create(
                             [
                                 'callsign' => $callsign,
