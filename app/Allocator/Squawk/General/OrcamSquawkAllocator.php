@@ -12,6 +12,7 @@ use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection as BaseCollection;
 
 class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
@@ -58,12 +59,9 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
                             return true;
                         }
 
-                        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-                        $assignment = OrcamSquawkAssignment::create(
-                            [
-                                'callsign' => $callsign,
-                                'code' => $possibleSquawks->first(),
-                            ]
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            $possibleSquawks
                         );
                         return false;
                     }
@@ -91,12 +89,12 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
 
     /**
      * @param string $callsign
-     * @param \Illuminate\Support\Collection $possibleSquawks
+     * @param BaseCollection $possibleSquawks
      * @return SquawkAssignmentInterface|null
      */
     private function assignSquawkFromAvailableCodes(
         string $callsign,
-        Collection $possibleSquawks
+        BaseCollection $possibleSquawks
     ): ?SquawkAssignmentInterface {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
         return $this->assignSquawk(
