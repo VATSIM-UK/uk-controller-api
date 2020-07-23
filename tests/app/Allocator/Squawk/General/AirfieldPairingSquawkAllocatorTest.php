@@ -39,6 +39,16 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertSquawkAssigned('BMI11A', '7203');
     }
 
+    public function testItReturnsNullOnAllSquawksAllocated()
+    {
+        $this->createSquawkRange('EGGD', 'EGFF', '7201', '7202');
+        $this->createSquawkAssignment('VIR25F', '7201');
+        $this->createSquawkAssignment('BAW92A', '7202');
+
+        $this->assertNull($this->allocator->allocate('BMI11A', []));
+        $this->assertSquawkNotAsssigned('BMI11A');
+    }
+
     public function testItReturnsNullNoApplicableRange()
     {
         $this->createSquawkRange('EGGD', 'EGFF', '7201', '7210');

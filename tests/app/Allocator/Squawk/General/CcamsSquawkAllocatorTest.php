@@ -33,14 +33,26 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertSquawkAssigned('BMI11A', '7203');
     }
 
+    public function testItReturnsNullOnAllSquawksAllocated()
+    {
+        $this->createSquawkRange('7201', '7202');
+        $this->createSquawkAssignment('VIR25F', '7201');
+        $this->createSquawkAssignment('BAW92A', '7202');
+
+        $this->assertNull($this->allocator->allocate('BMI11A', []));
+        $this->assertSquawkNotAsssigned('BMI11A');
+    }
+
     public function testItReturnsNullOnNoApplicableRange()
     {
         $this->assertNull($this->allocator->allocate('BMI11A', []));
+        $this->assertSquawkNotAsssigned('BMI11A');
     }
 
     public function testItReturnsNullIfAllocationFails()
     {
         $this->assertNull($this->allocator->allocate('BAW123', []));
+        $this->assertSquawkNotAsssigned('BMI11A');
     }
 
     public function testItReturnsNullIfAllocationNotFound()
@@ -68,7 +80,6 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
     {
         $this->assertFalse($this->allocator->delete('LALALA'));
     }
-
 
     /**
      * @dataProvider categoryProvider
