@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
-class ReserveSquawkIfInFirProximity
+class ReserveInFirProximity
 {
     const MIN_DISTANCE = 600.0;
     const CONSISTENT_SQUAWK_MINUTES = 2;
@@ -66,7 +66,7 @@ class ReserveSquawkIfInFirProximity
 
             // If the aircraft is close enough, lets try to reserve the squawk
             $this->squawkService->reserveSquawkForAircraft($aircraft->callsign);
-            break;
+            return true;
         }
 
         return true;

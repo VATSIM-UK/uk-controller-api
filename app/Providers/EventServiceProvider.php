@@ -15,7 +15,7 @@ use App\Listeners\Hold\UnassignHoldOnDisconnect;
 use App\Listeners\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Listeners\Squawk\MarkAssignmentDeletedOnUnassignment;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
-use App\Listeners\Squawk\ReserveSquawkIfInFirProximity;
+use App\Listeners\Squawk\ReserveInFirProximity;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -44,7 +44,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         NetworkAircraftUpdatedEvent::class => [
             RecordFirEntry::class,
-            ReserveSquawkIfInFirProximity::class,
+            ReserveInFirProximity::class,
         ],
     ];
 }
