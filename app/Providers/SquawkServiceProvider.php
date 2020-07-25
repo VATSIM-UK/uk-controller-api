@@ -35,6 +35,7 @@ class SquawkServiceProvider extends ServiceProvider
 
         $this->app->singleton(ReserveSquawkIfInFirProximity::class, function (Application $app) {
             return new ReserveSquawkIfInFirProximity(
+                $app->make(SquawkService::class),
                 [
                     SectorfileService::coordinateFromSectorfile('N053.35.13.000', 'W001.18.03.000'), // EGTT - UPTON
                     SectorfileService::coordinateFromSectorfile('N052.08.31.000', 'W002.03.38.000'), // EGTT - LUXTO
