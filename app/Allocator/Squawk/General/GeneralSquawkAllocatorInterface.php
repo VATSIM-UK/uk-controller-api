@@ -2,9 +2,10 @@
 
 namespace App\Allocator\Squawk\General;
 
+use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 
-interface GeneralSquawkAllocatorInterface
+interface GeneralSquawkAllocatorInterface extends SquawkAllocatorInterface
 {
     /**
      * Returns whether or not the code is allocated.

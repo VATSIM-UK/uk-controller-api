@@ -126,15 +126,23 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         $this->assertEquals('BAW123', $assignment->getCallsign());
     }
 
-    public function testDefaultAllocatorPreference()
+    public function testDefaultGeneralAllocatorPreference()
     {
         $expected = [
-            UnitDiscreteSquawkAllocator::class,
             AirfieldPairingSquawkAllocator::class,
             OrcamSquawkAllocator::class,
             CcamsSquawkAllocator::class,
         ];
 
-        $this->assertEquals($expected, $this->squawkService->getAllocatorPreference());
+        $this->assertEquals($expected, $this->squawkService->getGeneralAllocatorPreference());
+    }
+
+    public function testDefaultLocalAllocatorPreference()
+    {
+        $expected = [
+            UnitDiscreteSquawkAllocator::class,
+        ];
+
+        $this->assertEquals($expected, $this->squawkService->getLocalAllocatorPreference());
     }
 }

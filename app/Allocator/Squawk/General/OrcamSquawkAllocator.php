@@ -3,8 +3,6 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
-use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
@@ -15,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection as BaseCollection;
 
 class OrcamSquawkAllocator extends AbstractSquawkAllocator
-    implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
+    implements GeneralSquawkAllocatorInterface
 {
     /**
      * Generate rules to match flights by their origin in order
@@ -81,11 +79,6 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator
     public function fetch(string $callsign): ?SquawkAssignmentInterface
     {
         return OrcamSquawkAssignment::find($callsign);
-    }
-
-    public function canAllocateForCategory(string $category): bool
-    {
-        return $category === SquawkAssignmentCategories::GENERAL;
     }
 
     public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface

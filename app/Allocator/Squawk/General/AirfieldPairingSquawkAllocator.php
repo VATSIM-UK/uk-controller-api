@@ -3,8 +3,6 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
-use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkAssignment;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
@@ -14,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator
-    implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
+    implements GeneralSquawkAllocatorInterface
 {
     private function getPossibleRangesForFlight(string $origin, string $destination): Collection
     {
@@ -81,11 +79,6 @@ class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator
     public function fetch(string $callsign): ?SquawkAssignmentInterface
     {
         return AirfieldPairingSquawkAssignment::find($callsign);
-    }
-
-    public function canAllocateForCategory(string $category): bool
-    {
-        return $category === SquawkAssignmentCategories::GENERAL;
     }
 
     public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface

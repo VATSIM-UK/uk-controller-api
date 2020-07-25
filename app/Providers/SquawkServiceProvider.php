@@ -21,10 +21,12 @@ class SquawkServiceProvider extends ServiceProvider
             // Add the squawk allocation rules, in the order of preference
             return new SquawkService(
                 [
-                    $app->make(UnitDiscreteSquawkAllocator::class),
                     $app->make(AirfieldPairingSquawkAllocator::class),
                     $app->make(OrcamSquawkAllocator::class),
                     $app->make(CcamsSquawkAllocator::class),
+                ],
+                [
+                    $app->make(UnitDiscreteSquawkAllocator::class),
                 ]
             );
         });

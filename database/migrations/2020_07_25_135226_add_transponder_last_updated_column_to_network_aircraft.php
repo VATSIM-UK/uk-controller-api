@@ -14,11 +14,11 @@ class AddTransponderLastUpdatedColumnToNetworkAircraft extends Migration
     public function up()
     {
         Schema::table('network_aircraft', function (Blueprint $table) {
-            $table->timestamp('transponder_last_updated')
+            $table->timestamp('transponder_last_updated_at')
                 ->after('transponder')
                 ->comment('The last time the transponder code was updated');
 
-            $table->index('transponder_last_updated');
+            $table->index('transponder_last_updated_at');
         });
     }
 
@@ -30,7 +30,7 @@ class AddTransponderLastUpdatedColumnToNetworkAircraft extends Migration
     public function down()
     {
         Schema::table('network_aircraft', function (Blueprint $table) {
-            $table->dropColumn('transponder_last_updated');
+            $table->dropColumn('transponder_last_updated_at');
         });
     }
 }

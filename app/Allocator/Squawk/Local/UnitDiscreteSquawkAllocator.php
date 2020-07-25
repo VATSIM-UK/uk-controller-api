@@ -3,7 +3,6 @@
 namespace App\Allocator\Squawk\Local;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkAssignment;
@@ -108,11 +107,6 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator implements Squ
     public function fetch(string $callsign): ?SquawkAssignmentInterface
     {
         return UnitDiscreteSquawkAssignment::find($callsign);
-    }
-
-    public function canAllocateForCategory(string $category): bool
-    {
-        return $category === SquawkAssignmentCategories::LOCAL;
     }
 
     /**

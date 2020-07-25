@@ -133,23 +133,6 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertFalse($this->allocator->delete('LALALA'));
     }
 
-
-    /**
-     * @dataProvider categoryProvider
-     */
-    public function testItAllocatesCategories(string $category, bool $expected)
-    {
-        $this->assertEquals($expected, $this->allocator->canAllocateForCategory($category));
-    }
-
-    public function categoryProvider(): array
-    {
-        return [
-            [SquawkAssignmentCategories::GENERAL, true],
-            [SquawkAssignmentCategories::LOCAL, false],
-        ];
-    }
-
     private function createSquawkRange(
         string $origin,
         string $first,

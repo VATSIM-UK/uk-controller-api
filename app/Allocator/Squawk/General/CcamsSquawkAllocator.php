@@ -3,8 +3,6 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
-use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
@@ -13,7 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class CcamsSquawkAllocator extends AbstractSquawkAllocator
-    implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
+    implements GeneralSquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
@@ -52,11 +50,6 @@ class CcamsSquawkAllocator extends AbstractSquawkAllocator
     public function fetch(string $callsign): ?SquawkAssignmentInterface
     {
         return CcamsSquawkAssignment::find($callsign);
-    }
-
-    public function canAllocateForCategory(string $category): bool
-    {
-        return $category === SquawkAssignmentCategories::GENERAL;
     }
 
     public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface

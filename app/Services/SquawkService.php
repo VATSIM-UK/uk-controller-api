@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use App\Allocator\Squawk\General\GeneralSquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use App\Models\Squawk\Reserved\ReservedSquawkCode;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -21,19 +22,27 @@ use Illuminate\Support\Facades\DB;
 class SquawkService
 {
     /**
+     * @var GeneralSquawkAllocatorInterface[]
+     */
+    private $generalAllocators;
+
+    /**
      * @var SquawkAllocatorInterface[]
      */
-    private $allocators;
+    private $localAllocators;
 
     /**
      * Constructor
      *
-     * @param SquawkAllocatorInterface[] $allocators
+     * @param GeneralSquawkAllocatorInterface[] $generalAllocators
+     * @param SquawkAllocatorInterface[] $localAllocators
      */
     public function __construct(
-        array $allocators
+        array $generalAllocators,
+        array $localAllocators
     ) {
-        $this->allocators = $allocators;
+        $this->generalAllocators = $generalAllocators;
+        $this->localAllocators = $localAllocators;
     }
 
     /**
@@ -44,7 +53,7 @@ class SquawkService
      */
     public function deleteSquawkAssignment(string $callsign): bool
     {
-        foreach ($this->allocators as $allocator) {
+        foreach ($this->generalAllocators as $allocator) {
             if ($allocator->delete($callsign)) {
                 event(new SquawkUnassignedEvent($callsign));
                 return true;
@@ -63,7 +72,7 @@ class SquawkService
     public function getAssignedSquawk(string $callsign): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        foreach ($this->allocators as $allocator) {
+        foreach ($this->generalAllocators as $allocator) {
             if ($assignment = $allocator->fetch($callsign)) {
                 break;
             }
@@ -83,7 +92,7 @@ class SquawkService
     {
         return $this->assignSquawk(
             $callsign,
-            SquawkAssignmentCategories::LOCAL,
+            $this->localAllocators,
             ['unit' => $unit, 'rules' => $rules]
         );
     }
@@ -103,21 +112,18 @@ class SquawkService
     ): ?SquawkAssignmentInterface {
         return $this->assignSquawk(
             $callsign,
-            SquawkAssignmentCategories::GENERAL,
+            $this->generalAllocators,
             ['origin' => $origin, 'destination' => $destination]
         );
     }
 
-    private function assignSquawk(string $callsign, string $category, array $details): ?SquawkAssignmentInterface
+    private function assignSquawk(string $callsign, array $allocators, array $details): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        DB::transaction(function () use ($callsign, $category, $details, &$assignment) {
+        DB::transaction(function () use ($callsign, $allocators, $details, &$assignment) {
             $this->deleteSquawkAssignment($callsign);
-            foreach ($this->allocators as $allocator) {
-                if (
-                    $allocator->canAllocateForCategory($category) &&
-                    $assignment = $allocator->allocate($callsign, $details)
-                ) {
+            foreach ($allocators as $allocator) {
+                if ($assignment = $allocator->allocate($callsign, $details)) {
                     return;
                 }
             }
@@ -134,11 +140,21 @@ class SquawkService
     /**
      * @return string[]
      */
-    public function getAllocatorPreference(): array
+    public function getGeneralAllocatorPreference(): array
+    {
+        return array_map(function (GeneralSquawkAllocatorInterface $allocator) {
+            return get_class($allocator);
+        }, $this->generalAllocators);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalAllocatorPreference(): array
     {
         return array_map(function (SquawkAllocatorInterface $allocator) {
             return get_class($allocator);
-        }, $this->allocators);
+        }, $this->localAllocators);
     }
 
     public function reserveSquawkForAircraft(string $callsign): void
@@ -148,13 +164,14 @@ class SquawkService
 
             $currentAssignment = null;
             $responsibleAllocator = null;
-            foreach ($this->allocators as $allocator) {
-                if (
-                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::GENERAL) &&
-                    ($currentAssignment = $allocator->fetch($callsign))
-                )  {
-                    // If the current assignment is what they're squawking, great, nothing to do.
-                    if ($currentAssignment->getCode() === $aircraft->squawk) {
+            foreach ($this->generalAllocators as $allocator) {
+                if ($currentAssignment = $allocator->fetch($callsign))  {
+                    // If the current assignment is what they're squawking, or the transponder
+                    // only changed recently (it may be a momentary change), then nothing to do.
+                    if (
+                        $currentAssignment->getCode() === $aircraft->squawk ||
+                        $aircraft->transponder_last_updated <= Carbon::now()->subMinutes(2)
+                    ) {
                         return;
                     }
 
@@ -163,7 +180,7 @@ class SquawkService
                 }
             }
 
-            // The current squawk has changed from what's assigned, so delete reallocate
+            // The current squawk has changed from what's assigned, so delete and reallocate
             $responsibleAllocator->delete($callsign);
             event(new SquawkUnassignedEvent($callsign));
 
@@ -178,9 +195,8 @@ class SquawkService
                 'destination' => $aircraft->planned_destairport,
             ];
             $newAssignment = null;
-            foreach ($this->allocators as $allocator) {
+            foreach ($this->generalAllocators as $allocator) {
                 if (
-                    $allocator->canAllocateForCategory(SquawkAssignmentCategories::GENERAL) &&
                     $newAssignment = $allocator->allocate($callsign, $allocationDetails)
                 ) {
                     break;
