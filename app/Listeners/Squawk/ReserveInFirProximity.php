@@ -6,6 +6,7 @@ use App\Events\NetworkAircraftUpdatedEvent;
 use App\Services\LocationService;
 use App\Services\SquawkService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
@@ -65,7 +66,34 @@ class ReserveInFirProximity
             }
 
             // If the aircraft is close enough, lets try to reserve the squawk
-            $this->squawkService->reserveSquawkForAircraft($aircraft->callsign);
+            $newAssignment = $this->squawkService->reserveSquawkForAircraft($aircraft->callsign);
+            if ($currentAssignment && $newAssignment) {
+                Log::info(
+                    sprintf(
+                        'Reclaiming squawk code %s from %s due to code change, new code %s was reserved',
+                        $currentAssignment->getCode(),
+                        $currentAssignment->getCallsign(),
+                        $newAssignment->getCode())
+                );
+            } else if ($currentAssignment && !$newAssignment) {
+                Log::info(
+                    sprintf(
+                        'Reclaiming squawk code %s from %s due to code change, no new code was reserved, transponder is %s',
+                        $currentAssignment->getCode(),
+                        $currentAssignment->getCallsign(),
+                        $aircraft->transponder
+                    )
+                );
+            } else if ($newAssignment) {
+                Log::info(
+                    sprintf(
+                        'Reserving squawk code %s for %s due to FIR proximity',
+                        $currentAssignment->getCode(),
+                        $currentAssignment->getCallsign()
+                    )
+                );
+            }
+
             return true;
         }
 

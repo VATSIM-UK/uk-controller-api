@@ -157,9 +157,10 @@ class SquawkService
         }, $this->localAllocators);
     }
 
-    public function reserveSquawkForAircraft(string $callsign): void
+    public function reserveSquawkForAircraft(string $callsign): SquawkAssignmentInterface
     {
-        DB::transaction(function () use ($callsign) {
+        $assignment = null;
+        DB::transaction(function () use ($callsign, &$assignment) {
             $aircraft = NetworkAircraft::find($callsign);
             if (!$aircraft) {
                 return;
@@ -203,5 +204,7 @@ class SquawkService
 
             event(new SquawkAssignmentEvent($newAssignment));
         });
+
+        return $assignment;
     }
 }
