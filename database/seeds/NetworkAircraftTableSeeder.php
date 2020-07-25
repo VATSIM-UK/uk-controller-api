@@ -12,8 +12,8 @@ class NetworkAircraftTableSeeder extends Seeder
             [
                 [
                     'callsign' => 'BAW123',
-                    'latitude' => 'abc',
-                    'longitude' => 'def',
+                    'latitude' => 54.66,
+                    'longitude'=> -6.21,
                     'altitude' => '35123',
                     'groundspeed' => '35123',
                     'planned_aircraft' => 'B738',
@@ -29,8 +29,8 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'BAW456',
-                    'latitude' => 'abc',
-                    'longitude' => 'def',
+                    'latitude' => 54.66,
+                    'longitude'=> -6.21,
                     'altitude' => '35123',
                     'groundspeed' => '35123',
                     'planned_aircraft' => 'B738',
@@ -46,8 +46,8 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'BAW789',
-                    'latitude' => 'abc',
-                    'longitude' => 'def',
+                    'latitude' => 54.66,
+                    'longitude'=> -6.21,
                     'altitude' => '35123',
                     'groundspeed' => '35123',
                     'planned_aircraft' => 'B738',
@@ -63,8 +63,8 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'RYR824',
-                    'latitude' => 'abc',
-                    'longitude' => 'def',
+                    'latitude' => 54.66,
+                    'longitude'=> -6.21,
                     'altitude' => '35123',
                     'groundspeed' => '123',
                     'planned_aircraft' => 'B738',

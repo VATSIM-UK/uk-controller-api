@@ -19,8 +19,8 @@ class ChangeNetworkAircraftCoordinateType extends Migration
         });
 
         Schema::table('network_aircraft', function (Blueprint $table) {
-            $table->float('latitude')->after('callsign')->comment('The aircrafts latitude');
-            $table->float('longitude')->after('latitude')->comment('The aircrafts longitude');
+            $table->float('latitude')->after('callsign')->default(0.0)->comment('The aircrafts latitude');
+            $table->float('longitude')->after('latitude')->default(0.0)->comment('The aircrafts longitude');
         });
     }
 
@@ -37,8 +37,8 @@ class ChangeNetworkAircraftCoordinateType extends Migration
         });
 
         Schema::table('network_aircraft', function (Blueprint $table) {
-            $table->string('latitude')->after('callsign')->comment('The aircrafts latitude');
-            $table->string('longitude')->after('latitude')->comment('The aircrafts longitude');
+            $table->string('latitude')->after('callsign')->default('0.0')->comment('The aircrafts latitude');
+            $table->string('longitude')->after('latitude')->default('0.0')->comment('The aircrafts longitude');
         });
     }
 }
