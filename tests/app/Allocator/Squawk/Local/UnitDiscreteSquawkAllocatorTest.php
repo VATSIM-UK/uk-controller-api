@@ -114,6 +114,16 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate('BMI11A', ['unit' => 'EGFF_APP']));
     }
 
+    public function testItReturnsNullOnAllSquawksAllocated()
+    {
+        $this->createSquawkRange('EGFF', '7201', '7202');
+        $this->createSquawkAssignment('VIR25F', 'EGFF', '7201');
+        $this->createSquawkAssignment('BAW92A', 'EGFF', '7202');
+
+        $this->assertNull($this->allocator->allocate('BMI11A', []));
+        $this->assertSquawkNotAsssigned('BMI11A');
+    }
+
     public function testItReturnsNullNoUnitProvided()
     {
         $this->assertNull($this->allocator->allocate('BMI11A', []));
@@ -142,12 +152,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->createSquawkAssignment('VIR25F', 'EGGD', '0001');
 
         $this->assertTrue($this->allocator->delete('VIR25F'));
-        $this->assertDatabaseMissing(
-            'unit_discrete_squawk_assignments',
-            [
-                'callsign' => 'VIR25F',
-            ]
-        );
+        $this->assertSquawkNotAsssigned('VIR25F');
     }
 
     public function testItReturnsFalseForNonDeletedAllocations()
@@ -201,6 +206,16 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
                 'callsign' => $callsign,
                 'unit' => $unit,
                 'code' => $code,
+            ]
+        );
+    }
+
+    private function assertSquawkNotAsssigned(string $callsign)
+    {
+        $this->assertDatabaseMissing(
+            'unit_discrete_squawk_assignments',
+            [
+                'callsign' => $callsign
             ]
         );
     }
