@@ -14,6 +14,8 @@ use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use TestingUtils\Traits\WithSeedUsers;
 
 class SquawkServiceTest extends BaseFunctionalTestCase
@@ -144,5 +146,154 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         ];
 
         $this->assertEquals($expected, $this->squawkService->getLocalAllocatorPreference());
+    }
+
+    public function testSquawkReservationDoesNothingIfAircraftNotOnline()
+    {
+        CcamsSquawkRange::create(
+            [
+                'first' => '0303',
+                'last' => '0303',
+            ]
+        );
+        $this->squawkService->reserveSquawkForAircraft('UAE4');
+        $this->assertDatabaseMissing(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'UAE4',
+            ]
+        );
+    }
+
+    public function testItReservesSquawkForAircraftNotCurrentlyAllocated()
+    {
+        $this->expectsEvents([SquawkAssignmentEvent::class]);
+        $this->doesntExpectEvents([SquawkUnassignedEvent::class]);
+        Carbon::setTestNow(Carbon::now());
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
+                'transponder' => '0303',
+                'planned_depairport' => 'EDDF',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+        OrcamSquawkRange::create(
+            [
+                'origin' => 'ED',
+                'first' => '0303',
+                'last' => '0303',
+            ]
+        );
+        $this->squawkService->reserveSquawkForAircraft('BAW123');
+        $this->assertDatabaseHas(
+            'orcam_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '0303'
+            ]
+        );
+    }
+
+    public function testItReservesSquawkForAircraftCurrentlyAllocated()
+    {
+        $this->expectsEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
+        Carbon::setTestNow(Carbon::now());
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
+                'transponder' => '0303',
+                'planned_depairport' => 'EDDF',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+        OrcamSquawkRange::create(
+            [
+                'origin' => 'ED',
+                'first' => '0303',
+                'last' => '0303',
+            ]
+        );
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '0101'
+            ]
+        );
+
+        $this->squawkService->reserveSquawkForAircraft('BAW123');
+        $this->assertDatabaseMissing(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+            ]
+        );
+        $this->assertDatabaseHas(
+            'orcam_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '0303'
+            ]
+        );
+    }
+
+    public function testItDoesNothingIfReservedSquawkBeingSquawked()
+    {
+        $this->doesntExpectEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
+        Carbon::setTestNow(Carbon::now());
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
+                'transponder' => '7000',
+                'planned_depairport' => 'EDDF',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+        OrcamSquawkRange::create(
+            [
+                'origin' => 'ED',
+                'first' => '7000',
+                'last' => '7000',
+            ]
+        );
+
+        $this->squawkService->reserveSquawkForAircraft('BAW123');
+
+        $this->assertDatabaseMissing(
+            'orcam_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+            ]
+        );
+    }
+
+    public function testItDoesNothingIfTransponderChangeRecent()
+    {
+        $this->doesntExpectEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
+        Carbon::setTestNow(Carbon::now());
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
+                'transponder' => '7000',
+                'planned_depairport' => 'EDDF',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+        OrcamSquawkRange::create(
+            [
+                'origin' => 'ED',
+                'first' => '7000',
+                'last' => '7000',
+            ]
+        );
+
+        $this->squawkService->reserveSquawkForAircraft('BAW123');
+
+        $this->assertDatabaseMissing(
+            'orcam_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+            ]
+        );
     }
 }

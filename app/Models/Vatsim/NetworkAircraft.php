@@ -31,6 +31,10 @@ class NetworkAircraft extends Model
         'planned_route',
     ];
 
+    protected $dates = [
+        'transponder_last_updated_at',
+    ];
+
     public static function boot()
     {
         parent::boot();

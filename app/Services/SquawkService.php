@@ -160,29 +160,21 @@ class SquawkService
     public function reserveSquawkForAircraft(string $callsign): void
     {
         DB::transaction(function () use ($callsign) {
-            $aircraft = NetworkAircraft::lockForUpdate()->find($callsign);
+            $aircraft = NetworkAircraft::find($callsign);
+            if (!$aircraft) {
+                return;
+            }
 
             $currentAssignment = null;
             $responsibleAllocator = null;
             foreach ($this->generalAllocators as $allocator) {
                 if ($currentAssignment = $allocator->fetch($callsign))  {
-                    // If the current assignment is what they're squawking, or the transponder
-                    // only changed recently (it may be a momentary change), then nothing to do.
-                    if (
-                        $currentAssignment->getCode() === $aircraft->squawk ||
-                        $aircraft->transponder_last_updated <= Carbon::now()->subMinutes(2)
-                    ) {
-                        return;
-                    }
-
-                    $responsibleAllocator = $allocator;
+                    // The current squawk has changed from what's assigned, so delete it
+                    $allocator->delete($callsign);
+                    event(new SquawkUnassignedEvent($callsign));
                     break;
                 }
             }
-
-            // The current squawk has changed from what's assigned, so delete and reallocate
-            $responsibleAllocator->delete($callsign);
-            event(new SquawkUnassignedEvent($callsign));
 
             // The aircraft is squawking a reserved code, so we can't reserve it.
             if (ReservedSquawkCode::where('code', $aircraft->squawk)->first()) {
@@ -190,10 +182,11 @@ class SquawkService
             }
 
             $allocationDetails = [
-                'callsign' => $callsign,
                 'origin' => $aircraft->planned_depairport,
                 'destination' => $aircraft->planned_destairport,
             ];
+
+            // Try and do a new allocation
             $newAssignment = null;
             foreach ($this->generalAllocators as $allocator) {
                 if (
