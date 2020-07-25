@@ -166,8 +166,6 @@ class SquawkService
                 return;
             }
 
-            $currentAssignment = null;
-            $responsibleAllocator = null;
             foreach ($this->generalAllocators as $allocator) {
                 if ($currentAssignment = $allocator->fetch($callsign)) {
                     // The current squawk has changed from what's assigned, so delete it
@@ -181,11 +179,6 @@ class SquawkService
             if (ReservedSquawkCode::where('code', $aircraft->squawk)->first()) {
                 return;
             }
-
-            $allocationDetails = [
-                'origin' => $aircraft->planned_depairport,
-                'destination' => $aircraft->planned_destairport,
-            ];
 
             // Try and do a new allocation
             $newAssignment = null;
