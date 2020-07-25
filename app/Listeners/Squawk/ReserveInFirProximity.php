@@ -3,6 +3,7 @@
 namespace App\Listeners\Squawk;
 
 use App\Events\NetworkAircraftUpdatedEvent;
+use App\Services\LocationService;
 use App\Services\SquawkService;
 use Carbon\Carbon;
 use Location\Coordinate;
@@ -46,14 +47,18 @@ class ReserveSquawkIfInFirProximity
         foreach ($this->measuringPoints as $coordinate) {
             // If the aircraft is too far away, skip
             if (
-                !$coordinate->getDistance($aircraft->latLong, new Haversine()) < self::MIN_DISTANCE
+                LocationService::metersToNauticalMiles(
+                    $coordinate->getDistance($aircraft->latLong, new Haversine())
+                ) > self::MIN_DISTANCE
             ) {
                 continue;
             }
 
             // The aircraft is squawking its assigned code or has only recently changed code, so let it go
             if (
-                $aircraft->transponder == $this->squawkService->getAssignedSquawk($aircraft->callsign)->getCode() ||
+                (($currentAssignment = $this->squawkService->getAssignedSquawk(
+                        $aircraft->callsign
+                    )) && $aircraft->transponder == $currentAssignment->getCode()) ||
                 $aircraft->transponder_last_updated_at > Carbon::now()->subMinutes(self::CONSISTENT_SQUAWK_MINUTES)
             ) {
                 return true;
