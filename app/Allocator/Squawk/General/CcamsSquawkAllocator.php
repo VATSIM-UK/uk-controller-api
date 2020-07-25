@@ -2,15 +2,18 @@
 
 namespace App\Allocator\Squawk\General;
 
+use App\Allocator\Squawk\AbstractSquawkAllocator;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Services\NetworkDataService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
+class CcamsSquawkAllocator extends AbstractSquawkAllocator
+    implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
@@ -19,9 +22,6 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
             function () use (&$assignment, $callsign) {
                 CcamsSquawkRange::all()->shuffle()->each(
                     function (CcamsSquawkRange $range) use (&$assignment, $callsign) {
-                        // Lock the range so duplicate squawk allocations cannot happen
-                        CcamsSquawkRange::lockForUpdate()->find($range->id);
-
                         $squawks = $range->getAllSquawksInRange();
                         $possibleSquawks = $squawks->diff(
                             CcamsSquawkAssignment::whereIn('code', $squawks)->pluck('code')->all()
@@ -31,7 +31,10 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
                             return true;
                         }
 
-                        $assignment = $this->assignSquawk($possibleSquawks->first(), $callsign);
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            $possibleSquawks
+                        );
                         return false;
                     }
                 );
@@ -67,7 +70,10 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
 
                     // Assign the code, if we can.
                     if (!CcamsSquawkAssignment::where('code', $code)->first()) {
-                        $assignment = $this->assignSquawk($code, $callsign);
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            new Collection([$code])
+                        );
                     }
 
                     // In any case, if we've found the range with the code, we shouldn't try others.
@@ -81,14 +87,26 @@ class CcamsSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
         return $assignment;
     }
 
-    private function assignSquawk(string $squawk, string $callsign): CcamsSquawkAssignment
-    {
+    /**
+     * @param string $callsign
+     * @param Collection $possibleSquawks
+     * @return SquawkAssignmentInterface|null
+     */
+    private function assignSquawkFromAvailableCodes(
+        string $callsign,
+        Collection $possibleSquawks
+    ): ?SquawkAssignmentInterface {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        return CcamsSquawkAssignment::create(
-            [
-                'callsign' => $callsign,
-                'code' => $squawk
-            ]
+        return $this->assignSquawk(
+            function (string $code) use ($callsign) {
+                return CcamsSquawkAssignment::updateOrCreate(
+                    [
+                        'callsign' => $callsign,
+                        'code' => $code,
+                    ]
+                );
+            },
+            $possibleSquawks
         );
     }
 }

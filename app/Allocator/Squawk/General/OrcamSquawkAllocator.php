@@ -2,6 +2,7 @@
 
 namespace App\Allocator\Squawk\General;
 
+use App\Allocator\Squawk\AbstractSquawkAllocator;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
@@ -11,8 +12,10 @@ use App\Services\NetworkDataService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection as BaseCollection;
 
-class OrcamSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
+class OrcamSquawkAllocator extends AbstractSquawkAllocator
+    implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
 {
     /**
      * Generate rules to match flights by their origin in order
@@ -47,9 +50,6 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
             function () use (&$assignment, $callsign, $details) {
                 $this->getPossibleRangesForFlight($details['origin'])->each(
                     function (OrcamSquawkRange $range) use (&$assignment, $callsign) {
-                        // Lock range to prevent additional inserts
-                        OrcamSquawkRange::lockForUpdate()->find($range->id);
-
                         $allSquawks = $range->getAllSquawksInRange();
                         $possibleSquawks = $allSquawks->diff(
                             OrcamSquawkAssignment::whereIn('code', $allSquawks)
@@ -60,7 +60,10 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
                             return true;
                         }
 
-                        $assignment = $this->assignSquawk($possibleSquawks->first(), $callsign);
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            $possibleSquawks
+                        );
                         return false;
                     }
                 );
@@ -96,7 +99,10 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
 
                     // Assign the code, if we can.
                     if (!OrcamSquawkAssignment::where('code', $code)->first()) {
-                        $assignment = $this->assignSquawk($code, $callsign);
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            new BaseCollection([$code])
+                        );
                     }
 
                     // In any case, if we've found the range with the code, we shouldn't try others.
@@ -110,14 +116,26 @@ class OrcamSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAll
         return $assignment;
     }
 
-    private function assignSquawk(string $squawk, string $callsign): OrcamSquawkAssignment
-    {
+    /**
+     * @param string $callsign
+     * @param BaseCollection $possibleSquawks
+     * @return SquawkAssignmentInterface|null
+     */
+    private function assignSquawkFromAvailableCodes(
+        string $callsign,
+        BaseCollection $possibleSquawks
+    ): ?SquawkAssignmentInterface {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        return OrcamSquawkAssignment::create(
-            [
-                'callsign' => $callsign,
-                'code' => $squawk
-            ]
+        return $this->assignSquawk(
+            function (string $code) use ($callsign) {
+                return OrcamSquawkAssignment::updateOrCreate(
+                    [
+                        'callsign' => $callsign,
+                        'code' => $code,
+                    ]
+                );
+            },
+            $possibleSquawks
         );
     }
 }

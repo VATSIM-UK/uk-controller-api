@@ -2,17 +2,19 @@
 
 namespace App\Allocator\Squawk\General;
 
+use App\Allocator\Squawk\AbstractSquawkAllocator;
 use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkAssignment;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Services\NetworkDataService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
+class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator
+    implements SquawkAllocatorInterface, GeneralSquawkAllocatorInterface
 {
     private function getPossibleRangesForFlight(string $origin, string $destination): Collection
     {
@@ -47,9 +49,6 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface, Genera
                     $details['destination']
                 )->each(
                     function (AirfieldPairingSquawkRange $range) use (&$assignment, $callsign) {
-                        // Lock the range to prevent additional inserts on this range
-                        AirfieldPairingSquawkRange::lockForUpdate()->find($range->id);
-
                         $allSquawks = $range->getAllSquawksInRange();
                         $possibleSquawks = $allSquawks->diff(
                             AirfieldPairingSquawkAssignment::whereIn('code', $allSquawks)
@@ -61,7 +60,10 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface, Genera
                             return true;
                         }
 
-                        $assignment = $this->assignSquawk($possibleSquawks->first(), $callsign);
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            $possibleSquawks
+                        );
                         return false;
                     }
                 );
@@ -97,7 +99,10 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface, Genera
 
                     // Assign the code, if we can.
                     if (!AirfieldPairingSquawkAssignment::where('code', $code)->first()) {
-                        $assignment = $this->assignSquawk($code, $callsign);
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            new Collection([$code])
+                        );
                     }
 
                     // In any case, if we've found the range with the code, we shouldn't try others.
@@ -111,14 +116,26 @@ class AirfieldPairingSquawkAllocator implements SquawkAllocatorInterface, Genera
         return $assignment;
     }
 
-    private function assignSquawk(string $squawk, string $callsign): AirfieldPairingSquawkAssignment
-    {
+    /**
+     * @param string $callsign
+     * @param Collection $possibleSquawks
+     * @return SquawkAssignmentInterface|null
+     */
+    private function assignSquawkFromAvailableCodes(
+        string $callsign,
+        Collection $possibleSquawks
+    ): ?SquawkAssignmentInterface {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        return AirfieldPairingSquawkAssignment::create(
-            [
-                'callsign' => $callsign,
-                'code' => $squawk
-            ]
+        return $this->assignSquawk(
+            function (string $code) use ($callsign) {
+                return AirfieldPairingSquawkAssignment::updateOrCreate(
+                    [
+                        'callsign' => $callsign,
+                        'code' => $code,
+                    ]
+                );
+            },
+            $possibleSquawks
         );
     }
 }
