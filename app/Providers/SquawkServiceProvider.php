@@ -5,6 +5,7 @@ use App\Allocator\Squawk\General\AirfieldPairingSquawkAllocator;
 use App\Allocator\Squawk\General\CcamsSquawkAllocator;
 use App\Allocator\Squawk\General\OrcamSquawkAllocator;
 use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
+use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\ReserveInFirProximity;
 use App\Models\Squawk\SquawkReservationMeasurementPoint;
 use App\Services\SectorfileService;
@@ -40,6 +41,13 @@ class SquawkServiceProvider extends ServiceProvider
                 SquawkReservationMeasurementPoint::get()->pluck('latLong')->toArray()
             );
         });
+
+        $this->app->singleton(ReclaimIfLeftFirProximity::class, function (Application $app) {
+            return new ReclaimIfLeftFirProximity(
+                $app->make(SquawkService::class),
+                SquawkReservationMeasurementPoint::get()->pluck('latLong')->toArray()
+            );
+        });
     }
 
     /**
@@ -52,6 +60,7 @@ class SquawkServiceProvider extends ServiceProvider
         return [
             SquawkService::class,
             ReserveInFirProximity::class,
+            ReclaimIfLeftFirProximity::class,
         ];
     }
 }

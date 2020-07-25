@@ -125,6 +125,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         $expectedData = $this->getDataWithoutClientType('AAL123');
         $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123', $expectedData);
+        $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
         $this->assertDatabaseHas(
@@ -139,8 +140,9 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItCreatesNetworkAircraftCallsignOnly()
     {
         $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
+        $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($this->filterBySet($expected->toArray()), $actual->toArray());
+        $this->assertEquals($expected->toArray(), $actual->toArray());
         $this->assertDatabaseHas(
             'network_aircraft',
             [
@@ -240,6 +242,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         $expectedData = $this->getDataWithoutClientType('AAL123');
         $actual = NetworkDataService::firstOrCreateNetworkAircraft('AAL123', $expectedData);
+        $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
         $this->assertDatabaseHas(
@@ -254,8 +257,9 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItCreatesNetworkAircraftInFirstOrCreateCallsignOnly()
     {
         $actual = NetworkDataService::firstOrCreateNetworkAircraft('AAL123');
+        $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($this->filterBySet($expected->toArray()), $actual->toArray());
+        $this->assertEquals($expected->toArray(), $actual->toArray());
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
@@ -369,8 +373,8 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         return [
             'callsign' => $callsign,
             'clienttype' => $isAircraft ? 'PILOT' : 'ATC',
-            'latitude' => 'abc',
-            'longitude' => 'def',
+            'latitude' => 54.66,
+            'longitude'=> -6.21,
             'altitude' => '35123',
             'groundspeed' => '123',
             'planned_aircraft' => 'B738',

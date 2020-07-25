@@ -157,7 +157,7 @@ class SquawkService
         }, $this->localAllocators);
     }
 
-    public function reserveSquawkForAircraft(string $callsign): SquawkAssignmentInterface
+    public function reserveSquawkForAircraft(string $callsign): ?SquawkAssignmentInterface
     {
         $assignment = null;
         DB::transaction(function () use ($callsign, &$assignment) {
@@ -191,7 +191,7 @@ class SquawkService
             $newAssignment = null;
             foreach ($this->generalAllocators as $allocator) {
                 if (
-                    $newAssignment = $allocator->allocate($callsign, $allocationDetails)
+                    $newAssignment = $allocator->assignToCallsign($aircraft->transponder, $callsign)
                 ) {
                     break;
                 }

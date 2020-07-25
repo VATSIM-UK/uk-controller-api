@@ -5,14 +5,13 @@ namespace App\Listeners\Squawk;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Services\LocationService;
 use App\Services\SquawkService;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
 class ReclaimIfLeftFirProximity
 {
-    const MIN_DISTANCE = 600.0;
+    const MIN_DISTANCE = 650.0;
 
     /**
      * @var Coordinate[]

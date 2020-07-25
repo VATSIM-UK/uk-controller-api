@@ -12,7 +12,7 @@ use Location\Distance\Haversine;
 
 class ReserveInFirProximity
 {
-    const MIN_DISTANCE = 600.0;
+    const MIN_DISTANCE = 650.0;
     const CONSISTENT_SQUAWK_MINUTES = 2;
 
     /**
@@ -62,7 +62,7 @@ class ReserveInFirProximity
                     )) && $aircraft->transponder == $currentAssignment->getCode()) ||
                 $aircraft->transponder_last_updated_at > Carbon::now()->subMinutes(self::CONSISTENT_SQUAWK_MINUTES)
             ) {
-                return true;
+                break;
             }
 
             // If the aircraft is close enough, lets try to reserve the squawk
@@ -94,7 +94,7 @@ class ReserveInFirProximity
                 );
             }
 
-            return true;
+            break;
         }
 
         return true;
