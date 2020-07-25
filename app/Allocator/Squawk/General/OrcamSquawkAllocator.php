@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection as BaseCollection;
 
-class OrcamSquawkAllocator extends AbstractSquawkAllocator
-    implements GeneralSquawkAllocatorInterface
+class OrcamSquawkAllocator extends AbstractSquawkAllocator implements GeneralSquawkAllocatorInterface
 {
     /**
      * Generate rules to match flights by their origin in order

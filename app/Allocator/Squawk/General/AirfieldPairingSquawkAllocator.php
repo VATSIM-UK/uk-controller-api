@@ -11,8 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator
-    implements GeneralSquawkAllocatorInterface
+class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator implements GeneralSquawkAllocatorInterface
 {
     private function getPossibleRangesForFlight(string $origin, string $destination): Collection
     {

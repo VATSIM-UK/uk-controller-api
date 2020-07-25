@@ -49,7 +49,6 @@ class AddSquawkReservationMeasurementPoints extends Migration
                     ],
                 ]
             );
-
     }
 
     /**

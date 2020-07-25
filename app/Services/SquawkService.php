@@ -169,7 +169,7 @@ class SquawkService
             $currentAssignment = null;
             $responsibleAllocator = null;
             foreach ($this->generalAllocators as $allocator) {
-                if ($currentAssignment = $allocator->fetch($callsign))  {
+                if ($currentAssignment = $allocator->fetch($callsign)) {
                     // The current squawk has changed from what's assigned, so delete it
                     $allocator->delete($callsign);
                     event(new SquawkUnassignedEvent($callsign));

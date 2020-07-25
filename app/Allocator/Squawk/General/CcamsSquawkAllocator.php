@@ -10,8 +10,7 @@ use App\Services\NetworkDataService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class CcamsSquawkAllocator extends AbstractSquawkAllocator
-    implements GeneralSquawkAllocatorInterface
+class CcamsSquawkAllocator extends AbstractSquawkAllocator implements GeneralSquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {

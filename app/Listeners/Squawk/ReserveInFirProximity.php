@@ -75,7 +75,7 @@ class ReserveInFirProximity
                         $currentAssignment->getCallsign(),
                         $newAssignment->getCode())
                 );
-            } else if ($currentAssignment && !$newAssignment) {
+            } elseif ($currentAssignment && !$newAssignment) {
                 Log::info(
                     sprintf(
                         'Reclaiming squawk code %s from %s due to code change, no new code was reserved, transponder is %s',
@@ -84,7 +84,7 @@ class ReserveInFirProximity
                         $aircraft->transponder
                     )
                 );
-            } else if ($newAssignment) {
+            } elseif ($newAssignment) {
                 Log::info(
                     sprintf(
                         'Reserving squawk code %s for %s due to FIR proximity',
