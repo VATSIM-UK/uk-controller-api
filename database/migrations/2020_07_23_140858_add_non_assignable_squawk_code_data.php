@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class AddReservedSquawkCodeData extends Migration
+class AddNonAssignableSquawkCodeData extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class AddReservedSquawkCodeData extends Migration
      */
     public function up()
     {
-        DB::table('reserved_squawk_codes')
+        DB::table('non_assignable_squawk_codes')
             ->insert(
                 [
                     [
@@ -62,6 +62,6 @@ class AddReservedSquawkCodeData extends Migration
      */
     public function down()
     {
-        DB::table('reserved_squawk_codes')->delete();
+        DB::table('non_assignable_squawk_codes')->delete();
     }
 }

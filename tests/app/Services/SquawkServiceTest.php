@@ -237,7 +237,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItDoesNothingIfReservedSquawkBeingSquawked()
+    public function testItDoesNothingIfNonAssignableCodeBeingSquawked()
     {
         $this->doesntExpectEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
         Carbon::setTestNow(Carbon::now());

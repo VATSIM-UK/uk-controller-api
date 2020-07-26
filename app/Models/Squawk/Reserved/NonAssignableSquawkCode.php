@@ -4,7 +4,7 @@ namespace App\Models\Squawk\Reserved;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ReservedSquawkCode extends Model
+class NonAssignableSquawkCode extends Model
 {
     protected $fillable = [
         'code',

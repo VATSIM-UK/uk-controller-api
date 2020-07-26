@@ -7,7 +7,7 @@ use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
-use App\Models\Squawk\Reserved\ReservedSquawkCode;
+use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -205,7 +205,7 @@ class SquawkService
      */
     private function squawkIsNotAssignable(string $code): bool
     {
-        return is_null(ReservedSquawkCode::where('code', $code)->first());
+        return is_null(NonAssignableSquawkCode::where('code', $code)->first());
     }
 
     /**
