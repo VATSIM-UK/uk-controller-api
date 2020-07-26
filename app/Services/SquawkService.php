@@ -167,7 +167,7 @@ class SquawkService
             }
 
             foreach ($this->generalAllocators as $allocator) {
-                if ($currentAssignment = $allocator->fetch($callsign)) {
+                if ($allocator->fetch($callsign)) {
                     // The current squawk has changed from what's assigned, so delete it
                     $allocator->delete($callsign);
                     event(new SquawkUnassignedEvent($callsign));
@@ -176,28 +176,44 @@ class SquawkService
             }
 
             // The aircraft is squawking a reserved code, so we can't reserve it.
-            if (ReservedSquawkCode::where('code', $aircraft->squawk)->first()) {
+            if ($this->squawkIsNotAssignable($aircraft->squawk)) {
                 return;
             }
 
             // Try and do a new allocation
-            $newAssignment = null;
-            foreach ($this->generalAllocators as $allocator) {
-                if (
-                    $newAssignment = $allocator->assignToCallsign($aircraft->transponder, $callsign)
-                ) {
-                    break;
-                }
-            }
-
-            // Register the new assignment if we can
-            if (is_null($newAssignment)) {
-                return;
-            }
-
-            event(new SquawkAssignmentEvent($newAssignment));
+            $assignment = $this->assignCodeToAircraft($callsign, $aircraft->transponder);
         });
 
         return $assignment;
+    }
+
+    /**
+     * Returns if a squawk is a non-allocatable code code.
+     *
+     * @param string $code
+     * @return bool
+     */
+    private function squawkIsNotAssignable(string $code): bool
+    {
+        return is_null(ReservedSquawkCode::where('code', $code)->first());
+    }
+
+    /**
+     * Try to assign a specific code to an aircraft
+     *
+     * @param string $callsign
+     * @param string $code
+     * @return SquawkAssignmentInterface|null
+     */
+    private function assignCodeToAircraft(string $callsign, string $code): ?SquawkAssignmentInterface
+    {
+        foreach ($this->generalAllocators as $allocator) {
+            if ($newAssignment = $allocator->assignToCallsign($code, $callsign)) {
+                event(new SquawkAssignmentEvent($newAssignment));
+                return $newAssignment;
+            }
+        }
+
+        return null;
     }
 }
