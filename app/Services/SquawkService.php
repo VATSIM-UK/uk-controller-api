@@ -120,14 +120,16 @@ class SquawkService
     private function assignSquawk(string $callsign, array $allocators, array $details): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        DB::transaction(function () use ($callsign, $allocators, $details, &$assignment) {
-            $this->deleteSquawkAssignment($callsign);
-            foreach ($allocators as $allocator) {
-                if ($assignment = $allocator->allocate($callsign, $details)) {
-                    return;
+        DB::transaction(
+            function () use ($callsign, $allocators, $details, &$assignment) {
+                $this->deleteSquawkAssignment($callsign);
+                foreach ($allocators as $allocator) {
+                    if ($assignment = $allocator->allocate($callsign, $details)) {
+                        return;
+                    }
                 }
             }
-        });
+        );
 
         // If a squawk has been assigned, let the rest of the app know so it can be audited etc
         if (!is_null($assignment)) {
@@ -142,9 +144,12 @@ class SquawkService
      */
     public function getGeneralAllocatorPreference(): array
     {
-        return array_map(function (GeneralSquawkAllocatorInterface $allocator) {
-            return get_class($allocator);
-        }, $this->generalAllocators);
+        return array_map(
+            function (GeneralSquawkAllocatorInterface $allocator) {
+                return get_class($allocator);
+            },
+            $this->generalAllocators
+        );
     }
 
     /**
@@ -152,37 +157,42 @@ class SquawkService
      */
     public function getLocalAllocatorPreference(): array
     {
-        return array_map(function (SquawkAllocatorInterface $allocator) {
-            return get_class($allocator);
-        }, $this->localAllocators);
+        return array_map(
+            function (SquawkAllocatorInterface $allocator) {
+                return get_class($allocator);
+            },
+            $this->localAllocators
+        );
     }
 
     public function reserveSquawkForAircraft(string $callsign): ?SquawkAssignmentInterface
     {
         $assignment = null;
-        DB::transaction(function () use ($callsign, &$assignment) {
-            $aircraft = NetworkAircraft::find($callsign);
-            if (!$aircraft) {
-                return;
-            }
-
-            foreach ($this->generalAllocators as $allocator) {
-                if ($allocator->fetch($callsign)) {
-                    // The current squawk has changed from what's assigned, so delete it
-                    $allocator->delete($callsign);
-                    event(new SquawkUnassignedEvent($callsign));
-                    break;
+        DB::transaction(
+            function () use ($callsign, &$assignment) {
+                $aircraft = NetworkAircraft::find($callsign);
+                if (!$aircraft) {
+                    return;
                 }
-            }
 
-            // The aircraft is squawking a reserved code, so we can't reserve it.
-            if ($this->squawkIsNotAssignable($aircraft->squawk)) {
-                return;
-            }
+                foreach ($this->generalAllocators as $allocator) {
+                    if ($allocator->fetch($callsign)) {
+                        // The current squawk has changed from what's assigned, so delete it
+                        $allocator->delete($callsign);
+                        event(new SquawkUnassignedEvent($callsign));
+                        break;
+                    }
+                }
 
-            // Try and do a new allocation
-            $assignment = $this->assignCodeToAircraft($callsign, $aircraft->transponder);
-        });
+                // The aircraft is squawking a reserved code, so we can't reserve it.
+                if ($this->squawkIsNotAssignable($aircraft->squawk)) {
+                    return;
+                }
+
+                // Try and do a new allocation
+                $assignment = $this->assignCodeToAircraft($callsign, $aircraft->transponder);
+            }
+        );
 
         return $assignment;
     }
