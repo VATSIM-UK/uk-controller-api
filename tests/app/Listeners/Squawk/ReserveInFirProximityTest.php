@@ -22,6 +22,7 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
     public function setUp(): void
     {
         parent::setUp();
+        Carbon::setTestNow(Carbon::now());
         $this->listener = $this->app->make(ReserveInFirProximity::class);
         CcamsSquawkRange::create(
             [
@@ -101,7 +102,7 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
                 [
                     'latitude' => '54.66',
                     'longitude' => '-6.21',
-                    'transponder_last_updated_at' => Carbon::now()->subMinutes(2)->subSecond()
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(2)->subSeconds(10)
                 ]
             );
         $this->assertTrue($this->callListener());

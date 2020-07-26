@@ -88,8 +88,8 @@ class ReserveInFirProximity
                 Log::info(
                     sprintf(
                         'Reserving squawk code %s for %s due to FIR proximity',
-                        $currentAssignment->getCode(),
-                        $currentAssignment->getCallsign()
+                        $newAssignment->getCode(),
+                        $newAssignment->getCallsign()
                     )
                 );
             }

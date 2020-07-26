@@ -33,6 +33,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->squawkService = $this->app->make(SquawkService::class);
+        Carbon::setTestNow(Carbon::now());
     }
 
     public function testItDeletesSquawks()
@@ -238,36 +239,6 @@ class SquawkServiceTest extends BaseFunctionalTestCase
     }
 
     public function testItDoesNothingIfNonAssignableCodeBeingSquawked()
-    {
-        $this->doesntExpectEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
-        Carbon::setTestNow(Carbon::now());
-        NetworkAircraft::where('callsign', 'BAW123')->update(
-            [
-                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
-                'transponder' => '7000',
-                'planned_depairport' => 'EDDF',
-                'planned_destairport' => 'EGLL',
-            ]
-        );
-        OrcamSquawkRange::create(
-            [
-                'origin' => 'ED',
-                'first' => '7000',
-                'last' => '7000',
-            ]
-        );
-
-        $this->squawkService->reserveSquawkForAircraft('BAW123');
-
-        $this->assertDatabaseMissing(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BAW123',
-            ]
-        );
-    }
-
-    public function testItDoesNothingIfTransponderChangeRecent()
     {
         $this->doesntExpectEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
         Carbon::setTestNow(Carbon::now());
