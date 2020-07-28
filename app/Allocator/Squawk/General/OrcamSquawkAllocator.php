@@ -3,8 +3,6 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
-use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
@@ -14,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection as BaseCollection;
 
-class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllocatorInterface
+class OrcamSquawkAllocator extends AbstractSquawkAllocator implements GeneralSquawkAllocatorInterface
 {
     /**
      * Generate rules to match flights by their origin in order
@@ -61,7 +59,7 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
 
                         $assignment = $this->assignSquawkFromAvailableCodes(
                             $callsign,
-                            $possibleSquawks
+                            $possibleSquawks->shuffle()
                         );
                         return false;
                     }
@@ -82,9 +80,32 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
         return OrcamSquawkAssignment::find($callsign);
     }
 
-    public function canAllocateForCategory(string $category): bool
+    public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface
     {
-        return $category === SquawkAssignmentCategories::GENERAL;
+        $assignment = null;
+        OrcamSquawkRange::all()->each(
+            function (OrcamSquawkRange $range) use ($code, $callsign, &$assignment) {
+                if ($range->squawkInRange($code)) {
+                    // Lock the range to prevent a dupe assignment
+                    OrcamSquawkRange::lockForUpdate($range->id)->first();
+
+                    // Assign the code, if we can.
+                    if (!OrcamSquawkAssignment::where('code', $code)->first()) {
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            new BaseCollection([$code])
+                        );
+                    }
+
+                    // In any case, if we've found the range with the code, we shouldn't try others.
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+        return $assignment;
     }
 
     /**

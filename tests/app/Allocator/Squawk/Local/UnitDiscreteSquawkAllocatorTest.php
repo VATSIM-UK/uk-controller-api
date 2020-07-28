@@ -24,7 +24,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         parent::setUp();
         $this->allocator = new UnitDiscreteSquawkAllocator();
 
-        $this->createSquawkRange('EGGD', '7201', '7210');
+        $this->createSquawkRange('EGGD', '7201', '7203');
     }
 
     public function testItAllocatesFirstFreeSquawkInRange()
@@ -69,13 +69,15 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
                 'guest_unit' => 'EGFF',
             ]
         );
-        $this->assertEquals('7201', $this->allocator->allocate('BMI11A', ['unit' => 'EGFF'])->getCode());
+
+        $code = $this->allocator->allocate('BMI11A', ['unit' => 'EGFF'])->getCode();
+        $this->assertTrue(in_array($code, ['7201', '7202', '7203']));
         $this->assertDatabaseHas(
             'unit_discrete_squawk_assignments',
             [
                 'callsign' => 'BMI11A',
                 'unit' => 'EGGD',
-                'code' => '7201',
+                'code' => $code,
                 'created_at' => Carbon::now(),
             ]
         );
@@ -83,17 +85,18 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItIgnoresOverlappingIfDifferentUnits()
     {
-        $this->createSquawkRange('EGFF', '7201', '7210');
+        $this->createSquawkRange('EGFF', '7201', '7202');
         $this->createSquawkAssignment('VIR25F', 'EGFF', '7201');
         $this->createSquawkAssignment('BAW92A', 'EGFF', '7202');
 
-        $this->assertEquals('7201', $this->allocator->allocate('BMI11A', ['unit' => 'EGGD'])->getCode());
+        $code = $this->allocator->allocate('BMI11A', ['unit' => 'EGGD'])->getCode();
+        $this->assertTrue(in_array($code, ['7201', '7202', '7203']));
         $this->assertDatabaseHas(
             'unit_discrete_squawk_assignments',
             [
                 'callsign' => 'BMI11A',
                 'unit' => 'EGGD',
-                'code' => '7201',
+                'code' => $code,
                 'created_at' => Carbon::now(),
             ]
         );
@@ -158,23 +161,6 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
     public function testItReturnsFalseForNonDeletedAllocations()
     {
         $this->assertFalse($this->allocator->delete('LALALA'));
-    }
-
-
-    /**
-     * @dataProvider categoryProvider
-     */
-    public function testItAllocatesCategories(string $category, bool $expected)
-    {
-        $this->assertEquals($expected, $this->allocator->canAllocateForCategory($category));
-    }
-
-    public function categoryProvider(): array
-    {
-        return [
-            [SquawkAssignmentCategories::GENERAL, false],
-            [SquawkAssignmentCategories::LOCAL, true],
-        ];
     }
 
     private function createSquawkRange(

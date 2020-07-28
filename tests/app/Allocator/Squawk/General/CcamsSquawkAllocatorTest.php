@@ -23,9 +23,9 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         CcamsSquawkRange::query()->delete();
     }
 
-    public function testItAllocatesFirstFreeSquawkInRange()
+    public function testItAllocatesFreeSquawkInRange()
     {
-        $this->createSquawkRange('7201', '7210');
+        $this->createSquawkRange('7201', '7203');
         $this->createSquawkAssignment('VIR25F', '7201');
         $this->createSquawkAssignment('BAW92A', '7202');
 
@@ -81,22 +81,6 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertFalse($this->allocator->delete('LALALA'));
     }
 
-    /**
-     * @dataProvider categoryProvider
-     */
-    public function testItAllocatesCategories(string $category, bool $expected)
-    {
-        $this->assertEquals($expected, $this->allocator->canAllocateForCategory($category));
-    }
-
-    public function categoryProvider(): array
-    {
-        return [
-            [SquawkAssignmentCategories::GENERAL, true],
-            [SquawkAssignmentCategories::LOCAL, false],
-        ];
-    }
-
     private function createSquawkRange(
         string $first,
         string $last
@@ -146,5 +130,28 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
                 'created_at' => Carbon::now()->toDateTimeString(),
             ]
         );
+    }
+
+    public function testItAssignsToCallsignIfFree()
+    {
+        $this->createSquawkRange('0001', '0007');
+        $this->assertEquals('0002', $this->allocator->assignToCallsign('0002', 'RYR111')->getCode());
+        $this->assertSquawkAssigned('RYR111', '0002');
+    }
+
+    public function testItDoesntAssignIfNotInRange()
+    {
+        $this->createSquawkRange('0001', '0007');
+        $this->assertNull($this->allocator->assignToCallsign('RYR111', '0010'));
+        $this->assertSquawkNotAsssigned('RYR111');
+    }
+
+    public function testItDoesntAssignIfAlreadyAssigned()
+    {
+        $this->createSquawkAssignment('RYR234', '0001');
+        $this->createSquawkRange('0001', '0007');
+        $this->assertNull($this->allocator->assignToCallsign('RYR111', '0001'));
+        $this->assertSquawkNotAsssigned('RYR111');
+        $this->assertSquawkAssigned('RYR234', '0001');
     }
 }

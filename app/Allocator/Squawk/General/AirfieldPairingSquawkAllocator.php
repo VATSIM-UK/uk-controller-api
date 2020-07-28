@@ -3,8 +3,6 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
-use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkAssignment;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
@@ -13,8 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator implements
-    SquawkAllocatorInterface
+class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator implements GeneralSquawkAllocatorInterface
 {
     private function getPossibleRangesForFlight(string $origin, string $destination): Collection
     {
@@ -62,7 +59,7 @@ class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator implements
 
                         $assignment = $this->assignSquawkFromAvailableCodes(
                             $callsign,
-                            $possibleSquawks
+                            $possibleSquawks->shuffle()
                         );
                         return false;
                     }
@@ -83,9 +80,32 @@ class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator implements
         return AirfieldPairingSquawkAssignment::find($callsign);
     }
 
-    public function canAllocateForCategory(string $category): bool
+    public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface
     {
-        return $category === SquawkAssignmentCategories::GENERAL;
+        $assignment = null;
+        AirfieldPairingSquawkRange::all()->each(
+            function (AirfieldPairingSquawkRange $range) use ($code, $callsign, &$assignment) {
+                if ($range->squawkInRange($code)) {
+                    // Lock the range to prevent a dupe assignment
+                    AirfieldPairingSquawkRange::lockForUpdate($range->id)->first();
+
+                    // Assign the code, if we can.
+                    if (!AirfieldPairingSquawkAssignment::where('code', $code)->first()) {
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            new Collection([$code])
+                        );
+                    }
+
+                    // In any case, if we've found the range with the code, we shouldn't try others.
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+        return $assignment;
     }
 
     /**

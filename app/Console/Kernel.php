@@ -45,7 +45,6 @@ class Kernel extends ConsoleKernel
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
-        ReclaimSquawksAfterFirExit::class,
     ];
 
     /**
@@ -64,6 +63,5 @@ class Kernel extends ConsoleKernel
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute();
-        $schedule->command('squawks:reclaim')->hourly();
     }
 }

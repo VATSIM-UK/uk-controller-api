@@ -3,8 +3,6 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentCategories;
-use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
@@ -12,7 +10,7 @@ use App\Services\NetworkDataService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class CcamsSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllocatorInterface
+class CcamsSquawkAllocator extends AbstractSquawkAllocator implements GeneralSquawkAllocatorInterface
 {
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
@@ -32,7 +30,7 @@ class CcamsSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
 
                         $assignment = $this->assignSquawkFromAvailableCodes(
                             $callsign,
-                            $possibleSquawks
+                            $possibleSquawks->shuffle()
                         );
                         return false;
                     }
@@ -53,9 +51,32 @@ class CcamsSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllo
         return CcamsSquawkAssignment::find($callsign);
     }
 
-    public function canAllocateForCategory(string $category): bool
+    public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface
     {
-        return $category === SquawkAssignmentCategories::GENERAL;
+        $assignment = null;
+        CcamsSquawkRange::all()->each(
+            function (CcamsSquawkRange $range) use ($code, $callsign, &$assignment) {
+                if ($range->squawkInRange($code)) {
+                    // Lock the range to prevent a dupe assignment
+                    CcamsSquawkRange::lockForUpdate($range->id)->first();
+
+                    // Assign the code, if we can.
+                    if (!CcamsSquawkAssignment::where('code', $code)->first()) {
+                        $assignment = $this->assignSquawkFromAvailableCodes(
+                            $callsign,
+                            new Collection([$code])
+                        );
+                    }
+
+                    // In any case, if we've found the range with the code, we shouldn't try others.
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+        return $assignment;
     }
 
     /**
