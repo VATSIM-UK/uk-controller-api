@@ -48,25 +48,24 @@ class ReclaimIfLeftFirProximity
 
         $aircraft = $event->getAircraft();
         foreach ($this->measuringPoints as $coordinate) {
+            // If it's still in range of one of the measurement points, don't reclaim it.
             if (
                 LocationService::metersToNauticalMiles(
                     $coordinate->getDistance($aircraft->latLong, new Haversine())
                 ) < self::MIN_DISTANCE
             ) {
-                continue;
+                return true;
             }
-
-            Log::info(
-                sprintf(
-                    'Reclaiming squawk code %s from %s due to leaving FIR proximity',
-                    $assignment->getCode(),
-                    $assignment->getCallsign()
-                )
-            );
-            $this->squawkService->deleteSquawkAssignment($aircraft->callsign);
-            break;
         }
 
+        Log::info(
+            sprintf(
+                'Reclaiming squawk code %s from %s due to leaving FIR proximity',
+                $assignment->getCode(),
+                $assignment->getCallsign()
+            )
+        );
+        $this->squawkService->deleteSquawkAssignment($aircraft->callsign);
         return true;
     }
 }

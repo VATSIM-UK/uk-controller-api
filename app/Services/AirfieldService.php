@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
