@@ -54,20 +54,18 @@ class ReclaimIfLeftFirProximity
                     $coordinate->getDistance($aircraft->latLong, new Haversine())
                 ) < self::MIN_DISTANCE
             ) {
-                break;
+                return true;
             }
-
-            Log::info(
-                sprintf(
-                    'Reclaiming squawk code %s from %s due to leaving FIR proximity',
-                    $assignment->getCode(),
-                    $assignment->getCallsign()
-                )
-            );
-            $this->squawkService->deleteSquawkAssignment($aircraft->callsign);
-            break;
         }
 
+        Log::info(
+            sprintf(
+                'Reclaiming squawk code %s from %s due to leaving FIR proximity',
+                $assignment->getCode(),
+                $assignment->getCallsign()
+            )
+        );
+        $this->squawkService->deleteSquawkAssignment($aircraft->callsign);
         return true;
     }
 }
