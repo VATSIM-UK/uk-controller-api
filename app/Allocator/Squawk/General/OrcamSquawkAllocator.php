@@ -59,7 +59,7 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator implements GeneralSqu
 
                         $assignment = $this->assignSquawkFromAvailableCodes(
                             $callsign,
-                            $possibleSquawks
+                            $possibleSquawks->shuffle()
                         );
                         return false;
                     }

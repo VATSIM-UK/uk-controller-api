@@ -59,7 +59,7 @@ class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator implements 
 
                         $assignment = $this->assignSquawkFromAvailableCodes(
                             $callsign,
-                            $possibleSquawks
+                            $possibleSquawks->shuffle()
                         );
                         return false;
                     }

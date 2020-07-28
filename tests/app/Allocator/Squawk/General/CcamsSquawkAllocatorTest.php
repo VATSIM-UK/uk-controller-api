@@ -23,9 +23,9 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         CcamsSquawkRange::query()->delete();
     }
 
-    public function testItAllocatesFirstFreeSquawkInRange()
+    public function testItAllocatesFreeSquawkInRange()
     {
-        $this->createSquawkRange('7201', '7210');
+        $this->createSquawkRange('7201', '7203');
         $this->createSquawkAssignment('VIR25F', '7201');
         $this->createSquawkAssignment('BAW92A', '7202');
 

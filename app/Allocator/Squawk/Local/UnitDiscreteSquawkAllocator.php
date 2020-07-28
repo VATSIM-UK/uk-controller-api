@@ -88,7 +88,7 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator implements Squ
                         $assignment = $this->assignSquawkFromAvailableCodes(
                             $callsign,
                             $range->unit,
-                            $possibleSquawks
+                            $possibleSquawks->shuffle()
                         );
                         return false;
                     }

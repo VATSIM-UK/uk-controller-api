@@ -22,9 +22,9 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->allocator = new OrcamSquawkAllocator();
     }
 
-    public function testItAllocatesFirstFreeSquawkInRange()
+    public function testItAllocatesFreeSquawkInRange()
     {
-        $this->createSquawkRange('E', '7201', '7210');
+        $this->createSquawkRange('E', '7201', '7203');
         $this->createSquawkAssignment('VIR25F', '7201');
         $this->createSquawkAssignment('BAW92A', '7202');
 
@@ -37,7 +37,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesSingleCharacterRange()
     {
-        $this->createSquawkRange('E', '7201', '7210');
+        $this->createSquawkRange('E', '7201', '7201');
 
         $this->assertEquals(
             '7201',
