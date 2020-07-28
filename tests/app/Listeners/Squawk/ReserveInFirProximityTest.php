@@ -109,7 +109,7 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
                     'latitude' => '54.66',
                     'longitude' => '-6.21',
                     'transponder' => '7000',
-                    'transponder_last_updated_at' => Carbon::now()->subMinutes(2)->addSecond()
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
                 ]
             );
         $this->assertTrue($this->callListener());
