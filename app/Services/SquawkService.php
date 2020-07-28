@@ -205,7 +205,7 @@ class SquawkService
      */
     private function squawkIsNotAssignable(string $code): bool
     {
-        return !is_null(NonAssignableSquawkCode::where('code', $code)->first());
+        return NonAssignableSquawkCode::where('code', $code)->exists();
     }
 
     /**
