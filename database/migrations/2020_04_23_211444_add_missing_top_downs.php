@@ -63,10 +63,13 @@ class AddMissingTopDowns extends Migration
         AirfieldService::createNewTopDownOrder('EGEO', ['EGEO_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
         AirfieldService::createNewTopDownOrder('EGPU', ['EGPU_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
         AirfieldService::createNewTopDownOrder('EGPR', ['EGPR_I_TWR', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
-        AirfieldService::createNewTopDownOrder('EGPL',
-            ['EGPL_I_TWR', 'EGPL_TWR', 'EGPL_APP', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']);
         AirfieldService::createNewTopDownOrder(
-            'EGTO', [
+            'EGPL',
+            ['EGPL_I_TWR', 'EGPL_TWR', 'EGPL_APP', 'SCO_W_CTR', 'SCO_WD_CTR', 'SCO_CTR']
+        );
+        AirfieldService::createNewTopDownOrder(
+            'EGTO',
+            [
             'EGTO_I_TWR',
             'THAMES_APP',
             'LTC_SE_CTR',
@@ -76,7 +79,8 @@ class AddMissingTopDowns extends Migration
             'LON_S_CTR',
             'LON_SC_CTR',
             'LON_CTR',
-        ]);
+        ]
+        );
         AirfieldService::createNewTopDownOrder('EGOV', ['EGOV_TWR', 'EGOV_P_APP', 'EGOV_R_APP', 'EGVV_CTR']);
         AirfieldService::createNewTopDownOrder('EGXC', ['EGXC_GND', 'EGXC_TWR', 'EGXC_P_APP', 'EGXC_APP', 'EGVV_CTR']);
         AirfieldService::createNewTopDownOrder('EGYD', ['EGYD_GND', 'EGYD_TWR', 'EGYD_P_APP', 'EGYD_R_APP', 'EGVV_CTR']);

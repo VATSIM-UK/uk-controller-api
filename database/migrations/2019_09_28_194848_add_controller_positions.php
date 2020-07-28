@@ -1291,7 +1291,6 @@ class AddControllerPositions extends Migration
                     'created_at' => Carbon::now(),
                 ],
             ]
-
         );
     }
 

@@ -20,7 +20,7 @@ class RecordHoldUnassignment
                     'assigned_by' => !is_null(Auth::user()) ? Auth::user()->id : null,
                     'assigned_at' => Carbon::now(),
                 ]
-        );
+            );
 
         return true;
     }
