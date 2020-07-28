@@ -53,7 +53,7 @@ class ReclaimIfLeftFirProximity
                     $coordinate->getDistance($aircraft->latLong, new Haversine())
                 ) < self::MIN_DISTANCE
             ) {
-                continue;
+                break;
             }
 
             Log::info(
