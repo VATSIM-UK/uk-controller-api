@@ -48,6 +48,7 @@ class ReclaimIfLeftFirProximity
 
         $aircraft = $event->getAircraft();
         foreach ($this->measuringPoints as $coordinate) {
+            // If it's still in range of one of the measurement points, don't reclaim it.
             if (
                 LocationService::metersToNauticalMiles(
                     $coordinate->getDistance($aircraft->latLong, new Haversine())
