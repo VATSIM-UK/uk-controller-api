@@ -3,6 +3,7 @@
 namespace App\Listeners\Squawk;
 
 use App\Events\NetworkAircraftUpdatedEvent;
+use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use App\Services\LocationService;
 use App\Services\SquawkService;
 use Carbon\Carbon;
@@ -55,12 +56,18 @@ class ReserveInFirProximity
                 continue;
             }
 
-            // The aircraft is squawking its assigned code or has only recently changed code, so let it go
+            /*
+             * The aircraft is either:
+             * - Squawking its assigned code,
+             * - Squawking one of the reserved codes, so probably hasn't set its code yet
+             * - Only recently changed code, so let it go
+             */
             if (
                 (($currentAssignment = $this->squawkService->getAssignedSquawk(
                     $aircraft->callsign
                 )) && $aircraft->transponder == $currentAssignment->getCode()) ||
-                $aircraft->transponder_last_updated_at > Carbon::now()->subMinutes(self::CONSISTENT_SQUAWK_MINUTES)
+                $aircraft->transponder_last_updated_at > Carbon::now()->subMinutes(self::CONSISTENT_SQUAWK_MINUTES) ||
+                NonAssignableSquawkCode::all()->contains($aircraft->transponder)
             ) {
                 break;
             }

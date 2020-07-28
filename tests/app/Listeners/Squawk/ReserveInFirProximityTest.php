@@ -93,6 +93,35 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItDoesNothingIfSquawkingReservedCode()
+    {
+        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+        DB::table('network_aircraft')
+            ->where('callsign', 'BAW123')
+            ->update(
+                [
+                    'latitude' => '54.66',
+                    'longitude' => '-6.21',
+                    'transponder' => '7000',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(2)->addSecond()
+                ]
+            );
+        $this->assertTrue($this->callListener());
+        $this->assertDatabaseHas(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+    }
+
     public function testItDoesFreshAssignmentIfInProximity()
     {
         $this->expectsEvents(SquawkAssignmentEvent::class);
