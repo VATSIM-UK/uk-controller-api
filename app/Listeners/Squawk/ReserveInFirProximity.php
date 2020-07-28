@@ -58,8 +58,8 @@ class ReserveInFirProximity
             // The aircraft is squawking its assigned code or has only recently changed code, so let it go
             if (
                 (($currentAssignment = $this->squawkService->getAssignedSquawk(
-                        $aircraft->callsign
-                    )) && $aircraft->transponder == $currentAssignment->getCode()) ||
+                    $aircraft->callsign
+                )) && $aircraft->transponder == $currentAssignment->getCode()) ||
                 $aircraft->transponder_last_updated_at > Carbon::now()->subMinutes(self::CONSISTENT_SQUAWK_MINUTES)
             ) {
                 break;
@@ -73,7 +73,8 @@ class ReserveInFirProximity
                         'Reclaiming squawk code %s from %s due to code change, new code %s was reserved',
                         $currentAssignment->getCode(),
                         $currentAssignment->getCallsign(),
-                        $newAssignment->getCode())
+                        $newAssignment->getCode()
+                    )
                 );
             } elseif ($currentAssignment && !$newAssignment) {
                 Log::info(
