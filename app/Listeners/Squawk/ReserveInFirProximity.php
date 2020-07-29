@@ -123,7 +123,7 @@ class ReserveInFirProximity
 
     private function aircraftIsSquawkingNonAssignableCodeOnTheGround(NetworkAircraft $aircraft): bool
     {
-        return NonAssignableSquawkCode::where('code', $aircraft->squawk)->exists() &&
-            $aircraft->groundspeed < self::MAX_GROUND_RESERVATION_SPEED;
+        return $aircraft->groundspeed < self::MAX_GROUND_RESERVATION_SPEED &&
+            NonAssignableSquawkCode::where('code', $aircraft->squawk)->exists();
     }
 }
