@@ -39,6 +39,56 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertSquawkAssigned('BMI11A', '7203');
     }
 
+    public function testItAllocatesSingleCharacterDestinationRange()
+    {
+        $this->createSquawkRange('EGJJ', 'E', '7201', '7201');
+
+        $this->assertEquals(
+            '7201',
+            $this->allocator->allocate('BMI11A', ['origin' => 'EGJJ', 'destination' => 'EGGD'])->getCode()
+        );
+        $this->assertSquawkAssigned('BMI11A', '7201');
+    }
+
+    public function testItPrefersDoubleCharacterDestinationMatchOverSingle()
+    {
+        $this->createSquawkRange('EGJJ', 'E', '7201', '7201');
+        $this->createSquawkRange('EGJJ', 'EG', '7202', '7202');
+
+        $this->assertEquals(
+            '7202',
+            $this->allocator->allocate('BMI11A', ['origin' => 'EGJJ', 'destination' => 'EGGD'])->getCode()
+        );
+        $this->assertSquawkAssigned('BMI11A', '7202');
+    }
+
+    public function testItPrefersTripleCharacterDestinationMatchOverDouble()
+    {
+        $this->createSquawkRange('EGJJ', 'EG', '7201', '7201');
+        $this->createSquawkRange('EGJJ', 'EG', '7202', '7202');
+        $this->createSquawkRange('EGJJ', 'EGG', '7203', '7203');
+
+        $this->assertEquals(
+            '7203',
+            $this->allocator->allocate('BMI11A', ['origin' => 'EGJJ', 'destination' => 'EGGD'])->getCode()
+        );
+        $this->assertSquawkAssigned('BMI11A', '7203');
+    }
+
+    public function testItPrefersQuadrupleCharacterDestinationMatchOverTriple()
+    {
+        $this->createSquawkRange('EGJJ', 'EG', '7201', '7201');
+        $this->createSquawkRange('EGJJ', 'EG', '7202', '7202');
+        $this->createSquawkRange('EGJJ', 'EGG', '7203', '7203');
+        $this->createSquawkRange('EGJJ', 'EGGD', '7204', '7204');
+
+        $this->assertEquals(
+            '7204',
+            $this->allocator->allocate('BMI11A', ['origin' => 'EGJJ', 'destination' => 'EGGD'])->getCode()
+        );
+        $this->assertSquawkAssigned('BMI11A', '7204');
+    }
+
     public function testItReturnsNullOnAllSquawksAllocated()
     {
         $this->createSquawkRange('EGGD', 'EGFF', '7201', '7202');

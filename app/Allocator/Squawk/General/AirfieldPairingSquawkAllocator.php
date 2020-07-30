@@ -15,8 +15,16 @@ class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator implements 
 {
     private function getPossibleRangesForFlight(string $origin, string $destination): Collection
     {
+        $destinationStrings = [
+            substr($destination, 0, 1),
+            substr($destination, 0, 2),
+            substr($destination, 0, 3),
+            $destination
+        ];
+
         return AirfieldPairingSquawkRange::where('origin', $origin)
-            ->where('destination', $destination)
+            ->whereIn('destination', $destinationStrings)
+            ->orderByRaw('LENGTH(destination) DESC')
             ->get();
     }
 
