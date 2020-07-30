@@ -1,6 +1,6 @@
 # uk-controller-api
 
-![Laravel Tests](https://github.com/VATSIM-UK/uk-controller-api/workflows/Laravel%20Tests/badge.svg)
+![Build and Test](https://github.com/VATSIM-UK/uk-controller-api/workflows/Build%20and%20Test/badge.svg)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=security_rating)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
