@@ -75,4 +75,19 @@ class NetworkAircraft extends Model
     {
         return new Coordinate($this->latitude, $this->longitude);
     }
+
+    public function squawkingMayday(): bool
+    {
+        return $this->attributes['transponder'] === '7700';
+    }
+
+    public function squawkingRadioFailure(): bool
+    {
+        return $this->attributes['transponder'] === '7600';
+    }
+
+    public function squawkingBannedSquawk(): bool
+    {
+        return $this->attributes['transponder'] === '7500';
+    }
 }

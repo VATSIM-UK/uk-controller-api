@@ -60,7 +60,7 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
             ]
         );
 
-        NetworkAircraft::where('callsign', 'BAW123')->update(['latitude' => '54.66', 'longitude'=>'-6.21']);
+        NetworkAircraft::where('callsign', 'BAW123')->update(['latitude' => '54.66', 'longitude' => '-6.21']);
         $this->assertTrue($this->callListener());
         $this->assertDatabaseHas(
             'ccams_squawk_assignments',
@@ -73,7 +73,7 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
 
     public function testItDoesNothingIfCodeRecentlyUpdated()
     {
-        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        $this->doesntExpectEvents([SquawkAssignmentEvent::class, SquawkUnassignedEvent::class]);
         DB::table('network_aircraft')
             ->where('callsign', 'BAW123')
             ->update(
@@ -89,6 +89,126 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
             'ccams_squawk_assignments',
             [
                 'callsign' => 'BAW123',
+            ]
+        );
+    }
+
+    public function testItDoesNothingIfSquawkingReservedCodeOnTheGround()
+    {
+        $this->doesntExpectEvents([SquawkAssignmentEvent::class, SquawkUnassignedEvent::class]);
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+        DB::table('network_aircraft')
+            ->where('callsign', 'BAW123')
+            ->update(
+                [
+                    'latitude' => '54.66',
+                    'longitude' => '-6.21',
+                    'transponder' => '7000',
+                    'groundspeed' => 25,
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                ]
+            );
+        $this->assertTrue($this->callListener());
+        $this->assertDatabaseHas(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+    }
+
+    public function testItDoesNothingIfSquawkingBannedCodeInTheAir()
+    {
+        $this->doesntExpectEvents([SquawkAssignmentEvent::class, SquawkUnassignedEvent::class]);
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+        DB::table('network_aircraft')
+            ->where('callsign', 'BAW123')
+            ->update(
+                [
+                    'latitude' => '54.66',
+                    'longitude' => '-6.21',
+                    'transponder' => '7500',
+                    'groundspeed' => 125,
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                ]
+            );
+        $this->assertTrue($this->callListener());
+        $this->assertDatabaseHas(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+    }
+
+    public function testItDoesNothingIfSquawkingRadioFailureInTheAir()
+    {
+        $this->doesntExpectEvents([SquawkAssignmentEvent::class, SquawkUnassignedEvent::class]);
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+        DB::table('network_aircraft')
+            ->where('callsign', 'BAW123')
+            ->update(
+                [
+                    'latitude' => '54.66',
+                    'longitude' => '-6.21',
+                    'transponder' => '7600',
+                    'groundspeed' => 125,
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                ]
+            );
+        $this->assertTrue($this->callListener());
+        $this->assertDatabaseHas(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+    }
+
+    public function testItDoesNothingIfSquawkingMaydayInTheAir()
+    {
+        $this->doesntExpectEvents([SquawkAssignmentEvent::class, SquawkUnassignedEvent::class]);
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
+            ]
+        );
+        DB::table('network_aircraft')
+            ->where('callsign', 'BAW123')
+            ->update(
+                [
+                    'latitude' => '54.66',
+                    'longitude' => '-6.21',
+                    'transponder' => '7700',
+                    'groundspeed' => 125,
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                ]
+            );
+        $this->assertTrue($this->callListener());
+        $this->assertDatabaseHas(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '7212'
             ]
         );
     }
@@ -115,9 +235,38 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItAssignsNewCodeOnUpdateIfNotConflicting()
+    {
+        $this->expectsEvents([SquawkAssignmentEvent::class, SquawkUnassignedEvent::class]);
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '0001',
+            ]
+        );
+        DB::table('network_aircraft')
+            ->where('callsign', 'BAW123')
+            ->update(
+                [
+                    'latitude' => '54.66',
+                    'longitude' => '-6.21',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(2)->subSeconds(10)
+                ]
+            );
+        $this->assertTrue($this->callListener());
+        $this->assertDatabaseHas(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+                'code' => '1234',
+            ]
+        );
+    }
+
     public function testItRemovesOldAssignmentButDoesntAssignNewIfConflict()
     {
         $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        $this->expectsEvents(SquawkUnassignedEvent::class);
         CcamsSquawkAssignment::create(
             [
                 'callsign' => 'BAW456',
@@ -148,6 +297,37 @@ class ReserveInFirProximityTest extends BaseFunctionalTestCase
                 'code' => '1234',
             ]
         );
+        $this->assertDatabaseMissing(
+            'ccams_squawk_assignments',
+            [
+                'callsign' => 'BAW123',
+            ]
+        );
+    }
+
+    public function testItRemovesOldAssignmentButDoesntAssignNewIfSquawkingNonMaydayReservedCodeInTheAir()
+    {
+        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        $this->expectsEvents(SquawkUnassignedEvent::class);
+        CcamsSquawkAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'code' => '0101'
+            ]
+        );
+        DB::table('network_aircraft')
+            ->where('callsign', 'BAW123')
+            ->update(
+                [
+                    'latitude' => '54.66',
+                    'longitude' => '-6.21',
+                    'groundspeed' => '125',
+                    'transponder' => '7000',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(2)->subSecond()
+                ]
+            );
+
+        $this->assertTrue($this->callListener());
         $this->assertDatabaseMissing(
             'ccams_squawk_assignments',
             [
