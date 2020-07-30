@@ -66,7 +66,7 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
     {
         $this->createSquawkRange('EGJJ', 'EG', '7201', '7201');
         $this->createSquawkRange('EGJJ', 'EG', '7202', '7202');
-        $this->createSquawkRange('EGJJ', 'EGG', '7202', '7203');
+        $this->createSquawkRange('EGJJ', 'EGG', '7203', '7203');
 
         $this->assertEquals(
             '7203',
@@ -79,8 +79,8 @@ class AirfieldPairingSquawkAllocatorTest extends BaseFunctionalTestCase
     {
         $this->createSquawkRange('EGJJ', 'EG', '7201', '7201');
         $this->createSquawkRange('EGJJ', 'EG', '7202', '7202');
-        $this->createSquawkRange('EGJJ', 'EGG', '7202', '7203');
-        $this->createSquawkRange('EGJJ', 'EGGD', '7202', '7204');
+        $this->createSquawkRange('EGJJ', 'EGG', '7203', '7203');
+        $this->createSquawkRange('EGJJ', 'EGGD', '7204', '7204');
 
         $this->assertEquals(
             '7204',
