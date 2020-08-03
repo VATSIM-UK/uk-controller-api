@@ -18,7 +18,7 @@ class RecordHoldAssignment
                     'assigned_by' => Auth::user()->id,
                     'assigned_at' => $allocationEvent->getHold()->updated_at ?? $allocationEvent->getHold()->created_at,
                 ]
-        );
+            );
 
         return true;
     }

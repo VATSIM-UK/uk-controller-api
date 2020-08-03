@@ -5,6 +5,10 @@ use App\Allocator\Squawk\General\AirfieldPairingSquawkAllocator;
 use App\Allocator\Squawk\General\CcamsSquawkAllocator;
 use App\Allocator\Squawk\General\OrcamSquawkAllocator;
 use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
+use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
+use App\Listeners\Squawk\ReserveInFirProximity;
+use App\Models\Squawk\SquawkReservationMeasurementPoint;
+use App\Services\SectorfileService;
 use App\Services\SquawkService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application;
@@ -21,11 +25,27 @@ class SquawkServiceProvider extends ServiceProvider
             // Add the squawk allocation rules, in the order of preference
             return new SquawkService(
                 [
-                    $app->make(UnitDiscreteSquawkAllocator::class),
                     $app->make(AirfieldPairingSquawkAllocator::class),
                     $app->make(OrcamSquawkAllocator::class),
                     $app->make(CcamsSquawkAllocator::class),
+                ],
+                [
+                    $app->make(UnitDiscreteSquawkAllocator::class),
                 ]
+            );
+        });
+
+        $this->app->singleton(ReserveInFirProximity::class, function (Application $app) {
+            return new ReserveInFirProximity(
+                $app->make(SquawkService::class),
+                SquawkReservationMeasurementPoint::get()->pluck('latLong')->toArray()
+            );
+        });
+
+        $this->app->singleton(ReclaimIfLeftFirProximity::class, function (Application $app) {
+            return new ReclaimIfLeftFirProximity(
+                $app->make(SquawkService::class),
+                SquawkReservationMeasurementPoint::get()->pluck('latLong')->toArray()
             );
         });
     }
@@ -37,6 +57,10 @@ class SquawkServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [SquawkService::class];
+        return [
+            SquawkService::class,
+            ReserveInFirProximity::class,
+            ReclaimIfLeftFirProximity::class,
+        ];
     }
 }

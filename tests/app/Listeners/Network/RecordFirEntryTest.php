@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Models\Vatsim\NetworkAircraftFirEvent;
+use Carbon\Carbon;
 
 class RecordFirEntryTest extends BaseFunctionalTestCase
 {
@@ -102,7 +103,7 @@ class RecordFirEntryTest extends BaseFunctionalTestCase
     {
         // The coordinates are in the FIR
         $aircraft = $this->addEntryEvent(self::CALLSIGN, self::IN_FIR_LATITUDE, self::IN_FIR_LONGITUDE, self::FIR_ID);
-        NetworkAircraftFirEvent::create(
+        $event = NetworkAircraftFirEvent::create(
             [
                 'callsign' => self::CALLSIGN,
                 'flight_information_region_id' => self::FIR_ID,
@@ -110,9 +111,11 @@ class RecordFirEntryTest extends BaseFunctionalTestCase
                 'metadata' => [],
             ]
         );
+        $event->created_at = Carbon::now()->addMinute();
+        $event->save();
 
         $this->listener->handle(new NetworkAircraftUpdatedEvent($aircraft));
-        $this->assertDatabaseMissing(
+        $this->assertDatabaseHas(
             'network_aircraft_fir_events',
             [
                 'callsign' => self::CALLSIGN,

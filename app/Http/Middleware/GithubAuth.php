@@ -24,8 +24,11 @@ class GithubAuth
             return response()->json(['message' => 'Invalid request signature format'])->setStatusCode(400);
         }
 
-        if (hash_hmac($signatureParts[0], $request->getContent(),
-                config('github.secret')) !== $signatureParts[1]) {
+        if (hash_hmac(
+            $signatureParts[0],
+            $request->getContent(),
+            config('github.secret')
+        ) !== $signatureParts[1]) {
             Log::error('Invalid GitHub request signature');
             return response()->json(['message' => 'Invalid request signature'])->setStatusCode(403);
         }

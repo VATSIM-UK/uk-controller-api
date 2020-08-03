@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Location\Coordinate;
 
 class NetworkAircraft extends Model
 {
@@ -31,11 +32,27 @@ class NetworkAircraft extends Model
         'planned_route',
     ];
 
+    protected $dates = [
+        'transponder_last_updated_at',
+    ];
+
+    protected $casts = [
+        'latitude' => 'float',
+        'longitude' => 'float',
+    ];
+
     public static function boot()
     {
         parent::boot();
         static::creating(function (NetworkAircraft $aircraft) {
             $aircraft->setUpdatedAt(Carbon::now());
+            $aircraft->transponder_last_updated_at = Carbon::now();
+        });
+
+        static::updating(function (NetworkAircraft $aircraft) {
+            if ($aircraft->isDirty('transponder')) {
+                $aircraft->transponder_last_updated_at = Carbon::now();
+            }
         });
     }
 
@@ -47,5 +64,30 @@ class NetworkAircraft extends Model
     public function firEvents(): HasMany
     {
         return $this->hasMany(NetworkAircraftFirEvent::class, 'callsign', 'callsign');
+    }
+
+    public function getSquawkAttribute(): string
+    {
+        return $this->attributes['transponder'];
+    }
+
+    public function getLatLongAttribute(): Coordinate
+    {
+        return new Coordinate($this->latitude, $this->longitude);
+    }
+
+    public function squawkingMayday(): bool
+    {
+        return $this->attributes['transponder'] === '7700';
+    }
+
+    public function squawkingRadioFailure(): bool
+    {
+        return $this->attributes['transponder'] === '7600';
+    }
+
+    public function squawkingBannedSquawk(): bool
+    {
+        return $this->attributes['transponder'] === '7500';
     }
 }
