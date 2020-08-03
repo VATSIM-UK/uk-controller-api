@@ -9,6 +9,7 @@ use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Rules\VatsimCallsign;
 use App\Services\HoldService;
+use App\Services\NetworkDataService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -169,11 +170,14 @@ class HoldController extends BaseController
             return response()->json([], 422);
         }
 
-        $networkAircraft = NetworkAircraft::firstOrCreate(['callsign' => $request->json('callsign')]);
+        NetworkDataService::firstOrCreateNetworkAircraft(
+            $request->json('callsign'),
+            ['callsign' => $request->json('callsign')]
+        );
         $assignedHold = AssignedHold::updateOrCreate(
             ['callsign' => $request->json('callsign')],
             [
-                'callsign' => $networkAircraft->callsign,
+                'callsign' => $request->json('callsign'),
                 'navaid_id' => $navaid->id
             ]
         );
