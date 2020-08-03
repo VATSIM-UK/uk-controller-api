@@ -58,7 +58,7 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'type' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
                 'release_point' => 'LAM'
             ]
         )
@@ -70,7 +70,7 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'enroute_release_type_id' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
                 'release_point' => 'LAM',
                 'user_id' => self::ACTIVE_USER_CID,
                 'released_at' => Carbon::now(),
@@ -88,7 +88,7 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'type' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]
         )
             ->assertStatus(201);
@@ -99,7 +99,7 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'enroute_release_type_id' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
                 'release_point' => null,
                 'user_id' => self::ACTIVE_USER_CID,
                 'released_at' => Carbon::now(),
@@ -136,58 +136,58 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'ASDASDSADSADSADASDSADSA',
                 'type' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]], // Bad callsign
             [[
                 'type' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]], // No callsign
             [[
                 'callsign' => 'BAW123',
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]], //No type
             [[
                 'callsign' => 'BAW123',
                 'type' => 'abc',
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]], // Bad Type
             [[
                 'callsign' => 'BAW123',
                 'type' => 1,
                 'initiating_controller' => 123,
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]], // Bad init controller
             [[
                 'callsign' => 'BAW123',
                 'type' => 1,
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]], // Mo init controller
             [[
                 'callsign' => 'BAW123',
                 'type' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 123,
+                'target_controller' => 123,
             ]], // Bad rec controller
             [[
                 'callsign' => 'BAW123',
                 'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
+                'target_controller' => 'LON_S_CTR',
             ]], // No rec controller
             [[
                 'callsign' => 'BAW123',
                 'type' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
                 'release_point' => null,
             ]], // Bad release point
             [[
                 'callsign' => 'BAW123',
                 'type' => 1,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
                 'release_point' => 123,
             ]], // Bad release point
         ];
@@ -203,7 +203,7 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'type' => -5,
                 'initiating_controller' => 'LON_S_CTR',
-                'receiving_controller' => 'LON_C_CTR',
+                'target_controller' => 'LON_C_CTR',
             ]
         )
             ->assertStatus(404);

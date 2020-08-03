@@ -26,7 +26,7 @@ class ReleaseController extends BaseController
                 'callsign' => ['required', 'string', new VatsimCallsign],
                 'type' => 'required|integer',
                 'initiating_controller' => 'required|string',
-                'receiving_controller' => 'required|string',
+                'target_controller' => 'required|string',
                 'release_point' => 'string',
             ]
         );
@@ -45,7 +45,7 @@ class ReleaseController extends BaseController
                 'callsign' => $request->json('callsign'),
                 'enroute_release_type_id' => $request->json('type'),
                 'initiating_controller' => $request->json('initiating_controller'),
-                'receiving_controller' => $request->json('receiving_controller'),
+                'target_controller' => $request->json('target_controller'),
                 'release_point' => $request->json('release_point'),
                 'user_id' => Auth::user()->id,
             ]

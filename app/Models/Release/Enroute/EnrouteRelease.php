@@ -16,7 +16,7 @@ class EnrouteRelease extends Model
         'callsign',
         'enroute_release_type_id',
         'initiating_controller',
-        'receiving_controller',
+        'target_controller',
         'release_point',
         'user_id',
     ];

@@ -30,7 +30,7 @@ class EnrouteReleaseEventTest extends BaseFunctionalTestCase
                 'callsign' => 'BAW123',
                 'enroute_release_type_id' => 1,
                 'initiating_controller' => 'LON_C_CTR',
-                'receiving_controller' => 'LON_S_CTR',
+                'target_controller' => 'LON_S_CTR',
                 'release_point' => 'ABTUM-10',
                 'user_id' => Auth::user()->id,
             ]
@@ -50,7 +50,7 @@ class EnrouteReleaseEventTest extends BaseFunctionalTestCase
                 'callsign' => $this->release->callsign,
                 'type' => $this->release->enroute_release_type_id,
                 'release_point' => $this->release->release_point,
-                'target_controller' => $this->release->receiving_controller,
+                'target_controller' => $this->release->target_controller,
             ],
             $this->event->broadcastWith()
         );

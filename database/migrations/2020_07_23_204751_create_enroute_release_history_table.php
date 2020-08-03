@@ -18,7 +18,7 @@ class CreateEnrouteReleaseHistoryTable extends Migration
             $table->unsignedBigInteger('enroute_release_type_id')->comment('The type of release');
             $table->string('callsign')->comment('Which aircraft was the release for');
             $table->string('initiating_controller')->comment('Who initiated the release');
-            $table->string('receiving_controller')->comment('Who received the release');
+            $table->string('target_controller')->comment('Who was the target of the release');
             $table->string('release_point')
                 ->nullable()
                 ->comment('The point at which the release takes effect');
