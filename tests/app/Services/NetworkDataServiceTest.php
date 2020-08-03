@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
+use InvalidArgumentException;
 use Mockery;
 use PDOException;
 use Psr\Http\Message\MessageInterface;
@@ -49,6 +50,23 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $mockMessage = Mockery::mock(MessageInterface::class);
         $mockMessage->allows('getBody')->andReturn($mockStream);
         $client->allows('get')->with(NetworkDataService::NETWORK_DATA_URL)->andReturn($mockMessage);
+    }
+
+    public function testItHandlesExceptionsFromNetworkDataFeed()
+    {
+        $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
+        $clientMock = Mockery::mock(Client::class);
+        $clientMock->allows('get')
+            ->with(NetworkDataService::NETWORK_DATA_URL)
+            ->andThrow(new InvalidArgumentException('test'));
+        $service = new NetworkDataService($clientMock);
+        $service->updateNetworkData();
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'VIR25A',
+            ]
+        );
     }
 
     public function testItAddsNewAircraftFromDataFeed()

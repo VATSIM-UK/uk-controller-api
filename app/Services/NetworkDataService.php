@@ -6,6 +6,7 @@ use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,12 @@ class NetworkDataService
 
     public function updateNetworkData(): void
     {
-        $data = json_decode($this->client->get(self::NETWORK_DATA_URL)->getBody(), true);
+        try {
+            $data = json_decode($this->client->get(self::NETWORK_DATA_URL)->getBody(), true);
+        } catch (Exception $exception) {
+            Log::warning('Failed to download network data: ' . $exception->getMessage());
+            return;
+        }
         $this->processClients($data['clients']);
         $this->handleTimeouts();
     }
