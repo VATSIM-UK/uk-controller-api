@@ -6,28 +6,23 @@ use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class NetworkDataService
 {
     const NETWORK_DATA_URL = "http://cluster.data.vatsim.net/vatsim-data.json";
 
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
-
     public function updateNetworkData(): void
     {
-        $data = json_decode($this->client->get(self::NETWORK_DATA_URL)->getBody(), true);
-        $this->processClients($data['clients']);
+        $networkResponse = Http::get(self::NETWORK_DATA_URL);
+        if (!$networkResponse->successful()) {
+            Log::warning('Failed to download network data, response was ' . $networkResponse->status());
+            return;
+        }
+
+        $this->processClients($networkResponse->json()['clients']);
         $this->handleTimeouts();
     }
 

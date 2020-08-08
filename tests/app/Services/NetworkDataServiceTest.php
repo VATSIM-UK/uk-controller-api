@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Http;
+use InvalidArgumentException;
 use Mockery;
 use PDOException;
 use Psr\Http\Message\MessageInterface;
@@ -39,21 +41,41 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             ]
         ];
 
-        $client = Mockery::mock(Client::class);
-        $this->service = new NetworkDataService($client);
         Carbon::setTestNow(Carbon::now());
         Date::setTestNow(Carbon::now());
+        $this->service = $this->app->make(NetworkDataService::class);
+    }
 
-        $mockStream = Mockery::mock(StreamInterface::class);
-        $mockStream->allows('__toString')->andReturn(json_encode($this->networkData));
-        $mockMessage = Mockery::mock(MessageInterface::class);
-        $mockMessage->allows('getBody')->andReturn($mockStream);
-        $client->allows('get')->with(NetworkDataService::NETWORK_DATA_URL)->andReturn($mockMessage);
+    private function fakeNetworkDataReturn(): void
+    {
+        Http::fake(
+            [
+                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode($this->networkData), 200)
+            ]
+        );
+    }
+
+    public function testItHandlesExceptionsFromNetworkDataFeed()
+    {
+        $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
+        Http::fake(
+            [
+                NetworkDataService::NETWORK_DATA_URL => Http::response('', 404)
+            ]
+        );
+        $this->service->updateNetworkData();
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'VIR25A',
+            ]
+        );
     }
 
     public function testItAddsNewAircraftFromDataFeed()
     {
         $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
             'network_aircraft',
@@ -67,6 +89,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItUpdatesExistingAircraftFromDataFeed()
     {
         $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
             'network_aircraft',
@@ -80,6 +103,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItUpdatesExistingAircraftOnTheGroundFromDataFeed()
     {
         $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
             'network_aircraft',
@@ -93,6 +117,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItDoesntAddAtcFromDataFeed()
     {
         $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(
             'network_aircraft',
@@ -105,6 +130,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItTimesOutAircraftFromDataFeed()
     {
         $this->expectsEvents(NetworkAircraftDisconnectedEvent::class);
+        $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(
             'network_aircraft',
@@ -118,6 +144,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
         $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
+        $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
     }
 
