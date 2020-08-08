@@ -128,7 +128,7 @@ class SquawkController extends BaseController
         );
 
         if (!$assignment) {
-            Log::info(
+            Log::warning(
                 'Unable to allocate general squawk for ' . $callsign,
                 $request->json()->all()
             );
