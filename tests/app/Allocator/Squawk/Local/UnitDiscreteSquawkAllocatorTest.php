@@ -23,7 +23,6 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->allocator = new UnitDiscreteSquawkAllocator();
-
         $this->createSquawkRange('EGGD', '7201', '7203');
     }
 
@@ -39,7 +38,6 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
                 'callsign' => 'BMI11A',
                 'unit' => 'EGGD',
                 'code' => '7203',
-                'created_at' => Carbon::now(),
             ]
         );
     }
@@ -56,7 +54,6 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
                 'callsign' => 'BMI11A',
                 'unit' => 'EGGD',
                 'code' => '7203',
-                'created_at' => Carbon::now(),
             ]
         );
     }
@@ -78,7 +75,6 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
                 'callsign' => 'BMI11A',
                 'unit' => 'EGGD',
                 'code' => $code,
-                'created_at' => Carbon::now(),
             ]
         );
     }
@@ -97,7 +93,6 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
                 'callsign' => 'BMI11A',
                 'unit' => 'EGGD',
                 'code' => $code,
-                'created_at' => Carbon::now(),
             ]
         );
     }
