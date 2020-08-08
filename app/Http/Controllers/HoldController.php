@@ -170,14 +170,14 @@ class HoldController extends BaseController
             return response()->json([], 422);
         }
 
-        NetworkDataService::firstOrCreateNetworkAircraft(
+        $networkAircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             $request->json('callsign'),
             ['callsign' => $request->json('callsign')]
         );
         $assignedHold = AssignedHold::updateOrCreate(
-            ['callsign' => $request->json('callsign')],
+            ['callsign' => $networkAircraft->callsign],
             [
-                'callsign' => $request->json('callsign'),
+                'callsign' => $networkAircraft->callsign,
                 'navaid_id' => $navaid->id
             ]
         );
