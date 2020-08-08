@@ -22,7 +22,7 @@ class NetworkDataService
             return;
         }
 
-        $this->processClients(json_decode($networkResponse->body(), true)['clients']);
+        $this->processClients($networkResponse->json()['clients']);
         $this->handleTimeouts();
     }
 
