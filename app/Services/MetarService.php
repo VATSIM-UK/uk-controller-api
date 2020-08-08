@@ -86,7 +86,7 @@ class MetarService
             $metar->getStatusCode() !== 200 ||
             strpos($metarString, 'No METAR available for') === 0
         ) {
-            Log::error('Failed to download METAR for ' . $icao);
+            Log::info('Failed to download METAR for ' . $icao);
             return null;
         }
 
@@ -98,7 +98,7 @@ class MetarService
         try {
             $qnh = $this->getQnhFromMetar($metarString);
         } catch (MetarException $exception) {
-            Log::error(
+            Log::info(
                 'Unable to get QNH from METAR',
                 ['icao' => $icao, 'metar' => $metar->getBody()->getContents() ]
             );
