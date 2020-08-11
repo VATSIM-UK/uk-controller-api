@@ -16,20 +16,40 @@ class AddReleaseTypeData extends Migration
             ->insert(
                 [
                     [
-                        'tag_string' => 'RFC',
-                        'description' => 'Released For Climb',
+                        'tag_string' => 'C',
+                        'description' => 'Climb',
                     ],
                     [
-                        'tag_string' => 'RFD',
-                        'description' => 'Released For Descent',
+                        'tag_string' => 'D',
+                        'description' => 'Descent',
                     ],
                     [
-                        'tag_string' => 'RFT',
-                        'description' => 'Released For Turns',
+                        'tag_string' => 'T',
+                        'description' => 'Turns',
                     ],
                     [
-                        'tag_string' => 'RLS',
-                        'description' => 'Fully Released',
+                        'tag_string' => 'F',
+                        'description' => 'Full',
+                    ],
+                    [
+                        'tag_string' => 'LT',
+                        'description' => 'Left Turns',
+                    ],
+                    [
+                        'tag_string' => 'RT',
+                        'description' => 'Right Turns',
+                    ],
+                    [
+                        'tag_string' => 'TD',
+                        'description' => 'Turns and Descent',
+                    ],
+                    [
+                        'tag_string' => 'LTD',
+                        'description' => 'Left Turns and Descent',
+                    ],
+                    [
+                        'tag_string' => 'LTD',
+                        'description' => 'Right Turns and Descent',
                     ],
                 ]
             );
