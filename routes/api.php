@@ -36,17 +36,6 @@ Route::middleware('plugin.user')->group(function () {
     Route::delete('hold/assigned/{callsign}', 'HoldController@deleteAssignedHold')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 
-    Route::get('hold/profile', 'HoldController@getUserHoldProfiles');
-
-    // Whenever a hold profile is updated, we need to reset the dependency
-    Route::middleware('dependency.update:DEPENDENCY_HOLD_PROFILE')->group(function () {
-        Route::put('hold/profile', 'HoldController@createUserHoldProfile');
-        Route::put('hold/profile/{profile_id}', 'HoldController@updateUserHoldProfile')
-            ->where('profile_id', '\d+');
-        Route::delete('hold/profile/{profile_id}', 'HoldController@deleteUserHoldProfile')
-            ->where('profile_id', '\d+');
-    });
-
     // Squawks
     Route::get('squawk-assignment/{callsign}', 'SquawkController@getSquawkAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
