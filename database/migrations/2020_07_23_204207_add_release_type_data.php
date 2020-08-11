@@ -48,7 +48,7 @@ class AddReleaseTypeData extends Migration
                         'description' => 'Left Turns and Descent',
                     ],
                     [
-                        'tag_string' => 'LTD',
+                        'tag_string' => 'RTD',
                         'description' => 'Right Turns and Descent',
                     ],
                 ]
