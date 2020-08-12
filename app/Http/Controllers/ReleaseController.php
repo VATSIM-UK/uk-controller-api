@@ -27,7 +27,7 @@ class ReleaseController extends BaseController
                 'type' => 'required|integer',
                 'initiating_controller' => 'required|string',
                 'target_controller' => 'required|string',
-                'release_point' => 'string',
+                'release_point' => 'string|min:0|max:15',
             ]
         );
 

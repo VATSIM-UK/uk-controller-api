@@ -19,9 +19,11 @@ class CreateEnrouteReleaseHistoryTable extends Migration
             $table->string('callsign')->comment('Which aircraft was the release for');
             $table->string('initiating_controller')->comment('Who initiated the release');
             $table->string('target_controller')->comment('Who was the target of the release');
-            $table->string('release_point')
+            $table->string('release_point', 15)
                 ->nullable()
-                ->comment('The point at which the release takes effect');
+                ->comment(
+                    'The point at which the release takes effect. Limited to 15 characters as max length of tag item.'
+                );
             $table->unsignedInteger('user_id')->comment('Which user initiated the release');
             $table->timestamp('released_at');
 

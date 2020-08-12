@@ -78,6 +78,36 @@ class ReleaseControllerTest extends BaseApiTestCase
         );
     }
 
+    public function testItCreatesAReleaseWithReleasePointMaxLength()
+    {
+        $this->expectsEvents(EnrouteReleaseEvent::class);
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'release/enroute',
+            [
+                'callsign' => 'BAW123',
+                'type' => 1,
+                'initiating_controller' => 'LON_S_CTR',
+                'target_controller' => 'LON_C_CTR',
+                'release_point' => '123456789012345'
+            ]
+        )
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas(
+            'enroute_releases',
+            [
+                'callsign' => 'BAW123',
+                'enroute_release_type_id' => 1,
+                'initiating_controller' => 'LON_S_CTR',
+                'target_controller' => 'LON_C_CTR',
+                'release_point' => '123456789012345',
+                'user_id' => self::ACTIVE_USER_CID,
+                'released_at' => Carbon::now(),
+            ]
+        );
+    }
+
     public function testItCreatesAReleaseWithNoReleasePoint()
     {
         $this->expectsEvents(EnrouteReleaseEvent::class);
@@ -190,6 +220,20 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'target_controller' => 'LON_C_CTR',
                 'release_point' => 123,
             ]], // Bad release point
+            [[
+                'callsign' => 'BAW123',
+                'type' => 1,
+                'initiating_controller' => 'LON_S_CTR',
+                'target_controller' => 'LON_C_CTR',
+                'release_point' => '1234567890123456',
+            ]], // Bad release point - too long
+            [[
+                'callsign' => 'BAW123',
+                'type' => 1,
+                'initiating_controller' => 'LON_S_CTR',
+                'target_controller' => 'LON_C_CTR',
+                'release_point' => '',
+            ]], // Bad release point - too short
         ];
     }
 

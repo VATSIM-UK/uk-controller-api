@@ -15,7 +15,11 @@ class CreateEnrouteReleaseTypesTable extends Migration
     {
         Schema::create('enroute_release_types', function (Blueprint $table) {
             $table->id();
-            $table->string('tag_string')->comment('What to display in the TAG for this kind of release');
+            $table->string('tag_string', 15)
+                ->comment(
+                    'What to display in the TAG for this kind of release. ' .
+                        'Limited to 15 characters as max length of tag item.'
+                );
             $table->string('description')->comment('Description of the release to be shown in the plugin');
         });
     }
