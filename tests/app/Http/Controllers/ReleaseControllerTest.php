@@ -227,13 +227,6 @@ class ReleaseControllerTest extends BaseApiTestCase
                 'target_controller' => 'LON_C_CTR',
                 'release_point' => '1234567890123456',
             ]], // Bad release point - too long
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-                'release_point' => '',
-            ]], // Bad release point - too short
         ];
     }
 
