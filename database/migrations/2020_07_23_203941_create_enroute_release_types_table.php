@@ -21,6 +21,7 @@ class CreateEnrouteReleaseTypesTable extends Migration
                         'Limited to 15 characters as max length of tag item.'
                 );
             $table->string('description')->comment('Description of the release to be shown in the plugin');
+            $table->unique('tag_string');
         });
     }
 
