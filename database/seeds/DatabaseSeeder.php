@@ -36,12 +36,6 @@ class DatabaseSeeder extends Seeder
         HoldTableSeeder::class => [
             'holds',
         ],
-        HoldProfileTableSeeder::class => [
-            'hold_profile',
-        ],
-        HoldProfileHoldTableSeeder::class => [
-            'hold_profile_hold',
-        ],
         HoldRestrictionTableSeeder::class => [
             'hold_restrictions',
         ],
