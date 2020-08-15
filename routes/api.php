@@ -212,6 +212,9 @@ Route::middleware('public')->group(function () {
     // Navaids
     Route::get('navaid/dependency', 'NavaidController');
 
+    // Stands
+    Route::get('stand/dependency', 'StandController@getStandsDependency');
+
     // Admin login
     Route::prefix('admin')->group(function () {
         Route::post('login', 'UserController@adminLogin');

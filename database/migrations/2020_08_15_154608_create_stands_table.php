@@ -16,13 +16,13 @@ class CreateStandsTable extends Migration
         Schema::create('stands', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('airfield_id')->comment('The airfield that the stand is at');
-            $table->unsignedInteger('identifier')->comment('The stand identifier');
+            $table->string('identifier')->comment('The stand identifier');
             $table->string('latitude')->comment('The stands latitude');
             $table->string('longitude')->comment('The stands longitude');
             $table->timestamps();
 
             $table->foreign('airfield_id')->references('id')->on('airfield')->onDelete('cascade');
-            $table->unique('airfield_id', 'identifier');
+            $table->unique(['airfield_id', 'identifier']);
         });
     }
 
