@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Release\Enroute\EnrouteRelease;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Facades\Auth;
 use TestingUtils\Traits\WithSeedUsers;
 
@@ -38,9 +39,9 @@ class EnrouteReleaseEventTest extends BaseFunctionalTestCase
         $this->event = new EnrouteReleaseEvent($this->release);
     }
 
-    public function testItBroadcastsToCorrectChannel()
+    public function testItBroadcastsOnTheCorrectChannel()
     {
-        $this->assertEquals('enroute-releases', $this->event->broadcastOn());
+        $this->assertEquals([new PrivateChannel('enroute-releases')], $this->event->broadcastOn());
     }
 
     public function testItBroadcastsWithData()
