@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
 use App\Models\Stand\Stand;
+use Illuminate\Support\Facades\DB;
 
 class StandControllerTest extends BaseApiTestCase
 {
     public function testItReturnsStandDependency()
     {
+        DB::table('stands')->delete();
         Stand::insert(
             [
                 [
@@ -32,24 +34,22 @@ class StandControllerTest extends BaseApiTestCase
             ]
         );
 
+        $firstStand = Stand::all()->first()->id;
         $expected = [
             'EGLL' => [
                 [
+                    'id' => $firstStand,
                     'identifier' => '1L',
-                    'latitude' => 'abc',
-                    'longitude' => 'def',
                 ],
                 [
+                    'id' => $firstStand + 1,
                     'identifier' => '251',
-                    'latitude' => 'asd',
-                    'longitude' => 'hsd',
                 ],
             ],
             'EGBB' => [
                 [
+                    'id' => $firstStand + 2,
                     'identifier' => '32',
-                    'latitude' => 'fhg',
-                    'longitude' => 'sda',
                 ]
             ],
         ];

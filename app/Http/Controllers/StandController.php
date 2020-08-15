@@ -15,9 +15,8 @@ class StandController
             return [
                 Airfield::find($collection->first()->airfield_id)->code => $collection->map(function (Stand $stand) {
                     return [
-                        'identifier' => $stand->identifier,
-                        'latitude' => $stand->latitude,
-                        'longitude' => $stand->longitude,
+                        'id' => $stand->id,
+                        'identifier' => $stand->identifier
                     ];
                 }),
             ];
