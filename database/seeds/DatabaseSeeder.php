@@ -95,7 +95,12 @@ class DatabaseSeeder extends Seeder
             'unit_discrete_squawk_assignments',
             'unit_discrete_squawk_range_rules',
             'squawk_assignments_history',
-        ]
+        ],
+        StandTableSeeder::class => [
+            'stands',
+            'stand_assignments',
+            'stand_assignments_history',
+        ],
     ];
 
 

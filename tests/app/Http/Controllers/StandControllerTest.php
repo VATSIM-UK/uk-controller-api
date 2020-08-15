@@ -4,36 +4,13 @@ namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAssignment;
 use Illuminate\Support\Facades\DB;
 
 class StandControllerTest extends BaseApiTestCase
 {
     public function testItReturnsStandDependency()
     {
-        DB::table('stands')->delete();
-        Stand::insert(
-            [
-                [
-                    'airfield_id' => 1,
-                    'identifier' => '1L',
-                    'latitude' => 'abc',
-                    'longitude' => 'def',
-                ],
-                [
-                    'airfield_id' => 1,
-                    'identifier' => '251',
-                    'latitude' => 'asd',
-                    'longitude' => 'hsd',
-                ],
-                [
-                    'airfield_id' => 2,
-                    'identifier' => '32',
-                    'latitude' => 'fhg',
-                    'longitude' => 'sda',
-                ],
-            ]
-        );
-
         $firstStand = Stand::all()->first()->id;
         $expected = [
             'EGLL' => [
@@ -55,6 +32,31 @@ class StandControllerTest extends BaseApiTestCase
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/dependency')
+            ->assertJson($expected)
+            ->assertStatus(200);
+    }
+
+    public function testItReturnsAllStandAssignments()
+    {
+        StandAssignment::insert(
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'stand_id' => 1,
+                ],
+                [
+                    'callsign' => 'BAW456',
+                    'stand_id' => 2,
+                ],
+            ]
+        );
+
+        $expected = [
+            'BAW123' => 1,
+            'BAW456' => 2
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment')
             ->assertJson($expected)
             ->assertStatus(200);
     }

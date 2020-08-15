@@ -214,6 +214,7 @@ Route::middleware('public')->group(function () {
 
     // Stands
     Route::get('stand/dependency', 'StandController@getStandsDependency');
+    Route::get('stand/assignment', 'StandController@getStandAssignments');
 
     // Admin login
     Route::prefix('admin')->group(function () {
