@@ -13,17 +13,21 @@ class StandAssignedEventTest extends BaseUnitTestCase
      */
     private $event;
 
+    /**
+     * @var StandAssignment
+     */
+    private $assignment;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->event = new StandAssignedEvent(
-            new StandAssignment(
-                [
-                    'callsign' => 'BAW123',
-                    'stand_id' => 1,
-                ]
-            )
+        $this->assignment = new StandAssignment(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
         );
+        $this->event = new StandAssignedEvent($this->assignment);
     }
 
     public function testItBroadcastsWithData()
@@ -34,5 +38,10 @@ class StandAssignedEventTest extends BaseUnitTestCase
     public function testItBroadcastsOnChannel()
     {
         $this->assertEquals([new PrivateChannel('stand-assignments')], $this->event->broadcastOn());
+    }
+
+    public function testItReturnsAssignment()
+    {
+        $this->assertEquals($this->assignment, $this->event->getStandAssignment());
     }
 }

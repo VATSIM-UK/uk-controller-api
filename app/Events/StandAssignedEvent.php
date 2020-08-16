@@ -38,4 +38,12 @@ class StandAssignedEvent implements ShouldBroadcast
     {
         return [new PrivateChannel(self::CHANNEL)];
     }
+
+    /**
+     * @return StandAssignment
+     */
+    public function getStandAssignment(): StandAssignment
+    {
+        return $this->standAssignment;
+    }
 }
