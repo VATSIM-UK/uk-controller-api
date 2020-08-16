@@ -6,7 +6,6 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Models\Stand\StandAssignment;
 use App\Models\User\User;
-use Carbon\Carbon;
 
 class RecordStandAssignmentHistoryTest extends BaseFunctionalTestCase
 {
