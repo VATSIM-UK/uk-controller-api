@@ -47,17 +47,20 @@ class StandController extends BaseController
             return $invalidRequest;
         }
 
+        $response = null;
         try {
             $this->standService->assignStandToAircraft(
                 $request->json('callsign'),
                 (int) $request->json('stand_id')
             );
-            return response()->json([], 201);
+            $response = response()->json([], 201);
         } catch (StandNotFoundException $notFoundException) {
-            return response()->json([], 404);
+            $response = response()->json([], 404);
         } catch (StandAlreadyAssignedException $alreadyAssignedException) {
-            return response()->json([], 409);
+            $response = response()->json([], 409);
         }
+
+        return $response;
     }
 
     public function deleteStandAssignment(string $callsign): JsonResponse
