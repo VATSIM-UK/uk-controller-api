@@ -9,6 +9,7 @@ use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use App\Events\StandAssignedEvent;
+use App\Events\StandUnassignedEvent;
 use App\Listeners\Network\RecordFirEntry;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
@@ -18,8 +19,8 @@ use App\Listeners\Squawk\MarkAssignmentDeletedOnUnassignment;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 use App\Listeners\Squawk\ReserveInFirProximity;
+use App\Listeners\Stand\MarkAssignmentDeletedOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
-use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -53,5 +54,8 @@ class EventServiceProvider extends ServiceProvider
         StandAssignedEvent::class => [
             RecordStandAssignmentHistory::class,
         ],
+        StandUnassignedEvent::class => [
+            MarkStandAssignmentDeletedOnUnassignment::class,
+        ]
     ];
 }

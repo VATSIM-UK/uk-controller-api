@@ -36,4 +36,12 @@ class StandUnassignedEvent implements ShouldBroadcast
     {
         return [new PrivateChannel(self::CHANNEL)];
     }
+
+    /**
+     * @return string
+     */
+    public function getCallsign(): string
+    {
+        return $this->callsign;
+    }
 }

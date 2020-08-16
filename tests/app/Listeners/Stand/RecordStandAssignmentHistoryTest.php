@@ -19,7 +19,6 @@ class RecordStandAssignmentHistoryTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->listener = $this->app->make(RecordStandAssignmentHistory::class);
-        Carbon::setTestNow(Carbon::now());
     }
 
     public function testItCreatesAnAssignmentHistory()
