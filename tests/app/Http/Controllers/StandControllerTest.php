@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
+use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkDataService;
 
@@ -130,17 +131,38 @@ class StandControllerTest extends BaseApiTestCase
     public function testItReturnsConflictOnAssignmentIfStandAlreadyAssigned()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        StandAssignment::create(
-            [
-                'callsign' => 'BAW123',
-                'stand_id' => 1,
-            ]
-        );
+        $this->addStandAssignment('BAW123', 1);
         $data = [
             'callsign' => 'BAW9354',
             'stand_id' => 1
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
             ->assertStatus(409);
+    }
+
+    public function testItDeletesStandAssignments()
+    {
+        $this->expectsEvents(StandUnassignedEvent::class);
+        $this->addStandAssignment('BAW123', 1);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
+            ->assertStatus(204);
+    }
+
+    public function testItDeletesStandAssignmentsIfNonePresent()
+    {
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
+            ->assertStatus(204);
+    }
+
+    private function addStandAssignment(string $callsign, int $standId)
+    {
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        StandAssignment::create(
+            [
+                'callsign' => $callsign,
+                'stand_id' => $standId,
+            ]
+        );
     }
 }

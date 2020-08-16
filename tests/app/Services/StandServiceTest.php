@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
+use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\StandAssignment;
@@ -133,6 +134,33 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => 'RYR7234',
                 'stand_id' => 1,
+            ]
+        );
+    }
+
+    public function testItDeletesStandAssignments()
+    {
+        $this->expectsEvents(StandUnassignedEvent::class);
+        $this->addStandAssignment('RYR7234', 1);
+        $this->service->deleteStandAssignment('RYR7234');
+
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
+            ]
+        );
+    }
+
+    public function testItDoesntTriggerEventIfNoAssignmentDelete()
+    {
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $this->service->deleteStandAssignment('RYR7234');
+
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
             ]
         );
     }

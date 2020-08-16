@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\StandAssignedEvent;
+use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Airfield\Airfield;
@@ -33,7 +34,7 @@ class StandService
         })->toBase();
     }
 
-    public function assignStandToAircraft(string $callsign, int $standId)
+    public function assignStandToAircraft(string $callsign, int $standId): void
     {
         $stand = Stand::find($standId);
         if (!$stand) {
@@ -58,5 +59,14 @@ class StandService
         );
 
         event(new StandAssignedEvent($assignment));
+    }
+
+    public function deleteStandAssignment(string $callsign): void
+    {
+        if (!StandAssignment::destroy($callsign)) {
+            return;
+        }
+
+        event(new StandUnassignedEvent($callsign));
     }
 }

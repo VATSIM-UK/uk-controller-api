@@ -46,6 +46,8 @@ Route::middleware('plugin.user')->group(function () {
 
     // Stands
     Route::put('stand/assignment', 'StandController@createStandAssignment');
+    Route::delete('stand/assignment/{callsign}', 'StandController@deleteStandAssignment')
+        ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);;
 });
 
 // Routes for user administration

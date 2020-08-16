@@ -12,6 +12,8 @@ class StandAssignment extends Model
 
     public $keyType = 'string';
 
+    public $primaryKey = 'callsign';
+
     protected $fillable = [
         'callsign',
         'stand_id',
