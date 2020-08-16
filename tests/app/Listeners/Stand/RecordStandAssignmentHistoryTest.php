@@ -5,6 +5,7 @@ namespace App\Listeners\Stand;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\User\User;
 
 class RecordStandAssignmentHistoryTest extends BaseFunctionalTestCase
@@ -63,6 +64,28 @@ class RecordStandAssignmentHistoryTest extends BaseFunctionalTestCase
                 'user_id' => null,
             ]
         );
+    }
+
+    public function testItDeletesExistingHistoryForCallsign()
+    {
+        $existingHistory = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 2
+            ]
+        );
+        $assignment = new StandAssignedEvent(
+            new StandAssignment(
+                [
+                    'callsign' => 'BAW123',
+                    'stand_id' => 1
+                ]
+            )
+        );
+        $this->listener->handle($assignment);
+
+        $existingHistory->refresh();
+        $this->assertTrue($existingHistory->trashed());
     }
 
     public function testItContinuesPropagation()

@@ -8,14 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class RecordStandAssignmentHistory
 {
-    /**
-     * Handle any stand allocation event
-     *
-     * @param StandAssignedEvent $assignedEvent
-     * @return bool
-     */
     public function handle(StandAssignedEvent $assignedEvent) : bool
     {
+        // Mark any current assignments as deleted and create a new history item
+        StandAssignmentsHistory::where('callsign', $assignedEvent->getStandAssignment()->callsign)->delete();
         StandAssignmentsHistory::create(
             [
                 'callsign' => $assignedEvent->getStandAssignment()->callsign,
