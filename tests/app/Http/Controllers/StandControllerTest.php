@@ -3,29 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
-use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
-use Illuminate\Support\Facades\DB;
 
 class StandControllerTest extends BaseApiTestCase
 {
     public function testItReturnsStandDependency()
     {
-        $firstStand = Stand::all()->first()->id;
         $expected = [
             'EGLL' => [
                 [
-                    'id' => $firstStand,
+                    'id' => 1,
                     'identifier' => '1L',
                 ],
                 [
-                    'id' => $firstStand + 1,
+                    'id' => 2,
                     'identifier' => '251',
                 ],
             ],
             'EGBB' => [
                 [
-                    'id' => $firstStand + 2,
+                    'id' => 3,
                     'identifier' => '32',
                 ]
             ],

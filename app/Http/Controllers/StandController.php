@@ -2,36 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;
-use Illuminate\Database\Eloquent\Collection;
+use App\Rules\VatsimCallsign;
+use App\Services\NetworkDataService;
+use App\Services\StandService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
-class StandController
+class StandController extends BaseController
 {
+    /**
+     * @var StandService
+     */
+    private $standService;
+
+    public function __construct(StandService $standService)
+    {
+        $this->standService = $standService;
+    }
+
     public function getStandsDependency(): JsonResponse
     {
-        $stands = Stand::all()->groupBy('airfield_id')->mapWithKeys(function (Collection $collection) {
-            return [
-                Airfield::find($collection->first()->airfield_id)->code => $collection->map(function (Stand $stand) {
-                    return [
-                        'id' => $stand->id,
-                        'identifier' => $stand->identifier
-                    ];
-                }),
-            ];
-        });
-
-        return response()->json($stands);
+        return response()->json($this->standService->getStandsDependency());
     }
 
     public function getStandAssignments(): JsonResponse
     {
-        return response()->json(
-            StandAssignment::all()->mapWithKeys(function (StandAssignment $assignment) {
-                return [$assignment->callsign => $assignment->stand_id];
-            })
-        );
+        return response()->json($this->standService->getStandAssignments());
     }
 }
