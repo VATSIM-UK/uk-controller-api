@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\Stand\StandAlreadyAssignedException;
+use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\Stand;
 use App\Rules\VatsimCallsign;
 use App\Services\NetworkDataService;
@@ -29,5 +31,32 @@ class StandController extends BaseController
     public function getStandAssignments(): JsonResponse
     {
         return response()->json($this->standService->getStandAssignments());
+    }
+
+    public function createStandAssignment(Request $request): JsonResponse
+    {
+        $invalidRequest = $this->checkForSuppliedData(
+            $request,
+            [
+                'callsign' => ['string' , 'required', new VatsimCallsign],
+                'stand_id' => 'integer|required',
+            ]
+        );
+
+        if ($invalidRequest) {
+            return $invalidRequest;
+        }
+
+        try {
+            $this->standService->assignStandToAircraft(
+                $request->json('callsign'),
+                (int) $request->json('stand_id')
+            );
+            return response()->json([], 201);
+        } catch (StandNotFoundException $notFoundException) {
+            return response()->json([], 404);
+        } catch (StandAlreadyAssignedException $alreadyAssignedException) {
+            return response()->json([], 409);
+        }
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StandAssignment extends Model
 {
-    const UPDATED_AT = false;
+    const UPDATED_AT = null;
 
     public $incrementing = false;
 

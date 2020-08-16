@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Stand\StandAlreadyAssignedException;
+use App\Exceptions\Stand\StandNotFoundException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -30,5 +32,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         ValidationException::class,
         OAuthServerException::class,
+        StandNotFoundException::class,
+        StandAlreadyAssignedException::class
     ];
 }

@@ -43,6 +43,9 @@ Route::middleware('plugin.user')->group(function () {
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+
+    // Stands
+    Route::put('stand/assignment', 'StandController@createStandAssignment');
 });
 
 // Routes for user administration
