@@ -327,4 +327,17 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItCreatesAirfieldPairingPrenote()
+    {
+        PrenoteService::createNewAirfieldPairingFromPrenote('EGLL', 'EGBB', 'PRENOTE_TWO');
+        $this->assertDatabaseHas(
+            'airfield_pairing_prenotes',
+            [
+                'origin_airfield_id' => 1,
+                'destination_airfield_id' => 2,
+                'prenote_id' => 2,
+            ]
+        );
+    }
 }

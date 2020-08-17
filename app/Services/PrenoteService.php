@@ -194,4 +194,21 @@ class PrenoteService
             ->select('prenotes.key')
             ->pluck('prenotes.key');
     }
+
+    public static function createNewAirfieldPairingFromPrenote(
+        string $departureAirfield,
+        string $arrivalAirfield,
+        string $prenoteKey
+    ): void {
+        DB::transaction(function () use ($departureAirfield, $arrivalAirfield, $prenoteKey) {
+            DB::table('airfield_pairing_prenotes')
+                ->insert(
+                    [
+                        'origin_airfield_id' => Airfield::where('code', $departureAirfield)->firstOrFail()->id,
+                        'destination_airfield_id' => Airfield::where('code', $arrivalAirfield)->firstOrFail()->id,
+                        'prenote_id' => Prenote::where('key', $prenoteKey)->firstOrFail()->id,
+                    ]
+                );
+        });
+    }
 }
