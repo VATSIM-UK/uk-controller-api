@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Airfield\Airfield;
+use App\Models\Controller\Prenote;
+use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
 class PrenoteServiceTest extends BaseFunctionalTestCase
@@ -337,6 +340,26 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
                 'origin_airfield_id' => 1,
                 'destination_airfield_id' => 2,
                 'prenote_id' => 2,
+            ]
+        );
+    }
+
+    public function testItDeletesAirfieldPairingPrenoteForPair()
+    {
+        DB::table('airfield_pairing_prenotes')
+            ->insert(
+                [
+                    'origin_airfield_id' => 1,
+                    'destination_airfield_id' => 2,
+                    'prenote_id' => 2,
+                ]
+            );
+        PrenoteService::deleteAirfieldPairingPrenoteForPair('EGLL', 'EGBB');
+        $this->assertDatabaseMissing(
+            'airfield_pairing_prenotes',
+            [
+                'origin_airfield_id' => 1,
+                'destination_airfield_id' => 2,
             ]
         );
     }
