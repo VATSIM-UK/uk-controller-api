@@ -43,6 +43,9 @@ Route::middleware('plugin.user')->group(function () {
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+
+    // Enroute releases
+    Route::post('release/enroute', 'ReleaseController@enrouteRelease');
 });
 
 // Routes for user administration
@@ -211,6 +214,9 @@ Route::middleware('public')->group(function () {
 
     // Navaids
     Route::get('navaid/dependency', 'NavaidController');
+
+    // Enroute releases
+    Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
 
     // Admin login
     Route::prefix('admin')->group(function () {
