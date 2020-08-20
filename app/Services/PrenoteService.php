@@ -6,6 +6,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -193,5 +194,39 @@ class PrenoteService
             ->distinct()
             ->select('prenotes.key')
             ->pluck('prenotes.key');
+    }
+
+    public static function createNewAirfieldPairingFromPrenote(
+        string $departureAirfield,
+        string $arrivalAirfield,
+        string $prenoteKey
+    ): void {
+        DB::transaction(
+            function () use ($departureAirfield, $arrivalAirfield, $prenoteKey) {
+                DB::table('airfield_pairing_prenotes')
+                    ->insert(
+                        [
+                            'origin_airfield_id' => Airfield::where('code', $departureAirfield)->firstOrFail()->id,
+                            'destination_airfield_id' => Airfield::where('code', $arrivalAirfield)->firstOrFail()->id,
+                            'prenote_id' => Prenote::where('key', $prenoteKey)->firstOrFail()->id,
+                            'created_at' => Carbon::now(),
+                        ]
+                    );
+            }
+        );
+    }
+
+    public static function deleteAirfieldPairingPrenoteForPair(
+        string $departureAirfield,
+        string $arrivalAirfield
+    ): void {
+        DB::transaction(
+            function () use ($departureAirfield, $arrivalAirfield) {
+                DB::table('airfield_pairing_prenotes')
+                    ->where('origin_airfield_id', Airfield::where('code', $departureAirfield)->firstOrFail()->id)
+                    ->where('destination_airfield_id', Airfield::where('code', $arrivalAirfield)->firstOrFail()->id)
+                    ->delete();
+            }
+        );
     }
 }
