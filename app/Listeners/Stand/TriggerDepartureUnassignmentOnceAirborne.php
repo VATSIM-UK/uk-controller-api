@@ -26,7 +26,7 @@ class TriggerDepartureUnassignmentOnceAirborne
         if (
             $aircraft->groundspeed < self::MIN_UNASSIGNMENT_GROUNDSPEED ||
             $aircraft->altitude < self::MIN_UNASSIGNMENT_ALTITUDE ||
-            ($assignment = $this->standService->getDepartureStandAssignmentForAircraft($aircraft)) === null
+            !$this->standService->getDepartureStandAssignmentForAircraft($aircraft)
         ) {
             return true;
         }

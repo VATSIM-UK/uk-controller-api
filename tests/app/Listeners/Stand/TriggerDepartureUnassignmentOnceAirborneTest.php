@@ -6,7 +6,6 @@ use App\BaseFunctionalTestCase;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
-use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkDataService;
 
