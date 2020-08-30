@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
+use Illuminate\Testing\TestResponse;
 use InvalidArgumentException;
 use UserTableSeeder;
 

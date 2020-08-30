@@ -44,11 +44,13 @@ Route::middleware('plugin.user')->group(function () {
     Route::delete('squawk-assignment/{callsign}', 'SquawkController@deleteSquawkAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 
+    // Enroute releases
+    Route::post('release/enroute', 'ReleaseController@enrouteRelease');
+
     // Stands
     Route::put('stand/assignment', 'StandController@createStandAssignment');
     Route::delete('stand/assignment/{callsign}', 'StandController@deleteStandAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
-    ;
 });
 
 // Routes for user administration
@@ -217,6 +219,9 @@ Route::middleware('public')->group(function () {
 
     // Navaids
     Route::get('navaid/dependency', 'NavaidController');
+
+    // Enroute releases
+    Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
 
     // Stands
     Route::get('stand/dependency', 'StandController@getStandsDependency');
