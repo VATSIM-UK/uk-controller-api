@@ -21,6 +21,7 @@ use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 use App\Listeners\Squawk\ReserveInFirProximity;
 use App\Listeners\Stand\MarkAssignmentDeletedOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
+use App\Listeners\Stand\TriggerDepartureUnassignmentOnceAirborne;
 use App\Listeners\Stand\TriggerUnassignmentOnDisconnect;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -52,6 +53,7 @@ class EventServiceProvider extends ServiceProvider
             RecordFirEntry::class,
             ReserveInFirProximity::class,
             ReclaimIfLeftFirProximity::class,
+            TriggerDepartureUnassignmentOnceAirborne::class,
         ],
         StandAssignedEvent::class => [
             RecordStandAssignmentHistory::class,
