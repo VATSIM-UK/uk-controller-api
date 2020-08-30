@@ -2,7 +2,9 @@
 
 namespace App\Models\Stand;
 
+use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stand extends Model
 {
@@ -12,4 +14,9 @@ class Stand extends Model
         'latitude',
         'longitude',
     ];
+
+    public function airfield(): BelongsTo
+    {
+        return $this->belongsTo(Airfield::class);
+    }
 }
