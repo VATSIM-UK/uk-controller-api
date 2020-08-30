@@ -8,6 +8,7 @@ use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\StandAssignment;
+use App\Models\Vatsim\NetworkAircraft;
 
 class StandServiceTest extends BaseFunctionalTestCase
 {
@@ -165,10 +166,33 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    private function addStandAssignment(string $callsign, int $standId)
+    public function testItGetsDepartureStandAssignmentForAircraft()
+    {
+        $this->addStandAssignment('BAW123', 1);
+        NetworkAircraft::where('callsign', 'BAW123')->update(['planned_depairport' => 'EGLL']);
+
+        $this->assertEquals(
+            StandAssignment::find('BAW123'),
+            $this->service->getDepartureStandAssignmentForAircraft(NetworkAircraft::find('BAW123'))
+        );
+    }
+
+    public function testItDoesntGetDepartureStandIfAssignmentNotForDepartureAirport()
+    {
+        $this->addStandAssignment('BAW123', 1);
+        NetworkAircraft::where('callsign', 'BAW123')->update(['planned_depairport' => 'EGBB']);
+        $this->assertNull($this->service->getDepartureStandAssignmentForAircraft(NetworkAircraft::find('BAW123')));
+    }
+
+    public function testItDoesntGetDepartureStandIfNoAssignment()
+    {
+        $this->assertNull($this->service->getDepartureStandAssignmentForAircraft(NetworkAircraft::find('BAW123')));
+    }
+
+    private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        StandAssignment::create(
+        return StandAssignment::create(
             [
                 'callsign' => $callsign,
                 'stand_id' => $standId,

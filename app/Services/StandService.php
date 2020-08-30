@@ -9,6 +9,8 @@ use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class StandService
@@ -68,5 +70,14 @@ class StandService
         }
 
         event(new StandUnassignedEvent($callsign));
+    }
+
+    public function getDepartureStandAssignmentForAircraft(NetworkAircraft $aircraft): ?StandAssignment
+    {
+        return StandAssignment::where('callsign', $aircraft->callsign)
+            ->whereHas('stand.airfield', function (Builder $query) use ($aircraft) {
+                $query->where('code', $aircraft->planned_depairport);
+            })
+            ->first();
     }
 }
