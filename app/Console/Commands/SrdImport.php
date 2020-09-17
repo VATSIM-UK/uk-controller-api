@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Imports\Srd\SrdImport as ImportHelper;
-use App\Models\Srd\SrdNote;
-use App\Models\Srd\SrdRoute;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
