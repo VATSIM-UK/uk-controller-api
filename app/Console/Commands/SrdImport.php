@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Imports\SrdImport as ImportHelper;
+use App\Imports\Srd\SrdImport as ImportHelper;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Illuminate\Console\Command;
