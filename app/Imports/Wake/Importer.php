@@ -37,8 +37,7 @@ class Importer implements WithHeadingRow, ToCollection
             }
 
             // Get the wake category
-            if (($wakeCategory = $this->getWakeCategory($row[self::WAKE_CATEGORY_COLUMN])) === null)
-            {
+            if (($wakeCategory = $this->getWakeCategory($row[self::WAKE_CATEGORY_COLUMN])) === null) {
                 $this->output->warning(
                     'Invalid UK wake category for aircraft type ' . $row[self::TYPE_DESIGNATOR_COLUMN]
                 );
