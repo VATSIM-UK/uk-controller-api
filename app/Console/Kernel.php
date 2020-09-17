@@ -16,6 +16,7 @@ use App\Console\Commands\SrdImport;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
+use App\Console\Commands\WakeCategoriesImport;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
@@ -45,6 +46,7 @@ class Kernel extends ConsoleKernel
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
+        WakeCategoriesImport::class,
     ];
 
     /**
