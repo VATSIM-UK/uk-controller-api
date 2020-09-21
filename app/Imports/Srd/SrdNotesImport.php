@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Imports;
+namespace App\Imports\Srd;
 
 use App\Models\Srd\SrdNote;
 use Illuminate\Support\Collection;

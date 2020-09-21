@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Imports;
+namespace App\Imports\Srd;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Srd\SrdRoute;
