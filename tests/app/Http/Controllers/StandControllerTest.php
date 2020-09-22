@@ -13,21 +13,20 @@ class StandControllerTest extends BaseApiTestCase
     public function testItReturnsStandDependency()
     {
         $expected = [
-            'EGLL' => [
-                [
-                    'id' => 1,
-                    'identifier' => '1L',
-                ],
-                [
-                    'id' => 2,
-                    'identifier' => '251',
-                ],
+            [
+                'id' => 1,
+                'airfield_icao' => 'EGLL',
+                'identifier' => '1L',
             ],
-            'EGBB' => [
-                [
-                    'id' => 3,
-                    'identifier' => '32',
-                ]
+            [
+                'id' => 2,
+                'airfield_icao' => 'EGLL',
+                'identifier' => '251',
+            ],
+            [
+                'id' => 3,
+                'airfield_icao' => 'EGBB',
+                'identifier' => '32',
             ],
         ];
 

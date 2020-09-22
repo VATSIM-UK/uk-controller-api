@@ -27,26 +27,21 @@ class StandServiceTest extends BaseFunctionalTestCase
     {
         $expected = collect(
             [
-                'EGLL' => collect(
-                    [
-                        [
-                            'id' => 1,
-                            'identifier' => '1L',
-                        ],
-                        [
-                            'id' => 2,
-                            'identifier' => '251',
-                        ],
-                    ]
-                ),
-                'EGBB' => collect(
-                    [
-                        [
-                            'id' => 3,
-                            'identifier' => '32',
-                        ]
-                    ]
-                ),
+                [
+                    'id' => 1,
+                    'airfield_icao' => 'EGLL',
+                    'identifier' => '1L',
+                ],
+                [
+                    'id' => 2,
+                    'airfield_icao' => 'EGLL',
+                    'identifier' => '251',
+                ],
+                [
+                    'id' => 3,
+                    'airfield_icao' => 'EGBB',
+                    'identifier' => '32',
+                ],
             ]
         );
 

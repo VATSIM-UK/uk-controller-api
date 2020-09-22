@@ -6,7 +6,6 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
-use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
@@ -17,14 +16,11 @@ class StandService
 {
     public function getStandsDependency(): Collection
     {
-        return Stand::all()->groupBy('airfield_id')->mapWithKeys(function (Collection $collection) {
+        return Stand::with('airfield')->get()->map(function (Stand $stand) {
             return [
-                Airfield::find($collection->first()->airfield_id)->code => $collection->map(function (Stand $stand) {
-                    return [
-                        'id' => $stand->id,
-                        'identifier' => $stand->identifier
-                    ];
-                }),
+                'id' => $stand->id,
+                'airfield_icao' => $stand->airfield->code,
+                'identifier' => $stand->identifier,
             ];
         })->toBase();
     }
