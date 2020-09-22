@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +58,7 @@ class AirfieldService
                     'airfield_id' => $airfieldId,
                     'controller_position_id' => ControllerPosition::where('callsign', $position)->firstOrFail()->id,
                     'order' => $index + 1,
+                    'created_at' => Carbon::now(),
                 ];
             }
 

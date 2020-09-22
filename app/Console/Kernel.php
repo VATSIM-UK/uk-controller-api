@@ -13,6 +13,7 @@ use App\Console\Commands\SrdImport;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
+use App\Console\Commands\WakeCategoriesImport;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
@@ -43,6 +44,7 @@ class Kernel extends ConsoleKernel
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
         CleanStandAssignmentsHistory::class,
+        WakeCategoriesImport::class,
     ];
 
     /**
@@ -61,6 +63,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
-        $schedule->command('networkdata:update')->everyMinute();
+        $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
     }
 }
