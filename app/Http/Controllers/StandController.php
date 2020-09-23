@@ -56,8 +56,6 @@ class StandController extends BaseController
             $response = response()->json([], 201);
         } catch (StandNotFoundException $notFoundException) {
             $response = response()->json([], 404);
-        } catch (StandAlreadyAssignedException $alreadyAssignedException) {
-            $response = response()->json([], 409);
         }
 
         return $response;

@@ -128,18 +128,6 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(404);
     }
 
-    public function testItReturnsConflictOnAssignmentIfStandAlreadyAssigned()
-    {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
-        $this->addStandAssignment('BAW123', 1);
-        $data = [
-            'callsign' => 'BAW9354',
-            'stand_id' => 1
-        ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
-            ->assertStatus(409);
-    }
-
     public function testItDeletesStandAssignments()
     {
         $this->expectsEvents(StandUnassignedEvent::class);

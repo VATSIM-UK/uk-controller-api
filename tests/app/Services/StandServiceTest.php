@@ -78,7 +78,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->service->getStandAssignments());
     }
 
-    public function testItThrowsExceptionIfStandNotFound()
+    public function testAssignStandToAircraftThrowsExceptionIfStandNotFound()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
         $this->expectException(StandNotFoundException::class);
@@ -86,18 +86,10 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->service->assignStandToAircraft('RYR7234', 55);
     }
 
-    public function testItThrowsExceptionIfStandAlreadyAssigned()
-    {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
-        $this->expectException(StandAlreadyAssignedException::class);
-        $this->expectExceptionMessage('Stand id 1 is already assigned to RYR923');
-        $this->addStandAssignment('RYR923', 1);
-        $this->service->assignStandToAircraft('RYR7234', 1);
-    }
-
-    public function testItAddsNewStandAssignment()
+    public function testAssignStandToAircraftAddsNewStandAssignment()
     {
         $this->expectsEvents(StandAssignedEvent::class);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
         $this->service->assignStandToAircraft('RYR7234', 1);
 
         $this->assertDatabaseHas(
@@ -109,10 +101,11 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItUpdatesExistingStandAssignment()
+    public function testAssignStandToAircraftUpdatesExistingStandAssignment()
     {
         $this->expectsEvents(StandAssignedEvent::class);
-        $this->addStandAssignment('RYR923', 1);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $this->addStandAssignment('RYR7234', 1);
         $this->service->assignStandToAircraft('RYR7234', 2);
 
         $this->assertDatabaseHas(
@@ -124,11 +117,111 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItAllowsAssignmentToSameStand()
+    public function testAssignStandToAircraftUnassignsExistingAssignment()
+    {
+        $this->addStandAssignment('BAW123', 1);
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->expectsEvents(StandUnassignedEvent::class);
+        $this->service->assignStandToAircraft('RYR7234', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
+                'stand_id' => 1,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123'
+            ]
+        );
+    }
+
+    public function testAssignStandToAircraftAllowsAssignmentToSameStand()
     {
         $this->expectsEvents(StandAssignedEvent::class);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
         $this->addStandAssignment('RYR7234', 1);
         $this->service->assignStandToAircraft('RYR7234', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
+                'stand_id' => 1,
+            ]
+        );
+    }
+
+    public function testAssignAircraftToStandThrowsExceptionIfStandNotFound()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $this->expectException(StandNotFoundException::class);
+        $this->expectExceptionMessage('Stand with id 55 not found');
+        $this->service->assignAircraftToStand('RYR7234', 55);
+    }
+
+    public function testAssignAircraftToStandThrowsExceptionIfAlreadyAssigned()
+    {
+        $this->addStandAssignment('BAW123', 1);
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $this->expectException(StandAlreadyAssignedException::class);
+        $this->expectExceptionMessage('Stand id 1 is already assigned to BAW123');
+        $this->service->assignAircraftToStand('RYR7234', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234'
+            ]
+        );
+    }
+
+    public function testAssignAircraftToStandAddsNewStandAssignment()
+    {
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->service->assignAircraftToStand('RYR7234', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
+                'stand_id' => 1,
+            ]
+        );
+    }
+
+    public function testAssignAircraftToStandUpdatesExistingStandAssignment()
+    {
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $this->addStandAssignment('RYR7234', 1);
+        $this->service->assignAircraftToStand('RYR7234', 2);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
+                'stand_id' => 2,
+            ]
+        );
+    }
+
+    public function testAssignAircraftToStandAllowsAssignmentToSameStand()
+    {
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $this->addStandAssignment('RYR7234', 1);
+        $this->service->assignAircraftToStand('RYR7234', 1);
 
         $this->assertDatabaseHas(
             'stand_assignments',

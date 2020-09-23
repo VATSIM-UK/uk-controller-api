@@ -36,13 +36,18 @@ class StandService
         })->toBase();
     }
 
-    public function assignStandToAircraft(string $callsign, int $standId): void
+    /**
+     * Creates a stand assignment by assigning an aircraft to a stand.
+     * If the stand is already occupied, then the previous assignment is not
+     * overridden.
+     *
+     * @param string $callsign
+     * @param int $standId
+     * @throws StandAlreadyAssignedException
+     */
+    public function assignAircraftToStand(string $callsign, int $standId): void
     {
-        $stand = Stand::find($standId);
-        if (!$stand) {
-            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
-        }
-
+        $this->getStandById($standId);
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
         $currentAssignment = StandAssignment::where('stand_id', $standId)->first();
 
@@ -50,6 +55,37 @@ class StandService
             throw new StandAlreadyAssignedException(
                 sprintf('Stand id %d is already assigned to %s', $standId, $currentAssignment->callsign)
             );
+        }
+
+        $assignment = StandAssignment::updateOrCreate(
+            ['callsign' => $callsign],
+            [
+                'callsign' => $callsign,
+                'stand_id' => $standId,
+            ]
+        );
+
+        event(new StandAssignedEvent($assignment));
+    }
+
+    /**
+     * Creates a stand assignment by assigning a particular stand to an aircraft.
+     * If the stand is already assigned, that assignment is first removed.
+     *
+     * @param string $callsign
+     * @param int $standId
+     */
+    public function assignStandToAircraft(string $callsign, int $standId): void
+    {
+        $this->getStandById($standId);
+
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        $currentAssignment = StandAssignment::with('aircraft')
+            ->where('stand_id', $standId)
+            ->first();
+
+        if ($currentAssignment && $currentAssignment->callsign !== $callsign) {
+            $this->deleteStandAssignment($currentAssignment->aircraft->callsign);
         }
 
         $assignment = StandAssignment::updateOrCreate(
@@ -79,5 +115,15 @@ class StandService
                 $query->where('code', $aircraft->planned_depairport);
             })
             ->first();
+    }
+
+    private function getStandById(int $standId): Stand
+    {
+        $stand = Stand::find($standId);
+        if (!$stand) {
+            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
+        }
+
+        return $stand;
     }
 }
