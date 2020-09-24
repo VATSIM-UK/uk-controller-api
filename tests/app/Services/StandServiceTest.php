@@ -70,8 +70,14 @@ class StandServiceTest extends BaseFunctionalTestCase
 
         $expected = collect(
             [
-                'BAW123' => 1,
-                'BAW456' => 2
+                [
+                    'callsign' => 'BAW123',
+                    'stand_id' => 1,
+                ],
+                [
+                    'callsign' => 'BAW456',
+                    'stand_id' => 2,
+                ],
             ]
         );
 

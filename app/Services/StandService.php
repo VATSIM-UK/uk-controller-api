@@ -31,8 +31,11 @@ class StandService
 
     public function getStandAssignments(): Collection
     {
-        return StandAssignment::all()->mapWithKeys(function (StandAssignment $assignment) {
-            return [$assignment->callsign => $assignment->stand_id];
+        return StandAssignment::all()->map(function (StandAssignment $assignment) {
+            return [
+                'callsign' => $assignment->callsign,
+                'stand_id' => $assignment->stand_id,
+            ];
         })->toBase();
     }
 
@@ -91,7 +94,6 @@ class StandService
         $assignment = StandAssignment::updateOrCreate(
             ['callsign' => $callsign],
             [
-                'callsign' => $callsign,
                 'stand_id' => $standId,
             ]
         );

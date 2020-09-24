@@ -52,8 +52,14 @@ class StandControllerTest extends BaseApiTestCase
         );
 
         $expected = [
-            'BAW123' => 1,
-            'BAW456' => 2
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ],
+            [
+                'callsign' => 'BAW456',
+                'stand_id' => 2,
+            ],
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment')
