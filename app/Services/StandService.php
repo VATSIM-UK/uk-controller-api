@@ -17,26 +17,32 @@ class StandService
 {
     public function getStandsDependency(): Collection
     {
-        return Stand::all()->groupBy('airfield_id')->mapWithKeys(function (Collection $collection) {
-            return [
-                Airfield::find($collection->first()->airfield_id)->code => $collection->map(function (Stand $stand) {
-                    return [
-                        'id' => $stand->id,
-                        'identifier' => $stand->identifier
-                    ];
-                }),
-            ];
-        })->toBase();
+        return Stand::all()->groupBy('airfield_id')->mapWithKeys(
+            function (Collection $collection) {
+                return [
+                    Airfield::find($collection->first()->airfield_id)->code => $collection->map(
+                        function (Stand $stand) {
+                            return [
+                                'id' => $stand->id,
+                                'identifier' => $stand->identifier
+                            ];
+                        }
+                    ),
+                ];
+            }
+        )->toBase();
     }
 
     public function getStandAssignments(): Collection
     {
-        return StandAssignment::all()->map(function (StandAssignment $assignment) {
-            return [
-                'callsign' => $assignment->callsign,
-                'stand_id' => $assignment->stand_id,
-            ];
-        })->toBase();
+        return StandAssignment::all()->map(
+            function (StandAssignment $assignment) {
+                return [
+                    'callsign' => $assignment->callsign,
+                    'stand_id' => $assignment->stand_id,
+                ];
+            }
+        )->toBase();
     }
 
     /**
