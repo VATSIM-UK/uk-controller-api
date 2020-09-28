@@ -50,7 +50,10 @@ class StandService
      */
     public function assignAircraftToStand(string $callsign, int $standId): void
     {
-        $this->getStandById($standId);
+        if (!$this->standExists($standId)) {
+            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
+        }
+
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
         $currentAssignment = StandAssignment::where('stand_id', $standId)->first();
 
@@ -80,7 +83,9 @@ class StandService
      */
     public function assignStandToAircraft(string $callsign, int $standId): void
     {
-        $this->getStandById($standId);
+        if (!$this->standExists($standId)) {
+            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
+        }
 
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
         $currentAssignment = StandAssignment::with('aircraft')
@@ -113,19 +118,17 @@ class StandService
     public function getDepartureStandAssignmentForAircraft(NetworkAircraft $aircraft): ?StandAssignment
     {
         return StandAssignment::where('callsign', $aircraft->callsign)
-            ->whereHas('stand.airfield', function (Builder $query) use ($aircraft) {
-                $query->where('code', $aircraft->planned_depairport);
-            })
+            ->whereHas(
+                'stand.airfield',
+                function (Builder $query) use ($aircraft) {
+                    $query->where('code', $aircraft->planned_depairport);
+                }
+            )
             ->first();
     }
 
-    private function getStandById(int $standId): Stand
+    private function standExists(int $standId): bool
     {
-        $stand = Stand::find($standId);
-        if (!$stand) {
-            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
-        }
-
-        return $stand;
+        return Stand::where('id', $standId)->exists();
     }
 }
