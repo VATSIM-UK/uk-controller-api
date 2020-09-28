@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Schema;
 class CreateStandAssignmentsTable extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migrations. This one is custom due to the issue with string
+     * primary keys in Laravel (33238)
      *
      * @return void
      */
