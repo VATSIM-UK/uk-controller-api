@@ -10,12 +10,14 @@ class RecordStandAssignmentHistory
 {
     public function handle(StandAssignedEvent $assignedEvent) : bool
     {
+        $standAssignment = $assignedEvent->getStandAssignment();
+
         // Mark any current assignments as deleted and create a new history item
-        StandAssignmentsHistory::where('callsign', $assignedEvent->getStandAssignment()->callsign)->delete();
+        StandAssignmentsHistory::where('callsign', $standAssignment->callsign)->delete();
         StandAssignmentsHistory::create(
             [
-                'callsign' => $assignedEvent->getStandAssignment()->callsign,
-                'stand_id' => $assignedEvent->getStandAssignment()->stand_id,
+                'callsign' => $standAssignment->callsign,
+                'stand_id' => $standAssignment->stand_id,
                 'user_id' => !is_null(Auth::user()) ? Auth::user()->id : null,
             ]
         );
