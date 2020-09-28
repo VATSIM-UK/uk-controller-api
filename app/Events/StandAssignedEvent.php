@@ -24,8 +24,8 @@ class StandAssignedEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'callsign' => $this->standAssignment->callsign,
-            'stand_id' => $this->standAssignment->stand_id,
+            'callsign' => $this->getStandAssignment()->callsign,
+            'stand_id' => $this->getStandAssignment()->stand_id,
         ];
     }
 
