@@ -17,7 +17,7 @@ class CleanStandAssignmentsHistory extends Command
         StandAssignmentsHistory::where(
             'assigned_at',
             '<',
-            Carbon::now()->subMonths(3)->toDateTimeString()
+            Carbon::now()->subMonths(3)
         )->forceDelete();
         $this->info('Stand assignment audit history cleaned successfully');
         return 0;
