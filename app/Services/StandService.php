@@ -15,6 +15,8 @@ use Illuminate\Support\Collection;
 
 class StandService
 {
+    public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
+
     public function getStandsDependency(): Collection
     {
         return Stand::all()->groupBy('airfield_id')->mapWithKeys(
@@ -136,5 +138,23 @@ class StandService
     private function standExists(int $standId): bool
     {
         return Stand::where('id', $standId)->exists();
+    }
+
+    public function deleteStand(string $airfield, string $identifier)
+    {
+        $stand = Stand::with('airfield')->whereHas(
+            'airfield',
+            function (Builder $query) use ($airfield) {
+                $query->where('code', $airfield);
+            }
+        )->where('identifier', $identifier)
+            ->first();
+
+        if (!$stand) {
+            return;
+        }
+
+        $stand->delete();
+        DependencyService::touchDependencyByKey('DEPENDENCY_STANDS');
     }
 }

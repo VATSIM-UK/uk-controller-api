@@ -7,8 +7,10 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Dependency\Dependency;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 
 class StandServiceTest extends BaseFunctionalTestCase
 {
@@ -17,10 +19,24 @@ class StandServiceTest extends BaseFunctionalTestCase
      */
     private $service;
 
+    /**
+     * @var Dependency
+     */
+    private $dependency;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->service = $this->app->make(StandService::class);
+        $this->dependency = Dependency::create(
+            [
+                'key' => StandService::STAND_DEPENDENCY_KEY,
+                'uri' => 'stand/dependency',
+                'local_file' => 'stands.json'
+            ]
+        );
+        $this->dependency->updated_at = null;
+        $this->dependency->save();
     }
 
     public function testItReturnsStandDependency()
@@ -286,6 +302,34 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntGetDepartureStandIfNoAssignment()
     {
         $this->assertNull($this->service->getDepartureStandAssignmentForAircraft(NetworkAircraft::find('BAW123')));
+    }
+
+    public function testItDeletesAStand()
+    {
+        $this->service->deleteStand('EGLL', '1L');
+        $this->assertDatabaseMissing(
+            'stands',
+            [
+                'airfield_id' => 1,
+                'identifier' => '1L'
+            ]
+        );
+    }
+
+    public function testDeletingAStandUpdatesStandDependency()
+    {
+        $this->assertNull($this->dependency->updated_at);
+        $this->service->deleteStand('EGLL', '1L');
+        $this->dependency->refresh();
+        $this->assertNotNull($this->dependency->updated_at);
+    }
+
+    public function testItDoesNotUpdateDependencyOnDeletingNonExistentStand()
+    {
+        $this->assertNull($this->dependency->updated_at);
+        $this->service->deleteStand('EGLL', 'ABCD');
+        $this->dependency->refresh();
+        $this->assertNull($this->dependency->updated_at);
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
