@@ -140,6 +140,13 @@ class StandService
         return Stand::where('id', $standId)->exists();
     }
 
+    /**
+     * Delete a given stand
+     *
+     * @param string $airfield
+     * @param string $identifier
+     * @throws \Exception
+     */
     public function deleteStand(string $airfield, string $identifier)
     {
         $stand = Stand::with('airfield')->whereHas(
@@ -155,6 +162,32 @@ class StandService
         }
 
         $stand->delete();
+        DependencyService::touchDependencyByKey('DEPENDENCY_STANDS');
+    }
+
+    /**
+     * Change the identifier for a stand
+     *
+     * @param string $airfield
+     * @param string $oldIdentifier
+     * @param string $newIdentifier
+     */
+    public function changeStandIdentifier(string $airfield, string $oldIdentifier, string $newIdentifier)
+    {
+        $stand = Stand::with('airfield')->whereHas(
+            'airfield',
+            function (Builder $query) use ($airfield) {
+                $query->where('code', $airfield);
+            }
+        )->where('identifier', $oldIdentifier)
+            ->first();
+
+        if (!$stand) {
+            return;
+        }
+
+        $stand->identifier = $newIdentifier;
+        $stand->save();
         DependencyService::touchDependencyByKey('DEPENDENCY_STANDS');
     }
 }

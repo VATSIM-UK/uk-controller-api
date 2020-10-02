@@ -332,6 +332,41 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertNull($this->dependency->updated_at);
     }
 
+    public function testItChangesAStandIdentifier()
+    {
+        $this->service->changeStandIdentifier('EGLL', '1L', '1R');
+        $this->assertDatabaseMissing(
+            'stands',
+            [
+                'airfield_id' => 1,
+                'identifier' => '1L'
+            ]
+        );
+        $this->assertDatabaseHas(
+            'stands',
+            [
+                'airfield_id' => 1,
+                'identifier' => '1R'
+            ]
+        );
+    }
+
+    public function testChangingAStandIdentifierUpdatesStandDependency()
+    {
+        $this->assertNull($this->dependency->updated_at);
+        $this->service->changeStandIdentifier('EGLL', '1L', '1R');
+        $this->dependency->refresh();
+        $this->assertNotNull($this->dependency->updated_at);
+    }
+
+    public function testItDoesNotUpdateDependencyOnChangingIdentifierOfNonExistentStand()
+    {
+        $this->assertNull($this->dependency->updated_at);
+        $this->service->changeStandIdentifier('EGLL', 'ABCD', '1R');
+        $this->dependency->refresh();
+        $this->assertNull($this->dependency->updated_at);
+    }
+
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
