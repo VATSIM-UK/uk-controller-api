@@ -162,7 +162,7 @@ class StandService
         }
 
         $stand->delete();
-        DependencyService::touchDependencyByKey('DEPENDENCY_STANDS');
+        DependencyService::touchDependencyByKey(self::STAND_DEPENDENCY_KEY);
     }
 
     /**
@@ -188,6 +188,6 @@ class StandService
 
         $stand->identifier = $newIdentifier;
         $stand->save();
-        DependencyService::touchDependencyByKey('DEPENDENCY_STANDS');
+        DependencyService::touchDependencyByKey(self::STAND_DEPENDENCY_KEY);
     }
 }
