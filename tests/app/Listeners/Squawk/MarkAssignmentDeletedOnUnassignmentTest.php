@@ -16,14 +16,14 @@ use Carbon\Carbon;
 class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
 {
     /**
-     * @var MarkAssignmentDeletedOnUnassignment
+     * @var MarkAssignmentHistoryDeletedOnUnassignment
      */
     private $listener;
 
     public function setUp() : void
     {
         parent::setUp();
-        $this->listener = $this->app->make(MarkAssignmentDeletedOnUnassignment::class);
+        $this->listener = $this->app->make(MarkAssignmentHistoryDeletedOnUnassignment::class);
         Carbon::setTestNow(Carbon::now());
     }
 

@@ -5,7 +5,7 @@ namespace App\Listeners\Stand;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignmentsHistory;
 
-class MarkAssignmentDeletedOnUnassignment
+class DeleteAssignmentHistoryOnUnassignment
 {
     public function handle(StandUnassignedEvent $event) : bool
     {

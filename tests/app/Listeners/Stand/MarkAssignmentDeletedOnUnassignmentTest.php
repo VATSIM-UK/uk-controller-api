@@ -9,14 +9,14 @@ use App\Models\Stand\StandAssignmentsHistory;
 class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
 {
     /**
-     * @var MarkAssignmentDeletedOnUnassignment
+     * @var DeleteAssignmentHistoryOnUnassignment
      */
     private $listener;
 
     public function setUp() : void
     {
         parent::setUp();
-        $this->listener = $this->app->make(MarkAssignmentDeletedOnUnassignment::class);
+        $this->listener = $this->app->make(DeleteAssignmentHistoryOnUnassignment::class);
     }
 
     public function testItMarksHistoryAsDeleted()

@@ -15,11 +15,11 @@ use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Hold\UnassignHoldOnDisconnect;
 use App\Listeners\Squawk\MarkAssignmentDeletedOnDisconnect;
-use App\Listeners\Squawk\MarkAssignmentDeletedOnUnassignment;
+use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 use App\Listeners\Squawk\ReserveInFirProximity;
-use App\Listeners\Stand\MarkAssignmentDeletedOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
+use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
 use App\Listeners\Stand\TriggerDepartureUnassignmentOnceAirborne;
 use App\Listeners\Stand\TriggerUnassignmentOnDisconnect;
@@ -36,7 +36,7 @@ class EventServiceProvider extends ServiceProvider
             RecordSquawkAssignmentHistory::class,
         ],
         SquawkUnassignedEvent::class => [
-            MarkAssignmentDeletedOnUnassignment::class,
+            MarkAssignmentHistoryDeletedOnUnassignment::class,
         ],
         HoldAssignedEvent::class => [
             RecordHoldAssignment::class,
