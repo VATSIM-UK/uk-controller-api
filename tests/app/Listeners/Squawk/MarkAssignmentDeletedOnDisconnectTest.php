@@ -4,11 +4,8 @@ namespace App\Listeners\Squawk;
 
 use App\BaseFunctionalTestCase;
 use App\Events\NetworkAircraftDisconnectedEvent;
-use App\Events\SquawkAssignmentEvent;
 use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\SquawkAssignmentsHistory;
-use App\Models\Squawks\Allocation;
-use App\Models\User\User;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 
@@ -28,6 +25,7 @@ class MarkAssignmentDeletedOnDisconnectTest extends BaseFunctionalTestCase
 
     public function testItMarksHistoryAsDeleted()
     {
+        CcamsSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123']);
         SquawkAssignmentsHistory::create(
             [
                 'callsign' => 'BAW123',
@@ -46,8 +44,9 @@ class MarkAssignmentDeletedOnDisconnectTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItDoesntDoubleDelete()
+    public function testItDoesntDoubleDeleteAssignmentHistory()
     {
+        CcamsSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123']);
         $deletedHistory = SquawkAssignmentsHistory::create(
             [
                 'callsign' => 'BAW123',
@@ -67,6 +66,13 @@ class MarkAssignmentDeletedOnDisconnectTest extends BaseFunctionalTestCase
                 'deleted_at' => '2020-05-01 00:11:22',
             ]
         );
+    }
+
+    public function testItDeletesAssignment()
+    {
+        CcamsSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123']);
+        $this->listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])));
+        $this->assertNull(CcamsSquawkAssignment::find('BAW123'));
     }
 
     public function testItContinuesPropagation()
