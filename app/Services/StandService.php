@@ -150,15 +150,7 @@ class StandService
      */
     public function deleteStand(string $airfield, string $identifier): void
     {
-        $stand = Stand::with('airfield')->whereHas(
-            'airfield',
-            function (Builder $query) use ($airfield) {
-                $query->where('code', $airfield);
-            }
-        )->where('identifier', $identifier)
-            ->first();
-
-        if (!$stand) {
+        if (($stand = $this->getStandByAirfieldAndIdentifer($airfield, $identifier)) === null) {
             return;
         }
 
@@ -173,22 +165,32 @@ class StandService
      * @param string $oldIdentifier
      * @param string $newIdentifier
      */
-    public function changeStandIdentifier(string $airfield, string $oldIdentifier, string $newIdentifier)
+    public function changeStandIdentifier(string $airfield, string $oldIdentifier, string $newIdentifier): void
     {
-        $stand = Stand::with('airfield')->whereHas(
-            'airfield',
-            function (Builder $query) use ($airfield) {
-                $query->where('code', $airfield);
-            }
-        )->where('identifier', $oldIdentifier)
-            ->first();
-
-        if (!$stand) {
+        if (($stand = $this->getStandByAirfieldAndIdentifer($airfield, $oldIdentifier)) === null) {
             return;
         }
 
         $stand->identifier = $newIdentifier;
         $stand->save();
         DependencyService::touchDependencyByKey(self::STAND_DEPENDENCY_KEY);
+    }
+
+    /**
+     * Returns a stand by airfield ICAO and identifier
+     *
+     * @param string $airfield
+     * @param string $identifier
+     * @return Stand|null
+     */
+    private function getStandByAirfieldAndIdentifer(string $airfield, string $identifier): ?Stand
+    {
+        return Stand::with('airfield')->whereHas(
+            'airfield',
+            function (Builder $query) use ($airfield) {
+                $query->where('code', $airfield);
+            }
+        )->where('identifier', $identifier)
+            ->first();
     }
 }
