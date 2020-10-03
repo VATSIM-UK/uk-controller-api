@@ -57,8 +57,8 @@ class NetworkDataService
                 function (NetworkAircraft $aircraft) {
                     $aircraft->getConnection()->transaction(
                         function () use ($aircraft) {
-                            $aircraft->delete();
                             event(new NetworkAircraftDisconnectedEvent($aircraft));
+                            $aircraft->delete();
                         }
                     );
                 }
