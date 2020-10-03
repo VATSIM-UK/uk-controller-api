@@ -48,6 +48,11 @@ class NetworkDataService
 
     /**
      * If any aircraft has passed the timeout window, remove it from the list.
+     *
+     * NOTE: Events should always fire before final deletion because the listeners
+     * will use the aircraft data to mark things such as squawk assignments as deleted
+     * and send further events. As a last resort calling delete here will delete any
+     * foreign key references left over.
      */
     private function handleTimeouts(): void
     {
