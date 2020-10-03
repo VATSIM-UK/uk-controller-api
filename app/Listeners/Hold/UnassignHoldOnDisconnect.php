@@ -12,7 +12,7 @@ class UnassignHoldOnDisconnect
     {
         $callsign = $event->getAircraft()->callsign;
         if (AssignedHold::destroy($callsign)) {
-            event(new HoldUnassignedEvent($event->getAircraft()->callsign));
+            event(new HoldUnassignedEvent($callsign));
         }
 
         return true;
