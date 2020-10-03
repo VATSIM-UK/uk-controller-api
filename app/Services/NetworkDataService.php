@@ -51,14 +51,18 @@ class NetworkDataService
      */
     private function handleTimeouts(): void
     {
-        NetworkAircraft::all()->each(
-            function (NetworkAircraft $aircraft) {
-                if ($aircraft->updated_at < Carbon::now()->subMinutes(20)) {
-                    $aircraft->delete();
-                    event(new NetworkAircraftDisconnectedEvent($aircraft));
+        NetworkAircraft::where('updated_at', '<', Carbon::now()->subMinutes(20))
+            ->get()
+            ->each(
+                function (NetworkAircraft $aircraft) {
+                    $aircraft->getConnection()->transaction(
+                        function () use ($aircraft) {
+                            $aircraft->delete();
+                            event(new NetworkAircraftDisconnectedEvent($aircraft));
+                        }
+                    );
                 }
-            }
-        );
+            );
     }
 
     public static function createOrUpdateNetworkAircraft(
