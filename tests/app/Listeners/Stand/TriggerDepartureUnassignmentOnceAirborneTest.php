@@ -12,7 +12,7 @@ use App\Services\NetworkDataService;
 class TriggerDepartureUnassignmentOnceAirborneTest extends BaseFunctionalTestCase
 {
     /**
-     * @var MarkAssignmentDeletedOnUnassignment
+     * @var DeleteAssignmentHistoryOnUnassignment
      */
     private $listener;
 

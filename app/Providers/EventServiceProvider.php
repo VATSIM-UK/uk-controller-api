@@ -19,7 +19,7 @@ use App\Listeners\Squawk\MarkAssignmentDeletedOnUnassignment;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 use App\Listeners\Squawk\ReserveInFirProximity;
-use App\Listeners\Stand\MarkAssignmentDeletedOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
+use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
 use App\Listeners\Stand\TriggerDepartureUnassignmentOnceAirborne;
 use App\Listeners\Stand\TriggerUnassignmentOnDisconnect;
