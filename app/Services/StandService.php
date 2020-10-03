@@ -10,6 +10,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -145,9 +146,9 @@ class StandService
      *
      * @param string $airfield
      * @param string $identifier
-     * @throws \Exception
+     * @throws Exception
      */
-    public function deleteStand(string $airfield, string $identifier)
+    public function deleteStand(string $airfield, string $identifier): void
     {
         $stand = Stand::with('airfield')->whereHas(
             'airfield',
