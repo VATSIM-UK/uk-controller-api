@@ -10,11 +10,14 @@ use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class StandService
 {
+    public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
+
     public function getStandsDependency(): Collection
     {
         return Stand::all()->groupBy('airfield_id')->mapWithKeys(
@@ -136,5 +139,58 @@ class StandService
     private function standExists(int $standId): bool
     {
         return Stand::where('id', $standId)->exists();
+    }
+
+    /**
+     * Delete a given stand
+     *
+     * @param string $airfield
+     * @param string $identifier
+     * @throws Exception
+     */
+    public function deleteStand(string $airfield, string $identifier): void
+    {
+        if (($stand = $this->getStandByAirfieldAndIdentifer($airfield, $identifier)) === null) {
+            return;
+        }
+
+        $stand->delete();
+        DependencyService::touchDependencyByKey(self::STAND_DEPENDENCY_KEY);
+    }
+
+    /**
+     * Change the identifier for a stand
+     *
+     * @param string $airfield
+     * @param string $oldIdentifier
+     * @param string $newIdentifier
+     */
+    public function changeStandIdentifier(string $airfield, string $oldIdentifier, string $newIdentifier): void
+    {
+        if (($stand = $this->getStandByAirfieldAndIdentifer($airfield, $oldIdentifier)) === null) {
+            return;
+        }
+
+        $stand->identifier = $newIdentifier;
+        $stand->save();
+        DependencyService::touchDependencyByKey(self::STAND_DEPENDENCY_KEY);
+    }
+
+    /**
+     * Returns a stand by airfield ICAO and identifier
+     *
+     * @param string $airfield
+     * @param string $identifier
+     * @return Stand|null
+     */
+    private function getStandByAirfieldAndIdentifer(string $airfield, string $identifier): ?Stand
+    {
+        return Stand::with('airfield')->whereHas(
+            'airfield',
+            function (Builder $query) use ($airfield) {
+                $query->where('code', $airfield);
+            }
+        )->where('identifier', $identifier)
+            ->first();
     }
 }
