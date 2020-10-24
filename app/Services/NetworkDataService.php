@@ -32,14 +32,8 @@ class NetworkDataService
             return;
         }
 
-        // Sometimes the clients array is missing
-        $clientData = $networkResponse->json()['clients'];
-        if (is_null($clientData)) {
-            return;
-        }
-
         // Process clients
-        $this->processClients($clientData);
+        $this->processClients($networkResponse->json('clients', []));
         $this->handleTimeouts();
     }
 
