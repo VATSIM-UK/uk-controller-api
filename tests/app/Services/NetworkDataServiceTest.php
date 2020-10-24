@@ -7,6 +7,7 @@ use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
@@ -55,14 +56,29 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItHandlesExceptionsFromNetworkDataFeed()
+    public function testItHandlesErrorCodesFromNetworkDataFeed()
     {
         $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
         Http::fake(
             [
-                NetworkDataService::NETWORK_DATA_URL => Http::response('', 404)
+                NetworkDataService::NETWORK_DATA_URL => Http::response('', 500)
             ]
         );
+        $this->service->updateNetworkData();
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'VIR25A',
+            ]
+        );
+    }
+
+    public function testItHandlesExceptionsFromNetworkDataFeed()
+    {
+        $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
+        Http::fake(function () {
+            throw new Exception('LOL');
+        });
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(
             'network_aircraft',
