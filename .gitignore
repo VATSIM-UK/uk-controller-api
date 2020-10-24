@@ -10,5 +10,4 @@ storage/*
 !storage/app
 public/storage
 bootstrap/cache/
-storage/app/public/dependencies/*
 .phpunit.result.cache
