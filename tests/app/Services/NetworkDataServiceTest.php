@@ -72,6 +72,23 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItHandlesMissingClientData()
+    {
+        $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
+        Http::fake(
+            [
+                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode(['not_clients' => '']), 200)
+            ]
+        );
+        $this->service->updateNetworkData();
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'VIR25A',
+            ]
+        );
+    }
+
     public function testItAddsNewAircraftFromDataFeed()
     {
         $this->withoutEvents();
