@@ -6,6 +6,7 @@ use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -16,16 +17,31 @@ class NetworkDataService
 
     public function updateNetworkData(): void
     {
-        $networkResponse = Http::get(self::NETWORK_DATA_URL);
+
+        // Download the network data and check that it was successful
+        $networkResponse = null;
+        try {
+            $networkResponse = Http::get(self::NETWORK_DATA_URL);
+        } catch (Exception $exception) {
+            Log::warning('Failed to download network data, exception was ' . $exception->getMessage());
+            return;
+        }
+
         if (!$networkResponse->successful()) {
             Log::warning('Failed to download network data, response was ' . $networkResponse->status());
             return;
         }
 
-        $this->processClients($networkResponse->json()['clients']);
+        // Process clients
+        $this->processClients($networkResponse->json('clients', []));
         $this->handleTimeouts();
     }
 
+    /**
+     * Loop through each client in the clients array from the network data
+     *
+     * @param array $clients
+     */
     private function processClients(array $clients): void
     {
         foreach ($clients as $client) {
