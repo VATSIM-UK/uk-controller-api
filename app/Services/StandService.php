@@ -13,10 +13,28 @@ use App\Models\Vatsim\NetworkAircraft;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Location\Distance\Haversine;
 
 class StandService
 {
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
+
+    // The maximum speed at which an aircraft can be travelling for it to be deemed to be occupying a stand
+    private const MAX_OCCUPANCY_SPEED = 25;
+
+    /*
+     * The maximum altitude that an aircraft may be at in order to be deemed to be occupying a stand. For reference,
+     * the highest airport in the UK is Leeds at 681ft AMSL.
+     */
+    private const MAX_OCCUPANCY_ALTITUDE = 750;
+
+    /*
+     * Max distance that the aircraft must be from the centre point of the stand to be considered
+     * to be occupying it.
+     *
+     * As a reference, a small stand at Heathrow is about 50m wide and 60m deep.
+     */
+    private const MAX_OCCUPANCY_DISTANCE_KILOMETERS = 0.025;
 
     private $allStands = [];
 
@@ -196,9 +214,36 @@ class StandService
             ->first();
     }
 
+    /**
+     * @return Collection|Stand[]
+     */
     private function getAllStands(): Collection
     {
         $this->allStands = Stand::all()->toBase();
         return $this->allStands;
+    }
+
+    public function getOccupiedStand(NetworkAircraft $aircraft): ?Stand
+    {
+        if ($aircraft->altitude > self::MAX_OCCUPANCY_ALTITUDE || $aircraft->groundspeed > self::MAX_OCCUPANCY_SPEED) {
+            return null;
+        }
+
+        $selectedStand = null;
+        $selectedStandDistance = PHP_INT_MAX;
+
+        foreach ($this->getAllStands() as $stand)
+        {
+            $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+            if (
+                $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_KILOMETERS &&
+                $distanceFromStand < $selectedStandDistance
+            ) {
+                $selectedStand = $stand;
+                $selectedStandDistance = $distanceFromStand;
+            }
+        }
+
+        return $selectedStand;
     }
 }

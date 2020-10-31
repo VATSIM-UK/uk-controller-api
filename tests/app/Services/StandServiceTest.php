@@ -8,6 +8,7 @@ use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Dependency\Dependency;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
@@ -365,6 +366,76 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->service->changeStandIdentifier('EGLL', 'ABCD', '1R');
         $this->dependency->refresh();
         $this->assertNull($this->dependency->updated_at);
+    }
+
+    public function testItDoesntOccupyStandsIfAircraftTooHigh()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 10,
+                'altitude' => 751
+            ]
+        );
+
+        $this->assertNull($this->service->getOccupiedStand($aircraft));
+    }
+
+    public function testItDoesntOccupyStandsIfAircraftTooFast()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 26,
+                'altitude' => 0
+            ]
+        );
+
+        $this->assertNull($this->service->getOccupiedStand($aircraft));
+    }
+
+    public function testItReturnsOccupiedStandIfStandIsOccupied()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+
+        $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
+    }
+
+    public function testItReturnsClosestOccupiedStandIfMultipleInContention()
+    {
+        // Create an extra stand that's the closest
+        $newStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.658828,
+                'longitude' => -6.222070,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+
+        $this->assertEquals($newStand->id, $this->service->getOccupiedStand($aircraft)->id);
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
