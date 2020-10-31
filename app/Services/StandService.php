@@ -18,9 +18,11 @@ class StandService
 {
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
 
+    private $allStands = [];
+
     public function getStandsDependency(): Collection
     {
-        return Stand::all()->groupBy('airfield_id')->mapWithKeys(
+        return $this->getAllStands()->groupBy('airfield_id')->mapWithKeys(
             function (Collection $collection) {
                 return [
                     Airfield::find($collection->first()->airfield_id)->code => $collection->map(
@@ -192,5 +194,11 @@ class StandService
             }
         )->where('identifier', $identifier)
             ->first();
+    }
+
+    private function getAllStands(): Collection
+    {
+        $this->allStands = Stand::all()->toBase();
+        return $this->allStands;
     }
 }
