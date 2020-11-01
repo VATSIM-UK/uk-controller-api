@@ -2,10 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStandOccupanciesTable extends Migration
+class CreateAircraftStandTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +13,7 @@ class CreateStandOccupanciesTable extends Migration
      */
     public function up()
     {
-        Schema::create('stand_occupancies', function (Blueprint $table){
+        Schema::create('aircraft_stand', function (Blueprint $table){
             $table->id();
             $table->string('callsign')->comment('The callsign occupying the stand');
             $table->unsignedBigInteger('stand_id')->comment('The stand being occupied');
@@ -32,6 +31,6 @@ class CreateStandOccupanciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stand_occupancies');
+        Schema::dropIfExists('aircraft_stand');
     }
 }
