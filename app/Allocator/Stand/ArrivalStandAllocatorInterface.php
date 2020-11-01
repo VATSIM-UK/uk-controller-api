@@ -2,7 +2,7 @@
 
 namespace App\Allocator\Stand;
 
-use App\Models\Stand\Stand;
+use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 
 interface ArrivalStandAllocatorInterface
@@ -12,7 +12,7 @@ interface ArrivalStandAllocatorInterface
      * is not possible, should return null.
      *
      * @param NetworkAircraft $aircraft
-     * @return Stand|null
+     * @return StandAssignment|null
      */
-    public function allocate(NetworkAircraft $aircraft): ?Stand;
+    public function allocate(NetworkAircraft $aircraft): ?StandAssignment;
 }

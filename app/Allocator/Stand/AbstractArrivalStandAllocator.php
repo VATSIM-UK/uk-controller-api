@@ -10,7 +10,7 @@ use Illuminate\Database\QueryException;
 
 abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInterface
 {
-    public function allocate(NetworkAircraft $aircraft): ?Stand
+    public function allocate(NetworkAircraft $aircraft): ?StandAssignment
     {
         foreach ($this->getPossibleStands($aircraft) as $stand) {
             try {
@@ -34,5 +34,5 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      * @param NetworkAircraft $aircraft
      * @return Collection|Stand[]
      */
-    public abstract function getPossibleStands(NetworkAircraft $aircraft): Collection;
+    protected abstract function getPossibleStands(NetworkAircraft $aircraft): Collection;
 }
