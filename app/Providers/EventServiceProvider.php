@@ -20,6 +20,7 @@ use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 use App\Listeners\Squawk\ReserveInFirProximity;
 use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
+use App\Listeners\Stand\OccupyStands;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
 use App\Listeners\Stand\TriggerDepartureUnassignmentOnceAirborne;
 use App\Listeners\Stand\TriggerUnassignmentOnDisconnect;
@@ -54,6 +55,7 @@ class EventServiceProvider extends ServiceProvider
             ReserveInFirProximity::class,
             ReclaimIfLeftFirProximity::class,
             TriggerDepartureUnassignmentOnceAirborne::class,
+            OccupyStands::class,
         ],
         StandAssignedEvent::class => [
             RecordStandAssignmentHistory::class,
