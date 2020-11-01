@@ -24,6 +24,7 @@ class CreateAirlineStandTable extends Migration
 
             $table->foreign('airline_id')->references('id')->on('airlines')->cascadeOnDelete();
             $table->foreign('stand_id')->references('id')->on('stands')->cascadeOnDelete();
+            $table->index('destination');
         });
     }
 
