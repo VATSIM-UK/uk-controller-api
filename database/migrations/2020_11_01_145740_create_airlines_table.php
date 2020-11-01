@@ -17,6 +17,7 @@ class CreateAirlinesTable extends Migration
             $table->id();
             $table->string('icao_code')->comment('The airlines ICAO code');
             $table->string('name')->comment('The name of the airline');
+            $table->string('callsign')->comment('The airlines RTF callsign');
             $table->timestamps();
         });
     }
