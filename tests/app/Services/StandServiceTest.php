@@ -411,7 +411,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'latitude' => 54.65883639,
                 'longitude' => -6.22198972,
-                'groundspeed' => 11,
+                'groundspeed' => 6,
                 'altitude' => 0
             ]
         );
@@ -473,6 +473,24 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
         $aircraft->refresh();
         $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItUsurpsAssignedStands()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+
+        $assignment = $this->addStandAssignment('BAW123', 2);
+
+        $this->service->getOccupiedStand($aircraft);
+        $this->assertDeleted($assignment);
     }
 
     public function testItReturnsOccupiedStandIfStandIsOccupied()

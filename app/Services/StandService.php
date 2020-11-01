@@ -20,7 +20,7 @@ class StandService
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
 
     // The maximum speed at which an aircraft can be travelling for it to be deemed to be occupying a stand
-    private const MAX_OCCUPANCY_SPEED = 10;
+    private const MAX_OCCUPANCY_SPEED = 5;
 
     /*
      * The maximum altitude that an aircraft may be at in order to be deemed to be occupying a stand. For reference,
@@ -34,7 +34,7 @@ class StandService
      *
      * As a reference, a small stand at Heathrow is about 50m wide and 60m deep.
      */
-    private const MAX_OCCUPANCY_DISTANCE_KILOMETERS = 0.025;
+    private const MAX_OCCUPANCY_DISTANCE_KILOMETERS = 0.020;
 
     private $allStands = [];
 
@@ -236,10 +236,12 @@ class StandService
             return null;
         }
 
+        // If the aircraft is still occupying its stand, nothing else to do here.
         if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand->first())) {
             return $aircraft->occupiedStand->first();
         }
 
+        // Find the stand to which the aircraft is closest
         $selectedStand = null;
         $selectedStandDistance = PHP_INT_MAX;
 
@@ -255,11 +257,27 @@ class StandService
             }
         }
 
+        // If there's a stand that's viable, usurp any assignments and occupy it.
         if ($selectedStand) {
+            $this->usurpStand($aircraft, $selectedStand);
             $aircraft->occupiedStand()->sync([$selectedStand->id]);
         }
 
         return $selectedStand;
+    }
+
+    /*
+     * Delete any stand assignment that isn't for the given aircraft
+     */
+    private function usurpStand(NetworkAircraft $aircraft, Stand $stand)
+    {
+        $conflictingAssignment = StandAssignment::where('callsign', '<>', $aircraft->callsign)
+            ->where('stand_id', $stand->id)
+            ->first();
+
+        if ($conflictingAssignment) {
+            $conflictingAssignment->delete();
+        }
     }
 
     private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
