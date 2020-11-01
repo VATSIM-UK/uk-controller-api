@@ -82,4 +82,12 @@ class Stand extends Model
             $airlineQuery->where('airlines.id', $airline->id);
         });
     }
+
+    public function scopeAirlineDestination(Builder $builder, Airline $airline, array $destinationStrings): Builder
+    {
+        return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline, $destinationStrings) {
+            $airlineQuery->where('airlines.id', $airline->id)
+                ->whereIn('destination', $destinationStrings);
+        });
+    }
 }

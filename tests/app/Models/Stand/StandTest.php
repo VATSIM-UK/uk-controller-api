@@ -5,6 +5,7 @@ namespace App\Models\Stand;
 use App\BaseFunctionalTestCase;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Support\Facades\DB;
 
 class StandTest extends BaseFunctionalTestCase
 {
@@ -32,10 +33,32 @@ class StandTest extends BaseFunctionalTestCase
         $this->assertEquals([3], $stands);
     }
 
-    public function testAirlineOnlyReturnsStandsForThatAirline()
+    public function testAirlineDestinationOnlyReturnsStandsForTheCorrectDestinations()
     {
-        Airline::where('icao_code', 'BAW')->first()->stands()->sync([1, 3]);
-        $stands = Stand::airline(Airline::where('icao_code', 'BAW')->first())->get()->pluck('id')->toArray();
-        $this->assertEquals([1, 3], $stands);
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => 'EGFF'
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+            ]
+        );
+
+        $stands = Stand::airlineDestination(
+            Airline::find(1),
+            ['EGGD']
+        )->get()->pluck('id')->toArray();
+        $this->assertEquals([1], $stands);
     }
 }
