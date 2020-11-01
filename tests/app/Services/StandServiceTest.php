@@ -381,7 +381,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
         $aircraft->occupiedStand()->sync([1]);
 
-        $this->assertNull($this->service->getOccupiedStand($aircraft));
+        $this->assertNull($this->service->setOccupiedStand($aircraft));
         $aircraft->refresh();
         $this->assertEmpty($aircraft->occupiedStand);
     }
@@ -399,7 +399,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
         $aircraft->occupiedStand()->sync([1]);
 
-        $this->service->getOccupiedStand($aircraft);
+        $this->service->setOccupiedStand($aircraft);
         $aircraft->refresh();
         $this->assertEmpty($aircraft->occupiedStand);
     }
@@ -417,7 +417,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
         $aircraft->occupiedStand()->sync([1]);
 
-        $this->assertNull($this->service->getOccupiedStand($aircraft));
+        $this->assertNull($this->service->setOccupiedStand($aircraft));
         $aircraft->refresh();
         $this->assertEmpty($aircraft->occupiedStand);
     }
@@ -435,7 +435,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
 
         $aircraft->occupiedStand()->sync([1]);
-        $this->service->getOccupiedStand($aircraft);
+        $this->service->setOccupiedStand($aircraft);
         $aircraft->refresh();
         $this->assertEmpty($aircraft->occupiedStand);
     }
@@ -452,7 +452,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
         $aircraft->occupiedStand()->sync([2]);
-        $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
+        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
         $aircraft->refresh();
         $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
     }
@@ -470,7 +470,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
         $aircraft->occupiedStand()->sync([1]);
 
-        $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
+        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
         $aircraft->refresh();
         $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
     }
@@ -489,7 +489,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
         $assignment = $this->addStandAssignment('BAW123', 2);
 
-        $this->service->getOccupiedStand($aircraft);
+        $this->service->setOccupiedStand($aircraft);
         $this->assertDeleted($assignment);
     }
 
@@ -505,7 +505,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
+        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
         $aircraft->refresh();
         $this->assertCount(1, $aircraft->occupiedStand);
         $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
@@ -533,7 +533,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertEquals($newStand->id, $this->service->getOccupiedStand($aircraft)->id);
+        $this->assertEquals($newStand->id, $this->service->setOccupiedStand($aircraft)->id);
         $aircraft->refresh();
         $this->assertCount(1, $aircraft->occupiedStand);
         $this->assertEquals($newStand->id, $aircraft->occupiedStand->first()->id);

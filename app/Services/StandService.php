@@ -223,7 +223,7 @@ class StandService
         return $this->allStands;
     }
 
-    public function getOccupiedStand(NetworkAircraft $aircraft): ?Stand
+    public function setOccupiedStand(NetworkAircraft $aircraft): ?Stand
     {
         /*
          * If an aircraft cannot occupy a stand, delete any current occupation
@@ -248,6 +248,7 @@ class StandService
         foreach ($this->getAllStands() as $stand)
         {
             $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+
             if (
                 $this->standOccupied($aircraft, $stand) &&
                 $distanceFromStand < $selectedStandDistance
