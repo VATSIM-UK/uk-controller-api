@@ -103,6 +103,7 @@ class DatabaseSeeder extends Seeder
         ],
         AirlineTableSeeder::class => [
             'airlines',
+            'airline_stand',
         ],
     ];
 
