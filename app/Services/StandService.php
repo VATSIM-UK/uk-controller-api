@@ -34,7 +34,7 @@ class StandService
      *
      * As a reference, a small stand at Heathrow is about 50m wide and 60m deep.
      */
-    private const MAX_OCCUPANCY_DISTANCE_KILOMETERS = 0.020;
+    private const MAX_OCCUPANCY_DISTANCE_METERS = 20;
 
     private $allStands = [];
 
@@ -283,7 +283,7 @@ class StandService
     private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
     {
         $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
-        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_KILOMETERS;
+        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS;
     }
 
     private function aircraftCanOccupyStand(NetworkAircraft $aircraft): bool
