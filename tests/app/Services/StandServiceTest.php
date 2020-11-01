@@ -379,8 +379,29 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'altitude' => 751
             ]
         );
+        $aircraft->occupiedStand()->sync([1]);
 
         $this->assertNull($this->service->getOccupiedStand($aircraft));
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
+    }
+
+    public function testItRemovesOccupiedStandIfAircraftTooHigh()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 10,
+                'altitude' => 751
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1]);
+
+        $this->service->getOccupiedStand($aircraft);
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
     }
 
     public function testItDoesntOccupyStandsIfAircraftTooFast()
@@ -390,12 +411,68 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'latitude' => 54.65883639,
                 'longitude' => -6.22198972,
-                'groundspeed' => 26,
+                'groundspeed' => 11,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1]);
+
+        $this->assertNull($this->service->getOccupiedStand($aircraft));
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
+    }
+
+    public function testItRemovesOccupiedStandIfAircraftTooFast()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 11,
                 'altitude' => 0
             ]
         );
 
-        $this->assertNull($this->service->getOccupiedStand($aircraft));
+        $aircraft->occupiedStand()->sync([1]);
+        $this->service->getOccupiedStand($aircraft);
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
+    }
+
+    public function testItReturnsCurrentStandIfStillOccupied()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([2]);
+        $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItDoesntReturnCurrentStandIfNoLongerOccupied()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1]);
+
+        $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
     }
 
     public function testItReturnsOccupiedStandIfStandIsOccupied()
@@ -411,6 +488,9 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals(2, $this->service->getOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertCount(1, $aircraft->occupiedStand);
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
     }
 
     public function testItReturnsClosestOccupiedStandIfMultipleInContention()
@@ -436,6 +516,9 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals($newStand->id, $this->service->getOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertCount(1, $aircraft->occupiedStand);
+        $this->assertEquals($newStand->id, $aircraft->occupiedStand->first()->id);
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment

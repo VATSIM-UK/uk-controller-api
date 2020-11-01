@@ -20,7 +20,7 @@ class StandService
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
 
     // The maximum speed at which an aircraft can be travelling for it to be deemed to be occupying a stand
-    private const MAX_OCCUPANCY_SPEED = 25;
+    private const MAX_OCCUPANCY_SPEED = 10;
 
     /*
      * The maximum altitude that an aircraft may be at in order to be deemed to be occupying a stand. For reference,
@@ -225,8 +225,19 @@ class StandService
 
     public function getOccupiedStand(NetworkAircraft $aircraft): ?Stand
     {
-        if ($aircraft->altitude > self::MAX_OCCUPANCY_ALTITUDE || $aircraft->groundspeed > self::MAX_OCCUPANCY_SPEED) {
+        /*
+         * If an aircraft cannot occupy a stand, delete any current occupation
+         * and return.
+         */
+        if (!$this->aircraftCanOccupyStand($aircraft)) {
+            if ($aircraft->occupiedStand()) {
+                $aircraft->occupiedStand()->sync([]);
+            }
             return null;
+        }
+
+        if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand->first())) {
+            return $aircraft->occupiedStand->first();
         }
 
         $selectedStand = null;
@@ -236,7 +247,7 @@ class StandService
         {
             $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
             if (
-                $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_KILOMETERS &&
+                $this->standOccupied($aircraft, $stand) &&
                 $distanceFromStand < $selectedStandDistance
             ) {
                 $selectedStand = $stand;
@@ -244,6 +255,22 @@ class StandService
             }
         }
 
+        if ($selectedStand) {
+            $aircraft->occupiedStand()->sync([$selectedStand->id]);
+        }
+
         return $selectedStand;
+    }
+
+    private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
+    {
+        $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_KILOMETERS;
+    }
+
+    private function aircraftCanOccupyStand(NetworkAircraft $aircraft): bool
+    {
+        return $aircraft->altitude < self::MAX_OCCUPANCY_ALTITUDE
+            && $aircraft->groundspeed < self::MAX_OCCUPANCY_SPEED;
     }
 }

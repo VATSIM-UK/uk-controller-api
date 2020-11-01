@@ -3,9 +3,11 @@
 namespace App\Models\Vatsim;
 
 use App\Models\Hold\AssignedHold;
+use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Location\Coordinate;
 
@@ -89,5 +91,15 @@ class NetworkAircraft extends Model
     public function squawkingBannedSquawk(): bool
     {
         return $this->attributes['transponder'] === '7500';
+    }
+
+    public function occupiedStand(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Stand::class,
+            'aircraft_stand',
+            'callsign',
+            'stand_id'
+        );
     }
 }
