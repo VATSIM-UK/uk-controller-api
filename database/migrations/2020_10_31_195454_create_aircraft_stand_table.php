@@ -21,6 +21,7 @@ class CreateAircraftStandTable extends Migration
 
             $table->foreign('callsign')->references('callsign')->on('network_aircraft')->cascadeOnDelete();
             $table->foreign('stand_id')->references('id')->on('stands')->cascadeOnDelete();
+            $table->unique('callsign');
         });
     }
 
