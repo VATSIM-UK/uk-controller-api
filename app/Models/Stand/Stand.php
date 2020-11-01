@@ -3,11 +3,13 @@
 namespace App\Models\Stand;
 
 use App\Models\Airfield\Airfield;
+use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
 
 class Stand extends Model
@@ -24,9 +26,24 @@ class Stand extends Model
         'longitude' => 'double',
     ];
 
+    public function assignment(): HasOne
+    {
+        return $this->hasOne(StandAssignment::class);
+    }
+
     public function airfield(): BelongsTo
     {
         return $this->belongsTo(Airfield::class);
+    }
+
+    public function airlines(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Airline::class,
+            'airline_stand',
+            'stand_id',
+            'airline_id'
+        )->withTimestamps();
     }
 
     public function getCoordinateAttribute()
@@ -47,5 +64,22 @@ class Stand extends Model
             'stand_id',
             'callsign'
         )->withTimestamps();
+    }
+
+    public function scopeUnassigned(Builder $builder): Builder
+    {
+        return $builder->whereDoesntHave('assignment');
+    }
+
+    public function scopeAvailable(Builder $builder): Builder
+    {
+        return $this->scopeUnassigned($this->scopeUnoccupied($builder));
+    }
+
+    public function scopeAirline(Builder $builder, Airline $airline): Builder
+    {
+        return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline) {
+            $airlineQuery->where('airlines.id', $airline->id);
+        });
     }
 }

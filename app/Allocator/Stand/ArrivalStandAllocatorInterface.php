@@ -5,7 +5,7 @@ namespace App\Allocator\Stand;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 
-interface StandAllocatorInterface
+interface ArrivalStandAllocatorInterface
 {
     /**
      * If called, should allocate a stand to an aircraft and return it. If an allocation
