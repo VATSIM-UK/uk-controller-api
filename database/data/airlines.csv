@@ -54,7 +54,7 @@ Alberta Citylink,ABK,ALBERTA CITYLINK
 Air BC,ABL,AIRCOACH
 Air Busan,ABL,Air Busan
 Aero Albatros,ABM,ALBATROS ESPANA
-Air Fret Senegal,ABN, 
+Air Fret Senegal,ABN,
 APSA Colombia,ABO,AEROEXPRESO
 Aba Air,ABP,BAIR
 Airblue,ABQ,PAKBLUE
@@ -158,7 +158,7 @@ Air Data,AFS,
 Afrinat International Airlines,AFU,
 Air Afrique Vacancies,AFV,AFRIQUE VACANCE
 Afrique Regional Airways,AFW,AFRAIR
-Airfreight Express,AFX, 
+Airfreight Express,AFX,
 Africa Chartered Services,AFY,AFRICA CHARTERED
 Africa Freight Services,AFZ,AFREIGHT
 Aeronaves Del Centro,AGA,
@@ -206,7 +206,7 @@ Airbus Industrie,AIB,AIRBUS INDUSTRIE
 Air India Limited,AIC,AIRINDIA
 Air Inuit,AIE,AIR INUIT
 Compania Aerea de Valencia,AIF,
-Air Inter Gabon,AIG, 
+Air Inter Gabon,AIG,
 Alpine Air Chile,AIH,ALPINE CHILE
 Air Integra,AII,INTEGRA
 ABC Aerolineas,AIJ,ABC AEROLINEAS
@@ -219,7 +219,7 @@ Alpine Air Express,AIP,ALPINE AIR
 Thai AirAsia,AIQ,THAI ASIA
 Airlift International,AIR,AIRLIFT
 Air Sureste,AIS,SURESTE
-Airest,AIT, 
+Airest,AIT,
 Alicante Internacional Airlines,AIU,ALIA
 Airvias S/A Linhas Aereas,AIV,AIRVIAS
 Atlantic Island Airways,AIW,TARTAN
@@ -250,7 +250,7 @@ Arca Aerovias Colombianas Ltda.,AKC,ARCA
 Anikay Air Company,AKF,ANIKAY
 84 Squadron Royal Air Force @ RAF Akrotiri,AKG,GRIFTER
 Akhal,AKH,AKHAL
-Ibk-Petra,AKI, 
+Ibk-Petra,AKI,
 Aklak Air,AKK,AKLAK
 Air Kiribati,AKL,
 Mak Air,AKM,MAKAIR
@@ -285,7 +285,7 @@ Alas de Venezuela,ALV,ALVEN
 Alas Nacionales,ALW, S.A.
 Hewa Bora Airways,ALX,ALLCONGO
 Alyeska Air Service,ALY,ALYESKA
-Alta Flights (Charters) Ltd.,ALZ, 
+Alta Flights (Charters) Ltd.,ALZ,
 ATMA,AMA,ADIK
 Deutsche Rettungsflugwacht,AMB,CIVIL AIR AMBULANCE
 Air Malta,AMC,AIR MALTA
@@ -336,7 +336,7 @@ AirOne Atlantic,AO1,
 Alcon Servicios Aereos,AOA, S.A. de C.V.
 AVCOM,AOC,AERO AVCOM
 Aero Vodochody,AOD,AERO CZECH
-Air One Executive,AOE, 
+Air One Executive,AOE,
 Atair Pty Ltd.,AOF,ATAIR
 Aero VIP,AOG,AVIP
 Astoria,AOI, Inc.
@@ -382,7 +382,7 @@ AirQuarius Aviation,AQU,QUARIUS
 Aerodyne Charter Company,AQZ,QUANZA
 Arik Air,ARA,ARIK AIR
 Avia Air N.V.,ARB,AVIAIR
-Air Routing International Corp.,ARC, 
+Air Routing International Corp.,ARC,
 Aerocondor,ARD,AEROCONDOR
 Aires,ARE, Aerovias de Integracion Regional
 Aero Flight,ARF,Aero Fox
@@ -419,7 +419,7 @@ La Ronge Aviation Services,ASK,AIR SASK
 Spurling Aviation,ASL,AIR SEATTLE
 Air Serbia,ASL,AIR SERBIA
 Awesome Flight Services (PTY) Ltd.,ASM,AWESOME
-Air and Sea Transport,ASN, 
+Air and Sea Transport,ASN,
 Aero Slovakia,ASO,AERO NITRA
 Airsprint,ASP,AIRSPRINT
 Atlantic Southeast Airlines,ASQ,ACEY
@@ -519,7 +519,7 @@ Aeroline GmbH,AWU,SYLT-AIR
 Airwave Transport,AWV, Inc.
 Air Wales,AWW,RED DRAGON
 Aeroway,AWY, S.L.
-AirWest,AWZ, 
+AirWest,AWZ,
 Air India Express,AXB,EXPRESS INDIA
 Indochina Airlines,AXC,Airspup
 Air Express,AXD,AIR SUDEX
@@ -573,7 +573,7 @@ Azza Transport,AZZ,AZZA TRANSPORT
 Baltic Air lines,BA1,Baltic
 Balkan Agro Aviation,BAA,BALKAN AGRO
 Bahrain Air BSC (Closed),BAB,AWAL
-BAC Leasing Limited,BAC, 
+BAC Leasing Limited,BAC,
 BAE Systems,BAE,FELIX
 Belgian Air Force,BAF,BELGIAN AIRFORCE
 dba,BAG,SPEEDWAY
@@ -5854,7 +5854,7 @@ Central Aviation,YOG,YOGAN AIR
 Air Yugoslavia,YRG,YUGAIR
 ICAO,YYY,
 Yangtze River Express,YZR,YANGTZE RIVER
-LSM AIRLINES ,YZZ,Moscow frog 
+LSM AIRLINES ,YZZ,Moscow frog
 All Argentina Express,Z9H,
 Zaire Aero Service,ZAI,ZASAIR
 Airlink Zambia,ZAK,
@@ -5866,94 +5866,9 @@ Boskovic Air Charters Limited,ZBA,BOSKY
 Southjet connect,ZCS,
 Zambezi Airlines,ZMA,ZAMBEZI WINGS
 Zenith International Airline,ZNA,ZENITH
-Mongolian International Air Lines ,ZTF,Mongol_AIr 
-ZABAIKAL AIRLINES,ZTT,BAIKAL 
+Mongolian International Air Lines ,ZTF,Mongol_AIr
+ZABAIKAL AIRLINES,ZTT,BAIKAL
 Japan Regio,ZXY,
 Caribbean Wings,ZYZ,caribbean Wings
 Agence Nationale des Aerodromes et de la Meteorologie,ZZM,
 Zabaykalskii Airlines,ZZZ,Lakeair
-Abacus International,,
-Advance Leasing Company,,
-Aztec Worldwide Airlines,,
-Air Tindi,,
-Air Salone,,
-Air Libert,,
-Air Sicilia,,
-Airshop,,
-African Transport Trading and Investment Company,,
-Aeroland Airways,,
-Astair,,
-Bringer Air Cargo Taxi Aereo,,
-Balkan Bulgarian Airlines,,
-BA Connect,,
-BAX Global,,
-Coastal Air,,U.S. Virgin Islands
-Continental Express,,JETLINK
-Cyprus Turkish Airlines,,
-Deutsche Bahn,,
-Electronic Data Systems,,
-Eagle Air,,
-Euro Exec Express,,
-Falcon Aviation,,
-Forward Air International Airlines,,
-Galileo International,,
-Go One Airways,,
-Guyana Airways 2000,,
-Hainan Phoenix Information Systems,,
-Hawaiian Pacific Airlines,,
-Hawkair,,
-Hope Air,,HOPE AIR
-Héli Sécurité Helicopter Airlines,,
-ICAR Airlines,,
-INFINI Travel Information,,
-ITA Software,,
-Island Airlines,,
-Islands Nationair,,
-JSC Transport Automated Information Systems,,
-Jet Airways,,
-Jetclub,,
-Lufthansa Systems,,
-Maersk,,
-Mastertop Linhas Aereas,,
-Myway Airlines,,
-Nas Air,,
-National Airways Cameroon,,
-Navitaire,,
-North Coast Aviation,,
-Northern Dene Airways,,
-OAG,,
-Oceanic Airlines,,
-Pacificair,,
-Pegasus Hava Tasimaciligi,,
-Phoenix Airways,,
-Polyot Sirena,,
-Princess Air,,
-Proflight Commuter Services,,
-RACSA,,
-Radixx Solutions International,,
-Regional Airlines,,
-Rossiya,,
-Scorpio Aviation,,
-Sabre Pacific,,
-Sabre,,
-Sierra Nevada Airlines,,
-Siren-Travel,,
-Sirena,,
-Sky Trek International Airlines,,
-Southern Cross Distribution,,
-Sutra,,
-SNCF,,
-Star Equatorial Airlines,,
-Servant Air,,
-Sirin,,
-Star Air,,
-Travelsky Technology,,
-Thalys,,
-Transports et Travaux A,,
-United Feeder Service,,
-US Helicopter Corporation,,
-VIA Rail Canada,,
-Viasa,,
-Wayraper,,WAYRAPER
-West Coast Air,,
-Worldspan,,
