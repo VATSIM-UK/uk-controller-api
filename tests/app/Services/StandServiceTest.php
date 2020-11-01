@@ -259,7 +259,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     {
         $this->expectsEvents(StandUnassignedEvent::class);
         $this->addStandAssignment('RYR7234', 1);
-        $this->service->deleteStandAssignment('RYR7234');
+        $this->service->deleteStandAssignmentByCallsign('RYR7234');
 
         $this->assertDatabaseMissing(
             'stand_assignments',
@@ -272,7 +272,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntTriggerEventIfNoAssignmentDelete()
     {
         $this->doesntExpectEvents(StandUnassignedEvent::class);
-        $this->service->deleteStandAssignment('RYR7234');
+        $this->service->deleteStandAssignmentByCallsign('RYR7234');
 
         $this->assertDatabaseMissing(
             'stand_assignments',
@@ -477,6 +477,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItUsurpsAssignedStands()
     {
+        $this->expectsEvents(StandUnassignedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [

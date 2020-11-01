@@ -57,7 +57,7 @@ class StandController extends BaseController
 
     public function deleteStandAssignment(string $callsign): JsonResponse
     {
-        $this->standService->deleteStandAssignment($callsign);
+        $this->standService->deleteStandAssignmentByCallsign($callsign);
         return response()->json([], 204);
     }
 }

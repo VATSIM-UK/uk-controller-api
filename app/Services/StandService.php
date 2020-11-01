@@ -122,7 +122,7 @@ class StandService
             ->first();
 
         if ($currentAssignment && $currentAssignment->callsign !== $callsign) {
-            $this->deleteStandAssignment($currentAssignment->aircraft->callsign);
+            $this->deleteStandAssignmentByCallsign($currentAssignment->aircraft->callsign);
         }
 
         $assignment = StandAssignment::updateOrCreate(
@@ -135,13 +135,18 @@ class StandService
         event(new StandAssignedEvent($assignment));
     }
 
-    public function deleteStandAssignment(string $callsign): void
+    public function deleteStandAssignmentByCallsign(string $callsign): void
     {
         if (!StandAssignment::destroy($callsign)) {
             return;
         }
 
         event(new StandUnassignedEvent($callsign));
+    }
+
+    public function deleteStandAssignment(StandAssignment $assignment): void
+    {
+        $this->deleteStandAssignmentByCallsign($assignment->callsign);
     }
 
     public function getDepartureStandAssignmentForAircraft(NetworkAircraft $aircraft): ?StandAssignment
@@ -277,7 +282,7 @@ class StandService
             ->first();
 
         if ($conflictingAssignment) {
-            $conflictingAssignment->delete();
+            $this->deleteStandAssignment($conflictingAssignment);
         }
     }
 
