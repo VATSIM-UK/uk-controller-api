@@ -100,6 +100,6 @@ class NetworkAircraft extends Model
             'aircraft_stand',
             'callsign',
             'stand_id'
-        );
+        )->withTimestamps();
     }
 }
