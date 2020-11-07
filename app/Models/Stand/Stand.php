@@ -43,7 +43,7 @@ class Stand extends Model
             'airline_stand',
             'stand_id',
             'airline_id'
-        )->withTimestamps();
+        )->withPivot('destination')->withTimestamps();
     }
 
     public function getCoordinateAttribute()

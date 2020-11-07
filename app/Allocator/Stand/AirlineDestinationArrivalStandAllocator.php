@@ -27,21 +27,32 @@ class AirlineDestinationArrivalStandAllocator extends AbstractArrivalStandAlloca
             return new Collection();
         }
 
-        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
+        $stands = Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
             $query->where('code', $aircraft->planned_destairport);
         })
             ->airlineDestination($airline, $this->getDestinationStrings($aircraft))
             ->available()
             ->get();
+
+        dd($stands[0]);
+
+        dd($stands->sortByDesc(function (Stand $stand) {
+            dd($stand);
+            return strlen((string) $stand->destination);
+        }));
+
+        return $stands->sortByDesc(function (Stand $stand) {
+            return strlen((string) $stand->destination);
+        });
     }
 
     public function getDestinationStrings(NetworkAircraft $aircraft): array
     {
         return [
-            substr($aircraft->planned_destairport, 0, 1),
-            substr($aircraft->planned_destairport, 0, 2),
-            substr($aircraft->planned_destairport, 0, 3),
-            $aircraft->planned_destairport
+            substr($aircraft->planned_depairport, 0, 1),
+            substr($aircraft->planned_depairport, 0, 2),
+            substr($aircraft->planned_depairport, 0, 3),
+            $aircraft->planned_depairport
         ];
     }
 }
