@@ -2,6 +2,7 @@
 
 namespace App\Allocator\Stand;
 
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
@@ -27,22 +28,16 @@ class AirlineDestinationArrivalStandAllocator extends AbstractArrivalStandAlloca
             return new Collection();
         }
 
-        $stands = Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
-            $query->where('code', $aircraft->planned_destairport);
-        })
-            ->airlineDestination($airline, $this->getDestinationStrings($aircraft))
-            ->available()
-            ->get();
-
-        dd($stands[0]);
-
-        dd($stands->sortByDesc(function (Stand $stand) {
-            dd($stand);
-            return strlen((string) $stand->destination);
-        }));
+        $stands = Stand::with('airlines')
+            ->whereHas('airfield', function (Builder $query) use ($aircraft) {
+                $query->where('code', $aircraft->planned_destairport);
+            })
+                ->airlineDestination($airline, $this->getDestinationStrings($aircraft))
+                ->available()
+                ->get();
 
         return $stands->sortByDesc(function (Stand $stand) {
-            return strlen((string) $stand->destination);
+            return strlen((string) $stand->airlines->first()->pivot->destination);
         });
     }
 
