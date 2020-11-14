@@ -5,6 +5,7 @@ namespace App\Allocator\Stand;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 
@@ -28,6 +29,13 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
         }
 
         return null;
+    }
+
+    protected function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
+    {
+        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
+            $query->where('code', $aircraft->planned_destairport);
+        });
     }
 
     /**

@@ -27,9 +27,7 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
             return new Collection();
         }
 
-        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
-            $query->where('code', $aircraft->planned_destairport);
-        })
+        return $this->getArrivalAirfieldStandQuery($aircraft)
             ->airline($airline)
             ->available()
             ->get();

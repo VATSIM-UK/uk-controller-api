@@ -28,13 +28,11 @@ class AirlineDestinationArrivalStandAllocator extends AbstractArrivalStandAlloca
             return new Collection();
         }
 
-        $stands = Stand::with('airlines')
-            ->whereHas('airfield', function (Builder $query) use ($aircraft) {
-                $query->where('code', $aircraft->planned_destairport);
-            })
-                ->airlineDestination($airline, $this->getDestinationStrings($aircraft))
-                ->available()
-                ->get();
+        $stands = $this->getArrivalAirfieldStandQuery($aircraft)
+            ->with('airlines')
+            ->airlineDestination($airline, $this->getDestinationStrings($aircraft))
+            ->available()
+            ->get();
 
         return $stands->sortByDesc(function (Stand $stand) {
             return strlen((string) $stand->airlines->first()->pivot->destination);
