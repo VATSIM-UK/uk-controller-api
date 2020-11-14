@@ -117,4 +117,14 @@ class NetworkAircraft extends Model
                 return $splitType[1];
         }
     }
+
+    public function isVfr(): bool
+    {
+        return in_array($this->planned_flighttype, ['V', 'S']);
+    }
+
+    public function isIfr(): bool
+    {
+        return $this->planned_flighttype === 'I';
+    }
 }

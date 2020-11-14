@@ -66,4 +66,25 @@ class NetworkAircraftTest extends BaseUnitTestCase
             ],
         ];
     }
+
+    public function testItIsIfr()
+    {
+        $aircraft = new NetworkAircraft(['planned_flighttype' => 'I']);
+        $this->assertTrue($aircraft->isIfr());
+        $this->assertFalse($aircraft->isVfr());
+    }
+
+    public function testItIsVfr()
+    {
+        $aircraft = new NetworkAircraft(['planned_flighttype' => 'V']);
+        $this->assertTrue($aircraft->isVfr());
+        $this->assertFalse($aircraft->isIfr());
+    }
+
+    public function testItIsSvfr()
+    {
+        $aircraft = new NetworkAircraft(['planned_flighttype' => 'S']);
+        $this->assertTrue($aircraft->isVfr());
+        $this->assertFalse($aircraft->isIfr());
+    }
 }
