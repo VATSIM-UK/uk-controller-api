@@ -29,7 +29,7 @@ class WakeCategory extends Model
         return $this->hasMany(Aircraft::class);
     }
 
-    public function greaterRelativeWeighting(Builder $builder, WakeCategory $wakeCategory): Builder
+    public function scopeGreaterRelativeWeighting(Builder $builder, WakeCategory $wakeCategory): Builder
     {
         return $builder->where('relative_weighting', '>=', $wakeCategory->relative_weighting);
     }

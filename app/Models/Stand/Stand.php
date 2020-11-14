@@ -20,6 +20,7 @@ class Stand extends Model
         'identifier',
         'latitude',
         'longitude',
+        'wake_category_id',
     ];
 
     protected $casts = [
@@ -92,8 +93,8 @@ class Stand extends Model
         });
     }
 
-    public function wakeCategory(): HasOne
+    public function wakeCategory(): BelongsTo
     {
-        return $this->hasOne(WakeCategory::class);
+        return $this->belongsTo(WakeCategory::class);
     }
 }
