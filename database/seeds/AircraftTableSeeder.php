@@ -13,26 +13,32 @@ class AircraftTableSeeder extends Seeder
                 [
                     'code' => 'L',
                     'description' => 'Light',
+                    'relative_weighting' => 0,
                 ],
                 [
                     'code' => 'S',
                     'description' => 'Small',
+                    'relative_weighting' => 5,
                 ],
                 [
                     'code' => 'LM',
                     'description' => 'Lower Medium',
+                    'relative_weighting' => 10,
                 ],
                 [
                     'code' => 'UM',
                     'description' => 'Upper Medium',
+                    'relative_weighting' => 15,
                 ],
                 [
                     'code' => 'H',
                     'description' => 'Heavy',
+                    'relative_weighting' => 20,
                 ],
                 [
                     'code' => 'J',
                     'description' => 'Jumbo',
+                    'relative_weighting' => 25,
                 ],
             ]
         );
