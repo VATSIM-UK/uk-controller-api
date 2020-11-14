@@ -2,6 +2,7 @@
 
 namespace App\Models\Stand;
 
+use App\Models\Aircraft\WakeCategory;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
@@ -89,5 +90,10 @@ class Stand extends Model
             $airlineQuery->where('airlines.id', $airline->id)
                 ->whereIn('destination', $destinationStrings);
         });
+    }
+
+    public function wakeCategory(): HasOne
+    {
+        return $this->hasOne(WakeCategory::class);
     }
 }
