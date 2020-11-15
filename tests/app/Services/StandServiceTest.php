@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
@@ -550,6 +551,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 AirlineDestinationArrivalStandAllocator::class,
                 AirlineArrivalStandAllocator::class,
+                CargoArrivalStandAllocator::class,
                 SizeAppropriateArrivalStandAllocator::class,
             ],
             $this->service->getAllocatorPreference()

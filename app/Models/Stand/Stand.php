@@ -99,4 +99,9 @@ class Stand extends Model
     {
         return $this->belongsTo(WakeCategory::class);
     }
+
+    public function scopeCargo(Builder $builder): Builder
+    {
+        return $builder->where('is_cargo', true);
+    }
 }
