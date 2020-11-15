@@ -220,6 +220,40 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($fullMatchStand->id, StandAssignment::find($aircraft->callsign)->stand_id);
     }
 
+    public function testItDoesntAllocateOccupiedStands()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'destination' => null
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+            ]
+        );
+
+        $occupier = $this->createAircraft('EZY7823', 'EGLL', 'EGGD');
+        $occupier->occupiedStand()->sync([1]);
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
+        $this->assertEquals(2, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals(2, StandAssignment::find($aircraft->callsign)->stand_id);
+    }
+
     public function testItDoesntAllocateAStandWithNoDestination()
     {
         DB::table('airline_stand')->insert(

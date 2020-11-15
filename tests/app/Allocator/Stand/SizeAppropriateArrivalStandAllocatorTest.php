@@ -40,6 +40,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'code' => 'A388',
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'allocate_stands' => true,
             ]
         );
 
@@ -70,6 +71,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'code' => 'B744',
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'allocate_stands' => true,
             ]
         );
 
@@ -80,6 +82,34 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
         $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
         $this->assertEquals('AEU252', $assignment->callsign);
+    }
+
+    public function testItDoesntAllocateTakenStands()
+    {
+        // Create a stand that can only accept an A380 and create the aircraft
+        $stand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '55L',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+            ]
+        );
+        $stand->refresh();
+        $occupier = $this->createAircraft('AEU253', 'B744', 'EGLL');
+        $occupier->occupiedStand()->sync([$stand->id]);
+
+        Aircraft::create(
+            [
+                'code' => 'B744',
+                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'allocate_stands' => true,
+            ]
+        );
+
+        $aircraft = $this->createAircraft('AEU252', 'B744', 'EGLL');
+        $this->assertNull($this->allocator->allocate($aircraft));
     }
 
     public function testItDoesntAssignIfNoAircraftType()

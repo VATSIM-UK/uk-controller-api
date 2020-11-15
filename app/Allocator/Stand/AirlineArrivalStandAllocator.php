@@ -29,7 +29,6 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
 
         return $this->getArrivalAirfieldStandQuery($aircraft)
             ->airline($airline)
-            ->available()
             ->get();
     }
 }

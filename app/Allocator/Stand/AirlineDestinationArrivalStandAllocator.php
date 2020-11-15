@@ -31,7 +31,6 @@ class AirlineDestinationArrivalStandAllocator extends AbstractArrivalStandAlloca
         $stands = $this->getArrivalAirfieldStandQuery($aircraft)
             ->with('airlines')
             ->airlineDestination($airline, $this->getDestinationStrings($aircraft))
-            ->available()
             ->get();
 
         return $stands->sortByDesc(function (Stand $stand) {

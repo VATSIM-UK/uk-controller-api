@@ -35,7 +35,8 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
     {
         return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
             $query->where('code', $aircraft->planned_destairport);
-        });
+        })
+            ->available();
     }
 
     /**
