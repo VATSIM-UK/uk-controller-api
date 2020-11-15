@@ -12,7 +12,7 @@ class Aircraft extends Model
     protected $fillable = [
         'code',
         'wake_category_id',
-        'created_at'
+        'allocate_stands',
     ];
 
     protected $hidden = [
