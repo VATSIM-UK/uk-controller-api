@@ -48,10 +48,12 @@ class AircraftTableSeeder extends Seeder
                 [
                     'code' => 'B738',
                     'wake_category_id' => WakeCategory::where('code', 'LM')->firstOrFail()->id,
+                    'allocate_stands' => true,
                 ],
                 [
                     'code' => 'A333',
                     'wake_category_id' => WakeCategory::where('code', 'H')->firstOrFail()->id,
+                    'allocate_stands' => true,
                 ],
             ]
         );
