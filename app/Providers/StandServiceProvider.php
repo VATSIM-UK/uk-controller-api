@@ -1,7 +1,11 @@
 <?php
 namespace App\Providers;
 
+use App\Allocator\Stand\AirlineArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
 use App\Services\StandService;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class StandServiceProvider extends ServiceProvider
@@ -11,7 +15,15 @@ class StandServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(StandService::class);
+        $this->app->singleton(StandService::class, function (Application $application) {
+            return new StandService(
+                [
+                    $application->make(AirlineDestinationArrivalStandAllocator::class),
+                    $application->make(AirlineArrivalStandAllocator::class),
+                    $application->make(SizeAppropriateArrivalStandAllocator::class),
+                ]
+            );
+        });
     }
 
     /**

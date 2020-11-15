@@ -2,11 +2,15 @@
 
 namespace App\Services;
 
+use App\Allocator\Stand\AirlineArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Dependency\Dependency;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
@@ -538,6 +542,81 @@ class StandServiceTest extends BaseFunctionalTestCase
         $aircraft->refresh();
         $this->assertCount(1, $aircraft->occupiedStand);
         $this->assertEquals($newStand->id, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItHasAllocatorPreference()
+    {
+        $this->assertEquals(
+            [
+                AirlineDestinationArrivalStandAllocator::class,
+                AirlineArrivalStandAllocator::class,
+                SizeAppropriateArrivalStandAllocator::class,
+            ],
+            $this->service->getAllocatorPreference()
+        );
+    }
+
+    public function testItAllocatesAStandFromAllocator()
+    {
+        $this->expectsEvents(StandAssignedEvent::class);
+        $aircraft = NetworkAircraft::create(
+            [
+                'callsign' => 'BMI221',
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+
+        $assignment = $this->service->allocateStandForAircraft($aircraft);
+        $this->assertEquals(1, $assignment->stand_id);
+        $this->assertEquals('BMI221', $assignment->callsign);
+    }
+
+    public function testItDoesntReturnAllocationIfNoAllocationPerformed()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkAircraft::create(
+            [
+                'callsign' => 'BMI221',
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGXX',
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntReturnAllocationIfAircraftTypeUnknown()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkAircraft::create(
+            [
+                'callsign' => 'BMI221',
+                'planned_aircraft' => 'B736',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntReturnAllocationIfAircraftTypeNotStandAssignable()
+    {
+        Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
+
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkAircraft::create(
+            [
+                'callsign' => 'BMI221',
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment

@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
@@ -37,6 +39,19 @@ class StandService
     private const MAX_OCCUPANCY_DISTANCE_METERS = 20;
 
     private $allStands = [];
+
+    /**
+     * @var ArrivalStandAllocatorInterface[]
+     */
+    private $allocators;
+
+    /**
+     * @param ArrivalStandAllocatorInterface[] $allocators
+     */
+    public function __construct(array $allocators)
+    {
+        $this->allocators = $allocators;
+    }
 
     public function getStandsDependency(): Collection
     {
@@ -296,5 +311,41 @@ class StandService
     {
         return $aircraft->altitude < self::MAX_OCCUPANCY_ALTITUDE
             && $aircraft->groundspeed < self::MAX_OCCUPANCY_SPEED;
+    }
+
+    public function allocateStandForAircraft(NetworkAircraft $aircraft): ?StandAssignment
+    {
+        if (!$this->shouldAllocateStand($aircraft)) {
+            return null;
+        }
+
+        foreach ($this->allocators as $allocator)
+        {
+            if (($allocation = $allocator->allocate($aircraft))) {
+                event(new StandAssignedEvent($allocation));
+                return $allocation;
+            }
+        }
+
+        return null;
+    }
+
+    private function shouldAllocateStand(NetworkAircraft $aircraft): bool
+    {
+        return ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
+            $aircraftType ->allocate_stands;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAllocatorPreference(): array
+    {
+        return array_map(
+            function (ArrivalStandAllocatorInterface $allocator) {
+                return get_class($allocator);
+            },
+            $this->allocators
+        );
     }
 }
