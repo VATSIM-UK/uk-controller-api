@@ -18,7 +18,7 @@ class AddIsCargoToAirlinesTable extends Migration
             $table->boolean('is_cargo')
                 ->after('callsign')
                 ->default(false)
-                ->comment('Returns whether the airline is a cargo airline');
+                ->comment('Whether the airline is a cargo airline');
         });
 
         DB::table('airlines')

@@ -21,11 +21,13 @@ class Stand extends Model
         'latitude',
         'longitude',
         'wake_category_id',
+        'is_cargo',
     ];
 
     protected $casts = [
         'latitude' => 'double',
         'longitude' => 'double',
+        'is_cargo' => 'boolean',
     ];
 
     public function assignment(): HasOne
