@@ -39,7 +39,7 @@ class AddDecimalLatLongToStands extends Migration
                 ->comment('The latitude of the stand in decimal degrees');
             $table->double('lon_new', 11, 8)
                 ->after('lat_new')
-                ->comment('The latitude of the stand in decimal degrees');
+                ->comment('The longitude of the stand in decimal degrees');
         });
     }
 
