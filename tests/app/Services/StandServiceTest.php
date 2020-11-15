@@ -572,12 +572,33 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals('BMI221', $assignment->callsign);
     }
 
+    public function testItDoesntAllocateIfStandAlreadyAssigned()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+        StandAssignment::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertTrue(StandAssignment::where('callsign', 'BMI221')->where('stand_id', 1)->exists());
+    }
+
     public function testItDoesntReturnAllocationIfNoAllocationPerformed()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkAircraft::create(
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
             [
-                'callsign' => 'BMI221',
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGXX',
             ]
@@ -590,9 +611,9 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntReturnAllocationIfAircraftTypeUnknown()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkAircraft::create(
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
             [
-                'callsign' => 'BMI221',
                 'planned_aircraft' => 'B736',
                 'planned_destairport' => 'EGLL',
             ]
@@ -607,9 +628,9 @@ class StandServiceTest extends BaseFunctionalTestCase
         Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
 
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkAircraft::create(
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
             [
-                'callsign' => 'BMI221',
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
             ]

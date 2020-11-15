@@ -313,6 +313,9 @@ class StandService
             && $aircraft->groundspeed < self::MAX_OCCUPANCY_SPEED;
     }
 
+    /**
+     * Use the stand assignment rules to allocate a stand for a given aircraft
+     */
     public function allocateStandForAircraft(NetworkAircraft $aircraft): ?StandAssignment
     {
         if (!$this->shouldAllocateStand($aircraft)) {
@@ -332,7 +335,8 @@ class StandService
 
     private function shouldAllocateStand(NetworkAircraft $aircraft): bool
     {
-        return ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
+        return !StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
+            ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
             $aircraftType ->allocate_stands;
     }
 
