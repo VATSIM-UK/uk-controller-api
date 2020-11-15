@@ -9,17 +9,17 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 
-class SizeAppropriateStandAllocatorTest extends BaseFunctionalTestCase
+class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
     /**
-     * @var SizeAppropriateStandAllocator
+     * @var SizeAppropriateArrivalStandAllocator
      */
     private $allocator;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(SizeAppropriateStandAllocator::class);
+        $this->allocator = $this->app->make(SizeAppropriateArrivalStandAllocator::class);
     }
 
     public function testItAssignsAnAppropriatelySizedStand()

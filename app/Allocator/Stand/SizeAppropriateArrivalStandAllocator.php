@@ -8,7 +8,7 @@ use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class SizeAppropriateStandAllocator extends AbstractArrivalStandAllocator
+class SizeAppropriateArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
     /**
      * @var AirlineService
