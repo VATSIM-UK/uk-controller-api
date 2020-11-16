@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Location\Coordinate;
 
 class Airfield extends Model implements MinStackDataProviderInterface
 {
@@ -34,6 +35,10 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'msl_calculation',
         'created_at',
         'updated_at',
+    ];
+
+    protected $casts = [
+        'groundspeed' => 'integer',
     ];
 
     /**
@@ -124,5 +129,10 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'airfield_id',
             'altimeter_setting_region_id'
         );
+    }
+
+    public function getCoordinateAttribute(): Coordinate
+    {
+        return new Coordinate($this->latitude, $this->longitude);
     }
 }

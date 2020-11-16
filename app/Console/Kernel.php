@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AllocateStandForArrival;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
@@ -45,6 +46,7 @@ class Kernel extends ConsoleKernel
         OptimiseTables::class,
         CleanStandAssignmentsHistory::class,
         WakeCategoriesImport::class,
+        AllocateStandForArrival::class,
     ];
 
     /**
@@ -64,5 +66,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
+        $schedule->command('stands:assign-arrival')->everyFiveMinutes();
     }
 }
