@@ -4,7 +4,7 @@ use App\Services\DependencyService;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class FixBirminghamRadar extends Migration
+class FixBirminghamRadarFrequency extends Migration
 {
     /**
      * Run the migrations.
