@@ -3,6 +3,8 @@
 namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Aircraft\Aircraft;
+use App\Models\Aircraft\WakeCategory;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
@@ -50,6 +52,53 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
         $this->assertEquals(2, $this->allocator->allocate($aircraft)->stand_id);
         $this->assertEquals(2, StandAssignment::find($aircraft->callsign)->stand_id);
+    }
+
+    public function testItAllocatesAStandWithAnAppropriateWeight()
+    {
+        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'UM')->first()->id]);
+        $weightAppropriateStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '502',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
+                'is_cargo' => false,
+            ]
+        );
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => null
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'destination' => null
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => $weightAppropriateStand->id,
+                    'destination' => 'EGGD'
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
+        $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals($weightAppropriateStand->id, StandAssignment::find($aircraft->callsign)->stand_id);
     }
 
     public function testItAllocatesSingleCharacterMatches()
@@ -370,6 +419,7 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
+                'planned_aircraft' => 'B738',
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
             ]

@@ -337,7 +337,7 @@ class StandService
     {
         return !StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
             ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
-            $aircraftType ->allocate_stands;
+            $aircraftType->allocate_stands;
     }
 
     /**

@@ -20,21 +20,16 @@ class SizeAppropriateArrivalStandAllocator extends AbstractArrivalStandAllocator
         $this->airlineService = $airlineService;
     }
 
+    /**
+     * This runs the base query, and gets stands at the arrival airport suitable
+     * for the aircraft's size that aren't occupied.
+     *
+     * @param NetworkAircraft $aircraft
+     * @return Collection
+     */
     protected function getPossibleStands(NetworkAircraft $aircraft): Collection
     {
-        $aircraftType = Aircraft::with('wakeCategory')
-            ->where('code', $aircraft->aircraftType)
-            ->first();
-
-        // Only allocate a stand if we can match types
-        if (!$aircraftType) {
-            return new Collection();
-        }
-
         return $this->getArrivalAirfieldStandQuery($aircraft)
-            ->whereHas('wakeCategory', function (Builder $builder) use ($aircraftType) {
-                $builder->greaterRelativeWeighting($aircraftType->wakeCategory);
-            })
-                ->get();
+            ->get();
     }
 }
