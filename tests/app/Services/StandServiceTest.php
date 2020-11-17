@@ -561,11 +561,15 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItAllocatesAStandFromAllocator()
     {
         $this->expectsEvents(StandAssignedEvent::class);
-        $aircraft = NetworkAircraft::create(
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
             [
-                'callsign' => 'BMI221',
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
             ]
         );
 
@@ -574,7 +578,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals('BMI221', $assignment->callsign);
     }
 
-    public function testItDoesntAllocateIfStandAlreadyAssigned()
+    public function testItDoesntPerformAllocationIfStandTooFarFromAirfield()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
@@ -582,6 +586,72 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'groundspeed' => 100,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfAircraftHasNoGroundspeed()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 0,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfNoStandAllocated()
+    {
+        // Delete all the stands so there's nothing to allocate
+        Stand::all()->each(function (Stand $stand) {
+            $stand->delete();
+        });
+
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfStandAlreadyAssigned()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
             ]
         );
         StandAssignment::create(
@@ -595,7 +665,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertTrue(StandAssignment::where('callsign', 'BMI221')->where('stand_id', 1)->exists());
     }
 
-    public function testItDoesntReturnAllocationIfNoAllocationPerformed()
+    public function testItDoesntReturnAllocationIfAirfieldNotFound()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
@@ -603,6 +673,10 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGXX',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
             ]
         );
 
@@ -610,7 +684,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
-    public function testItDoesntReturnAllocationIfAircraftTypeUnknown()
+    public function testItDoesntPerformAllocationIfUnknownAircraftType()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
@@ -618,6 +692,10 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B736',
                 'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
             ]
         );
 
@@ -625,7 +703,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
-    public function testItDoesntReturnAllocationIfAircraftTypeNotStandAssignable()
+    public function testItDoesntPerformAllocationIfAircraftTypeNotStandAssignable()
     {
         Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
 
@@ -635,6 +713,10 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
             ]
         );
 

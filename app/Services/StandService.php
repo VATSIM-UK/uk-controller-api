@@ -38,6 +38,11 @@ class StandService
      */
     private const MAX_OCCUPANCY_DISTANCE_METERS = 20;
 
+    /**
+     * How many minutes before arrival the stand should be assigned
+     */
+    private const ASSIGN_STAND_MINUTES_BEFORE = 15.0;
+
     private $allStands = [];
 
     /**
@@ -336,8 +341,28 @@ class StandService
     private function shouldAllocateStand(NetworkAircraft $aircraft): bool
     {
         return !StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
+            ($arrivalAirfield = Airfield::where('code',  $aircraft->planned_destairport)->first()) !== null &&
+            $aircraft->groundspeed &&
             ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
-            $aircraftType->allocate_stands;
+            $aircraftType->allocate_stands &&
+            $this->getTimeFromAirfieldInMinutes($aircraft, $arrivalAirfield) < self::ASSIGN_STAND_MINUTES_BEFORE;
+    }
+
+    /**
+     * Ground speed is kts (nautical miles per hour), so for minutes multiply that by 60.
+     *
+     * @param NetworkAircraft $aircraft
+     * @param Airfield $airfield
+     * @return float
+     */
+    private function getTimeFromAirfieldInMinutes(NetworkAircraft $aircraft, Airfield $airfield): float
+    {
+        $distanceToAirfieldInNm = LocationService::metersToNauticalMiles(
+            $aircraft->latLong->getDistance($airfield->coordinate, new Haversine())
+        );
+        $groundspeed = $aircraft->groundspeed === 0 ? 1 : $aircraft->groundspeed;
+
+        return (float) ($distanceToAirfieldInNm / $groundspeed) * 60.0;
     }
 
     /**
