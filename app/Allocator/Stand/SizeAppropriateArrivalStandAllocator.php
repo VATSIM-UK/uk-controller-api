@@ -30,6 +30,7 @@ class SizeAppropriateArrivalStandAllocator extends AbstractArrivalStandAllocator
     protected function getPossibleStands(NetworkAircraft $aircraft): Collection
     {
         return $this->getArrivalAirfieldStandQuery($aircraft)
+            ->generalUse()
             ->get();
     }
 }

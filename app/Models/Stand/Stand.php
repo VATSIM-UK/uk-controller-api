@@ -104,4 +104,9 @@ class Stand extends Model
     {
         return $builder->where('is_cargo', true);
     }
+
+    public function scopeGeneralUse(Builder $builder): Builder
+    {
+        return $builder->where('general_use', true);
+    }
 }
