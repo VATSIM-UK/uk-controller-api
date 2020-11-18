@@ -17,7 +17,10 @@ class AddGeneralUseColumnToStands extends Migration
             $table->boolean('general_use')
                 ->after('is_cargo')
                 ->default(true)
-                ->comment('Whether the stand should be available for general use');
+                ->comment(
+                    'Whether the stand should be available for general use, ' .
+                    'for example Cargo stands would not be, nor would Heathrow T5 as this is purely for BA'
+                );
         });
     }
 
