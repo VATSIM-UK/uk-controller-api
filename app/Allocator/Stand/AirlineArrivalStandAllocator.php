@@ -2,10 +2,8 @@
 
 namespace App\Allocator\Stand;
 
-use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
