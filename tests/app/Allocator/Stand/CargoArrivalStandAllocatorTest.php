@@ -8,6 +8,7 @@ use App\Models\Aircraft\WakeCategory;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
 
 class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
@@ -35,7 +36,7 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
-                'is_cargo' => true,
+                'stand_type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
         $this->cargoStand = Stand::create(
@@ -45,7 +46,7 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
-                'is_cargo' => true,
+                'stand_type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
         Aircraft::create(
@@ -59,6 +60,17 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesCargoStandsOnly()
     {
+        // Create a non-cargo stand
+        Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '602',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'stand_type_id' => StandType::where('key', 'DOMESTIC')->first()->id,
+            ]
+        );
         Airline::where('icao_code', 'VIR')->update(['is_cargo' => true]);
 
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));

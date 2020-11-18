@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\Stand\StandType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIsCargoToStandsTable extends Migration
+class AddStandTypeToStandsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +15,11 @@ class AddIsCargoToStandsTable extends Migration
     public function up()
     {
         Schema::table('stands', function (Blueprint $table) {
-            $table->boolean('is_cargo')
-                ->after('wake_category_id')
-                ->default(false)
-                ->comment('Whether the stand is a cargo stand');
+            $table->unsignedBigInteger('stand_type_id')
+                ->after('longitude')
+                ->nullable()
+                ->comment('The type of stand if relevant - international, domestic, cargo etc');
+            $table->foreign('stand_type_id')->references('id')->on('stand_types');
         });
     }
 
@@ -29,7 +31,8 @@ class AddIsCargoToStandsTable extends Migration
     public function down()
     {
         Schema::table('stands', function (Blueprint $table) {
-            $table->dropColumn('is_cargo');
+            $table->dropForeign('stands_stand_type_id_foreign');
+            $table->dropColumn('stand_type_id');
         });
     }
 }
