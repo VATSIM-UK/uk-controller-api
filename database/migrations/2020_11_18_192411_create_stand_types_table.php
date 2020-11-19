@@ -35,10 +35,6 @@ class CreateStandTypesTable extends Migration
                         'created_at' => Carbon::now(),
                     ],
                     [
-                        'key' => 'PASSENGER',
-                        'created_at' => Carbon::now(),
-                    ],
-                    [
                         'key' => 'CARGO',
                         'created_at' => Carbon::now(),
                     ],

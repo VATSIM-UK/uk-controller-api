@@ -17,7 +17,7 @@ class AddStandTypeToStandsTable extends Migration
         Schema::table('stands', function (Blueprint $table) {
             $table->unsignedBigInteger('type_id')
                 ->after('longitude')
-                ->default(StandType::where('key', 'PASSENGER')->first()->id)
+                ->nullable()
                 ->comment('The type of stand if relevant - international, domestic, cargo etc');
             $table->foreign('type_id')->references('id')->on('stand_types');
         });

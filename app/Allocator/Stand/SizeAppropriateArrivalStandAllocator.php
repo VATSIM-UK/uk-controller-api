@@ -29,6 +29,7 @@ class SizeAppropriateArrivalStandAllocator extends AbstractArrivalStandAllocator
     {
         return $this->getArrivalAirfieldStandQuery($aircraft)
             ->generalUse()
+            ->notCargo()
             ->get();
     }
 }
