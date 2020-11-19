@@ -20,13 +20,13 @@ class Stand extends Model
         'identifier',
         'latitude',
         'longitude',
-        'stand_type_id',
+        'type_id',
         'wake_category_id',
         'is_cargo',
     ];
 
     protected $casts = [
-        'stand_type_id' => 'integer',
+        'type_id' => 'integer',
         'latitude' => 'double',
         'longitude' => 'double',
         'is_cargo' => 'boolean',
@@ -104,7 +104,7 @@ class Stand extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(StandType::class, 'stand_type_id');
+        return $this->belongsTo(StandType::class);
     }
 
     public function scopeCargo(Builder $builder): Builder

@@ -13,6 +13,7 @@ class StandType extends Model
     private const TYPE_KEY_INTERNATIONAL = 'INTERNATIONAL';
     private const TYPE_KEY_DOMESTIC = 'DOMESTIC';
     private const TYPE_KEY_CARGO = 'CARGO';
+    private const TYPE_KEY_PASSENGER = 'PASSENGER';
 
     protected $fillable = [
         'key',
@@ -31,5 +32,10 @@ class StandType extends Model
     public function scopeCargo(Builder $builder)
     {
         return $builder->where('key', self::TYPE_KEY_CARGO);
+    }
+
+    public function scopePassenger(Builder $builder)
+    {
+        return $builder->where('key', self::TYPE_KEY_PASSENGER);
     }
 }

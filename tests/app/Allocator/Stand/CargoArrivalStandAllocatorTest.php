@@ -36,7 +36,7 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
-                'stand_type_id' => StandType::where('key', 'CARGO')->first()->id,
+                'type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
         $this->cargoStand = Stand::create(
@@ -46,7 +46,7 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
-                'stand_type_id' => StandType::where('key', 'CARGO')->first()->id,
+                'type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
         Aircraft::create(
@@ -68,7 +68,7 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
-                'stand_type_id' => StandType::where('key', 'DOMESTIC')->first()->id,
+                'type_id' => StandType::where('key', 'DOMESTIC')->first()->id,
             ]
         );
         Airline::where('icao_code', 'VIR')->update(['is_cargo' => true]);

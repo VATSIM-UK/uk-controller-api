@@ -15,11 +15,12 @@ class AddStandTypeToStandsTable extends Migration
     public function up()
     {
         Schema::table('stands', function (Blueprint $table) {
-            $table->unsignedBigInteger('stand_type_id')
+            $table->unsignedBigInteger('type_id')
                 ->after('longitude')
                 ->nullable()
+                ->default(StandType::where('key', 'PASSENGER')->first()->id)
                 ->comment('The type of stand if relevant - international, domestic, cargo etc');
-            $table->foreign('stand_type_id')->references('id')->on('stand_types');
+            $table->foreign('type_id')->references('id')->on('stand_types');
         });
     }
 
@@ -31,8 +32,8 @@ class AddStandTypeToStandsTable extends Migration
     public function down()
     {
         Schema::table('stands', function (Blueprint $table) {
-            $table->dropForeign('stands_stand_type_id_foreign');
-            $table->dropColumn('stand_type_id');
+            $table->dropForeign('stands_type_id_foreign');
+            $table->dropColumn('type_id');
         });
     }
 }
