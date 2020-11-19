@@ -19,7 +19,9 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
             try {
                 return StandAssignment::updateOrCreate(
                     [
-                        'callsign' => $aircraft['callsign'],
+                        'callsign' => $aircraft['callsign']
+                    ],
+                    [
                         'stand_id' => $stand->id,
                     ]
                 );

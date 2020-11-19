@@ -89,8 +89,7 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
-                'is_cargo' => false,
+                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id
             ]
         );
         DB::table('airline_stand')->insert(

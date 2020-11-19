@@ -4,6 +4,7 @@ namespace App\Providers;
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\CargoArrivalStandAllocator;
+use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
 use App\Services\StandService;
 use Illuminate\Foundation\Application;
@@ -22,6 +23,7 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
                     $application->make(CargoArrivalStandAllocator::class),
+                    $application->make(DomesticInternationalStandAllocator::class),
                     $application->make(SizeAppropriateArrivalStandAllocator::class),
                 ]
             );

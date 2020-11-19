@@ -114,6 +114,27 @@ class Stand extends Model
         });
     }
 
+    public function scopeNotCargo(Builder $builder): Builder
+    {
+        return $builder->whereHas('type', function (Builder $typeQuery) {
+            return $typeQuery->notCargo();
+        })->orWhereNull('type_id');
+    }
+
+    public function scopeDomestic(Builder $builder): Builder
+    {
+        return $builder->whereHas('type', function (Builder $typeQuery) {
+            return $typeQuery->domestic();
+        });
+    }
+
+    public function scopeInternational(Builder $builder): Builder
+    {
+        return $builder->whereHas('type', function (Builder $typeQuery) {
+            return $typeQuery->international();
+        });
+    }
+
     public function scopeGeneralUse(Builder $builder): Builder
     {
         return $builder->where('general_use', true);

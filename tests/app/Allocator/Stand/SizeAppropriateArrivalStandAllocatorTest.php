@@ -223,18 +223,22 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
+    public function testItReturnsNothingOnNoStandAllocated()
+    {
+        $this->assertNull($this->allocator->allocate($this->createAircraft('BAW898', 'B738', 'XXXX', true)));
+        $this->assertFalse(StandAssignment::where('callsign', 'BAW898')->exists());
+    }
+
     private function createAircraft(
         string $callsign,
         string $type,
-        string $arrivalAirport,
-        string $rules = 'I'
+        string $arrivalAirport
     ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => $type,
                 'planned_destairport' => $arrivalAirport,
-                'planned_flighttype' => $rules,
             ]
         );
     }

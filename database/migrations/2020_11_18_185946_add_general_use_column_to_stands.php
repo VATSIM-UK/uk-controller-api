@@ -15,7 +15,7 @@ class AddGeneralUseColumnToStands extends Migration
     {
         Schema::table('stands', function (Blueprint $table) {
             $table->boolean('general_use')
-                ->after('is_cargo')
+                ->after('wake_category_id')
                 ->default(true)
                 ->comment(
                     'Whether the stand should be available for general use, ' .
