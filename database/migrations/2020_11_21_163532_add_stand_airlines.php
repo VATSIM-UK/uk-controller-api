@@ -27,7 +27,7 @@ class AddStandAirlines extends Migration
                 ->first()
                 ->id;
 
-            $stand->airlines()->attach([$airlineId => ['destination' => $line[3] ? $line[3] : null]]);
+            $stand->airlines()->attach([$airlineId => ['destination' => !empty($line[3]) ? $line[3] : null]]);
         }
         fclose($pairs);
     }
