@@ -139,4 +139,14 @@ class Stand extends Model
     {
         return $builder->where('general_use', true);
     }
+
+    public function pairedStands(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Stand::class,
+            'stand_pairs',
+            'stand_id',
+            'paired_stand_id',
+        );
+    }
 }
