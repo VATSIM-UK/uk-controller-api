@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
 use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
@@ -552,6 +553,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 AirlineDestinationArrivalStandAllocator::class,
                 AirlineArrivalStandAllocator::class,
+                AirlineTerminalArrivalStandAllocator::class,
                 CargoArrivalStandAllocator::class,
                 DomesticInternationalStandAllocator::class,
                 SizeAppropriateArrivalStandAllocator::class,

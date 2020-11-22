@@ -156,4 +156,13 @@ class Stand extends Model
     {
         return $this->belongsTo(Terminal::class);
     }
+
+    public function scopeAirlineTerminal(Builder $builder, Airline $airline): Builder
+    {
+        return $builder->whereHas('terminal', function (Builder $terminal) use ($airline) {
+            $terminal->whereHas('airlines', function (Builder $airlineQuery) use ($airline) {
+                $airlineQuery->where('airlines.id', $airline->id);
+            });
+        });
+    }
 }

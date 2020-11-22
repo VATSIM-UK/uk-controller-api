@@ -101,9 +101,13 @@ class DatabaseSeeder extends Seeder
             'stand_assignments',
             'stand_assignments_history',
         ],
+        TerminalTableSeeder::class => [
+            'terminals',
+        ],
         AirlineTableSeeder::class => [
             'airlines',
             'airline_stand',
+            'airline_terminal',
         ],
     ];
 
