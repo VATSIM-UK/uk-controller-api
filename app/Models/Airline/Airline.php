@@ -2,6 +2,7 @@
 
 namespace App\Models\Airline;
 
+use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -27,5 +28,10 @@ class Airline extends Model
             'airline_id',
             'stand_id'
         )->withTimestamps();
+    }
+
+    public function terminals(): BelongsToMany
+    {
+        return $this->belongsToMany(Terminal::class)->withTimestamps();
     }
 }
