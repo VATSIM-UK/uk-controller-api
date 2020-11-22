@@ -13,7 +13,7 @@ use Illuminate\Database\QueryException;
 
 abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInterface
 {
-    public function allocate(NetworkAircraft $aircraft): ?StandAssignment
+    final public function allocate(NetworkAircraft $aircraft): ?StandAssignment
     {
         foreach ($this->getPossibleStands($aircraft) as $stand) {
             try {
@@ -39,7 +39,7 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      * Return base query for stands at the arrival airfield, which are of a suitable
      * size (or max size if no type) for the aircraft and not occupied.
      */
-    protected function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
+    final protected function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
     {
         return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
             $query->where('code', $aircraft->planned_destairport);
