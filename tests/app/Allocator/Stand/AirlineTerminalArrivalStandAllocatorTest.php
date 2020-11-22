@@ -5,7 +5,6 @@ namespace App\Allocator\Stand;
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
-use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
@@ -22,17 +21,35 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->allocator = $this->app->make(AirlineTerminalArrivalStandAllocator::class);
-        Airline::where('icao_code', 'BAW')->first()->terminals()->attach(Terminal::where('key', 'T2')->first()->id);
+        Airline::where('icao_code', 'BAW')->first()->terminals()->attach(2);
+        Stand::find(1)->update(['terminal_id' => 1]);
+        Stand::find(2)->update(['terminal_id' => 2]);
     }
 
     public function testItAllocatesAStandAtTheRightTerminal()
     {
-        Stand::find(1)->update(['terminal_id' => Terminal::where('key', 'T1')->first()->id]);
-        Stand::find(2)->update(['terminal_id' => Terminal::where('key', 'T2')->first()->id]);
-
         $aircraft = $this->createAircraft('BAW23451', 'EGLL');
         $this->assertEquals(2, $this->allocator->allocate($aircraft)->stand_id);
         $this->assertEquals(2, StandAssignment::find($aircraft->callsign)->stand_id);
+    }
+
+    public function testItAllocatesStandsInWeightAscendingOrder()
+    {
+        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
+        $weightAppropriateStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '502',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+                'terminal_id' => 2,
+            ]
+        );
+
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals($weightAppropriateStand->id, StandAssignment::find($aircraft->callsign)->stand_id);
     }
 
     public function testItAllocatesStandsAtAppropriateWeight()
@@ -45,7 +62,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
-                'terminal_id' => Terminal::where('key', 'T2')->first()->id,
+                'terminal_id' => 2,
             ]
         );
 
@@ -63,7 +80,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
-                'terminal_id' => Terminal::where('key', 'T2')->first()->id,
+                'terminal_id' => 2,
             ]
         );
 
@@ -84,7 +101,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
-                'terminal_id' => Terminal::where('key', 'T2')->first()->id,
+                'terminal_id' => 2,
             ]
         );
         NetworkAircraft::find('BAW123')->occupiedStand()->sync([2]);

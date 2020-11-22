@@ -76,8 +76,8 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertEquals(1, $this->allocator->allocate($aircraft)->stand_id);
-        $this->assertEquals(1, StandAssignment::find($aircraft->callsign)->stand_id);
+        $this->assertEquals(2, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals(2, StandAssignment::find($aircraft->callsign)->stand_id);
     }
 
     public function testItAllocatesStandsAtAppropriateWeight()
@@ -90,6 +90,47 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id
+            ]
+        );
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => null
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => null
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => $weightAppropriateStand->id,
+                    'destination' => null
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals($weightAppropriateStand->id, StandAssignment::find($aircraft->callsign)->stand_id);
+    }
+
+    public function testItAllocatesStandsInWeightAscendingOrder()
+    {
+        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
+        $weightAppropriateStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '502',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id
             ]
         );
         DB::table('airline_stand')->insert(

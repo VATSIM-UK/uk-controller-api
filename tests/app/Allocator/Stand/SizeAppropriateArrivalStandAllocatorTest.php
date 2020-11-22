@@ -51,6 +51,32 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
         $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
+        $this->assertEquals($stand->id, $assignment->stand_id);
+        $this->assertEquals('AEU252', $assignment->callsign);
+    }
+
+    public function testItAssignsInWeightAscendingOrder()
+    {
+        // Create a stand that can only accept an A380 and create the aircraft
+        $stand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '55L',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+            ]
+        );
+        $stand->refresh();
+
+        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
+        $assignment = $this->allocator->allocate($aircraft);
+        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
+
+        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
+        $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
+        $this->assertEquals($stand->id, $assignment->stand_id);
         $this->assertEquals('AEU252', $assignment->callsign);
     }
 

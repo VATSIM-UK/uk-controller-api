@@ -3,6 +3,7 @@
 namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
@@ -36,7 +37,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'type_id' => StandType::domestic()->first()->id
             ]
         );
@@ -47,7 +48,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55R',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'type_id' => StandType::international()->first()->id
             ]
         );
@@ -71,6 +72,48 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 
         $this->assertEquals($expectedAssignment->id, $assignment->id);
         $this->assertEquals($expectedAssignment->stand_id, $this->internationalStand->id);
+    }
+
+    public function testItAssignsWeightAppropriateStands()
+    {
+        $weightAppropriateStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '55C',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'type_id' => StandType::domestic()->first()->id
+            ]
+        );
+        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'J')->first()->id]);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $assignment = $this->allocator->allocate($aircraft);
+        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
+
+        $this->assertEquals($weightAppropriateStand->id, $assignment->stand_id);
+        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
+    }
+
+    public function testItAssignsInWeightAscendingOrder()
+    {
+        $weightAppropriateStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '55C',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+                'type_id' => StandType::domestic()->first()->id
+            ]
+        );
+        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $assignment = $this->allocator->allocate($aircraft);
+        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
+
+        $this->assertEquals($expectedAssignment->id, $assignment->id);
+        $this->assertEquals($expectedAssignment->stand_id, $weightAppropriateStand->id);
     }
 
     public function testItOnlyAssignsGeneralUseStands()

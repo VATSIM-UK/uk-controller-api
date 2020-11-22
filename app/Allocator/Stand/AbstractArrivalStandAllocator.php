@@ -55,7 +55,9 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
                         : WakeCategory::orderBy('relative_weighting', 'desc')->first()
                 );
             })
-            ->available();
+            ->orderByWeight()
+            ->available()
+            ->select('stands.*');
     }
 
     /**

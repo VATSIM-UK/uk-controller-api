@@ -165,4 +165,10 @@ class Stand extends Model
             });
         });
     }
+
+    public function scopeOrderByWeight(Builder $builder, string $direction = 'asc') : Builder
+    {
+        return $builder->join('wake_categories', 'wake_categories.id', 'stands.wake_category_id')
+            ->orderBy('wake_categories.relative_weighting', $direction);
+    }
 }
