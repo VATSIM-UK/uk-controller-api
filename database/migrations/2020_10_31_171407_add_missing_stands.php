@@ -2,6 +2,8 @@
 
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
+use App\Services\DependencyService;
+use App\Services\StandService;
 use Illuminate\Database\Migrations\Migration;
 
 class AddMissingStands extends Migration
@@ -27,6 +29,7 @@ class AddMissingStands extends Migration
             );
         }
         fclose($stands);
+        DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 
     /**

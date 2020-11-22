@@ -2,6 +2,8 @@
 
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
+use App\Services\DependencyService;
+use App\Services\StandService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Migrations\Migration;
 
@@ -25,6 +27,7 @@ class RetireOldStands extends Migration
                 ->delete();
         }
         fclose($stands);
+        DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 
     /**
