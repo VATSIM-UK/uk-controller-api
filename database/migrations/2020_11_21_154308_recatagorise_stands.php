@@ -2,6 +2,7 @@
 
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Airfield\Airfield;
+use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandType;
 use Illuminate\Database\Migrations\Migration;
@@ -52,6 +53,15 @@ class RecatagoriseStands extends Migration
 
             $generalUse = $line[4] === '1';
 
+            $terminalId = null;
+            if (!empty($line[5])) {
+                $terminal = Terminal::where('key', $line[5])->first();
+                if (!$terminal) {
+                    throw new InvalidArgumentException('Invalid terminal ' . $line[5]);
+                }
+                $terminalId = $terminal->id;
+            }
+
             $stand = Stand::where('airfield_id', $airfieldId)
                 ->where('identifier', $line[1])
                 ->first();
@@ -64,6 +74,7 @@ class RecatagoriseStands extends Migration
                 [
                     'wake_category_id' => $wakeCategoryId,
                     'type_id' => $standTypeId,
+                    'terminal_id' => $terminalId,
                     'general_use' => $generalUse,
                 ]
             );

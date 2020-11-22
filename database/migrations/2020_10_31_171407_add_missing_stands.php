@@ -17,7 +17,6 @@ class AddMissingStands extends Migration
     {
         $stands = fopen(self:: MISSING_STANDS_FILE, 'r');
         while ($line = fgetcsv($stands)) {
-            $airfieldId = Airfield::where('code', $line[0])->first()->id;
             Stand::create(
                 [
                     'airfield_id' => Airfield::where('code', $line[0])->first()->id,

@@ -4,6 +4,7 @@ namespace App\Models\Stand;
 
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Airfield\Airfield;
+use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,7 @@ class Stand extends Model
         'identifier',
         'latitude',
         'longitude',
+        'terminal_id',
         'type_id',
         'wake_category_id',
         'is_cargo',
@@ -148,5 +150,10 @@ class Stand extends Model
             'stand_id',
             'paired_stand_id',
         );
+    }
+
+    public function terminal(): BelongsTo
+    {
+        return $this->belongsTo(Terminal::class);
     }
 }
