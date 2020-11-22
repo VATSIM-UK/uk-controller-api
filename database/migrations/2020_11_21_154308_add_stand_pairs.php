@@ -25,6 +25,10 @@ class AddStandPairs extends Migration
                     ->where('identifier', $line[2])
                     ->first();
 
+                if (!$firstStand || !$secondStand) {
+                    dd($firstStand, $secondStand, $line);
+                }
+
                 $firstStand->pairedStands()->attach($secondStand);
                 $secondStand->pairedStands()->attach($firstStand);
         }
