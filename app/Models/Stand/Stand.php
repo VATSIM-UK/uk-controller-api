@@ -61,7 +61,10 @@ class Stand extends Model
 
     public function scopeUnoccupied(Builder $builder): Builder
     {
-        return $builder->whereDoesntHave('occupier');
+        return $builder->whereDoesntHave('occupier')
+            ->whereDoesntHave('pairedStands', function (Builder $pairedStand) {
+                $pairedStand->whereHas('occupier');
+            });
     }
 
     public function occupier(): BelongsToMany
@@ -76,7 +79,10 @@ class Stand extends Model
 
     public function scopeUnassigned(Builder $builder): Builder
     {
-        return $builder->whereDoesntHave('assignment');
+        return $builder->whereDoesntHave('assignment')
+            ->whereDoesntHave('pairedStands', function (Builder $pairedStand) {
+                $pairedStand->whereHas('assignment');
+            });
     }
 
     public function scopeAvailable(Builder $builder): Builder

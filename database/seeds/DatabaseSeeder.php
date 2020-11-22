@@ -100,6 +100,7 @@ class DatabaseSeeder extends Seeder
             'stands',
             'stand_assignments',
             'stand_assignments_history',
+            'stand_pairs',
         ],
         TerminalTableSeeder::class => [
             'terminals',
