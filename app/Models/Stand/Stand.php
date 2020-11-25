@@ -24,6 +24,7 @@ class Stand extends Model
         'terminal_id',
         'type_id',
         'wake_category_id',
+        'max_aircraft_id',
         'is_cargo',
     ];
 
