@@ -11,6 +11,7 @@ class Aircraft extends Model
 
     protected $fillable = [
         'code',
+        'wingspan',
         'wake_category_id',
         'allocate_stands',
     ];
@@ -18,6 +19,10 @@ class Aircraft extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+    ];
+
+    protected $casts = [
+        'wingspan' => 'double',
     ];
 
     public function wakeCategory() : BelongsTo
