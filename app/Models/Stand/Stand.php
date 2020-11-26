@@ -2,6 +2,7 @@
 
 namespace App\Models\Stand;
 
+use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
@@ -177,5 +178,32 @@ class Stand extends Model
     {
         return $builder->join('wake_categories', 'wake_categories.id', 'stands.wake_category_id')
             ->orderBy('wake_categories.relative_weighting', $direction);
+    }
+
+    public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
+    {
+        return $builder->whereHas('wakeCategory', function (Builder $query) use ($aircraftType) {
+            $query->greaterRelativeWeighting($aircraftType->wakeCategory);
+        });
+    }
+
+    public function maxAircraft(): BelongsTo
+    {
+        return $this->belongsTo(Aircraft::class, 'max_aircraft_id');
+    }
+
+    public function scopeAppropriateDimensions(Builder $builder, Aircraft $aircraftType): Builder
+    {
+        return $builder->whereHas('maxAircraft', function (Builder $aircraftQuery) use ($aircraftType) {
+            $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan)
+                ->where('length', '>=', $aircraftType->length);
+        })
+            ->orWhereDoesntHave('maxAircraft');
+    }
+
+    public function scopeSizeAppropriate(Builder $builder, Aircraft $aircraftType): Builder
+    {
+        return $builder->appropriateWakeCategory($aircraftType)
+            ->appropriateDimensions($aircraftType);
     }
 }
