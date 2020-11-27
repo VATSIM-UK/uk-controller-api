@@ -33,6 +33,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'general_use' => true,
             ]
         );
         $stand->refresh();
@@ -42,6 +43,8 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'code' => 'A388',
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
                 'allocate_stands' => true,
+                'wingspan' => 1.0,
+                'length' => 1.0,
             ]
         );
 
@@ -65,6 +68,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+                'general_use' => true,
             ]
         );
         $stand->refresh();
@@ -90,6 +94,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'general_use' => true,
             ]
         );
         $stand->refresh();
@@ -99,31 +104,10 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'code' => 'B744',
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'allocate_stands' => true,
+                'wingspan' => 1.0,
+                'length' => 1.0,
             ]
         );
-
-        $aircraft = $this->createAircraft('AEU252', 'B744', 'EGLL');
-        $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
-
-        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
-        $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertEquals('AEU252', $assignment->callsign);
-    }
-
-    public function testItAssumesTheWorstIfNoAircraftType()
-    {
-        // Create a stand that can only accept an A380 and create the aircraft
-        $stand = Stand::create(
-            [
-                'airfield_id' => 1,
-                'identifier' => '55L',
-                'latitude' => 54.65875500,
-                'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-            ]
-        );
-        $stand->refresh();
 
         $aircraft = $this->createAircraft('AEU252', 'B744', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
@@ -156,6 +140,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'general_use' => true,
             ]
         );
         $stand->refresh();
@@ -165,6 +150,8 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'code' => 'A388',
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
                 'allocate_stands' => true,
+                'wingspan' => 1.0,
+                'length' => 1.0,
             ]
         );
 
@@ -189,6 +176,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
                 'general_use' => true,
                 'type_id' => StandType::cargo()->first()->id,
+                'general_use' => true,
             ]
         );
 
@@ -200,6 +188,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'general_use' => true,
             ]
         );
         $stand->refresh();
@@ -209,6 +198,8 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'code' => 'A388',
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
                 'allocate_stands' => true,
+                'wingspan' => 1.0,
+                'length' => 1.0,
             ]
         );
 
@@ -231,6 +222,7 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'general_use' => true,
             ]
         );
         $stand->refresh();
@@ -242,6 +234,8 @@ class SizeAppropriateArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'code' => 'B744',
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'allocate_stands' => true,
+                'wingspan' => 1.0,
+                'length' => 1.0,
             ]
         );
 

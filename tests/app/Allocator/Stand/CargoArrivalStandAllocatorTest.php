@@ -54,6 +54,8 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'code' => 'B744',
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'allocate_stands' => true,
+                'wingspan' => 1.0,
+                'length' => 2.2,
             ]
         );
     }

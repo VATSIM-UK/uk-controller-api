@@ -27,13 +27,14 @@ class Stand extends Model
         'wake_category_id',
         'max_aircraft_id',
         'is_cargo',
+        'general_use',
     ];
 
     protected $casts = [
         'type_id' => 'integer',
         'latitude' => 'double',
         'longitude' => 'double',
-        'is_cargo' => 'boolean',
+        'general_use' => 'boolean',
     ];
 
     public function assignment(): HasOne

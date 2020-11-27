@@ -41,22 +41,14 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      */
     final protected function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
     {
+        $aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first();
+
         return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
             $query->where('code', $aircraft->planned_destairport);
         })
-            ->whereHas('wakeCategory', function (Builder $query) use ($aircraft) {
-                $aircraftType = Aircraft::with('wakeCategory')
-                    ->where('code', $aircraft->aircraftType)
-                    ->first();
-
-                $query->greaterRelativeWeighting(
-                    $aircraftType
-                        ? $aircraftType->wakeCategory
-                        : WakeCategory::orderBy('relative_weighting', 'desc')->first()
-                );
-            })
-            ->orderByWeight()
+            ->sizeAppropriate($aircraftType)
             ->available()
+            ->orderByWeight()
             ->select('stands.*');
     }
 

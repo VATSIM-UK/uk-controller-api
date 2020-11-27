@@ -38,7 +38,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
-                'type_id' => StandType::domestic()->first()->id
+                'type_id' => StandType::domestic()->first()->id,
+                'general_use' => true,
             ]
         );
 
@@ -49,7 +50,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
-                'type_id' => StandType::international()->first()->id
+                'type_id' => StandType::international()->first()->id,
+                'general_use' => true,
             ]
         );
     }
@@ -83,7 +85,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'type_id' => StandType::domestic()->first()->id
+                'type_id' => StandType::domestic()->first()->id,
+                'general_use' => true,
             ]
         );
         Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'J')->first()->id]);
@@ -104,7 +107,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
-                'type_id' => StandType::domestic()->first()->id
+                'type_id' => StandType::domestic()->first()->id,
+                'general_use' => true,
             ]
         );
         Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
@@ -148,7 +152,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'type_id' => StandType::domestic()->first()->id
+                'type_id' => StandType::domestic()->first()->id,
+                'general_use' => true,
             ]
         );
 
