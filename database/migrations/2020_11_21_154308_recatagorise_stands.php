@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
@@ -62,6 +63,14 @@ class RecatagoriseStands extends Migration
                 $terminalId = $terminal->id;
             }
 
+            $maxAircraftTypeId = null;
+            if (!empty($line[6])) {
+                $aircraftType = Aircraft::where('code', $line[6])->first();
+                if ($aircraftType) {
+                    $maxAircraftTypeId = $aircraftType->id;
+                }
+            }
+
             $stand = Stand::where('airfield_id', $airfieldId)
                 ->where('identifier', $line[1])
                 ->first();
@@ -76,6 +85,7 @@ class RecatagoriseStands extends Migration
                     'type_id' => $standTypeId,
                     'terminal_id' => $terminalId,
                     'general_use' => $generalUse,
+                    'max_aircraft_id' => $maxAircraftTypeId,
                 ]
             );
         }
