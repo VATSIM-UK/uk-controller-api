@@ -18,19 +18,19 @@ class AddStandPairs extends Migration
         $pairs = fopen(self::STAND_PAIRS_FILE, 'r');
         while ($line = fgetcsv($pairs)) {
             $airfieldId = Airfield::where('code', $line[0])->first()->id;
-                $firstStand = Stand::where('airfield_id', $airfieldId)
+            $firstStand = Stand::where('airfield_id', $airfieldId)
                     ->where('identifier', $line[1])
                     ->first();
-                $secondStand = Stand::where('airfield_id', $airfieldId)
+            $secondStand = Stand::where('airfield_id', $airfieldId)
                     ->where('identifier', $line[2])
                     ->first();
 
-                if (!$firstStand || !$secondStand) {
-                    dd($firstStand, $secondStand, $line);
-                }
+            if (!$firstStand || !$secondStand) {
+                dd($firstStand, $secondStand, $line);
+            }
 
-                $firstStand->pairedStands()->attach($secondStand);
-                $secondStand->pairedStands()->attach($firstStand);
+            $firstStand->pairedStands()->attach($secondStand);
+            $secondStand->pairedStands()->attach($firstStand);
         }
         fclose($pairs);
     }

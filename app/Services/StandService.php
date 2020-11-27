@@ -270,8 +270,7 @@ class StandService
         $selectedStand = null;
         $selectedStandDistance = PHP_INT_MAX;
 
-        foreach ($this->getAllStands() as $stand)
-        {
+        foreach ($this->getAllStands() as $stand) {
             $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
 
             if (
@@ -327,8 +326,7 @@ class StandService
             return null;
         }
 
-        foreach ($this->allocators as $allocator)
-        {
+        foreach ($this->allocators as $allocator) {
             if (($allocation = $allocator->allocate($aircraft))) {
                 event(new StandAssignedEvent($allocation));
                 return $allocation;
@@ -341,7 +339,7 @@ class StandService
     private function shouldAllocateStand(NetworkAircraft $aircraft): bool
     {
         return !StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
-            ($arrivalAirfield = Airfield::where('code',  $aircraft->planned_destairport)->first()) !== null &&
+            ($arrivalAirfield = Airfield::where('code', $aircraft->planned_destairport)->first()) !== null &&
             $aircraft->groundspeed &&
             ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
             $aircraftType->allocate_stands &&

@@ -13,7 +13,7 @@ class CreateAircraftStandTable extends Migration
      */
     public function up()
     {
-        Schema::create('aircraft_stand', function (Blueprint $table){
+        Schema::create('aircraft_stand', function (Blueprint $table) {
             $table->id();
             $table->string('callsign')->comment('The callsign occupying the stand');
             $table->unsignedBigInteger('stand_id')->comment('The stand being occupied');

@@ -45,8 +45,7 @@ class AddDecimalLatLongToStands extends Migration
 
     private function migrateData(): void
     {
-        foreach (DB::table('stands')->select()->get() as $stand)
-        {
+        foreach (DB::table('stands')->select()->get() as $stand) {
             $latLong = SectorfileService::coordinateFromSectorfile($stand->latitude, $stand->longitude);
             DB::table('stands')
                 ->where('id', $stand->id)

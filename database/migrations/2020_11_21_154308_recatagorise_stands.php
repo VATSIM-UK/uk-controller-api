@@ -40,7 +40,7 @@ class RecatagoriseStands extends Migration
 
             $wakeCategoryId = $wakeCategories[$line[3]];
 
-            if(!in_array($line[2], ['DOMESTIC', 'INTERNATIONAL', 'CARGO', ''])) {
+            if (!in_array($line[2], ['DOMESTIC', 'INTERNATIONAL', 'CARGO', ''])) {
                 throw new InvalidArgumentException('Invalid stand type ' . $line[2]);
             }
 
@@ -48,7 +48,7 @@ class RecatagoriseStands extends Migration
             $standTypeId = $standType ? $standType->id : null;
 
             if (!in_array($line[4], ['0', '1'])) {
-               throw new InvalidArgumentException('Invalid general use value ' . $line[4]);
+                throw new InvalidArgumentException('Invalid general use value ' . $line[4]);
             }
 
             $generalUse = $line[4] === '1';

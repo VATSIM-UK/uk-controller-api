@@ -56,5 +56,5 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      * @param NetworkAircraft $aircraft
      * @return Collection|Stand[]
      */
-    protected abstract function getPossibleStands(NetworkAircraft $aircraft): Collection;
+    abstract protected function getPossibleStands(NetworkAircraft $aircraft): Collection;
 }

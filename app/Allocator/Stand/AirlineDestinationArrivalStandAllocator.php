@@ -21,8 +21,7 @@ class AirlineDestinationArrivalStandAllocator extends AbstractArrivalStandAlloca
 
     protected function getPossibleStands(NetworkAircraft $aircraft): Collection
     {
-        if (($airline = $this->airlineService->getAirlineForAircraft($aircraft)) === null)
-        {
+        if (($airline = $this->airlineService->getAirlineForAircraft($aircraft)) === null) {
             return new Collection();
         }
 
