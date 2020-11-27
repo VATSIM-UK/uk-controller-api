@@ -327,7 +327,7 @@ class StandService
         }
 
         foreach ($this->allocators as $allocator) {
-            if (($allocation = $allocator->allocate($aircraft))) {
+            if ($allocation = $allocator->allocate($aircraft)) {
                 event(new StandAssignedEvent($allocation));
                 return $allocation;
             }

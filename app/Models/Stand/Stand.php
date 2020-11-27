@@ -17,6 +17,8 @@ use Location\Coordinate;
 
 class Stand extends Model
 {
+    const QUERY_AIRLINE_ID_COLUMN = 'airlines.id';
+
     protected $fillable = [
         'airfield_id',
         'identifier',
@@ -96,14 +98,14 @@ class Stand extends Model
     public function scopeAirline(Builder $builder, Airline $airline): Builder
     {
         return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline) {
-            $airlineQuery->where('airlines.id', $airline->id);
+            $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id);
         });
     }
 
     public function scopeAirlineDestination(Builder $builder, Airline $airline, array $destinationStrings): Builder
     {
         return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline, $destinationStrings) {
-            $airlineQuery->where('airlines.id', $airline->id)
+            $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id)
                 ->whereIn('destination', $destinationStrings);
         });
     }
@@ -170,7 +172,7 @@ class Stand extends Model
     {
         return $builder->whereHas('terminal', function (Builder $terminal) use ($airline) {
             $terminal->whereHas('airlines', function (Builder $airlineQuery) use ($airline) {
-                $airlineQuery->where('airlines.id', $airline->id);
+                $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id);
             });
         });
     }
