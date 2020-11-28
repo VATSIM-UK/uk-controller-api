@@ -24,7 +24,7 @@ class AddIsCargoToAirlinesTable extends Migration
         DB::table('airlines')
             ->where('name', 'LIKE', '%cargo%')
             ->orWhere('callsign', 'LIKE', '%cargo%')
-            ->orWhereIn('icao_code', ['FDX', 'UPS', 'DHX', 'DAE', 'DHK', 'LDL', 'GSS'])
+            ->orWhereIn('icao_code', ['FDX', 'UPS', 'DHX', 'DAE', 'DHK', 'LDL', 'GSS', 'ADB'])
             ->update(['is_cargo' => true]);
     }
 
