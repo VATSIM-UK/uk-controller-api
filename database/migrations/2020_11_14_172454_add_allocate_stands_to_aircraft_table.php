@@ -12,6 +12,8 @@ class AddAllocateStandsToAircraftTable extends Migration
         'DH8B',
         'DH8C',
         'DH8D',
+        'D328',
+        'AT43',
     ];
 
     /**
