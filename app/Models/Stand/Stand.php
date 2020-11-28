@@ -220,8 +220,7 @@ class Stand extends Model
     public function scopeNotReserved(Builder $builder): Builder
     {
         return $builder->whereDoesntHave('reservations', function (Builder $reservation) {
-            $reservation->where('start', '<=', Carbon::now())
-                ->where('end', '>=', Carbon::now());
+            $reservation->active();
         });
     }
 }

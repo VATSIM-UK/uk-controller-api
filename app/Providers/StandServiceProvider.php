@@ -6,6 +6,7 @@ use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
+use App\Allocator\Stand\ReservedArrivalStandAllocator;
 use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
 use App\Imports\Stand\StandReservationsImport;
 use App\Services\StandService;
@@ -22,6 +23,7 @@ class StandServiceProvider extends ServiceProvider
         $this->app->singleton(StandService::class, function (Application $application) {
             return new StandService(
                 [
+                    $application->make(ReservedArrivalStandAllocator::class),
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
                     $application->make(AirlineTerminalArrivalStandAllocator::class),
