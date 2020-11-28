@@ -1,3 +1,7 @@
 EGCC,EGCC_T1,EGCC Terminal 1
 EGCC,EGCC_T2,EGCC Terminal 2
 EGCC,EGCC_T3,EGCC Terminal 3
+EGNX,EGNX_C,EGNX Central Apron
+EGNX,EGNX_CW,EGNX Central West Apron
+EGNX,EGNX_W,EGNX West Apron
+EGNX,EGNX_E,EGNX East Apron
