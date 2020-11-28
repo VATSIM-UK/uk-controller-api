@@ -7,6 +7,7 @@ use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
+use App\Imports\Stand\StandReservationsImport;
 use App\Services\StandService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +31,8 @@ class StandServiceProvider extends ServiceProvider
                 ]
             );
         });
+
+        $this->app->singleton(StandReservationsImport::class);
     }
 
     /**
