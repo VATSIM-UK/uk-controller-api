@@ -24,20 +24,20 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
     {
         $reservations = collect(
             [
-                [
+                collect([
                     'EGLL',
                     '1L',
                     'BAW123',
                     '2020-11-12 18:00:00',
                     '2020-11-12 19:00:00',
-                ],
-                [
+                ]),
+                collect([
                     'EGLL',
                     '251',
                     'BAW251',
                     '2020-11-12 18:00:00',
                     '2020-11-12 19:00:00',
-                ],
+                ]),
             ]
         );
 
@@ -71,20 +71,20 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
     {
         $reservations = collect(
             [
-                [
+                collect([
                     'EGLL',
                     '1L',
                     '',
                     '2020-11-12 18:00:00',
                     '2020-11-12 19:00:00',
-                ],
-                [
+                ]),
+                collect([
                     'EGLL',
                     '251',
                     '',
                     '2020-11-12 18:00:00',
                     '2020-11-12 19:00:00',
-                ],
+                ]),
             ]
         );
 
@@ -151,6 +151,24 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
                     'hasdd',
                 ],
             ],
+            'Start time after end time' => [
+                [
+                    'EGLL',
+                    '251',
+                    '',
+                    '2020-11-12 18:00:00',
+                    '2020-11-12 17:00:00',
+                ],
+            ],
+            'Start time same as end time' => [
+                [
+                    'EGLL',
+                    '251',
+                    '',
+                    '2020-11-12 18:00:00',
+                    '2020-11-12 18:00:00',
+                ],
+            ],
         ];
     }
 
@@ -161,7 +179,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
     {
         $reservation = collect(
             [
-                $reservationData
+                collect($reservationData),
             ]
         );
 

@@ -11,6 +11,7 @@ use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\GetDeletedSidsFromSectorFile;
 use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\SrdImport;
+use App\Console\Commands\StandReservationsImport;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
@@ -47,6 +48,7 @@ class Kernel extends ConsoleKernel
         CleanStandAssignmentsHistory::class,
         WakeCategoriesImport::class,
         AllocateStandForArrival::class,
+        StandReservationsImport::class,
     ];
 
     /**

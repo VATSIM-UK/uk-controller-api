@@ -32,13 +32,15 @@ class StandReservationsImport implements ToCollection
      * 2 - Callsign (optional)
      * 3 - Start datetime
      * 4 - End datetime
+     *
+     * @param Collection[] $rows
      */
     public function collection(Collection $rows)
     {
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
             if (!$this->rowValid($row)) {
-                $this->output->warning(sprintf('Invalid reservation: %s', implode(', ', $row)));
+                $this->output->warning(sprintf('Invalid reservation: %s', implode(', ', $row->toArray())));
                 $this->output->progressAdvance();
                 continue;
             }
@@ -57,7 +59,7 @@ class StandReservationsImport implements ToCollection
         $this->output->progressFinish();
     }
 
-    private function rowValid(array $row): bool
+    private function rowValid(Collection $row): bool
     {
         try {
             return isset($row[0]) &&
@@ -65,9 +67,10 @@ class StandReservationsImport implements ToCollection
                 isset($row[1]) &&
                 array_key_exists($row[1], $this->stands[$row[0]]) &&
                 isset($row[3]) &&
-                Carbon::parse($row[3]) &&
+                ($startTime = Carbon::parse($row[3])) &&
                 isset($row[4]) &&
-                Carbon::parse($row[4]);
+                ($endTime = Carbon::parse($row[4])) &&
+                $endTime > $startTime;
         } catch (Exception $exception) {
             return false;
         }
