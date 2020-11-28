@@ -8,6 +8,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -93,7 +94,7 @@ class Stand extends Model
 
     public function scopeAvailable(Builder $builder): Builder
     {
-        return $this->scopeUnassigned($this->scopeUnoccupied($builder));
+        return $this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder)));
     }
 
     public function scopeAirline(Builder $builder, Airline $airline): Builder
@@ -214,5 +215,13 @@ class Stand extends Model
     public function reservations(): HasMany
     {
         return $this->hasMany(StandReservation::class);
+    }
+
+    public function scopeNotReserved(Builder $builder): Builder
+    {
+        return $builder->whereDoesntHave('reservations', function (Builder $reservation) {
+            $reservation->where('start', '<=', Carbon::now())
+                ->where('end', '>=', Carbon::now());
+        });
     }
 }

@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class StandTest extends BaseFunctionalTestCase
@@ -33,8 +34,20 @@ class StandTest extends BaseFunctionalTestCase
         $this->assertEquals([1], $stands);
     }
 
-    public function testAvailableOnlyReturnsUnassignedUnoccupiedStands()
+    public function testAvailableOnlyReturnsUnassignedUnoccupiedUnreservedStands()
     {
+        $extraStand = Stand::find(1)->replicate();
+        $extraStand->identifier = 'NEW';
+        $extraStand->save();
+
+        StandReservation::create(
+            [
+                'stand_id' => $extraStand->id,
+                'start' => Carbon::now()->subMinutes(1),
+                'end' => Carbon::now()->addHour(),
+            ]
+        );
+
         NetworkAircraft::find('BAW123')->occupiedStand()->sync([1]);
         StandAssignment::create(['callsign' => 'BAW123', 'stand_id' => 2]);
 
@@ -150,5 +163,43 @@ class StandTest extends BaseFunctionalTestCase
         $stands = Stand::sizeAppropriate($a330)->get()->pluck('id')->toArray();
 
         $this->assertEquals([3], $stands);
+    }
+
+    public function testNotReservedDoesntReturnStandsThatAreCurrentlyReserved()
+    {
+        // Stand 1 is allowed because the reservation has expired
+        StandReservation::create(
+            [
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinutes(10),
+                'end' => Carbon::now()->subMinutes(5),
+            ]
+        );
+
+        // Stand 2 is not allowed because its reserved
+        StandReservation::create(
+            [
+                'stand_id' => 2,
+                'start' => Carbon::now()->subMinutes(10),
+                'end' => Carbon::now()->addMinutes(5),
+            ]
+        );
+
+        // Stand 3 is allowed because the reservation hasn't started
+        StandReservation::create(
+            [
+                'stand_id' => 3,
+                'start' => Carbon::now()->addMinute(),
+                'end' => Carbon::now()->addHour(),
+            ]
+        );
+
+        // Extra stand is allowed because it has no reservations
+        $extraStand = Stand::find(1)->replicate();
+        $extraStand->identifier = 'NEW';
+        $extraStand->save();
+
+        $stands = Stand::notReserved()->get()->pluck('id')->toArray();
+        $this->assertEquals([1, 3, $extraStand->id], $stands);
     }
 }
