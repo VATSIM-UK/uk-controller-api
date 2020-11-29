@@ -86,7 +86,7 @@ class ScottishTmaHandoffs extends Migration
             'identifier',
             ['LUSIV1B', 'TRN6B']
         )
-            ->update(['handoff_id' => DB::table('handoffs')->where(['key' => 'EGPH_SID_TRN_LUSIV_23'])->first()->id]);
+            ->update(['handoff_id' => DB::table('handoffs')->where(['key' => 'EGPH_SID_TRN_LUSIV_05'])->first()->id]);
 
         // Add SCO_S To EGPF Northbound Departures
         HandoffService::insertIntoOrderBefore('EGPF_SID_NORTH', 'SCO_S_CTR', 'SCO_E_CTR');
