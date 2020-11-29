@@ -45,11 +45,11 @@ class SwanwickMilSectorisationUpdate extends Migration
             ->where('callsign', 'EGQQ_CTR')
             ->delete();
 
-        AirfieldService::createNewTopDownOrder('EGOV', ['EGOV_TWR', 'EGOV_P_APP', 'EGOV_R_APP', 'EGVV_W_CTR', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGXC', ['EGXC_GND', 'EGXC_TWR', 'EGXC_P_APP', 'EGXC_APP', 'EGVV_E_CTR', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGYD', ['EGYD_GND', 'EGYD_TWR', 'EGYD_P_APP', 'EGYD_R_APP', 'EGVV_E_CTR', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGYM', ['EGYM_TWR', 'EGYM_P_APP', 'EGYM_R_APP', 'EGVV_E_CTR', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGVN', ['EGVN_GND', 'EGVN_TWR', 'EGVN_F_APP', 'EGVN_APP', 'EGVV_W_CTR', 'EGVV_CTR']);
+        AirfieldService::insertIntoOrderBefore('EGOV', 'EGVV_W_CTR', 'EGVV_CTR');
+        AirfieldService::insertIntoOrderBefore('EGXC', 'EGVV_E_CTR', 'EGVV_CTR');
+        AirfieldService::insertIntoOrderBefore('EGYD', 'EGVV_E_CTR', 'EGVV_CTR');
+        AirfieldService::insertIntoOrderBefore('EGYM', 'EGVV_E_CTR', 'EGVV_CTR');
+        AirfieldService::insertIntoOrderBefore('EGVN', 'EGVV_W_CTR', 'EGVV_CTR');
 
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
@@ -85,11 +85,11 @@ class SwanwickMilSectorisationUpdate extends Migration
                 'created_at' => Carbon::now(),
             ]);
 
-        AirfieldService::createNewTopDownOrder('EGOV', ['EGOV_TWR', 'EGOV_P_APP', 'EGOV_R_APP', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGXC', ['EGXC_GND', 'EGXC_TWR', 'EGXC_P_APP', 'EGXC_APP', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGYD', ['EGYD_GND', 'EGYD_TWR', 'EGYD_P_APP', 'EGYD_R_APP', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGYM', ['EGYM_TWR', 'EGYM_P_APP', 'EGYM_R_APP', 'EGVV_CTR']);
-        AirfieldService::createNewTopDownOrder('EGVN', ['EGVN_GND', 'EGVN_TWR', 'EGVN_F_APP', 'EGVN_APP', 'EGVV_CTR']);
+        AirfieldService::removeFromTopDownsOrder('EGOV', 'EGVV_W_CTR');
+        AirfieldService::removeFromTopDownsOrder('EGXC', 'EGVV_E_CTR');
+        AirfieldService::removeFromTopDownsOrder('EGYD', 'EGVV_E_CTR');
+        AirfieldService::removeFromTopDownsOrder('EGYM', 'EGVV_E_CTR');
+        AirfieldService::removeFromTopDownsOrder('EGVN', 'EGVV_W_CTR');
 
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
         DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
