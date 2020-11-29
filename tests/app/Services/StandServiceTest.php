@@ -7,6 +7,7 @@ use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
 use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
+use App\Allocator\Stand\ReservedArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocatorTest;
 use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
@@ -18,6 +19,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Dependency\Dependency;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 
@@ -552,7 +554,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     {
         $this->assertEquals(
             [
-                ReservedArrivalStandAllocatorTest::class,
+                ReservedArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
                 AirlineArrivalStandAllocator::class,
                 AirlineTerminalArrivalStandAllocator::class,
@@ -566,6 +568,15 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItAllocatesAStandFromAllocator()
     {
+        StandReservation::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addMinute(),
+            ]
+        );
+
         $this->expectsEvents(StandAssignedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'BMI221',
@@ -573,9 +584,9 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
-                // Lambourne
-                'latitude' => 51.646099,
-                'longitude' => 0.151667,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
             ]
         );
 
