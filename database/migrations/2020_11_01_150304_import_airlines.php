@@ -13,7 +13,7 @@ class ImportAirlines extends Migration
      */
     public function up()
     {
-        $airlineFile = fopen(__DIR__ . '/../data/airlines.csv', 'r');
+        $airlineFile = fopen(__DIR__ . '/../data/stands/2020/airlines.csv', 'r');
         $airlines = [];
         while (($airline = fgetcsv($airlineFile)) !== false) {
             $airlines[] = [
