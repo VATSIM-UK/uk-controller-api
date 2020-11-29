@@ -2,6 +2,7 @@
 
 use App\Services\DependencyService;
 use App\Services\HandoffService;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -98,6 +99,16 @@ class ScottishTmaHandoffs extends Migration
 
         // Add SCO_S To EGPK Westbound Departures
         HandoffService::insertIntoOrderBefore('EGPK_SID_EAST_SOUTH', 'SCO_S_CTR', 'SCO_CTR');
+
+        // Add missing EGPK SID OKNOB1L
+        DB::table('sid')->insert(
+            [
+                'airfield_id' => DB::table('airfield')->where('code', 'EGPK')->first()->id,
+                'identifier' => 'OKNOB1L',
+                'initial_altitude' => 6000,
+                'created_at' => Carbon::now(),
+            ]
+        );
 
         // Create new handoff EGPK_SID_WEST
         HandoffService::createNewHandoffOrder(
