@@ -2,6 +2,7 @@
 
 use App\Services\AirfieldService;
 use App\Services\DependencyService;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -82,7 +83,7 @@ class SwanwickMilSectorisationUpdate extends Migration
                 'callsign' => 'EGQQ_CTR',
                 'frequency' => 134.3,
                 'created_at' => Carbon::now(),
-            ])
+            ]);
 
         AirfieldService::createNewTopDownOrder('EGOV', ['EGOV_TWR', 'EGOV_P_APP', 'EGOV_R_APP', 'EGVV_CTR']);
         AirfieldService::createNewTopDownOrder('EGXC', ['EGXC_GND', 'EGXC_TWR', 'EGXC_P_APP', 'EGXC_APP', 'EGVV_CTR']);
