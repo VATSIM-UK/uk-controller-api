@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ReservedArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
-
     protected function getPossibleStands(NetworkAircraft $aircraft): Collection
     {
         $reservation = StandReservation::with('stand')
