@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class NetworkDataService
 {
@@ -66,7 +67,7 @@ class NetworkDataService
             'longitude' => $pilot['longitude'],
             'altitude' => $pilot['altitude'],
             'groundspeed' => $pilot['groundspeed'],
-            'transponder' => $pilot['transponder'],
+            'transponder' => Str::padLeft($pilot['transponder'], '0', 4),
             'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
             'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
             'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),

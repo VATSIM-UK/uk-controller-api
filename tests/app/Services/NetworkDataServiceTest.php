@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Mockery;
 use PDOException;
 
@@ -433,7 +434,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'longitude' => -6.21,
             'altitude' => 35123,
             'groundspeed' => 123,
-            'transponder' => 1234,
+            'transponder' => 457,
             'flight_plan' => $hasFlightplan
                 ? [
                     'aircraft' => 'B738',
@@ -456,7 +457,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'longitude' => $pilot['longitude'],
             'altitude' => $pilot['altitude'],
             'groundspeed' => $pilot['groundspeed'],
-            'transponder' => $pilot['transponder'],
+            'transponder' => Str::padLeft($pilot['transponder'], '0', 4),
         ];
 
         if ($hasFlightplan) {
