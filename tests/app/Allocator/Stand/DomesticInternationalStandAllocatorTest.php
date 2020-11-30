@@ -13,7 +13,7 @@ use App\Models\Vatsim\NetworkAircraft;
 class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 {
     /**
-     * @var SizeAppropriateArrivalStandAllocator
+     * @var DomesticInternationalStandAllocator
      */
     private $allocator;
 

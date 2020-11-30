@@ -6,7 +6,7 @@ use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Collection;
 
-class SizeAppropriateArrivalStandAllocator extends AbstractArrivalStandAllocator
+class GeneralUseArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
     /**
      * @var AirlineService

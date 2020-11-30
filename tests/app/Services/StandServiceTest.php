@@ -9,7 +9,7 @@ use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocatorTest;
-use App\Allocator\Stand\SizeAppropriateArrivalStandAllocator;
+use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
@@ -560,7 +560,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 AirlineTerminalArrivalStandAllocator::class,
                 CargoArrivalStandAllocator::class,
                 DomesticInternationalStandAllocator::class,
-                SizeAppropriateArrivalStandAllocator::class,
+                GeneralUseArrivalStandAllocator::class,
             ],
             $this->service->getAllocatorPreference()
         );
