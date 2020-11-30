@@ -138,16 +138,16 @@
         },
         {
             "name": "bugsnag/bugsnag",
-            "version": "v3.23.1",
+            "version": "v3.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-php.git",
-                "reference": "138d6c3875fc062612160be4440ffd762ed372e1"
+                "reference": "5a62ea2449e090ac103b1e9883a8fc33567d4241"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/138d6c3875fc062612160be4440ffd762ed372e1",
-                "reference": "138d6c3875fc062612160be4440ffd762ed372e1",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-php/zipball/5a62ea2449e090ac103b1e9883a8fc33567d4241",
+                "reference": "5a62ea2449e090ac103b1e9883a8fc33567d4241",
                 "shasum": ""
             },
             "require": {
@@ -193,20 +193,20 @@
                 "logging",
                 "tracking"
             ],
-            "time": "2020-10-19T09:17:48+00:00"
+            "time": "2020-11-25T13:15:13+00:00"
         },
         {
             "name": "bugsnag/bugsnag-laravel",
-            "version": "v2.20.1",
+            "version": "v2.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-laravel.git",
-                "reference": "fe049f561f1bebce9800d65fc4a11909f8f45f5d"
+                "reference": "b470a34b2b6ba33b2aa4ef1a01c64843ae8ab91b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/fe049f561f1bebce9800d65fc4a11909f8f45f5d",
-                "reference": "fe049f561f1bebce9800d65fc4a11909f8f45f5d",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/b470a34b2b6ba33b2aa4ef1a01c64843ae8ab91b",
+                "reference": "b470a34b2b6ba33b2aa4ef1a01c64843ae8ab91b",
                 "shasum": ""
             },
             "require": {
@@ -220,7 +220,7 @@
             "require-dev": {
                 "graham-campbell/testbench": "^3.1|^4.0|^5.0",
                 "mockery/mockery": "^0.9.4|^1.3.1",
-                "phpunit/phpunit": "^4.8.36|^5.6.3|^6.3.1|^7.5.15|^8.3.5"
+                "phpunit/phpunit": "^4.8.36|^6.3.1|^7.5.15|^8.3.5|^9.3.10"
             },
             "type": "library",
             "extra": {
@@ -253,7 +253,7 @@
                 "logging",
                 "tracking"
             ],
-            "time": "2020-10-13T08:56:18+00:00"
+            "time": "2020-11-25T13:26:13+00:00"
         },
         {
             "name": "bugsnag/bugsnag-psr-logger",
