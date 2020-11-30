@@ -27,7 +27,7 @@ class NetworkAircraftTest extends BaseUnitTestCase
     /**
      * @dataProvider aircraftTypeProvider
      */
-    public function testItReturnsCorrectAircraftTypeString(string $rawType, string $expectedType)
+    public function testItReturnsCorrectAircraftTypeString(?string $rawType, string $expectedType)
     {
         $aircraft = new NetworkAircraft(['planned_aircraft' => $rawType]);
         $this->assertEquals($expectedType, $aircraft->aircraftType);
@@ -63,6 +63,18 @@ class NetworkAircraftTest extends BaseUnitTestCase
             'Extra separators' => [
                 'fgfg/CONC/asdsadf/dsfgfdghdfg/fdg/',
                 'CONC',
+            ],
+            'No type at all' => [
+                null,
+                ''
+            ],
+            'Vatsim prefile equipment' => [
+                'B738/M-SDE2E3FGHIRWXY/LB1',
+                'B738',
+            ],
+            'Bad order' => [
+                'H/B738',
+                'B738',
             ],
         ];
     }

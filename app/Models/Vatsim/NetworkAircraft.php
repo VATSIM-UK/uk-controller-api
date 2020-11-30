@@ -13,6 +13,8 @@ use Location\Coordinate;
 
 class NetworkAircraft extends Model
 {
+    const AIRCRAFT_TYPE_REGEX = '/^[0-9A-Z]{4}/';
+
     const AIRCRAFT_TYPE_SEPARATOR = '/';
 
     protected $primaryKey = 'callsign';
@@ -107,15 +109,18 @@ class NetworkAircraft extends Model
 
     public function getAircraftTypeAttribute(): string
     {
-        $splitType = explode(self::AIRCRAFT_TYPE_SEPARATOR, $this->planned_aircraft);
-        switch (count($splitType)) {
-            case 1:
-            case 2:
-                return $splitType[0];
-            case 3:
-            default:
-                return $splitType[1];
+        if (is_null($this->planned_aircraft)) {
+            return '';
         }
+
+        $splitType = explode(self::AIRCRAFT_TYPE_SEPARATOR, $this->planned_aircraft);
+        foreach ($splitType as $split) {
+            if (preg_match(self::AIRCRAFT_TYPE_REGEX, $split)) {
+                return $split;
+            }
+        }
+
+        return '';
     }
 
     public function isVfr(): bool
