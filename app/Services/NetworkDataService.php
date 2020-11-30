@@ -76,6 +76,9 @@ class NetworkDataService
         ];
     }
 
+    /**
+     * Returns a data element from a V3 flightplan if one exists.
+     */
     private function getFlightplanDataElement(array $pilot, string $element): ?string
     {
         return $pilot['flight_plan'][$element] ?? null;
