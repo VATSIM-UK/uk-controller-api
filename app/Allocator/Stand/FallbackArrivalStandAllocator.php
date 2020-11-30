@@ -6,7 +6,7 @@ use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Collection;
 
-class GeneralUseArrivalStandAllocator extends AbstractArrivalStandAllocator
+class FallbackArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
     /**
      * @var AirlineService
@@ -20,7 +20,7 @@ class GeneralUseArrivalStandAllocator extends AbstractArrivalStandAllocator
 
     /**
      * This runs the base query, and gets stands at the arrival airport suitable
-     * for the aircraft's size that aren't occupied and available for general use.
+     * for the aircraft's size that aren't occupied. It's a last ditch attempt.
      *
      * @param NetworkAircraft $aircraft
      * @return Collection
@@ -28,7 +28,6 @@ class GeneralUseArrivalStandAllocator extends AbstractArrivalStandAllocator
     protected function getPossibleStands(NetworkAircraft $aircraft): Collection
     {
         return $this->getArrivalAirfieldStandQuery($aircraft)
-            ->generalUse()
             ->notCargo()
             ->get();
     }

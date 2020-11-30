@@ -10,17 +10,17 @@ use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
 
-class GeneralUseArrivalStandAllocatorTest extends BaseFunctionalTestCase
+class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
     /**
-     * @var GeneralUseArrivalStandAllocator
+     * @var FallbackArrivalStandAllocator
      */
     private $allocator;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(GeneralUseArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(FallbackArrivalStandAllocator::class);
     }
 
     public function testItAssignsAnAppropriatelySizedStand()
@@ -118,10 +118,10 @@ class GeneralUseArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals('AEU252', $assignment->callsign);
     }
 
-    public function testItOnlyAssignsGeneralUseStand()
+    public function testAssignsAllStands()
     {
         // Create a stand that isn't for general allocation
-        Stand::create(
+        $notGeneralUse = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => '55C',
@@ -160,8 +160,8 @@ class GeneralUseArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
         $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
-        $this->assertEquals($stand->id, $assignment->stand_id);
         $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
+        $this->assertEquals($notGeneralUse->id, $assignment->stand_id);
         $this->assertEquals('AEU252', $assignment->callsign);
     }
 
