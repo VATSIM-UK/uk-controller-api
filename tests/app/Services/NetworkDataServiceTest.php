@@ -8,15 +8,11 @@ use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
-use GuzzleHttp\Client;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
-use InvalidArgumentException;
 use Mockery;
 use PDOException;
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\StreamInterface;
 
 class NetworkDataServiceTest extends BaseFunctionalTestCase
 {
@@ -34,11 +30,10 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->networkData = [
-            'clients' => [
-                $this->getClientData('VIR25A', true),
-                $this->getClientData('BAW123', true),
-                $this->getClientData('RYR824', true),
-                $this->getClientData('LON_S_CTR', false),
+            'pilots' => [
+                $this->getPilotData('VIR25A', true),
+                $this->getPilotData('BAW123', false),
+                $this->getPilotData('RYR824', true),
             ]
         ];
 
@@ -76,9 +71,11 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItHandlesExceptionsFromNetworkDataFeed()
     {
         $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
-        Http::fake(function () {
-            throw new Exception('LOL');
-        });
+        Http::fake(
+            function () {
+                throw new Exception('LOL');
+            }
+        );
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(
             'network_aircraft',
@@ -113,7 +110,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
-                $this->getDataWithoutClientType('VIR25A'),
+                $this->getTransformedPilotData('VIR25A'),
                 ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
             ),
         );
@@ -127,7 +124,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
-                $this->getDataWithoutClientType('BAW123'),
+                $this->getTransformedPilotData('BAW123', false),
                 ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
             ),
         );
@@ -141,7 +138,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
-                $this->getDataWithoutClientType('RYR824'),
+                $this->getTransformedPilotData('RYR824'),
                 ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
             ),
         );
@@ -183,7 +180,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesNetworkAircraft()
     {
-        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expectedData = $this->getTransformedPilotData('AAL123');
         $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123', $expectedData);
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
@@ -213,7 +210,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesNetworkAircraft()
     {
-        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expectedData = $this->getTransformedPilotData('AAL123');
         NetworkAircraft::create($expectedData);
         $actual = NetworkDataService::createOrUpdateNetworkAircraft(
             'AAL123',
@@ -237,7 +234,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesNetworkAircraftCallsignOnly()
     {
-        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expectedData = $this->getTransformedPilotData('AAL123');
         NetworkAircraft::create($expectedData);
         $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
         $expected = NetworkAircraft::find('AAL123');
@@ -300,7 +297,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesNetworkAircraftInFirstOrCreate()
     {
-        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expectedData = $this->getTransformedPilotData('AAL123');
         $actual = NetworkDataService::firstOrCreateNetworkAircraft('AAL123', $expectedData);
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
@@ -332,7 +329,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItFindsNetworkAircraftFirstOrCreateWithData()
     {
         Carbon::setTestNow(Carbon::now());
-        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expectedData = $this->getTransformedPilotData('AAL123');
         $expected = NetworkAircraft::create($expectedData);
         $expected->created_at = Carbon::now()->subHour(2);
         $expected->updated_at = Carbon::now()->subHour(1);
@@ -361,7 +358,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItFindsNetworkAircraftFirstOrCreateCallsignOnly()
     {
         Carbon::setTestNow(Carbon::now());
-        $expectedData = $this->getDataWithoutClientType('AAL123');
+        $expectedData = $this->getTransformedPilotData('AAL123');
         $expected = NetworkAircraft::create($expectedData);
         $expected->created_at = Carbon::now()->subHour(2);
         $expected->updated_at = Carbon::now()->subHour(1);
@@ -428,34 +425,55 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         NetworkDataService::firstOrCreateNetworkAircraft('AAL123');
     }
 
-    private function getClientData(string $callsign, bool $isAircraft): array
+    private function getPilotData(string $callsign, bool $hasFlightplan): array
     {
         return [
             'callsign' => $callsign,
-            'clienttype' => $isAircraft ? 'PILOT' : 'ATC',
             'latitude' => 54.66,
-            'longitude'=> -6.21,
-            'altitude' => '35123',
-            'groundspeed' => '123',
-            'planned_aircraft' => 'B738',
-            'planned_depairport' => 'EGKK',
-            'planned_destairport' => 'EGPH',
-            'planned_altitude' => '15001',
-            'transponder' => '1234',
-            'planned_flighttype' => 'I',
-            'planned_route' => 'DIRECT',
+            'longitude' => -6.21,
+            'altitude' => 35123,
+            'groundspeed' => 123,
+            'transponder' => 1234,
+            'flight_plan' => $hasFlightplan
+                ? [
+                    'aircraft' => 'B738',
+                    'departure' => 'EGKK',
+                    'arrival' => 'EGPH',
+                    'altitude' => '15001',
+                    'flight_rules' => 'I',
+                    'route' => 'DIRECT',
+                ]
+                : null,
         ];
     }
 
-    private function getDataWithoutClientType(string $callsign): array
+    private function getTransformedPilotData(string $callsign, bool $hasFlightplan = true): array
     {
-        return array_filter(
-            $this->getClientData($callsign, true),
-            function ($value) {
-                return $value !== 'clienttype';
-            },
-            ARRAY_FILTER_USE_KEY
-        );
+        $pilot = $this->getPilotData($callsign, $hasFlightplan);
+        $baseData = [
+            'callsign' => $pilot['callsign'],
+            'latitude' => $pilot['latitude'],
+            'longitude' => $pilot['longitude'],
+            'altitude' => $pilot['altitude'],
+            'groundspeed' => $pilot['groundspeed'],
+            'transponder' => $pilot['transponder'],
+        ];
+
+        if ($hasFlightplan) {
+            $baseData = array_merge(
+                $baseData,
+                [
+                    'planned_aircraft' => $pilot['flight_plan']['aircraft'],
+                    'planned_depairport' => $pilot['flight_plan']['departure'],
+                    'planned_destairport' => $pilot['flight_plan']['arrival'],
+                    'planned_altitude' => $pilot['flight_plan']['altitude'],
+                    'planned_flighttype' => $pilot['flight_plan']['flight_rules'],
+                    'planned_route' => $pilot['flight_plan']['route'],
+                ]
+            );
+        }
+
+        return $baseData;
     }
 
     private function filterBySet(array $data): array
