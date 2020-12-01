@@ -10,14 +10,14 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class NetworkDataService
 {
-    const NETWORK_DATA_URL = "http://cluster.data.vatsim.net/vatsim-data.json";
+    const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
 
     public function updateNetworkData(): void
     {
-
         // Download the network data and check that it was successful
         $networkResponse = null;
         try {
@@ -33,7 +33,7 @@ class NetworkDataService
         }
 
         // Process clients
-        $this->processClients($networkResponse->json('clients', []));
+        $this->processPilots($networkResponse->json('pilots', []));
         $this->handleTimeouts();
     }
 
@@ -42,24 +42,47 @@ class NetworkDataService
      *
      * @param array $clients
      */
-    private function processClients(array $clients): void
+    private function processPilots(array $pilots): void
     {
-        foreach ($clients as $client) {
-            if (!isset($client['clienttype'])) {
-                Log::error('Client type missing for aircraft', $client);
-                continue;
-            }
-
-            if ($client['clienttype'] !== 'PILOT') {
-                continue;
-            }
-
+        foreach ($pilots as $pilot) {
             event(
                 new NetworkAircraftUpdatedEvent(
-                    self::createOrUpdateNetworkAircraft($client['callsign'], $client)
+                    self::createOrUpdateNetworkAircraft(
+                        $pilot['callsign'],
+                        $this->formatPilot($pilot)
+                    )
                 )
             );
         }
+    }
+
+    /**
+     * Formats a pilot from the V3 datafeed.
+     */
+    private function formatPilot(array $pilot): array
+    {
+        return [
+            'callsign' => $pilot['callsign'],
+            'latitude' => $pilot['latitude'],
+            'longitude' => $pilot['longitude'],
+            'altitude' => $pilot['altitude'],
+            'groundspeed' => $pilot['groundspeed'],
+            'transponder' => Str::padLeft($pilot['transponder'], '0', 4),
+            'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
+            'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
+            'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),
+            'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),
+            'planned_flighttype' => $this->getFlightplanDataElement($pilot, 'flight_rules'),
+            'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
+        ];
+    }
+
+    /**
+     * Returns a data element from a V3 flightplan if one exists.
+     */
+    private function getFlightplanDataElement(array $pilot, string $element): ?string
+    {
+        return $pilot['flight_plan'][$element] ?? null;
     }
 
     /**
