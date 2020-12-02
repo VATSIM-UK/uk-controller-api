@@ -11,6 +11,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -86,6 +87,60 @@ class StandService
                 ];
             }
         )->toBase();
+    }
+
+    public function getAvailableStandsForAirfield(string $airfield): Collection
+    {
+        return Stand::available()->airfield($airfield)->get()->map(function (Stand $stand) {
+            return $stand->identifier;
+        })->toBase();
+    }
+
+    public function getAssignedStandForAircraft(string $aircraft): ?Stand
+    {
+        $assignment = StandAssignment::with('stand')->where('callsign', $aircraft)->first();
+        return $assignment ? $assignment->stand : null;
+    }
+
+    /**
+     * Assignments are preferred to reservations as reservations may be overridden by controllers.
+     *
+     * Get all assigned stands as well as any active reservations.
+     */
+    public function getAirfieldStandStatus(string $airfield): array
+    {
+        $stands = Stand::with('assignment', 'activeReservations')
+            ->airfield($airfield)
+            ->get();
+        $stands->sortBy('identifier', SORT_NATURAL);
+
+        $standStatuses = [
+            'assigned' => [],
+            'reserved' => [],
+            'free' => [],
+        ];
+
+        foreach ($stands as $stand) {
+            if ($stand->assignment) {
+                $standStatuses['assigned'][] = [
+                    'identifier' => $stand->identifier,
+                    'callsign' => $stand->assignment->callsign
+                ];
+            } else if (!$stand->activeReservations->isEmpty()) {
+                foreach ($stand->activeReservations as $reservation) {
+                    $standStatuses['reserved'][] = [
+                        'identifier' => $reservation->stand->identifier,
+                        'callsign' => $reservation->callsign
+                    ];
+                }
+            } else {
+                $standStatuses['free'][] = [
+                    'identifier' => $stand->identifier,
+                ];
+            }
+        }
+
+        return $standStatuses;
     }
 
     /**

@@ -743,6 +743,101 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
+    public function testItReturnsFreeStandsAtAirfields()
+    {
+        $stand1 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST1',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST2',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        $this->addStandAssignment('BAW959', $stand1->id);
+
+        $this->assertEquals(
+            [
+                '1L',
+                '251',
+                'TEST2',
+            ],
+            $this->service->getAvailableStandsForAirfield('EGLL')->toArray()
+        );
+    }
+
+    public function testItReturnsAnAircraftsStandAssignment()
+    {
+        $this->addStandAssignment('BAW959', 1);
+        $this->assertEquals(1, $this->service->getAssignedStandForAircraft('BAW959')->id);
+    }
+
+    public function testItReturnsNullIfNoStandAssignmentForAircraft()
+    {
+        $this->assertNull($this->service->getAssignedStandForAircraft('BAW959'));
+    }
+
+    public function testItReturnsStandStatuses()
+    {
+        $stand1 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST1',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        $stand2 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST2',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        $this->addStandAssignment('BAW959', $stand1->id);
+        $this->addStandReservation('BAW959', $stand1->id, true);
+        $this->addStandReservation('BAW955', 1, false);
+        $this->addStandReservation('BAW999', $stand2->id, true);
+
+        $this->assertEquals(
+            [
+                'free' => [
+                    [
+                        'identifier' => '1L'
+                    ],
+                    [
+                        'identifier' => '251'
+                    ],
+                ],
+                'assigned' => [
+                    [
+                        'identifier' => 'TEST1',
+                        'callsign' => 'BAW959',
+                    ],
+                ],
+                'reserved' => [
+                    [
+                        'identifier' => 'TEST2',
+                        'callsign' => 'BAW999',
+                    ],
+                ],
+            ],
+            $this->service->getAirfieldStandStatus('EGLL')
+        );
+    }
+
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
@@ -750,6 +845,19 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'stand_id' => $standId,
+            ]
+        );
+    }
+
+    private function addStandReservation(string $callsign, int $standId, bool $active): StandReservation
+    {
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        return StandReservation::create(
+            [
+                'callsign' => $callsign,
+                'stand_id' => $standId,
+                'start' => $active ? Carbon::now() : Carbon::now()->addMinutes(5),
+                'end' => Carbon::now()->addMinutes(10),
             ]
         );
     }

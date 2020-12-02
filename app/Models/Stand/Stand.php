@@ -8,7 +8,6 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,6 +48,13 @@ class Stand extends Model
     public function airfield(): BelongsTo
     {
         return $this->belongsTo(Airfield::class);
+    }
+
+    public function scopeAirfield(Builder $query, string $airfield): Builder
+    {
+        return $query->whereHas('airfield', function (Builder $airfieldQuery) use ($airfield) {
+            return $airfieldQuery->where('code', $airfield);
+        });
     }
 
     public function airlines(): BelongsToMany
@@ -215,6 +221,11 @@ class Stand extends Model
     public function reservations(): HasMany
     {
         return $this->hasMany(StandReservation::class);
+    }
+
+    public function activeReservations(): HasMany
+    {
+        return $this->hasMany(StandReservation::class)->active();
     }
 
     public function scopeNotReserved(Builder $builder): Builder
