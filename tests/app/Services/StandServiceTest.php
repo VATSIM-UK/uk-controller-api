@@ -173,6 +173,30 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testAssignStandToAircraftUnassignsExistingAssignmentToPairedStand()
+    {
+        Stand::find(1)->pairedStands()->sync([2]);
+        $this->addStandAssignment('BAW123', 2);
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->expectsEvents(StandUnassignedEvent::class);
+
+        $this->service->assignStandToAircraft('RYR7234', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
+                'stand_id' => 1,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123'
+            ]
+        );
+    }
+
     public function testAssignStandToAircraftAllowsAssignmentToSameStand()
     {
         $this->expectsEvents(StandAssignedEvent::class);

@@ -192,12 +192,21 @@ class StandService
         }
 
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        $currentAssignment = StandAssignment::with('aircraft')
+        $currentAssignment = StandAssignment::with('aircraft', 'stand.pairedStands.assignment')
             ->where('stand_id', $standId)
             ->first();
 
+        // Remove the current assignment
         if ($currentAssignment && $currentAssignment->callsign !== $callsign) {
             $this->deleteStandAssignmentByCallsign($currentAssignment->aircraft->callsign);
+        }
+
+        // Remove assignments on paired stands
+        $stand = Stand::with('pairedStands.assignment')->find($standId);
+        foreach ($stand->pairedStands as $pairedStand) {
+            if ($pairedStand->assignment) {
+                $this->deleteStandAssignmentByCallsign($pairedStand->assignment->callsign);
+            }
         }
 
         $assignment = StandAssignment::updateOrCreate(
