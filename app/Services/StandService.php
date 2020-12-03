@@ -204,7 +204,7 @@ class StandService
         // Remove assignments on paired stands
         $stand = Stand::with('pairedStands.assignment')->find($standId);
         foreach ($stand->pairedStands as $pairedStand) {
-            if ($pairedStand->assignment) {
+            if ($pairedStand->assignment && $pairedStand->assignment->callsign !== $callsign) {
                 $this->deleteStandAssignmentByCallsign($pairedStand->assignment->callsign);
             }
         }

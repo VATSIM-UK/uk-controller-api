@@ -197,6 +197,24 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItDoesntTriggerUnassignmentIfMovingWithinPair()
+    {
+        Stand::find(1)->pairedStands()->sync([2]);
+        $this->addStandAssignment('BAW123', 2);
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+
+        $this->service->assignStandToAircraft('BAW123', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
+        );
+    }
+
     public function testAssignStandToAircraftAllowsAssignmentToSameStand()
     {
         $this->expectsEvents(StandAssignedEvent::class);
