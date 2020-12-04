@@ -224,6 +224,7 @@ Route::middleware('public')->group(function () {
     Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
 
     // Stands
+    Route::get('stands/status', 'StandController@getAirfieldStandStatus');
     Route::get('stand/dependency', 'StandController@getStandsDependency');
     Route::get('stand/assignment', 'StandController@getStandAssignments');
 
