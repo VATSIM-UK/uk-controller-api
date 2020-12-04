@@ -109,38 +109,55 @@ class StandService
      */
     public function getAirfieldStandStatus(string $airfield): array
     {
-        $stands = Stand::with('assignment', 'activeReservations')
+        $stands = Stand::with(
+            'assignment',
+            'occupier',
+            'activeReservations',
+            'pairedStands.assignment',
+            'pairedStands.occupier',
+            'pairedStands.activeReservations'
+        )
             ->airfield($airfield)
             ->get();
         $stands->sortBy('identifier', SORT_NATURAL);
 
-        $standStatuses = [
-            'assigned' => [],
-            'reserved' => [],
-            'free' => [],
-        ];
+        $standStatuses = [];
 
         foreach ($stands as $stand) {
-            if ($stand->assignment) {
-                $standStatuses['assigned'][] = [
-                    'identifier' => $stand->identifier,
-                    'callsign' => $stand->assignment->callsign
-                ];
-            } else if (!$stand->activeReservations->isEmpty()) {
-                foreach ($stand->activeReservations as $reservation) {
-                    $standStatuses['reserved'][] = [
-                        'identifier' => $reservation->stand->identifier,
-                        'callsign' => $reservation->callsign
-                    ];
-                }
-            } else {
-                $standStatuses['free'][] = [
-                    'identifier' => $stand->identifier,
-                ];
-            }
+            $standStatuses[] = $this->getStandStatus($stand);
         }
 
         return $standStatuses;
+    }
+
+    private function getStandStatus(Stand $stand): array
+    {
+        $standData = [
+            'identifier' => $stand->identifier
+        ];
+
+        if ($stand->assignment) {
+            $standData['status'] = 'assigned';
+            $standData['callsign'] = $stand->assignment->callsign;
+        } else if ($stand->occupier->first()) {
+            $standData['status'] = 'occupied';
+            $standData['callsign'] = $stand->occupier->first()->callsign;
+        } else if (!$stand->activeReservations->isEmpty()) {
+            $standData['status'] = 'reserved';
+            $standData['callsign'] = $stand->activeReservations->first()->callsign;
+        } else if (
+        !$stand->pairedStands->filter(function (Stand $stand) {
+            return $stand->assignment ||
+                !$stand->occupier->isEmpty() ||
+                !$stand->activeReservations->isEmpty();
+        })->isEmpty()
+        ) {
+            $standData['status'] = 'unavailable';
+        } else {
+            $standData['status'] = 'available';
+        }
+
+        return $standData;
     }
 
     /**

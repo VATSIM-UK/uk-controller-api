@@ -830,6 +830,12 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsStandStatuses()
     {
+        // Clear out all the stands so its easier to follow the test data.
+        Stand::all()->each(function (Stand $stand) {
+            $stand->delete();
+        });
+
+        // Stand 1 is free but has a reservation starting in 10 minutes
         $stand1 = Stand::create(
             [
                 'airfield_id' => 1,
@@ -838,7 +844,9 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'longitude' =>  -6.222070,
             ]
         );
+        $this->addStandReservation('FUTURE-RESERVATION', $stand1->id, false);
 
+        // Stand 2 is assigned
         $stand2 = Stand::create(
             [
                 'airfield_id' => 1,
@@ -847,33 +855,115 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'longitude' =>  -6.222070,
             ]
         );
+        $this->addStandAssignment('ASSIGNMENT', $stand2->id);
 
-        $this->addStandAssignment('BAW959', $stand1->id);
-        $this->addStandReservation('BAW959', $stand1->id, true);
-        $this->addStandReservation('BAW955', 1, false);
-        $this->addStandReservation('BAW999', $stand2->id, true);
+        // Stand 3 is reserved
+        $stand3 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST3',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $this->addStandReservation('RESERVATION', $stand3->id, true);
+
+        // Stand 4 is occupied
+        $stand4 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST4',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $occupier = NetworkDataService::firstOrCreateNetworkAircraft('OCCUPIED');
+        $occupier->occupiedStand()->sync($stand4);
+
+        // Stand 5 is paired with stand 2 which is assigned
+        $stand5 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST5',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand2->pairedStands()->sync($stand5);
+        $stand5->pairedStands()->sync($stand2);
+
+        // Stand 6 is paired with stand 3 which is reserved
+        $stand6 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST6',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand3->pairedStands()->sync([$stand6->id]);
+        $stand6->pairedStands()->sync([$stand3->id]);
+
+        // Stand 7 is paired with stand 4 which is occupied
+        $stand7 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST7',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand4->pairedStands()->sync([$stand7->id]);
+        $stand7->pairedStands()->sync([$stand4->id]);
+
+        // Stand 8 is paired with stand 1 which is free
+        $stand8 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST8',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand1->pairedStands()->sync([$stand8->id]);
+        $stand8->pairedStands()->sync([$stand1->id]);
 
         $this->assertEquals(
             [
-                'free' => [
-                    [
-                        'identifier' => '1L'
-                    ],
-                    [
-                        'identifier' => '251'
-                    ],
+                [
+                    'identifier' => 'TEST1',
+                    'status' => 'available',
                 ],
-                'assigned' => [
-                    [
-                        'identifier' => 'TEST1',
-                        'callsign' => 'BAW959',
-                    ],
+                [
+                    'identifier' => 'TEST2',
+                    'status' => 'assigned',
+                    'callsign' => 'ASSIGNMENT',
                 ],
-                'reserved' => [
-                    [
-                        'identifier' => 'TEST2',
-                        'callsign' => 'BAW999',
-                    ],
+                [
+                    'identifier' => 'TEST3',
+                    'status' => 'reserved',
+                    'callsign' => 'RESERVATION',
+                ],
+                [
+                    'identifier' => 'TEST4',
+                    'status' => 'occupied',
+                    'callsign' => 'OCCUPIED',
+                ],
+                [
+                    'identifier' => 'TEST5',
+                    'status' => 'unavailable',
+                ],
+                [
+                    'identifier' => 'TEST6',
+                    'status' => 'unavailable',
+                ],
+                [
+                    'identifier' => 'TEST7',
+                    'status' => 'unavailable',
+                ],
+                [
+                    'identifier' => 'TEST8',
+                    'status' => 'available',
                 ],
             ],
             $this->service->getAirfieldStandStatus('EGLL')
