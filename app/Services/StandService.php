@@ -98,7 +98,7 @@ class StandService
 
     public function getAssignedStandForAircraft(string $aircraft): ?Stand
     {
-        $assignment = StandAssignment::with('stand')->where('callsign', $aircraft)->first();
+        $assignment = StandAssignment::with('stand', 'stand.airfield')->where('callsign', $aircraft)->first();
         return $assignment ? $assignment->stand : null;
     }
 

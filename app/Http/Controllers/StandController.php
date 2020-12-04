@@ -105,4 +105,14 @@ class StandController extends BaseController
     {
         return Carbon::now()->addMinutes(self::AIRFIELD_STAND_STATUS_CACHE_MINUTES);
     }
+
+    public function getStandAssignmentForAircraft(string $aircraft): JsonResponse
+    {
+        $stand = $this->standService->getAssignedStandForAircraft($aircraft);
+        return $stand
+            ? response()->json(
+                ['id' => $stand->id, 'airfield' => $stand->airfield->code, 'identifier' => $stand['identifier']], 200
+            )
+            : response()->json([], 404);
+    }
 }

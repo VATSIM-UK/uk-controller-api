@@ -224,9 +224,11 @@ Route::middleware('public')->group(function () {
     Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
 
     // Stands
-    Route::get('stands/status', 'StandController@getAirfieldStandStatus');
+    Route::get('stand/status', 'StandController@getAirfieldStandStatus');
     Route::get('stand/dependency', 'StandController@getStandsDependency');
     Route::get('stand/assignment', 'StandController@getStandAssignments');
+    Route::get('stand/assignment/{callsign}', 'StandController@getStandAssignmentForAircraft')
+        ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 
     // Admin login
     Route::prefix('admin')->group(function () {

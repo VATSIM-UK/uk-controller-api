@@ -184,7 +184,7 @@ class StandControllerTest extends BaseApiTestCase
             'refresh_interval_minutes' => 5,
             'refresh_at' => Carbon::now()->addMinutes(5)->toIso8601String(),
         ];
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stands/status?airfield=EGLL')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/status?airfield=EGLL')
             ->assertStatus(200)
             ->assertJson($expected);
     }
@@ -192,7 +192,7 @@ class StandControllerTest extends BaseApiTestCase
     public function testItCachesStandStatuses()
     {
         Carbon::setTestNow(Carbon::now());
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stands/status?airfield=EGLL');
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/status?airfield=EGLL');
 
         $this->assertTrue(Cache::has('STAND_STATUS_EGLL'));
     }
@@ -202,15 +202,35 @@ class StandControllerTest extends BaseApiTestCase
         Carbon::setTestNow(Carbon::now());
         Cache::put('STAND_STATUS_EGLL', ['foo'], Carbon::now()->addSeconds(5));
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stands/status?airfield=EGLL')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/status?airfield=EGLL')
             ->assertStatus(200)
             ->assertJson(['foo']);
     }
 
     public function testItReturnsNotFoundOnUnknownStandStatusAirfield()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stands/status?airfield=XXXX')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/status?airfield=XXXX')
             ->assertStatus(404);
+    }
+
+    public function testItReturnsNotFoundIfNoStandAssignmentForAircraft()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stands/assignment/ABCD')
+            ->assertStatus(404);
+    }
+
+    public function testItReturnsStandAssignmentForAircraft()
+    {
+        $expected = [
+            'id' => 2,
+            'identifier' => '251',
+            'airfield' => 'EGLL',
+        ];
+
+        $this->addStandAssignment('BAW123', 2);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment/BAW123')
+            ->assertStatus(200)
+            ->assertJson($expected);
     }
 
     private function addStandAssignment(string $callsign, int $standId)
