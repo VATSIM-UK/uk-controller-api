@@ -26,6 +26,7 @@ class AirlineTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
 
         return $this->getArrivalAirfieldStandQuery($aircraft)
             ->airlineTerminal($airline)
+            ->inRandomOrder()
             ->get();
     }
 }

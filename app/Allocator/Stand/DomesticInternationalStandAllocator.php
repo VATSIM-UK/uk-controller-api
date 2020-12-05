@@ -17,6 +17,7 @@ class DomesticInternationalStandAllocator extends AbstractArrivalStandAllocator
 
         return $this->getDomesticInternationalScope($aircraft, $this->getArrivalAirfieldStandQuery($aircraft))
             ->generalUse()
+            ->inRandomOrder()
             ->get();
     }
 

@@ -29,6 +29,7 @@ class FallbackArrivalStandAllocator extends AbstractArrivalStandAllocator
     {
         return $this->getArrivalAirfieldStandQuery($aircraft)
             ->notCargo()
+            ->inRandomOrder()
             ->get();
     }
 }

@@ -29,6 +29,7 @@ class CargoArrivalStandAllocator extends AbstractArrivalStandAllocator
 
         return $this->getArrivalAirfieldStandQuery($aircraft)
             ->cargo()
+            ->inRandomOrder()
             ->get();
     }
 }

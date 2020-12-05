@@ -30,6 +30,7 @@ class GeneralUseArrivalStandAllocator extends AbstractArrivalStandAllocator
         return $this->getArrivalAirfieldStandQuery($aircraft)
             ->generalUse()
             ->notCargo()
+            ->inRandomOrder()
             ->get();
     }
 }

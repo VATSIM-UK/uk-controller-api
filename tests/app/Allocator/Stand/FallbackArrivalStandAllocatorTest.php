@@ -133,17 +133,16 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         );
 
         // Create a stand that can only accept an A380 and create the aircraft
-        $stand = Stand::create(
+        $generalUse = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => true,
+                'general_use' => false,
             ]
         );
-        $stand->refresh();
 
         Aircraft::create(
             [
@@ -161,7 +160,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
         $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertEquals($notGeneralUse->id, $assignment->stand_id);
+        $this->assertContains($assignment->stand_id, [$notGeneralUse->id, $generalUse->id]);
         $this->assertEquals('AEU252', $assignment->callsign);
     }
 
