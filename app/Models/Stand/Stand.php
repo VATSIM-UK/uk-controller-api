@@ -8,6 +8,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,7 +65,7 @@ class Stand extends Model
             'airline_stand',
             'stand_id',
             'airline_id'
-        )->withPivot('destination', 'from', 'to')->withTimestamps();
+        )->withPivot('destination', 'not_before')->withTimestamps();
     }
 
     public function getCoordinateAttribute()
@@ -106,7 +107,13 @@ class Stand extends Model
     public function scopeAirline(Builder $builder, Airline $airline): Builder
     {
         return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline) {
-            $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id);
+            $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id)
+                ->where(function (Builder $query) {
+                    // Timezones here should be local because Heathrow.
+                    $now = Carbon::now()->timezone('Europe/London')->toTimeString();
+                    $query->whereNull('not_before')
+                        ->orWhere('not_before', '<=', $now);
+                });
         });
     }
 
@@ -114,7 +121,13 @@ class Stand extends Model
     {
         return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline, $destinationStrings) {
             $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id)
-                ->whereIn('destination', $destinationStrings);
+                ->whereIn('destination', $destinationStrings)
+                ->where(function (Builder $query) {
+                    // Timezones here should be local because Heathrow.
+                    $now = Carbon::now()->timezone('Europe/London')->toTimeString();
+                    $query->whereNull('not_before')
+                        ->orWhere('not_before', '<=', $now);
+                });
         });
     }
 

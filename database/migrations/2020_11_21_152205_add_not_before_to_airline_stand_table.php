@@ -14,16 +14,11 @@ class AddNotBeforeToAirlineStandTable extends Migration
     public function up()
     {
         Schema::table('airline_stand', function (Blueprint $table) {
-            $table->time('from')
+            $table->time('not_before')
                 ->after('destination')
                 ->index()
                 ->nullable()
                 ->comment('The earliest time in the day the stand can be allocated');
-            $table->time('to')
-                ->after('from')
-                ->index()
-                ->nullable()
-                ->comment('The latest time in the day the stand can be allocated');
         });
     }
 
@@ -35,8 +30,7 @@ class AddNotBeforeToAirlineStandTable extends Migration
     public function down()
     {
         Schema::table('airline_stand', function (Blueprint $table) {
-            $table->drop('from');
-            $table->drop('to');
+            $table->drop('not_before');
         });
     }
 }

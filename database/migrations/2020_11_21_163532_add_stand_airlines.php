@@ -31,8 +31,7 @@ class AddStandAirlines extends Migration
                 [
                     $airlineId => [
                         'destination' => !empty($line[3]) ? $line[3] : null,
-                        'from' => !empty($line[4]) ? $line[4] : null,
-                        'to' => !empty($line[5]) ? $line[5] : null,
+                        'not_before' => !empty($line[4]) ? $line[4] : null,
                     ],
                 ]);
         }

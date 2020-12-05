@@ -55,7 +55,67 @@ class StandTest extends BaseFunctionalTestCase
         $this->assertEquals([3], $stands);
     }
 
-    public function testAirlineDestinationOnlyReturnsStandsForTheCorrectDestinations()
+    public function testAirlineOnlyReturnsStandsForTheCorrectAirline()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => null,
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+            ]
+        );
+
+        $stands = Stand::airline(
+            Airline::find(1)
+        )->get()->pluck('id')->toArray();
+        $this->assertEquals([1, 2], $stands);
+    }
+
+    public function testAirlineOnlyReturnsStandsAtTheRightTime()
+    {
+        Carbon::setTestNow(Carbon::parse('2020-12-05 16:00:00'));
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD',
+                    'not_before' => '16:00:01',
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => 'EGGD',
+                    'not_before' => null,
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'destination' => 'EGGD',
+                    'not_before' => '16:00:00',
+                ],
+            ]
+        );
+
+        $stands = Stand::airline(
+            Airline::find(1)
+        )->get()->pluck('id')->toArray();
+        $this->assertEquals([2, 3], $stands);
+    }
+
+    public function testAirlineDestinationOnlyReturnsStandsForTheCorrectAirlineAndDestinations()
     {
         DB::table('airline_stand')->insert(
             [
@@ -82,6 +142,39 @@ class StandTest extends BaseFunctionalTestCase
             ['EGGD']
         )->get()->pluck('id')->toArray();
         $this->assertEquals([1], $stands);
+    }
+
+    public function testAirlineDestinationOnlyReturnsStandsWithinTheRightTime()
+    {
+        Carbon::setTestNow(Carbon::parse('2020-12-05 16:00:00'));
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD',
+                    'not_before' => '16:00:01',
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => 'EGGD',
+                    'not_before' => null,
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'destination' => 'EGGD',
+                    'not_before' => '16:00:00',
+                ],
+            ]
+        );
+
+        $stands = Stand::airlineDestination(
+            Airline::find(1),
+            ['EGGD']
+        )->get()->pluck('id')->toArray();
+        $this->assertEquals([2, 3], $stands);
     }
 
     public function testAppropriateDimensionsOnlyReturnsStandsThatAreTheRightSize()
