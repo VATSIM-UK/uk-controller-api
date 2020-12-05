@@ -33,7 +33,8 @@ class AddStandAirlines extends Migration
                         'destination' => !empty($line[3]) ? $line[3] : null,
                         'not_before' => !empty($line[4]) ? $line[4] : null,
                     ],
-                ]);
+                ]
+            );
         }
         fclose($pairs);
     }

@@ -111,7 +111,8 @@ class StandController extends BaseController
         $stand = $this->standService->getAssignedStandForAircraft($aircraft);
         return $stand
             ? response()->json(
-                ['id' => $stand->id, 'airfield' => $stand->airfield->code, 'identifier' => $stand['identifier']], 200
+                ['id' => $stand->id, 'airfield' => $stand->airfield->code, 'identifier' => $stand['identifier']],
+                200
             )
             : response()->json([], 404);
     }

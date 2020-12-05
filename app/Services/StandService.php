@@ -139,13 +139,13 @@ class StandService
         if ($stand->assignment) {
             $standData['status'] = 'assigned';
             $standData['callsign'] = $stand->assignment->callsign;
-        } else if ($stand->occupier->first()) {
+        } elseif ($stand->occupier->first()) {
             $standData['status'] = 'occupied';
             $standData['callsign'] = $stand->occupier->first()->callsign;
-        } else if (!$stand->activeReservations->isEmpty()) {
+        } elseif (!$stand->activeReservations->isEmpty()) {
             $standData['status'] = 'reserved';
             $standData['callsign'] = $stand->activeReservations->first()->callsign;
-        } else if (
+        } elseif (
         !$stand->pairedStands->filter(function (Stand $stand) {
             return $stand->assignment ||
                 !$stand->occupier->isEmpty() ||
