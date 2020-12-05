@@ -51,7 +51,7 @@ class EventServiceProvider extends ServiceProvider
             TriggerUnassignmentOnDisconnect::class,
         ],
         NetworkAircraftUpdatedEvent::class => [
-            RecordFirEntry::class,
+            // RecordFirEntry::class, This is quite intensive on CPU and isn't used at the moment
             ReserveInFirProximity::class,
             ReclaimIfLeftFirProximity::class,
             TriggerDepartureUnassignmentOnceAirborne::class,
