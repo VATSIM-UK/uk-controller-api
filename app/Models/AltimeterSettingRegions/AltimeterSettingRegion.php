@@ -5,7 +5,6 @@ namespace App\Models\AltimeterSettingRegions;
 use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Model for an Altimeter Setting Region and the airfields used to determine its pressure.
@@ -39,10 +38,5 @@ class AltimeterSettingRegion extends Model
             'altimeter_setting_region_id',
             'airfield_id'
         );
-    }
-
-    public function regionalPressureSetting() : HasOne
-    {
-        return $this->hasOne(RegionalPressureSetting::class);
     }
 }

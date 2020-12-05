@@ -13,14 +13,4 @@ class NetworkServiceProvider extends ServiceProvider
     {
         $this->app->singleton(RecordFirEntry::class);
     }
-
-    /**
-     * Tells the framework what services this provider provides.
-     *
-     * @return array Array of provided services.
-     */
-    public function provides()
-    {
-        return [RecordFirEntry::class];
-    }
 }

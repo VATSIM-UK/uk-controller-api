@@ -47,6 +47,7 @@ class Tma extends Model implements MinStackDataProviderInterface
      * The facility against which the MSL should be calculated
      *
      * @return string
+     * @codeCoverageIgnore
      */
     public function calculationFacility(): string
     {
@@ -57,6 +58,7 @@ class Tma extends Model implements MinStackDataProviderInterface
      * The transition altitude for the facility in question
      *
      * @return int
+     * @codeCoverageIgnore
      */
     public function transitionAltitude(): int
     {
@@ -68,6 +70,7 @@ class Tma extends Model implements MinStackDataProviderInterface
      * high
      *
      * @return bool
+     * @codeCoverageIgnore
      */
     public function standardPressureHigh(): bool
     {

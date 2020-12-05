@@ -76,6 +76,10 @@ class NetworkAircraftTest extends BaseUnitTestCase
                 'H/B738',
                 'B738',
             ],
+            'Complete rubbish' => [
+                'asdsadsadsadas',
+                ''
+            ],
         ];
     }
 

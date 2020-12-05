@@ -49,22 +49,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * @return HasOne
-     */
-    public function admin() : HasOne
-    {
-        return $this->hasOne(Admin::class, 'user_id', 'id');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAdmin() : bool
-    {
-        return !is_null($this->admin);
-    }
-
-    /**
      * Sets the last login time of the user
      *
      * @return User

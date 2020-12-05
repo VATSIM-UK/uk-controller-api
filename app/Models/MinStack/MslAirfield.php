@@ -2,9 +2,7 @@
 
 namespace App\Models\MinStack;
 
-use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MslAirfield extends Model
 {
@@ -19,12 +17,4 @@ class MslAirfield extends Model
         'msl',
         'generated_at',
     ];
-
-    /**
-     * @return BelongsTo
-     */
-    public function airfield() : BelongsTo
-    {
-        return $this->belongsTo(Airfield::class);
-    }
 }

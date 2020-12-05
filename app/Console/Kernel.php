@@ -8,7 +8,6 @@ use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
 use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
-use App\Console\Commands\GetDeletedSidsFromSectorFile;
 use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
@@ -40,7 +39,6 @@ class Kernel extends ConsoleKernel
         UserCreate::class,
         \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
         GenerateMinStackLevels::class,
-        GetDeletedSidsFromSectorFile::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,

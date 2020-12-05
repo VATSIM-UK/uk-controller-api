@@ -62,16 +62,6 @@ class NetworkAircraft extends Model
         });
     }
 
-    public function assignedHold(): BelongsTo
-    {
-        return $this->belongsTo(AssignedHold::class, 'callsign', 'callsign');
-    }
-
-    public function firEvents(): HasMany
-    {
-        return $this->hasMany(NetworkAircraftFirEvent::class, 'callsign', 'callsign');
-    }
-
     public function getSquawkAttribute(): string
     {
         return $this->attributes['transponder'];
