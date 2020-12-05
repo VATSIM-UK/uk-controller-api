@@ -16,10 +16,12 @@ class AddNotBeforeToAirlineStandTable extends Migration
         Schema::table('airline_stand', function (Blueprint $table) {
             $table->time('from')
                 ->after('destination')
+                ->index()
                 ->nullable()
                 ->comment('The earliest time in the day the stand can be allocated');
             $table->time('to')
                 ->after('from')
+                ->index()
                 ->nullable()
                 ->comment('The latest time in the day the stand can be allocated');
         });

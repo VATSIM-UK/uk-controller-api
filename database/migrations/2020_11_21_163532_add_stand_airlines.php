@@ -23,15 +23,18 @@ class AddStandAirlines extends Migration
                 ->where('identifier', $line[1])
                 ->first();
 
-            if (!$stand || !Airline::where('icao_code', $line[2])->first()) {
-                dd($line);
-            }
-
             $airlineId = Airline::where('icao_code', $line[2])
                 ->first()
                 ->id;
 
-            $stand->airlines()->attach([$airlineId => ['destination' => !empty($line[3]) ? $line[3] : null]]);
+            $stand->airlines()->attach(
+                [
+                    $airlineId => [
+                        'destination' => !empty($line[3]) ? $line[3] : null,
+                        'from' => !empty($line[4]) ? $line[4] : null,
+                        'to' => !empty($line[5]) ? $line[5] : null,
+                    ],
+                ]);
         }
         fclose($pairs);
     }
