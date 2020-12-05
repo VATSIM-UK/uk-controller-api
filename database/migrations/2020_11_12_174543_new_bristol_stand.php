@@ -21,8 +21,8 @@ class NewBristolStand extends Migration
                 [
                     'airfield_id' => DB::table('airfield')->where('code', 'EGGD')->first()->id,
                     'identifier' => '7N',
-                    'latitude' => 'N051.23.10.242',
-                    'longitude' => 'W002.42.30.128',
+                    'latitude' => 51.38617833,
+                    'longitude' => -2.70836889,
                     'created_at' => Carbon::now(),
                 ]
             );
