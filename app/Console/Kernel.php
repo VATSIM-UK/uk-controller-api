@@ -68,6 +68,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
-        $schedule->command('stands:assign-arrival')->everyFiveMinutes();
+        $schedule->command('stands:assign-arrival')->everyTwoMinutes();
     }
 }
