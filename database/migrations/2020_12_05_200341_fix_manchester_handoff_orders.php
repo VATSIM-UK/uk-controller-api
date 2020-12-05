@@ -13,7 +13,7 @@ class FixManchesterHandoffOrders extends Migration
      */
     public function up()
     {
-        HandoffService::removeFromHandoffOrder('EGCC_SID_SOUTH' , 'EGCC_N_APP');
+        HandoffService::removeFromHandoffOrder('EGCC_SID_SOUTH', 'EGCC_N_APP');
         HandoffService::insertIntoOrderAfter('EGCC_SID_SOUTH', 'EGCC_S_APP', 'LON_CTR');
         DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFF');
     }
