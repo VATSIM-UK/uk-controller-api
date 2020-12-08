@@ -174,10 +174,18 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'identifier' => '1L',
                     'status' => 'available',
+                    'type' => null,
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
                 [
                     'identifier' => '251',
                     'status' => 'available',
+                    'type' => null,
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
             ],
             'generated_at' => Carbon::now()->toIso8601String(),

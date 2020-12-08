@@ -835,24 +835,28 @@ class StandServiceTest extends BaseFunctionalTestCase
             $stand->delete();
         });
 
-        // Stand 1 is free but has a reservation starting in 10 minutes
+        // Stand 1 is free but has a reservation starting in 10 minutes, it also has an airline with some destinations
         $stand1 = Stand::create(
             [
                 'airfield_id' => 1,
+                'type_id' => 3,
                 'identifier' => 'TEST1',
                 'latitude' => 54.658828,
                 'longitude' =>  -6.222070,
             ]
         );
         $this->addStandReservation('FUTURE-RESERVATION', $stand1->id, false);
+        $stand1->airlines()->attach([1 => ['destination' => 'EDDM']]);
+        $stand1->airlines()->attach([1 => ['destination' => 'EDDF']]);
 
-        // Stand 2 is assigned
+        // Stand 2 is assigned, it has a max aircraft type
         $stand2 = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => 'TEST2',
                 'latitude' => 54.658828,
                 'longitude' =>  -6.222070,
+                'max_aircraft_id' => 1,
             ]
         );
         $this->addStandAssignment('ASSIGNMENT', $stand2->id);
@@ -932,38 +936,72 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 [
                     'identifier' => 'TEST1',
+                    'type' => 'CARGO',
                     'status' => 'available',
+                    'airlines' => [
+                        'BAW' => ['EDDM', 'EDDF']
+                    ],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
                 [
                     'identifier' => 'TEST2',
+                    'type' => null,
                     'status' => 'assigned',
                     'callsign' => 'ASSIGNMENT',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => 'B738',
                 ],
                 [
                     'identifier' => 'TEST3',
+                    'type' => null,
                     'status' => 'reserved',
                     'callsign' => 'RESERVATION',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
                 [
                     'identifier' => 'TEST4',
+                    'type' => null,
                     'status' => 'occupied',
                     'callsign' => 'OCCUPIED',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
                 [
                     'identifier' => 'TEST5',
+                    'type' => null,
                     'status' => 'unavailable',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
                 [
                     'identifier' => 'TEST6',
+                    'type' => null,
                     'status' => 'unavailable',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
                 [
                     'identifier' => 'TEST7',
+                    'type' => null,
                     'status' => 'unavailable',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
                 [
                     'identifier' => 'TEST8',
+                    'type' => null,
                     'status' => 'available',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
                 ],
             ],
             $this->service->getAirfieldStandStatus('EGLL')

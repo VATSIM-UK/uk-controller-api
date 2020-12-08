@@ -9,6 +9,7 @@ use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
@@ -110,6 +111,8 @@ class StandService
     public function getAirfieldStandStatus(string $airfield): array
     {
         $stands = Stand::with(
+            'wakeCategory',
+            'maxAircraft',
             'assignment',
             'occupier',
             'activeReservations',
@@ -133,7 +136,17 @@ class StandService
     private function getStandStatus(Stand $stand): array
     {
         $standData = [
-            'identifier' => $stand->identifier
+            'identifier' => $stand->identifier,
+            'type' => $stand->type ? $stand->type->key : null,
+            'airlines' => $stand->airlines->groupBy('icao_code')->map(function (Collection $airlineDestination) {
+                return $airlineDestination->filter(function (Airline $airline) {
+                    return $airline->pivot->destination;
+                })->map(function (Airline $airline) {
+                    return $airline->pivot->destination;
+                });
+            })->toArray(),
+            'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code: null,
+            'max_aircraft_type' => $stand->maxAircraft ? $stand->maxAircraft->code : null,
         ];
 
         if ($stand->assignment) {
@@ -146,11 +159,11 @@ class StandService
             $standData['status'] = 'reserved';
             $standData['callsign'] = $stand->activeReservations->first()->callsign;
         } elseif (
-        !$stand->pairedStands->filter(function (Stand $stand) {
-            return $stand->assignment ||
-                !$stand->occupier->isEmpty() ||
-                !$stand->activeReservations->isEmpty();
-        })->isEmpty()
+            !$stand->pairedStands->filter(function (Stand $stand) {
+                return $stand->assignment ||
+                    !$stand->occupier->isEmpty() ||
+                    !$stand->activeReservations->isEmpty();
+            })->isEmpty()
         ) {
             $standData['status'] = 'unavailable';
         } else {
