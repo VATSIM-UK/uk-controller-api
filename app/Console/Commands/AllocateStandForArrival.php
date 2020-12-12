@@ -8,15 +8,10 @@ use Illuminate\Console\Command;
 
 class AllocateStandForArrival extends Command
 {
-    public const ALLOCATE_STANDS_CONFIG_KEY = 'stands.auto_allocate';
-
     protected $signature = 'stands:assign-arrival';
     protected $description = 'Assigns arrival stands to all aircraft that require it';
 
-    /**
-     * @var StandService
-     */
-    private $standService;
+    private StandService $standService;
 
     public function __construct(StandService $standService)
     {
@@ -26,7 +21,7 @@ class AllocateStandForArrival extends Command
 
     public function handle()
     {
-        if (!config(self::ALLOCATE_STANDS_CONFIG_KEY, false)) {
+        if (!config('stands.auto_allocate', false)) {
             $this->info('Skipping arrival stand allocation');
             return;
         }
