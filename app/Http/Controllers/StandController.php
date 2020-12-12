@@ -15,10 +15,7 @@ class StandController extends BaseController
 {
     const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
 
-    /**
-     * @var StandService
-     */
-    private $standService;
+    private StandService $standService;
 
     public function __construct(StandService $standService)
     {
@@ -77,23 +74,20 @@ class StandController extends BaseController
 
     private function getAirfieldStandStatusData(Airfield $airfield): array
     {
-        if ($cachedResponse = Cache::get($this->getStandStatusCacheKey($airfield))) {
-            return $cachedResponse;
-        }
-
-        $standStatuses = $this->standService->getAirfieldStandStatus($airfield->code);
-        $response = [
-            'stands' => $standStatuses,
-            'generated_at' => Carbon::now()->toIso8601String(),
-            'refresh_interval_minutes' => self::AIRFIELD_STAND_STATUS_CACHE_MINUTES,
-            'refresh_at' => $this->getStandStatusRefreshTime()->toIso8601String(),
-        ];
-        Cache::put(
+        $cacheRefreshTime = $this->getStandStatusRefreshTime();
+        return Cache::remember(
             $this->getStandStatusCacheKey($airfield),
-            $response,
-            $this->getStandStatusRefreshTime()
+            $cacheRefreshTime,
+            function () use ($airfield, $cacheRefreshTime) {
+                $standStatuses = $this->standService->getAirfieldStandStatus($airfield->code);
+                return [
+                    'stands' => $standStatuses,
+                    'generated_at' => Carbon::now()->toIso8601String(),
+                    'refresh_interval_minutes' => self::AIRFIELD_STAND_STATUS_CACHE_MINUTES,
+                    'refresh_at' => $cacheRefreshTime->toIso8601String(),
+                ];
+            }
         );
-        return $response;
     }
 
     private function getStandStatusCacheKey(Airfield $airfield): string
