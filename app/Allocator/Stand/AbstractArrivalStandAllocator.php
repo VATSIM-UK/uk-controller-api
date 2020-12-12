@@ -26,6 +26,7 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
                     ]
                 );
             } catch (QueryException $queryException) {
+                // If it's a duplicate stand, ignore it and try a different stand
                 if ($queryException->errorInfo[1] !== 1062) {
                     throw $queryException;
                 }
