@@ -59,6 +59,14 @@ class StandReservationsImport implements ToCollection
         $this->output->progressFinish();
     }
 
+    /**
+     * For the data to be valid:
+     *
+     * - Index 0 must be an airfield ICAO where stands are present (see constructor)
+     * - Index 1 must be a valid stand identifier at the airfield in index 0
+     * - Index 3 must be a valid timestamp - start time
+     * - Index 4 must be a valid timestamp after index 3 - end time
+     */
     private function rowValid(Collection $row): bool
     {
         try {

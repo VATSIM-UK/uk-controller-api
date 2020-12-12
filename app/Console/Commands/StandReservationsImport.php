@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Imports\Stand\StandReservationsImport as Importer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use InvalidArgumentException;
 use Maatwebsite\Excel\Excel;
 
 class StandReservationsImport extends Command
