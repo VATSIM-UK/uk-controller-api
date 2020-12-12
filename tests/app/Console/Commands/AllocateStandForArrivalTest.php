@@ -13,7 +13,7 @@ class AllocateStandForArrivalTest extends BaseFunctionalTestCase
 {
     public function testItAllocatesForEachAircraft()
     {
-        Config::set(AllocateStandForArrival::ALLOCATE_STANDS_CONFIG_KEY, true);
+        Config::set('stands.auto_allocate', true);
         $serviceMock = Mockery::mock(StandService::class);
         $serviceMock->shouldReceive('allocateStandForAircraft')
             ->with(Mockery::on(function (NetworkAircraft $aircraft) {
@@ -42,7 +42,7 @@ class AllocateStandForArrivalTest extends BaseFunctionalTestCase
 
     public function testItDoesntAllocateStandsIfDisabled()
     {
-        Config::set(AllocateStandForArrival::ALLOCATE_STANDS_CONFIG_KEY, false);
+        Config::set('stands.auto_allocate', false);
         $serviceMock = Mockery::mock(StandService::class);
         $serviceMock->shouldNotReceive('allocateStandForAircraft');
         $this->app->instance(StandService::class, $serviceMock);
