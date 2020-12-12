@@ -21,13 +21,10 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
         $this->mockImporter = Mockery::mock(Importer::class);
     }
 
-    public function testItThrowsExceptionIfFileNotFound()
+    public function testItReturnsErrorIfFileNotFound()
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Import file not found: stands.csv');
         Storage::fake('imports');
-
-        Artisan::call('stand-reservations:import stands.csv');
+        $this->assertEquals(1, Artisan::call('stand-reservations:import stands.csv'));
     }
 
     public function testItCallsImporter()

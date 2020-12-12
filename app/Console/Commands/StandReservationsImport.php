@@ -33,7 +33,8 @@ class StandReservationsImport extends Command
     public function handle(Importer $importer)
     {
         if (!Storage::disk('imports')->exists($this->argument('file_name'))) {
-            throw new InvalidArgumentException(sprintf('Import file not found: %s', $this->argument('file_name')));
+            $this->error(sprintf('Import file not found: %s', $this->argument('file_name')));
+            return 1;
         }
 
         $this->output->title('Starting stand reservations import');
