@@ -33,6 +33,12 @@ class StandReservation extends Model
     public function scopeActive(Builder $builder): Builder
     {
         return $builder->where('start', '<=', Carbon::now())
-            ->where('end', '>=', Carbon::now());
+            ->where('end', '>', Carbon::now());
+    }
+
+    public function scopeUpcoming(Builder $builder, Carbon $before): Builder
+    {
+        return $builder->where('start', '>', Carbon::now())
+            ->where('start', '<=', $before);
     }
 }
