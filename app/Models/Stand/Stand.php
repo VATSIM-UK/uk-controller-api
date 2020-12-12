@@ -247,4 +247,9 @@ class Stand extends Model
             $reservation->active();
         });
     }
+
+    public function reservationsInNextHour(): HasMany
+    {
+        return $this->hasMany(StandReservation::class)->upcoming(Carbon::now()->addHour());
+    }
 }

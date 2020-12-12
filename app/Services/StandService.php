@@ -14,6 +14,7 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -148,16 +149,19 @@ class StandService
             'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code: null,
             'max_aircraft_type' => $stand->maxAircraft ? $stand->maxAircraft->code : null,
         ];
-
-        if ($stand->assignment) {
-            $standData['status'] = 'assigned';
-            $standData['callsign'] = $stand->assignment->callsign;
-        } elseif ($stand->occupier->first()) {
+        if ($stand->occupier->first()) {
             $standData['status'] = 'occupied';
             $standData['callsign'] = $stand->occupier->first()->callsign;
+        } elseif ($stand->assignment) {
+            $standData['status'] = 'assigned';
+            $standData['callsign'] = $stand->assignment->callsign;
         } elseif (!$stand->activeReservations->isEmpty()) {
             $standData['status'] = 'reserved';
             $standData['callsign'] = $stand->activeReservations->first()->callsign;
+        } elseif (!$stand->reservationsInNextHour->isEmpty()) {
+            $standData['status'] = 'reserved_soon';
+            $standData['reserved_at'] = $stand->reservationsInNextHour->first()->start;
+            $standData['callsign'] = $stand->reservationsInNextHour->first()->callsign;
         } elseif (
             !$stand->pairedStands->filter(function (Stand $stand) {
                 return $stand->assignment ||

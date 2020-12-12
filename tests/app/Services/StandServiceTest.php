@@ -830,12 +830,14 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsStandStatuses()
     {
+        Carbon::setTestNow(Carbon::now());
+
         // Clear out all the stands so its easier to follow the test data.
         Stand::all()->each(function (Stand $stand) {
             $stand->delete();
         });
 
-        // Stand 1 is free but has a reservation starting in 10 minutes, it also has an airline with some destinations
+        // Stand 1 is free but has a reservation starting in a few hours, it also has an airline with some destinations
         $stand1 = Stand::create(
             [
                 'airfield_id' => 1,
@@ -932,6 +934,24 @@ class StandServiceTest extends BaseFunctionalTestCase
         $stand1->pairedStands()->sync([$stand8->id]);
         $stand8->pairedStands()->sync([$stand1->id]);
 
+        // Stand 9 is reserved in half an hour
+        $stand9 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST9',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        StandReservation::create(
+            [
+                'callsign' => null,
+                'stand_id' => $stand9->id,
+                'start' => Carbon::now()->addMinutes(59)->startOfSecond(),
+                'end' => Carbon::now()->addHours(2),
+            ]
+        );
+
         $this->assertEquals(
             [
                 [
@@ -1003,6 +1023,16 @@ class StandServiceTest extends BaseFunctionalTestCase
                     'max_wake_category' => 'LM',
                     'max_aircraft_type' => null,
                 ],
+                [
+                    'identifier' => 'TEST9',
+                    'type' => null,
+                    'status' => 'reserved_soon',
+                    'callsign' => null,
+                    'reserved_at' => Carbon::now()->addMinutes(59)->startOfSecond(),
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
             ],
             $this->service->getAirfieldStandStatus('EGLL')
         );
@@ -1026,8 +1056,8 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'stand_id' => $standId,
-                'start' => $active ? Carbon::now() : Carbon::now()->addMinutes(5),
-                'end' => Carbon::now()->addMinutes(10),
+                'start' => $active ? Carbon::now() : Carbon::now()->addHours(2),
+                'end' => Carbon::now()->addHours(2)->addMinutes(10),
             ]
         );
     }
