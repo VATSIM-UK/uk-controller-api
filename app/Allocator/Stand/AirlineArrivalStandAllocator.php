@@ -8,10 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
-    /**
-     * @var AirlineService
-     */
-    private $airlineService;
+    private AirlineService $airlineService;
 
     public function __construct(AirlineService $airlineService)
     {
