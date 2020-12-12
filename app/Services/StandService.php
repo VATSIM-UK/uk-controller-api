@@ -430,6 +430,16 @@ class StandService
         return null;
     }
 
+    /**
+     * Criteria for whether a stand should be allocated
+     *
+     * 1. Aircraft must not have an existing stand assignment
+     * 2. The arrival airfield must exist
+     * 3. The aircraft has to be moving (to prevent divide by zero errors)
+     * 4. The aircraft must have a discernible aircraft type
+     * 5. The aircraft type should be one that we allocate stands to
+     * 6. The aircraft needs to be within a certain number of minutes from landing
+     */
     private function shouldAllocateStand(NetworkAircraft $aircraft): bool
     {
         return !StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
