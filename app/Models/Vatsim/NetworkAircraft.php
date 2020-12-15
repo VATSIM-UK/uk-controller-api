@@ -3,14 +3,20 @@
 namespace App\Models\Vatsim;
 
 use App\Models\Hold\AssignedHold;
+use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Location\Coordinate;
 
 class NetworkAircraft extends Model
 {
+    const AIRCRAFT_TYPE_REGEX = '/^[0-9A-Z]{4}/';
+
+    const AIRCRAFT_TYPE_SEPARATOR = '/';
+
     protected $primaryKey = 'callsign';
 
     public $incrementing = false;
@@ -56,16 +62,6 @@ class NetworkAircraft extends Model
         });
     }
 
-    public function assignedHold(): BelongsTo
-    {
-        return $this->belongsTo(AssignedHold::class, 'callsign', 'callsign');
-    }
-
-    public function firEvents(): HasMany
-    {
-        return $this->hasMany(NetworkAircraftFirEvent::class, 'callsign', 'callsign');
-    }
-
     public function getSquawkAttribute(): string
     {
         return $this->attributes['transponder'];
@@ -89,5 +85,41 @@ class NetworkAircraft extends Model
     public function squawkingBannedSquawk(): bool
     {
         return $this->attributes['transponder'] === '7500';
+    }
+
+    public function occupiedStand(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Stand::class,
+            'aircraft_stand',
+            'callsign',
+            'stand_id'
+        )->withTimestamps();
+    }
+
+    public function getAircraftTypeAttribute(): string
+    {
+        if (is_null($this->planned_aircraft)) {
+            return '';
+        }
+
+        $splitType = explode(self::AIRCRAFT_TYPE_SEPARATOR, $this->planned_aircraft);
+        foreach ($splitType as $split) {
+            if (preg_match(self::AIRCRAFT_TYPE_REGEX, $split)) {
+                return $split;
+            }
+        }
+
+        return '';
+    }
+
+    public function isVfr(): bool
+    {
+        return in_array($this->planned_flighttype, ['V', 'S']);
+    }
+
+    public function isIfr(): bool
+    {
+        return $this->planned_flighttype === 'I';
     }
 }

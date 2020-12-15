@@ -110,6 +110,8 @@ class SrdNotesImportTest extends BaseFunctionalTestCase
 
     public function testItSubscribesToBeforeSheetEvents()
     {
-        $this->assertArrayHasKey(BeforeSheet::class, $this->import->registerEvents());
+        $events = $this->import->registerEvents();
+        $this->assertArrayHasKey(BeforeSheet::class, $events);
+        $events[BeforeSheet::class]();
     }
 }

@@ -2,25 +2,68 @@
 
 namespace App\Services;
 
+use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Location\Distance\Haversine;
 
 class StandService
 {
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
 
+    // The maximum speed at which an aircraft can be travelling for it to be deemed to be occupying a stand
+    private const MAX_OCCUPANCY_SPEED = 5;
+
+    /*
+     * The maximum altitude that an aircraft may be at in order to be deemed to be occupying a stand. For reference,
+     * the highest airport in the UK is Leeds at 681ft AMSL.
+     */
+    private const MAX_OCCUPANCY_ALTITUDE = 750;
+
+    /*
+     * Max distance that the aircraft must be from the centre point of the stand to be considered
+     * to be occupying it.
+     *
+     * As a reference, a small stand at Heathrow is about 50m wide and 60m deep.
+     */
+    private const MAX_OCCUPANCY_DISTANCE_METERS = 15;
+
+    /**
+     * How many minutes before arrival the stand should be assigned
+     */
+    private const ASSIGN_STAND_MINUTES_BEFORE = 15.0;
+
+    private $allStands = [];
+
+    /**
+     * @var ArrivalStandAllocatorInterface[]
+     */
+    private $allocators;
+
+    /**
+     * @param ArrivalStandAllocatorInterface[] $allocators
+     */
+    public function __construct(array $allocators)
+    {
+        $this->allocators = $allocators;
+    }
+
     public function getStandsDependency(): Collection
     {
-        return Stand::all()->groupBy('airfield_id')->mapWithKeys(
+        return $this->getAllStands()->groupBy('airfield_id')->mapWithKeys(
             function (Collection $collection) {
                 return [
                     Airfield::find($collection->first()->airfield_id)->code => $collection->map(
@@ -46,6 +89,92 @@ class StandService
                 ];
             }
         )->toBase();
+    }
+
+    public function getAvailableStandsForAirfield(string $airfield): Collection
+    {
+        return Stand::available()->airfield($airfield)->get()->map(function (Stand $stand) {
+            return $stand->identifier;
+        })->toBase();
+    }
+
+    public function getAssignedStandForAircraft(string $aircraft): ?Stand
+    {
+        $assignment = StandAssignment::with('stand', 'stand.airfield')->where('callsign', $aircraft)->first();
+        return $assignment ? $assignment->stand : null;
+    }
+
+    /**
+     * Assignments are preferred to reservations as reservations may be overridden by controllers.
+     *
+     * Get all assigned stands as well as any active reservations.
+     */
+    public function getAirfieldStandStatus(string $airfield): array
+    {
+        $stands = Stand::with(
+            'wakeCategory',
+            'maxAircraft',
+            'assignment',
+            'occupier',
+            'activeReservations',
+            'pairedStands.assignment',
+            'pairedStands.occupier',
+            'pairedStands.activeReservations'
+        )
+            ->airfield($airfield)
+            ->get();
+        $stands->sortBy('identifier', SORT_NATURAL);
+
+        $standStatuses = [];
+
+        foreach ($stands as $stand) {
+            $standStatuses[] = $this->getStandStatus($stand);
+        }
+
+        return $standStatuses;
+    }
+
+    private function getStandStatus(Stand $stand): array
+    {
+        $standData = [
+            'identifier' => $stand->identifier,
+            'type' => $stand->type ? $stand->type->key : null,
+            'airlines' => $stand->airlines->groupBy('icao_code')->map(function (Collection $airlineDestination) {
+                return $airlineDestination->filter(function (Airline $airline) {
+                    return $airline->pivot->destination;
+                })->map(function (Airline $airline) {
+                    return $airline->pivot->destination;
+                });
+            })->toArray(),
+            'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code: null,
+            'max_aircraft_type' => $stand->maxAircraft ? $stand->maxAircraft->code : null,
+        ];
+        if ($stand->occupier->first()) {
+            $standData['status'] = 'occupied';
+            $standData['callsign'] = $stand->occupier->first()->callsign;
+        } elseif ($stand->assignment) {
+            $standData['status'] = 'assigned';
+            $standData['callsign'] = $stand->assignment->callsign;
+        } elseif (!$stand->activeReservations->isEmpty()) {
+            $standData['status'] = 'reserved';
+            $standData['callsign'] = $stand->activeReservations->first()->callsign;
+        } elseif (!$stand->reservationsInNextHour->isEmpty()) {
+            $standData['status'] = 'reserved_soon';
+            $standData['reserved_at'] = $stand->reservationsInNextHour->first()->start;
+            $standData['callsign'] = $stand->reservationsInNextHour->first()->callsign;
+        } elseif (
+            !$stand->pairedStands->filter(function (Stand $stand) {
+                return $stand->assignment ||
+                    !$stand->occupier->isEmpty() ||
+                    !$stand->activeReservations->isEmpty();
+            })->isEmpty()
+        ) {
+            $standData['status'] = 'unavailable';
+        } else {
+            $standData['status'] = 'available';
+        }
+
+        return $standData;
     }
 
     /**
@@ -97,12 +226,21 @@ class StandService
         }
 
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        $currentAssignment = StandAssignment::with('aircraft')
+        $currentAssignment = StandAssignment::with('aircraft', 'stand.pairedStands.assignment')
             ->where('stand_id', $standId)
             ->first();
 
+        // Remove the current assignment
         if ($currentAssignment && $currentAssignment->callsign !== $callsign) {
-            $this->deleteStandAssignment($currentAssignment->aircraft->callsign);
+            $this->deleteStandAssignmentByCallsign($currentAssignment->aircraft->callsign);
+        }
+
+        // Remove assignments on paired stands
+        $stand = Stand::with('pairedStands.assignment')->find($standId);
+        foreach ($stand->pairedStands as $pairedStand) {
+            if ($pairedStand->assignment && $pairedStand->assignment->callsign !== $callsign) {
+                $this->deleteStandAssignmentByCallsign($pairedStand->assignment->callsign);
+            }
         }
 
         $assignment = StandAssignment::updateOrCreate(
@@ -115,13 +253,18 @@ class StandService
         event(new StandAssignedEvent($assignment));
     }
 
-    public function deleteStandAssignment(string $callsign): void
+    public function deleteStandAssignmentByCallsign(string $callsign): void
     {
         if (!StandAssignment::destroy($callsign)) {
             return;
         }
 
         event(new StandUnassignedEvent($callsign));
+    }
+
+    public function deleteStandAssignment(StandAssignment $assignment): void
+    {
+        $this->deleteStandAssignmentByCallsign($assignment->callsign);
     }
 
     public function getDepartureStandAssignmentForAircraft(NetworkAircraft $aircraft): ?StandAssignment
@@ -192,5 +335,152 @@ class StandService
             }
         )->where('identifier', $identifier)
             ->first();
+    }
+
+    /**
+     * @return Collection|Stand[]
+     */
+    private function getAllStands(): Collection
+    {
+        $this->allStands = Stand::all()->toBase();
+        return $this->allStands;
+    }
+
+    public function setOccupiedStand(NetworkAircraft $aircraft): ?Stand
+    {
+        /*
+         * If an aircraft cannot occupy a stand, delete any current occupation
+         * and return.
+         */
+        if (!$this->aircraftCanOccupyStand($aircraft)) {
+            if ($aircraft->occupiedStand()) {
+                $aircraft->occupiedStand()->sync([]);
+            }
+            return null;
+        }
+
+        // If the aircraft is still occupying its stand, nothing else to do here.
+        if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand->first())) {
+            return $aircraft->occupiedStand->first();
+        }
+
+        // Find the stand to which the aircraft is closest
+        $selectedStand = null;
+        $selectedStandDistance = PHP_INT_MAX;
+
+        foreach ($this->getAllStands() as $stand) {
+            $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+
+            if (
+                $this->standOccupied($aircraft, $stand) &&
+                $distanceFromStand < $selectedStandDistance
+            ) {
+                $selectedStand = $stand;
+                $selectedStandDistance = $distanceFromStand;
+            }
+        }
+
+        // If there's a stand that's viable, usurp any assignments and occupy it.
+        if ($selectedStand) {
+            $this->usurpStand($aircraft, $selectedStand);
+            $aircraft->occupiedStand()->sync([$selectedStand->id]);
+        }
+
+        return $selectedStand;
+    }
+
+    /*
+     * Delete any stand assignment that isn't for the given aircraft
+     */
+    private function usurpStand(NetworkAircraft $aircraft, Stand $stand)
+    {
+        $conflictingAssignment = StandAssignment::where('callsign', '<>', $aircraft->callsign)
+            ->where('stand_id', $stand->id)
+            ->first();
+
+        if ($conflictingAssignment) {
+            $this->deleteStandAssignment($conflictingAssignment);
+        }
+    }
+
+    private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
+    {
+        $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS;
+    }
+
+    private function aircraftCanOccupyStand(NetworkAircraft $aircraft): bool
+    {
+        return $aircraft->altitude < self::MAX_OCCUPANCY_ALTITUDE
+            && $aircraft->groundspeed < self::MAX_OCCUPANCY_SPEED;
+    }
+
+    /**
+     * Use the stand assignment rules to allocate a stand for a given aircraft
+     */
+    public function allocateStandForAircraft(NetworkAircraft $aircraft): ?StandAssignment
+    {
+        if (!$this->shouldAllocateStand($aircraft)) {
+            return null;
+        }
+
+        foreach ($this->allocators as $allocator) {
+            if ($allocation = $allocator->allocate($aircraft)) {
+                event(new StandAssignedEvent($allocation));
+                return $allocation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Criteria for whether a stand should be allocated
+     *
+     * 1. Aircraft must not have an existing stand assignment
+     * 2. The arrival airfield must exist
+     * 3. The aircraft has to be moving (to prevent divide by zero errors)
+     * 4. The aircraft must have a discernible aircraft type
+     * 5. The aircraft type should be one that we allocate stands to
+     * 6. The aircraft needs to be within a certain number of minutes from landing
+     */
+    private function shouldAllocateStand(NetworkAircraft $aircraft): bool
+    {
+        return !StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
+            ($arrivalAirfield = Airfield::where('code', $aircraft->planned_destairport)->first()) !== null &&
+            $aircraft->groundspeed &&
+            ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
+            $aircraftType->allocate_stands &&
+            $this->getTimeFromAirfieldInMinutes($aircraft, $arrivalAirfield) < self::ASSIGN_STAND_MINUTES_BEFORE;
+    }
+
+    /**
+     * Ground speed is kts (nautical miles per hour), so for minutes multiply that by 60.
+     *
+     * @param NetworkAircraft $aircraft
+     * @param Airfield $airfield
+     * @return float
+     */
+    private function getTimeFromAirfieldInMinutes(NetworkAircraft $aircraft, Airfield $airfield): float
+    {
+        $distanceToAirfieldInNm = LocationService::metersToNauticalMiles(
+            $aircraft->latLong->getDistance($airfield->coordinate, new Haversine())
+        );
+        $groundspeed = $aircraft->groundspeed === 0 ? 1 : $aircraft->groundspeed;
+
+        return (float) ($distanceToAirfieldInNm / $groundspeed) * 60.0;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAllocatorPreference(): array
+    {
+        return array_map(
+            function (ArrivalStandAllocatorInterface $allocator) {
+                return get_class($allocator);
+            },
+            $this->allocators
+        );
     }
 }

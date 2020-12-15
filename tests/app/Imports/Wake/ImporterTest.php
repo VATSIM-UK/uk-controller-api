@@ -45,7 +45,15 @@ class ImporterTest extends BaseFunctionalTestCase
 
     public function testItUpdatesAWakeCategoryListing()
     {
-        Aircraft::create(['code' => 'AXXX', 'wake_category_id' => 3]);
+        Aircraft::create(
+            [
+                'code' => 'AXXX',
+                'wake_category_id' => 3,
+                'allocate_stands' => false,
+                'wingspan' => 0.0,
+                'length' => 0.0,
+            ]
+        );
         $rows = (new Collection())
             ->push(
                 [

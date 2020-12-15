@@ -2,14 +2,15 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AllocateStandForArrival;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
 use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
-use App\Console\Commands\GetDeletedSidsFromSectorFile;
 use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\SrdImport;
+use App\Console\Commands\StandReservationsImport;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
@@ -38,13 +39,14 @@ class Kernel extends ConsoleKernel
         UserCreate::class,
         \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
         GenerateMinStackLevels::class,
-        GetDeletedSidsFromSectorFile::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
         CleanStandAssignmentsHistory::class,
         WakeCategoriesImport::class,
+        AllocateStandForArrival::class,
+        StandReservationsImport::class,
     ];
 
     /**
@@ -64,5 +66,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
+        $schedule->command('stands:assign-arrival')->everyTwoMinutes();
     }
 }

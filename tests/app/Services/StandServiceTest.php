@@ -2,13 +2,25 @@
 
 namespace App\Services;
 
+use App\Allocator\Stand\AirlineArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
+use App\Allocator\Stand\CargoArrivalStandAllocator;
+use App\Allocator\Stand\DomesticInternationalStandAllocator;
+use App\Allocator\Stand\FallbackArrivalStandAllocator;
+use App\Allocator\Stand\ReservedArrivalStandAllocator;
+use App\Allocator\Stand\ReservedArrivalStandAllocatorTest;
+use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Dependency\Dependency;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 
@@ -161,6 +173,48 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testAssignStandToAircraftUnassignsExistingAssignmentToPairedStand()
+    {
+        Stand::find(1)->pairedStands()->sync([2]);
+        $this->addStandAssignment('BAW123', 2);
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->expectsEvents(StandUnassignedEvent::class);
+
+        $this->service->assignStandToAircraft('RYR7234', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'RYR7234',
+                'stand_id' => 1,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123'
+            ]
+        );
+    }
+
+    public function testItDoesntTriggerUnassignmentIfMovingWithinPair()
+    {
+        Stand::find(1)->pairedStands()->sync([2]);
+        $this->addStandAssignment('BAW123', 2);
+        $this->expectsEvents(StandAssignedEvent::class);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+
+        $this->service->assignStandToAircraft('BAW123', 1);
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
+        );
+    }
+
     public function testAssignStandToAircraftAllowsAssignmentToSameStand()
     {
         $this->expectsEvents(StandAssignedEvent::class);
@@ -258,7 +312,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     {
         $this->expectsEvents(StandUnassignedEvent::class);
         $this->addStandAssignment('RYR7234', 1);
-        $this->service->deleteStandAssignment('RYR7234');
+        $this->service->deleteStandAssignmentByCallsign('RYR7234');
 
         $this->assertDatabaseMissing(
             'stand_assignments',
@@ -271,7 +325,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntTriggerEventIfNoAssignmentDelete()
     {
         $this->doesntExpectEvents(StandUnassignedEvent::class);
-        $this->service->deleteStandAssignment('RYR7234');
+        $this->service->deleteStandAssignmentByCallsign('RYR7234');
 
         $this->assertDatabaseMissing(
             'stand_assignments',
@@ -367,6 +421,623 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertNull($this->dependency->updated_at);
     }
 
+    public function testItDoesntOccupyStandsIfAircraftTooHigh()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 10,
+                'altitude' => 751
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1]);
+
+        $this->assertNull($this->service->setOccupiedStand($aircraft));
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
+    }
+
+    public function testItRemovesOccupiedStandIfAircraftTooHigh()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 10,
+                'altitude' => 751
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1]);
+
+        $this->service->setOccupiedStand($aircraft);
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
+    }
+
+    public function testItDoesntOccupyStandsIfAircraftTooFast()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 6,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1]);
+
+        $this->assertNull($this->service->setOccupiedStand($aircraft));
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
+    }
+
+    public function testItRemovesOccupiedStandIfAircraftTooFast()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 11,
+                'altitude' => 0
+            ]
+        );
+
+        $aircraft->occupiedStand()->sync([1]);
+        $this->service->setOccupiedStand($aircraft);
+        $aircraft->refresh();
+        $this->assertEmpty($aircraft->occupiedStand);
+    }
+
+    public function testItReturnsCurrentStandIfStillOccupied()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([2]);
+        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItDoesntReturnCurrentStandIfNoLongerOccupied()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1]);
+
+        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItUsurpsAssignedStands()
+    {
+        $this->expectsEvents(StandUnassignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+
+        $assignment = $this->addStandAssignment('BAW123', 2);
+
+        $this->service->setOccupiedStand($aircraft);
+        $this->assertDeleted($assignment);
+    }
+
+    public function testItReturnsOccupiedStandIfStandIsOccupied()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.65883639,
+                'longitude' => -6.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+
+        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertCount(1, $aircraft->occupiedStand);
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItReturnsClosestOccupiedStandIfMultipleInContention()
+    {
+        // Create an extra stand that's the closest
+        $newStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 54.658828,
+                'longitude' => -6.222070,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+
+        $this->assertEquals($newStand->id, $this->service->setOccupiedStand($aircraft)->id);
+        $aircraft->refresh();
+        $this->assertCount(1, $aircraft->occupiedStand);
+        $this->assertEquals($newStand->id, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItHasAllocatorPreference()
+    {
+        $this->assertEquals(
+            [
+                ReservedArrivalStandAllocator::class,
+                AirlineDestinationArrivalStandAllocator::class,
+                AirlineArrivalStandAllocator::class,
+                AirlineTerminalArrivalStandAllocator::class,
+                CargoArrivalStandAllocator::class,
+                DomesticInternationalStandAllocator::class,
+                GeneralUseArrivalStandAllocator::class,
+                FallbackArrivalStandAllocator::class,
+            ],
+            $this->service->getAllocatorPreference()
+        );
+    }
+
+    public function testItAllocatesAStandFromAllocator()
+    {
+        StandReservation::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addMinute(),
+            ]
+        );
+
+        $this->expectsEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+
+        $assignment = $this->service->allocateStandForAircraft($aircraft);
+        $this->assertEquals(1, $assignment->stand_id);
+        $this->assertEquals('BMI221', $assignment->callsign);
+    }
+
+    public function testItDoesntPerformAllocationIfStandTooFarFromAirfield()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 100,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfAircraftHasNoGroundspeed()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 0,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfNoStandAllocated()
+    {
+        // Delete all the stands so there's nothing to allocate
+        Stand::all()->each(function (Stand $stand) {
+            $stand->delete();
+        });
+
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfStandAlreadyAssigned()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+        StandAssignment::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertTrue(StandAssignment::where('callsign', 'BMI221')->where('stand_id', 1)->exists());
+    }
+
+    public function testItDoesntReturnAllocationIfAirfieldNotFound()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGXX',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfUnknownAircraftType()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B736',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItDoesntPerformAllocationIfAircraftTypeNotStandAssignable()
+    {
+        Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
+
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
+    public function testItReturnsFreeStandsAtAirfields()
+    {
+        $stand1 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST1',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST2',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+
+        $this->addStandAssignment('BAW959', $stand1->id);
+
+        $this->assertEquals(
+            [
+                '1L',
+                '251',
+                'TEST2',
+            ],
+            $this->service->getAvailableStandsForAirfield('EGLL')->toArray()
+        );
+    }
+
+    public function testItReturnsAnAircraftsStandAssignment()
+    {
+        $this->addStandAssignment('BAW959', 1);
+        $this->assertEquals(1, $this->service->getAssignedStandForAircraft('BAW959')->id);
+    }
+
+    public function testItReturnsNullIfNoStandAssignmentForAircraft()
+    {
+        $this->assertNull($this->service->getAssignedStandForAircraft('BAW959'));
+    }
+
+    public function testItReturnsStandStatuses()
+    {
+        Carbon::setTestNow(Carbon::now());
+
+        // Clear out all the stands so its easier to follow the test data.
+        Stand::all()->each(function (Stand $stand) {
+            $stand->delete();
+        });
+
+        // Stand 1 is free but has a reservation starting in a few hours, it also has an airline with some destinations
+        $stand1 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'type_id' => 3,
+                'identifier' => 'TEST1',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $this->addStandReservation('FUTURE-RESERVATION', $stand1->id, false);
+        $stand1->airlines()->attach([1 => ['destination' => 'EDDM']]);
+        $stand1->airlines()->attach([1 => ['destination' => 'EDDF']]);
+
+        // Stand 2 is assigned, it has a max aircraft type
+        $stand2 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST2',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+                'max_aircraft_id' => 1,
+            ]
+        );
+        $this->addStandAssignment('ASSIGNMENT', $stand2->id);
+
+        // Stand 3 is reserved
+        $stand3 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST3',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $this->addStandReservation('RESERVATION', $stand3->id, true);
+
+        // Stand 4 is occupied
+        $stand4 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST4',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $occupier = NetworkDataService::firstOrCreateNetworkAircraft('OCCUPIED');
+        $occupier->occupiedStand()->sync($stand4);
+
+        // Stand 5 is paired with stand 2 which is assigned
+        $stand5 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST5',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand2->pairedStands()->sync($stand5);
+        $stand5->pairedStands()->sync($stand2);
+
+        // Stand 6 is paired with stand 3 which is reserved
+        $stand6 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST6',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand3->pairedStands()->sync([$stand6->id]);
+        $stand6->pairedStands()->sync([$stand3->id]);
+
+        // Stand 7 is paired with stand 4 which is occupied
+        $stand7 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST7',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand4->pairedStands()->sync([$stand7->id]);
+        $stand7->pairedStands()->sync([$stand4->id]);
+
+        // Stand 8 is paired with stand 1 which is free
+        $stand8 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST8',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand1->pairedStands()->sync([$stand8->id]);
+        $stand8->pairedStands()->sync([$stand1->id]);
+
+        // Stand 9 is reserved in half an hour
+        $stand9 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST9',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        StandReservation::create(
+            [
+                'callsign' => null,
+                'stand_id' => $stand9->id,
+                'start' => Carbon::now()->addMinutes(59)->startOfSecond(),
+                'end' => Carbon::now()->addHours(2),
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'identifier' => 'TEST1',
+                    'type' => 'CARGO',
+                    'status' => 'available',
+                    'airlines' => [
+                        'BAW' => ['EDDM', 'EDDF']
+                    ],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST2',
+                    'type' => null,
+                    'status' => 'assigned',
+                    'callsign' => 'ASSIGNMENT',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => 'B738',
+                ],
+                [
+                    'identifier' => 'TEST3',
+                    'type' => null,
+                    'status' => 'reserved',
+                    'callsign' => 'RESERVATION',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST4',
+                    'type' => null,
+                    'status' => 'occupied',
+                    'callsign' => 'OCCUPIED',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST5',
+                    'type' => null,
+                    'status' => 'unavailable',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST6',
+                    'type' => null,
+                    'status' => 'unavailable',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST7',
+                    'type' => null,
+                    'status' => 'unavailable',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST8',
+                    'type' => null,
+                    'status' => 'available',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST9',
+                    'type' => null,
+                    'status' => 'reserved_soon',
+                    'callsign' => null,
+                    'reserved_at' => Carbon::now()->addMinutes(59)->startOfSecond(),
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+            ],
+            $this->service->getAirfieldStandStatus('EGLL')
+        );
+    }
+
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);
@@ -374,6 +1045,19 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'stand_id' => $standId,
+            ]
+        );
+    }
+
+    private function addStandReservation(string $callsign, int $standId, bool $active): StandReservation
+    {
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        return StandReservation::create(
+            [
+                'callsign' => $callsign,
+                'stand_id' => $standId,
+                'start' => $active ? Carbon::now() : Carbon::now()->addHours(2),
+                'end' => Carbon::now()->addHours(2)->addMinutes(10),
             ]
         );
     }

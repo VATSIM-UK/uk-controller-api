@@ -2,9 +2,7 @@
 
 namespace App\Models\Release\Enroute;
 
-use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EnrouteRelease extends Model
 {
@@ -20,9 +18,4 @@ class EnrouteRelease extends Model
         'release_point',
         'user_id',
     ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 }

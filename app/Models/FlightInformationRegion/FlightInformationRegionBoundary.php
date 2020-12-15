@@ -15,9 +15,4 @@ class FlightInformationRegionBoundary extends Model
         'finish_longitude',
         'description',
     ];
-
-    public function flightInformationRegion(): BelongsTo
-    {
-        return $this->belongsTo(FlightInformationRegion::class);
-    }
 }

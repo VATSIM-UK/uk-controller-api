@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Srd\SrdNote;
 
 class SrdControllerTest extends BaseApiTestCase
 {
     const L9_ROUTE_KENET = 'WOTAN L9 KENET';
     const SRD_SEARCH_URI = 'srd/route/search';
-    
+
     public function testItRejectsMissingOrigin()
     {
         $queryParams = [

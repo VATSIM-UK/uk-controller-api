@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Airfield\Airfield;
 use App\Rules\VatsimCallsign;
 use App\Services\StandService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class StandController extends BaseController
 {
-    /**
-     * @var StandService
-     */
-    private $standService;
+    const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
+
+    private StandService $standService;
 
     public function __construct(StandService $standService)
     {
@@ -57,7 +59,55 @@ class StandController extends BaseController
 
     public function deleteStandAssignment(string $callsign): JsonResponse
     {
-        $this->standService->deleteStandAssignment($callsign);
+        $this->standService->deleteStandAssignmentByCallsign($callsign);
         return response()->json([], 204);
+    }
+
+    public function getAirfieldStandStatus(Request $request): JsonResponse
+    {
+        if (!$airfield = Airfield::where('code', $request->query('airfield'))->first()) {
+            return response()->json([], 404);
+        }
+
+        return response()->json($this->getAirfieldStandStatusData($airfield));
+    }
+
+    private function getAirfieldStandStatusData(Airfield $airfield): array
+    {
+        $cacheRefreshTime = $this->getStandStatusRefreshTime();
+        return Cache::remember(
+            $this->getStandStatusCacheKey($airfield),
+            $cacheRefreshTime,
+            function () use ($airfield, $cacheRefreshTime) {
+                $standStatuses = $this->standService->getAirfieldStandStatus($airfield->code);
+                return [
+                    'stands' => $standStatuses,
+                    'generated_at' => Carbon::now()->toIso8601String(),
+                    'refresh_interval_minutes' => self::AIRFIELD_STAND_STATUS_CACHE_MINUTES,
+                    'refresh_at' => $cacheRefreshTime->toIso8601String(),
+                ];
+            }
+        );
+    }
+
+    private function getStandStatusCacheKey(Airfield $airfield): string
+    {
+        return sprintf('STAND_STATUS_%s', $airfield->code);
+    }
+
+    private function getStandStatusRefreshTime(): Carbon
+    {
+        return Carbon::now()->addMinutes(self::AIRFIELD_STAND_STATUS_CACHE_MINUTES);
+    }
+
+    public function getStandAssignmentForAircraft(string $aircraft): JsonResponse
+    {
+        $stand = $this->standService->getAssignedStandForAircraft($aircraft);
+        return $stand
+            ? response()->json(
+                ['id' => $stand->id, 'airfield' => $stand->airfield->code, 'identifier' => $stand['identifier']],
+                200
+            )
+            : response()->json([], 404);
     }
 }

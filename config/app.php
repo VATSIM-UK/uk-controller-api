@@ -182,6 +182,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RegionalPressureServiceProvider::class,
         App\Providers\SquawkServiceProvider::class,
+        App\Providers\StandServiceProvider::class,
         App\Providers\MinStackCalculationServiceProvider::class,
         App\Providers\NetworkServiceProvider::class,
     ],
