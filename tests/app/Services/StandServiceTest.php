@@ -612,6 +612,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItAllocatesAStandFromAllocator()
     {
+        $this->expectsEvents(StandAssignedEvent::class);
         StandReservation::create(
             [
                 'callsign' => 'BMI221',
@@ -621,7 +622,6 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->expectsEvents(StandAssignedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'BMI221',
             [

@@ -448,7 +448,7 @@ class StandService
     private function shouldAllocateStand(NetworkAircraft $aircraft): bool
     {
         return $aircraft->planned_depairport !== $aircraft->planned_destairport &&
-            StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
+            !StandAssignment::where('callsign', $aircraft->callsign)->exists() &&
             ($arrivalAirfield = Airfield::where('code', $aircraft->planned_destairport)->first()) !== null &&
             $aircraft->groundspeed &&
             ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
