@@ -17,6 +17,16 @@ class RemoveAirlinesFromUniformApronGatwick extends Migration
             ->whereIn(
                 'identifier',
                 [
+                    '160R',
+                    '170',
+                    '171',
+                    '172',
+                    '173',
+                    '174',
+                    '176',
+                    '177',
+                    '178',
+                    '180',
                     '230',
                     '230L',
                     '230R',
