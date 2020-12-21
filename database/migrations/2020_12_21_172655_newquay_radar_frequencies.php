@@ -1,10 +1,9 @@
 <?php
 
 use App\Services\DependencyService;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class NewquayRadarFrequencies extends Migration
 {
@@ -17,7 +16,7 @@ class NewquayRadarFrequencies extends Migration
     {
         DB::table('controller_positions')
             ->where('callsign', 'EGHQ_APP')
-            ->update(['frequency' => '133.400']);
+            ->update(['frequency' => '133.400', 'updated_at' => Carbon::now()]);
 
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
     }
