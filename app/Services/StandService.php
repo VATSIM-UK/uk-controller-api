@@ -353,7 +353,7 @@ class StandService
          * and return.
          */
         if (!$this->aircraftCanOccupyStand($aircraft)) {
-            if ($aircraft->occupiedStand()) {
+            if ($aircraft->occupiedStand()->exists()) {
                 $aircraft->occupiedStand()->sync([]);
             }
             return null;
