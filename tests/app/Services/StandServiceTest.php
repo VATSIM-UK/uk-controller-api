@@ -612,6 +612,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItAllocatesAStandFromAllocator()
     {
+        $this->expectsEvents(StandAssignedEvent::class);
         StandReservation::create(
             [
                 'callsign' => 'BMI221',
@@ -621,7 +622,6 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->expectsEvents(StandAssignedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'BMI221',
             [
@@ -637,6 +637,26 @@ class StandServiceTest extends BaseFunctionalTestCase
         $assignment = $this->service->allocateStandForAircraft($aircraft);
         $this->assertEquals(1, $assignment->stand_id);
         $this->assertEquals('BMI221', $assignment->callsign);
+    }
+
+    public function testItDoesntAllocateStandIfPerformingCircuits()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'EGLL',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+
+        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
     public function testItDoesntPerformAllocationIfStandTooFarFromAirfield()
