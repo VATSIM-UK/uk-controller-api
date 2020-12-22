@@ -25,7 +25,7 @@ class StandService
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
 
     // The maximum speed at which an aircraft can be travelling for it to be deemed to be occupying a stand
-    private const MAX_OCCUPANCY_SPEED = 5;
+    private const MAX_OCCUPANCY_SPEED = 2;
 
     /*
      * The maximum altitude that an aircraft may be at in order to be deemed to be occupying a stand. For reference,
@@ -39,7 +39,7 @@ class StandService
      *
      * As a reference, a small stand at Heathrow is about 50m wide and 60m deep.
      */
-    private const MAX_OCCUPANCY_DISTANCE_METERS = 15;
+    private const MAX_OCCUPANCY_DISTANCE_METERS = 25;
 
     /**
      * How many minutes before arrival the stand should be assigned
@@ -353,7 +353,7 @@ class StandService
          * and return.
          */
         if (!$this->aircraftCanOccupyStand($aircraft)) {
-            if ($aircraft->occupiedStand()) {
+            if ($aircraft->occupiedStand()->exists()) {
                 $aircraft->occupiedStand()->sync([]);
             }
             return null;
