@@ -16,6 +16,7 @@ class CreateRecatCategoriesTable extends Migration
         Schema::create('recat_categories', function (Blueprint $table) {
             $table->id();
             $table->string('code')->comment('The code for the category')->unique();
+            $table->string('description')->comment('Description of what the category is');
             $table->timestamps();
         });
     }
