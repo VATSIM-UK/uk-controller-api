@@ -164,6 +164,7 @@ Route::middleware('public')->group(function () {
     Route::get('aircraft', 'AircraftController@getAllAircraft');
     Route::get('wake-category', 'AircraftController@getAllWakeCategories');
     Route::get('wake-category/dependency', 'AircraftController@getWakeCategoriesDependency');
+    Route::get('wake-category/recat/dependency', 'AircraftController@getRecatCategoriesDependency');
 
     // Initial altitudes and sids
     Route::get('sid', 'SidController@getAllSids');
