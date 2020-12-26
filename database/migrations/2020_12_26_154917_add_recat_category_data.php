@@ -22,10 +22,15 @@ class AddRecatCategoryData extends Migration
         $file = fopen(self::DATA_FILE, 'r+');
         while ($line = fgetcsv($file))
         {
+            if (!isset($line[1]))
+            {
+                dd($line);
+            }
             DB::table('aircraft')
                 ->where('code', $line[0])
                 ->update(['recat_category_id' => $categories[$line[1]], 'updated_at' => Carbon::now()]);
         }
+        fclose($file);
     }
 
     /**
