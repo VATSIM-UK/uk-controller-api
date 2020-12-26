@@ -56,6 +56,5 @@ class AddRecatCategories extends Migration
      */
     public function down()
     {
-
     }
 }

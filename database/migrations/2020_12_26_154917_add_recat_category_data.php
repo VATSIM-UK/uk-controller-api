@@ -20,10 +20,8 @@ class AddRecatCategoryData extends Migration
         });
 
         $file = fopen(self::DATA_FILE, 'r+');
-        while ($line = fgetcsv($file))
-        {
-            if (!isset($line[1]))
-            {
+        while ($line = fgetcsv($file)) {
+            if (!isset($line[1])) {
                 dd($line);
             }
             DB::table('aircraft')
