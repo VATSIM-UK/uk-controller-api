@@ -16,7 +16,7 @@ class AddRecatCategoryToAircraft extends Migration
         Schema::table('aircraft', function (Blueprint $table) {
             $table->unsignedBigInteger('recat_category_id')
                 ->nullable()
-                ->after('wake_turbulence_id')
+                ->after('wake_category_id')
                 ->comment('The aircrafts RECAT category');
 
             $table->foreign('recat_category_id')->references('id')->on('recat_categories');
