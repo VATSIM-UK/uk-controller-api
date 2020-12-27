@@ -22,7 +22,6 @@ class RecatImporter implements WithHeadingRow, ToCollection
 
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
-
             if (!isset($row[0], $row[1])) {
                 throw new InvalidArgumentException(
                     sprintf('Invalid RECAT import data: %s', implode(',', $row))
