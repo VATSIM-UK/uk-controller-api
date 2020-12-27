@@ -8,9 +8,8 @@ use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class RecatImporter implements WithHeadingRow, ToCollection
+class RecatImporter implements ToCollection
 {
     use Importable;
 
