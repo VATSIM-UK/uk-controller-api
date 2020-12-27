@@ -3,7 +3,6 @@
 namespace App\Imports\Wake;
 
 use App\BaseFunctionalTestCase;
-use App\Exceptions\InvalidWakeImportException;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\RecatCategory;
 use Illuminate\Console\OutputStyle;
@@ -38,6 +37,10 @@ class RecatImporterTest extends BaseFunctionalTestCase
             'Empty row' => [
                 collect()->push([]),
                 'Invalid RECAT import data: '
+            ],
+            'Not an array' => [
+                collect()->push(''),
+                'Invalid RECAT import data: Not an array'
             ],
             'Missing item' => [
                 collect()->push(

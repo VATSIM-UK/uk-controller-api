@@ -23,13 +23,13 @@ class RecatImporter implements ToCollection
         foreach ($rows as $row) {
             if (!isset($row[0], $row[1])) {
                 throw new InvalidArgumentException(
-                    sprintf('Invalid RECAT import data: %s', implode(',', $row))
+                    sprintf('Invalid RECAT import data: %s', is_array($row) ? implode(',', $row) : 'Not an array')
                 );
             }
 
             if (!array_key_exists($row[1], $categories)) {
                 throw new InvalidArgumentException(
-                    sprintf('RECAT category not found: %s', implode(',', $row))
+                    sprintf('RECAT category not found: %s', is_array($row) ? implode(',', $row) : 'Not an array')
                 );
             }
 

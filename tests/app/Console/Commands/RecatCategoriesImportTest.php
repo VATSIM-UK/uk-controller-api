@@ -19,6 +19,7 @@ class RecatCategoriesImportTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->mockImporter = Mockery::mock(RecatImporter::class);
+        $this->app->instance(RecatImporter::class, $this->mockImporter);
     }
 
     public function testItThrowsExceptionIfFileNotFound()
@@ -46,6 +47,12 @@ class RecatCategoriesImportTest extends BaseFunctionalTestCase
 
     public function testItTouchesRecatDependencyAfterImport()
     {
+        $this->mockImporter->shouldReceive('withOutput')
+            ->andReturnSelf();
+
+        $this->mockImporter->shouldReceive('import')
+            ->with('recat.csv', 'imports', Excel::CSV);
+
         $dependency = Dependency::create(
             [
                 'key' => 'DEPENDENCY_RECAT',
