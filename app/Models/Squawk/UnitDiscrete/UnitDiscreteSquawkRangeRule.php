@@ -21,9 +21,4 @@ class UnitDiscreteSquawkRangeRule extends Model
     protected $casts = [
         'rule' => UnitDiscreteSquawkRangeRuleCaster::class,
     ];
-
-    public function range(): BelongsTo
-    {
-        return $this->belongsTo(UnitDiscreteSquawkRange::class);
-    }
 }

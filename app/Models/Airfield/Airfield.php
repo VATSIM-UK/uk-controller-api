@@ -3,13 +3,12 @@
 namespace App\Models\Airfield;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
-use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Models\Controller\ControllerPosition;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Location\Coordinate;
 
 class Airfield extends Model implements MinStackDataProviderInterface
 {
@@ -36,20 +35,16 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'updated_at',
     ];
 
+    protected $casts = [
+        'groundspeed' => 'integer',
+    ];
+
     /**
      * @return HasOne
      */
     public function msl() : HasOne
     {
         return $this->hasOne(MslAirfield::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function sids() : HasMany
-    {
-        return $this->hasMany(Sid::class);
     }
 
     /**
@@ -116,13 +111,8 @@ class Airfield extends Model implements MinStackDataProviderInterface
         )->withPivot('prenote_id');
     }
 
-    public function altimeterSettingRegions() : BelongsToMany
+    public function getCoordinateAttribute(): Coordinate
     {
-        return $this->belongsToMany(
-            AltimeterSettingRegion::class,
-            'altimeter_setting_region_airfield',
-            'airfield_id',
-            'altimeter_setting_region_id'
-        );
+        return new Coordinate($this->latitude, $this->longitude);
     }
 }

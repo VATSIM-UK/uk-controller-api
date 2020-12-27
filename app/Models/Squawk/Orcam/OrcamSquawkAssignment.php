@@ -25,11 +25,6 @@ class OrcamSquawkAssignment extends Model implements SquawkAssignmentInterface
         'code',
     ];
 
-    public function squawkRange(): BelongsTo
-    {
-        return $this->belongsTo(OrcamSquawkRange::class);
-    }
-
     public function getCode(): string
     {
         return $this->attributes['code'];

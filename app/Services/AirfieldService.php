@@ -27,7 +27,7 @@ class AirfieldService
             });
 
             $airfields[] = array_merge(
-                $airfield->toArray(),
+                $airfield->makeHidden(['latitude', 'longitude'])->toArray(),
                 [
                     'controllers' =>
                     $airfield->controllers()->orderBy('order')->pluck('controller_position_id')->toArray(),

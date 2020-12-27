@@ -23,9 +23,4 @@ class SquawkAssignmentsHistory extends Model
         'type',
         'user_id'
     ];
-
-    public function user(): HasOne
-    {
-        return $this->hasOne(User::class);
-    }
 }

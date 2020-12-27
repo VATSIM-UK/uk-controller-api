@@ -31,7 +31,7 @@ class TriggerDepartureUnassignmentOnceAirborne
             return true;
         }
 
-        $this->standService->deleteStandAssignment($aircraft->callsign);
+        $this->standService->deleteStandAssignmentByCallsign($aircraft->callsign);
         return true;
     }
 }

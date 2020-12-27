@@ -51,6 +51,9 @@ class Importer implements WithHeadingRow, ToCollection
                     'code' => $row[self::TYPE_DESIGNATOR_COLUMN],
                 ],
                 [
+                    'allocate_stands' => false,
+                    'wingspan' => 0.0,
+                    'length' => 0.0,
                     'wake_category_id' => $wakeCategory->id,
                 ]
             );

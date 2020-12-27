@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Imports\Srd\SrdImport as ImportHelper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 
@@ -26,6 +25,17 @@ class SrdImport extends Command
     protected $description = 'Imports routes from an SRD XLS file';
 
     /**
+     * @var ImportHelper
+     */
+    private ImportHelper $importer;
+
+    public function __construct(ImportHelper $importer)
+    {
+        parent::__construct();
+        $this->importer = $importer;
+    }
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -39,9 +49,9 @@ class SrdImport extends Command
         $this->output->title('Starting SRD import');
         $this->output->section('Dropping existing SRD data');
 
-        Schema::disableForeignKeyConstraints();
+        // Drop the current SRD data
+        DB::statement("SET foreign_key_checks=0");
 
-        // Drop the SRD Notes
         $this->output->comment('Dropping SRD notes and route links');
         DB::table('srd_note_srd_route')->truncate();
         $this->output->comment('Dropping SRD notes');
@@ -49,10 +59,10 @@ class SrdImport extends Command
         $this->output->comment('Dropping SRD routes');
         DB::table('srd_routes')->truncate();
 
-        Schema::enableForeignKeyConstraints();
+        DB::statement("SET foreign_key_checks=1");
 
         // Import the data
-        (new ImportHelper())->withOutput($this->output)->import($this->argument('file_name'), 'imports');
+        $this->importer->withOutput($this->output)->import($this->argument('file_name'), 'imports');
         $this->output->success('SRD import complete');
     }
 }

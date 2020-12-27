@@ -56,18 +56,4 @@ class SquawkServiceProvider extends ServiceProvider
             );
         });
     }
-
-    /**
-     * Tells the framework what services this provider provides.
-     *
-     * @return array Array of provided services.
-     */
-    public function provides()
-    {
-        return [
-            SquawkService::class,
-            ReserveInFirProximity::class,
-            ReclaimIfLeftFirProximity::class,
-        ];
-    }
 }

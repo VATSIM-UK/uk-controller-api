@@ -3,7 +3,6 @@ name: Build and Test
 on:
   push:
     branches:
-      - 'master'
       - 'main'
   pull_request:
 
@@ -84,6 +83,8 @@ jobs:
       - name: Run PHPUnit With Coverage
         if: matrix.php == '7.4'
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        env:
+          XDEBUG_MODE: coverage
 
       - name: Run PHPUnit Without Coverage
         if: matrix.php != '7.4'

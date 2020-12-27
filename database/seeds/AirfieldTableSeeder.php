@@ -11,6 +11,8 @@ class AirfieldTableSeeder extends Seeder
         Airfield::create(
             [
                 'code' => 'EGLL',
+                'latitude' => 51.4775,
+                'longitude' => -0.461389,
                 'transition_altitude' => 6000,
                 'standard_high' => true,
                 'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGLL']),
@@ -21,6 +23,8 @@ class AirfieldTableSeeder extends Seeder
         Airfield::create(
             [
                 'code' => 'EGBB',
+                'latitude' => 52.453889,
+                'longitude' => -1.748056,
                 'transition_altitude' => 6000,
                 'standard_high' => false,
                 'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGBB']),
@@ -31,6 +35,8 @@ class AirfieldTableSeeder extends Seeder
         Airfield::create(
             [
                 'code' => 'EGKR',
+                'latitude' => 51.213611,
+                'longitude' => -0.138611,
                 'transition_altitude' => 6000,
                 'standard_high' => true,
                 'msl_calculation' => null,
