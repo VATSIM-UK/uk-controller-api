@@ -30,12 +30,10 @@ class AircraftController extends BaseController
 
     public function getRecatCategoriesDependency()
     {
-        $categories = Aircraft::with('recatCategory')->whereHas('recatCategory')->get()->mapWithKeys(
+        return response()->json(tap(Aircraft::with('recatCategory')->whereHas('recatCategory')->get()->mapWithKeys(
             function (Aircraft $aircraft) {
                 return [$aircraft->code => $aircraft->recatCategory->code];
             }
-        );
-
-        return response()->json($categories);
+        ));
     }
 }
