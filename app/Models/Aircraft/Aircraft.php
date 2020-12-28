@@ -14,6 +14,7 @@ class Aircraft extends Model
         'wingspan',
         'length',
         'wake_category_id',
+        'recat_category_id',
         'allocate_stands',
     ];
 
@@ -30,5 +31,10 @@ class Aircraft extends Model
     public function wakeCategory() : BelongsTo
     {
         return $this->belongsTo(WakeCategory::class);
+    }
+
+    public function recatCategory() : BelongsTo
+    {
+        return $this->belongsTo(RecatCategory::class);
     }
 }

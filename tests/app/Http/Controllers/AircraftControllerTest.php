@@ -79,4 +79,27 @@ class AircraftControllerTest extends BaseApiTestCase
             ->assertStatus(200)
             ->assertJson($expected);
     }
+
+    public function testItGetsRecatCategoryDependency()
+    {
+        // An aircraft without a category for testing
+        Aircraft::create(
+            [
+                'code' => 'XXXX',
+                'wake_category_id' => 1,
+                'wingspan' => 0,
+                'length' => 0,
+                'allocate_stands' => false,
+            ]
+        );
+
+        $expected = [
+            'B738' => 'D',
+            'A333' => 'B'
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'wake-category/recat/dependency')
+            ->assertStatus(200)
+            ->assertJson($expected);
+    }
 }
