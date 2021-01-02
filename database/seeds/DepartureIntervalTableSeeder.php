@@ -15,21 +15,18 @@ class DepartureIntervalTableSeeder extends Seeder
         SidDepartureIntervalGroup::create(
             [
                 'key' => 'GROUP_ONE',
-                'description' => 'ONE',
             ]
         );
 
         SidDepartureIntervalGroup::create(
             [
                 'key' => 'GROUP_TWO',
-                'description' => 'TWO',
             ]
         );
 
         SidDepartureIntervalGroup::create(
             [
                 'key' => 'GROUP_THREE',
-                'description' => 'THREE',
             ]
         );
     }

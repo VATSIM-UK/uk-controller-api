@@ -602,7 +602,6 @@ class DepartureControllerTest extends BaseApiTestCase
             [
                 'id' => 1,
                 'key' => 'GROUP_ONE',
-                'description' => 'ONE',
                 'related_groups' => [
                     [
                         'id' => 1,
@@ -617,7 +616,6 @@ class DepartureControllerTest extends BaseApiTestCase
             [
                 'id' => 2,
                 'key' => 'GROUP_TWO',
-                'description' => 'TWO',
                 'related_groups' => [
                     [
                         'id' => 1,
@@ -632,7 +630,6 @@ class DepartureControllerTest extends BaseApiTestCase
             [
                 'id' => 3,
                 'key' => 'GROUP_THREE',
-                'description' => 'THREE',
                 'related_groups' => [
                     [
                         'id' => 3,

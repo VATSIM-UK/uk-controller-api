@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class SidDepartureIntervalGroup extends Model
 {
     protected $fillable = [
-        'key',
         'description',
     ];
 
@@ -24,7 +23,6 @@ class SidDepartureIntervalGroup extends Model
         return [
             'id' => $this->id,
             'key' => $this->key,
-            'description' => $this->description,
             'related_groups' => $this->relatedGroups->map(function (SidDepartureIntervalGroup $group) {
                 return [
                     'id' => $group->id,
