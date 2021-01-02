@@ -6,6 +6,7 @@ use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class DepartureInterval extends Model
@@ -16,9 +17,23 @@ class DepartureInterval extends Model
         'expires_at',
     ];
 
-    public $timestamps = [
+    public $dates = [
         'expires_at',
     ];
+
+    public function toArray()
+    {
+        return [
+            'interval' => $this->interval,
+            'type' => $this->type->key,
+            'expires_at' => $this->expires_at->toDateTimeString(),
+        ];
+    }
+
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(DepartureIntervalType::class);
+    }
 
     public function sids(): BelongsToMany
     {

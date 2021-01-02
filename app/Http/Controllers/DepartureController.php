@@ -2,10 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DepartureIntervalService;
+use Illuminate\Http\JsonResponse;
+
 class DepartureController extends BaseController
 {
-    public function CreateDepartureInterval()
-    {
+    private DepartureIntervalService $departureIntervalService;
 
+    public function __construct(DepartureIntervalService $departureIntervalService)
+    {
+        $this->departureIntervalService = $departureIntervalService;
+    }
+
+    public function getActiveDepartureIntervals(): JsonResponse
+    {
+        return response()->json($this->departureIntervalService->getActiveIntervals());
     }
 }
