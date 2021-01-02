@@ -14,7 +14,7 @@ class DepartureIntervalService
 {
     public function getActiveIntervals(): Collection
     {
-        return DepartureInterval::active()->get();
+        return DepartureInterval::with('sids', 'sids.airfield')->active()->get();
     }
 
     /**

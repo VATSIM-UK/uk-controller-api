@@ -25,6 +25,7 @@ class DepartureControllerTest extends BaseApiTestCase
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
+        $interval1->sids()->attach([1, 2]);
 
         $interval2 = DepartureInterval::create(
             [
@@ -33,6 +34,8 @@ class DepartureControllerTest extends BaseApiTestCase
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
+
+        $interval2->sids()->attach([3]);
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals')
             ->assertOk()

@@ -28,6 +28,9 @@ class DepartureInterval extends Model
             'interval' => $this->interval,
             'type' => $this->type->key,
             'expires_at' => $this->expires_at->toDateTimeString(),
+            'sids' => $this->sids->mapToGroups(function (Sid $sid, $key) {
+                return [$sid->airfield->code => $sid->identifier];
+            })->toArray(),
         ];
     }
 
