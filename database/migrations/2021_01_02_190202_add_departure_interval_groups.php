@@ -24,20 +24,48 @@ class AddDepartureIntervalGroups extends Migration
             'description' => 'EGCC North and Eastbound Departures Runway 23',
         ],
         [
-            'key' => 'EGCC_WEST_23',
-            'description' => 'EGCC Westbound Departures Runway 23',
+            'key' => 'EGCC_EKLAD_KUXEM_23',
+            'description' => 'EGCC EKLAD and KUXEM Departures Runway 23',
         ],
         [
-            'key' => 'EGCC_SOUTH_05',
-            'description' => 'EGCC Southbound Departures On Runway 05',
+            'key' => 'EGCC_MONTY_23',
+            'description' => 'EGCC MONTY Departures Runway 23',
         ],
         [
-            'key' => 'EGCC_WEST_05',
-            'description' => 'EGCC Westbound Departures On Runway 05',
+            'key' => 'EGCC_LISTO_05',
+            'description' => 'EGCC LISTO Departures On Runway 05',
         ],
         [
-            'key' => 'EGCC_NORTH_EAST_05',
-            'description' => 'EGCC North and Eastbound Departures Runway 05',
+            'key' => 'EGCC_MONTY_05',
+            'description' => 'EGCC MONTY Departures On Runway 05',
+        ],
+        [
+            'key' => 'EGCC_ASMIM_05',
+            'description' => 'EGCC ASMIM Departures On Runway 05',
+        ],
+        [
+            'key' => 'EGCC_DESIG_05',
+            'description' => 'EGCC DESIG Departures Runway 05',
+        ],
+        [
+            'key' => 'EGCC_POL_05',
+            'description' => 'EGCC DESIG Departures Runway 05',
+        ],
+        [
+            'key' => 'EGCN_ROGAG_02',
+            'description' => 'EGCN ROGAG Departures Runway 02',
+        ],
+        [
+            'key' => 'EGCN_ROGAG_20',
+            'description' => 'EGCN ROGAG Departures Runway 20',
+        ],
+        [
+            'key' => 'EGCN_UPTON_20',
+            'description' => 'EGCN UPTON Departures Runway 20',
+        ],
+        [
+            'key' => 'EGCN_UPTON_02',
+            'description' => 'EGCN UPTON Departures Runway 02',
         ],
     ];
 

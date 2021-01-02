@@ -5,6 +5,13 @@ use Illuminate\Support\Facades\DB;
 
 class AddDepartureIntervalGroupPairs extends Migration
 {
+    /**
+     * Pair format:
+     *
+     * 0 - First group name
+     * 1 - Second group name
+     * 2 - Interval in seconds when going First group -> second group
+     */
     const PAIRS = [
         [
             'EGBB_SID',
@@ -12,29 +19,29 @@ class AddDepartureIntervalGroupPairs extends Migration
             120
         ],
         [
-            'EGCC_WEST_23',
-            'EGCC_WEST_23',
+            'EGCC_EKLAD_KUXEM_23',
+            'EGCC_EKLAD_KUXEM_23',
             120,
         ],
         [
-            'EGCC_WEST_23',
+            'EGCC_EKLAD_KUXEM_23',
             'EGCC_LISTO_23',
             60,
         ],
         [
-            'EGCC_WEST_23',
+            'EGCC_EKLAD_KUXEM_23',
+            'EGCC_MONTY_23',
+            120,
+        ],
+        [
+            'EGCC_EKLAD_KUXEM_23',
             'EGCC_SANBA_23',
             120,
         ],
         [
-            'EGCC_WEST_23',
+            'EGCC_EKLAD_KUXEM_23',
             'EGCC_NORTH_EAST_23',
-            60,
-        ],
-        [
-            'EGCC_LISTO_23',
-            'EGCC_WEST_23',
-            60,
+            120,
         ],
         [
             'EGCC_LISTO_23',
@@ -43,23 +50,63 @@ class AddDepartureIntervalGroupPairs extends Migration
         ],
         [
             'EGCC_LISTO_23',
+            'EGCC_EKLAD_KUXEM_23',
+            60,
+        ],
+        [
+            'EGCC_LISTO_23',
+            'EGCC_MONTY_23',
+            60,
+        ],
+        [
+            'EGCC_LISTO_23',
             'EGCC_NORTH_EAST_23',
             120,
         ],
         [
-            'EGCC_NORTH_EAST_23',
+            'EGCC_MONTY_23',
+            'EGCC_EKLAD_KUXEM_23',
+            120,
+        ],
+        [
+            'EGCC_MONTY_23',
+            'EGCC_LISTO_23',
+            60,
+        ],
+        [
+            'EGCC_MONTY_23',
+            'EGCC_MONTY_23',
+            120,
+        ],
+        [
+            'EGCC_MONTY_23',
             'EGCC_NORTH_EAST_23',
             120,
         ],
         [
+            'EGCC_MONTY_23',
+            'EGCC_SANBA_23',
+            120,
+        ],
+        [
             'EGCC_NORTH_EAST_23',
-            'EGCC_WEST_23',
+            'EGCC_EKLAD_KUXEM_23',
             60,
         ],
         [
             'EGCC_NORTH_EAST_23',
             'EGCC_LISTO_23',
             60,
+        ],
+        [
+            'EGCC_NORTH_EAST_23',
+            'EGCC_MONTY_23',
+            60,
+        ],
+        [
+            'EGCC_NORTH_EAST_23',
+            'EGCC_NORTH_EAST_23',
+            120,
         ],
         [
             'EGCC_NORTH_EAST_23',
@@ -67,48 +114,188 @@ class AddDepartureIntervalGroupPairs extends Migration
             60,
         ],
         [
-            'EGCC_WEST_05',
-            'EGCC_WEST_05',
+            'EGCC_SANBA_23',
+            'EGCC_EKLAD_KUXEM_23',
             120,
         ],
         [
-            'EGCC_WEST_05',
-            'EGCC_NORTH_EAST_05',
+            'EGCC_SANBA_23',
+            'EGCC_MONTY_23',
             60,
         ],
         [
-            'EGCC_WEST_05',
-            'EGCC_SOUTH_05',
+            'EGCC_SANBA_23',
+            'EGCC_NORTH_EAST_23',
             60,
         ],
         [
-            'EGCC_NORTH_EAST_05',
-            'EGCC_WEST_05',
-            60,
-        ],
-        [
-            'EGCC_NORTH_EAST_05',
-            'EGCC_SOUTH_05',
-            60,
-        ],
-        [
-            'EGCC_NORTH_EAST_05',
-            'EGCC_NORTH_EAST_05',
+            'EGCC_SANBA_23',
+            'EGCC_SANBA_23',
             120,
         ],
         [
-            'EGCC_SOUTH_05',
-            'EGCC_WEST_05',
+            'EGCC_ASMIM_05',
+            'EGCC_ASMIM_05',
+            120,
+        ],
+        [
+            'EGCC_ASMIM_05',
+            'EGCC_DESIG_05',
             60,
         ],
         [
-            'EGCC_SOUTH_05',
-            'EGCC_NORTH_EAST_05',
+            'EGCC_ASMIM_05',
+            'EGCC_POL_05',
             60,
         ],
         [
-            'EGCC_SOUTH_05',
-            'EGCC_SOUTH_05',
+            'EGCC_ASMIM_05',
+            'EGCC_LISTO_05',
+            60,
+        ],
+        [
+            'EGCC_ASMIM_05',
+            'EGCC_MONTY_05',
+            120,
+        ],
+        [
+            'EGCC_DESIG_05',
+            'EGCC_ASMIM_05',
+            60,
+        ],
+        [
+            'EGCC_DESIG_05',
+            'EGCC_DESIG_05',
+            120,
+        ],
+        [
+            'EGCC_DESIG_05',
+            'EGCC_LISTO_05',
+            60,
+        ],
+        [
+            'EGCC_DESIG_05',
+            'EGCC_MONTY_05',
+            120,
+        ],
+        [
+            'EGCC_DESIG_05',
+            'EGCC_POL_05',
+            120,
+        ],
+        [
+            'EGCC_LISTO_05',
+            'EGCC_ASMIM_05',
+            60,
+        ],
+        [
+            'EGCC_LISTO_05',
+            'EGCC_DESIG_05',
+            60,
+        ],
+        [
+            'EGCC_LISTO_05',
+            'EGCC_LISTO_05',
+            120,
+        ],
+        [
+            'EGCC_LISTO_05',
+            'EGCC_MONTY_05',
+            60,
+        ],
+        [
+            'EGCC_LISTO_05',
+            'EGCC_POL_05',
+            60,
+        ],
+        [
+            'EGCC_MONTY_05',
+            'EGCC_ASMIM_05',
+            120,
+        ],
+        [
+            'EGCC_MONTY_05',
+            'EGCC_DESIG_05',
+            60,
+        ],
+        [
+            'EGCC_MONTY_05',
+            'EGCC_LISTO_05',
+            60,
+        ],
+        [
+            'EGCC_MONTY_05',
+            'EGCC_MONTY_05',
+            120,
+        ],
+        [
+            'EGCC_MONTY_05',
+            'EGCC_POL_05',
+            60,
+        ],
+        [
+            'EGCC_POL_05',
+            'EGCC_ASMIM_05',
+            60,
+        ],
+        [
+            'EGCC_POL_05',
+            'EGCC_DESIG_05',
+            120,
+        ],
+        [
+            'EGCC_POL_05',
+            'EGCC_LISTO_05',
+            60,
+        ],
+        [
+            'EGCC_POL_05',
+            'EGCC_MONTY_05',
+            60,
+        ],
+        [
+            'EGCC_POL_05',
+            'EGCC_POL_05',
+            60,
+        ],
+        [
+            'EGCN_ROGAG_02',
+            'EGCN_ROGAG_02',
+            120,
+        ],
+        [
+            'EGCN_UPTON_02',
+            'EGCN_UPTON_02',
+            180,
+        ],
+        [
+            'EGCN_ROGAG_02',
+            'EGCN_UPTON_02',
+            60,
+        ],
+        [
+            'EGCN_UPTON_02',
+            'EGCN_ROGAG_02',
+            60,
+        ],
+        [
+            'EGCN_UPTON_20',
+            'EGCN_UPTON_20',
+            180,
+        ],
+        [
+            'EGCN_UPTON_20',
+            'EGCN_ROGAG_20',
+            120,
+        ],
+        [
+            'EGCN_ROGAG_20',
+            'EGCN_ROGAG_20',
+            120,
+        ],
+        [
+            'EGCN_ROGAG_20',
+            'EGCN_UPTON_20',
             120,
         ],
     ];

@@ -36,13 +36,15 @@ class AddDepartureIntervalGroupMembers extends Migration
             'LISTO2R',
             'LISTO2Y',
         ],
-        'EGCC_WEST_23' => [
-            'MONTY1R',
-            'MONTY1Y',
+        'EGCC_EKLAD_KUXEM_23' => [
             'EKLAD1R',
             'EKLAD1Y',
             'KUXEM1R',
             'KUXEM1Y',
+        ],
+        'EGCC_MONTY_23' => [
+            'MONTY1R',
+            'MONTY1Y',
         ],
         'EGCC_NORTH_EAST_23' => [
             'POL5R',
@@ -50,21 +52,37 @@ class AddDepartureIntervalGroupMembers extends Migration
             'SONEX1R',
             'SONEX1Y',
         ],
-        'EGCC_SOUTH_05' => [
+        'EGCC_LISTO_05' => [
             'LISTO2Z',
             'LISTO2S',
         ],
-        'EGCC_WEST_05' => [
+        'EGCC_MONTY_05' => [
             'MONTY1Z',
             'MONTY1S',
-            'AZMIM1Z',
-            'AZMIM1S',
         ],
-        'EGCC_NORTH_EAST_05' => [
-            'POL1Z',
-            'POL4S',
+        'EGCC_ASMIM_05' => [
+            'ASMIM1Z',
+            'ASMIM1S',
+        ],
+        'EGCC_DESIG_05' => [
             'DESIG1Z',
             'DESIG1S',
+        ],
+        'EGCC_POL_05' => [
+            'POL1Z',
+            'POL4S',
+        ],
+        'EGCN_ROGAG_02' => [
+            'ROGAG2C',
+        ],
+        'EGCN_UPTON_02' => [
+            'UPTON2C',
+        ],
+        'EGCN_ROGAG_20' => [
+            'ROGAG2A',
+        ],
+        'EGCN_UPTON_20' => [
+            'UPTON2A',
         ],
     ];
 
