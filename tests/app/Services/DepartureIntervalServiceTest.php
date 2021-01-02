@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Departure\DepartureInterval;
 use Carbon\Carbon;
 
 class DepartureIntervalServiceTest extends BaseFunctionalTestCase
@@ -83,6 +84,50 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertDatabaseHas(
+            'departure_interval_sid',
+            [
+                'departure_interval_id' => $interval->id,
+                'sid_id' => 2,
+            ]
+        );
+    }
+
+    public function testItUpdatesIntervals()
+    {
+        $interval = $this->service->createAverageDepartureInterval(
+            4,
+            'EGLL',
+            ['TEST1X', 'TEST1Y'],
+            Carbon::now()->addMinutes(10)
+        );
+
+        $this->service->updateDepartureInterval(
+            $interval->id,
+            2,
+            'EGLL',
+            ['TEST1X'],
+            Carbon::now()->addMinutes(20)
+        );
+
+        $this->assertDatabaseHas(
+            'departure_intervals',
+            [
+                'id' => $interval->id,
+                'type_id' => 2,
+                'interval' => 2,
+                'expires_at' => Carbon::now()->addMinutes(20),
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'departure_interval_sid',
+            [
+                'departure_interval_id' => $interval->id,
+                'sid_id' => 1,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
             'departure_interval_sid',
             [
                 'departure_interval_id' => $interval->id,

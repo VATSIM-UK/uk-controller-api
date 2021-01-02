@@ -34,6 +34,21 @@ class DepartureIntervalService
         return $this->createDepartureInterval($interval, 'adi', $airfield, $sids, $expiresAt);
     }
 
+    public function updateDepartureInterval(
+        int $id,
+        int $interval,
+        string $airfield,
+        array $sids,
+        Carbon $expiresAt
+    ) {
+        $model = DepartureInterval::findOrFail($id);
+        $model->update(['expires_at' => $expiresAt, 'interval' => $interval]);
+        $this->addSidToDepartureInterval($model, $airfield, $sids);
+    }
+
+    /**
+     * Create a specified type of departure interval
+     */
     private function createDepartureInterval(
         int $interval,
         string $type,
