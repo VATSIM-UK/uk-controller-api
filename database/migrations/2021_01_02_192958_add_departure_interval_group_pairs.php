@@ -298,6 +298,16 @@ class AddDepartureIntervalGroupPairs extends Migration
             'EGCN_UPTON_20',
             120,
         ],
+        [
+            'EGFF_SID',
+            'EGFF_SID',
+            120,
+        ],
+        [
+            'EGGD_SID',
+            'EGGD_SID',
+            120,
+        ],
     ];
 
     /**

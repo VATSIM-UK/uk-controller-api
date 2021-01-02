@@ -67,6 +67,22 @@ class AddDepartureIntervalGroups extends Migration
             'key' => 'EGCN_UPTON_02',
             'description' => 'EGCN UPTON Departures Runway 02',
         ],
+        [
+            'key' => 'EGFF_SID',
+            'description' => 'EGFF Departures',
+        ],
+        [
+            'key' => 'EGGD_SID',
+            'description' => 'EGGD Departures',
+        ],
+        [
+            'key' => 'EGGP_SID_EAST',
+            'description' => 'EGGP Departures',
+        ],
+        [
+            'key' => 'EGGP_SID',
+            'description' => 'EGGP Departures Excluding Eastbound',
+        ],
     ];
 
     /**

@@ -84,6 +84,35 @@ class AddDepartureIntervalGroupMembers extends Migration
         'EGCN_UPTON_20' => [
             'UPTON2A',
         ],
+        'EGFF_SID' => [
+            'BCN1A',
+            'BCN1B',
+            'EXMOR1A',
+            'EXMOR1B',
+            'ALVIN1B',
+        ],
+        'EGGD_SID' => [
+            'BCN1X',
+            'BCN1Z',
+            'BADIM1X',
+            'WOTAN1Z',
+            'EXMOR1X',
+            'EXMOR1Z',
+        ],
+        'EGGP_SID_EAST' => [
+            'BARTN1T',
+            'BARTN1V',
+            'POL4T',
+            'POL5V',
+        ],
+        'EGGP_SID' => [
+            'WAL2V',
+            'WAL2T',
+            'POL4T',
+            'POL5V',
+            'NANTI2V',
+            'NANTI2T',
+        ]
     ];
 
     /**
