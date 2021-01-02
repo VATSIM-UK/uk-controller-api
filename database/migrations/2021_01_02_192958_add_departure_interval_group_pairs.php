@@ -398,6 +398,16 @@ class AddDepartureIntervalGroupPairs extends Migration
             'EGGW_OLNEY_08',
             120,
         ],
+        [
+            'EGJB_SID',
+            'EGJB_SID',
+            120,
+        ],
+        [
+            'EGJJ_SID',
+            'EGJJ_SID',
+            120,
+        ],
     ];
 
     /**

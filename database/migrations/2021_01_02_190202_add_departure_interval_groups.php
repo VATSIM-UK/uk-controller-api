@@ -32,6 +32,8 @@ class AddDepartureIntervalGroups extends Migration
         'EGGW_CPT_08',
         'EGGW_DET_MATCH_08',
         'EGGW_OLNEY_08',
+        'EGJB_SID',
+        'EGJJ_SID',
     ];
 
     /**
@@ -44,7 +46,7 @@ class AddDepartureIntervalGroups extends Migration
         $formattedGroups = [];
         foreach (self::GROUPS as $group) {
             $formattedGroups[] = [
-                $group,
+                'key' => $group,
                 'created_at' => Carbon::now(),
             ];
         }

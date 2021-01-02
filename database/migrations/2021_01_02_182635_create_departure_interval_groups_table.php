@@ -16,7 +16,6 @@ class CreateDepartureIntervalGroupsTable extends Migration
         Schema::create('sid_departure_interval_groups', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique()->comment('A key for the group');
-            $table->string('description')->comment('Group description');
             $table->timestamps();
         });
     }
