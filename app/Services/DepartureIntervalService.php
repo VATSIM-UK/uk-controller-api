@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\DepartureIntervalUpdatedEvent;
 use App\Models\Departure\DepartureInterval;
 use App\Models\Departure\DepartureIntervalType;
 use App\Models\Sid;
@@ -40,15 +41,25 @@ class DepartureIntervalService
         string $airfield,
         array $sids,
         Carbon $expiresAt
-    ) {
-        $model = DepartureInterval::findOrFail($id);
-        $model->update(['expires_at' => $expiresAt, 'interval' => $interval]);
-        $this->addSidToDepartureInterval($model, $airfield, $sids);
+    ) : DepartureInterval {
+        return tap(
+            DepartureInterval::findOrFail($id),
+            function (DepartureInterval $model) use ($interval, $airfield, $sids, $expiresAt) {
+                $model->update(['expires_at' => $expiresAt, 'interval' => $interval]);
+                $this->addSidToDepartureInterval($model, $airfield, $sids);
+                $this->triggerIntervalUpdatedEvent($model);
+            }
+        );
     }
 
     public function expireDepartureInterval(int $id): void
     {
-        DepartureInterval::findOrFail($id)->expire();
+        $this->triggerIntervalUpdatedEvent(DepartureInterval::findOrFail($id)->expire());
+    }
+
+    public function triggerIntervalUpdatedEvent(DepartureInterval $interval): void
+    {
+        event(new DepartureIntervalUpdatedEvent($interval));
     }
 
     /**
@@ -61,16 +72,19 @@ class DepartureIntervalService
         array $sids,
         Carbon $expiresAt
     ): DepartureInterval {
-        $interval = DepartureInterval::create(
-            [
-                'interval' => $interval,
-                'type_id' => DepartureIntervalType::where('key', $type)->first()->id,
-                'expires_at' => $expiresAt
-            ]
+        return tap(
+            DepartureInterval::create(
+                [
+                    'interval' => $interval,
+                    'type_id' => DepartureIntervalType::where('key', $type)->first()->id,
+                    'expires_at' => $expiresAt
+                ]
+            ),
+            function (DepartureInterval $interval) use ($airfield, $sids){
+                $this->addSidToDepartureInterval($interval, $airfield, $sids);
+                $this->triggerIntervalUpdatedEvent($interval);
+            }
         );
-        $this->addSidToDepartureInterval($interval, $airfield, $sids);
-
-        return $interval;
     }
 
     /**

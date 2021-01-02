@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Events\DepartureIntervalUpdatedEvent;
 use App\Models\Departure\DepartureInterval;
 use Carbon\Carbon;
 
@@ -22,6 +23,7 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAMinimumDepartureIntervalWithSids()
     {
+        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
         $interval = $this->service->createMinimumDepartureInterval(
             4,
             'EGLL',
@@ -58,6 +60,7 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAnAverageDepartureIntervalWithSids()
     {
+        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
         $interval = $this->service->createAverageDepartureInterval(
             4,
             'EGLL',
@@ -94,6 +97,7 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesIntervals()
     {
+        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
         $interval = $this->service->createAverageDepartureInterval(
             4,
             'EGLL',
@@ -138,6 +142,7 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 
     public function testItExpiresIntervals()
     {
+        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
         $interval = $this->service->createAverageDepartureInterval(
             4,
             'EGLL',

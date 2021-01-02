@@ -39,5 +39,6 @@ class DepartureInterval extends Model
     {
         $this->expires_at = Carbon::now();
         $this->save();
+        return $this;
     }
 }

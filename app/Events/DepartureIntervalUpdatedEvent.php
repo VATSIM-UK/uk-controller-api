@@ -2,33 +2,25 @@
 
 namespace App\Events;
 
+use App\Models\Departure\DepartureInterval;
 use App\Models\Hold\AssignedHold;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class HoldAssignedEvent implements ShouldBroadcast
+class DepartureIntervalUpdatedEvent implements ShouldBroadcast
 {
-    const CHANNEL = 'hold-assignments';
+    const CHANNEL = 'departure-intervals';
 
     /**
-     * @var AssignedHold
+     * @var DepartureInterval
      */
-    private $hold;
+    private DepartureInterval $interval;
 
-    public function __construct(AssignedHold $hold)
+    public function __construct(DepartureInterval $interval)
     {
-        $this->hold = $hold;
+        $this->interval = $interval;
     }
-
-    public function broadcastWith()
-    {
-        return [
-            'callsign' => $this->hold->callsign,
-            'navaid' => $this->hold->navaid->identifier,
-        ];
-    }
-
     /**
      * Get the channels the event should broadcast on.
      *
