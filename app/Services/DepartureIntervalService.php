@@ -19,20 +19,38 @@ class DepartureIntervalService
         array $sids,
         Carbon $expiresAt
     ) : DepartureInterval {
-        $interval = $this->createDepartureInterval($interval, 'mdi', $expiresAt);
-        $this->addSidToDepartureInterval($interval, $airfield, $sids);
-        return $interval;
+        return $this->createDepartureInterval($interval, 'mdi', $airfield, $sids, $expiresAt);
     }
 
-    private function createDepartureInterval(int $interval, string $type, Carbon $expiresAt): DepartureInterval
-    {
-        return DepartureInterval::create(
+    /**
+     * Create an MDI
+     */
+    public function createAverageDepartureInterval(
+        int $interval,
+        string $airfield,
+        array $sids,
+        Carbon $expiresAt
+    ) : DepartureInterval {
+        return $this->createDepartureInterval($interval, 'adi', $airfield, $sids, $expiresAt);
+    }
+
+    private function createDepartureInterval(
+        int $interval,
+        string $type,
+        string $airfield,
+        array $sids,
+        Carbon $expiresAt
+    ): DepartureInterval {
+        $interval = DepartureInterval::create(
             [
                 'interval' => $interval,
                 'type_id' => DepartureIntervalType::where('key', $type)->first()->id,
                 'expires_at' => $expiresAt
             ]
         );
+        $this->addSidToDepartureInterval($interval, $airfield, $sids);
+
+        return $interval;
     }
 
     /**

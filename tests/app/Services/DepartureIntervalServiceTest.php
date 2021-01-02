@@ -54,4 +54,40 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItCreatesAnAverageDepartureIntervalWithSids()
+    {
+        $interval = $this->service->createAverageDepartureInterval(
+            4,
+            'EGLL',
+            ['TEST1X', 'TEST1Y'],
+            Carbon::now()->addMinutes(10)
+        );
+
+        $this->assertDatabaseHas(
+            'departure_intervals',
+            [
+                'id' => $interval->id,
+                'type_id' => 2,
+                'interval' => 4,
+                'expires_at' => Carbon::now()->addMinutes(10),
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'departure_interval_sid',
+            [
+                'departure_interval_id' => $interval->id,
+                'sid_id' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'departure_interval_sid',
+            [
+                'departure_interval_id' => $interval->id,
+                'sid_id' => 2,
+            ]
+        );
+    }
 }
