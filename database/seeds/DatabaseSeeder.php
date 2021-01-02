@@ -111,6 +111,9 @@ class DatabaseSeeder extends Seeder
             'airline_stand',
             'airline_terminal',
         ],
+        DepartureIntervalTableSeeder::class => [
+            'departure_intervals',
+        ],
     ];
 
 

@@ -13,7 +13,7 @@ class CreateDepartureIntervalsSidTable extends Migration
      */
     public function up()
     {
-        Schema::create('departure_intervals_sid', function (Blueprint $table) {
+        Schema::create('departure_interval_sid', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('departure_interval_id')->comment('The interval this applies to');
             $table->unsignedInteger('sid_id')->comment('The sids that this interval applies to');
@@ -31,6 +31,6 @@ class CreateDepartureIntervalsSidTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departure_intervals_sid');
+        Schema::dropIfExists('departure_interval_sid');
     }
 }
