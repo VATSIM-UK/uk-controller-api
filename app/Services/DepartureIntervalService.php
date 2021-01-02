@@ -91,29 +91,9 @@ class DepartureIntervalService
         return $mappings;
     }
 
-    public function getDepartureSidIntervalsDependency(): array
+    public function getDepartureIntervalGroupsDependency(): array
     {
-        $groupsToMap = SidDepartureIntervalGroup::with('sids', 'sids.airfield', 'relatedGroups')
-            ->whereHas('sids')
-            ->whereHas('relatedGroups')
-            ->get();
-
-        $mappings = [];
-        foreach ($groupsToMap as $group) {
-            foreach ($group->sids as $sidToMap) {
-                foreach ($group->relatedGroups as $relatedGroup) {
-                    foreach ($relatedGroup->sids as $relatedSid) {
-                        $mappings[$sidToMap->airfield->code][] = [
-                            'lead' => $sidToMap->identifier,
-                            'follow' => $relatedSid->identifier,
-                            'interval' => (int) $relatedGroup->pivot->interval,
-                        ];
-                    }
-                }
-            }
-        }
-
-        return $mappings;
+        return SidDepartureIntervalGroup::with('relatedGroups')->get()->toArray();
     }
 
     /**

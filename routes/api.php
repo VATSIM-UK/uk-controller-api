@@ -176,7 +176,7 @@ Route::middleware('public')->group(function () {
     // Initial altitudes and sids
     Route::get('sid', 'SidController@getAllSids');
     Route::get('sid/{id}', 'SidController@getSid')
-        ->where('sid', 'd+');
+        ->where('id', '[0-9]+');
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
     Route::get('handoffs', 'SidController@getSidHandoffsDependency');
 
@@ -202,7 +202,7 @@ Route::middleware('public')->group(function () {
     // Departures
     Route::get('departure/intervals', 'DepartureController@getActiveDepartureIntervals');
     Route::get('departure/intervals/wake/dependency', 'DepartureController@getDepartureWakeIntervalsDependency');
-    Route::get('departure/intervals/sid/dependency', 'DepartureController@getDepartureSidIntervalsDependency');
+    Route::get('departure/intervals/sid-groups/dependency', 'DepartureController@getDepartureSidIntervalGroupsDependency');
 
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
@@ -235,6 +235,9 @@ Route::middleware('public')->group(function () {
 
     // Enroute releases
     Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
+
+    // Sids
+    Route::get('sid/dependency', 'SidController@getSidsDependency');
 
     // Stands
     Route::get('stand/status', 'StandController@getAirfieldStandStatus');

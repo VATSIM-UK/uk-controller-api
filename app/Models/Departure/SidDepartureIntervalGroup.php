@@ -14,6 +14,26 @@ class SidDepartureIntervalGroup extends Model
         'description',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'key' => $this->key,
+            'description' => $this->description,
+            'related_groups' => $this->relatedGroups->map(function (SidDepartureIntervalGroup $group) {
+                return [
+                    'id' => $group->id,
+                    'interval' => $group->pivot->interval,
+                ];
+            })->toArray(),
+        ];
+    }
+
     public function sids(): HasMany
     {
         return $this->hasMany(Sid::class);

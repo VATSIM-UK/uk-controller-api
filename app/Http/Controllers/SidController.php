@@ -99,4 +99,9 @@ class SidController extends BaseController
 
         return response()->json(null, 200);
     }
+
+    public function getSidsDependency(): JsonResponse
+    {
+        return response()->json($this->sidService->getSidsDependency());
+    }
 }

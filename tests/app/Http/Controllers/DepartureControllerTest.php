@@ -584,58 +584,65 @@ class DepartureControllerTest extends BaseApiTestCase
             ->assertJson($expected);
     }
 
-    public function testItReturnsSidIntervalsDependency()
+    public function testItReturnsSidIntervalGroupsDependency()
     {
-        DB::table('sid_departure_interval_group_sid_departure_interval_group')->delete();
-
-        Sid::find(1)->update(['sid_departure_interval_group_id' => 1]);
         SidDepartureIntervalGroup::find(1)->relatedGroups()->sync(
             [1 => ['interval' => 25], 2 => ['interval' => 73]],
         );
 
-        Sid::find(2)->update(['sid_departure_interval_group_id' => 2]);
         SidDepartureIntervalGroup::find(2)->relatedGroups()->sync(
             [1 => ['interval' => 26], 2 => ['interval' => 52]],
         );
 
-        Sid::find(3)->update(['sid_departure_interval_group_id' => 3]);
         SidDepartureIntervalGroup::find(3)->relatedGroups()->sync(
             [3 => ['interval' => 99]]
         );
 
         $expected = [
-            'EGLL' => [
-                [
-                    'lead' => 'TEST1X',
-                    'follow' => 'TEST1X',
-                    'interval' => 25,
-                ],
-                [
-                    'lead' => 'TEST1X',
-                    'follow' => 'TEST1Y',
-                    'interval' => 73,
-                ],
-                [
-                    'lead' => 'TEST1Y',
-                    'follow' => 'TEST1X',
-                    'interval' => 26,
-                ],
-                [
-                    'lead' => 'TEST1Y',
-                    'follow' => 'TEST1Y',
-                    'interval' => 52,
+            [
+                'id' => 1,
+                'key' => 'GROUP_ONE',
+                'description' => 'ONE',
+                'related_groups' => [
+                    [
+                        'id' => 1,
+                        'interval' => 25,
+                    ],
+                    [
+                        'id' => 2,
+                        'interval' => 73,
+                    ],
                 ],
             ],
-            'EGBB' => [
-                [
-                    'lead' => 'TEST1A',
-                    'follow' => 'TEST1A',
-                    'interval' => 99,
+            [
+                'id' => 2,
+                'key' => 'GROUP_TWO',
+                'description' => 'TWO',
+                'related_groups' => [
+                    [
+                        'id' => 1,
+                        'interval' => 26,
+                    ],
+                    [
+                        'id' => 2,
+                        'interval' => 52,
+                    ],
+                ],
+            ],
+            [
+                'id' => 3,
+                'key' => 'GROUP_THREE',
+                'description' => 'THREE',
+                'related_groups' => [
+                    [
+                        'id' => 3,
+                        'interval' => 99,
+                    ],
                 ],
             ],
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals/sid/dependency')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals/sid-groups/dependency')
             ->assertOk()
             ->assertJson($expected);
     }
