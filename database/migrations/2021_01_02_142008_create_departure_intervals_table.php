@@ -16,8 +16,11 @@ class CreateDepartureIntervalsTable extends Migration
         Schema::create('departure_intervals', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('type_id')->comment('The type of interval');
+            $table->integer('interval')->comment('The time period for this interval');
             $table->timestamp('expires_at')->comment('The time at which the departure interval expires');
             $table->timestamps();
+
+            $table->foreign('type_id')->references('id')->on('departure_interval_types')->cascadeOnDelete();
         });
     }
 
