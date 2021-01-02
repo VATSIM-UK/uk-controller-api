@@ -19,7 +19,7 @@ class CreateDepartureWakeIntervalsTable extends Migration
                 ->comment('The wake category of the lead aircraft');
             $table->unsignedTinyInteger('following_wake_category_id')
                 ->comment('The wake category of the following aircraft');
-            $table->unsignedInteger('value')->comment('The value of the interval in seconds');
+            $table->unsignedInteger('interval')->comment('The value of the interval in seconds');
             $table->boolean('intermediate')->comment('Whether its from an intermediate point on the runway');
 
             $table->foreign('lead_wake_category_id')->references('id')->on('wake_categories')->cascadeOnDelete();
