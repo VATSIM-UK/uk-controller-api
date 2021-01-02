@@ -18,7 +18,7 @@ class AirfieldIcao implements Rule
      */
     public function passes($attribute, $value)
     {
-        return preg_match(self::AIRFIELD_REGEX, $value) === self::REGEX_MATCHED;
+        return is_string($value) && preg_match(self::AIRFIELD_REGEX, $value) === self::REGEX_MATCHED;
     }
 
     /**
