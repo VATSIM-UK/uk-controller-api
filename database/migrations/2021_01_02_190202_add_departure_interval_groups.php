@@ -11,6 +11,34 @@ class AddDepartureIntervalGroups extends Migration
             'key' => 'EGBB_SID',
             'description' => 'All Birmingham Departures'
         ],
+        [
+            'key' => 'EGCC_SANBA_23',
+            'description' => 'EGCC SANBA Runway 23',
+        ],
+        [
+            'key' => 'EGCC_LISTO_23',
+            'description' => 'EGCC LISTO Runway 23',
+        ],
+        [
+            'key' => 'EGCC_NORTH_EAST_23',
+            'description' => 'EGCC North and Eastbound Departures Runway 23',
+        ],
+        [
+            'key' => 'EGCC_WEST_23',
+            'description' => 'EGCC Westbound Departures Runway 23',
+        ],
+        [
+            'key' => 'EGCC_SOUTH_05',
+            'description' => 'EGCC Southbound Departures On Runway 05',
+        ],
+        [
+            'key' => 'EGCC_WEST_05',
+            'description' => 'EGCC Westbound Departures On Runway 05',
+        ],
+        [
+            'key' => 'EGCC_NORTH_EAST_05',
+            'description' => 'EGCC North and Eastbound Departures Runway 05',
+        ],
     ];
 
     /**
