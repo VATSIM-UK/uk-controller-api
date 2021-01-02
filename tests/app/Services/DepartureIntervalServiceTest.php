@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\DepartureIntervalUpdatedEvent;
+use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 {
@@ -185,7 +187,60 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
             Carbon::now()->subSecond()
         );
 
-        $expected = new Collection([DepartureInterval::find($interval1->id), DepartureInterval::find($interval3->id)]);
+        $expected = new Collection([
+            DepartureInterval::with('sids', 'sids.airfield')->find($interval1->id),
+            DepartureInterval::with('sids', 'sids.airfield')->find($interval3->id)
+        ]);
         $this->assertEquals($expected, $this->service->getActiveIntervals());
+    }
+
+    public function testItReturnsWakeIntervalData()
+    {
+        DB::table('departure_wake_intervals')->delete();
+
+        WakeCategory::where('code', 'H')->first()->departureIntervals()->sync(
+            [
+                WakeCategory::where('code', 'S')->first()->id => [
+                    'interval' => 1,
+                    'intermediate' => false,
+                ],
+                WakeCategory::where('code', 'H')->first()->id => [
+                    'interval' => 2,
+                    'intermediate' => true,
+                ],
+            ]
+        );
+
+        WakeCategory::where('code', 'LM')->first()->departureIntervals()->sync(
+            [
+                WakeCategory::where('code', 'L')->first()->id => [
+                    'interval' => 3,
+                    'intermediate' => false,
+                ],
+            ]
+        );
+
+        $expected = [
+            [
+                'lead' => 'LM',
+                'follow' => 'L',
+                'interval' => 3,
+                'intermediate' => false,
+            ],
+            [
+                'lead' => 'H',
+                'follow' => 'S',
+                'interval' => 1,
+                'intermediate' => false,
+            ],
+            [
+                'lead' => 'H',
+                'follow' => 'H',
+                'interval' => 2,
+                'intermediate' => true,
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getDepartureWakeIntervalsDependency());
     }
 }

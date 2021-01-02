@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\DepartureIntervalUpdatedEvent;
+use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
 use App\Models\Departure\DepartureIntervalType;
 use App\Models\Sid;
@@ -66,6 +67,27 @@ class DepartureIntervalService
     public function triggerIntervalUpdatedEvent(DepartureInterval $interval): void
     {
         event(new DepartureIntervalUpdatedEvent($interval));
+    }
+
+    public function getDepartureWakeIntervalsDependency(): array
+    {
+        $mappings = [];
+        $categories = WakeCategory::with('departureIntervals')
+            ->whereHas('departureIntervals')
+            ->get();
+
+        foreach ($categories as $category) {
+            foreach ($category->departureIntervals as $follow) {
+                $mappings[] = [
+                    'lead' => $category->code,
+                    'follow' => $follow->code,
+                    'interval' => (int) $follow->pivot->interval,
+                    'intermediate' => (bool) $follow->pivot->intermediate,
+                ];
+            }
+        }
+
+        return $mappings;
     }
 
     /**
