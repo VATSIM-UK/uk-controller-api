@@ -16,7 +16,7 @@ class AddIntervalGroupToSidsTable extends Migration
         Schema::table('sid', function (Blueprint $table) {
             $table->unsignedBigInteger('sid_departure_interval_group_id')
                 ->nullable()
-                ->after('prenote_id')
+                ->after('handoff_id')
                 ->comment('The group that the SID is in for intervals');
 
             $table->foreign('sid_departure_interval_group_id', 'sids_departure_interval_group')

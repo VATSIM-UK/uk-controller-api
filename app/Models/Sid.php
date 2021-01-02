@@ -20,7 +20,6 @@ class Sid extends Model
         'identifier',
         'initial_altitude',
         'handoff_id',
-        'prenote_id',
         'sid_departure_interval_group_id',
         'created_at',
         'updated_at',

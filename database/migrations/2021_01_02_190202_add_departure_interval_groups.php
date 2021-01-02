@@ -8,8 +8,9 @@ class AddDepartureIntervalGroups extends Migration
 {
     const GROUPS = [
         [
-
-        ]
+            'key' => 'EGBB_SID',
+            'description' => 'All Birmingham Departures'
+        ],
     ];
 
     /**

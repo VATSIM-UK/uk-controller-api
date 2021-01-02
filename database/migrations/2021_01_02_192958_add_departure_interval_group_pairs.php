@@ -7,7 +7,10 @@ class AddDepartureIntervalGroupPairs extends Migration
 {
     const PAIRS = [
         [
-        ]
+            'EGBB_SID',
+            'EGBB_SID',
+            120
+        ],
     ];
 
     /**
@@ -17,19 +20,19 @@ class AddDepartureIntervalGroupPairs extends Migration
      */
     public function up()
     {
-        $groups = DB::table('departure_interval_groups')->get()->mapWithKeys(
+        $groups = DB::table('sid_departure_interval_groups')->get()->mapWithKeys(
             function ($group) {
                 return [$group->key => $group->id];
             }
         );
 
         foreach (self::PAIRS as $pair) {
-            DB::table('departure_interval_group_departure_interval_group')
+            DB::table('sid_departure_interval_group_sid_departure_interval_group')
                 ->insert(
                     [
                         'lead_group_id' =>  $groups[$pair[0]],
                         'follow_group_id' =>  $groups[$pair[1]],
-                        'interval' =>  $groups[$pair[2]],
+                        'interval' =>  $pair[2],
                     ]
                 );
         }
@@ -42,6 +45,6 @@ class AddDepartureIntervalGroupPairs extends Migration
      */
     public function down()
     {
-        DB::table('departure_interval_group_departure_interval_group')->delete();
+        DB::table('sid_departure_interval_group_sid_departure_interval_group')->delete();
     }
 }
