@@ -46,6 +46,11 @@ class DepartureIntervalService
         $this->addSidToDepartureInterval($model, $airfield, $sids);
     }
 
+    public function expireDepartureInterval(int $id): void
+    {
+        DepartureInterval::findOrFail($id)->expire();
+    }
+
     /**
      * Create a specified type of departure interval
      */

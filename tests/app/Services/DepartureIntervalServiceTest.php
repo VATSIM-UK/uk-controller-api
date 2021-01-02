@@ -135,4 +135,18 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItExpiresIntervals()
+    {
+        $interval = $this->service->createAverageDepartureInterval(
+            4,
+            'EGLL',
+            ['TEST1X', 'TEST1Y'],
+            Carbon::now()->addMinutes(10)
+        );
+
+        $this->service->expireDepartureInterval($interval->id);
+        $interval->refresh();
+        $this->assertTrue($interval->expired());
+    }
 }
