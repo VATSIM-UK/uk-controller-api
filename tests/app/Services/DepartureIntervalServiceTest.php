@@ -10,10 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var DepartureIntervalService
-     */
-    private $service;
+    private DepartureIntervalService $service;
 
     public function setUp(): void
     {
