@@ -52,4 +52,14 @@ class Sid extends Model
             'prenote_id'
         );
     }
+
+    public function departureIntervals(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Sid::class,
+            'departure_sid_intervals',
+            'lead_sid_id',
+            'following_sid_id'
+        )->withPivot('interval');
+    }
 }

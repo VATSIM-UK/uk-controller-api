@@ -90,6 +90,26 @@ class DepartureIntervalService
         return $mappings;
     }
 
+    public function getDepartureSidIntervalsDependency(): array
+    {
+        $sids = Sid::with('departureIntervals', 'airfield')
+            ->whereHas('departureIntervals')
+            ->get();
+
+        $mappings = [];
+        foreach ($sids as $sid) {
+            foreach ($sid->departureIntervals as $followingSid) {
+                $mappings[$sid->airfield->code][] = [
+                    'lead' => $sid->identifier,
+                    'follow' => $followingSid->identifier,
+                    'interval' => (int) $followingSid->pivot->interval,
+                ];
+            }
+        }
+
+        return $mappings;
+    }
+
     /**
      * Create a specified type of departure interval
      */

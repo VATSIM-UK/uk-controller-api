@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\DepartureIntervalUpdatedEvent;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
+use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -242,5 +243,55 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         ];
 
         $this->assertEquals($expected, $this->service->getDepartureWakeIntervalsDependency());
+    }
+
+    public function testItReturnsSidIntervalData()
+    {
+        DB::table('departure_sid_intervals')->delete();
+        Sid::find(1)->departureIntervals()->sync(
+            [1 => ['interval' => 25], 2 => ['interval' => 23]],
+        );
+
+        Sid::find(2)->departureIntervals()->sync(
+            [1 => ['interval' => 26], 2 => ['interval' => 52]],
+        );
+
+        Sid::find(3)->departureIntervals()->sync(
+            [3 => ['interval' => 99]],
+        );
+
+        $expected = [
+            'EGLL' => [
+                [
+                    'lead' => 'TEST1X',
+                    'follow' => 'TEST1X',
+                    'interval' => 25,
+                ],
+                [
+                    'lead' => 'TEST1X',
+                    'follow' => 'TEST1Y',
+                    'interval' => 23,
+                ],
+                [
+                    'lead' => 'TEST1Y',
+                    'follow' => 'TEST1X',
+                    'interval' => 26,
+                ],
+                [
+                    'lead' => 'TEST1Y',
+                    'follow' => 'TEST1Y',
+                    'interval' => 52,
+                ],
+            ],
+            'EGBB' => [
+                [
+                    'lead' => 'TEST1A',
+                    'follow' => 'TEST1A',
+                    'interval' => 99,
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getDepartureSidIntervalsDependency());
     }
 }

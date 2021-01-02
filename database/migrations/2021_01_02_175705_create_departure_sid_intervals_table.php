@@ -17,7 +17,7 @@ class CreateDepartureSidIntervalsTable extends Migration
             $table->id();
             $table->unsignedInteger('lead_sid_id')->comment('The id of the leading aircraft SID');
             $table->unsignedInteger('following_sid_id')->comment('The id of the following aircraft SID');
-            $table->unsignedInteger('interval')->comment('The interval required, in seconds');
+            $table->unsignedSmallInteger('interval')->comment('The interval required, in seconds');
 
             $table->unique(['lead_sid_id', 'following_sid_id'], 'sid_intervals_unique');
             $table->foreign('lead_sid_id')->references('id')->on('sid')->cascadeOnDelete();
