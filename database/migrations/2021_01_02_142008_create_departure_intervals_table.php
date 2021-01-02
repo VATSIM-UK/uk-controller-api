@@ -21,6 +21,7 @@ class CreateDepartureIntervalsTable extends Migration
             $table->timestamps();
 
             $table->foreign('type_id')->references('id')->on('departure_interval_types')->cascadeOnDelete();
+            $table->index('expires_at');
         });
     }
 
