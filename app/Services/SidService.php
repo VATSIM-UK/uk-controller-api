@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 class SidService
 {
     /**
+     * @deprecated
      * @return array
      */
     public function getInitialAltitudeDependency() : array

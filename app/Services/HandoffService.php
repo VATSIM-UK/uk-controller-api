@@ -22,6 +22,9 @@ class HandoffService
         })->toArray();
     }
 
+    /**
+     * @deprecated
+     */
     public function mapSidsToHandoffs(): array
     {
         $sidMap = [];

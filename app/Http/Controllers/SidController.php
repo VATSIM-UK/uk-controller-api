@@ -33,6 +33,9 @@ class SidController extends BaseController
         return response()->json($this->sidService->getInitialAltitudeDependency());
     }
 
+    /**
+     * @deprecated
+     */
     public function getSidHandoffsDependency(): JsonResponse
     {
         return response()->json($this->handoffService->mapSidsToHandoffs());
