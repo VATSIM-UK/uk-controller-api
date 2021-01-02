@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
 use App\Models\Departure\DepartureIntervalType;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DepartureControllerTest extends BaseApiTestCase
 {
@@ -524,6 +526,58 @@ class DepartureControllerTest extends BaseApiTestCase
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, sprintf('departure/interval/%d', $interval->id), $data)
+            ->assertOk()
+            ->assertJson($expected);
+    }
+
+    public function testItReturnsWakeIntervalsDependency()
+    {
+        DB::table('departure_wake_intervals')->delete();
+
+        WakeCategory::where('code', 'H')->first()->departureIntervals()->sync(
+            [
+                WakeCategory::where('code', 'S')->first()->id => [
+                    'interval' => 1,
+                    'intermediate' => false,
+                ],
+                WakeCategory::where('code', 'H')->first()->id => [
+                    'interval' => 2,
+                    'intermediate' => true,
+                ],
+            ]
+        );
+
+        WakeCategory::where('code', 'LM')->first()->departureIntervals()->sync(
+            [
+                WakeCategory::where('code', 'L')->first()->id => [
+                    'interval' => 3,
+                    'intermediate' => false,
+                ],
+            ]
+        );
+
+        $expected = [
+            [
+                'lead' => 'LM',
+                'follow' => 'L',
+                'interval' => 3,
+                'intermediate' => false,
+            ],
+            [
+                'lead' => 'H',
+                'follow' => 'S',
+                'interval' => 1,
+                'intermediate' => false,
+            ],
+            [
+                'lead' => 'H',
+                'follow' => 'H',
+                'interval' => 2,
+                'intermediate' => true,
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals/wake/dependency')
             ->assertOk()
             ->assertJson($expected);
     }

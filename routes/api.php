@@ -201,6 +201,7 @@ Route::middleware('public')->group(function () {
 
     // Departures
     Route::get('departure/intervals', 'DepartureController@getActiveDepartureIntervals');
+    Route::get('departure/intervals/wake/dependency', 'DepartureController@getDepartureWakeIntervalsDependency');
 
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
