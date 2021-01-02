@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departure\DepartureInterval;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Services\DepartureIntervalService;
 use Carbon\Carbon;
@@ -46,7 +47,7 @@ class DepartureController extends BaseController
                 ],
                 'sids' => 'required|array|filled',
                 'sids.*' => 'string'
-            ]
+            ],
         );
 
         if ($badData) {
@@ -66,5 +67,36 @@ class DepartureController extends BaseController
         );
 
         return response()->json($interval, 201);
+    }
+
+    public function updateInterval(Request $request, int $id): JsonResponse
+    {
+        $badData = $this->checkForSuppliedData(
+            $request,
+            [
+                'interval' => 'required|integer|min:1',
+                'expires_at' => 'required|date|after:now',
+                'airfield' => [
+                    'required',
+                    new AirfieldIcao(),
+                ],
+                'sids' => 'required|array|filled',
+                'sids.*' => 'string',
+            ]
+        );
+
+        if ($badData) {
+            return $badData;
+        }
+
+        $interval = $this->departureIntervalService->updateDepartureInterval(
+            $id,
+            $request->json('interval'),
+            $request->json('airfield'),
+            $request->json('sids'),
+            Carbon::parse($request->json('expires_at'))
+        );
+
+        return response()->json($interval, 200);
     }
 }

@@ -52,7 +52,7 @@ class DepartureControllerTest extends BaseApiTestCase
             ]
         );
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, sprintf('departure/intervals/%d', $interval->id))
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, sprintf('departure/interval/%d', $interval->id))
             ->assertNoContent();
 
         $this->assertDatabaseHas(
@@ -270,7 +270,13 @@ class DepartureControllerTest extends BaseApiTestCase
             'id' => $previousInterval->id + 1,
             'type' => 'mdi',
             'interval' => 5,
-            'expires_at' => Carbon::now()->addMinutes(15)
+            'expires_at' => Carbon::now()->addMinutes(15),
+            'sids' => [
+                'EGLL' => [
+                    'TEST1X',
+                    'TEST1Y',
+                ],
+            ],
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/intervals', $data)
@@ -303,11 +309,222 @@ class DepartureControllerTest extends BaseApiTestCase
             'id' => $previousInterval->id + 1,
             'type' => 'adi',
             'interval' => 5,
-            'expires_at' => Carbon::now()->addMinutes(15)
+            'expires_at' => Carbon::now()->addMinutes(15),
+            'sids' => [
+                'EGLL' => [
+                    'TEST1X',
+                    'TEST1Y',
+                ],
+            ],
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/intervals', $data)
             ->assertStatus(201)
+            ->assertJson($expected);
+    }
+
+    public function badIntervalUpdateProvider(): array
+    {
+        return [
+            'Missing interval' => [
+                [
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'EGLL',
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Invalid interval' => [
+                [
+                    'interval' => 'abc',
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'EGLL',
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Interval too small' => [
+                [
+                    'interval' => 0,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'EGLL',
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Invalid airfield' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'abc',
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Invalid airfield type' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 123,
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Missing airfield' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Missing sids' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'EGLL',
+                ]
+            ],
+            'Invalid sids' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'EGLL',
+                    'sids' => 123
+                ]
+            ],
+            'Sids empty' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'EGLL',
+                    'sids' => []
+                ]
+            ],
+            'Invalid sids types' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->addMinutes(15),
+                    'airfield' => 'EGLL',
+                    'sids' => [
+                        'TEST1X',
+                        123
+                    ]
+                ]
+            ],
+            'Missing expires at' => [
+                [
+                    'interval' => 5,
+                    'airfield' => 'EGLL',
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Invalid expires at' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => 'abc',
+                    'airfield' => 'EGLL',
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+            'Expires at too early' => [
+                [
+                    'interval' => 5,
+                    'expires_at' => Carbon::now()->subSecond(),
+                    'airfield' => 'EGLL',
+                    'sids' => [
+                        'TEST1X',
+                        'TEST1Y'
+                    ]
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider badIntervalUpdateProvider
+     */
+    public function testItReturnsBadRequestOnBadIntervalUpdateData(array $data)
+    {
+        $interval = DepartureInterval::create(
+            [
+                'interval' => 2,
+                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'expires_at' => Carbon::now()->addSecond()
+            ]
+        );
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, sprintf('departure/interval/%d', $interval->id), $data)
+            ->assertStatus(400);
+    }
+
+    public function testItReturnsNotFoundOnUnknownInterval()
+    {
+        $data = [
+            'interval' => 5,
+            'expires_at' => Carbon::now()->addMinutes(15),
+            'airfield' => 'EGLL',
+            'sids' => [
+                'TEST1X',
+                'TEST1Y'
+            ]
+        ];
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'departure/interval/999', $data)
+            ->assertNotFound();
+    }
+
+    public function testItUpdatesAnInterval()
+    {
+        $interval = DepartureInterval::create(
+            [
+                'interval' => 2,
+                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'expires_at' => Carbon::now()->addSecond()
+            ]
+        );
+        $interval->sids()->attach([1, 2]);
+
+        $data = [
+            'type' => 'mdi',
+            'interval' => 5,
+            'expires_at' => Carbon::now()->addMinutes(15),
+            'airfield' => 'EGBB',
+            'sids' => [
+                'TEST1A'
+            ]
+        ];
+
+        $expected = [
+            'id' => $interval->id,
+            'type' => 'mdi',
+            'interval' => 5,
+            'expires_at' => Carbon::now()->addMinutes(15),
+            'sids' => [
+                'EGBB' => [
+                    'TEST1A',
+                ],
+            ],
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, sprintf('departure/interval/%d', $interval->id), $data)
+            ->assertOk()
             ->assertJson($expected);
     }
 }
