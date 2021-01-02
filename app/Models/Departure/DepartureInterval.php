@@ -27,7 +27,7 @@ class DepartureInterval extends Model
 
     public function scopeActive(Builder $query)
     {
-        $query->where('expires_at' > Carbon::now());
+        $query->where('expires_at', '>', Carbon::now());
     }
 
     public function expired(): bool

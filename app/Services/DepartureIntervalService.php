@@ -8,9 +8,15 @@ use App\Models\Departure\DepartureIntervalType;
 use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class DepartureIntervalService
 {
+    public function getActiveIntervals(): Collection
+    {
+        return DepartureInterval::active()->get();
+    }
+
     /**
      * Create an MDI
      */

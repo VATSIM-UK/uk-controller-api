@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\DepartureIntervalUpdatedEvent;
 use App\Models\Departure\DepartureInterval;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 {
@@ -153,5 +154,41 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         $this->service->expireDepartureInterval($interval->id);
         $interval->refresh();
         $this->assertTrue($interval->expired());
+    }
+
+    public function testItReturnsActiveIntervals()
+    {
+        $this->withoutEvents();
+
+        $interval1 = $this->service->createAverageDepartureInterval(
+            4,
+            'EGLL',
+            ['TEST1X', 'TEST1Y'],
+            Carbon::now()->addSecond()
+        );
+
+        $this->service->createAverageDepartureInterval(
+            4,
+            'EGLL',
+            ['TEST1X', 'TEST1Y'],
+            Carbon::now()
+        );
+
+        $interval3 = $this->service->createMinimumDepartureInterval(
+            2,
+            'EGLL',
+            ['TEST1X', 'TEST1Y'],
+            Carbon::now()->addMinute()
+        );
+
+        $this->service->createMinimumDepartureInterval(
+            2,
+            'EGLL',
+            ['TEST1X', 'TEST1Y'],
+            Carbon::now()->subSecond()
+        );
+
+        $expected = new Collection([DepartureInterval::find($interval1->id), DepartureInterval::find($interval3->id)]);
+        $this->assertEquals($expected, $this->service->getActiveIntervals());
     }
 }
