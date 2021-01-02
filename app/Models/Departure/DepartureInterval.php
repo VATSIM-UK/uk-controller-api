@@ -24,6 +24,7 @@ class DepartureInterval extends Model
     public function toArray()
     {
         return [
+            'id' => $this->id,
             'interval' => $this->interval,
             'type' => $this->type->key,
             'expires_at' => $this->expires_at->toDateTimeString(),

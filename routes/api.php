@@ -29,7 +29,9 @@ Route::middleware('plugin.user')->group(function () {
     );
 
     // Departures
-    Route::put('departure/intervals', 'DepartureController@createInterval');
+    Route::post('departure/intervals', 'DepartureController@createInterval');
+    Route::put('departure/intervals/{id}', 'DepartureController@updateInterval')
+        ->where('id', '[0-9]+');
     Route::delete('departure/intervals/{id}', 'DepartureController@deleteInterval')
         ->where('id', '[0-9]+');
 
