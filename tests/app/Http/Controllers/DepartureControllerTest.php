@@ -13,6 +13,7 @@ class DepartureControllerTest extends BaseApiTestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
+        $this->withoutEvents();
     }
 
     public function testItReturnsActiveIntervals()
@@ -36,5 +37,27 @@ class DepartureControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals')
             ->assertOk()
             ->assertJson([$interval1->toArray(), $interval2->toArray()]);
+    }
+
+    public function testItExpiresIntervals()
+    {
+        $interval = DepartureInterval::create(
+            [
+                'interval' => 2,
+                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'expires_at' => Carbon::now()->addHour()
+            ]
+        );
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, sprintf('departure/intervals/%d', $interval->id))
+            ->assertNoContent();
+
+        $this->assertDatabaseHas(
+            'departure_intervals',
+            [
+                'id' => $interval->id,
+                'expires_at' => Carbon::now()
+            ]
+        );
     }
 }

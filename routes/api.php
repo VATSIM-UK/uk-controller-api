@@ -28,6 +28,11 @@ Route::middleware('plugin.user')->group(function () {
         ]
     );
 
+    // Departures
+    Route::put('departure/intervals', 'DepartureController@createInterval');
+    Route::delete('departure/intervals/{id}', 'DepartureController@deleteInterval')
+        ->where('id', '[0-9]+');
+
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
 

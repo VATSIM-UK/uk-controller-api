@@ -18,4 +18,10 @@ class DepartureController extends BaseController
     {
         return response()->json($this->departureIntervalService->getActiveIntervals());
     }
+
+    public function deleteInterval(int $id): JsonResponse
+    {
+        $this->departureIntervalService->expireDepartureInterval($id);
+        return response()->json([], 204);
+    }
 }
