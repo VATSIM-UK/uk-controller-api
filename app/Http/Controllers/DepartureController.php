@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Departure\DepartureInterval;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Services\DepartureIntervalService;
 use Carbon\Carbon;
