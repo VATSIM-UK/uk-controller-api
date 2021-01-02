@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Departure\SidDepartureIntervalGroup;
 use Illuminate\Database\Seeder;
 
 class DepartureIntervalTableSeeder extends Seeder
@@ -11,5 +12,25 @@ class DepartureIntervalTableSeeder extends Seeder
      */
     public function run()
     {
+        SidDepartureIntervalGroup::create(
+            [
+                'key' => 'GROUP_ONE',
+                'description' => 'ONE',
+            ]
+        );
+
+        SidDepartureIntervalGroup::create(
+            [
+                'key' => 'GROUP_TWO',
+                'description' => 'TWO',
+            ]
+        );
+
+        SidDepartureIntervalGroup::create(
+            [
+                'key' => 'GROUP_THREE',
+                'description' => 'THREE',
+            ]
+        );
     }
 }

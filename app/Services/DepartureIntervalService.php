@@ -6,6 +6,7 @@ use App\Events\DepartureIntervalUpdatedEvent;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
 use App\Models\Departure\DepartureIntervalType;
+use App\Models\Departure\SidDepartureIntervalGroup;
 use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -92,18 +93,23 @@ class DepartureIntervalService
 
     public function getDepartureSidIntervalsDependency(): array
     {
-        $sids = Sid::with('departureIntervals', 'airfield')
-            ->whereHas('departureIntervals')
+        $groupsToMap = SidDepartureIntervalGroup::with('sids', 'sids.airfield', 'relatedGroups')
+            ->whereHas('sids')
+            ->whereHas('relatedGroups')
             ->get();
 
         $mappings = [];
-        foreach ($sids as $sid) {
-            foreach ($sid->departureIntervals as $followingSid) {
-                $mappings[$sid->airfield->code][] = [
-                    'lead' => $sid->identifier,
-                    'follow' => $followingSid->identifier,
-                    'interval' => (int) $followingSid->pivot->interval,
-                ];
+        foreach ($groupsToMap as $group) {
+            foreach ($group->sids as $sidToMap) {
+                foreach ($group->relatedGroups as $relatedGroup) {
+                    foreach ($relatedGroup->sids as $relatedSid) {
+                        $mappings[$sidToMap->airfield->code][] = [
+                            'lead' => $sidToMap->identifier,
+                            'follow' => $relatedSid->identifier,
+                            'interval' => (int) $relatedGroup->pivot->interval,
+                        ];
+                    }
+                }
             }
         }
 

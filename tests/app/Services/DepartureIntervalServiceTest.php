@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\DepartureIntervalUpdatedEvent;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
+use App\Models\Departure\SidDepartureIntervalGroup;
 use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -247,17 +248,21 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsSidIntervalData()
     {
-        DB::table('departure_sid_intervals')->delete();
-        Sid::find(1)->departureIntervals()->sync(
-            [1 => ['interval' => 25], 2 => ['interval' => 23]],
+        DB::table('sid_departure_interval_group_sid_departure_interval_group')->delete();
+
+        Sid::find(1)->update(['sid_departure_interval_group_id' => 1]);
+        SidDepartureIntervalGroup::find(1)->relatedGroups()->sync(
+            [1 => ['interval' => 25], 2 => ['interval' => 73]],
         );
 
-        Sid::find(2)->departureIntervals()->sync(
+        Sid::find(2)->update(['sid_departure_interval_group_id' => 2]);
+        SidDepartureIntervalGroup::find(2)->relatedGroups()->sync(
             [1 => ['interval' => 26], 2 => ['interval' => 52]],
         );
 
-        Sid::find(3)->departureIntervals()->sync(
-            [3 => ['interval' => 99]],
+        Sid::find(3)->update(['sid_departure_interval_group_id' => 3]);
+        SidDepartureIntervalGroup::find(3)->relatedGroups()->sync(
+            [3 => ['interval' => 99]]
         );
 
         $expected = [
@@ -270,7 +275,7 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
                 [
                     'lead' => 'TEST1X',
                     'follow' => 'TEST1Y',
-                    'interval' => 23,
+                    'interval' => 73,
                 ],
                 [
                     'lead' => 'TEST1Y',

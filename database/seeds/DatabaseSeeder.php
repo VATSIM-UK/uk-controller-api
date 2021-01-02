@@ -113,6 +113,8 @@ class DatabaseSeeder extends Seeder
         ],
         DepartureIntervalTableSeeder::class => [
             'departure_intervals',
+            'sid_departure_interval_groups',
+            'sid_departure_interval_group_sid_departure_interval_group',
         ],
     ];
 

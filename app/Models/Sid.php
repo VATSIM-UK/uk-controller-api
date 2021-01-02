@@ -21,6 +21,7 @@ class Sid extends Model
         'initial_altitude',
         'handoff_id',
         'prenote_id',
+        'sid_departure_interval_group_id',
         'created_at',
         'updated_at',
     ];
@@ -51,15 +52,5 @@ class Sid extends Model
             'sid_id',
             'prenote_id'
         );
-    }
-
-    public function departureIntervals(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Sid::class,
-            'departure_sid_intervals',
-            'lead_sid_id',
-            'following_sid_id'
-        )->withPivot('interval');
     }
 }
