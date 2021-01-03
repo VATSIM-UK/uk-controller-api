@@ -30,8 +30,8 @@ class CreateDepartureRecatWakeIntervalsTable extends Migration
                 ->on('recat_categories')
                 ->cascadeOnDelete();
             $table->unique(
-                ['lead_recat_category_id', 'following_recat_category_id', 'intermediate'],
-                'lead_following_recat_intermediate'
+                ['lead_recat_category_id', 'following_recat_category_id'],
+                'lead_following_recat_categories'
             );
         });
     }
