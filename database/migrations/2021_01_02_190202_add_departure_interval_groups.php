@@ -70,6 +70,11 @@ class AddDepartureIntervalGroups extends Migration
         'EGPF_LOMON',
         'EGPH_SID',
         'EGPK_SID',
+        'EGSS_SOUTH_EAST',
+        'EGSS_UTAVA_BKY',
+        'EGSS_NUGBO',
+        'EGVA_SID',
+        'EGWU_SID',
     ];
 
     /**

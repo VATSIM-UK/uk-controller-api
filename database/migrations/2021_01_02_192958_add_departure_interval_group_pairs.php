@@ -1158,6 +1158,61 @@ class AddDepartureIntervalGroupPairs extends Migration
             'EGPK_SID',
             120
         ],
+        [
+            'EGSS_NUGBO',
+            'EGSS_NUGBO',
+            240,
+        ],
+        [
+            'EGSS_NUGBO',
+            'EGSS_UTAVA_BKY',
+            120,
+        ],
+        [
+            'EGSS_NUGBO',
+            'EGSS_SOUTH_EAST',
+            60,
+        ],
+        [
+            'EGSS_UTAVA_BKY',
+            'EGSS_NUGBO',
+            120,
+        ],
+        [
+            'EGSS_UTAVA_BKY',
+            'EGSS_UTAVA_BKY',
+            120,
+        ],
+        [
+            'EGSS_UTAVA_BKY',
+            'EGSS_SOUTH_EAST',
+            60,
+        ],
+        [
+            'EGSS_SOUTH_EAST',
+            'EGSS_NUGBO',
+            60,
+        ],
+        [
+            'EGSS_SOUTH_EAST',
+            'EGSS_UTAVA_BKY',
+            60,
+        ],
+        [
+            'EGSS_SOUTH_EAST',
+            'EGSS_SOUTH_EAST',
+            120,
+        ],
+        [
+            'EGVA_SID',
+            'EGVA_SID',
+            120
+        ],
+        [
+            'EGWU_SID',
+            'EGWU_SID',
+            120
+        ],
     ];
 
     /**
