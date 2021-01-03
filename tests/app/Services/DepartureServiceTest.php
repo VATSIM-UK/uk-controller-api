@@ -3,31 +3,31 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
-use App\Events\DepartureIntervalUpdatedEvent;
+use App\Events\DepartureRestrictionUpdatedEvent;
 use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
-use App\Models\Departure\DepartureInterval;
+use App\Models\Departure\DepartureRestriction;
 use App\Models\Departure\SidDepartureIntervalGroup;
 use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class DepartureIntervalServiceTest extends BaseFunctionalTestCase
+class DepartureServiceTest extends BaseFunctionalTestCase
 {
-    private DepartureIntervalService $service;
+    private DepartureService $service;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = $this->app->make(DepartureIntervalService::class);
+        $this->service = $this->app->make(DepartureService::class);
         Carbon::setTestNow(Carbon::now()->startOfSecond());
     }
 
     public function testItCreatesAMinimumDepartureIntervalWithSids()
     {
-        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
-        $interval = $this->service->createMinimumDepartureInterval(
+        $this->expectsEvents(DepartureRestrictionUpdatedEvent::class);
+        $restriction = $this->service->createMinimumDepartureInterval(
             4,
             'EGLL',
             ['TEST1X', 'TEST1Y'],
@@ -35,9 +35,9 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertDatabaseHas(
-            'departure_intervals',
+            'departure_restrictions',
             [
-                'id' => $interval->id,
+                'id' => $restriction->id,
                 'type_id' => 1,
                 'interval' => 4,
                 'expires_at' => Carbon::now()->addMinutes(10),
@@ -45,17 +45,17 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertDatabaseHas(
-            'departure_interval_sid',
+            'departure_restriction_sid',
             [
-                'departure_interval_id' => $interval->id,
+                'departure_restriction_id' => $restriction->id,
                 'sid_id' => 1,
             ]
         );
 
         $this->assertDatabaseHas(
-            'departure_interval_sid',
+            'departure_restriction_sid',
             [
-                'departure_interval_id' => $interval->id,
+                'departure_restriction_id' => $restriction->id,
                 'sid_id' => 2,
             ]
         );
@@ -63,8 +63,8 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAnAverageDepartureIntervalWithSids()
     {
-        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
-        $interval = $this->service->createAverageDepartureInterval(
+        $this->expectsEvents(DepartureRestrictionUpdatedEvent::class);
+        $restriction = $this->service->createAverageDepartureInterval(
             4,
             'EGLL',
             ['TEST1X', 'TEST1Y'],
@@ -72,9 +72,9 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertDatabaseHas(
-            'departure_intervals',
+            'departure_restrictions',
             [
-                'id' => $interval->id,
+                'id' => $restriction->id,
                 'type_id' => 2,
                 'interval' => 4,
                 'expires_at' => Carbon::now()->addMinutes(10),
@@ -82,34 +82,34 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertDatabaseHas(
-            'departure_interval_sid',
+            'departure_restriction_sid',
             [
-                'departure_interval_id' => $interval->id,
+                'departure_restriction_id' => $restriction->id,
                 'sid_id' => 1,
             ]
         );
 
         $this->assertDatabaseHas(
-            'departure_interval_sid',
+            'departure_restriction_sid',
             [
-                'departure_interval_id' => $interval->id,
+                'departure_restriction_id' => $restriction->id,
                 'sid_id' => 2,
             ]
         );
     }
 
-    public function testItUpdatesIntervals()
+    public function testItUpdatesRestrictions()
     {
-        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
-        $interval = $this->service->createAverageDepartureInterval(
+        $this->expectsEvents(DepartureRestrictionUpdatedEvent::class);
+        $restriction = $this->service->createAverageDepartureInterval(
             4,
             'EGLL',
             ['TEST1X', 'TEST1Y'],
             Carbon::now()->addMinutes(10)
         );
 
-        $this->service->updateDepartureInterval(
-            $interval->id,
+        $this->service->updateDepartureRestriction(
+            $restriction->id,
             2,
             'EGLL',
             ['TEST1X'],
@@ -117,9 +117,9 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertDatabaseHas(
-            'departure_intervals',
+            'departure_restrictions',
             [
-                'id' => $interval->id,
+                'id' => $restriction->id,
                 'type_id' => 2,
                 'interval' => 2,
                 'expires_at' => Carbon::now()->addMinutes(20),
@@ -127,42 +127,42 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertDatabaseHas(
-            'departure_interval_sid',
+            'departure_restriction_sid',
             [
-                'departure_interval_id' => $interval->id,
+                'departure_restriction_id' => $restriction->id,
                 'sid_id' => 1,
             ]
         );
 
         $this->assertDatabaseMissing(
-            'departure_interval_sid',
+            'departure_restriction_sid',
             [
-                'departure_interval_id' => $interval->id,
+                'departure_restriction_id' => $restriction->id,
                 'sid_id' => 2,
             ]
         );
     }
 
-    public function testItExpiresIntervals()
+    public function testItExpiresRestrictions()
     {
-        $this->expectsEvents(DepartureIntervalUpdatedEvent::class);
-        $interval = $this->service->createAverageDepartureInterval(
+        $this->expectsEvents(DepartureRestrictionUpdatedEvent::class);
+        $restriction = $this->service->createAverageDepartureInterval(
             4,
             'EGLL',
             ['TEST1X', 'TEST1Y'],
             Carbon::now()->addMinutes(10)
         );
 
-        $this->service->expireDepartureInterval($interval->id);
-        $interval->refresh();
-        $this->assertTrue($interval->expired());
+        $this->service->expireDepartureRestriction($restriction->id);
+        $restriction->refresh();
+        $this->assertTrue($restriction->expired());
     }
 
-    public function testItReturnsActiveIntervals()
+    public function testItReturnsActiveRestrictions()
     {
         $this->withoutEvents();
 
-        $interval1 = $this->service->createAverageDepartureInterval(
+        $restriction1 = $this->service->createAverageDepartureInterval(
             4,
             'EGLL',
             ['TEST1X', 'TEST1Y'],
@@ -176,7 +176,7 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
             Carbon::now()
         );
 
-        $interval3 = $this->service->createMinimumDepartureInterval(
+        $restriction3 = $this->service->createMinimumDepartureInterval(
             2,
             'EGLL',
             ['TEST1X', 'TEST1Y'],
@@ -191,10 +191,10 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         );
 
         $expected = new Collection([
-            DepartureInterval::with('sids', 'sids.airfield')->find($interval1->id),
-            DepartureInterval::with('sids', 'sids.airfield')->find($interval3->id)
+            DepartureRestriction::with('sids', 'sids.airfield')->find($restriction1->id),
+            DepartureRestriction::with('sids', 'sids.airfield')->find($restriction3->id)
         ]);
-        $this->assertEquals($expected, $this->service->getActiveIntervals());
+        $this->assertEquals($expected, $this->service->getActiveRestrictions());
     }
 
     public function testItReturnsUkWakeIntervalData()

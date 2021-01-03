@@ -2,19 +2,19 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Departure\DepartureInterval;
+use App\Models\Departure\DepartureRestriction;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class CleanDepartureIntervals extends Command
+class CleanDepartureRestrictions extends Command
 {
-    protected $signature = 'departure-intervals:clean';
+    protected $signature = 'departure-restrictions:clean';
 
     protected $description = 'Remove departure restrictions older than a specified age';
 
     public function handle(): int
     {
-        DepartureInterval::where(
+        DepartureRestriction::where(
             'expires_at',
             '<',
             Carbon::now()->subMonths(3)

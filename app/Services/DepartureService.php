@@ -2,22 +2,22 @@
 
 namespace App\Services;
 
-use App\Events\DepartureIntervalUpdatedEvent;
+use App\Events\DepartureRestrictionUpdatedEvent;
 use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
-use App\Models\Departure\DepartureInterval;
-use App\Models\Departure\DepartureIntervalType;
+use App\Models\Departure\DepartureRestriction;
+use App\Models\Departure\DepartureRestrictionType;
 use App\Models\Departure\SidDepartureIntervalGroup;
 use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class DepartureIntervalService
+class DepartureService
 {
-    public function getActiveIntervals(): Collection
+    public function getActiveRestrictions(): Collection
     {
-        return DepartureInterval::with('sids', 'sids.airfield')->active()->get();
+        return DepartureRestriction::with('sids', 'sids.airfield')->active()->get();
     }
 
     /**
@@ -28,8 +28,8 @@ class DepartureIntervalService
         string $airfield,
         array $sids,
         Carbon $expiresAt
-    ) : DepartureInterval {
-        return $this->createDepartureInterval($interval, 'mdi', $airfield, $sids, $expiresAt);
+    ) : DepartureRestriction {
+        return $this->createDepartureRestriction($interval, 'mdi', $airfield, $sids, $expiresAt);
     }
 
     /**
@@ -40,35 +40,35 @@ class DepartureIntervalService
         string $airfield,
         array $sids,
         Carbon $expiresAt
-    ) : DepartureInterval {
-        return $this->createDepartureInterval($interval, 'adi', $airfield, $sids, $expiresAt);
+    ) : DepartureRestriction {
+        return $this->createDepartureRestriction($interval, 'adi', $airfield, $sids, $expiresAt);
     }
 
-    public function updateDepartureInterval(
+    public function updateDepartureRestriction(
         int $id,
         int $interval,
         string $airfield,
         array $sids,
         Carbon $expiresAt
-    ) : DepartureInterval {
+    ) : DepartureRestriction {
         return tap(
-            DepartureInterval::findOrFail($id),
-            function (DepartureInterval $model) use ($interval, $airfield, $sids, $expiresAt) {
+            DepartureRestriction::findOrFail($id),
+            function (DepartureRestriction $model) use ($interval, $airfield, $sids, $expiresAt) {
                 $model->update(['expires_at' => $expiresAt, 'interval' => $interval]);
-                $this->addSidToDepartureInterval($model, $airfield, $sids);
-                $this->triggerIntervalUpdatedEvent($model);
+                $this->addSidToDepartureRestriction($model, $airfield, $sids);
+                $this->triggerRestrictionUpdatedEvent($model);
             }
         );
     }
 
-    public function expireDepartureInterval(int $id): void
+    public function expireDepartureRestriction(int $id): void
     {
-        $this->triggerIntervalUpdatedEvent(DepartureInterval::findOrFail($id)->expire());
+        $this->triggerRestrictionUpdatedEvent(DepartureRestriction::findOrFail($id)->expire());
     }
 
-    public function triggerIntervalUpdatedEvent(DepartureInterval $interval): void
+    public function triggerRestrictionUpdatedEvent(DepartureRestriction $interval): void
     {
-        event(new DepartureIntervalUpdatedEvent($interval));
+        event(new DepartureRestrictionUpdatedEvent($interval));
     }
 
     public function getDepartureUkWakeIntervalsDependency(): array
@@ -118,26 +118,26 @@ class DepartureIntervalService
     }
 
     /**
-     * Create a specified type of departure interval
+     * Create a specified type of departure restriction
      */
-    private function createDepartureInterval(
+    private function createDepartureRestriction(
         int $interval,
         string $type,
         string $airfield,
         array $sids,
         Carbon $expiresAt
-    ): DepartureInterval {
+    ): DepartureRestriction {
         return tap(
-            DepartureInterval::create(
+            DepartureRestriction::create(
                 [
                     'interval' => $interval,
-                    'type_id' => DepartureIntervalType::where('key', $type)->first()->id,
+                    'type_id' => DepartureRestrictionType::where('key', $type)->first()->id,
                     'expires_at' => $expiresAt
                 ]
             ),
-            function (DepartureInterval $interval) use ($airfield, $sids){
-                $this->addSidToDepartureInterval($interval, $airfield, $sids);
-                $this->triggerIntervalUpdatedEvent($interval);
+            function (DepartureRestriction $interval) use ($airfield, $sids){
+                $this->addSidToDepartureRestriction($interval, $airfield, $sids);
+                $this->triggerRestrictionUpdatedEvent($interval);
             }
         );
     }
@@ -145,14 +145,17 @@ class DepartureIntervalService
     /**
      * Associate sids with a newly created departure interval
      */
-    private function addSidToDepartureInterval(DepartureInterval $interval, string $airfield, array $identifiers): void
-    {
+    private function addSidToDepartureRestriction(
+        DepartureRestriction $restriction,
+        string $airfield,
+        array $identifiers
+    ): void {
         $sids = Sid::whereHas('airfield', function (Builder $airfieldQuery) use ($airfield) {
             $airfieldQuery->where('code', $airfield);
         })
             ->whereIn('identifier', $identifiers)
             ->pluck('id');
 
-        $interval->sids()->sync($sids);
+        $restriction->sids()->sync($sids);
     }
 }

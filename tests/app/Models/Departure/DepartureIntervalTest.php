@@ -10,10 +10,10 @@ class DepartureIntervalTest extends BaseFunctionalTestCase
 {
     public function testItSerialisesToArray()
     {
-        $interval = DepartureInterval::create(
+        $interval = DepartureRestriction::create(
             [
                 'interval' => 2,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );

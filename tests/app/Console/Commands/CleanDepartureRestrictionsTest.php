@@ -3,16 +3,16 @@
 namespace App\Console\Commands;
 
 use App\BaseFunctionalTestCase;
-use App\Models\Departure\DepartureInterval;
+use App\Models\Departure\DepartureRestriction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 
-class CleanDepartureIntervalsTest extends BaseFunctionalTestCase
+class CleanDepartureRestrictionsTest extends BaseFunctionalTestCase
 {
-    public function testItDeletesOldAssignments()
+    public function testItDeletesOldRestrictions()
     {
         Carbon::setTestNow(Carbon::now());
-        DepartureInterval::insert(
+        DepartureRestriction::insert(
             [
                 [
                     'type_id' => 1,
@@ -38,16 +38,16 @@ class CleanDepartureIntervalsTest extends BaseFunctionalTestCase
             ]
         );
 
-        Artisan::call('departure-intervals:clean');
-        $this->assertDatabaseCount('departure_intervals', 2);
+        Artisan::call('departure-restrictions:clean');
+        $this->assertDatabaseCount('departure_restrictions', 2);
         $this->assertDatabaseHas(
-            'departure_intervals',
+            'departure_restrictions',
             [
                 'id' => 1,
             ]
         );
         $this->assertDatabaseHas(
-            'departure_intervals',
+            'departure_restrictions',
             [
                 'id' => 2,
             ]

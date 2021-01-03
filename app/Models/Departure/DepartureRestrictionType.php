@@ -4,7 +4,7 @@ namespace App\Models\Departure;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DepartureIntervalType extends Model
+class DepartureRestrictionType extends Model
 {
     protected $fillable = [
         'key',

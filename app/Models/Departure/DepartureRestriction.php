@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class DepartureInterval extends Model
+class DepartureRestriction extends Model
 {
     protected $fillable = [
         'type_id',
@@ -36,7 +36,7 @@ class DepartureInterval extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(DepartureIntervalType::class);
+        return $this->belongsTo(DepartureRestrictionType::class);
     }
 
     public function sids(): BelongsToMany

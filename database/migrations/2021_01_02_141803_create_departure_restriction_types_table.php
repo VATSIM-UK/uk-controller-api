@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDepartureIntervalTypesTable extends Migration
+class CreateDepartureRestrictionTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,14 +15,14 @@ class CreateDepartureIntervalTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('departure_interval_types', function (Blueprint $table) {
+        Schema::create('departure_restriction_types', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique()->comment('Key for the interval type');
-            $table->string('description')->comment('Description of the interval type');
+            $table->string('key')->unique()->comment('Key for this type');
+            $table->string('description')->comment('Description of the type');
             $table->timestamps();
         });
 
-        DB::table('departure_interval_types')
+        DB::table('departure_restriction_types')
             ->insert(
                 [
                     [
@@ -46,6 +46,6 @@ class CreateDepartureIntervalTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departure_interval_types');
+        Schema::dropIfExists('departure_restriction_types');
     }
 }

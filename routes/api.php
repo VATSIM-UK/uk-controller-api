@@ -29,10 +29,10 @@ Route::middleware('plugin.user')->group(function () {
     );
 
     // Departures
-    Route::post('departure/intervals', 'DepartureController@createInterval');
-    Route::put('departure/interval/{id}', 'DepartureController@updateInterval')
+    Route::post('departure/restrictions', 'DepartureController@createRestriction');
+    Route::put('departure/restriction/{id}', 'DepartureController@updateRestriction')
         ->where('id', '[0-9]+');
-    Route::delete('departure/interval/{id}', 'DepartureController@deleteInterval')
+    Route::delete('departure/restriction/{id}', 'DepartureController@deleteRestriction')
         ->where('id', '[0-9]+');
 
     // Dependencies
@@ -201,7 +201,7 @@ Route::middleware('public')->group(function () {
     Route::get('airfield-ownership', 'AirfieldController@getAirfieldOwnershipDependency');
 
     // Departures
-    Route::get('departure/intervals', 'DepartureController@getActiveDepartureIntervals');
+    Route::get('departure/restrictions', 'DepartureController@getActiveDepartureRestrictions');
     Route::get('departure/intervals/wake-uk/dependency', 'DepartureController@getDepartureUkWakeIntervalsDependency');
     Route::get('departure/intervals/wake-recat/dependency', 'DepartureController@getDepartureRecatWakeIntervalsDependency');
     Route::get('departure/intervals/sid-groups/dependency', 'DepartureController@getDepartureSidIntervalGroupsDependency');

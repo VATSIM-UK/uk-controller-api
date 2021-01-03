@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
-use App\Models\Departure\DepartureInterval;
-use App\Models\Departure\DepartureIntervalType;
+use App\Models\Departure\DepartureRestriction;
+use App\Models\Departure\DepartureRestrictionType;
 use App\Models\Departure\SidDepartureIntervalGroup;
 use App\Models\Sid;
 use Carbon\Carbon;
@@ -21,55 +21,55 @@ class DepartureControllerTest extends BaseApiTestCase
         $this->withoutEvents();
     }
 
-    public function testItReturnsActiveIntervals()
+    public function testItReturnsActiveRestrictions()
     {
-        $interval1 = DepartureInterval::create(
+        $restriction1 = DepartureRestriction::create(
             [
                 'interval' => 2,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
-        $interval1->sids()->attach([1, 2]);
+        $restriction1->sids()->attach([1, 2]);
 
-        $interval2 = DepartureInterval::create(
+        $restriction2 = DepartureRestriction::create(
             [
                 'interval' => 4,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
 
-        $interval2->sids()->attach([3]);
+        $restriction2->sids()->attach([3]);
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/restrictions')
             ->assertOk()
-            ->assertJson([$interval1->toArray(), $interval2->toArray()]);
+            ->assertJson([$restriction1->toArray(), $restriction2->toArray()]);
     }
 
-    public function testItExpiresIntervals()
+    public function testItExpiresRestrictions()
     {
-        $interval = DepartureInterval::create(
+        $restriction = DepartureRestriction::create(
             [
                 'interval' => 2,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addHour()
             ]
         );
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, sprintf('departure/interval/%d', $interval->id))
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, sprintf('departure/restriction/%d', $restriction->id))
             ->assertNoContent();
 
         $this->assertDatabaseHas(
-            'departure_intervals',
+            'departure_restrictions',
             [
-                'id' => $interval->id,
+                'id' => $restriction->id,
                 'expires_at' => Carbon::now()
             ]
         );
     }
 
-    public function badIntervalCreationProvider(): array
+    public function badRestrictionCreationProvider(): array
     {
         return [
             'Missing type' => [
@@ -242,20 +242,20 @@ class DepartureControllerTest extends BaseApiTestCase
     }
 
     /**
-     * @dataProvider badIntervalCreationProvider
+     * @dataProvider badRestrictionCreationProvider
      */
-    public function testItReturnsBadRequestOnBadIntervalCreationData(array $data)
+    public function testItReturnsBadRequestOnBadRestrictionCreationData(array $data)
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/intervals', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/restrictions', $data)
             ->assertStatus(400);
     }
 
-    public function testItCreatesMinimumDepartureInterval()
+    public function testItCreatesMinimumDepartureRestriction()
     {
-        $previousInterval = DepartureInterval::create(
+        $previousRestriction = DepartureRestriction::create(
             [
                 'interval' => 2,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
@@ -272,7 +272,7 @@ class DepartureControllerTest extends BaseApiTestCase
         ];
 
         $expected = [
-            'id' => $previousInterval->id + 1,
+            'id' => $previousRestriction->id + 1,
             'type' => 'mdi',
             'interval' => 5,
             'expires_at' => Carbon::now()->addMinutes(15),
@@ -284,17 +284,17 @@ class DepartureControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/intervals', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/restrictions', $data)
             ->assertStatus(201)
             ->assertJson($expected);
     }
 
     public function testItCreatesAverageDepartureInterval()
     {
-        $previousInterval = DepartureInterval::create(
+        $previousRestriction = DepartureRestriction::create(
             [
                 'interval' => 2,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
@@ -311,7 +311,7 @@ class DepartureControllerTest extends BaseApiTestCase
         ];
 
         $expected = [
-            'id' => $previousInterval->id + 1,
+            'id' => $previousRestriction->id + 1,
             'type' => 'adi',
             'interval' => 5,
             'expires_at' => Carbon::now()->addMinutes(15),
@@ -323,12 +323,12 @@ class DepartureControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/intervals', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/restrictions', $data)
             ->assertStatus(201)
             ->assertJson($expected);
     }
 
-    public function badIntervalUpdateProvider(): array
+    public function badRestrictionUpdateProvider(): array
     {
         return [
             'Missing interval' => [
@@ -465,22 +465,27 @@ class DepartureControllerTest extends BaseApiTestCase
     }
 
     /**
-     * @dataProvider badIntervalUpdateProvider
+     * @dataProvider badRestrictionUpdateProvider
      */
     public function testItReturnsBadRequestOnBadIntervalUpdateData(array $data)
     {
-        $interval = DepartureInterval::create(
+        $restriction = DepartureRestriction::create(
             [
                 'interval' => 2,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, sprintf('departure/interval/%d', $interval->id), $data)
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            sprintf('departure/restriction/%d',
+                    $restriction->id),
+            $data
+        )
             ->assertStatus(400);
     }
 
-    public function testItReturnsNotFoundOnUnknownInterval()
+    public function testItReturnsNotFoundOnUnknownRestriction()
     {
         $data = [
             'interval' => 5,
@@ -491,20 +496,20 @@ class DepartureControllerTest extends BaseApiTestCase
                 'TEST1Y'
             ]
         ];
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'departure/interval/999', $data)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'departure/restriction/999', $data)
             ->assertNotFound();
     }
 
     public function testItUpdatesAnInterval()
     {
-        $interval = DepartureInterval::create(
+        $restriction = DepartureRestriction::create(
             [
                 'interval' => 2,
-                'type_id' => DepartureIntervalType::where('key', 'mdi')->first()->id,
+                'type_id' => DepartureRestrictionType::where('key', 'mdi')->first()->id,
                 'expires_at' => Carbon::now()->addSecond()
             ]
         );
-        $interval->sids()->attach([1, 2]);
+        $restriction->sids()->attach([1, 2]);
 
         $data = [
             'type' => 'mdi',
@@ -517,7 +522,7 @@ class DepartureControllerTest extends BaseApiTestCase
         ];
 
         $expected = [
-            'id' => $interval->id,
+            'id' => $restriction->id,
             'type' => 'mdi',
             'interval' => 5,
             'expires_at' => Carbon::now()->addMinutes(15),
@@ -528,7 +533,11 @@ class DepartureControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, sprintf('departure/interval/%d', $interval->id), $data)
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PUT,
+            sprintf('departure/restriction/%d', $restriction->id),
+            $data
+        )
             ->assertOk()
             ->assertJson($expected);
     }

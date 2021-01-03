@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDepartureIntervalsSidTable extends Migration
+class CreateDepartureRestrictionSidTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateDepartureIntervalsSidTable extends Migration
      */
     public function up()
     {
-        Schema::create('departure_interval_sid', function (Blueprint $table) {
+        Schema::create('departure_restriction_sid', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('departure_interval_id')->comment('The interval this applies to');
+            $table->unsignedBigInteger('departure_restriction_id')->comment('The restriction this applies to');
             $table->unsignedInteger('sid_id')->comment('The sids that this interval applies to');
             $table->timestamps();
 
-            $table->foreign('departure_interval_id')->references('id')->on('departure_intervals')->cascadeOnDelete();
+            $table->foreign('departure_restriction_id')
+                ->references('id')
+                ->on('departure_restrictions')->cascadeOnDelete();
+
             $table->foreign('sid_id')->references('id')->on('sid')->cascadeOnDelete();
         });
     }
@@ -31,6 +34,6 @@ class CreateDepartureIntervalsSidTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departure_interval_sid');
+        Schema::dropIfExists('departure_restriction_sid');
     }
 }

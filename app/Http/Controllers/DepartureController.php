@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rules\Airfield\AirfieldIcao;
-use App\Services\DepartureIntervalService;
+use App\Services\DepartureService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,25 +11,25 @@ use Illuminate\Validation\Rule;
 
 class DepartureController extends BaseController
 {
-    private DepartureIntervalService $departureIntervalService;
+    private DepartureService $departureService;
 
-    public function __construct(DepartureIntervalService $departureIntervalService)
+    public function __construct(DepartureService $departureService)
     {
-        $this->departureIntervalService = $departureIntervalService;
+        $this->departureService = $departureService;
     }
 
-    public function getActiveDepartureIntervals(): JsonResponse
+    public function getActiveDepartureRestrictions(): JsonResponse
     {
-        return response()->json($this->departureIntervalService->getActiveIntervals());
+        return response()->json($this->departureService->getActiveRestrictions());
     }
 
-    public function deleteInterval(int $id): JsonResponse
+    public function deleteRestriction(int $id): JsonResponse
     {
-        $this->departureIntervalService->expireDepartureInterval($id);
+        $this->departureService->expireDepartureRestriction($id);
         return response()->json([], 204);
     }
 
-    public function createInterval(Request $request): JsonResponse
+    public function createRestriction(Request $request): JsonResponse
     {
         $badData = $this->checkForSuppliedData(
             $request,
@@ -56,7 +56,7 @@ class DepartureController extends BaseController
 
         $interval = call_user_func(
             [
-                $this->departureIntervalService,
+                $this->departureService,
                 $request->json('type') === 'mdi' ? 'createMinimumDepartureInterval' : 'createAverageDepartureInterval'
             ],
             $request->json('interval'),
@@ -68,7 +68,7 @@ class DepartureController extends BaseController
         return response()->json($interval, 201);
     }
 
-    public function updateInterval(Request $request, int $id): JsonResponse
+    public function updateRestriction(Request $request, int $id): JsonResponse
     {
         $badData = $this->checkForSuppliedData(
             $request,
@@ -88,7 +88,7 @@ class DepartureController extends BaseController
             return $badData;
         }
 
-        $interval = $this->departureIntervalService->updateDepartureInterval(
+        $interval = $this->departureService->updateDepartureRestriction(
             $id,
             $request->json('interval'),
             $request->json('airfield'),
@@ -101,16 +101,16 @@ class DepartureController extends BaseController
 
     public function getDepartureUkWakeIntervalsDependency(): JsonResponse
     {
-        return response()->json($this->departureIntervalService->getDepartureUkWakeIntervalsDependency());
+        return response()->json($this->departureService->getDepartureUkWakeIntervalsDependency());
     }
 
     public function getDepartureRecatWakeIntervalsDependency(): JsonResponse
     {
-        return response()->json($this->departureIntervalService->getDepartureRecatWakeIntervalsDependency());
+        return response()->json($this->departureService->getDepartureRecatWakeIntervalsDependency());
     }
 
     public function getDepartureSidIntervalGroupsDependency(): JsonResponse
     {
-        return response()->json($this->departureIntervalService->getDepartureIntervalGroupsDependency());
+        return response()->json($this->departureService->getDepartureIntervalGroupsDependency());
     }
 }

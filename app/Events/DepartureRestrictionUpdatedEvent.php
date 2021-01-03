@@ -2,22 +2,22 @@
 
 namespace App\Events;
 
-use App\Models\Departure\DepartureInterval;
+use App\Models\Departure\DepartureRestriction;
 use App\Models\Hold\AssignedHold;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class DepartureIntervalUpdatedEvent implements ShouldBroadcast
+class DepartureRestrictionUpdatedEvent implements ShouldBroadcast
 {
     const CHANNEL = 'departure-intervals';
 
     /**
-     * @var DepartureInterval
+     * @var DepartureRestriction
      */
-    private DepartureInterval $interval;
+    private DepartureRestriction $interval;
 
-    public function __construct(DepartureInterval $interval)
+    public function __construct(DepartureRestriction $interval)
     {
         $this->interval = $interval;
     }
