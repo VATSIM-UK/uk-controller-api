@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\DepartureIntervalUpdatedEvent;
+use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
 use App\Models\Departure\SidDepartureIntervalGroup;
@@ -196,9 +197,9 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->service->getActiveIntervals());
     }
 
-    public function testItReturnsWakeIntervalData()
+    public function testItReturnsUkWakeIntervalData()
     {
-        DB::table('departure_wake_intervals')->delete();
+        DB::table('departure_uk_wake_intervals')->delete();
 
         WakeCategory::where('code', 'H')->first()->departureIntervals()->sync(
             [
@@ -244,6 +245,50 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
         ];
 
         $this->assertEquals($expected, $this->service->getDepartureUkWakeIntervalsDependency());
+    }
+
+    public function testItReturnsRecatWakeIntervalData()
+    {
+        DB::table('departure_recat_wake_intervals')->delete();
+
+        RecatCategory::where('code', 'A')->first()->departureIntervals()->sync(
+            [
+                RecatCategory::where('code', 'B')->first()->id => [
+                    'interval' => 1,
+                ],
+                RecatCategory::where('code', 'C')->first()->id => [
+                    'interval' => 2,
+                ],
+            ]
+        );
+
+        RecatCategory::where('code', 'C')->first()->departureIntervals()->sync(
+            [
+                RecatCategory::where('code', 'F')->first()->id => [
+                    'interval' => 3,
+                ],
+            ]
+        );
+
+        $expected = [
+            [
+                'lead' => 'A',
+                'follow' => 'B',
+                'interval' => 1,
+            ],
+            [
+                'lead' => 'A',
+                'follow' => 'C',
+                'interval' => 2,
+            ],
+            [
+                'lead' => 'C',
+                'follow' => 'F',
+                'interval' => 3,
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getDepartureRecatWakeIntervalsDependency());
     }
 
     public function testItReturnsDepartureIntervalGroups()

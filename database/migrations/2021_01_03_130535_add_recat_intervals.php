@@ -24,82 +24,82 @@ class AddRecatIntervals extends Migration
                 // CAT-A lead
                 [
                     'lead_recat_category_id' => $categories['A'],
-                    'follow_recat_category_id' => $categories['B'],
+                    'following_recat_category_id' => $categories['B'],
                     'interval' => 100,
                 ],
                 [
                     'lead_recat_category_id' => $categories['A'],
-                    'follow_recat_category_id' => $categories['C'],
+                    'following_recat_category_id' => $categories['C'],
                     'interval' => 120,
                 ],
                 [
                     'lead_recat_category_id' => $categories['A'],
-                    'follow_recat_category_id' => $categories['D'],
+                    'following_recat_category_id' => $categories['D'],
                     'interval' => 140,
                 ],
                 [
                     'lead_recat_category_id' => $categories['A'],
-                    'follow_recat_category_id' => $categories['E'],
+                    'following_recat_category_id' => $categories['E'],
                     'interval' => 160,
                 ],
                 [
                     'lead_recat_category_id' => $categories['A'],
-                    'follow_recat_category_id' => $categories['F'],
+                    'following_recat_category_id' => $categories['F'],
                     'interval' => 180,
                 ],
 
                 // CAT-B lead
                 [
                     'lead_recat_category_id' => $categories['B'],
-                    'follow_recat_category_id' => $categories['D'],
+                    'following_recat_category_id' => $categories['D'],
                     'interval' => 100,
                 ],
                 [
                     'lead_recat_category_id' => $categories['B'],
-                    'follow_recat_category_id' => $categories['E'],
+                    'following_recat_category_id' => $categories['E'],
                     'interval' => 120,
                 ],
                 [
                     'lead_recat_category_id' => $categories['B'],
-                    'follow_recat_category_id' => $categories['F'],
+                    'following_recat_category_id' => $categories['F'],
                     'interval' => 140,
                 ],
 
                 // CAT-C lead
                 [
                     'lead_recat_category_id' => $categories['C'],
-                    'follow_recat_category_id' => $categories['D'],
+                    'following_recat_category_id' => $categories['D'],
                     'interval' => 80,
                 ],
                 [
                     'lead_recat_category_id' => $categories['C'],
-                    'follow_recat_category_id' => $categories['E'],
+                    'following_recat_category_id' => $categories['E'],
                     'interval' => 100,
                 ],
                 [
                     'lead_recat_category_id' => $categories['C'],
-                    'follow_recat_category_id' => $categories['F'],
+                    'following_recat_category_id' => $categories['F'],
                     'interval' => 80,
                 ],
 
                 // CAT-D Lead
                 [
                     'lead_recat_category_id' => $categories['D'],
-                    'follow_recat_category_id' => $categories['F'],
+                    'following_recat_category_id' => $categories['F'],
                     'interval' => 120,
                 ],
 
                 // CAT-E Lead
                 [
                     'lead_recat_category_id' => $categories['E'],
-                    'follow_recat_category_id' => $categories['F'],
+                    'following_recat_category_id' => $categories['F'],
                     'interval' => 100,
                 ],
 
                 // CAT-F Lead
                 [
                     'lead_recat_category_id' => $categories['F'],
-                    'follow_recat_category_id' => $categories['F'],
+                    'following_recat_category_id' => $categories['F'],
                     'interval' => 80,
                 ],
             ]

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\DepartureIntervalUpdatedEvent;
+use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
 use App\Models\Departure\DepartureIntervalType;
@@ -84,6 +85,26 @@ class DepartureIntervalService
                     'follow' => $follow->code,
                     'interval' => (int) $follow->pivot->interval,
                     'intermediate' => (bool) $follow->pivot->intermediate,
+                ];
+            }
+        }
+
+        return $mappings;
+    }
+
+    public function getDepartureRecatWakeIntervalsDependency(): array
+    {
+        $mappings = [];
+        $categories = RecatCategory::with('departureIntervals')
+            ->whereHas('departureIntervals')
+            ->get();
+
+        foreach ($categories as $category) {
+            foreach ($category->departureIntervals as $follow) {
+                $mappings[] = [
+                    'lead' => $category->code,
+                    'follow' => $follow->code,
+                    'interval' => (int) $follow->pivot->interval
                 ];
             }
         }
