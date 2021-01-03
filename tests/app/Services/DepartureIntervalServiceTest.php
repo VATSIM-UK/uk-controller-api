@@ -243,7 +243,7 @@ class DepartureIntervalServiceTest extends BaseFunctionalTestCase
             ],
         ];
 
-        $this->assertEquals($expected, $this->service->getDepartureWakeIntervalsDependency());
+        $this->assertEquals($expected, $this->service->getDepartureUkWakeIntervalsDependency());
     }
 
     public function testItReturnsDepartureIntervalGroups()

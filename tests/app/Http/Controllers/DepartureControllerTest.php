@@ -579,7 +579,7 @@ class DepartureControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals/wake/dependency')
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals/wake-uk/dependency')
             ->assertOk()
             ->assertJson($expected);
     }

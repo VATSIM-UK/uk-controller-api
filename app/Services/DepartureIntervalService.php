@@ -70,7 +70,7 @@ class DepartureIntervalService
         event(new DepartureIntervalUpdatedEvent($interval));
     }
 
-    public function getDepartureWakeIntervalsDependency(): array
+    public function getDepartureUkWakeIntervalsDependency(): array
     {
         $mappings = [];
         $categories = WakeCategory::with('departureIntervals')
