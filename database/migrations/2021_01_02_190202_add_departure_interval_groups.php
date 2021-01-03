@@ -34,6 +34,16 @@ class AddDepartureIntervalGroups extends Migration
         'EGGW_OLNEY_08',
         'EGJB_SID',
         'EGJJ_SID',
+        'EGKK_EAST_26',
+        'EGKK_BIG_26',
+        'EGKK_WEST_26',
+        'EGKK_SFD_26',
+        'EGKK_RELIEF_26',
+        'EGKK_LAM_08',
+        'EGKK_EAST_08',
+        'EGKK_BIG_08',
+        'EGKK_WEST_08',
+        'EGKK_SFD_08',
     ];
 
     /**

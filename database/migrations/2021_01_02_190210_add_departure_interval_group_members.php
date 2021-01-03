@@ -178,7 +178,70 @@ class AddDepartureIntervalGroupMembers extends Migration
             'ORVAL1A',
             'ORVAL1B',
             'OYSTA2B',
-        ]
+        ],
+        'EGKK_EAST_26' => [
+            'ADMAG2X',
+            'CLN1M',
+            'CLN1V',
+            'DVR1M',
+            'DVR1V',
+            'FRANE1X',
+            'LAM2X',
+            'LAM6M',
+            'LAM6V',
+        ],
+        'EGKK_BIG_26' => [
+            'BIG2X',
+            'BIG8M',
+        ],
+        'EGKK_WEST_26' => [
+            'BOGNA1M',
+            'BOGNA1V',
+            'BOGNA1X',
+            'HARDY1X',
+            'HARDY5M',
+            'HARDY5V',
+            'NOVMA1X',
+            'NOVMA1M',
+            'NOVMA1V',
+            'SAM2M',
+        ],
+        'EGKK_SFD_26' => [
+            'SFD1X',
+            'SFD5M',
+            'SFD5V',
+        ],
+        'EGKK_RELIEF_26' => [
+            'DAGGA1M',
+            'DAGGA1V',
+            'DAGGA1X',
+            'TIGER1X',
+            'TIGER3M',
+            'TIGER3V',
+            'WIZAD1X',
+            'WIZAD4M',
+            'WIZAD4V',
+        ],
+        'EGKK_EAST_08' => [
+            'CLN5P',
+            'FRANE1Z',
+            'ODVIK1Z',
+            'DVR2P'
+        ],
+        'EGKK_BIG_08' => [
+            'BIG3P',
+            'BIG2Z',
+        ],
+        'EGKK_WEST_08' => [
+            'KENET3P',
+            'KENET3W',
+            'IMVUR1Z',
+        ],
+        'EGKK_SFD_08' => [
+            'SFD4Z',
+            'SFD9P',
+            'SFD9W',
+        ],
     ];
 
     /**
