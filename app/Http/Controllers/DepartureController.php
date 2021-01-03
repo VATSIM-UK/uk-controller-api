@@ -104,6 +104,11 @@ class DepartureController extends BaseController
         return response()->json($this->departureIntervalService->getDepartureUkWakeIntervalsDependency());
     }
 
+    public function getDepartureRecatWakeIntervalsDependency(): JsonResponse
+    {
+        return response()->json($this->departureIntervalService->getDepartureRecatWakeIntervalsDependency());
+    }
+
     public function getDepartureSidIntervalGroupsDependency(): JsonResponse
     {
         return response()->json($this->departureIntervalService->getDepartureIntervalGroupsDependency());

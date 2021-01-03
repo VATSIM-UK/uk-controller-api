@@ -2,9 +2,8 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 
-class AddDepartureWakeIntervalsDependency extends Migration
+class AddDepartureRecatWakeIntervalsDependency extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +14,9 @@ class AddDepartureWakeIntervalsDependency extends Migration
     {
         DB::table('dependencies')->insert(
             [
-                'key' => 'DEPENDENCY_DEPARTURE_WAKE_UK',
-                'uri' => 'departure/intervals/wake-uk/dependency',
-                'local_file' => 'departure-uk-wake-intervals.json',
+                'key' => 'DEPENDENCY_DEPARTURE_WAKE_RECAT',
+                'uri' => 'departure/intervals/wake-recat/dependency',
+                'local_file' => 'departure-recat-wake-intervals.json',
                 'created_at' => Carbon::now(),
             ]
         );
@@ -30,6 +29,6 @@ class AddDepartureWakeIntervalsDependency extends Migration
      */
     public function down()
     {
-        DB::table('dependencies')->where('key', 'DEPENDENCY_DEPARTURE_WAKE_UK')->delete();
+        DB::table('dependencies')->where('key', 'DEPENDENCY_DEPARTURE_WAKE_RECAT')->delete();
     }
 }

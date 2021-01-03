@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureInterval;
 use App\Models\Departure\DepartureIntervalType;
@@ -532,9 +533,9 @@ class DepartureControllerTest extends BaseApiTestCase
             ->assertJson($expected);
     }
 
-    public function testItReturnsWakeIntervalsDependency()
+    public function testItReturnsUkWakeIntervalsDependency()
     {
-        DB::table('departure_wake_intervals')->delete();
+        DB::table('departure_uk_wake_intervals')->delete();
 
         WakeCategory::where('code', 'H')->first()->departureIntervals()->sync(
             [
@@ -580,6 +581,52 @@ class DepartureControllerTest extends BaseApiTestCase
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals/wake-uk/dependency')
+            ->assertOk()
+            ->assertJson($expected);
+    }
+
+    public function testItReturnsRecatWakeIntervalsDependency()
+    {
+        DB::table('departure_recat_wake_intervals')->delete();
+
+        RecatCategory::where('code', 'A')->first()->departureIntervals()->sync(
+            [
+                RecatCategory::where('code', 'B')->first()->id => [
+                    'interval' => 1,
+                ],
+                RecatCategory::where('code', 'C')->first()->id => [
+                    'interval' => 2,
+                ],
+            ]
+        );
+
+        RecatCategory::where('code', 'C')->first()->departureIntervals()->sync(
+            [
+                RecatCategory::where('code', 'F')->first()->id => [
+                    'interval' => 3,
+                ],
+            ]
+        );
+
+        $expected = [
+            [
+                'lead' => 'A',
+                'follow' => 'B',
+                'interval' => 1,
+            ],
+            [
+                'lead' => 'A',
+                'follow' => 'C',
+                'interval' => 2,
+            ],
+            [
+                'lead' => 'C',
+                'follow' => 'F',
+                'interval' => 3,
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'departure/intervals/wake-recat/dependency')
             ->assertOk()
             ->assertJson($expected);
     }
