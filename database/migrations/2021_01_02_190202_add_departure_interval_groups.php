@@ -44,6 +44,20 @@ class AddDepartureIntervalGroups extends Migration
         'EGKK_BIG_08',
         'EGKK_WEST_08',
         'EGKK_SFD_08',
+        'EGLC_SID_NORTH_WEST',
+        'EGLC_SID_SOUTH_EAST',
+        'EGLL_NORTH_27',
+        'EGLL_WEST_27L',
+        'EGLL_WEST_27R',
+        'EGLL_MAXIT_27',
+        'EGLL_DET_27',
+        'EGLL_NORTH_09',
+        'EGLL_CPT_09',
+        'EGLL_GASGU_09',
+        'EGLL_MODMI_09',
+        'EGLL_DET_09L',
+        'EGLL_DET_09R',
+        'EGLF_SID',
     ];
 
     /**

@@ -242,6 +242,81 @@ class AddDepartureIntervalGroupMembers extends Migration
             'SFD9P',
             'SFD9W',
         ],
+        'EGLC_SID_NORTH_WEST' => [
+            'BPK1A',
+            'BPK5U',
+            'BPK1H',
+            'BPK5T',
+            'CPT1A',
+            'CPT1H',
+        ],
+        'EGLC_SID_SOUTH_EAST' => [
+            'CLN1A',
+            'CLN1H',
+            'LYD5T',
+            'LYD5U',
+            'EKNIV1A',
+            'EKNIV1H',
+            'DVRF5T',
+            'DVRF5U',
+        ],
+        'EGLL_NORTH_27' => [
+            'BPK7F',
+            'BPK7G',
+            'UMLAT1F',
+            'UMLAT1G',
+            'WOBUN3F',
+            'WOBUN3G',
+        ],
+        'EGLL_WEST_27L' => [
+            'CPT3F',
+            'GOGSI2F',
+        ],
+        'EGLL_WEST_27R' => [
+            'CPT3G',
+            'GOGSI2G',
+        ],
+        'EGLL_MAXIT_27' => [
+            'MAXIT1F',
+            'MAXIT1G',
+        ],
+        'EGLL_DET_27' => [
+            'DET2F',
+            'DET2G',
+        ],
+        'EGLL_NORTH_09' => [
+            'BPK5K',
+            'BPK6J',
+            'ULTIB1J',
+            'ULTIB1K',
+            'BUZAD3K',
+            'BUZAD4J',
+        ],
+        'EGLL_CPT_09' => [
+            'CPT4K',
+            'CPT5J',
+            'CHK',
+        ],
+        'EGLL_GASGU_09' => [
+            'GASGU2J',
+            'GASGU2K',
+        ],
+        'EGLL_MODMI_09' => [
+            'MODMI1K',
+            'MODMI1J',
+        ],
+        'EGLL_DET_09L' => [
+            'DET1K',
+        ],
+        'EGLL_DET_09R' => [
+            'DET1J',
+        ],
+        'EGLF_SID' => [
+            'GWC2F',
+            'GWC2L',
+            'HAZEL2F',
+            'HAZEL2L',
+        ],
     ];
 
     /**
