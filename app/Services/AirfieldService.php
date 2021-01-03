@@ -12,6 +12,17 @@ use OutOfRangeException;
 
 class AirfieldService
 {
+    public function getAirfieldsDependency(): array
+    {
+        return Airfield::all()->map(function (Airfield $airfield) {
+            return [
+                'id' => $airfield->id,
+                'identifier' => $airfield->code,
+                'departure_wake_scheme' => $airfield->departure_wake_separation_scheme_id,
+            ];
+        })->toArray();
+    }
+
     /**
      * @return array
      */

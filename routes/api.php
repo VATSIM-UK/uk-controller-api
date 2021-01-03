@@ -197,6 +197,7 @@ Route::middleware('public')->group(function () {
 
     // Airfields
     Route::get('airfield', 'AirfieldController@getAllAirfields');
+    Route::get('airfield/dependency', 'AirfieldController@getAirfieldDependency');
     Route::get('airfield-ownership', 'AirfieldController@getAirfieldOwnershipDependency');
 
     // Departures

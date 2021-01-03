@@ -43,4 +43,9 @@ class AirfieldController extends BaseController
 
         return response()->json($ownership);
     }
+
+    public function getAirfieldDependency(): JsonResponse
+    {
+        return response()->json($this->airfieldService->getAirfieldsDependency());
+    }
 }

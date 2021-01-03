@@ -24,6 +24,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'transition_altitude',
         'standard_high',
         'msl_calculation',
+        'departure_wake_separation_scheme_id',
         'created_at',
         'updated_at'
     ];

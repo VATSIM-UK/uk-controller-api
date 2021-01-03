@@ -13,6 +13,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                 'id' => 1,
                 'code' => 'EGLL',
                 'transition_altitude' => 6000,
+                'departure_wake_separation_scheme_id' => 1,
                 'controllers' => [
                     1,
                     2,
@@ -28,6 +29,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                 'id' => 2,
                 'code' => 'EGBB',
                 'transition_altitude' => 6000,
+                'departure_wake_separation_scheme_id' => 1,
                 'controllers' => [
                     4,
                 ],
@@ -37,6 +39,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                 'id' => 3,
                 'code' => 'EGKR',
                 'transition_altitude' => 6000,
+                'departure_wake_separation_scheme_id' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
             ],
@@ -65,5 +68,30 @@ class AirfieldControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'airfield-ownership')
             ->assertExactJson($expected)
             ->assertStatus(200);
+    }
+
+    public function testItGetsAirfieldDependency()
+    {
+        $expected = [
+            [
+                'id' => 1,
+                'identifier' => 'EGLL',
+                'departure_wake_scheme' => 1,
+            ],
+            [
+                'id' => 2,
+                'identifier' => 'EGBB',
+                'departure_wake_scheme' => 1,
+            ],
+            [
+                'id' => 3,
+                'identifier' => 'EGKR',
+                'departure_wake_scheme' => 1,
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'airfield/dependency')
+            ->assertOk()
+            ->assertJson($expected);
     }
 }

@@ -10,10 +10,7 @@ use OutOfRangeException;
 
 class AirfieldServiceTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var AirfieldService
-     */
-    private $service;
+    private AirfieldService $service;
 
     /**
      * @var ControllerPosition
@@ -39,6 +36,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 1,
                 'code' => 'EGLL',
                 'transition_altitude' => 6000,
+                'departure_wake_separation_scheme_id' => 1,
                 'controllers' => [
                     1,
                     2,
@@ -54,6 +52,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 2,
                 'code' => 'EGBB',
                 'transition_altitude' => 6000,
+                'departure_wake_separation_scheme_id' => 1,
                 'controllers' => [
                     4,
                 ],
@@ -63,6 +62,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 3,
                 'code' => 'EGKR',
                 'transition_altitude' => 6000,
+                'departure_wake_separation_scheme_id' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
             ],
@@ -439,5 +439,30 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
     {
         $this->expectException(ModelNotFoundException::class);
         AirfieldService::deleteTopDownOrder('EGXY');
+    }
+
+    public function testItReturnsAirfieldDependency()
+    {
+        Airfield::find(2)->update(['departure_wake_separation_scheme_id' => 2]);
+
+        $expected = [
+            [
+                'id' => 1,
+                'identifier' => 'EGLL',
+                'departure_wake_scheme' => 1,
+            ],
+            [
+                'id' => 2,
+                'identifier' => 'EGBB',
+                'departure_wake_scheme' => 2,
+            ],
+            [
+                'id' => 3,
+                'identifier' => 'EGKR',
+                'departure_wake_scheme' => 1,
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getAirfieldsDependency());
     }
 }
