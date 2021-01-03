@@ -84,7 +84,7 @@ class SidServiceTest extends BaseFunctionalTestCase
             ],
         ];
 
-        $this>assertEquals($expected, $this->service->getAllSids());
+        $this->assertEquals($expected, $this->service->getAllSids());
     }
 
 
