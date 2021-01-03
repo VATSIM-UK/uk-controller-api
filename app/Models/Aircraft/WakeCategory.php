@@ -33,7 +33,7 @@ class WakeCategory extends Model
     {
         return $this->belongsToMany(
             WakeCategory::class,
-            'departure_wake_intervals',
+            'departure_uk_wake_intervals',
             'lead_wake_category_id',
             'following_wake_category_id'
         )->withPivot('intermediate', 'interval');
