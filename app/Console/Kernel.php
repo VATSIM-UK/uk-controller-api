@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
+use App\Console\Commands\CleanDepartureIntervals;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
@@ -49,6 +50,7 @@ class Kernel extends ConsoleKernel
         AllocateStandForArrival::class,
         StandReservationsImport::class,
         RecatCategoriesImport::class,
+        CleanDepartureIntervals::class,
     ];
 
     /**
