@@ -58,6 +58,18 @@ class AddDepartureIntervalGroups extends Migration
         'EGLL_DET_09L',
         'EGLL_DET_09R',
         'EGLF_SID',
+        'EGNM_DOPEK_LAMIX',
+        'EGNM_SID_NELSA',
+        'EGNM_SID_POL',
+        'EGNX_TNT_POL',
+        'EGNX_DTY_BPK',
+        'EGPF_NORBO_LUSIV_TLA_TRN',
+        'EGPF_CLYDE_PTH',
+        'EGPF_ROBBO',
+        'EGPF_FOYLE',
+        'EGPF_LOMON',
+        'EGPH_SID',
+        'EGPK_SID',
     ];
 
     /**

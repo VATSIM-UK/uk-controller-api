@@ -317,6 +317,75 @@ class AddDepartureIntervalGroupMembers extends Migration
             'HAZEL2F',
             'HAZEL2L',
         ],
+        'EGNM_DOPEK_LAMIX' => [
+            'DOPEK2W',
+            'DOPEK2X',
+            'LAMIX2W',
+            'LAMIX2X',
+        ],
+        'EGNM_SID_NELSA' => [
+            'NELSA3W'
+        ],
+        'EGNM_SID_POL' => [
+            'POL2X',
+        ],
+        'EGNX_TNT_POL' => [
+            'TNT2N',
+            'TNT3P',
+            'POL2P',
+        ],
+        'EGNX_DTY_BPK' => [
+            'DTY3N',
+            'DTY4P',
+            'BPK2P',
+        ],
+        'EGPF_NORBO_LUSIV_TLA_TRN' => [
+            'NORBO1H',
+            'NORBO1J',
+            'LUSIV1A',
+            'LUSIV1B',
+            'TLA5A',
+            'TLA6B',
+            'TRN3A',
+            'TRN6B',
+        ],
+        'EGPF_FOYLE' => [
+            'FOYLE3A',
+            'FOYLE3B'
+        ],
+        'EGPF_LOMON' => [
+            'LOMON3A',
+            'LOMON3B',
+        ],
+        'EGPF_ROBBO' => [
+            'ROBBO2A',
+            'ROBBO2B',
+        ],
+        'EGPF_CLYDE_PTH' => [
+            'CLYDE3A',
+            'CLYDE3B',
+            'PTH4A',
+            'PTH4B',
+        ],
+        'EGPH_SID' => [
+            'GOSAM1C',
+            'GOSAM1D',
+            'GRICE3C',
+            'GRICE4D',
+            'TLA6C',
+            'TLA6D',
+        ],
+        'EGPK_SID' => [
+            'DAUNT1K',
+            'LUCCO1K',
+            'NGY1K',
+            'NGY1L',
+            'OKNOB1L',
+            'SUDBY1L',
+            'SUMIN1L',
+            'TRN2K',
+            'TRN2L',
+        ],
     ];
 
     /**
