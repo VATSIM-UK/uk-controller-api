@@ -21,7 +21,8 @@ class AirfieldService
                         'id' => $airfield->id,
                         'identifier' => $airfield->code,
                         'departure_wake_scheme' => $airfield->departure_wake_separation_scheme_id,
-                        'departure_speed_groups' => $this->getSpeedGroupRulesForAirfield($airfield)
+                        'departure_speed_groups' => $this->getSpeedGroupRulesForAirfield($airfield),
+                        'top_down_order' => $airfield->controllers()->orderBy('order')->pluck('callsign')->toArray(),
                     ];
                 }
             )->toArray();

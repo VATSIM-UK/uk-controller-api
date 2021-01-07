@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Services\AirfieldService;
 
 class AirfieldControllerTest extends BaseApiTestCase
 {
@@ -72,24 +73,7 @@ class AirfieldControllerTest extends BaseApiTestCase
 
     public function testItGetsAirfieldDependency()
     {
-        $expected = [
-            [
-                'id' => 1,
-                'identifier' => 'EGLL',
-                'departure_wake_scheme' => 1,
-            ],
-            [
-                'id' => 2,
-                'identifier' => 'EGBB',
-                'departure_wake_scheme' => 1,
-            ],
-            [
-                'id' => 3,
-                'identifier' => 'EGKR',
-                'departure_wake_scheme' => 1,
-            ],
-        ];
-
+        $expected = $this->app->make(AirfieldService::class)->getAirfieldsDependency();
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'airfield/dependency')
             ->assertOk()
             ->assertJson($expected);
