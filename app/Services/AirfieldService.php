@@ -14,13 +14,39 @@ class AirfieldService
 {
     public function getAirfieldsDependency(): array
     {
-        return Airfield::all()->map(function (Airfield $airfield) {
-            return [
-                'id' => $airfield->id,
-                'identifier' => $airfield->code,
-                'departure_wake_scheme' => $airfield->departure_wake_separation_scheme_id,
-            ];
-        })->toArray();
+        return Airfield::with('speedGroup', 'speedGroup.aircraft', 'speedGroup.engineTypes')
+            ->get()->map(
+                function (Airfield $airfield) {
+                    return [
+                        'id' => $airfield->id,
+                        'identifier' => $airfield->code,
+                        'departure_wake_scheme' => $airfield->departure_wake_separation_scheme_id,
+                        'departure_speed_groups' => $this->getSpeedGroupRulesForAirfield($airfield)
+                    ];
+                }
+            )->toArray();
+    }
+
+    public function getSpeedGroupRulesForAirfield(Airfield $airfield): array
+    {
+        $aircraftTypeRules = [];
+        $engineTypeRules = [];
+
+        foreach ($airfield->speedGroups as $speedGroup) {
+            if ($speedGroup->aircraft) {
+                $aircraftTypeRules[] = [
+                    'type' => 'aircraft_type',
+                    'aircraft_types' => $speedGroup->aircraft->pluck('code')->toArray(),
+                ];
+            } elseif ($speedGroup->engineTypes) {
+                $engineTypeRules[] = [
+                    'type' => 'engine_type',
+                    'engine_types' => $speedGroup->engineTypes->pluck('type')->toArray(),
+                ];
+            }
+        }
+
+        return array_merge($aircraftTypeRules, $engineTypeRules);
     }
 
     /**

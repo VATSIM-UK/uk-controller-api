@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -444,25 +445,86 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
     public function testItReturnsAirfieldDependency()
     {
         Airfield::find(2)->update(['departure_wake_separation_scheme_id' => 2]);
+        $speedGroup = SpeedGroup::create(
+            [
+                'airfield_id' => 1,
+                'key' => 'SG2'
+            ]
+        );
+        $speedGroup->aircraft()->sync([1]);
 
         $expected = [
             [
                 'id' => 1,
                 'identifier' => 'EGLL',
                 'departure_wake_scheme' => 1,
+                'departure_speed_groups' => [
+                    [
+                        'rule_type' => 'aircraft_type',
+                        'aircraft_types' => [
+                            'B738'
+                        ],
+                    ],
+                ],
             ],
             [
                 'id' => 2,
                 'identifier' => 'EGBB',
                 'departure_wake_scheme' => 2,
+                'departure_speed_groups' => [],
             ],
             [
                 'id' => 3,
                 'identifier' => 'EGKR',
                 'departure_wake_scheme' => 1,
+                'departure_speed_groups' => [],
             ],
         ];
 
         $this->assertEquals($expected, $this->service->getAirfieldsDependency());
+    }
+
+    public function testItReturnsSpeedGroupRulesForAnAirfield()
+    {
+        $firstGroup = SpeedGroup::create(
+            [
+                'airfield_id' => 1,
+                'key' => 'SG1'
+            ]
+        );
+        $firstGroup->aircraft()->sync([1, 2]);
+        $firstGroup->engineTypes()->sync([1]);
+
+        $secondGroup = SpeedGroup::create(
+            [
+                'airfield_id' => 1,
+                'key' => 'SG2'
+            ]
+        );
+        $secondGroup->aircraft()->sync([1]);
+
+        $expected = [
+            [
+                'rule_type' => 'aircraft_type',
+                'aircraft_types' => [
+                    'B738',
+                    'A333',
+                ],
+            ],
+            [
+                'rule_type' => 'aircraft_type',
+                'aircraft_types' => [
+                    'B738'
+                ],
+            ],
+            [
+                'rule_type' => 'engine_type',
+                'engine_types' => [
+                    'Jet'
+                ],
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getSpeedGroupRulesForAirfield(Airfield::find(1)));
     }
 }

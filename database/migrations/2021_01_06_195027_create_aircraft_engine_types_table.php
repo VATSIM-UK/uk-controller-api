@@ -14,21 +14,29 @@ class CreateAircraftEngineTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('aircraft_engine_types', function (Blueprint $table) {
+        Schema::create('engine_types', function (Blueprint $table) {
             $table->id();
             $table->string('type')->unique()->comment('The type');
+            $table->string('euroscope_type')->unique()->comment('The type in euroscope');
         });
 
         DB::table('aircraft_engine_types')->insert(
             [
                 [
                     'type' => 'Jet',
+                    'euroscope_type' => 'J',
                 ],
                 [
                     'type' => 'Piston',
+                    'euroscope_type' => 'P',
                 ],
                 [
                     'type' => 'Turboprop',
+                    'euroscope_type' => 'T',
+                ],
+                [
+                    'type' => 'Electric',
+                    'euroscope_type' => 'E',
                 ],
             ]
         );
@@ -41,6 +49,6 @@ class CreateAircraftEngineTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('aircraft_engine_types');
+        Schema::dropIfExists('engine_types');
     }
 }

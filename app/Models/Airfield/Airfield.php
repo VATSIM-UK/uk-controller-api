@@ -3,10 +3,12 @@
 namespace App\Models\Airfield;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
+use App\Models\Aircraft\SpeedGroup;
 use App\Models\Controller\ControllerPosition;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
 
@@ -115,5 +117,10 @@ class Airfield extends Model implements MinStackDataProviderInterface
     public function getCoordinateAttribute(): Coordinate
     {
         return new Coordinate($this->latitude, $this->longitude);
+    }
+
+    public function speedGroups(): HasMany
+    {
+        return $this->hasMany(SpeedGroup::class);
     }
 }
