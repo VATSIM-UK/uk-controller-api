@@ -1,6 +1,6 @@
 FROM php:7.4-fpm
 
-WORKDIR /var/www
+WORKDIR /var/www/ukcp
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -15,13 +15,17 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    supervisor
+    supervisor \
+    nginx
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd
+
+# Setup PHP ini things for CLI
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -30,10 +34,24 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
+# Setup nginx directories
+RUN mkdir -p /var/log/nginx
+RUN touch /var/log/nginx/access.log
+RUN touch /var/log/nginx/error.log
+RUN chown www:www /var/log/nginx
+RUN chown www:www /var/log/nginx/*
+
+RUN mkdir -p /var/lib/nginx
+RUN chown www:www /var/lib/nginx
+
+RUN mkdir -p /run
+RUN touch /run/nginx.pid
+RUN chown www:www /run/nginx.pid
+
 # Make the supervisor directories
 RUN mkdir -p /var/log/supervisor
-RUN mkdir -p /etc/supervisor
 RUN chown www:www /var/log/supervisor
+RUN mkdir -p /etc/supervisor
 
 # Copy supervisor scripts
 COPY ./etc/supervisor /etc/supervisor/

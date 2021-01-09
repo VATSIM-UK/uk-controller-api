@@ -1,30 +1,24 @@
 version: "3.9"
 services:
-  # Nginx for routing
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
+  # Webserver running PHP-FPM and nginx
+  web:
+    build:
+      context: ./.docker/web
+      dockerfile: Dockerfile
+    container_name: web
     restart: unless-stopped
+    working_dir: /var/www
+    extra_hosts:
+      - "ukcp.devapp:127.0.0.1"
     ports:
       - "80:80"
       - "443:443"
-    networks:
-      - ukcp-network
-    volumes:
-      - ./.docker/nginx/etc/nginx/conf.d:/etc/nginx/conf.d
-
-  # php-fpm server
-  app:
-    build:
-      context: ./.docker/php
-      dockerfile: Dockerfile
-    container_name: app
-    restart: unless-stopped
-    working_dir: /var/www
     volumes:
       - type: bind
         source: .
         target: /var/www/ukcp
+      - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
+      - ./.docker/web/usr/local/etc/php/conf.d/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - ukcp-network
 
@@ -33,6 +27,7 @@ services:
     image: mysql:8.0
     container_name: mysql
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     ports:
       - "3306:3306"
     volumes:
@@ -40,6 +35,7 @@ services:
     environment:
       MYSQL_DATABASE: uk_plugin
       MYSQL_ROOT_PASSWORD: secret
+      MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
     networks:
       - ukcp-network
 
