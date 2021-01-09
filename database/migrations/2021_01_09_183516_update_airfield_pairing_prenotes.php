@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\DependencyService;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,7 @@ class UpdateAirfieldPairingPrenotes extends Migration
             ->update(
                 ['flight_rule_id' => DB::table('flight_rules')->where('euroscope_key', 'I')->first()->id],
             );
+        DependencyService::touchDependencyByKey('DEPENDENCY_PRENOTE');
     }
 
     /**
