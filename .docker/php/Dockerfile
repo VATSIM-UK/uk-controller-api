@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     vim \
     unzip \
     git \
-    curl
+    curl \
+    supervisor
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -29,16 +30,17 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Copy the services script and set it up
-COPY ./usr/bin/services.sh /usr/bin/services.sh
-RUN chmod +x /usr/bin/services.sh
-RUN chown www:www /usr/bin/services.sh
-RUN mkdir -p /var/log/websocket
-RUN chown www:www /var/log/websocket
+# Make the supervisor directories
+RUN mkdir -p /var/log/supervisor
+RUN mkdir -p /etc/supervisor
+RUN chown www:www /var/log/supervisor
+
+# Copy supervisor scripts
+COPY ./etc/supervisor /etc/supervisor/
 
 # Change current user to www
 USER www
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
-CMD ["/usr/bin/services.sh"]
+CMD ["/usr/bin/supervisord"]
