@@ -13,6 +13,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "6001:6001"
     volumes:
       - type: bind
         source: .
