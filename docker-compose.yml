@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  # Nginx for routing
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - ukcp-network
+    volumes:
+      - ./.docker/nginx/etc/nginx/conf.d:/etc/nginx/conf.d
+
+  # php-fpm server
+  app:
+    build:
+      context: ./.docker/php
+      dockerfile: Dockerfile
+    container_name: app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www/ukcp
+    networks:
+      - ukcp-network
+
+  # Database
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: uk_plugin
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      - ukcp-network
+
+# Netwokring
+networks:
+  ukcp-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  mysqldata:
+    driver: local
