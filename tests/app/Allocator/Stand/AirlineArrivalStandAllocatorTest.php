@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var AirlineArrivalStandAllocator
-     */
-    private $allocator;
+    private AirlineArrivalStandAllocator $allocator;
 
     public function setUp(): void
     {
@@ -72,12 +69,12 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'destination' => 'EGGD',
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'destination' => null
+                    'destination' => null,
                 ],
             ]
         );
