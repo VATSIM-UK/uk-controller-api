@@ -21,7 +21,7 @@ class PigotMinimumHoldingLevel extends Migration
 
         DB::table('holds')
             ->where('navaid_id', $pigot)
-            ->update(['minimum_level' => 8000, 'updated_at' => Carbon::now()]);
+            ->update(['minimum_altitude' => 8000, 'updated_at' => Carbon::now()]);
 
         DependencyService::touchDependencyByKey('DEPENDENCY_HOLDS');
     }
