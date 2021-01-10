@@ -21,4 +21,6 @@ class SpeedGroup extends Model
     {
         return $this->belongsToMany(EngineType::class);
     }
+
+    public function relatedSpeedGroups
 }
