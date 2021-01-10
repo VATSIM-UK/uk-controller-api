@@ -22,5 +22,13 @@ class SpeedGroup extends Model
         return $this->belongsToMany(EngineType::class);
     }
 
-    public function relatedSpeedGroups
+    public function relatedGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            SpeedGroup::class,
+            'speed_group_speed_group',
+            'lead_speed_group_id',
+            'follow_speed_group_id'
+        )->withPivot('penalty');
+    }
 }

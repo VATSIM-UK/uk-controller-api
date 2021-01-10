@@ -17,7 +17,7 @@ class CreateSpeedGroupSpeedGroupTable extends Migration
             $table->id();
             $table->unsignedBigInteger('lead_speed_group_id')->comment('The first speed group to depart');
             $table->unsignedBigInteger('follow_speed_group_id')->comment('The second speed group depart');
-            $table->unsignedInteger('interval')->comment('The required interval');
+            $table->unsignedInteger('penalty')->comment('The time penalty in seconds for the second group');
             $table->timestamps();
 
             $table->unique(['lead_speed_group_id', 'follow_speed_group_id'], 'speed_group_pairs');

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use Carbon\Carbon;
@@ -14,40 +15,41 @@ class AirfieldService
 {
     public function getAirfieldsDependency(): array
     {
-        return Airfield::with('speedGroup', 'speedGroup.aircraft', 'speedGroup.engineTypes')
+        return Airfield::with(
+            'speedGroups',
+            'speedGroups.aircraft',
+            'speedGroups.engineTypes',
+            'speedGroups.relatedGroups'
+        )
             ->get()->map(
                 function (Airfield $airfield) {
                     return [
                         'id' => $airfield->id,
                         'identifier' => $airfield->code,
                         'departure_wake_scheme' => $airfield->departure_wake_separation_scheme_id,
-                        'departure_speed_groups' => $this->getSpeedGroupRulesForAirfield($airfield),
+                        'departure_speed_groups' => $this->getSpeedGroupsForAirfield($airfield),
                         'top_down_order' => $airfield->controllers()->orderBy('order')->pluck('callsign')->toArray(),
                     ];
                 }
             )->toArray();
     }
 
-    public function getSpeedGroupRulesForAirfield(Airfield $airfield): array
+    private function getSpeedGroupsForAirfield(Airfield $airfield): array
     {
-        $aircraftTypeRules = [];
-        $engineTypeRules = [];
+        $speedGroups = [];
 
         foreach ($airfield->speedGroups as $speedGroup) {
-            if ($speedGroup->aircraft) {
-                $aircraftTypeRules[] = [
-                    'type' => 'aircraft_type',
-                    'aircraft_types' => $speedGroup->aircraft->pluck('code')->toArray(),
-                ];
-            } elseif ($speedGroup->engineTypes) {
-                $engineTypeRules[] = [
-                    'type' => 'engine_type',
-                    'engine_types' => $speedGroup->engineTypes->pluck('type')->toArray(),
-                ];
-            }
+            $speedGroups[] = [
+                'id' => $speedGroup->id,
+                'aircraft_types' => $speedGroup->aircraft->pluck('code')->toArray(),
+                'engine_types' => $speedGroup->engineTypes->pluck('euroscope_type')->toArray(),
+                'next_group_penalty' => $speedGroup->relatedGroups->mapWithKeys(function (SpeedGroup $related) {
+                    return [$related->id => $related->pivot->penalty];
+                })->toArray(),
+            ];
         }
 
-        return array_merge($aircraftTypeRules, $engineTypeRules);
+        return $speedGroups;
     }
 
     /**
