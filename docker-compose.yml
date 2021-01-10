@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  # Webserver running PHP-FPM and nginx
+  web:
+    build:
+      context: ./.docker/web
+      dockerfile: Dockerfile
+    container_name: web
+    restart: unless-stopped
+    working_dir: /var/www
+    extra_hosts:
+      - "ukcp.devapp:127.0.0.1"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "6001:6001"
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www/ukcp
+      - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
+      - ./.docker/web/usr/local/etc/php/conf.d/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - ukcp-network
+
+  # Database
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: uk_plugin
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+    networks:
+      - ukcp-network
+
+# Netwokring
+networks:
+  ukcp-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  mysqldata:
+    driver: local
