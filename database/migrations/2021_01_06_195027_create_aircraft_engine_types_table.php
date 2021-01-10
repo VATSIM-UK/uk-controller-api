@@ -20,7 +20,7 @@ class CreateAircraftEngineTypesTable extends Migration
             $table->string('euroscope_type')->unique()->comment('The type in euroscope');
         });
 
-        DB::table('aircraft_engine_types')->insert(
+        DB::table('engine_types')->insert(
             [
                 [
                     'type' => 'Jet',
