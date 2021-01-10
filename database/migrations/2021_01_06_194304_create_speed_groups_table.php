@@ -13,7 +13,7 @@ class CreateSpeedGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('departure_speed_groups', function (Blueprint $table) {
+        Schema::create('speed_groups', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique()->comment('String key for easier identification');
             $table->unsignedInteger('airfield_id')->comment('The airfield where the speed group applies');
@@ -30,6 +30,6 @@ class CreateSpeedGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departure_speed_groups');
+        Schema::dropIfExists('speed_groups');
     }
 }
