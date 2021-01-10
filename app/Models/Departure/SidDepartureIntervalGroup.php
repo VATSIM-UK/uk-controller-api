@@ -27,6 +27,7 @@ class SidDepartureIntervalGroup extends Model
                 return [
                     'id' => $group->id,
                     'interval' => $group->pivot->interval,
+                    'apply_speed_groups' => $group->pivot->apply_speed_groups,
                 ];
             })->toArray(),
         ];

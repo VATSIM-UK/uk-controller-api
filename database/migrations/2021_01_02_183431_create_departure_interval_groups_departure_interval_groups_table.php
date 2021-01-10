@@ -18,6 +18,9 @@ class CreateDepartureIntervalGroupsDepartureIntervalGroupsTable extends Migratio
             $table->unsignedBigInteger('lead_group_id')->comment('The group of the lead departure');
             $table->unsignedBigInteger('follow_group_id')->comment('The group of the following departure');
             $table->unsignedSmallInteger('interval')->comment('The time in seconds between departures in each group');
+            $table->boolean('apply_speed_groups')
+                ->default(true)
+                ->comment('Whether or not speed groups should be applied in this combination');
 
             $table->unique(['lead_group_id', 'follow_group_id'], 'departure_interval_group_ids');
 

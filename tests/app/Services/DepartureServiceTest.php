@@ -302,7 +302,7 @@ class DepartureServiceTest extends BaseFunctionalTestCase
         );
 
         SidDepartureIntervalGroup::find(3)->relatedGroups()->sync(
-            [3 => ['interval' => 99]]
+            [3 => ['interval' => 99, 'apply_speed_groups' => false]]
         );
 
         $expected = [
@@ -313,10 +313,12 @@ class DepartureServiceTest extends BaseFunctionalTestCase
                     [
                         'id' => 1,
                         'interval' => 25,
+                        'apply_speed_groups' => true,
                     ],
                     [
                         'id' => 2,
                         'interval' => 73,
+                        'apply_speed_groups' => true,
                     ],
                 ],
             ],
@@ -327,10 +329,12 @@ class DepartureServiceTest extends BaseFunctionalTestCase
                     [
                         'id' => 1,
                         'interval' => 26,
+                        'apply_speed_groups' => true,
                     ],
                     [
                         'id' => 2,
                         'interval' => 52,
+                        'apply_speed_groups' => true,
                     ],
                 ],
             ],
@@ -341,6 +345,7 @@ class DepartureServiceTest extends BaseFunctionalTestCase
                     [
                         'id' => 3,
                         'interval' => 99,
+                        'apply_speed_groups' => false,
                     ],
                 ],
             ],
