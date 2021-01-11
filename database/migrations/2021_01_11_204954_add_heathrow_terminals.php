@@ -57,6 +57,7 @@ class AddHeathrowTerminals extends Migration
         $this->assignStandsToTerminal($heathrow, $terminal2b, '23%');
         $this->assignStandsToTerminal($heathrow, $terminal2b, '24%');
         $this->assignStandsToTerminal($heathrow, $terminal3, '3%');
+        $this->assignStandsToTerminal($heathrow, $terminal4, '40%');
         $this->assignStandsToTerminal($heathrow, $terminal4, '41%');
         $this->assignStandsToTerminal($heathrow, $terminal4, '42%');
         $this->assignStandsToTerminal($heathrow, $terminal5a, '50%');
@@ -79,7 +80,7 @@ class AddHeathrowTerminals extends Migration
 
     private function createTerminal(int $airfieldId, string $key, string $description): int
     {
-        return DB::table('terminals')
+        return (int) DB::table('terminals')
             ->insertGetId(
                 [
                     'airfield_id' => $airfieldId,
@@ -90,7 +91,7 @@ class AddHeathrowTerminals extends Migration
             );
     }
 
-    private function assignStandsToTerminal(int $airfieldId, string $standIdentifierPattern, int $terminalId): void
+    private function assignStandsToTerminal(int $airfieldId, int $terminalId, string $standIdentifierPattern): void
     {
         DB::table('stands')
             ->where('airfield_id', $airfieldId)
@@ -104,9 +105,9 @@ class AddHeathrowTerminals extends Migration
         $airlinesAtTerminal = DB::table('airline_stand')
             ->join('stands', 'airline_stand.stand_id', '=', 'stands.id')
             ->join('airlines', 'airline_stand.airline_id', '=', 'airlines.id')
-            ->where('stand.terminal_id', $terminalId)
+            ->where('stands.terminal_id', $terminalId)
             ->whereNotIn('airlines.icao_code', ['BAW', 'SHT', 'IBE', 'IBS'])
-            ->select('airline_stand.id')
+            ->select('airline_stand.airline_id')
             ->distinct()
             ->get()
             ->toArray();
@@ -114,7 +115,7 @@ class AddHeathrowTerminals extends Migration
         $formattedAirlines = [];
         foreach ($airlinesAtTerminal as $airline) {
             $formattedAirlines[] = [
-                'airline_id' => $airline,
+                'airline_id' => $airline->airline_id,
                 'terminal_id' => $terminalId,
                 'created_at' => Carbon::now(),
             ];
