@@ -101,7 +101,7 @@ class AddHeathrowTerminals extends Migration
 
     private function assignAirlinesToTerminal(int $terminalId): void
     {
-        // Don't add terminals for BA.
+        // Don't add terminals for BA - they use two terminals, which confuses things.
         $airlinesAtTerminal = DB::table('airline_stand')
             ->join('stands', 'airline_stand.stand_id', '=', 'stands.id')
             ->join('airlines', 'airline_stand.airline_id', '=', 'airlines.id')
