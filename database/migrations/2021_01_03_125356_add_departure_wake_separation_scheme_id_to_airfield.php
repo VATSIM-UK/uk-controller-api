@@ -17,7 +17,7 @@ class AddDepartureWakeSeparationSchemeIdToAirfield extends Migration
     {
 
         Schema::table('airfield', function (Blueprint $table) {
-            $ukSchemeId = DB::table('departure_wake_separation_schemes')
+            $ukSchemeId = DB::table('wake_separation_schemes')
                 ->where('key', 'UK')
                 ->first()
                 ->id;
@@ -29,10 +29,10 @@ class AddDepartureWakeSeparationSchemeIdToAirfield extends Migration
 
             $table->foreign('departure_wake_separation_scheme_id', 'departure_wake_separation_scheme_id')
                 ->references('id')
-                ->on('departure_wake_separation_schemes');
+                ->on('wake_separation_schemes');
         });
 
-        $recatSchemeId = DB::table('departure_wake_separation_schemes')
+        $recatSchemeId = DB::table('wake_separation_schemes')
             ->where('key', 'RECAT_EU')
             ->first()
             ->id;

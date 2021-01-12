@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddDepartureWakeSeparationSchemesTable extends Migration
+class AddWakeSeparationSchemesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,12 @@ class AddDepartureWakeSeparationSchemesTable extends Migration
      */
     public function up()
     {
-        Schema::create('departure_wake_separation_schemes', function (Blueprint $table) {
+        Schema::create('wake_separation_schemes', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique()->comment('Key for the scheme');
         });
 
-        DB::table('departure_wake_separation_schemes')
+        DB::table('wake_separation_schemes')
             ->insert(
                 [
                     [
@@ -39,6 +39,6 @@ class AddDepartureWakeSeparationSchemesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departure_wake_separation_schemes');
+        Schema::dropIfExists('wake_separation_schemes');
     }
 }
