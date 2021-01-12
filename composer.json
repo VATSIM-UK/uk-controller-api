@@ -15,7 +15,7 @@
         "predis/predis": "~1.0",
         "laravel/passport": "^10.0",
         "laravel/framework": "^8.0",
-        "beyondcode/laravel-websockets": "^1.4",
+        "beyondcode/laravel-websockets": "^2.0",
         "knplabs/github-api": "^2.12",
         "php-http/guzzle6-adapter": "^1.1",
         "nesbot/carbon": "^2.32",

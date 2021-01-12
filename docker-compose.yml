@@ -19,7 +19,6 @@ services:
         source: .
         target: /var/www/ukcp
       - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
-      - ./.docker/web/usr/local/etc/php/conf.d/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - ukcp-network
 

@@ -26,6 +26,7 @@ RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd
 
 # Setup PHP ini things for CLI
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+COPY ./usr/local/etc/php/conf.d/local.ini /usr/local/etc/php/conf.d/local.ini
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
