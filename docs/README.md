@@ -14,13 +14,22 @@ The API is built on [Laravel Framework](https://laravel.com/) and uses [PHPUnit]
 
 ## System Requirements
 
-- PHP 7.3+
+- PHP 7.4+
 - MySQL 8.0
 
 # Local Deployment
 
-It is recommended that you use the [laravel/homestead](https://laravel.com/docs/homestead) Vagrant machine when developing
-the API. For this you will need Vagrant installed [More Information](https://www.vagrantup.com/downloads.html).
+A development environment using `docker-compose` comes bundled with the source, to use it simply run `docker-compose build`
+followed by `docker-compose up`.
+
+## Connecting To The Development Database
+
+The development database binds to Port 3306 and can be connected to using the password provided in
+the `docker-compose.yml`.
+
+## Running The Websocket Server
+
+The websocket service is automatically started on Port 6001.
 
 ## Setup Steps
 
