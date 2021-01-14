@@ -4,6 +4,7 @@ namespace App\Models\Aircraft;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class WakeCategory extends Model
@@ -33,9 +34,14 @@ class WakeCategory extends Model
     {
         return $this->belongsToMany(
             WakeCategory::class,
-            'departure_uk_wake_intervals',
+            'departure_wake_intervals',
             'lead_wake_category_id',
             'following_wake_category_id'
         )->withPivot('intermediate', 'interval');
+    }
+
+    public function scheme(): BelongsTo
+    {
+        return $this->belongsTo(WakeCategoryScheme::class);
     }
 }

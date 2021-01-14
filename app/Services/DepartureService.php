@@ -74,8 +74,11 @@ class DepartureService
     public function getDepartureUkWakeIntervalsDependency(): array
     {
         $mappings = [];
-        $categories = WakeCategory::with('departureIntervals')
+        $categories = WakeCategory::with('departureIntervals', 'scheme')
             ->whereHas('departureIntervals')
+            ->whereHas('scheme', function (Builder $scheme) {
+                $scheme->uk();
+            })
             ->get();
 
         foreach ($categories as $category) {
@@ -95,8 +98,11 @@ class DepartureService
     public function getDepartureRecatWakeIntervalsDependency(): array
     {
         $mappings = [];
-        $categories = RecatCategory::with('departureIntervals')
+        $categories = WakeCategory::with('departureIntervals', 'scheme')
             ->whereHas('departureIntervals')
+            ->whereHas('scheme', function (Builder $scheme) {
+                $scheme->recat();
+            })
             ->get();
 
         foreach ($categories as $category) {

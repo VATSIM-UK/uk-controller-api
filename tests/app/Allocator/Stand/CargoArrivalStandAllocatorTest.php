@@ -10,9 +10,12 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
+use util\Traits\WithWakeCategories;
 
 class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
+    use WithWakeCategories;
+
     /**
      * @var CargoArrivalStandAllocator
      */
@@ -52,12 +55,12 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
         Aircraft::create(
             [
                 'code' => 'B744',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 2.2,
             ]
         );
+        $this->setWakeCategoryForAircraft('B744', 'H');
     }
 
     public function testItAllocatesCargoStandsOnly()

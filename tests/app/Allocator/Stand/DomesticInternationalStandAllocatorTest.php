@@ -9,9 +9,12 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
+use util\Traits\WithWakeCategories;
 
 class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 {
+    use WithWakeCategories;
+
     /**
      * @var DomesticInternationalStandAllocator
      */
@@ -89,7 +92,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'general_use' => true,
             ]
         );
-        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'J')->first()->id]);
+        $this->setWakeCategoryForAircraft('B738', 'J');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
         $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
@@ -111,7 +114,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'general_use' => true,
             ]
         );
-        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
+        $this->setWakeCategoryForAircraft('B738', 'S');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
         $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();

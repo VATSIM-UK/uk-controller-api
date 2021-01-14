@@ -45,6 +45,6 @@ class SidDepartureIntervalGroup extends Model
             'sid_departure_interval_group_sid_departure_interval_group',
             'lead_group_id',
             'follow_group_id'
-        )->withPivot('interval');
+        )->withPivot('interval', 'apply_speed_groups');
     }
 }

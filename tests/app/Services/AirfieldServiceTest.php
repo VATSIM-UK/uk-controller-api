@@ -37,7 +37,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 1,
                 'code' => 'EGLL',
                 'transition_altitude' => 6000,
-                'departure_wake_separation_scheme_id' => 1,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [
                     1,
                     2,
@@ -53,7 +53,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 2,
                 'code' => 'EGBB',
                 'transition_altitude' => 6000,
-                'departure_wake_separation_scheme_id' => 1,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [
                     4,
                 ],
@@ -63,7 +63,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 3,
                 'code' => 'EGKR',
                 'transition_altitude' => 6000,
-                'departure_wake_separation_scheme_id' => 1,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
             ],
@@ -444,7 +444,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsAirfieldDependency()
     {
-        Airfield::find(2)->update(['departure_wake_separation_scheme_id' => 2]);
+        Airfield::find(2)->update(['wake_category_scheme_id' => 2]);
         $speedGroup = SpeedGroup::create(
             [
                 'airfield_id' => 1,
@@ -468,7 +468,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 1,
                 'identifier' => 'EGLL',
-                'departure_wake_scheme' => 1,
+                'wake_scheme' => 1,
                 'departure_speed_groups' => [
                     [
                         'id' => $speedGroup->id,
@@ -500,7 +500,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 2,
                 'identifier' => 'EGBB',
-                'departure_wake_scheme' => 2,
+                'wake_scheme' => 2,
                 'departure_speed_groups' => [],
                 'top_down_order' => [
                     'LON_C_CTR',
@@ -509,7 +509,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 3,
                 'identifier' => 'EGKR',
-                'departure_wake_scheme' => 1,
+                'wake_scheme' => 1,
                 'departure_speed_groups' => [],
                 'top_down_order' => [],
             ],

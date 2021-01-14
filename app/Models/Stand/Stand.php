@@ -207,7 +207,11 @@ class Stand extends Model
     public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
     {
         return $builder->whereHas('wakeCategory', function (Builder $query) use ($aircraftType) {
-            $query->greaterRelativeWeighting($aircraftType->wakeCategory);
+            $query->greaterRelativeWeighting(
+                $aircraftType->wakeCategories()->whereHas('scheme', function (Builder $scheme) {
+                    $scheme->uk();
+                })->first()
+            );
         });
     }
 

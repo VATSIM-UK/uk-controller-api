@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
-use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Departure\DepartureRestriction;
 use App\Models\Departure\DepartureRestrictionType;
 use App\Models\Departure\SidDepartureIntervalGroup;
-use App\Models\Sid;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -544,7 +542,7 @@ class DepartureControllerTest extends BaseApiTestCase
 
     public function testItReturnsUkWakeIntervalsDependency()
     {
-        DB::table('departure_uk_wake_intervals')->delete();
+        DB::table('departure_wake_intervals')->delete();
 
         WakeCategory::where('code', 'H')->first()->departureIntervals()->sync(
             [
@@ -596,23 +594,26 @@ class DepartureControllerTest extends BaseApiTestCase
 
     public function testItReturnsRecatWakeIntervalsDependency()
     {
-        DB::table('departure_recat_wake_intervals')->delete();
+        DB::table('departure_wake_intervals')->delete();
 
-        RecatCategory::where('code', 'A')->first()->departureIntervals()->sync(
+        WakeCategory::where('code', 'A')->first()->departureIntervals()->sync(
             [
-                RecatCategory::where('code', 'B')->first()->id => [
+                WakeCategory::where('code', 'B')->first()->id => [
                     'interval' => 1,
+                    'intermediate' => false,
                 ],
-                RecatCategory::where('code', 'C')->first()->id => [
+                WakeCategory::where('code', 'C')->first()->id => [
                     'interval' => 2,
+                    'intermediate' => false,
                 ],
             ]
         );
 
-        RecatCategory::where('code', 'C')->first()->departureIntervals()->sync(
+        WakeCategory::where('code', 'C')->first()->departureIntervals()->sync(
             [
-                RecatCategory::where('code', 'F')->first()->id => [
+                WakeCategory::where('code', 'F')->first()->id => [
                     'interval' => 3,
+                    'intermediate' => false,
                 ],
             ]
         );

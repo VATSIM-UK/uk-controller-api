@@ -13,7 +13,7 @@ class CreateDepartureWakeIntervalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('departure_uk_wake_intervals', function (Blueprint $table) {
+        Schema::create('departure_wake_intervals', function (Blueprint $table) {
             $table->id();
             $table->unsignedTinyInteger('lead_wake_category_id')
                 ->comment('The wake category of the lead aircraft');
@@ -38,6 +38,6 @@ class CreateDepartureWakeIntervalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departure_uk_wake_intervals');
+        Schema::dropIfExists('departure_wake_intervals');
     }
 }

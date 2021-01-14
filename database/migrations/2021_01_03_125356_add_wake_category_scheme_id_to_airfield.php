@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddDepartureWakeSeparationSchemeIdToAirfield extends Migration
+class AddWakeCategorySchemeIdToAirfield extends Migration
 {
     /**
      * Run the migrations.
@@ -17,22 +17,22 @@ class AddDepartureWakeSeparationSchemeIdToAirfield extends Migration
     {
 
         Schema::table('airfield', function (Blueprint $table) {
-            $ukSchemeId = DB::table('wake_separation_schemes')
+            $ukSchemeId = DB::table('wake_category_schemes')
                 ->where('key', 'UK')
                 ->first()
                 ->id;
 
-            $table->unsignedBigInteger('departure_wake_separation_scheme_id')
+            $table->unsignedBigInteger('wake_category_scheme_id')
                 ->after('msl_calculation')
                 ->default($ukSchemeId)
-                ->comment('Which scheme to use for departure separation');
+                ->comment('Which scheme to use for wake separation');
 
-            $table->foreign('departure_wake_separation_scheme_id', 'departure_wake_separation_scheme_id')
+            $table->foreign('wake_category_scheme_id', 'wake_category_scheme_id')
                 ->references('id')
-                ->on('wake_separation_schemes');
+                ->on('wake_category_schemes');
         });
 
-        $recatSchemeId = DB::table('wake_separation_schemes')
+        $recatSchemeId = DB::table('wake_category_schemes')
             ->where('key', 'RECAT_EU')
             ->first()
             ->id;
@@ -41,7 +41,7 @@ class AddDepartureWakeSeparationSchemeIdToAirfield extends Migration
             ->where('code', 'EGLL')
             ->update(
                 [
-                    'departure_wake_separation_scheme_id' => $recatSchemeId,
+                    'wake_category_scheme_id' => $recatSchemeId,
                     'updated_at' => Carbon::now()
                 ]
             );

@@ -14,7 +14,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                 'id' => 1,
                 'code' => 'EGLL',
                 'transition_altitude' => 6000,
-                'departure_wake_separation_scheme_id' => 1,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [
                     1,
                     2,
@@ -30,7 +30,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                 'id' => 2,
                 'code' => 'EGBB',
                 'transition_altitude' => 6000,
-                'departure_wake_separation_scheme_id' => 1,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [
                     4,
                 ],
@@ -40,7 +40,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                 'id' => 3,
                 'code' => 'EGKR',
                 'transition_altitude' => 6000,
-                'departure_wake_separation_scheme_id' => 1,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
             ],

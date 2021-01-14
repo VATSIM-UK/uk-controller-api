@@ -20,7 +20,7 @@ class AddDepartureIntervalData extends Migration
             }
         )->toArray();
 
-        DB::table('departure_uk_wake_intervals')->insert(
+        DB::table('departure_wake_intervals')->insert(
             [
                 // A380 vs any
                 [
