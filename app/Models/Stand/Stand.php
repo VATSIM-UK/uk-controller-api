@@ -120,17 +120,7 @@ class Stand extends Model
 
     public function scopeAirlineDestination(Builder $builder, Airline $airline, array $destinationStrings): Builder
     {
-        return $builder->join('airline_stand', 'stands.id', '=', 'airline_stand.stand_id')
-            ->where('airline_stand.airline_id', $airline->id)
-            ->whereIn('destination', $destinationStrings)
-            ->where(
-                function (Builder $query) {
-                    // Timezones here should be local because Heathrow.
-                    $now = Carbon::now()->timezone('Europe/London')->toTimeString();
-                    $query->whereNull('airline_stand.not_before')
-                        ->orWhere('airline_stand.not_before', '<=', $now);
-                }
-            );
+        return $this->scopeAirline($builder, $airline)->whereIn('destination', $destinationStrings);
     }
 
     public function wakeCategory(): BelongsTo
