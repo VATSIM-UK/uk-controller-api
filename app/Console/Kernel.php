@@ -9,6 +9,7 @@ use App\Console\Commands\ClearAssignedHoldsHistory;
 use App\Console\Commands\GenerateMinStackLevels;
 use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\OptimiseTables;
+use App\Console\Commands\RecatCategoriesImport;
 use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
 use App\Console\Commands\UpdateVatsimNetworkData;
@@ -47,6 +48,7 @@ class Kernel extends ConsoleKernel
         WakeCategoriesImport::class,
         AllocateStandForArrival::class,
         StandReservationsImport::class,
+        RecatCategoriesImport::class,
     ];
 
     /**
