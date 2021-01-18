@@ -57,6 +57,7 @@ class StandTest extends BaseFunctionalTestCase
 
     public function testAirlineOnlyReturnsStandsForTheCorrectAirline()
     {
+        DB::table('airline_stand')->truncate();
         DB::table('airline_stand')->insert(
             [
                 [
