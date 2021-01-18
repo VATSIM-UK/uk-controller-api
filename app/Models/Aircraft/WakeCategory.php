@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class WakeCategory extends Model
 {
     protected $fillable = [
+        'wake_category_scheme_id',
         'code',
         'description',
         'relative_weighting',
@@ -24,6 +25,23 @@ class WakeCategory extends Model
     protected $casts = [
         'relative_weighting' => 'integer',
     ];
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'code' => $this->code,
+            'subsequent_departure_intervals' => $this->departureIntervals->map(
+                function (WakeCategory $subsequent) {
+                    return [
+                        'id' => $subsequent->id,
+                        'interval' => $subsequent->pivot->interval,
+                        'intermediate' => $subsequent->pivot->intermediate,
+                    ];
+                }
+            )->toArray(),
+        ];
+    }
 
     public function scopeGreaterRelativeWeighting(Builder $builder, WakeCategory $wakeCategory): Builder
     {

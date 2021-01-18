@@ -20,13 +20,15 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
         $airline = $this->airlineService->getAirlineForAircraft($aircraft);
         if ($airline === null) {
             return new Collection();
-        }
+	}
 
-        return $this->getArrivalAirfieldStandQuery($aircraft)
+
+        $query = $this->getArrivalAirfieldStandQuery($aircraft)
             ->airline($airline)
             ->join('airline_stand', 'stands.id', 'airline_stand.stand_id')
             ->orderByRaw('airline_stand.destination IS NULL DESC')
             ->inRandomOrder()
-            ->get();
+	    ->get();
+	dd($query->toSql(), $query->getBindings());
     }
 }

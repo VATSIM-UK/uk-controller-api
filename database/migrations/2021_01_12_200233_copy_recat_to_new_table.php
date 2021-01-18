@@ -27,7 +27,7 @@ class CopyRecatToNewTable extends Migration
             $mappedCategories[] = array_merge(
                 (array) $recatCategory,
                 [
-                    'scheme_id' => $recatScheme,
+                    'wake_category_scheme_id' => $recatScheme,
                     'relative_weighting' => $key + 1,
                 ]);
         }

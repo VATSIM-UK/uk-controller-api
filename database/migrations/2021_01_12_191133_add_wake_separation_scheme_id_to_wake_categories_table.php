@@ -16,7 +16,7 @@ class AddWakeSeparationSchemeIdToWakeCategoriesTable extends Migration
     {
         // Add the column
         Schema::table('wake_categories', function (Blueprint $table) {
-            $table->unsignedBigInteger('scheme_id')
+            $table->unsignedBigInteger('wake_category_scheme_id')
                 ->after('id')
                 ->comment('The scheme that this wake category applies to');
         });
@@ -29,13 +29,13 @@ class AddWakeSeparationSchemeIdToWakeCategoriesTable extends Migration
             ->id;
 
         DB::table('wake_categories')
-            ->update(['scheme_id' => $ukScheme]);
+            ->update(['wake_category_scheme_id' => $ukScheme]);
 
         // Add indexes
         Schema::table('wake_categories', function (Blueprint $table) {
-            $table->unique(['scheme_id', 'code'], 'wake_category_code');
-            $table->unique(['scheme_id', 'relative_weighting'], 'wake_category_weighting');
-            $table->foreign('scheme_id', 'wake_categories_scheme_id')
+            $table->unique(['wake_category_scheme_id', 'code'], 'wake_category_code');
+            $table->unique(['wake_category_scheme_id', 'relative_weighting'], 'wake_category_weighting');
+            $table->foreign('wake_category_scheme_id', 'wake_categories_scheme_id')
                 ->references('id')
                 ->on('wake_category_schemes')
                 ->cascadeOnDelete();

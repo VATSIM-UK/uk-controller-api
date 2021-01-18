@@ -4,6 +4,7 @@ namespace App\Models\Aircraft;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WakeCategoryScheme extends Model
 {
@@ -12,7 +13,18 @@ class WakeCategoryScheme extends Model
 
     protected $fillable = [
         'key',
+        'name',
     ];
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'key' => $this->key,
+            'name' => $this->name,
+            'categories' => $this->categories->toArray(),
+        ];
+    }
 
     protected function scopeUk(Builder $query)
     {
@@ -32,5 +44,10 @@ class WakeCategoryScheme extends Model
     public function isUk()
     {
         return $this->key === self::UK_KEY;
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(WakeCategory::class);
     }
 }

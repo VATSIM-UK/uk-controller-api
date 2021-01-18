@@ -17,15 +17,18 @@ class AddWakeCategorySchemesTable extends Migration
         Schema::create('wake_category_schemes', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique()->comment('Key for the scheme');
+            $table->string('name')->comment('The name of the scheme');
         });
 
         DB::table('wake_category_schemes')
             ->insert(
                 [
                     [
+                        'name' => 'UK',
                         'key' => 'UK',
                     ],
                     [
+                        'name' => 'RECAT-EU',
                         'key' => 'RECAT_EU',
                     ],
                 ]
