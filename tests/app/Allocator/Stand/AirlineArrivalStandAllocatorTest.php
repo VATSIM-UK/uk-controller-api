@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var AirlineArrivalStandAllocator
-     */
-    private $allocator;
+    private AirlineArrivalStandAllocator $allocator;
 
     public function setUp(): void
     {
@@ -47,6 +44,43 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('BAW23451', 'EGLL');
         $this->assertContains($this->allocator->allocate($aircraft)->stand_id, [1, 2]);
         $this->assertContains(StandAssignment::find($aircraft->callsign)->stand_id, [1, 2]);
+    }
+
+    public function testItAssignsStandsWithSpecificDestinations()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals(1, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals(1, StandAssignment::find($aircraft->callsign)->stand_id);
+    }
+
+    public function testItAPrefersStandsWithNoSpecificDestinations()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD',
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => null,
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals(2, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals(2, StandAssignment::find($aircraft->callsign)->stand_id);
     }
 
     public function testItAllocatesStandsAtAppropriateWeight()

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Aircraft\Aircraft;
+use App\Models\Aircraft\RecatCategory;
 use App\Models\Aircraft\WakeCategory;
 use Illuminate\Database\Seeder;
 
@@ -48,6 +49,7 @@ class AircraftTableSeeder extends Seeder
                 [
                     'code' => 'B738',
                     'wake_category_id' => WakeCategory::where('code', 'LM')->firstOrFail()->id,
+                    'recat_category_id' => RecatCategory::where('code', 'D')->firstOrFail()->id,
                     'allocate_stands' => true,
                     'wingspan' => 117.83,
                     'length' => 129.50,
@@ -55,6 +57,7 @@ class AircraftTableSeeder extends Seeder
                 [
                     'code' => 'A333',
                     'wake_category_id' => WakeCategory::where('code', 'H')->firstOrFail()->id,
+                    'recat_category_id' => RecatCategory::where('code', 'B')->firstOrFail()->id,
                     'allocate_stands' => true,
                     'wingspan' => 197.83,
                     'length' => 208.99
