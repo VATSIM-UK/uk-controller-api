@@ -79,7 +79,7 @@ class StandTest extends BaseFunctionalTestCase
 
         $stands = Stand::airline(
             Airline::find(1)
-        )->get()->pluck('id')->toArray();
+        )->pluck('stands.id')->toArray();
         $this->assertEquals([1, 2], $stands);
     }
 
