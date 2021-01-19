@@ -57,6 +57,7 @@ class StandTest extends BaseFunctionalTestCase
 
     public function testAirlineOnlyReturnsStandsForTheCorrectAirline()
     {
+        DB::table('airline_stand')->truncate();
         DB::table('airline_stand')->insert(
             [
                 [
@@ -86,6 +87,7 @@ class StandTest extends BaseFunctionalTestCase
     public function testAirlineOnlyReturnsStandsAtTheRightTime()
     {
         Carbon::setTestNow(Carbon::parse('2020-12-05 16:00:00'));
+        DB::table('airline_stand')->truncate();
         DB::table('airline_stand')->insert(
             [
                 [
@@ -117,6 +119,7 @@ class StandTest extends BaseFunctionalTestCase
 
     public function testAirlineDestinationOnlyReturnsStandsForTheCorrectAirlineAndDestinations()
     {
+        DB::table('airline_stand')->truncate();
         DB::table('airline_stand')->insert(
             [
                 [
@@ -147,6 +150,7 @@ class StandTest extends BaseFunctionalTestCase
     public function testAirlineDestinationOnlyReturnsStandsWithinTheRightTime()
     {
         Carbon::setTestNow(Carbon::parse('2020-12-05 16:00:00'));
+        DB::table('airline_stand')->truncate();
         DB::table('airline_stand')->insert(
             [
                 [
