@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Aircraft\WakeCategory;
 use App\Models\Aircraft\WakeCategoryScheme;
+use Illuminate\Support\Facades\DB;
 
 class WakeServiceTest extends BaseFunctionalTestCase
 {
@@ -17,10 +19,11 @@ class WakeServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsWakeSchemesDependency()
     {
-        $expected = [
-            WakeCategoryScheme::uk()->first()->toArray(),
-            WakeCategoryScheme::recat()->first()->toArray(),
-        ];
+        $expected = array_merge(
+            [WakeCategoryScheme::where('key', 'UK')->first()->toArray()],
+            [WakeCategoryScheme::where('key', 'RECAT_EU')->first()->toArray()],
+        );
+
         $this->assertEquals($expected, $this->service->getWakeSchemesDependency());
     }
 }

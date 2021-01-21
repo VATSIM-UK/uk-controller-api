@@ -31,7 +31,7 @@ class WakeCategory extends Model
         return [
             'id' => $this->id,
             'code' => $this->code,
-            'subsequent_departure_intervals' => $this->departureIntervals->map(
+            'subsequent_departure_intervals' => $this->departureIntervals->sortBy('relative_weighting')->map(
                 function (WakeCategory $subsequent) {
                     return [
                         'id' => $subsequent->id,
@@ -39,7 +39,7 @@ class WakeCategory extends Model
                         'intermediate' => $subsequent->pivot->intermediate,
                     ];
                 }
-            )->toArray(),
+            )->values()->toArray(),
         ];
     }
 

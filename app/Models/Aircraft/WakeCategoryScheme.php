@@ -22,7 +22,7 @@ class WakeCategoryScheme extends Model
             'id' => $this->id,
             'key' => $this->key,
             'name' => $this->name,
-            'categories' => $this->categories->toArray(),
+            'categories' => $this->categories->sortBy('relative_weighting')->values()->toArray(),
         ];
     }
 
