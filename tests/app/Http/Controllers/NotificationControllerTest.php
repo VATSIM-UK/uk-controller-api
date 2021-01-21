@@ -171,14 +171,14 @@ class NotificationControllerTest extends BaseApiTestCase
             'valid_to' => Carbon::now()->addYear()
         ]);
 
-        $this->assertCount(0, $notification->readBy);
+        $this->assertCount(0, $notification->read);
         $this->assertDatabaseCount('notification_reads', 0);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/{$notification->id}")
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$notification->id}")
             ->assertStatus(201)
             ->assertExactJson(['message' => 'ok']);
 
-        $this->assertCount(1, $notification->fresh()->readBy);
+        $this->assertCount(1, $notification->fresh()->read);
         $this->assertDataBaseHas('notification_reads', [
             'user_id' => auth()->user()->id,
             'notification_id' => $notification->id
