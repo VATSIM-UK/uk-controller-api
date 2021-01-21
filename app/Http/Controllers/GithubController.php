@@ -139,7 +139,7 @@ class GithubController
             $this->client->authenticate(
                 config('github.access_token'),
                 null,
-                Client::AUTH_HTTP_TOKEN
+                Client::AUTH_ACCESS_TOKEN
             );
 
             $this->client->api('issue')

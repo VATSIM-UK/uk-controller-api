@@ -35,7 +35,7 @@ class GithubControllerTest extends BaseApiTestCase
 
         $this->client
             ->shouldReceive('authenticate')
-            ->withArgs([config('github.access_token'), null, Client::AUTH_HTTP_TOKEN])
+            ->withArgs([config('github.access_token'), null, Client::AUTH_ACCESS_TOKEN])
             ->once();
 
         $this->client->shouldReceive('api')->with('issue')->andReturn($issuesMock);

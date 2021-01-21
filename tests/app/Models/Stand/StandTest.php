@@ -79,7 +79,7 @@ class StandTest extends BaseFunctionalTestCase
 
         $stands = Stand::airline(
             Airline::find(1)
-        )->get()->pluck('id')->toArray();
+        )->pluck('stands.id')->toArray();
         $this->assertEquals([1, 2], $stands);
     }
 
@@ -111,7 +111,7 @@ class StandTest extends BaseFunctionalTestCase
 
         $stands = Stand::airline(
             Airline::find(1)
-        )->get()->pluck('id')->toArray();
+        )->pluck('stands.id')->toArray();
         $this->assertEquals([2, 3], $stands);
     }
 
@@ -140,7 +140,7 @@ class StandTest extends BaseFunctionalTestCase
         $stands = Stand::airlineDestination(
             Airline::find(1),
             ['EGGD']
-        )->get()->pluck('id')->toArray();
+        )->pluck('stands.id')->toArray();
         $this->assertEquals([1], $stands);
     }
 
@@ -173,7 +173,7 @@ class StandTest extends BaseFunctionalTestCase
         $stands = Stand::airlineDestination(
             Airline::find(1),
             ['EGGD']
-        )->get()->pluck('id')->toArray();
+        )->pluck('stands.id')->toArray();
         $this->assertEquals([2, 3], $stands);
     }
 

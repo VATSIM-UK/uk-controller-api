@@ -111,7 +111,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'airfield_pairing_prenotes',
             'origin_airfield_id',
             'destination_airfield_id'
-        )->withPivot('prenote_id');
+        )->withPivot('prenote_id', 'flight_rule_id');
     }
 
     public function getCoordinateAttribute(): Coordinate

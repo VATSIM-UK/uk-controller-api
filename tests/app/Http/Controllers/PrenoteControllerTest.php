@@ -22,6 +22,7 @@ class PrenoteControllerTest extends BaseApiTestCase
                 'origin' => 'EGLL',
                 'destination' => 'EGBB',
                 'type' => 'airfieldPairing',
+                'flight_rules' => null,
                 'recipient' => [
                     'EGLL_S_TWR',
                     'EGLL_N_APP',

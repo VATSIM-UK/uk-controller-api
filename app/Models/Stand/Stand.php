@@ -106,29 +106,21 @@ class Stand extends Model
 
     public function scopeAirline(Builder $builder, Airline $airline): Builder
     {
-        return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline) {
-            $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id)
-                ->where(function (Builder $query) {
+        return $builder->join('airline_stand', 'stands.id', '=', 'airline_stand.stand_id')
+            ->where('airline_stand.airline_id', $airline->id)
+            ->where(
+                function (Builder $query) {
                     // Timezones here should be local because Heathrow.
                     $now = Carbon::now()->timezone('Europe/London')->toTimeString();
-                    $query->whereNull('not_before')
-                        ->orWhere('not_before', '<=', $now);
-                });
-        });
+                    $query->whereNull('airline_stand.not_before')
+                        ->orWhere('airline_stand.not_before', '<=', $now);
+                }
+            );
     }
 
     public function scopeAirlineDestination(Builder $builder, Airline $airline, array $destinationStrings): Builder
     {
-        return $builder->whereHas('airlines', function (Builder $airlineQuery) use ($airline, $destinationStrings) {
-            $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id)
-                ->whereIn('destination', $destinationStrings)
-                ->where(function (Builder $query) {
-                    // Timezones here should be local because Heathrow.
-                    $now = Carbon::now()->timezone('Europe/London')->toTimeString();
-                    $query->whereNull('not_before')
-                        ->orWhere('not_before', '<=', $now);
-                });
-        });
+        return $this->scopeAirline($builder, $airline)->whereIn('destination', $destinationStrings);
     }
 
     public function wakeCategory(): BelongsTo

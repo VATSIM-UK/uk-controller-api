@@ -33,6 +33,9 @@ class OptimiseTables extends Command
 
     protected $description = 'Optimise database tables';
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function handle()
     {
         $this->info('Optimising database tables');
