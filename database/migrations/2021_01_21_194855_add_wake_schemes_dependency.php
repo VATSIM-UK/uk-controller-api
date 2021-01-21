@@ -2,9 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AddWakeSchemesDependency extends Migration
 {
@@ -19,7 +17,7 @@ class AddWakeSchemesDependency extends Migration
             [
                 'key' => 'DEPENDENCY_WAKE_SCHEME',
                 'uri' => 'wake-scheme/dependency',
-                'local_file' => 'airfields.json',
+                'local_file' => 'wake-schemes.json',
                 'created_at' => Carbon::now(),
             ]
         );
