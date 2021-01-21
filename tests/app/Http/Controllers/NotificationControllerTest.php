@@ -185,26 +185,43 @@ class NotificationControllerTest extends BaseApiTestCase
         ]);
     }
 
-    public function testIt()
+    public function testItCanReturnUnreadNotifications()
     {
-        $notification = Notification::create([
-            'title' => 'My Linked Notification',
+        $read = Notification::create([
+            'title' => 'My Read Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
 
-        $this->assertCount(0, $notification->readBy);
-        $this->assertDatabaseCount('notification_reads', 0);
+        Notification::create([
+            'title' => 'My Unread Notification',
+            'body' => 'This is some contents for my notification.',
+            'valid_from' => Carbon::now()->subMonth(),
+            'valid_to' => Carbon::now()->addYear()
+        ]);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$notification->id}")
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(2);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$read->id}")
             ->assertStatus(201)
             ->assertExactJson(['message' => 'ok']);
 
-        $this->assertCount(1, $notification->fresh()->readBy);
-        $this->assertDataBaseHas('notification_reads', [
-            'user_id' => auth()->user()->id,
-            'notification_id' => $notification->id
-        ]);
+        $expected = [
+            [
+                'title' => 'My Unread Notification',
+                'body' => 'This is some contents for my notification.',
+                'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
+                'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
+                'controllers' => []
+            ]
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertExactJson($expected);
     }
 }

@@ -35,7 +35,7 @@ class Notification extends Model
         );
     }
 
-    public function readBy() : BelongsToMany
+    public function read() : BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
