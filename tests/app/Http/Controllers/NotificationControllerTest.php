@@ -9,6 +9,12 @@ use Carbon\Carbon;
 
 class NotificationControllerTest extends BaseApiTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Carbon::setTestNow();
+    }
+
     public function testItDoesNotAllowUnauthenticatedRequests()
     {
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'notifications')
