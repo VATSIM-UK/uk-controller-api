@@ -3,6 +3,7 @@
 namespace App\Models\Notification;
 
 use App\Models\Controller\ControllerPosition;
+use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -31,6 +32,16 @@ class Notification extends Model
             'notification_controllers',
             'notification_id',
             'controller_position_id'
+        );
+    }
+
+    public function readBy() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'notification_reads',
+            'notification_id',
+            'user_id'
         );
     }
 }
