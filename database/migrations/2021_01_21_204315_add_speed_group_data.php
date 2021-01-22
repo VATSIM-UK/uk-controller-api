@@ -9,13 +9,13 @@ class AddSpeedGroupData extends Migration
 
     const SPEED_GROUPS = [
         'EGKK' => [
-            'EGKK_GROUP_1' => [
-                'aircraft' =>  [
+            '1' => [
+                'aircraft' => [
                     'DHC6',
                     'E110',
                 ],
             ],
-            'EGKK_GROUP_2' => [
+            '2' => [
                 'aircraft' => [
                     'F27',
                     'F406',
@@ -27,7 +27,7 @@ class AddSpeedGroupData extends Migration
                     'E120',
                 ],
             ],
-            'EGKK_GROUP_3' => [
+            '3' => [
                 'aircraft' => [
                     'AT43',
                     'AT45',
@@ -56,7 +56,7 @@ class AddSpeedGroupData extends Migration
                     'SW4',
                 ],
             ],
-            'EGKK_GROUP_4' => [
+            '4' => [
                 'aircraft' => [
                     'A400M',
                     'B461',
@@ -84,7 +84,7 @@ class AddSpeedGroupData extends Migration
                     'C650',
                 ]
             ],
-            'EGKK_GROUP_5' => [
+            '5' => [
                 'aircraft' => [
                     'C56X',
                     'C680',
@@ -94,12 +94,14 @@ class AddSpeedGroupData extends Migration
                     'Jet',
                 ],
             ],
-            'EGKK_GROUP_6' => [
+            '6' => [
                 'aircraft' => [
                     'CONC'
                 ],
             ],
-            'EGLL_GROUP_0' => [
+        ],
+        'EGLL' => [
+            '0' => [
                 'aircraft' => [
                     'BE9L',
                     'DHC6',
@@ -107,7 +109,7 @@ class AddSpeedGroupData extends Migration
                     'SH36',
                 ],
             ],
-            'EGLL_GROUP_1' => [
+            '1' => [
                 'aircraft' => [
                     'AT43',
                     'AT44',
@@ -127,7 +129,7 @@ class AddSpeedGroupData extends Migration
                     'SF34',
                 ],
             ],
-            'EGLL_GROUP_2' => [
+            '2' => [
                 'aircraft' => [
                     'B461',
                     'B462',
@@ -157,22 +159,24 @@ class AddSpeedGroupData extends Migration
                     'SB20',
                 ]
             ],
-            'EGLL_GROUP_3' => [
+            '3' => [
                 'engines' => [
                     'Jet',
                 ],
             ],
-            'EGLL_GROUP_4' => [
+            '4' => [
                 'aircraft' => [
                     'CONC',
                 ],
             ],
-            'EGLC_GROUP_0' => [
+        ],
+        'EGLC' => [
+            '0' => [
                 'engines' => [
                     'Jet',
                 ],
             ],
-            'EGLC_GROUP_1' => [
+            '1' => [
                 'aircraft' => [
                     'B461',
                     'B462',
@@ -193,7 +197,7 @@ class AddSpeedGroupData extends Migration
                     'SB20',
                 ]
             ],
-            'EGLC_GROUP_2' => [
+            '2' => [
                 'aircraft' => [
                     'AT43',
                     'AT44',
@@ -220,7 +224,7 @@ class AddSpeedGroupData extends Migration
                     'SF34',
                 ]
             ],
-            'EGLC_GROUP_3' => [
+            '3' => [
                 'aircraft' => [
                     'BE58',
                     'BE99',
@@ -231,7 +235,9 @@ class AddSpeedGroupData extends Migration
                     'PA34',
                 ]
             ],
-            'EGSS_GROUP_0' => [
+        ],
+        'EGSS' => [
+            '0' => [
                 'aircraft' => [
                     'BE9L',
                     'DHC6',
@@ -239,7 +245,7 @@ class AddSpeedGroupData extends Migration
                     'SH36',
                 ],
             ],
-            'EGSS_GROUP_1' => [
+            '1' => [
                 'aircraft' => [
                     'AT42',
                     'AT43',
@@ -256,9 +262,170 @@ class AddSpeedGroupData extends Migration
                     'DH8A',
                     'DH8B',
                     'DH8C',
+                    'JS31',
+                    'JS32',
+                    'JS41',
                 ],
             ],
-        ]
+            '2' => [
+                'aircraft' => [
+                    'B461',
+                    'B462',
+                    'B463',
+                    'RJ70',
+                    'RJ85',
+                    'RJ1H',
+                    'C501',
+                    'C551',
+                    'D328',
+                    'J328',
+                    'DH8D',
+                    'SB20',
+                ],
+            ],
+            '3' => [
+                'aircraft' => [
+                    'C501',
+                    'C551',
+                    'J328',
+                ],
+                'engines' => [
+                    'Jet'
+                ],
+            ],
+            '4' => [
+                'aircraft' => [
+                    'CONC',
+                ],
+            ],
+        ],
+        'EGGW' => [
+            '0' => [
+                'aircraft' => [
+                    'BE99',
+                    'E110',
+                    'SH33',
+                    'SH36',
+                    'C404',
+                    'PA23',
+                    'PA31',
+                ],
+            ],
+            '1' => [
+                'aircraft' => [
+                    'ATP',
+                    'AT43',
+                    'AT45',
+                    'AT72',
+                    'BE20',
+                    'DHC6',
+                    'DHC7',
+                    'DH8A',
+                    'DH8B',
+                    'DH8C',
+                    'DH8D',
+                    'E120',
+                    'F27',
+                    'F50',
+                    'G159',
+                    'JS31',
+                    'JS32',
+                    'JS41',
+                    'SF34',
+                ],
+            ],
+            '2' => [
+                'B461',
+                'B462',
+                'B463',
+                'RJ70',
+                'RJ85',
+                'RJ1H',
+                'C501',
+                'C551',
+                'CARJ',
+                'CL60',
+                'E145',
+            ],
+            '3' => [
+                'engines' => [
+                    'Jet',
+                ],
+            ],
+            '4' => [
+                'aircraft' => [
+                    'CONC',
+                ],
+            ],
+        ],
+        'EGCC' => [
+            '0' => [
+                'aircraft' => [
+                'BE9L',
+                'DHC6',
+                'E110',
+                'SH36',]
+            ],
+            '1' => [
+                'aircraft' => [
+                'ATP',
+                'AT43',
+                'AT44',
+                'AT72',
+                'BE20',
+                'BE30',
+                'DH8A',
+                'DH8B',
+                'DH8C',
+                'F27',
+                'F50',
+                'JS31',
+                'JS32',
+                'JS41',
+                'SF34',
+],
+            ],
+            '2' => [
+                'aircraft' => [
+                    'B461',
+                    'B462',
+                    'B463',
+                    'RJ70',
+                    'RJ85',
+                    'RJ1H',
+                    'C25A',
+                    'C25B',
+                    'C25C',
+                    'C500',
+                    'C501',
+                    'C510',
+                    'C525',
+                    'C550',
+                    'C551',
+                    'C560',
+                    'C650',
+                    'C56X',
+                    'C680',
+                    'C750',
+                    'C130',
+                    'D328',
+                    'J328',
+                    'L328',
+                    'DH8D',
+                    'SB20',
+                ],
+            ],
+            '3' => [
+                'engines' => [
+                    'Jet'
+                ],
+            ],
+            '4' => [
+                'aircraft' => [
+                    'CONC',
+                ]
+            ],
+        ],
     ];
 
     /**
@@ -268,17 +435,18 @@ class AddSpeedGroupData extends Migration
      */
     public function up()
     {
-        $airfields = DB::table('airfield')->get()->mapWithKeys(function ($airfield) {
-            return [$airfield->code => $airfield->id];
-        })->toArray();
+        $airfields = DB::table('airfield')->get()->mapWithKeys(
+            function ($airfield) {
+                return [$airfield->code => $airfield->id];
+            }
+        )->toArray();
 
-        foreach (self::SPEED_GROUPS as $airfield => $speedGroups)
-        {
+        foreach (self::SPEED_GROUPS as $airfield => $speedGroups) {
             foreach ($speedGroups as $key => $group) {
                 $groupId = DB::table('speed_groups')->insertGetId(
                     [
                         'airfield_id' => $airfields[$airfield],
-                        'key' => $key,
+                        'key' => sprintf('%s_GROUP_%d', $airfield, $key),
                         'created_at' => Carbon::now(),
                     ]
                 );
@@ -287,12 +455,14 @@ class AddSpeedGroupData extends Migration
                     $aircraftToInclude = DB::table('aircraft')->whereIn('code', $group['aircraft'])
                         ->pluck('id');
 
-                    $aircraftToInclude = $aircraftToInclude->map(function ($aircraftId) use ($groupId) {
-                        return [
-                            'aircraft_id' => $aircraftId,
-                            'speed_group_id' => $groupId,
-                        ];
-                    });
+                    $aircraftToInclude = $aircraftToInclude->map(
+                        function ($aircraftId) use ($groupId) {
+                            return [
+                                'aircraft_id' => $aircraftId,
+                                'speed_group_id' => $groupId,
+                            ];
+                        }
+                    );
 
                     DB::table('aircraft_speed_group')->insert($aircraftToInclude->toArray());
                 }
@@ -300,7 +470,8 @@ class AddSpeedGroupData extends Migration
                 if (isset($group['engines'])) {
                     DB::table('engine_type_speed_group')->insert(
                         [
-                            'engine_type_id' => DB::table('engine_types')->where('type', $group['engines'])->first()->id,
+                            'engine_type_id' => DB::table('engine_types')->where('type', $group['engines'])->first(
+                            )->id,
                             'speed_group_id' => $groupId,
                             'created_at' => Carbon::now(),
                         ]
