@@ -55,10 +55,10 @@ class NotificationController extends BaseController
         return response()->json($notifications);
     }
 
-    public function readNotification($notification) : JsonResponse
+    public function readNotification($id) : JsonResponse
     {
-        // Confused as to why Notification $notification doesn't resolve the instance....
-        Notification::findOrFail($notification)
+        // Confused as to why Notification $id doesn't resolve the instance....
+        Notification::findOrFail($id)
             ->readBy()
             ->attach(auth()->user());
 

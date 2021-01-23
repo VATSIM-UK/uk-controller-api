@@ -176,8 +176,6 @@ class NotificationControllerTest extends BaseApiTestCase
 
     public function testANotificationCanBeRead()
     {
-        $this->withoutExceptionHandling();
-
         $notification = Notification::create([
             'title' => 'My Linked Notification',
             'body' => 'This is some contents for my notification.',

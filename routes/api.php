@@ -55,7 +55,7 @@ Route::middleware('plugin.user')->group(function () {
     // Notifications
     Route::get('notifications', 'NotificationController@getActiveNotifications');
     Route::get('notifications/unread', 'NotificationController@getUnreadNotifications');
-    Route::put('notifications/read/{notification}', 'NotificationController@readNotification');
+    Route::put('notifications/read/{id}', 'NotificationController@readNotification');
 });
 
 // Routes for user administration
