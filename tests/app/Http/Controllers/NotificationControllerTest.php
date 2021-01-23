@@ -170,6 +170,8 @@ class NotificationControllerTest extends BaseApiTestCase
 
     public function testANotificationCanBeRead()
     {
+        $this->withoutExceptionHandling();
+        
         $notification = Notification::create([
             'title' => 'My Linked Notification',
             'body' => 'This is some contents for my notification.',
@@ -177,14 +179,14 @@ class NotificationControllerTest extends BaseApiTestCase
             'valid_to' => Carbon::now()->addYear()
         ]);
 
-        $this->assertCount(0, $notification->read);
+        $this->assertCount(0, $notification->readBy);
         $this->assertDatabaseCount('notification_reads', 0);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$notification->id}")
             ->assertStatus(201)
             ->assertExactJson(['message' => 'ok']);
 
-        $this->assertCount(1, $notification->fresh()->read);
+        $this->assertCount(1, $notification->fresh()->readBy);
         $this->assertDataBaseHas('notification_reads', [
             'user_id' => auth()->user()->id,
             'notification_id' => $notification->id

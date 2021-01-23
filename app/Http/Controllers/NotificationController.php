@@ -36,7 +36,7 @@ class NotificationController extends BaseController
         $notifications = Notification::active()
             ->orderBy('valid_from', 'desc')
             ->with('controllers')
-            ->doesntHave('read')
+            ->doesntHave('readBy')
             ->get()
             ->each(function (Notification $notification) {
 
@@ -59,7 +59,7 @@ class NotificationController extends BaseController
     {
         // Confused as to why Notification $notification doesn't resolve the instance....
         Notification::findOrFail($notification)
-            ->read()
+            ->readBy()
             ->attach(auth()->user());
 
         return response()->json(['message' => 'ok'], 201);
