@@ -23,12 +23,12 @@ class CreateNotificationReadsTable extends Migration
             $table->foreign('notification_id')
                 ->references('id')
                 ->on('notifications')
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
 
             $table->foreign('user_id')
                 ->references('id')
                 ->on('user')
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
         });
     }
 
