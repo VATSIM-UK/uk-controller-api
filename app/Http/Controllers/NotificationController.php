@@ -23,7 +23,7 @@ class NotificationController extends BaseController
                 });
 
                 $notification->setHidden([
-                    'id', 'disabled_at', 'created_at', 'updated_at'
+                    'disabled_at', 'created_at', 'updated_at'
                 ]);
 
             });
@@ -47,7 +47,7 @@ class NotificationController extends BaseController
                 });
 
                 $notification->setHidden([
-                    'id', 'disabled_at', 'created_at', 'updated_at'
+                    'disabled_at', 'created_at', 'updated_at'
                 ]);
 
             });

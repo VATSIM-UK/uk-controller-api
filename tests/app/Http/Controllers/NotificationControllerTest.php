@@ -24,7 +24,7 @@ class NotificationControllerTest extends BaseApiTestCase
     public function testItShowsNotificationsWithinTheirValidPeriod()
     {
         // Current Notification
-        Notification::create([
+        $current = Notification::create([
             'title' => 'My Current Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subYear(),
@@ -41,6 +41,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $expected = [
             [
+                'id' => $current->id,
                 'title' => 'My Current Notification',
                 'body' => 'This is some contents for my notification.',
                 'valid_from' => Carbon::now()->subYear()->toDateTimeString(),
@@ -57,7 +58,7 @@ class NotificationControllerTest extends BaseApiTestCase
     public function testItDoesNotShowDisabledNotifications()
     {
         // Active Notification
-        Notification::create([
+        $active = Notification::create([
             'title' => 'My Active Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subYear(),
@@ -75,6 +76,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $expected = [
             [
+                'id' => $active->id,
                 'title' => 'My Active Notification',
                 'body' => 'This is some contents for my notification.',
                 'valid_from' => Carbon::now()->subYear()->toDateTimeString(),
@@ -90,21 +92,21 @@ class NotificationControllerTest extends BaseApiTestCase
 
     public function testItShowsNotificationsInOrderOfValidFromDate()
     {
-        Notification::create([
+        $second = Notification::create([
             'title' => 'My Second Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
 
-        Notification::create([
+        $third = Notification::create([
             'title' => 'My Third Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subYear(),
             'valid_to' => Carbon::now()->addYear()
         ]);
 
-        Notification::create([
+        $first = Notification::create([
             'title' => 'My First Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subWeek(),
@@ -113,6 +115,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $expected = [
             [
+                'id' => $first->id,
                 'title' => 'My First Notification',
                 'body' => 'This is some contents for my notification.',
                 'valid_from' => Carbon::now()->subWeek()->toDateTimeString(),
@@ -120,6 +123,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'controllers' => []
             ],
             [
+                'id' => $second->id,
                 'title' => 'My Second Notification',
                 'body' => 'This is some contents for my notification.',
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
@@ -127,6 +131,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'controllers' => []
             ],
             [
+                'id' => $third->id,
                 'title' => 'My Third Notification',
                 'body' => 'This is some contents for my notification.',
                 'valid_from' => Carbon::now()->subYear()->toDateTimeString(),
@@ -153,6 +158,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $expected = [
             [
+                'id' => $notification->id,
                 'title' => 'My Linked Notification',
                 'body' => 'This is some contents for my notification.',
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
@@ -202,7 +208,7 @@ class NotificationControllerTest extends BaseApiTestCase
             'valid_to' => Carbon::now()->addYear()
         ]);
 
-        Notification::create([
+        $unread = Notification::create([
             'title' => 'My Unread Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subMonth(),
@@ -219,6 +225,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $expected = [
             [
+                'id' => $unread->id,
                 'title' => 'My Unread Notification',
                 'body' => 'This is some contents for my notification.',
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
