@@ -7,22 +7,23 @@ use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'title',
         'body',
         'valid_from',
-        'valid_to',
-        'disabled_at'
+        'valid_to'
     ];
 
     public function scopeActive($query)
     {
         return $query->where('valid_from', '<=', Carbon::now())
-            ->where('valid_to', '>=', Carbon::now())
-            ->whereNull('disabled_at');
+            ->where('valid_to', '>=', Carbon::now());
     }
 
     public function controllers() : BelongsToMany

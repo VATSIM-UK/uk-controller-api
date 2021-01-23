@@ -66,13 +66,13 @@ class NotificationControllerTest extends BaseApiTestCase
         ]);
 
         // Inactive Notification
-        Notification::create([
+        $inactive = Notification::create([
             'title' => 'My Inactive Notification',
             'body' => 'This is some contents for my notification.',
             'valid_from' => Carbon::now()->subYear(),
-            'valid_to' => Carbon::now()->addYear(),
-            'disabled_at' => Carbon::now()
+            'valid_to' => Carbon::now()->addYear()
         ]);
+        $inactive->delete();
 
         $expected = [
             [

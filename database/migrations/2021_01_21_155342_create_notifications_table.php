@@ -19,8 +19,8 @@ class CreateNotificationsTable extends Migration
             $table->text('body');
             $table->timestamp('valid_from');
             $table->timestamp('valid_to');
-            $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
