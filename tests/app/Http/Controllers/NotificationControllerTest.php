@@ -214,7 +214,7 @@ class NotificationControllerTest extends BaseApiTestCase
             ->assertJsonCount(2);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$read->id}")
-            ->assertStatus(201)
+            ->assertStatus(200)
             ->assertExactJson(['message' => 'ok']);
 
         $expected = [
