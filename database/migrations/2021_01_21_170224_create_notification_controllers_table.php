@@ -29,6 +29,9 @@ class CreateNotificationControllersTable extends Migration
                 ->references('id')
                 ->on('controller_positions')
                 ->onDelete('cascade');
+
+            // Index
+            $table->index(['notification_id', 'controller_position_id'], 'notification_controllers_notification_controller_index');
         });
     }
 

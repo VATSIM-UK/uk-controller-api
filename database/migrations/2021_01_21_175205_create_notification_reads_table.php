@@ -29,6 +29,9 @@ class CreateNotificationReadsTable extends Migration
                 ->references('id')
                 ->on('user')
                 ->cascadeOnDelete();
+
+            // Index
+            $table->index(['notification_id', 'user_id']);
         });
     }
 
