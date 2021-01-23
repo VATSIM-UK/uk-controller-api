@@ -171,7 +171,7 @@ class NotificationControllerTest extends BaseApiTestCase
     public function testANotificationCanBeRead()
     {
         $this->withoutExceptionHandling();
-        
+
         $notification = Notification::create([
             'title' => 'My Linked Notification',
             'body' => 'This is some contents for my notification.',
@@ -183,7 +183,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $this->assertDatabaseCount('notification_reads', 0);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$notification->id}")
-            ->assertStatus(201)
+            ->assertStatus(200)
             ->assertExactJson(['message' => 'ok']);
 
         $this->assertCount(1, $notification->fresh()->readBy);

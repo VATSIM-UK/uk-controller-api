@@ -62,6 +62,6 @@ class NotificationController extends BaseController
             ->readBy()
             ->attach(auth()->user());
 
-        return response()->json(['message' => 'ok'], 201);
+        return response()->json(['message' => 'ok']);
     }
 }
