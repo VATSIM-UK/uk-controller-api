@@ -197,6 +197,12 @@ class NotificationControllerTest extends BaseApiTestCase
         ]);
     }
 
+    public function testItCannotReadANonNumericNotification()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/my-string")
+            ->assertStatus(404);
+    }
+
     public function testItCanReturnUnreadNotifications()
     {
         $read = Notification::create([
