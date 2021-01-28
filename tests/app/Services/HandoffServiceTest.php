@@ -367,4 +367,15 @@ class HandoffServiceTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItDeletesHandoffByKey()
+    {
+        HandoffService::deleteHandoffByKey('HANDOFF_ORDER_2');
+        $this->assertDatabaseMissing(
+            'handoffs',
+            [
+                'key' => 'HANDOFF_ORDER_2',
+            ]
+        );
+    }
 }

@@ -196,6 +196,11 @@ class HandoffService
             ->update(['handoff_id' => Handoff::where('key', $handoff)->firstOrFail()->id]);
     }
 
+    public static function deleteHandoffByKey(string $handoffKey)
+    {
+        Handoff::where('key', $handoffKey)->delete();
+    }
+
     private static function getHandoffsForPosition(int $positionId): Collection
     {
         return  DB::table('handoff_orders')
