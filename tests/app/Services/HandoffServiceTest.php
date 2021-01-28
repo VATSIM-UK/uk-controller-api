@@ -370,11 +370,12 @@ class HandoffServiceTest extends BaseFunctionalTestCase
 
     public function testItDeletesHandoffByKey()
     {
-        HandoffService::deleteHandoffByKey('HANDOFF_ORDER_2');
+        HandoffService::createNewHandoffOrder('TEST_XYZ', 'Test', ['EGLL_N_APP']);
+        HandoffService::deleteHandoffByKey('TEST_XYZ');
         $this->assertDatabaseMissing(
             'handoffs',
             [
-                'key' => 'HANDOFF_ORDER_2',
+                'key' => 'TEST_XYZ',
             ]
         );
     }
