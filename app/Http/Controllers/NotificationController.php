@@ -33,10 +33,10 @@ class NotificationController extends BaseController
 
     public function getUnreadNotifications() : JsonResponse
     {
-        $notifications = Notification::active()
+        $unreadNotifications = Notification::active()
             ->orderBy('valid_from', 'desc')
             ->with('controllers')
-            ->doesntHave('readBy')
+            ->unreadBy(auth()->user())
             ->get()
             ->each(function (Notification $notification) {
 
@@ -52,12 +52,11 @@ class NotificationController extends BaseController
 
             });
 
-        return response()->json($notifications);
+        return response()->json($unreadNotifications);
     }
 
     public function readNotification($id) : JsonResponse
     {
-        // Confused as to why Notification $id doesn't resolve the instance....
         Notification::findOrFail($id)
             ->readBy()
             ->attach(auth()->user());

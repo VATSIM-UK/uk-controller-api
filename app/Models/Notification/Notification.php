@@ -26,6 +26,13 @@ class Notification extends Model
             ->where('valid_to', '>=', Carbon::now());
     }
 
+    public function scopeUnreadBy($query, User $user)
+    {
+        return $query->whereDoesntHave('readBy', function ($userQuery) use ($user) {
+            return $userQuery->where('user.id', $user->id);
+        });
+    }
+
     public function controllers() : BelongsToMany
     {
         return $this->belongsToMany(

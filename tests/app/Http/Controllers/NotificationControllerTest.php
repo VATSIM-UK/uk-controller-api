@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\BaseApiTestCase;
-use App\Models\Controller\ControllerPosition;
-use App\Models\Notification\Notification;
 use Carbon\Carbon;
+use App\BaseApiTestCase;
+use Illuminate\Support\Facades\DB;
+use App\Models\Notification\Notification;
+use App\Models\Controller\ControllerPosition;
 
 class NotificationControllerTest extends BaseApiTestCase
 {
@@ -184,14 +185,14 @@ class NotificationControllerTest extends BaseApiTestCase
         ]);
 
         $this->assertCount(0, $notification->readBy);
-        $this->assertDatabaseCount('notification_reads', 0);
+        $this->assertDatabaseCount('notification_user', 0);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$notification->id}")
             ->assertStatus(200)
             ->assertExactJson(['message' => 'ok']);
 
         $this->assertCount(1, $notification->fresh()->readBy);
-        $this->assertDataBaseHas('notification_reads', [
+        $this->assertDataBaseHas('notification_user', [
             'user_id' => auth()->user()->id,
             'notification_id' => $notification->id
         ]);
@@ -242,5 +243,77 @@ class NotificationControllerTest extends BaseApiTestCase
             ->assertStatus(200)
             ->assertJsonCount(1)
             ->assertExactJson($expected);
+    }
+
+    public function testItOnlyReturnsUnreadNotificationsForTheUserLoggedIn()
+    {
+        // Create the two active notifications
+        $read = Notification::create([
+            'title' => 'My Read Notification',
+            'body' => 'This is some contents for my notification.',
+            'valid_from' => Carbon::now()->subMonth(),
+            'valid_to' => Carbon::now()->addYear()
+        ]);
+
+        $unread = Notification::create([
+            'title' => 'My Unread Notification',
+            'body' => 'This is some contents for my notification.',
+            'valid_from' => Carbon::now()->subMonth(),
+            'valid_to' => Carbon::now()->addYear()
+        ]);
+
+        // Create a record of another user reading this notification
+        DB::table('notification_user')->insert([
+            'notification_id' => $read->id,
+            'user_id' => 1203535,
+            'created_at' => '2020-01-01',
+            'updated_at' => '2020-01-01'
+        ]);
+
+        // Get the logged in user's unread notifications
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(2);
+
+        // Read a notification
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$read->id}")
+            ->assertStatus(200)
+            ->assertExactJson(['message' => 'ok']);
+
+        $expected = [
+            [
+                'id' => $unread->id,
+                'title' => 'My Unread Notification',
+                'body' => 'This is some contents for my notification.',
+                'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
+                'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
+                'controllers' => []
+            ]
+        ];
+
+        // Assert only the unread notification is returned
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertExactJson($expected);
+    }
+
+    public function testItHandlesNoUnreadNotificationsCorrectly()
+    {
+        $read = Notification::create([
+            'title' => 'My Read Notification',
+            'body' => 'This is some contents for my notification.',
+            'valid_from' => Carbon::now()->subMonth(),
+            'valid_to' => Carbon::now()->addYear()
+        ]);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$read->id}")
+            ->assertStatus(200)
+            ->assertExactJson(['message' => 'ok']);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(0)
+            ->assertExactJson([]);
     }
 }
