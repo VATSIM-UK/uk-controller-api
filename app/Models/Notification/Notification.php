@@ -30,7 +30,7 @@ class Notification extends Model
     {
         return $this->belongsToMany(
             ControllerPosition::class,
-            'notification_controllers',
+            'controller_position_notification',
             'notification_id',
             'controller_position_id'
         );

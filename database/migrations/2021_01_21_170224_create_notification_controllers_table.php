@@ -13,7 +13,7 @@ class CreateNotificationControllersTable extends Migration
      */
     public function up()
     {
-        Schema::create('notification_controllers', function (Blueprint $table) {
+        Schema::create('controller_position_notification', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('notification_id');
             $table->unsignedBigInteger('controller_position_id');
@@ -31,7 +31,7 @@ class CreateNotificationControllersTable extends Migration
                 ->onDelete('cascade');
 
             // Index
-            $table->index(['notification_id', 'controller_position_id'], 'notification_controllers_notification_controller_index');
+            $table->index(['notification_id', 'controller_position_id'], 'controller_position_notification_controller_index');
         });
     }
 
@@ -42,6 +42,6 @@ class CreateNotificationControllersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notification_controllers');
+        Schema::dropIfExists('controller_position_notification');
     }
 }
