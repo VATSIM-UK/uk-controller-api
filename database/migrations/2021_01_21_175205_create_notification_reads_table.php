@@ -13,7 +13,7 @@ class CreateNotificationReadsTable extends Migration
      */
     public function up()
     {
-        Schema::create('notification_reads', function (Blueprint $table) {
+        Schema::create('notification_user', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('notification_id');
             $table->unsignedInteger('user_id');
@@ -42,6 +42,6 @@ class CreateNotificationReadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notification_reads');
+        Schema::dropIfExists('notification_user');
     }
 }

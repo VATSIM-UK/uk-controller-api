@@ -40,7 +40,7 @@ class Notification extends Model
     {
         return $this->belongsToMany(
             User::class,
-            'notification_reads',
+            'notification_user',
             'notification_id',
             'user_id'
         );
