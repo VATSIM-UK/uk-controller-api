@@ -10,16 +10,11 @@ class NotificationController extends BaseController
 {
     public function getActiveNotifications() : JsonResponse
     {
-
-
-
-
         $notifications = Notification::active()
             ->orderBy('valid_from', 'desc')
             ->with('controllers')
             ->get()
             ->each(function (Notification $notification) {
-
                 $notification->controllers->each(function (ControllerPosition $controllerPosition) {
                     $controllerPosition->setHidden([
                         'pivot', 'id', 'frequency', 'created_at', 'updated_at'
@@ -29,7 +24,6 @@ class NotificationController extends BaseController
                 $notification->setHidden([
                     'created_at', 'updated_at', 'deleted_at'
                 ]);
-
             });
 
         return response()->json($notifications);
