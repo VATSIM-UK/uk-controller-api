@@ -15,7 +15,6 @@ class NotificationController extends BaseController
             ->with('controllers')
             ->get()
             ->each(function (Notification $notification) {
-
                 $notification->controllers->each(function (ControllerPosition $controllerPosition) {
                     $controllerPosition->setHidden([
                         'pivot', 'id', 'frequency', 'created_at', 'updated_at'
@@ -25,7 +24,6 @@ class NotificationController extends BaseController
                 $notification->setHidden([
                     'created_at', 'updated_at', 'deleted_at'
                 ]);
-
             });
 
         return response()->json($notifications);
@@ -39,7 +37,6 @@ class NotificationController extends BaseController
             ->unreadBy(auth()->user())
             ->get()
             ->each(function (Notification $notification) {
-
                 $notification->controllers->each(function (ControllerPosition $controllerPosition) {
                     $controllerPosition->setHidden([
                         'pivot', 'id', 'frequency', 'created_at', 'updated_at'
@@ -49,7 +46,6 @@ class NotificationController extends BaseController
                 $notification->setHidden([
                     'created_at', 'updated_at', 'deleted_at'
                 ]);
-
             });
 
         return response()->json($unreadNotifications);
