@@ -16,6 +16,7 @@ class Notification extends Model
     protected $fillable = [
         'title',
         'body',
+        'link',
         'valid_from',
         'valid_to'
     ];

@@ -17,6 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('body');
+            $table->string('link')->nullable();
             $table->timestamp('valid_from');
             $table->timestamp('valid_to');
             $table->timestamps();

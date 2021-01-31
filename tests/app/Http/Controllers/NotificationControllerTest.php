@@ -28,6 +28,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $current = Notification::create([
             'title' => 'My Current Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subYear(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -36,6 +37,7 @@ class NotificationControllerTest extends BaseApiTestCase
         Notification::create([
             'title' => 'My Old Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subYear(),
             'valid_to' => Carbon::now()->subDay()
         ]);
@@ -45,6 +47,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $current->id,
                 'title' => 'My Current Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subYear()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => []
@@ -62,6 +65,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $active = Notification::create([
             'title' => 'My Active Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subYear(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -70,6 +74,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $inactive = Notification::create([
             'title' => 'My Inactive Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subYear(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -80,6 +85,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $active->id,
                 'title' => 'My Active Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subYear()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => []
@@ -96,6 +102,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $second = Notification::create([
             'title' => 'My Second Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -103,6 +110,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $third = Notification::create([
             'title' => 'My Third Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subYear(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -110,6 +118,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $first = Notification::create([
             'title' => 'My First Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subWeek(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -119,6 +128,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $first->id,
                 'title' => 'My First Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subWeek()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => []
@@ -127,6 +137,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $second->id,
                 'title' => 'My Second Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => []
@@ -135,6 +146,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $third->id,
                 'title' => 'My Third Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subYear()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => []
@@ -151,6 +163,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $notification = Notification::create([
             'title' => 'My Linked Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -162,6 +175,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $notification->id,
                 'title' => 'My Linked Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => [
@@ -180,6 +194,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $notification = Notification::create([
             'title' => 'My Linked Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -209,6 +224,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $read = Notification::create([
             'title' => 'My Read Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -216,6 +232,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $unread = Notification::create([
             'title' => 'My Unread Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -233,6 +250,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $unread->id,
                 'title' => 'My Unread Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => []
@@ -251,6 +269,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $read = Notification::create([
             'title' => 'My Read Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -258,6 +277,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $unread = Notification::create([
             'title' => 'My Unread Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
@@ -285,6 +305,7 @@ class NotificationControllerTest extends BaseApiTestCase
                 'id' => $unread->id,
                 'title' => 'My Unread Notification',
                 'body' => 'This is some contents for my notification.',
+                'link' => 'https://www.vatsim.uk',
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => []
@@ -303,6 +324,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $read = Notification::create([
             'title' => 'My Read Notification',
             'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
             'valid_from' => Carbon::now()->subMonth(),
             'valid_to' => Carbon::now()->addYear()
         ]);
