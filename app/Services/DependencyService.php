@@ -26,11 +26,9 @@ class DependencyService
     {
         return Cache::rememberForever(
             self::getDependencyCacheKey($dependency),
-            function () use ($dependency)
-            {
+            function () use ($dependency) {
                 $response = app()->call(sprintf('App\\Http\\Controllers\\%s', $dependency->action));
-                if (!$response instanceof JsonResponse)
-                {
+                if (!$response instanceof JsonResponse) {
                     throw new InvalidArgumentException('Returned dependency was not JSON');
                 }
 
@@ -84,8 +82,7 @@ class DependencyService
 
     public static function touchUserDependency(Dependency $dependency): void
     {
-        if (($user = Auth::user()) === null)
-        {
+        if (($user = Auth::user()) === null) {
             throw new LogicException('User dependencies can only be updated by logged in users');
         }
 

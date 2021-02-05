@@ -28,8 +28,7 @@ class AddActionsForDependencies extends Migration
      */
     public function up()
     {
-        foreach (self::DEPENDENCY_MAP as $dependency => $action)
-        {
+        foreach (self::DEPENDENCY_MAP as $dependency => $action) {
             DB::table('dependencies')
                 ->where('key', $dependency)
                 ->update(['action' => $action, 'updated_at' => Carbon::now()]);
