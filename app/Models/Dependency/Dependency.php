@@ -10,7 +10,7 @@ class Dependency extends Model
 {
     protected $fillable = [
         'key',
-        'uri',
+        'action',
         'local_file',
         'per_user',
         'created_at',

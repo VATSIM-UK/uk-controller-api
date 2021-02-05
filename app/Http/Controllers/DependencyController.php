@@ -2,12 +2,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dependency\Dependency;
+use App\Services\DependencyService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class DependencyController extends BaseController
 {
+    public function getDependency(int $id): JsonResponse
+    {
+        return response()->json(DependencyService::fetchDependencyDataById($id));
+    }
+
     /**
      * Get all the downloadable dependency locations
      *
