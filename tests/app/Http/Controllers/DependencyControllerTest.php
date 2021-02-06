@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Dependency\Dependency;
+use App\Services\DependencyService;
 use Carbon\Carbon;
 
 class DependencyControllerTest extends BaseApiTestCase
@@ -58,9 +60,9 @@ class DependencyControllerTest extends BaseApiTestCase
         return [
             'key' => $key,
             'uri' => sprintf(
-                '%s/dependency/%s',
+                '%s/dependency/%d',
                 config(self::APP_URL_KEY),
-                $isUser ? 'user' . $dependencyNumber : $dependencyNumber
+                Dependency::where('key', $key)->first()->id
             ),
             'local_file' => sprintf(
                 '%s.json',
@@ -68,5 +70,12 @@ class DependencyControllerTest extends BaseApiTestCase
             ),
             'updated_at' => $updatedAtTime->timestamp,
         ];
+    }
+
+    private function testItReturnsDependencyData()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'dependency/1')
+            ->assertOk()
+            ->assertJson(DependencyService::fetchDependencyDataById(1));
     }
 }
