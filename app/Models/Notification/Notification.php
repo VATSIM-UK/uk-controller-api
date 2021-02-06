@@ -21,6 +21,17 @@ class Notification extends Model
         'valid_to'
     ];
 
+    public function toArray(): array
+    {
+        $this->setHidden(['created_at', 'updated_at']);
+        return array_merge(
+            parent::toArray(),
+            [
+                'controllers' => $this->controllers->pluck('callsign')->toArray(),
+            ]
+        );
+    }
+
     public function scopeActive($query)
     {
         return $query->where('valid_from', '<=', Carbon::now())
