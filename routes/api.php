@@ -51,6 +51,12 @@ Route::middleware('plugin.user')->group(function () {
     Route::put('stand/assignment', 'StandController@createStandAssignment');
     Route::delete('stand/assignment/{callsign}', 'StandController@deleteStandAssignment')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+
+    // Notifications
+    Route::get('notifications', 'NotificationController@getActiveNotifications');
+    Route::get('notifications/unread', 'NotificationController@getUnreadNotifications');
+    Route::put('notifications/read/{id}', 'NotificationController@readNotification')
+        ->where('id', '[0-9]+');
 });
 
 // Routes for user administration
