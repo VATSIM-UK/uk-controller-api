@@ -43,7 +43,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->dependency = Dependency::create(
             [
                 'key' => StandService::STAND_DEPENDENCY_KEY,
-                'uri' => 'stand/dependency',
+                'action' => 'foo',
                 'local_file' => 'stands.json'
             ]
         );
