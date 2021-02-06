@@ -2,55 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Controller\ControllerPosition;
 use App\Models\Notification\Notification;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 class NotificationController extends BaseController
 {
     public function getActiveNotifications() : JsonResponse
     {
-        $notifications = Notification::active()
-            ->orderBy('valid_from', 'desc')
-            ->with('controllers')
-            ->get()
-            ->each(function (Notification $notification) {
-                $notification->controllers->each(function (ControllerPosition $controllerPosition) {
-                    $controllerPosition->setHidden([
-                        'pivot', 'id', 'frequency', 'created_at', 'updated_at'
-                    ]);
-                });
-
-                $notification->setHidden([
-                    'created_at', 'updated_at', 'deleted_at'
-                ]);
-            });
-
-        return response()->json($notifications);
+        return response()->json($this->getNotifications(false));
     }
 
     public function getUnreadNotifications() : JsonResponse
     {
-        $unreadNotifications = Notification::active()
+        return response()->json($this->getNotifications(true));
+    }
+
+    private function getNotifications(bool $unreadOnly): Collection
+    {
+        $query = Notification::active()
             ->orderBy('valid_from', 'desc')
-            ->with('controllers')
+            ->with('controllers');
 
-            ->unreadBy(auth()->user())
+        if ($unreadOnly) {
+            $query->unreadBy(auth()->user());
+        }
 
-            ->get()
-            ->each(function (Notification $notification) {
-                $notification->controllers->each(function (ControllerPosition $controllerPosition) {
-                    $controllerPosition->setHidden([
-                        'pivot', 'id', 'frequency', 'created_at', 'updated_at'
-                    ]);
-                });
-
-                $notification->setHidden([
-                    'created_at', 'updated_at', 'deleted_at'
-                ]);
-            });
-
-        return response()->json($unreadNotifications);
+        return $query->get();
     }
 
     public function readNotification($id) : JsonResponse

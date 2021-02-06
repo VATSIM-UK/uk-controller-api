@@ -56,7 +56,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications')
             ->assertStatus(200)
-            ->assertExactJson($expected);
+            ->assertJson($expected);
     }
 
     public function testItDoesNotShowDisabledNotifications()
@@ -94,7 +94,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications')
             ->assertStatus(200)
-            ->assertExactJson($expected);
+            ->assertJson($expected);
     }
 
     public function testItShowsNotificationsInOrderOfValidFromDate()
@@ -155,7 +155,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications')
             ->assertStatus(200)
-            ->assertExactJson($expected);
+            ->assertJson($expected);
     }
 
     public function testANotificationCanBeLinkedToAControllerPosition()
@@ -179,14 +179,14 @@ class NotificationControllerTest extends BaseApiTestCase
                 'valid_from' => Carbon::now()->subMonth()->toDateTimeString(),
                 'valid_to' => Carbon::now()->addYear()->toDateTimeString(),
                 'controllers' => [
-                    ['callsign' => 'EGLL_S_TWR']
+                    'EGLL_S_TWR',
                 ]
             ]
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications')
             ->assertStatus(200)
-            ->assertExactJson($expected);
+            ->assertJson($expected);
     }
 
     public function testANotificationCanBeRead()
@@ -204,7 +204,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$notification->id}")
             ->assertStatus(200)
-            ->assertExactJson(['message' => 'ok']);
+            ->assertJson(['message' => 'ok']);
 
         $this->assertCount(1, $notification->fresh()->readBy);
         $this->assertDataBaseHas('notification_user', [
@@ -243,7 +243,7 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$read->id}")
             ->assertStatus(200)
-            ->assertExactJson(['message' => 'ok']);
+            ->assertJson(['message' => 'ok']);
 
         $expected = [
             [
@@ -260,7 +260,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
             ->assertStatus(200)
             ->assertJsonCount(1)
-            ->assertExactJson($expected);
+            ->assertJson($expected);
     }
 
     public function testItOnlyReturnsUnreadNotificationsForTheUserLoggedIn()
@@ -298,7 +298,7 @@ class NotificationControllerTest extends BaseApiTestCase
         // Read a notification
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$read->id}")
             ->assertStatus(200)
-            ->assertExactJson(['message' => 'ok']);
+            ->assertJson(['message' => 'ok']);
 
         $expected = [
             [
@@ -316,7 +316,7 @@ class NotificationControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
             ->assertStatus(200)
             ->assertJsonCount(1)
-            ->assertExactJson($expected);
+            ->assertJson($expected);
     }
 
     public function testItHandlesNoUnreadNotificationsCorrectly()
@@ -331,11 +331,11 @@ class NotificationControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "notifications/read/{$read->id}")
             ->assertStatus(200)
-            ->assertExactJson(['message' => 'ok']);
+            ->assertJson(['message' => 'ok']);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'notifications/unread')
             ->assertStatus(200)
             ->assertJsonCount(0)
-            ->assertExactJson([]);
+            ->assertJson([]);
     }
 }
