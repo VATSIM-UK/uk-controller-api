@@ -1,7 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\Exceptions\VersionNotFoundException;
+use App\Exceptions\Version\VersionAlreadyExistsException;
+use App\Exceptions\Version\VersionNotFoundException;
 use App\Models\Version\Version;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,7 +19,7 @@ use Illuminate\Support\ServiceProvider;
  */
 class VersionService extends ServiceProvider
 {
-
+    private const VERSIONS_TO_KEEP = 3;
 
     /**
      * Determines an appropriate JSON response, given two versions.
@@ -151,6 +152,20 @@ class VersionService extends ServiceProvider
 
     public function publishNewVersionFromGithub(string $tag)
     {
+        if (Version::withTrashed()->where('version', $tag)->exists())
+        {
+            throw new VersionAlreadyExistsException();
+        }
 
+        // Create the version
+        Version::create(
+            [
+                'version' => $tag
+            ]
+        );
+
+        // Retire old versions
+        $versionsToKeep = Version::orderBy('id', 'desc')->limit(self::VERSIONS_TO_KEEP)->pluck('id')->toArray();
+        Version::whereNotIn('id', $versionsToKeep)->delete();
     }
 }

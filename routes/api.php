@@ -161,6 +161,7 @@ Route::middleware('admin.dependency')->group(function () {
 
 Route::middleware('admin.github')->group(function () {
     Route::post('github', 'GithubController@processGithubWebhook');
+    Route::post('version', 'VersionController@createNewPluginVersion');
 });
 
 // Routes that can be hit by anybody at all, mostly login and informational routes

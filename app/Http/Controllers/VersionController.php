@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Exceptions\Version\VersionAlreadyExistsException;
 use App\Services\VersionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Exceptions\VersionNotFoundException;
+use App\Exceptions\Version\VersionNotFoundException;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Controller for handling plugin version checks.
@@ -88,7 +90,7 @@ class VersionController extends BaseController
      * @string $version The version string
      * @return JsonResponse
      */
-    public function getVersion(string $version) : JsonResponse
+    public function getVersion(string $version): JsonResponse
     {
         try {
             return response()
@@ -97,5 +99,39 @@ class VersionController extends BaseController
         } catch (VersionNotFoundException $e) {
             return response()->json()->setStatusCode(404);
         }
+    }
+
+    public function createNewPluginVersion(Request $request): JsonResponse
+    {
+        if (($publishDataResponse = $this->checkPublishData($request)) !== null) {
+            return $publishDataResponse;
+        }
+
+        try {
+            $this->versionService->publishNewVersionFromGithub($request->json('release.tag_name'));
+        } catch (VersionAlreadyExistsException $alreadyExistsException)
+        {
+            return response()->json();
+        }
+
+        return response()->json(201);
+    }
+
+    private function checkPublishData(Request $request): ?JsonResponse
+    {
+        if ($request->json('action') !== 'published')
+        {
+            return response()->json();
+        }
+
+        $validator = Validator::make(
+            $request->json()->all(),
+            [
+                'release' => 'required|array',
+                'release.tag_name' => 'required|string',
+            ]
+        );
+
+        return $validator->fails() ? response()->json([], 400) : null;
     }
 }

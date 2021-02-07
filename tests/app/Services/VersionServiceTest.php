@@ -1,7 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\Exceptions\VersionNotFoundException;
+use App\Exceptions\Version\VersionAlreadyExistsException;
+use App\Exceptions\Version\VersionNotFoundException;
 use Carbon\Carbon;
 use App\BaseFunctionalTestCase;
 use App\Models\Version\Version;
@@ -137,5 +138,76 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->assertTrue(Version::withTrashed()->find(2)->trashed());
         $this->service->toggleVersionAllowed(self::ALLOWED_OLD_VERSION);
         $this->assertFalse(Version::find(2)->trashed());
+    }
+
+    public function testItPublishesANewGithubVersion()
+    {
+        $this->service->publishNewVersionFromGithub('3.0.0');
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '3.0.0',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'deleted_at' => null,
+            ]
+        );
+    }
+
+    public function testItRetiresOldVersions()
+    {
+        $this->service->createOrUpdateVersion('2.0.2', true);
+        $this->service->createOrUpdateVersion('2.0.3', true);
+        $this->service->createOrUpdateVersion('2.0.4', true);
+        $this->service->publishNewVersionFromGithub('3.0.0');
+
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.0',
+                'deleted_at' => Carbon::now(),
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.1',
+                'deleted_at' => Carbon::now(),
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.2',
+                'deleted_at' => Carbon::now(),
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.3',
+                'deleted_at' => null,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.4',
+                'deleted_at' => null,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '3.0.0',
+                'deleted_at' => null,
+            ]
+        );
+    }
+
+    public function testItThrowsExceptionIfPublishingExistingVersion()
+    {
+        $this->expectException(VersionAlreadyExistsException::class);
+        $this->service->publishNewVersionFromGithub('1.0.0');
     }
 }
