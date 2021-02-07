@@ -190,6 +190,7 @@ Route::middleware('public')->group(function () {
             'uses' => 'VersionController@getVersionStatus',
         ]
     )->where('version', '[A-Za-z0-9\.\-]+');
+    Route::get('version/latest/github', 'VersionController@getLatestVersionDetails');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');

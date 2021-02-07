@@ -114,7 +114,7 @@ class VersionController extends BaseController
             return response()->json();
         }
 
-        return response()->json(201);
+        return response()->json([], 201);
     }
 
     private function checkPublishData(Request $request): ?JsonResponse
@@ -133,5 +133,10 @@ class VersionController extends BaseController
         );
 
         return $validator->fails() ? response()->json([], 400) : null;
+    }
+
+    public function getLatestVersionDetails(): JsonResponse
+    {
+        return response()->json($this->versionService->getLatestVersionGithubDetails());
     }
 }

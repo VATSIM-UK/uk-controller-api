@@ -168,4 +168,16 @@ class VersionService extends ServiceProvider
         $versionsToKeep = Version::orderBy('id', 'desc')->limit(self::VERSIONS_TO_KEEP)->pluck('id')->toArray();
         Version::whereNotIn('id', $versionsToKeep)->delete();
     }
+
+    public function getLatestVersionGithubDetails(): array
+    {
+        $latest = Version::orderByDesc('id')->first();
+        $assetsUrl = "https://github.com/VATSIM-UK/uk/releases/download/{$latest->version}";
+
+        return [
+            'version' => $latest->version,
+            'libs_download_url' => $assetsUrl . '/UKControllerPluginLibs',
+            'plugin_download_url' => $assetsUrl . '/UKControllerPlugin',
+        ];
+    }
 }

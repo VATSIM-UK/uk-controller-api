@@ -210,4 +210,14 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->expectException(VersionAlreadyExistsException::class);
         $this->service->publishNewVersionFromGithub('1.0.0');
     }
+
+    public function testItReturnsLatestVersionInformation()
+    {
+        $expected = [
+            'version' => '2.0.1',
+            'libs_download_url' => 'https://github.com/VATSIM-UK/uk/releases/download/2.0.1/UKControllerPluginLibs',
+            'plugin_download_url' => 'https://github.com/VATSIM-UK/uk/releases/download/2.0.1/UKControllerPlugin',
+        ];
+        $this->assertEquals($expected, $this->service->getLatestVersionGithubDetails());
+    }
 }
