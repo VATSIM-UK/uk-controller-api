@@ -109,8 +109,7 @@ class VersionController extends BaseController
 
         try {
             $this->versionService->publishNewVersionFromGithub($request->json('release.tag_name'));
-        } catch (VersionAlreadyExistsException $alreadyExistsException)
-        {
+        } catch (VersionAlreadyExistsException $alreadyExistsException) {
             return response()->json();
         }
 
@@ -119,8 +118,7 @@ class VersionController extends BaseController
 
     private function checkPublishData(Request $request): ?JsonResponse
     {
-        if ($request->json('action') !== 'published')
-        {
+        if ($request->json('action') !== 'published') {
             return response()->json();
         }
 

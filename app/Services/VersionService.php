@@ -152,8 +152,7 @@ class VersionService extends ServiceProvider
 
     public function publishNewVersionFromGithub(string $tag)
     {
-        if (Version::withTrashed()->where('version', $tag)->exists())
-        {
+        if (Version::withTrashed()->where('version', $tag)->exists()) {
             throw new VersionAlreadyExistsException();
         }
 

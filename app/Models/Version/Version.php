@@ -41,8 +41,7 @@ class Version extends Model
      */
     public function toggleAllowed() : Version
     {
-        if ($this->trashed())
-        {
+        if ($this->trashed()) {
             $this->restore();
         } else {
             $this->delete();
