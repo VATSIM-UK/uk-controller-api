@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Models\Version;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Model for a plugin version.
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Version extends Model
 {
+    use SoftDeletes;
+
     /**
      * The table associated with the model.
      *
@@ -27,19 +31,8 @@ class Version extends Model
 
     protected $fillable = [
         'version',
-        'allowed',
+        'deleted_at',
     ];
-
-    /**
-     * Get the allowed attribute
-     *
-     * @param int $allowed
-     * @return bool
-     */
-    public function getAllowedAttribute(int $allowed) : bool
-    {
-        return (bool) $allowed;
-    }
 
     /**
      * Revoke a version and make it not allowed
@@ -48,8 +41,13 @@ class Version extends Model
      */
     public function toggleAllowed() : Version
     {
-        $this->allowed = !$this->allowed;
-        $this->save();
+        if ($this->trashed())
+        {
+            $this->restore();
+        } else {
+            $this->delete();
+        }
+
         return $this;
     }
 }

@@ -21,6 +21,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(VersionService::class);
+        Carbon::setTestNow(Carbon::now());
     }
 
     public function testItConstructs()
@@ -101,9 +102,9 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version',
             [
                 'version' => '3.0.0',
-                'allowed' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'deleted_at' => null,
             ]
         );
     }
@@ -116,9 +117,9 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version',
             [
                 'version' => self::ALLOWED_OLD_VERSION,
-                'allowed' => 0,
                 'created_at' => '2017-12-03 00:00:00',
-                'updated_at' => Carbon::now(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
+                'deleted_at' => Carbon::now()->toDateTimeString(),
             ]
         );
     }
@@ -131,10 +132,10 @@ class VersionServiceTest extends BaseFunctionalTestCase
 
     public function testToggleVersionAllowedTogglesAllowed()
     {
-        $this->assertTrue(Version::find(2)->allowed);
+        $this->assertFalse(Version::find(2)->trashed());
         $this->service->toggleVersionAllowed(self::ALLOWED_OLD_VERSION);
-        $this->assertFalse(Version::find(2)->allowed);
+        $this->assertTrue(Version::withTrashed()->find(2)->trashed());
         $this->service->toggleVersionAllowed(self::ALLOWED_OLD_VERSION);
-        $this->assertTrue(Version::find(2)->allowed);
+        $this->assertFalse(Version::find(2)->trashed());
     }
 }
