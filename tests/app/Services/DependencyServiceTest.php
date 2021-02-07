@@ -17,6 +17,10 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     private const GLOBAL_DEPENDENCY = 'DEPENDENCY_ONE';
     private const USER_DEPENDENCY = 'USER_DEPENDENCY_ONE';
 
+    /**
+     * This method has been defined so that it can be called in place of a controller
+     * by one of the tests. We need this as we can't mockery up an object from scratch.
+     */
     public function foo(): string
     {
         return 'foo';

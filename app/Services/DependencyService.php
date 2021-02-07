@@ -27,7 +27,7 @@ class DependencyService
         return Cache::rememberForever(
             self::getDependencyCacheKey($dependency),
             function () use ($dependency) {
-                $response = app()->call(sprintf('App\\Http\\Controllers\\%s', $dependency->action));
+                $response = app()->call("App\\Http\\Controllers\\{$dependency->action}");
                 if (!$response instanceof JsonResponse) {
                     throw new InvalidArgumentException('Returned dependency was not JSON');
                 }
@@ -65,7 +65,7 @@ class DependencyService
         }
     }
 
-    private static function removeDependencyFromCache(Dependency $dependency)
+    private static function removeDependencyFromCache(Dependency $dependency): void
     {
         Cache::forget(self::getDependencyCacheKey($dependency));
     }
