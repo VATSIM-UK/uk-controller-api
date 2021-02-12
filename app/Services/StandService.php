@@ -442,6 +442,14 @@ class StandService
         }
     }
 
+    public function getAircraftEligibleForArrivalStandAllocation(): Collection
+    {
+        return NetworkAircraft::whereIn(
+            'planned_destairport',
+            Airfield::all()->pluck('code')->toArray()
+        )->get();
+    }
+
     /**
      * Criteria for whether a stand should be allocated
      *

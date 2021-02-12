@@ -1117,6 +1117,20 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItReturnsAircraftWhoAreEligibleForArrivalStandAllocation()
+    {
+        $this->assertEquals(
+            collect(
+                [
+                    NetworkAircraft::find('BAW123'),
+                    NetworkAircraft::find('BAW456'),
+                    NetworkAircraft::find('BAW789')
+                ]
+            ),
+            $this->service->getAircraftEligibleForArrivalStandAllocation()->toBase()
+        );
+    }
+
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);

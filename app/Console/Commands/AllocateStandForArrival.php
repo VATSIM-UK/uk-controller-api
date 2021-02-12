@@ -25,13 +25,13 @@ class AllocateStandForArrival extends Command
             $this->info('Skipping arrival stand allocation');
             return;
         }
-        $allAircraft = NetworkAircraft::all();
+        $aircraftToProcess = $this->standService->getAircraftEligibleForArrivalStandAllocation();
         $this->info('Checking for diversions to deallocate');
-        $allAircraft->each(function (NetworkAircraft $aircraft) {
+        $aircraftToProcess->each(function (NetworkAircraft $aircraft) {
             $this->standService->removeAllocationIfDestinationChanged($aircraft);
         });
         $this->info('Allocating arrival stands');
-        $allAircraft->each(function (NetworkAircraft $aircraft) {
+        $aircraftToProcess->each(function (NetworkAircraft $aircraft) {
             $this->standService->allocateStandForAircraft($aircraft);
         });
         $this->info('Finished allocation of arrival stands');
