@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Controller\Handoff;
+use DB;
 use OutOfRangeException;
 
 class HandoffServiceTest extends BaseFunctionalTestCase
@@ -51,9 +53,41 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testItSetsControllerPositionsForHandoffOrder()
+    {
+        $handoff = HandoffService::createNewHandoffOrder('NEW_HANDOFF_ORDER', 'New!', ['EGLL_S_TWR']);
+        HandoffService::setPositionsForHandoffOrder('NEW_HANDOFF_ORDER', ['EGLL_N_APP', 'LON_S_CTR']);
+
+        $this->assertDatabaseMissing(
+            'handoff_orders',
+            [
+                'handoff_id' => $handoff->id,
+                'controller_position_id' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'handoff_orders',
+            [
+                'handoff_id' => $handoff->id,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'handoff_orders',
+            [
+                'handoff_id' => $handoff->id,
+                'controller_position_id' => 3,
+                'order' => 2,
+            ]
+        );
+    }
+
     public function testItAddsANewHandoffOrder()
     {
-        HandoffService::createNewHandoffOrder('NEW_HANDOFF_ORDER', 'New!', ['EGLL_N_APP', 'LON_S_CTR']);
+        $handoff = HandoffService::createNewHandoffOrder('NEW_HANDOFF_ORDER', 'New!', ['EGLL_N_APP', 'LON_S_CTR']);
 
         $this->assertDatabaseHas(
             'handoffs',
@@ -66,7 +100,7 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'handoff_orders',
             [
-                'handoff_id' => 3,
+                'handoff_id' => $handoff->id,
                 'controller_position_id' => 2,
                 'order' => 1,
             ]
@@ -75,7 +109,7 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'handoff_orders',
             [
-                'handoff_id' => 3,
+                'handoff_id' => $handoff->id,
                 'controller_position_id' => 3,
                 'order' => 2,
             ]
