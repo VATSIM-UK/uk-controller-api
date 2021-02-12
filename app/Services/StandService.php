@@ -12,9 +12,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
-use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -432,6 +430,16 @@ class StandService
         }
 
         return null;
+    }
+
+    public function removeAllocationIfDestinationChanged(NetworkAircraft $aircraft): void
+    {
+        if (
+            ($assignedStand = $this->getAssignedStandForAircraft($aircraft->callsign)) !== null &&
+            $assignedStand->airfield->code !== $aircraft->planned_destairport
+        ) {
+            $this->deleteStandAssignmentByCallsign($aircraft->callsign);
+        }
     }
 
     /**

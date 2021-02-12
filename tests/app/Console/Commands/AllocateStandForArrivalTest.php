@@ -20,7 +20,17 @@ class AllocateStandForArrivalTest extends BaseFunctionalTestCase
                 return $aircraft->callsign === 'BAW123';
             }));
 
+        $serviceMock->shouldReceive('removeAllocationIfDestinationChanged')
+            ->with(Mockery::on(function (NetworkAircraft $aircraft) {
+                return $aircraft->callsign === 'BAW123';
+            }));
+
         $serviceMock->shouldReceive('allocateStandForAircraft')
+            ->with(Mockery::on(function (NetworkAircraft $aircraft) {
+                return $aircraft->callsign === 'BAW456';
+            }));
+
+        $serviceMock->shouldReceive('removeAllocationIfDestinationChanged')
             ->with(Mockery::on(function (NetworkAircraft $aircraft) {
                 return $aircraft->callsign === 'BAW456';
             }));
@@ -30,7 +40,17 @@ class AllocateStandForArrivalTest extends BaseFunctionalTestCase
                 return $aircraft->callsign === 'BAW789';
             }));
 
+        $serviceMock->shouldReceive('removeAllocationIfDestinationChanged')
+            ->with(Mockery::on(function (NetworkAircraft $aircraft) {
+                return $aircraft->callsign === 'BAW789';
+            }));
+
         $serviceMock->shouldReceive('allocateStandForAircraft')
+            ->with(Mockery::on(function (NetworkAircraft $aircraft) {
+                return $aircraft->callsign === 'RYR824';
+            }));
+
+        $serviceMock->shouldReceive('removeAllocationIfDestinationChanged')
             ->with(Mockery::on(function (NetworkAircraft $aircraft) {
                 return $aircraft->callsign === 'RYR824';
             }));
