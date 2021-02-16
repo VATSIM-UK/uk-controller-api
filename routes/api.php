@@ -30,6 +30,8 @@ Route::middleware('plugin.user')->group(function () {
 
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
+    Route::get('dependency/{id}', 'DependencyController@getDependency')
+        ->where('id', '[0-9]+');
 
     // Holds
     Route::put('hold/assigned', 'HoldController@assignHold');

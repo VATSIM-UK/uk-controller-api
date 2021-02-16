@@ -13,7 +13,7 @@ class NotificationControllerTest extends BaseApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        Carbon::setTestNow();
+        Carbon::setTestNow(Carbon::now());
     }
 
     public function testItDoesNotAllowUnauthenticatedRequests()
