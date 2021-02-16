@@ -9,7 +9,6 @@ use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocator;
-use App\Allocator\Stand\ReservedArrivalStandAllocatorTest;
 use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
@@ -610,6 +609,66 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItDeallocatesStandForDivertingAircraft()
+    {
+        $this->addStandAssignment('BMI221', 3);
+        $this->expectsEvents(StandUnassignedEvent::class);
+
+        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+
+        $this->service->removeAllocationIfDestinationChanged($aircraft);
+        $this->assertNull(StandAssignment::find('BMI221'));
+    }
+
+    public function testItDoesntDeallocateStandIfAircraftNotDiverting()
+    {
+        $this->addStandAssignment('BMI221', 1);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+
+        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+
+        $this->service->removeAllocationIfDestinationChanged($aircraft);
+        $this->assertEquals(1, StandAssignment::find('BMI221')->stand_id);
+    }
+
+    public function testItDoesntDeallocateStandIfNoStandToDeallocate()
+    {
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+
+        $this->service->removeAllocationIfDestinationChanged($aircraft);
+    }
+
     public function testItAllocatesAStandFromAllocator()
     {
         $this->expectsEvents(StandAssignedEvent::class);
@@ -1055,6 +1114,20 @@ class StandServiceTest extends BaseFunctionalTestCase
                 ],
             ],
             $this->service->getAirfieldStandStatus('EGLL')
+        );
+    }
+
+    public function testItReturnsAircraftWhoAreEligibleForArrivalStandAllocation()
+    {
+        $this->assertEquals(
+            collect(
+                [
+                    NetworkAircraft::find('BAW123'),
+                    NetworkAircraft::find('BAW456'),
+                    NetworkAircraft::find('BAW789')
+                ]
+            ),
+            $this->service->getAircraftEligibleForArrivalStandAllocation()->toBase()
         );
     }
 
