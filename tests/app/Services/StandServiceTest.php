@@ -12,6 +12,7 @@ use App\Allocator\Stand\ReservedArrivalStandAllocator;
 use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
+use App\Events\StandOccupiedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
@@ -422,6 +423,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntOccupyStandsIfAircraftTooHigh()
     {
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -440,6 +442,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesOccupiedStandIfAircraftTooHigh()
     {
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -458,6 +461,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntOccupyStandsIfAircraftTooFast()
     {
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -494,6 +498,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsCurrentStandIfStillOccupied()
     {
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -529,7 +534,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItUsurpsAssignedStands()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
+        $this->expectsEvents([StandOccupiedEvent::class, StandUnassignedEvent::class]);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -548,6 +553,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsOccupiedStandIfStandIsOccupied()
     {
+        $this->expectsEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -566,6 +572,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsClosestOccupiedStandIfMultipleInContention()
     {
+        $this->expectsEvents(StandOccupiedEvent::class);
         // Create an extra stand that's the closest
         $newStand = Stand::create(
             [

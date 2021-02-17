@@ -2,13 +2,10 @@
 
 namespace App\Models\Vatsim;
 
-use App\Models\Hold\AssignedHold;
 use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Location\Coordinate;
 
 class NetworkAircraft extends Model

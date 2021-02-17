@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
+use App\Events\StandOccupiedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
@@ -199,15 +200,7 @@ class StandService
             );
         }
 
-        $assignment = StandAssignment::updateOrCreate(
-            ['callsign' => $callsign],
-            [
-                'callsign' => $callsign,
-                'stand_id' => $standId,
-            ]
-        );
-
-        event(new StandAssignedEvent($assignment));
+        $this->createStandAssignment($callsign, $standId);
     }
 
     /**
@@ -241,6 +234,11 @@ class StandService
             }
         }
 
+        $this->createStandAssignment($callsign, $standId);
+    }
+
+    private function createStandAssignment(string $callsign, int $standId): void
+    {
         $assignment = StandAssignment::updateOrCreate(
             ['callsign' => $callsign],
             [
@@ -357,9 +355,18 @@ class StandService
             return null;
         }
 
-        // If the aircraft is still occupying its stand, nothing else to do here.
+        /*
+         * If the aircraft is still occupying its stand,we don't need to do anything but
+         * check for a flightplan so we can assign it.
+         */
         if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand->first())) {
-            return $aircraft->occupiedStand->first();
+            return tap(
+                $aircraft->occupiedStand()->first(),
+                function (Stand $occupiedStand) use ($aircraft)
+                {
+                    $this->occupyStand($aircraft, $occupiedStand);
+                }
+            );
         }
 
         // Find the stand to which the aircraft is closest
@@ -380,8 +387,7 @@ class StandService
 
         // If there's a stand that's viable, usurp any assignments and occupy it.
         if ($selectedStand) {
-            $this->usurpStand($aircraft, $selectedStand);
-            $aircraft->occupiedStand()->sync([$selectedStand->id]);
+            $this->occupyStand($aircraft, $selectedStand);
         }
 
         return $selectedStand;
@@ -390,14 +396,26 @@ class StandService
     /*
      * Delete any stand assignment that isn't for the given aircraft
      */
-    private function usurpStand(NetworkAircraft $aircraft, Stand $stand)
+    private function occupyStand(NetworkAircraft $aircraft, Stand $stand)
     {
+        // Remove any conflicting assignments
         $conflictingAssignment = StandAssignment::where('callsign', '<>', $aircraft->callsign)
             ->where('stand_id', $stand->id)
             ->first();
 
         if ($conflictingAssignment) {
             $this->deleteStandAssignment($conflictingAssignment);
+        }
+
+        $occupiedStand = $aircraft->occupiedStand->first();
+        $alreadyOccupied = $occupiedStand !== null && $aircraft->occupiedStand->first()->id === $stand->id;
+
+        // Mark the stand as occupied
+        $aircraft->occupiedStand()->sync([$stand->id]);
+
+        // If the stand has only just become occupied
+        if (!$alreadyOccupied) {
+            event(new StandOccupiedEvent($aircraft, $stand));
         }
     }
 
