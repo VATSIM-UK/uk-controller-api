@@ -1,8 +1,7 @@
 <?php
 
+use App\Services\DependencyService;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class AddDeemedSeparatedHolds extends Migration
 {
@@ -37,6 +36,8 @@ class AddDeemedSeparatedHolds extends Migration
                 ],
             ]
         );
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_HOLDs');
     }
 
     /**

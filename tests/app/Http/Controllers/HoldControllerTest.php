@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
+use App\Services\HoldService;
 
 class HoldControllerTest extends BaseApiTestCase
 {
@@ -23,43 +24,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItReturnsHoldData()
     {
-        $expected = [
-            [
-                'id' => 1,
-                'fix' => 'WILLO',
-                'inbound_heading' => 285,
-                'minimum_altitude' => 7000,
-                'maximum_altitude' => 15000,
-                'turn_direction' => 'left',
-                'description' => 'WILLO',
-                'restrictions' => [
-                    [
-                        'foo' => 'bar',
-                    ],
-                ],
-            ],
-            [
-                'id' => 2,
-                'fix' => 'TIMBA',
-                'inbound_heading' => 309,
-                'minimum_altitude' => 7000,
-                'maximum_altitude' => 15000,
-                'turn_direction' => 'right',
-                'description' => 'TIMBA',
-                'restrictions' => [],
-            ],
-            [
-                'id' => 3,
-                'fix' => 'MAY',
-                'inbound_heading' => 90,
-                'minimum_altitude' => 3000,
-                'maximum_altitude' => 5000,
-                'turn_direction' => 'right',
-                'description' => 'Mayfield Low',
-                'restrictions' => [],
-            ],
-        ];
-
+        $expected = $this->app->make(HoldService::class)->getHolds();
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'hold')->assertJson($expected);
     }
 

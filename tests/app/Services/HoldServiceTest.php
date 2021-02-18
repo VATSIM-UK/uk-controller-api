@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Hold\Hold;
 
 class HoldServiceTest extends BaseFunctionalTestCase
 {
@@ -24,6 +25,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsAllHolds()
     {
+        Hold::find(1)->deemedSeparatedHolds()->sync([2, 3]);
         $expected = [
             [
                 'id' => 1,
@@ -38,6 +40,10 @@ class HoldServiceTest extends BaseFunctionalTestCase
                         'foo' => 'bar',
                     ],
                 ],
+                'deemed_separated_holds' => [
+                    2,
+                    3,
+                ],
             ],
             [
                 'id' => 2,
@@ -48,6 +54,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'turn_direction' => 'right',
                 'description' => 'TIMBA',
                 'restrictions' => [],
+                'deemed_separated_holds' => [],
             ],
             [
                 'id' => 3,
@@ -58,6 +65,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'turn_direction' => 'right',
                 'description' => 'Mayfield Low',
                 'restrictions' => [],
+                'deemed_separated_holds' => [],
             ],
         ];
         $actual = $this->holdService->getHolds();
