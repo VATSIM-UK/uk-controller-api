@@ -56,6 +56,6 @@ class Hold extends Model
             'deemed_separated_holds',
             'first_hold_id',
             'second_hold_id',
-        );
+        )->withPivot('vsl_insert_distance');
     }
 }

@@ -22,7 +22,10 @@ class HoldService
             }
 
             foreach ($hold['deemed_separated_holds'] as $separatedKey => $deemedSeparated) {
-                $data[$key]['deemed_separated_holds'][$separatedKey] = $deemedSeparated['id'];
+                $data[$key]['deemed_separated_holds'][$separatedKey] = [
+                    'hold_id' => $deemedSeparated['id'],
+                    'vsl_insert_distance' => $deemedSeparated['pivot']['vsl_insert_distance'],
+                ];
             }
 
             $data[$key]['fix'] = $data[$key]['navaid']['identifier'];

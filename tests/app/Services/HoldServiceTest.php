@@ -12,7 +12,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
      */
     private $holdService;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->holdService = $this->app->make(HoldService::class);
@@ -25,7 +25,12 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsAllHolds()
     {
-        Hold::find(1)->deemedSeparatedHolds()->sync([2, 3]);
+        Hold::find(1)->deemedSeparatedHolds()->sync(
+            [
+                2 => ['vsl_insert_distance' => 5],
+                3 => ['vsl_insert_distance' => 7]
+            ]
+        );
         $expected = [
             [
                 'id' => 1,
@@ -41,8 +46,14 @@ class HoldServiceTest extends BaseFunctionalTestCase
                     ],
                 ],
                 'deemed_separated_holds' => [
-                    2,
-                    3,
+                    [
+                        'hold_id' => 2,
+                        'vsl_insert_distance' => 5,
+                    ],
+                    [
+                        'hold_id' => 3,
+                        'vsl_insert_distance' => 7,
+                    ],
                 ],
             ],
             [

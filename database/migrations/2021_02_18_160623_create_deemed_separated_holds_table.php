@@ -17,6 +17,8 @@ class CreateDeemedSeparatedHoldsTable extends Migration
             $table->id();
             $table->unsignedInteger('first_hold_id')->comment('The first hold in the pair');
             $table->unsignedInteger('second_hold_id')->comment('The second hold in the pair');
+            $table->unsignedInteger('vsl_insert_distance')
+                ->comment('The distance at and below which holding aircraft should populate the VSL');
             $table->unique(['first_hold_id', 'second_hold_id'], 'deemed_separated_holds_pairs');
 
             $table->foreign('first_hold_id')->references('id')->on('holds')->cascadeOnDelete();

@@ -29,10 +29,12 @@ class AddDeemedSeparatedHolds extends Migration
                 [
                     'first_hold_id' => $willo,
                     'second_hold_id' => $timba,
+                    'vsl_insert_distance' => 6,
                 ],
                 [
                     'first_hold_id' => $timba,
                     'second_hold_id' => $willo,
+                    'vsl_insert_distance' => 6,
                 ],
             ]
         );
