@@ -48,7 +48,8 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
             $query->where('code', $aircraft->planned_destairport);
         })
             ->sizeAppropriate($aircraftType)
-            ->available();
+            ->available()
+            ->select('stands.*');
     }
 
     /**
@@ -62,10 +63,20 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
         $orderedQuery = $this->getOrderedStandsQuery($this->getArrivalAirfieldStandQuery($aircraft), $aircraft);
         return $orderedQuery === null
             ? new Collection()
-            : $orderedQuery->orderByWeight()
-                ->inRandomOrder()
-                ->select('stands.*')
-                ->get();
+            : $this->applyBaseOrderingToStandsQuery($orderedQuery)->get();
+    }
+
+    /**
+     * Apply the base ordering to the stands query. This orders stands by weight ascending
+     * so smaller aircraft prefer smaller stands and also applies an element of randomness
+     * so we don't just put all the aircraft next to each other.
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    final private function applyBaseOrderingToStandsQuery(Builder $query): Builder
+    {
+        return $query->orderByWeight()->inRandomOrder();
     }
 
     abstract protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder;
