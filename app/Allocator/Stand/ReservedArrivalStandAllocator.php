@@ -2,14 +2,14 @@
 
 namespace App\Allocator\Stand;
 
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 
 class ReservedArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
-    protected function getPossibleStands(NetworkAircraft $aircraft): Collection
+    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
     {
         $reservation = StandReservation::with('stand')
             ->whereHas('stand', function (Builder $standQuery) {
@@ -19,6 +19,8 @@ class ReservedArrivalStandAllocator extends AbstractArrivalStandAllocator
             ->active()
             ->first();
 
-        return $reservation ? new Collection([$reservation->stand]) : new Collection();
+        return $reservation
+            ? Stand::where('stands.id', $reservation->stand_id)
+            : null;
     }
 }
