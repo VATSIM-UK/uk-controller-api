@@ -39,6 +39,5 @@ class AssignShuttleStandsToBaDomestic extends Migration
      */
     public function down()
     {
-
     }
 }
