@@ -48,7 +48,7 @@ class AssignOccupiedStandsForDepartureTest extends BaseFunctionalTestCase
             ),
             Stand::find(1)
         );
-        $this->listener->handle($event);
+        $this->assertTrue($this->listener->handle($event));
     }
 
     public function testItAssignsStandsForDepartingAircraftWithNoFlightplan()
@@ -63,29 +63,7 @@ class AssignOccupiedStandsForDepartureTest extends BaseFunctionalTestCase
             ),
             Stand::find(1)
         );
-        $this->listener->handle($event);
-    }
-
-    public function testItAssignsStandsForDepartingAircraftWhereAircraftHasMoved()
-    {
-        StandAssignment::create(
-            [
-                'callsign' => 'BAW123',
-                'stand_id' => 2,
-            ]
-        );
-
-        $this->expectAssignment();
-        $event = new StandOccupiedEvent(
-            NetworkDataService::createOrUpdateNetworkAircraft(
-                'BAW123',
-                [
-                    'planned_depairport' => 'EGLL',
-                ]
-            ),
-            Stand::find(1)
-        );
-        $this->listener->handle($event);
+        $this->assertTrue($this->listener->handle($event));
     }
 
     public function testItDoesntAssignStandIfNotDeparting()
@@ -100,7 +78,7 @@ class AssignOccupiedStandsForDepartureTest extends BaseFunctionalTestCase
             ),
             Stand::find(1)
         );
-        $this->listener->handle($event);
+        $this->assertTrue($this->listener->handle($event));
     }
 
     public function testItDoesntAssignStandIfAircraftAlreadyAssignedToStand()
@@ -122,6 +100,28 @@ class AssignOccupiedStandsForDepartureTest extends BaseFunctionalTestCase
             ),
             Stand::find(1)
         );
-        $this->listener->handle($event);
+        $this->assertTrue($this->listener->handle($event));
+    }
+
+    public function testItDoesntAssignWhenAircraftHasMoved()
+    {
+        StandAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 2,
+            ]
+        );
+
+        $this->expectNoAssignment();
+        $event = new StandOccupiedEvent(
+            NetworkDataService::createOrUpdateNetworkAircraft(
+                'BAW123',
+                [
+                    'planned_depairport' => 'EGLL',
+                ]
+            ),
+            Stand::find(1)
+        );
+        $this->assertTrue($this->listener->handle($event));
     }
 }
