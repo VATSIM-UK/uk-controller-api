@@ -39,7 +39,7 @@ class AddDeemedSeparatedHolds extends Migration
             ]
         );
 
-        DependencyService::touchDependencyByKey('DEPENDENCY_HOLDs');
+        DependencyService::touchDependencyByKey('DEPENDENCY_HOLDS');
     }
 
     /**
