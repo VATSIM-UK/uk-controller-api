@@ -6,18 +6,6 @@ use App\Http\Middleware\MiddlewareKeys;
 
 // Routes that the plugin user will use
 Route::middleware('plugin.user')->group(function () {
-
-    // Default routes, just used to check if the API is available and the user is authenticated
-    Route::get(
-        '/',
-        [
-            'middleware' => [
-                'user.lastlogin',
-            ],
-            'uses' => 'TeapotController@teapot',
-        ]
-    );
-
     Route::get(
         '/authorise',
         [

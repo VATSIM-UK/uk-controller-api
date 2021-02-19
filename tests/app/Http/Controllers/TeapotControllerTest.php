@@ -16,17 +16,6 @@ class TeapotControllerTest extends BaseApiTestCase
         $this->assertInstanceOf(TeapotController::class, $controller);
     }
 
-    public function testItAcceptsGet()
-    {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/')
-            ->assertJson(
-                [
-                    'message' => 'Nothing here but us teapots...',
-                ]
-            )
-            ->assertStatus(418);
-    }
-
     public function testItAcceptsGetAndReturns200()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise')
