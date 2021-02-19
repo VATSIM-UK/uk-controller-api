@@ -40,7 +40,7 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      * Base query for stands at the arrival airfield, which are of a suitable
      * size (or max size if no type) for the aircraft and not occupied.
      */
-    final private function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
+    private function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
     {
         $aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first();
 
@@ -58,7 +58,7 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      * @param NetworkAircraft $aircraft
      * @return Collection|Stand[]
      */
-    final private function getPossibleStands(NetworkAircraft $aircraft): Collection
+    private function getPossibleStands(NetworkAircraft $aircraft): Collection
     {
         $orderedQuery = $this->getOrderedStandsQuery($this->getArrivalAirfieldStandQuery($aircraft), $aircraft);
         return $orderedQuery === null
@@ -74,7 +74,7 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      * @param Builder $query
      * @return Builder
      */
-    final private function applyBaseOrderingToStandsQuery(Builder $query): Builder
+    private function applyBaseOrderingToStandsQuery(Builder $query): Builder
     {
         return $query->orderByWeight()->inRandomOrder();
     }
