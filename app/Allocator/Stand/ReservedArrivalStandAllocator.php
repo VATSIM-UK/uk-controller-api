@@ -20,7 +20,7 @@ class ReservedArrivalStandAllocator extends AbstractArrivalStandAllocator
             ->first();
 
         return $reservation
-            ? Stand::where('stands.id', $reservation->stand_id)
+            ? Stand::where('stands.id', $reservation->stand_id)->select('stands.*')
             : null;
     }
 }
