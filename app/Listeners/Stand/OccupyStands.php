@@ -6,6 +6,10 @@ use App\Events\NetworkAircraftUpdatedEvent;
 use App\Services\StandService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+/**
+ * This job involves a lot of proximity calculations for stands,
+ * so queue this one.
+ */
 class OccupyStands implements ShouldQueue
 {
     /**

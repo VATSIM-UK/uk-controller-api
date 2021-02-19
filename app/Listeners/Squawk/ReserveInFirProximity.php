@@ -8,11 +8,15 @@ use App\Models\Vatsim\NetworkAircraft;
 use App\Services\LocationService;
 use App\Services\SquawkService;
 use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
-class ReserveInFirProximity
+/**
+ * This job involves a lot of distance calculations, so run it on the queue.
+ */
+class ReserveInFirProximity implements ShouldQueue
 {
     const MIN_DISTANCE = 650.0;
     const MAX_GROUND_RESERVATION_SPEED = 45;

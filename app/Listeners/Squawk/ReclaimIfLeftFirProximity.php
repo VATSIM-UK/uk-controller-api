@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
+/**
+ * This job involves a lot of distance calculations, so run it on the queue.
+ */
 class ReclaimIfLeftFirProximity
 {
     const MIN_DISTANCE = 650.0;
