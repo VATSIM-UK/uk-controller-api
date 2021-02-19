@@ -3,7 +3,6 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
