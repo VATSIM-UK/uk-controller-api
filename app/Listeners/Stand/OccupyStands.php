@@ -4,8 +4,9 @@ namespace App\Listeners\Stand;
 
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Services\StandService;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OccupyStands
+class OccupyStands implements ShouldQueue
 {
     /**
      * @var StandService

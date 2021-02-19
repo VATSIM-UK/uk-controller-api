@@ -13,7 +13,7 @@ return [
         ],
         'web_admin' => [
             'driver' => 'session',
-            'provider' => 'admin',
+            'provider' => 'admin',q
         ],
     ],
 
