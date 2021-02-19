@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
-/**
- * This job involves a lot of distance calculations, so run it on the queue.
- */
 class ReserveInFirProximity implements ShouldQueue
 {
     const MIN_DISTANCE = 650.0;
@@ -25,12 +22,8 @@ class ReserveInFirProximity implements ShouldQueue
     /**
      * @var Coordinate[]
      */
-    private $measuringPoints;
-
-    /**
-     * @var SquawkService
-     */
-    private $squawkService;
+    private array $measuringPoints;
+    private SquawkService $squawkService;
 
     /**
      * ReserveSquawkIfInFirProximity constructor.
