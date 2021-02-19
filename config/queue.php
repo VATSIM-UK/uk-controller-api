@@ -10,7 +10,7 @@ return [
     | syntax for every one. Here you may define a default connection.
     |
     */
-    'default' => env('QUEUE_CONNECTION', 'sync'),
+    'default' => env('QUEUE_CONNECTION', 'redis'),
     /*
     |--------------------------------------------------------------------------
     | Queue Connections
@@ -50,7 +50,7 @@ return [
         ],
         'redis' => [
             'driver' => 'redis',
-            'connection' => 'default',
+            'connection' => 'queue',
             'queue' => env('REDIS_QUEUE', 'default'),
             'retry_after' => 90,
             'block_for' => null,
