@@ -2,40 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\BaseApiTestCase;
 use App\Models\User\Admin;
-use App\Models\User\User;
-use App\BaseTestCase;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class AuthenticationTest extends BaseTestCase
+class AuthenticationTest extends BaseApiTestCase
 {
-    use RefreshDatabase;
-
-    public function test_login_screen_can_be_rendered()
+    public function setUp(): void
     {
-        $response = $this->get('/login');
+        parent::setUp();
+        $this->app['env'] = 'testing';
+    }
 
+    public function testLoginScreenCanBeRendered()
+    {
+        $response = $this->get('web/login');
         $response->assertStatus(200);
     }
 
-    public function test_users_can_authenticate_using_the_login_screen()
+    public function testUsersCanAuthenticateUsingTheLoginScreen()
     {
-        $response = $this->post('/login', [
-            'email' => Admin::find(1)->email,
-            'password' => 'password',
+        $response = $this->post('web/login', [
+            'email' => Admin::find(1203533)->email,
+            'password' => 'letmein',
         ]);
 
-        $this->assertAuthenticated();
+        $this->assertAuthenticated('web_admin');
         $response->assertRedirect(RouteServiceProvider::HOME);
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password()
+    public function testUsersCannotAuthenticateWithInvalidPassword()
     {
-        $user = User::factory()->create();
-
-        $this->post('/login', [
-            'email' => Admin::find(1)->email,
+        $this->post('web/login', [
+            'email' => Admin::find(1203533)->email,
             'password' => 'wrong-password',
         ]);
 

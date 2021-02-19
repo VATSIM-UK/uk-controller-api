@@ -47,6 +47,17 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('notifications/unread', 'NotificationController@getUnreadNotifications');
     Route::put('notifications/read/{id}', 'NotificationController@readNotification')
         ->where('id', '[0-9]+');
+
+    // Version checking
+    Route::get(
+        'version/{version}/status',
+        [
+            'middleware' => [
+                'user.version',
+            ],
+            'uses' => 'VersionController@getVersionStatus',
+        ]
+    )->where('version', '[A-Za-z0-9\.\-]+');
 });
 
 // Routes for user administration
@@ -168,17 +179,6 @@ Route::middleware('public')->group(function () {
         ->where('sid', 'd+');
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
     Route::get('handoffs', 'SidController@getSidHandoffsDependency');
-
-    // Version checking
-    Route::get(
-        'version/{version}/status',
-        [
-            'middleware' => [
-                'user.version',
-            ],
-            'uses' => 'VersionController@getVersionStatus',
-        ]
-    )->where('version', '[A-Za-z0-9\.\-]+');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');
