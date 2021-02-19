@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User\Admin;
+use App\Models\User\User;
 use App\BaseTestCase;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,10 +21,8 @@ class AuthenticationTest extends BaseTestCase
 
     public function test_users_can_authenticate_using_the_login_screen()
     {
-        $user = User::factory()->create();
-
         $response = $this->post('/login', [
-            'email' => $user->email,
+            'email' => Admin::find(1)->email,
             'password' => 'password',
         ]);
 
@@ -35,7 +35,7 @@ class AuthenticationTest extends BaseTestCase
         $user = User::factory()->create();
 
         $this->post('/login', [
-            'email' => $user->email,
+            'email' => Admin::find(1)->email,
             'password' => 'wrong-password',
         ]);
 
