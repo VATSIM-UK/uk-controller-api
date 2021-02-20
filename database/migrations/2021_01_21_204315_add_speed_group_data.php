@@ -361,29 +361,30 @@ class AddSpeedGroupData extends Migration
         'EGCC' => [
             '0' => [
                 'aircraft' => [
-                'BE9L',
-                'DHC6',
-                'E110',
-                'SH36',]
+                    'BE9L',
+                    'DHC6',
+                    'E110',
+                    'SH36',
+                ]
             ],
             '1' => [
                 'aircraft' => [
-                'ATP',
-                'AT43',
-                'AT44',
-                'AT72',
-                'BE20',
-                'BE30',
-                'DH8A',
-                'DH8B',
-                'DH8C',
-                'F27',
-                'F50',
-                'JS31',
-                'JS32',
-                'JS41',
-                'SF34',
-],
+                    'ATP',
+                    'AT43',
+                    'AT44',
+                    'AT72',
+                    'BE20',
+                    'BE30',
+                    'DH8A',
+                    'DH8B',
+                    'DH8C',
+                    'F27',
+                    'F50',
+                    'JS31',
+                    'JS32',
+                    'JS41',
+                    'SF34',
+                ],
             ],
             '2' => [
                 'aircraft' => [
@@ -424,6 +425,58 @@ class AddSpeedGroupData extends Migration
                 'aircraft' => [
                     'CONC',
                 ]
+            ],
+        ],
+        'EGGP' => [
+            '0' => [
+                'aircraft' => [
+                    'BE9L',
+                    'DHC6',
+                    'E110',
+                    'SH36',
+                ],
+            ],
+            '1' => [
+                'aircraft' => [
+                    'AT43',
+                    'AT44',
+                    'AT72',
+                    'BE20',
+                    'BE35',
+                    'F27',
+                    'F50',
+                    'SF34',
+                    'DH8A',
+                    'DH8B',
+                    'DH8C',
+                    'JS31',
+                    'JS32',
+                    'JS41',
+                ],
+            ],
+            '2' => [
+                'B461',
+                'B462',
+                'B463',
+                'RJ70',
+                'RJ85',
+                'RJ1H',
+                'C501',
+                'C551',
+                'D328',
+                'J328',
+                'DH8D',
+                'SB20',
+            ],
+            '3' => [
+                'engines' => [
+                    'Jet'
+                ],
+            ],
+            '4' => [
+                'aircraft' => [
+                    'CONC',
+                ],
             ],
         ],
     ];
