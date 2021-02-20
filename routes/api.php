@@ -166,7 +166,6 @@ Route::middleware('admin.github')->group(function () {
 
 // Routes that can be hit by anybody at all, mostly login and informational routes
 Route::middleware('public')->group(function () {
-
     Route::get('/', function () {
         return response()->json(['message' => 'Welcome to the UK Controller Plugin API']);
     });
