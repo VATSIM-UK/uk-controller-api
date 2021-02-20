@@ -49,7 +49,7 @@ class WakeCategoriesImportTest extends BaseFunctionalTestCase
         $dependency = Dependency::create(
             [
                 'key' => 'DEPENDENCY_WAKE',
-                'uri' => 'wake-category/dependency',
+                'action' => 'foo',
                 'local_file' => 'wake-categories.json',
             ],
         );

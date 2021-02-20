@@ -53,6 +53,24 @@ return [
         ],
     ],
 
+    'redis' => [
+        'client' => 'predis',
+        'cache' => [
+            'host'     => env('REDIS_HOST', '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port'     => env('REDIS_PORT', 6379),
+            'database' => env('REDIS_CACHE_DB', 6),
+            'read_write_timeout' => -1,
+        ],
+        'session' => [
+            'host'     => env('REDIS_HOST', '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port'     => env('REDIS_PORT', 6379),
+            'database' => env('REDIS_SESSION_DB', 7),
+            'read_write_timeout' => -1,
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Migration Repository Table

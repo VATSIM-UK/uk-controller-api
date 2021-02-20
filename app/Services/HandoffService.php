@@ -35,9 +35,10 @@ class HandoffService
         return $sidMap;
     }
 
-    public static function createNewHandoffOrder(string $key, string $description, array $positions): void
+    public static function createNewHandoffOrder(string $key, string $description, array $positions): ?Handoff
     {
-        DB::transaction(function () use ($key, $description, $positions) {
+        $handoff = null;
+        DB::transaction(function () use ($key, $description, $positions, &$handoff) {
             $handoff = Handoff::create(
                 [
                     'key' => $key,
@@ -45,18 +46,30 @@ class HandoffService
                 ]
             );
 
+            self::setPositionsForHandoffOrder($key, $positions);
+        });
+
+        return $handoff;
+    }
+
+    public static function setPositionsForHandoffOrder(string $key, array $positions): void
+    {
+        DB::transaction(function () use ($key, $positions) {
+            $handoff = DB::table('handoffs')->where('key', $key)->first()->id;
+            DB::table('handoff_orders')
+                ->where('handoff_id', $handoff)
+                ->delete();
 
             $handoffOrder = [];
             foreach ($positions as $index => $position) {
                 $handoffOrder[] = [
-                    'handoff_id' => $handoff->id,
+                    'handoff_id' => $handoff,
                     'controller_position_id' => ControllerPosition::where('callsign', $position)->firstOrFail()->id,
                     'order' => $index + 1,
                 ];
             }
 
-            DB::table('handoff_orders')
-                ->insert($handoffOrder);
+            DB::table('handoff_orders')->insert($handoffOrder);
         });
     }
 
@@ -197,6 +210,11 @@ class HandoffService
         Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)
             ->where('identifier', $identifier)
             ->update(['handoff_id' => Handoff::where('key', $handoff)->firstOrFail()->id]);
+    }
+
+    public static function deleteHandoffByKey(string $handoffKey)
+    {
+        Handoff::where('key', $handoffKey)->delete();
     }
 
     private static function getHandoffsForPosition(int $positionId): Collection

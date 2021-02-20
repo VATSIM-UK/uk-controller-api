@@ -56,7 +56,7 @@ class RecatCategoriesImportTest extends BaseFunctionalTestCase
         $dependency = Dependency::create(
             [
                 'key' => 'DEPENDENCY_RECAT',
-                'uri' => 'wake-category/recat/dependency',
+                'action' => 'foo',
                 'local_file' => 'recat.json',
             ],
         );
