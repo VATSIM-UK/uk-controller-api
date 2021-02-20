@@ -2,8 +2,6 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class AddSpeedGroupLinks extends Migration
 {
@@ -136,11 +134,11 @@ class AddSpeedGroupLinks extends Migration
             'EGGW_GROUP_2' => -1,
         ],
         'EGCC_GROUP_0' => [
-            'EGCC_GROUP_0' => 1, // Increases the default departure interval
-            'EGCC_GROUP_1' => 1,
-            'EGCC_GROUP_2' => 2,
-            'EGCC_GROUP_3' => 3,
-            'EGCC_GROUP_4' => 4,
+            'EGCC_GROUP_0' => 1,
+            'EGCC_GROUP_1' => 2,
+            'EGCC_GROUP_2' => 3,
+            'EGCC_GROUP_3' => 4,
+            'EGCC_GROUP_4' => 5,
         ],
         'EGCC_GROUP_1' => [
             'EGCC_GROUP_2' => 1,
@@ -163,10 +161,11 @@ class AddSpeedGroupLinks extends Migration
             'EGCC_GROUP_2' => -1,
         ],
         'EGGP_GROUP_0' => [
-            'EGGP_GROUP_1' => 1,
-            'EGGP_GROUP_2' => 2,
-            'EGGP_GROUP_3' => 3,
-            'EGGP_GROUP_4' => 4,
+            'EGGP_GROUP_0' => 1,
+            'EGGP_GROUP_1' => 2,
+            'EGGP_GROUP_2' => 3,
+            'EGGP_GROUP_3' => 4,
+            'EGGP_GROUP_4' => 5,
         ],
         'EGGP_GROUP_1' => [
             'EGGP_GROUP_2' => 1,
