@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddAirfieldDependency extends Migration
+class CreateDepartureSidIntervalsDependency extends Migration
 {
     /**
      * Run the migrations.
@@ -17,9 +17,9 @@ class AddAirfieldDependency extends Migration
     {
         DB::table('dependencies')->insert(
             [
-                'key' => 'DEPENDENCY_AIRFIELD',
-                'uri' => 'airfield/dependency',
-                'local_file' => 'airfields.json',
+                'key' => 'DEPENDENCY_DEPARTURE_SID_GROUPS',
+                'action' => 'DepartureController@getDepartureSidIntervalGroupsDependency',
+                'local_file' => 'departure-sid-group-intervals.json',
                 'created_at' => Carbon::now(),
             ]
         );
@@ -32,6 +32,6 @@ class AddAirfieldDependency extends Migration
      */
     public function down()
     {
-        DB::table('dependencies')->where('key', 'DEPENDENCY_AIRFIELD')->delete();
+        DB::table('dependencies')->where('key', 'DEPENDENCY_DEPARTURE_SID_GROUPS')->delete();
     }
 }

@@ -2,11 +2,9 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
-class CreateDepartureSidIntervalsDependency extends Migration
+class AddDepartureRecatWakeIntervalsDependency extends Migration
 {
     /**
      * Run the migrations.
@@ -17,9 +15,9 @@ class CreateDepartureSidIntervalsDependency extends Migration
     {
         DB::table('dependencies')->insert(
             [
-                'key' => 'DEPENDENCY_DEPARTURE_SID_GROUPS',
-                'uri' => 'departure/intervals/sid-groups/dependency',
-                'local_file' => 'departure-sid-group-intervals.json',
+                'key' => 'DEPENDENCY_DEPARTURE_WAKE_RECAT',
+                'action' => 'DepartureController@getDepartureRecatWakeIntervalsDependency',
+                'local_file' => 'departure-recat-wake-intervals.json',
                 'created_at' => Carbon::now(),
             ]
         );
@@ -32,6 +30,6 @@ class CreateDepartureSidIntervalsDependency extends Migration
      */
     public function down()
     {
-        DB::table('dependencies')->where('key', 'DEPENDENCY_DEPARTURE_SID_GROUPS')->delete();
+        DB::table('dependencies')->where('key', 'DEPENDENCY_DEPARTURE_WAKE_RECAT')->delete();
     }
 }

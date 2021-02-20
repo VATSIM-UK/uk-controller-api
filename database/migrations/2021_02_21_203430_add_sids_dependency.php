@@ -17,7 +17,7 @@ class AddSidsDependency extends Migration
         DB::table('dependencies')->insert(
             [
                 'key' => 'DEPENDENCY_SIDS',
-                'uri' => 'sid/dependency',
+                'action' => 'SidController@getSidsDependency',
                 'local_file' => 'sids.json',
                 'created_at' => Carbon::now(),
             ]

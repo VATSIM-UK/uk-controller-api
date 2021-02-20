@@ -16,7 +16,7 @@ class AddDepartureWakeIntervalsDependency extends Migration
         DB::table('dependencies')->insert(
             [
                 'key' => 'DEPENDENCY_DEPARTURE_WAKE_UK',
-                'uri' => 'departure/intervals/wake-uk/dependency',
+                'action' => 'DepartureController@getDepartureUkWakeIntervalsDependency',
                 'local_file' => 'departure-uk-wake-intervals.json',
                 'created_at' => Carbon::now(),
             ]

@@ -2,9 +2,11 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-class AddWakeSchemesDependency extends Migration
+class AddAirfieldDependency extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +17,9 @@ class AddWakeSchemesDependency extends Migration
     {
         DB::table('dependencies')->insert(
             [
-                'key' => 'DEPENDENCY_WAKE_SCHEME',
-                'uri' => 'wake-scheme/dependency',
-                'local_file' => 'wake-schemes.json',
+                'key' => 'DEPENDENCY_AIRFIELD',
+                'action' => 'AirfieldController@getAirfieldDependency',
+                'local_file' => 'airfields.json',
                 'created_at' => Carbon::now(),
             ]
         );
@@ -30,6 +32,6 @@ class AddWakeSchemesDependency extends Migration
      */
     public function down()
     {
-        DB::table('dependencies')->where('key', 'DEPENDENCY_WAKE_SCHEME')->delete();
+        DB::table('dependencies')->where('key', 'DEPENDENCY_AIRFIELD')->delete();
     }
 }
