@@ -21,6 +21,6 @@
     </style>
 </head>
 <body class="antialiased">
-<h1>UK Controller API</h1>
+<h1>UK Controller Plugin API</h1>
 </body>
 </html>

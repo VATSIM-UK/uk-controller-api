@@ -64,7 +64,7 @@ Route::middleware('plugin.user')->group(function () {
 Route::middleware('admin.user')->group(function () {
 
     // A test route for useradmin access
-    Route::get('useradmin', 'TeapotController@teapot');
+    Route::get('useradmin', 'TeapotController@normalTeapots');
 
     // Get user
     Route::get(
@@ -132,7 +132,7 @@ Route::middleware('admin.user')->group(function () {
 // Routes for user administration
 Route::middleware('admin.version')->group(function () {
     // A test route for useradmin access
-    Route::get('versionadmin', 'TeapotController@teapot');
+    Route::get('versionadmin', 'TeapotController@normalTeapots');
 
     // Routes for returning information about versions
     Route::get('version', 'VersionController@getAllVersions');

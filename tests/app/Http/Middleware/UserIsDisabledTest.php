@@ -22,7 +22,7 @@ class UserIsDisabledTest extends BaseApiTestCase
         $token = $this->disabledUser()->createToken('access')->accessToken;
         $this->json(
             'GET',
-            '/',
+            '/authorise',
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
@@ -39,7 +39,7 @@ class UserIsDisabledTest extends BaseApiTestCase
         $token = $this->activeUser()->createToken('access', [AuthServiceProvider::SCOPE_USER])->accessToken;
         $this->json(
             'GET',
-            '/',
+            '/authorise',
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
@@ -48,6 +48,6 @@ class UserIsDisabledTest extends BaseApiTestCase
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
-            ->assertStatus(418);
+            ->assertStatus(200);
     }
 }

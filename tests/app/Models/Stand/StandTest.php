@@ -235,6 +235,7 @@ class StandTest extends BaseFunctionalTestCase
         Stand::find(3)->update(['wake_category_id' => 5]);
 
         $stands = Stand::appropriateWakeCategory($a330)->get()->pluck('id')->toArray();
+        sort($stands);
 
         $this->assertEquals([1, 3], $stands);
     }
