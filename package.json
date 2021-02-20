@@ -18,12 +18,12 @@
     "tailwindcss": "^2.0.3"
   },
   "scripts": {
-    "dev": "npm run development",
+    "dev": "yarn run development",
     "development": "mix",
     "watch": "mix watch",
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
-    "prod": "npm run production",
+    "prod": "yarn run production",
     "production": "mix --production"
   },
   "repository": {
