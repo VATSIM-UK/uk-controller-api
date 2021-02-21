@@ -26,7 +26,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/web/horizon';
+    public const HOME = 'horizon';
 
     /**
      * Define the routes for the application.
