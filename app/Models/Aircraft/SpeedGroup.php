@@ -29,6 +29,6 @@ class SpeedGroup extends Model
             'speed_group_speed_group',
             'lead_speed_group_id',
             'follow_speed_group_id'
-        )->withPivot('penalty');
+        )->withPivot('penalty', 'set_interval_to');
     }
 }

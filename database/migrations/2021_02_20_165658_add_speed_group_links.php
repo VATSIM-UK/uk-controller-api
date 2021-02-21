@@ -8,7 +8,7 @@ class AddSpeedGroupLinks extends Migration
     /*
      * Lead group => follow group => penalty
      */
-    const GROUP_LINKS = [
+    const PENALTY_GROUPS = [
         'EGKK_GROUP_1' => [
             'EGKK_GROUP_6' => 5,
             'EGKK_GROUP_5' => 4,
@@ -119,19 +119,11 @@ class AddSpeedGroupLinks extends Migration
             'EGGW_GROUP_4' => 3,
         ],
         'EGGW_GROUP_2' => [
-            'EGGW_GROUP_0' => -1,
             'EGGW_GROUP_3' => 1,
             'EGGW_GROUP_4' => 2,
         ],
         'EGGW_GROUP_3' => [
-            'EGGW_GROUP_0' => -1,
-            'EGGW_GROUP_1' => -1,
             'EGGW_GROUP_4' => 1,
-        ],
-        'EGGW_GROUP_4' => [
-            'EGGW_GROUP_0' => -1,
-            'EGGW_GROUP_1' => -1,
-            'EGGW_GROUP_2' => -1,
         ],
         'EGCC_GROUP_0' => [
             'EGCC_GROUP_0' => 1,
@@ -146,18 +138,13 @@ class AddSpeedGroupLinks extends Migration
             'EGCC_GROUP_4' => 3,
         ],
         'EGCC_GROUP_2' => [
-            'EGCC_GROUP_0' => -1,
             'EGCC_GROUP_3' => 2,
             'EGCC_GROUP_4' => 3,
         ],
         'EGCC_GROUP_3' => [
-            'EGCC_GROUP_0' => -1,
-            'EGCC_GROUP_1' => -1,
             'EGCC_GROUP_4' => 3,
         ],
         'EGCC_GROUP_4' => [
-            'EGCC_GROUP_0' => -1,
-            'EGCC_GROUP_1' => -1,
             'EGCC_GROUP_2' => -1,
         ],
         'EGGP_GROUP_0' => [
@@ -190,6 +177,48 @@ class AddSpeedGroupLinks extends Migration
     ];
 
     /**
+     * Lead group => follow group => set interval to
+     */
+    const SET_INTERVAL_GROUPS = [
+        'EGGW_GROUP_2' => [
+            'EGGW_GROUP_0' => 1,
+        ],
+        'EGGW_GROUP_3' => [
+            'EGGW_GROUP_0' => 1,
+            'EGGW_GROUP_1' => 1,
+        ],
+        'EGGW_GROUP_4' => [
+            'EGGW_GROUP_0' => 1,
+            'EGGW_GROUP_1' => 1,
+            'EGGW_GROUP_2' => 1,
+        ],
+        'EGCC_GROUP_2' => [
+            'EGCC_GROUP_0' => 1,
+        ],
+        'EGCC_GROUP_3' => [
+            'EGCC_GROUP_0' => 1,
+            'EGCC_GROUP_1' => 1,
+        ],
+        'EGCC_GROUP_4' => [
+            'EGCC_GROUP_0' => 1,
+            'EGCC_GROUP_1' => 1,
+            'EGCC_GROUP_2' => 1,
+        ],
+        'EGGP_GROUP_2' => [
+            'EGCC_GROUP_0' => 1,
+        ],
+        'EGGP_GROUP_3' => [
+            'EGCC_GROUP_0' => 1,
+            'EGCC_GROUP_1' => 1,
+        ],
+        'EGGP_GROUP_4' => [
+            'EGCC_GROUP_0' => 1,
+            'EGCC_GROUP_1' => 1,
+            'EGCC_GROUP_2' => 1,
+        ],
+    ];
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -201,12 +230,23 @@ class AddSpeedGroupLinks extends Migration
         });
 
         $mergedLinks = [];
-        foreach (self::GROUP_LINKS as $leadGroup => $followingGroups) {
+        foreach (self::PENALTY_GROUPS as $leadGroup => $followingGroups) {
             foreach ($followingGroups as $followingGroup => $penalty) {
                 $mergedLinks[] = [
                     'lead_speed_group_id' => $groups[$leadGroup],
                     'follow_speed_group_id' => $groups[$followingGroup],
                     'penalty' => $penalty,
+                    'created_at' => Carbon::now(),
+                ];
+            }
+        }
+
+        foreach (self::SET_INTERVAL_GROUPS as $leadGroup => $followingGroups) {
+            foreach ($followingGroups as $followingGroup => $interval) {
+                $mergedLinks[] = [
+                    'lead_speed_group_id' => $groups[$leadGroup],
+                    'follow_speed_group_id' => $groups[$followingGroup],
+                    'set_interval_to' => $interval,
                     'created_at' => Carbon::now(),
                 ];
             }
