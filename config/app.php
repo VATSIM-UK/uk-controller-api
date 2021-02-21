@@ -181,7 +181,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\HorizonServiceProvider::class,
         App\Providers\RegionalPressureServiceProvider::class,
         App\Providers\SquawkServiceProvider::class,
         App\Providers\StandServiceProvider::class,
