@@ -12,7 +12,9 @@ use App\Allocator\Stand\ReservedArrivalStandAllocator;
 use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
+use App\Events\StandOccupiedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Events\StandVacatedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Aircraft\Aircraft;
@@ -422,6 +424,8 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntOccupyStandsIfAircraftTooHigh()
     {
+        $this->expectsEvents(StandVacatedEvent::class);
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -440,12 +444,14 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesOccupiedStandIfAircraftTooHigh()
     {
+        $this->expectsEvents(StandVacatedEvent::class);
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 54.65883639,
                 'longitude' => -6.22198972,
-                'groundspeed' => 10,
+                'groundspeed' => 0,
                 'altitude' => 751
             ]
         );
@@ -458,6 +464,8 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntOccupyStandsIfAircraftTooFast()
     {
+        $this->expectsEvents(StandVacatedEvent::class);
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -476,6 +484,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesOccupiedStandIfAircraftTooFast()
     {
+        $this->expectsEvents(StandVacatedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -494,6 +503,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsCurrentStandIfStillOccupied()
     {
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -511,6 +521,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntReturnCurrentStandIfNoLongerOccupied()
     {
+        $this->expectsEvents([StandOccupiedEvent::class]);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -529,7 +540,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItUsurpsAssignedStands()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
+        $this->expectsEvents([StandOccupiedEvent::class, StandUnassignedEvent::class]);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -548,6 +559,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsOccupiedStandIfStandIsOccupied()
     {
+        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
@@ -557,6 +569,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'altitude' => 0
             ]
         );
+        $aircraft->occupiedStand()->sync([2]);
 
         $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
         $aircraft->refresh();
@@ -566,6 +579,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsClosestOccupiedStandIfMultipleInContention()
     {
+        $this->expectsEvents(StandOccupiedEvent::class);
         // Create an extra stand that's the closest
         $newStand = Stand::create(
             [

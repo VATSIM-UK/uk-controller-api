@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
+use App\Events\StandOccupiedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Events\StandVacatedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Aircraft\Aircraft;
@@ -23,7 +25,7 @@ class StandService
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
 
     // The maximum speed at which an aircraft can be travelling for it to be deemed to be occupying a stand
-    private const MAX_OCCUPANCY_SPEED = 2;
+    private const MAX_OCCUPANCY_SPEED = 0;
 
     /*
      * The maximum altitude that an aircraft may be at in order to be deemed to be occupying a stand. For reference,
@@ -98,7 +100,7 @@ class StandService
 
     public function getAssignedStandForAircraft(string $aircraft): ?Stand
     {
-        $assignment = StandAssignment::with('stand', 'stand.airfield')->where('callsign', $aircraft)->first();
+        $assignment = StandAssignment::with('stand', 'stand.airfield')->find($aircraft);
         return $assignment ? $assignment->stand : null;
     }
 
@@ -199,15 +201,7 @@ class StandService
             );
         }
 
-        $assignment = StandAssignment::updateOrCreate(
-            ['callsign' => $callsign],
-            [
-                'callsign' => $callsign,
-                'stand_id' => $standId,
-            ]
-        );
-
-        event(new StandAssignedEvent($assignment));
+        $this->createStandAssignment($callsign, $standId);
     }
 
     /**
@@ -241,6 +235,11 @@ class StandService
             }
         }
 
+        $this->createStandAssignment($callsign, $standId);
+    }
+
+    private function createStandAssignment(string $callsign, int $standId): void
+    {
         $assignment = StandAssignment::updateOrCreate(
             ['callsign' => $callsign],
             [
@@ -344,25 +343,42 @@ class StandService
         return $this->allStands;
     }
 
+    private function vacateStand(NetworkAircraft $aircraft)
+    {
+        $aircraft->occupiedStand()->sync([]);
+        event(new StandVacatedEvent($aircraft));
+    }
+
     public function setOccupiedStand(NetworkAircraft $aircraft): ?Stand
     {
-        /*
-         * If an aircraft cannot occupy a stand, delete any current occupation
-         * and return.
-         */
-        if (!$this->aircraftCanOccupyStand($aircraft)) {
+        // If an aircraft cannot occupy a stand, we don't need to check any further. Vacate stand if there is one.
+        if (!$this->canOccupyStand($aircraft)) {
             if ($aircraft->occupiedStand()->exists()) {
-                $aircraft->occupiedStand()->sync([]);
+                $this->vacateStand($aircraft);
             }
             return null;
         }
 
-        // If the aircraft is still occupying its stand, nothing else to do here.
-        if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand->first())) {
+        /*
+         * The aircraft is still occupying its stand.
+         */
+        if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand()->first())) {
             return $aircraft->occupiedStand->first();
         }
 
-        // Find the stand to which the aircraft is closest
+        // If there's a stand that's viable, occupy the stand.
+        if ($selectedStand = $this->getOccupiedStand($aircraft)) {
+            $this->occupyStand($aircraft, $selectedStand);
+        }
+
+        return $selectedStand;
+    }
+
+    /**
+     * Get the stand that the aircraft is closest to, within occupation parameters.
+     */
+    private function getOccupiedStand(NetworkAircraft $aircraft): ?Stand
+    {
         $selectedStand = null;
         $selectedStandDistance = PHP_INT_MAX;
 
@@ -378,20 +394,15 @@ class StandService
             }
         }
 
-        // If there's a stand that's viable, usurp any assignments and occupy it.
-        if ($selectedStand) {
-            $this->usurpStand($aircraft, $selectedStand);
-            $aircraft->occupiedStand()->sync([$selectedStand->id]);
-        }
-
         return $selectedStand;
     }
 
     /*
      * Delete any stand assignment that isn't for the given aircraft
      */
-    private function usurpStand(NetworkAircraft $aircraft, Stand $stand)
+    private function occupyStand(NetworkAircraft $aircraft, Stand $stand)
     {
+        // Remove any conflicting assignments
         $conflictingAssignment = StandAssignment::where('callsign', '<>', $aircraft->callsign)
             ->where('stand_id', $stand->id)
             ->first();
@@ -399,18 +410,31 @@ class StandService
         if ($conflictingAssignment) {
             $this->deleteStandAssignment($conflictingAssignment);
         }
+
+        $alreadyOccupiedStand = $aircraft->occupiedStand->first();
+        $alreadyOccupied = $alreadyOccupiedStand !== null &&
+            $alreadyOccupiedStand->id === $stand->id;
+
+        // Mark the stand as occupied
+        $aircraft->occupiedStand()->sync([$stand->id]);
+
+        // Trigger an event so other listeners can process it if its a new occupation
+        if (!$alreadyOccupied) {
+            event(new StandOccupiedEvent($aircraft, $stand));
+        }
     }
 
     private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
     {
         $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
-        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS;
+        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS &&
+            $this->canOccupyStand($aircraft);
     }
 
-    private function aircraftCanOccupyStand(NetworkAircraft $aircraft): bool
+    private function canOccupyStand(NetworkAircraft $aircraft)
     {
-        return $aircraft->altitude < self::MAX_OCCUPANCY_ALTITUDE
-            && $aircraft->groundspeed < self::MAX_OCCUPANCY_SPEED;
+        return $aircraft->altitude <= self::MAX_OCCUPANCY_ALTITUDE &&
+            $aircraft->groundspeed <= self::MAX_OCCUPANCY_SPEED;
     }
 
     /**
