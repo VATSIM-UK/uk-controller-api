@@ -39,7 +39,7 @@ class StandService
      *
      * As a reference, a small stand at Heathrow is about 50m wide and 60m deep.
      */
-    private const MAX_OCCUPANCY_DISTANCE_METERS = 25;
+    private const MAX_OCCUPANCY_DISTANCE_METERS = 35;
 
     /**
      * How many minutes before arrival the stand should be assigned
