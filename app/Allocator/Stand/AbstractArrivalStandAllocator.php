@@ -3,7 +3,6 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
@@ -37,10 +36,10 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
     }
 
     /*
-     * Return base query for stands at the arrival airfield, which are of a suitable
+     * Base query for stands at the arrival airfield, which are of a suitable
      * size (or max size if no type) for the aircraft and not occupied.
      */
-    final protected function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
+    private function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
     {
         $aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first();
 
@@ -49,13 +48,35 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
         })
             ->sizeAppropriate($aircraftType)
             ->available()
-            ->orderByWeight()
             ->select('stands.*');
     }
 
     /**
+     * Get all the possible stands that are available for allocation.
+     *
      * @param NetworkAircraft $aircraft
      * @return Collection|Stand[]
      */
-    abstract protected function getPossibleStands(NetworkAircraft $aircraft): Collection;
+    private function getPossibleStands(NetworkAircraft $aircraft): Collection
+    {
+        $orderedQuery = $this->getOrderedStandsQuery($this->getArrivalAirfieldStandQuery($aircraft), $aircraft);
+        return $orderedQuery === null
+            ? new Collection()
+            : $this->applyBaseOrderingToStandsQuery($orderedQuery)->get();
+    }
+
+    /**
+     * Apply the base ordering to the stands query. This orders stands by weight ascending
+     * so smaller aircraft prefer smaller stands and also applies an element of randomness
+     * so we don't just put all the aircraft next to each other.
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    private function applyBaseOrderingToStandsQuery(Builder $query): Builder
+    {
+        return $query->orderByWeight()->inRandomOrder();
+    }
+
+    abstract protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder;
 }
