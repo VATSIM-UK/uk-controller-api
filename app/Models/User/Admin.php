@@ -2,11 +2,14 @@
 
 namespace App\Models\User;
 
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Admin extends Model
+class Admin extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
+    use Authenticatable;
+
     public $timestamps = true;
 
     public $incrementing = false;

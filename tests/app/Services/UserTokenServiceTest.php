@@ -49,7 +49,7 @@ class UserTokenServiceTest extends BaseApiTestCase
     public function testItCreatesAUserToken()
     {
         $token = $this->service->create(1203533);
-        $this->get('/', ['Authorization' => 'Bearer ' . $token])->assertStatus(418);
+        $this->get('/authorise', ['Authorization' => 'Bearer ' . $token])->assertStatus(200);
     }
 
     public function testDeleteRemovesAToken()
