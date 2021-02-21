@@ -665,6 +665,28 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(1, StandAssignment::find('BMI221')->stand_id);
     }
 
+    public function testItDoesntDeallocateStandIfForDepartureAirport()
+    {
+        $this->addStandAssignment('BMI221', 3);
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+
+        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGBB',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+
+        $this->service->removeAllocationIfDestinationChanged($aircraft);
+        $this->assertEquals(3, StandAssignment::find('BMI221')->stand_id);
+    }
+
     public function testItDoesntDeallocateStandIfNoStandToDeallocate()
     {
         $this->doesntExpectEvents(StandUnassignedEvent::class);
