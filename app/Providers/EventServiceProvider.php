@@ -25,7 +25,6 @@ use App\Listeners\Stand\AssignOccupiedStandsForDeparture;
 use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
 use App\Listeners\Stand\OccupyStands;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
-use App\Listeners\Stand\TriggerDepartureUnassignmentOnceAirborne;
 use App\Listeners\Stand\TriggerUnassignmentOnDisconnect;
 use App\Listeners\Stand\UnassignVacatedDepartureStand;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -58,7 +57,6 @@ class EventServiceProvider extends ServiceProvider
             // RecordFirEntry::class, This is quite intensive on CPU and isn't used at the moment
             ReserveInFirProximity::class,
             ReclaimIfLeftFirProximity::class,
-            TriggerDepartureUnassignmentOnceAirborne::class,
             OccupyStands::class,
         ],
         StandAssignedEvent::class => [
