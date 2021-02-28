@@ -7,44 +7,33 @@ use Carbon\Carbon;
 
 class AiracServiceTest extends BaseUnitTestCase
 {
-    private AiracService $service;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->service = $this->app->make(AiracService::class);
-    }
-
-    public function testItGetsTheNextAiracDayFromDateIfItsToday()
+    public function testItGetsThePreviousAiracDayIfItsToday()
     {
         // 2020/02 Airac
         Carbon::setTestNow(Carbon::parse('2021-02-25 15:00:00'));
 
         $this->assertEquals(
             Carbon::parse('2021-02-25 00:00:00'),
-            $this->service->getNextAiracDayFromDate(Carbon::now())
+            AiracService::getPreviousAiracDay()
         );
     }
 
-    public function testItGetsTheNextAiracDay()
+    public function testItGetsThePreviousAiracDay()
     {
         // After 2020/02 Airac
         Carbon::setTestNow(Carbon::parse('2021-03-26 15:00:00'));
 
         $this->assertEquals(
-            Carbon::parse('2021-04-22 00:00:00'),
-            $this->service->getNextAiracDayFromDate(Carbon::now())
+            Carbon::parse('2021-03-25 00:00:00'),
+            AiracService::getPreviousAiracDay()
         );
     }
 
-    public function testItGetsTheNextAiracDayFromToday()
+    public function testItHasAValidBaseAiracDate()
     {
-        // After 2020/02 Airac
-        Carbon::setTestNow(Carbon::parse('2021-03-26 15:00:00'));
-
         $this->assertEquals(
-            Carbon::parse('2021-04-22 00:00:00'),
-            $this->service->getNextAiracDay()
+            Carbon::parse('2021-01-28 00:00:00'),
+            AiracService::getBaseAiracDate()
         );
     }
 }
