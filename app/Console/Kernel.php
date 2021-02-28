@@ -56,11 +56,6 @@ class Kernel extends ConsoleKernel
         UpdateSrd::class,
     ];
 
-    public function __construct(Application $app, Dispatcher $events)
-    {
-        parent::__construct($app, $events);
-    }
-
     /**
      * Define the application's command schedule.
      *
