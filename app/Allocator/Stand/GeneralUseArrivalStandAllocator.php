@@ -3,34 +3,12 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class GeneralUseArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
-    /**
-     * @var AirlineService
-     */
-    private $airlineService;
-
-    public function __construct(AirlineService $airlineService)
+    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
     {
-        $this->airlineService = $airlineService;
-    }
-
-    /**
-     * This runs the base query, and gets stands at the arrival airport suitable
-     * for the aircraft's size that aren't occupied and available for general use.
-     *
-     * @param NetworkAircraft $aircraft
-     * @return Collection
-     */
-    protected function getPossibleStands(NetworkAircraft $aircraft): Collection
-    {
-        return $this->getArrivalAirfieldStandQuery($aircraft)
-            ->generalUse()
-            ->notCargo()
-            ->inRandomOrder()
-            ->get();
+        return $stands->generalUse()->notCargo();
     }
 }

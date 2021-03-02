@@ -32,6 +32,7 @@ services:
       - "3306:3306"
     volumes:
       - mysqldata:/var/lib/mysql
+      - ./.docker/mysql/etc/mysql/my.cnf:/etc/mysql/conf.d/config-file.cnf
     environment:
       MYSQL_DATABASE: uk_plugin
       MYSQL_ROOT_PASSWORD: secret

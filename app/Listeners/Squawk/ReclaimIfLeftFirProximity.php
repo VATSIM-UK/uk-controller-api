@@ -5,23 +5,24 @@ namespace App\Listeners\Squawk;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Services\LocationService;
 use App\Services\SquawkService;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
-class ReclaimIfLeftFirProximity
+/**
+ * This job involves a lot of distance calculations, so run it on the queue.
+ */
+class ReclaimIfLeftFirProximity implements ShouldQueue
 {
     const MIN_DISTANCE = 650.0;
 
     /**
      * @var Coordinate[]
      */
-    private $measuringPoints;
-
-    /**
-     * @var SquawkService
-     */
-    private $squawkService;
+    private array $measuringPoints;
+    private SquawkService $squawkService;
 
     /**
      * ReserveSquawkIfInFirProximity constructor.

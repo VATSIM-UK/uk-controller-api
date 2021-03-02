@@ -16,17 +16,6 @@ class TeapotControllerTest extends BaseApiTestCase
         $this->assertInstanceOf(TeapotController::class, $controller);
     }
 
-    public function testItAcceptsGet()
-    {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/')
-            ->assertJson(
-                [
-                    'message' => 'Nothing here but us teapots...',
-                ]
-            )
-            ->assertStatus(418);
-    }
-
     public function testItAcceptsGetAndReturns200()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise')
@@ -38,32 +27,32 @@ class TeapotControllerTest extends BaseApiTestCase
             ->assertStatus(200);
     }
 
-    public function testGetAssignmentRejectsTokensWithoutUserScope()
+    public function testAuthoriseRejectsTokensWithoutUserScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/')
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise')
             ->assertStatus(403);
     }
 
     public function testItSetsUsersLastLogin()
     {
         Carbon::setTestNow(Carbon::now());
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise');
         $this->assertEquals($this->activeUser()->last_login, Carbon::now());
     }
 
     public function testItDoesntAcceptPut()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, '/')->assertStatus(405);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, '/authorise')->assertStatus(405);
     }
 
     public function testItDoesntAcceptPatch()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, '/')->assertStatus(405);
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, '/authorise')->assertStatus(405);
     }
 
     public function testItDoesntAcceptDelete()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, '/')->assertStatus(405);
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, '/authorise')->assertStatus(405);
     }
 }

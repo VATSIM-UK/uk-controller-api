@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     supervisor \
-    nginx
+    nginx \
+    npm
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -30,6 +31,13 @@ COPY ./usr/local/etc/php/conf.d/local.ini /usr/local/etc/php/conf.d/local.ini
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Upgrade node to latest version and install things
+RUN npm install -g yarn
+RUN apt-get remove npm -y
+RUN yarn global add n
+RUN n latest
+RUN yarn global add cross-env
 
 # Add user for laravel application and websockets
 RUN groupadd -g 1000 www
