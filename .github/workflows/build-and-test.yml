@@ -102,3 +102,15 @@ jobs:
       - name: Upload Code Coverage Report
         if: matrix.php == '7.4'
         run: bash <(curl -s https://codecov.io/bash)
+
+  trigger-release:
+    name: Trigger Release
+    needs: laravel-tests
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger release workflow
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PAT }}
+          event-type: release-trigger
