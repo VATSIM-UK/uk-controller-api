@@ -33,7 +33,7 @@ jobs:
       - name: Set additional deployment variables
         uses: allenevans/set-env@v2.0.0
         with:
-          APP_URL: https://www.vatsim.uk
+          APP_URL: https://ukcp.vatsim.uk
           APPLICATION_ROOT: ${{ secrets.APPLICATION_ROOT }}
           RELEASE_DIRECTORY: ${{ secrets.APPLICATION_ROOT }}/releases/${{ env.COMMIT }}
           SHARED_DIRECTORY: ${{ secrets.APPLICATION_ROOT }}/shared
@@ -61,7 +61,7 @@ jobs:
         id: github_deployment
         with:
           token: ${{ github.token }}
-          target_url: https://www.vatsim.uk
+          target_url: https://ukcp.vatsim.uk
           environment: production
           ref: ${{ github.event.client_payload.ref }}
 
@@ -72,7 +72,7 @@ jobs:
       - name: Setup Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '14'
 
       #
       # YARN BUILD
@@ -94,32 +94,17 @@ jobs:
             ${{ runner.os }}-yarn-
 
       # Install node_modules
-      - name: Install Core assets
+      - name: Install Assets
         run: yarn
 
-      - name: Install Waiting Lists Manager assets
-        run: cd nova-components/WaitingListsManager && yarn && cd ../../
-
       # Run Webpack
-      - name: Compile Core assets
+      - name: Compile Assets
         run: yarn run prod
-
-      - name: Compile Waiting Lists Manager assets
-        run: cd nova-components/WaitingListsManager && yarn run prod && cd ../../
 
       #
       # CONFIGURATION FILES
       # Create any configuration files, interpolating secrets
       #
-      - name: Create Nova authentication file
-        env:
-          NOVA_USERNAME: ${{ secrets.NOVA_USERNAME }}
-          NOVA_PASSWORD: ${{ secrets.NOVA_PASSWORD }}
-        run: |
-          cp auth.json.example auth.json
-          sed -i "s/your-username/${NOVA_USERNAME}/g" auth.json
-          sed -i "s/your-password/${NOVA_PASSWORD}/g" auth.json
-
       - name: Create .env from Secrets value
         env:
           ENV_FILE_CONTENTS: ${{ secrets.ENV_FILE_CONTENTS }}
@@ -164,12 +149,6 @@ jobs:
             # Install application dependencies
             $PHP_PATH /usr/local/bin/composer update --no-interaction --no-dev
             $PHP_PATH artisan package:discover
-
-            # Install Waiting List Dependencies
-            $PHP_PATH /usr/local/bin/composer install --working-dir="$RELEASE_DIRECTORY/nova-components/WaitingListsManager" --no-dev
-
-            # Install Nova
-            $PHP_PATH artisan nova:install
           envs: RELEASE_DIRECTORY,PHP_PATH
 
       - name: (Remote) Update symbolic links
@@ -209,26 +188,24 @@ jobs:
             cd $RELEASE_DIRECTORY
 
             # Stop Application / Services
-            sudo systemctl stop teamspeak-daemon
             $PHP_PATH artisan down
-            sudo systemctl stop core-horizon
+            sudo systemctl stop ukcp-horizon
 
             # Deployment Tasks
             $PHP_PATH artisan migrate --step --force -n
-            $PHP_PATH artisan route:cache
+            $PHP_PATH artisan optimize
             $PHP_PATH artisan view:clear
+            $PHP_PATH artisan view:cache
             $PHP_PATH artisan storage:link
-            $PHP_PATH artisan telescope:publish
             $PHP_PATH artisan horizon:publish
             mv storage/logs/laravel.log storage/logs/laravel.log.`date +%s`; true
 
             # Start Applications / Services
             $PHP_PATH artisan up
 
-            # This will interpolate the values as --revision="vx.y.z" and --repository="vatsim-uk/core"
+            # This will interpolate the values as --revision="vx.y.z" and --repository="vatsim-uk/uk-controller-api"
             echo artisan bugsnag:deploy --branch="main" --revision="$TAG" --repository="$GITHUB_REPOSITORY"
-            sudo systemctl start core-horizon
-            sudo systemctl start teamspeak-daemon
+            sudo systemctl start ukcp-horizon
           envs: RELEASE_DIRECTORY,PHP_PATH,TAG,GITHUB_REPOSITORY
 
       #
@@ -267,7 +244,7 @@ jobs:
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: ${{ github.token }}
-          target_url: https://www.vatsim.uk
+          target_url: https://ukcp.vatsim.uk
           state: "failure"
           deployment_id: ${{ steps.github_deployment.outputs.deployment_id }}
 
@@ -276,7 +253,7 @@ jobs:
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: ${{ github.token }}
-          target_url: https://www.vatsim.uk
+          target_url: https://ukcp.vatsim.uk
           state: "success"
           deployment_id: ${{ steps.github_deployment.outputs.deployment_id }}
 
