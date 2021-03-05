@@ -77,8 +77,8 @@ class NetworkDataService
     {
         return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
             return LocationService::metersToNauticalMiles(
-                    $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
-                ) < 700;
+                $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
+            ) < 700;
         });
     }
 
