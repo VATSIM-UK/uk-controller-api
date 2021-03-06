@@ -187,25 +187,27 @@ jobs:
             # Ensure we're working from the new release
             cd $RELEASE_DIRECTORY
 
-            # Stop Application / Services
+            # Stop Websocket and Horizon Processes
             $PHP_PATH artisan down
+            sudo systemctl stop ukcp
             sudo systemctl stop ukcp-horizon
 
             # Deployment Tasks
             $PHP_PATH artisan migrate --step --force -n
-            $PHP_PATH artisan optimize
             $PHP_PATH artisan view:clear
+            $PHP_PATH artisan optimize
             $PHP_PATH artisan view:cache
             $PHP_PATH artisan storage:link
             $PHP_PATH artisan horizon:publish
             mv storage/logs/laravel.log storage/logs/laravel.log.`date +%s`; true
 
-            # Start Applications / Services
+            # Start Websockets and Horizon
             $PHP_PATH artisan up
 
             # This will interpolate the values as --revision="vx.y.z" and --repository="vatsim-uk/uk-controller-api"
             echo artisan bugsnag:deploy --branch="main" --revision="$TAG" --repository="$GITHUB_REPOSITORY"
             sudo systemctl start ukcp-horizon
+            sudo systemctl start ukcp
           envs: RELEASE_DIRECTORY,PHP_PATH,TAG,GITHUB_REPOSITORY
 
       #
