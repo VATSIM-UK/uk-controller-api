@@ -171,12 +171,12 @@ class VersionService extends ServiceProvider
     public function getLatestVersionGithubDetails(): array
     {
         $latest = Version::orderByDesc('id')->first();
-        $assetsUrl = "https://github.com/VATSIM-UK/uk/releases/download/{$latest->version}";
+        $assetsUrl = "https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/{$latest->version}";
 
         return [
             'version' => $latest->version,
-            'libs_download_url' => $assetsUrl . '/UKControllerPluginLibs',
-            'plugin_download_url' => $assetsUrl . '/UKControllerPlugin',
+            'libs_download_url' => $assetsUrl . '/UKControllerPluginLibs.dll',
+            'plugin_download_url' => $assetsUrl . '/UKControllerPlugin.dll',
         ];
     }
 }

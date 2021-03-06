@@ -18,20 +18,20 @@ class UserLastLoginTest extends BaseApiTestCase
     public function testItSetsLastLoginTimeNeverLoggedIn()
     {
         Carbon::setTestNow(Carbon::now());
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise');
         $this->assertEquals(Carbon::now(), $this->activeUser()->last_login);
     }
 
     public function testItSetsLastLoginIpNeverLoggedIn()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise');
         $this->assertEquals('127.0.0.1', $this->activeUser()->last_login_ip);
     }
 
     public function testItDoesntSetIpIfRecentLogin()
     {
         $this->updateUser(Carbon::now()->subMinutes(30));
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise');
         $this->assertEquals('192.168.0.1', $this->activeUser()->last_login_ip);
     }
 
@@ -42,7 +42,7 @@ class UserLastLoginTest extends BaseApiTestCase
 
         $this->updateUser($loginTime);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise');
         $this->assertEquals($loginTime, $this->activeUser()->last_login);
     }
 
@@ -51,7 +51,7 @@ class UserLastLoginTest extends BaseApiTestCase
         Carbon::setTestNow(Carbon::now());
         $this->updateUser(Carbon::now()->subMinutes(61));
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise');
         $this->assertEquals('127.0.0.1', $this->activeUser()->last_login_ip);
     }
 
@@ -60,7 +60,7 @@ class UserLastLoginTest extends BaseApiTestCase
         Carbon::setTestNow(Carbon::now());
         $this->updateUser(Carbon::now()->subMinutes(61));
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/');
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, '/authorise');
         $this->assertEquals(Carbon::now(), $this->activeUser()->last_login);
     }
 

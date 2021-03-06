@@ -2,7 +2,7 @@
 
 return [
     'defaults' => [
-        'guard' => 'api',
+        'guard' => 'web_admin',
         'passwords' => 'users',
     ],
 
@@ -11,12 +11,20 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+        'web_admin' => [
+            'driver' => 'session',
+            'provider' => 'admin',
+        ],
     ],
 
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
             'model' => \App\Models\User\User::class,
+        ],
+        'admin' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\User\Admin::class,
         ]
     ]
 ];
