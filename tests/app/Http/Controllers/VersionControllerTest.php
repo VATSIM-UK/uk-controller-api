@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\Version\Version;
 use App\Providers\AuthServiceProvider;
+use App\Services\VersionService;
 use TestingUtils\Traits\WithSeedUsers;
 
 class VersionControllerTest extends BaseApiTestCase
@@ -254,13 +255,8 @@ class VersionControllerTest extends BaseApiTestCase
 
     public function testItReturnsLatestVersionDetails()
     {
-        $expected = [
-            'version' => '2.0.1',
-            'libs_download_url' => 'https://github.com/VATSIM-UK/uk/releases/download/2.0.1/UKControllerPluginLibs',
-            'plugin_download_url' => 'https://github.com/VATSIM-UK/uk/releases/download/2.0.1/UKControllerPlugin',
-        ];
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/latest/github')
             ->assertOk()
-            ->assertJson($expected);
+            ->assertJson($this->app->make(VersionService::class)->getLatestVersionGithubDetails());
     }
 }
