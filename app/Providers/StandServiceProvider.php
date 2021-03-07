@@ -1,18 +1,19 @@
 <?php
 namespace App\Providers;
 
-use App\Allocator\Stand\AirlineArrivalStandAllocator;
-use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
-use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Services\StandService;
+use App\Service\StandAdminService;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
+use App\Imports\Stand\StandReservationsImport;
 use App\Allocator\Stand\CargoArrivalStandAllocator;
-use App\Allocator\Stand\DomesticInternationalStandAllocator;
+use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocator;
 use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
-use App\Imports\Stand\StandReservationsImport;
-use App\Services\StandService;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\ServiceProvider;
+use App\Allocator\Stand\DomesticInternationalStandAllocator;
+use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 
 class StandServiceProvider extends ServiceProvider
 {
@@ -37,5 +38,6 @@ class StandServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(StandReservationsImport::class);
+        $this->app->singleton(StandAdminService::class);
     }
 }

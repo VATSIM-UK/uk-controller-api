@@ -1,0 +1,34 @@
+<?php
+
+namespace Database\Factories\Stand;
+
+use App\Models\Stand\Stand;
+use App\Models\Airfield\Airfield;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class StandFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Stand::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'airfield_id' => Airfield::factory()->create()->id,
+            'identifier' => (string)$this->faker->numberBetween(0, 500),
+            'latitude' => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
+            'wake_category_id' => 1,
+            'general_use' => false
+        ];
+    }
+}

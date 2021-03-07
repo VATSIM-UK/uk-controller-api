@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Airfield extends Model implements MinStackDataProviderInterface
 {
+    use HasFactory;
+
     public $timestamps = true;
 
     protected $table = 'airfield';

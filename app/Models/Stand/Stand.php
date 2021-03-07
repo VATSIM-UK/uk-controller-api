@@ -16,9 +16,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stand extends Model
 {
+    use HasFactory;
+
     const QUERY_AIRLINE_ID_COLUMN = 'airlines.id';
 
     protected $fillable = [
