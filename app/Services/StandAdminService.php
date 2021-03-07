@@ -7,7 +7,7 @@ use App\Models\Stand\StandType;
 use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Collection;
 
-class StandAdminService 
+class StandAdminService
 {
     /**
      * Return a list of stand types.
