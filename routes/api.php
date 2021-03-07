@@ -160,6 +160,18 @@ Route::middleware('admin.dependency')->group(function () {
         );
 });
 
+// Routes for data management.
+Route::middleware('admin.data')->group(function () {
+    Route::get('dataadmin', 'TeapotController@normalTeapots');
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/airfield/{airfield:code}/stands', 'Admin\\StandAdminController@getStandsForAirfield');
+        Route::get('/airfield/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@getStandDetails');
+
+        Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
+    });
+});
+
 Route::middleware('admin.github')->group(function () {
     Route::post('github', 'GithubController@processGithubWebhook');
 });
