@@ -98,19 +98,27 @@ class UserService
      */
     public function createAdminUser() : string
     {
-        $admins = User::where('id', '<', self::MINIMUM_VATSIM_CID);
-        $newUserCid = $admins->exists() ? $admins->max('id') + 1 : 0;
-
-        $user = new User();
-        $user->id = $newUserCid;
-        $user->status = UserStatus::ACTIVE;
-        $user->save();
-
-        return $user->createToken(
+        return $this->createAdminUserModel()->createToken(
             'access',
             [
                 AuthServiceProvider::SCOPE_USER_ADMIN,
                 AuthServiceProvider::SCOPE_VERSION_ADMIN,
+            ]
+        )->accessToken;
+    }
+
+    /**
+     * Creates a user with the scope of data administration, 
+     * returning the token of the user.
+     *
+     * @return string
+     */
+    public function createDataAdminUser() : string
+    {
+        return $this->createAdminUserModel()->createToken(
+            'access',
+            [
+                AuthServiceProvider::SCOPE_DATA_ADMIN
             ]
         )->accessToken;
     }
@@ -125,5 +133,23 @@ class UserService
     public function getUser(int $userCid) : User
     {
         return User::findOrFail($userCid);
+    }
+
+    /**
+     * Create a user model as a 'pseudo' admin user.
+     *
+     * @return User
+     */
+    private function createAdminUserModel(): User
+    {
+        $admins = User::where('id', '<', self::MINIMUM_VATSIM_CID);
+        $newUserCid = $admins->exists() ? $admins->max('id') + 1 : 0;
+
+        $user = new User();
+        $user->id = $newUserCid;
+        $user->status = UserStatus::ACTIVE;
+        $user->save(); 
+
+        return $user;
     }
 }
