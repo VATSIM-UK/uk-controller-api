@@ -18,6 +18,7 @@ use Location\Distance\Haversine;
 class NetworkDataService
 {
     const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
+    const MAX_PROCESSING_DISTANCE = 700;
 
     /**
      * @var Coordinate[]
@@ -78,7 +79,7 @@ class NetworkDataService
         return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
             return LocationService::metersToNauticalMiles(
                 $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
-            ) < 700;
+            ) < self::MAX_PROCESSING_DISTANCE;
         });
     }
 
