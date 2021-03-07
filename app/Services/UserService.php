@@ -108,7 +108,7 @@ class UserService
     }
 
     /**
-     * Creates a user with the scope of data administration, 
+     * Creates a user with the scope of data administration,
      * returning the token of the user.
      *
      * @return string
@@ -148,7 +148,7 @@ class UserService
         $user = new User();
         $user->id = $newUserCid;
         $user->status = UserStatus::ACTIVE;
-        $user->save(); 
+        $user->save();
 
         return $user;
     }

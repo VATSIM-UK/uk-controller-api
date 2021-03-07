@@ -161,7 +161,7 @@ Route::middleware('admin.dependency')->group(function () {
 });
 
 // Routes for data management.
-Route::middleware('admin.data')->group(function() {
+Route::middleware('admin.data')->group(function () {
     Route::get('dataadmin', 'TeapotController@normalTeapots');
 });
 
