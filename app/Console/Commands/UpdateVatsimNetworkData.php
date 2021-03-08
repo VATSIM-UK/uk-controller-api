@@ -22,25 +22,15 @@ class UpdateVatsimNetworkData extends Command
     protected $description = 'Update the VATSIM network data';
 
     /**
-     * @var NetworkDataService
-     */
-    private $dataService;
-
-    public function __construct(NetworkDataService $dataService)
-    {
-        parent::__construct();
-        $this->dataService = $dataService;
-    }
-
-    /**
      * Execute the console command.
      *
+     * @param NetworkDataService $dataService
      * @return mixed
      */
-    public function handle()
+    public function handle(NetworkDataService $dataService)
     {
         $this->info('Starting network data update');
-        $this->dataService->updateNetworkData();
+        $dataService->updateNetworkData();
         $this->info('Network data successfully updated');
     }
 }
