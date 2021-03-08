@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Squawk;
+namespace App\Models\FlightInformationRegion;
 
 use Illuminate\Database\Eloquent\Model;
 use Location\Coordinate;
 
-class SquawkReservationMeasurementPoint extends Model
+class FirProximityMeasuringPoint extends Model
 {
     public $timestamps = false;
 

@@ -25,6 +25,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
 use App\Console\Commands\DeleteUserTokens;
 use App\Console\Commands\CreateUserToken;
+use App\Console\Commands\DataAdminCreate;
 
 class Kernel extends ConsoleKernel
 {
@@ -54,6 +55,7 @@ class Kernel extends ConsoleKernel
         StandReservationsImport::class,
         RecatCategoriesImport::class,
         UpdateSrd::class,
+        DataAdminCreate::class
     ];
 
     /**
