@@ -4,6 +4,8 @@ namespace App\Models\Hold;
 use App\Models\Navigation\Navaid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Model for a hold
@@ -45,5 +47,15 @@ class Hold extends Model
     public function restrictions()
     {
         return $this->hasMany(HoldRestriction::class, 'hold_id', 'id');
+    }
+
+    public function deemedSeparatedHolds(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Hold::class,
+            'deemed_separated_holds',
+            'first_hold_id',
+            'second_hold_id',
+        )->withPivot('vsl_insert_distance');
     }
 }

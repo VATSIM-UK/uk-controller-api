@@ -47,6 +47,7 @@ The websocket service is automatically started on Port 6001.
 
 - Create a user and generate their API settings file using `php artisan user:create`
 - Create a user an api key that can administer other users by running `php artisan user:create-admin`
+- Create a user and api key that can administer the data by running `php artisan user:create-data-admin`
 - Create a new api key for an existing non-admin user by running `php artisan token:create`
 - Delete all api keys for a user by running `php artisan tokens:delete-user`
 

@@ -105,6 +105,12 @@ class UserServiceTest extends BaseFunctionalTestCase
         $this->makeTestRequest('/useradmin', $accessToken);
     }
 
+    public function testItCreateaDataAdminAccessToken()
+    {
+        $accessToken = $this->service->createDataAdminUser();
+        $this->makeTestRequest('/dataadmin', $accessToken);
+    }
+
     public function testItAVersionAdminAccessToken()
     {
         $accessToken = $this->service->createAdminUser();

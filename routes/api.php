@@ -160,6 +160,11 @@ Route::middleware('admin.dependency')->group(function () {
         );
 });
 
+// Routes for data management.
+Route::middleware('admin.data')->group(function () {
+    Route::get('dataadmin', 'TeapotController@normalTeapots');
+});
+
 Route::middleware('admin.github')->group(function () {
     Route::post('github', 'GithubController@processGithubWebhook');
 });
