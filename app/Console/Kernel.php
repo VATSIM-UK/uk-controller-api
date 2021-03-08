@@ -12,11 +12,15 @@ use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\RecatCategoriesImport;
 use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
+use App\Console\Commands\UpdateSrd;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
 use App\Console\Commands\WakeCategoriesImport;
+use App\Services\SrdService;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
 use App\Console\Commands\DeleteUserTokens;
@@ -50,6 +54,7 @@ class Kernel extends ConsoleKernel
         AllocateStandForArrival::class,
         StandReservationsImport::class,
         RecatCategoriesImport::class,
+        UpdateSrd::class,
         DataAdminCreate::class
     ];
 
@@ -71,5 +76,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
+        $schedule->command('srd:update')
+            ->hourly()
+            ->when(function () {
+                return $this->app->make(SrdService::class)->newSrdShouldBeAvailable();
+            });
     }
 }
