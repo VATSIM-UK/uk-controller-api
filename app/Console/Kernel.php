@@ -81,9 +81,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('schedule-monitor:clean')
             ->dailyAt('08:01');
         $schedule->command('srd:update')
-            ->hourly()
-            ->when(function () {
-                return $this->app->make(SrdService::class)->newSrdShouldBeAvailable();
-            });
+            ->hourlyAt([1,2,3,4,5,6,7]);
     }
 }
