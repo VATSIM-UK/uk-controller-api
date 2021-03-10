@@ -2,14 +2,16 @@
 
 namespace App\Models\Airfield;
 
-use App\Helpers\MinStack\MinStackDataProviderInterface;
-use App\Models\Controller\ControllerPosition;
+use Location\Coordinate;
+use App\Models\Stand\Stand;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Location\Coordinate;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Helpers\MinStack\MinStackDataProviderInterface;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Airfield extends Model implements MinStackDataProviderInterface
 {
@@ -112,6 +114,15 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'origin_airfield_id',
             'destination_airfield_id'
         )->withPivot('prenote_id', 'flight_rule_id');
+    }
+
+
+    public function stands() : HasMany
+    {
+        return $this->hasMany(
+            Stand::class,
+            'airfield_id',
+        );
     }
 
     public function getCoordinateAttribute(): Coordinate

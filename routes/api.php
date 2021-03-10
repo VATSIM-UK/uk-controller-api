@@ -165,8 +165,9 @@ Route::middleware('admin.data')->group(function () {
     Route::get('dataadmin', 'TeapotController@normalTeapots');
 
     Route::prefix('admin')->group(function () {
-        Route::get('/airfield/{airfield:code}/stands', 'Admin\\StandAdminController@getStandsForAirfield');
-        Route::get('/airfield/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@getStandDetails');
+        Route::get('/airfields', 'Admin\\StandAdminController@getAirfields');
+        Route::get('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@getStandsForAirfield');
+        Route::get('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@getStandDetails');
 
         Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
     });
