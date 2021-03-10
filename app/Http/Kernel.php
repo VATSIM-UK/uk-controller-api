@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
             MiddlewareKeys::AUTH . ':api',
             MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_DATA_ADMIN,
             MiddlewareKeys::ADMIN_LOG,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class
         ],
         'admin.github' => [
             MiddlewareKeys::GITHUB_AUTH,
