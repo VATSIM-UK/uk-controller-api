@@ -112,7 +112,7 @@ paths:
                   types:
                     type: array
                     items: 
-                      $ref: '#/components/schemas/StandListItem'
+                      $ref: '#/components/schemas/StandType'
   /airfield/{icao}/stands:
     get:
       description: 'Get a list of stands from their airfield'
