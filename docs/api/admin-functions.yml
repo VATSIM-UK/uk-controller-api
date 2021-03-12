@@ -98,6 +98,20 @@ components:
               type: array
               items: 
                 $ref: '#/components/schemas/Airline'
+    Airfield:
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        transition_altitude:
+          type: integer
+        stands_count:
+          type: integer
 
 paths:
   /stand-types:
@@ -113,7 +127,31 @@ paths:
                     type: array
                     items: 
                       $ref: '#/components/schemas/StandListItem'
-  /airfield/{icao}/stands:
+  /airfields:
+    get:
+      parameters:
+      - in: query
+        name: all
+        required: false
+        schema:
+          type: boolean
+        description: 'Include airfields without stands'
+      description: 'Get a list of airfields with or without stands. See query parameter.'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  airfields:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Airfield'
+
+
+
+  /airfields/{icao}/stands:
     get:
       description: 'Get a list of stands from their airfield'
       responses:
@@ -127,7 +165,7 @@ paths:
                     type: array 
                     items:
                       $ref: '#/components/schemas/StandListItem'
-  /airfield/{icao}/stands/{stand_id}:
+  /airfields/{icao}/stands/{stand_id}:
     get:
       responses:
         '200':
