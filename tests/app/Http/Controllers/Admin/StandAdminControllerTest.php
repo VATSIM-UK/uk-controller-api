@@ -28,10 +28,10 @@ class StandAdminControllerTest extends BaseApiTestCase
         $airfield = Airfield::factory()->create();
         $stand = Stand::factory()->create(['airfield_id' => $airfield->id]);
 
-        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfield/{$airfield->code}/stands/{$stand->id}");
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields/{$airfield->code}/stands");
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['stand']);
+        $response->assertJsonStructure(['stands']);
     }
 
     public function testAirfieldStandCanBeRetrieved()
@@ -39,7 +39,7 @@ class StandAdminControllerTest extends BaseApiTestCase
         $airfield = Airfield::factory()->create();
         $stand = Stand::factory()->create(['airfield_id' => $airfield->id]);
 
-        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfield/{$airfield->code}/stands/{$stand->id}");
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields/{$airfield->code}/stands/{$stand->id}");
 
         $response->assertStatus(200);
         $response->assertJsonStructure(['stand']);
@@ -50,9 +50,34 @@ class StandAdminControllerTest extends BaseApiTestCase
         $airfield = Airfield::factory()->create();
         $stand = Stand::factory()->create();
 
-        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfield/{$airfield->code}/stands/{$stand->id}");
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields/{$airfield->code}/stands/{$stand->id}");
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Stand not part of airfield.']);
+    }
+
+    public function testAirfieldsWithStandsCanBeRetrieved()
+    {
+        $airfield = Airfield::factory()->create();
+
+        $airfieldWithStands = Airfield::factory()->create();
+        Stand::factory()->create(['airfield_id' => $airfieldWithStands->id]);
+
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields");
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment($airfieldWithStands->toArray(), true);
+        $response->assertJsonMissing($airfield->toArray(), true);
+    }
+
+    public function testAirfieldsWithoutStandsCanBeRetrieved()
+    {
+        $airfield = Airfield::factory()->create();
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields?all=true");
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment($airfield->toArray(), true);
     }
 }

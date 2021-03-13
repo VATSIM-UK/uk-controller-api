@@ -18,6 +18,19 @@ class StandAdminController extends BaseController
         $this->service = $standAdminService;
     }
 
+    public function getAirfields(Request $request)
+    {
+        $shouldIncludeAirfieldsWithoutStands = $request->query('all');
+
+        if ($shouldIncludeAirfieldsWithoutStands) {
+            $airfields = Airfield::withCount('stands')->get();
+        } else {
+            $airfields = Airfield::has('stands')->withCount('stands')->get();
+        }
+
+        return response()->json(compact('airfields'));
+    }
+
     /**
      * Get a list of the registered stand types.
      *
