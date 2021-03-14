@@ -83,11 +83,11 @@ class UpdateStandPriorities extends Migration
                     ->where('airfield_id', $airfieldId)
                     ->whereIn('identifier', $stands)
                     ->update(
-                    [
-                        'assignment_priority' => $priority,
-                        'updated_at' => Carbon::now(),
-                    ]
-                );
+                        [
+                            'assignment_priority' => $priority,
+                            'updated_at' => Carbon::now(),
+                        ]
+                    );
             }
         }
     }
