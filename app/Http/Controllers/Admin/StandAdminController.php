@@ -91,7 +91,7 @@ class StandAdminController extends BaseController
         if ($terminal = Terminal::find($request->get('terminal_id'))) {
             if ($terminal->airfield_id != $airfield->id) { // NOSONAR (cant merge the if statements, despite what sonar says!)
                 return response()->json(['message' => 'Invalid terminal for airfield.'], 400);
-            } 
+            }
         }
 
         $stand = Stand::create([
@@ -105,6 +105,6 @@ class StandAdminController extends BaseController
             'terminal_id' => $request->get('terminal_id'),
         ]);
 
-        return response()->json(['stand_id' => $stand->id], 201);   
+        return response()->json(['stand_id' => $stand->id], 201);
     }
 }
