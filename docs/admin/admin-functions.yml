@@ -112,6 +112,25 @@ components:
           type: integer
         stands_count:
           type: integer
+    StandCreation:
+      properties:
+        type_id:
+          type: integer
+          description: Stand type id
+        latitude:
+          type: number
+        longitude:
+          type: number
+        identifier:
+          type: string
+        wake_category_id:
+          type: integer
+        max_aircraft_id:
+          type: integer
+          nullable: true
+        terminal_id:
+          type: integer
+          nullable: true
 
 paths:
   /stand-types:
@@ -165,6 +184,33 @@ paths:
                     type: array 
                     items:
                       $ref: '#/components/schemas/StandListItem'
+    post:
+      description: 'Create a new stand'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/StandCreation'
+      responses:
+        '201':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  stand_id:
+                    type: string
+        '400':
+          description: Duplicate stand identifier or invalid terminal
+          content:
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+        '422':
+          description: Validation errors detected
+            
   /airfields/{icao}/stands/{stand_id}:
     get:
       responses:

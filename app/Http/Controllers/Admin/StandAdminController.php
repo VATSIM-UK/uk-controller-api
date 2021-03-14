@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Stand\Stand;
 use Illuminate\Http\Request;
 use App\Models\Airfield\Airfield;
+use App\Models\Airfield\Terminal;
 use Illuminate\Http\JsonResponse;
 use App\Services\StandAdminService;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\StandCreateRequest;
 
 class StandAdminController extends BaseController
 {
@@ -69,5 +71,40 @@ class StandAdminController extends BaseController
         $stand->load(['terminal', 'wakeCategory', 'type', 'airlines']);
 
         return response()->json(['stand' => $stand]);
+    }
+
+    /**
+     * Create a new stand from a validated request.
+     *
+     * @param Airfield $airfield
+     * @param StandCreateRequest $request
+     * @return JsonResponse
+     */
+    public function createNewStand(Airfield $airfield, StandCreateRequest $request): JsonResponse
+    {
+        $validatorsInUse = $airfield->stands->pluck('identifier');
+        if ($validatorsInUse->contains($request->get('identifier'))) {
+            return response()->json(['message' => 'Stand identifier in use for airfield.'], 400);
+        }
+
+        // form request will validate existence of terminal if specified.
+        if ($terminal = Terminal::find($request->get('terminal_id'))) {
+            if ($terminal->airfield_id != $airfield->id) { // NOSONAR (cant merge the if statements, despite what sonar says!)
+                return response()->json(['message' => 'Invalid terminal for airfield.'], 400);
+            } 
+        }
+
+        $stand = Stand::create([
+            'identifier' => $request->get('identifier'),
+            'airfield_id' => $airfield->id,
+            'type_id' => $request->get('type_id'),
+            'latitude' => $request->get('latitude'),
+            'longitude' => $request->get('longitude'),
+            'wake_category_id' => $request->get('wake_category_id'),
+            'max_aircraft_id' => $request->get('max_aircraft_id'),
+            'terminal_id' => $request->get('terminal_id'),
+        ]);
+
+        return response()->json(['stand_id' => $stand->id], 201);   
     }
 }
