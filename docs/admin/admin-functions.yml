@@ -1,6 +1,6 @@
 openapi: '3.0.2'
 info:
-  title: UK Controller PLugin API - Admin Functions 
+  title: UK Controller Plugin API - Admin Functions 
   version: '1.0'
 components:
   schemas:
@@ -126,7 +126,7 @@ paths:
                   types:
                     type: array
                     items: 
-                      $ref: '#/components/schemas/StandListItem'
+                      $ref: '#/components/schemas/StandType'
   /airfields:
     get:
       parameters:
