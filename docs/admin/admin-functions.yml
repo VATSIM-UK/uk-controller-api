@@ -45,8 +45,8 @@ components:
           type: integer
         wake_category_id:
           type: integer
-        general_use:
-          type: boolean
+        assignment_priority:
+          type: integer
         created_at:
           type: string
         updated_at:

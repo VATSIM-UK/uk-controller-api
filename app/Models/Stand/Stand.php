@@ -41,7 +41,7 @@ class Stand extends Model
         'type_id' => 'integer',
         'latitude' => 'double',
         'longitude' => 'double',
-        'general_use' => 'boolean',
+        'assignment_priority' => 'integer',
     ];
 
     public function assignment(): HasOne
@@ -162,11 +162,6 @@ class Stand extends Model
         return $builder->whereHas('type', function (Builder $typeQuery) {
             return $typeQuery->international();
         });
-    }
-
-    public function scopeGeneralUse(Builder $builder): Builder
-    {
-        return $builder->where('general_use', true);
     }
 
     public function pairedStands(): BelongsToMany
