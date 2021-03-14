@@ -34,7 +34,7 @@ class Stand extends Model
         'wake_category_id',
         'max_aircraft_id',
         'is_cargo',
-        'general_use',
+        'assignment_priority',
     ];
 
     protected $casts = [
@@ -197,6 +197,11 @@ class Stand extends Model
     {
         return $builder->join('wake_categories', 'wake_categories.id', 'stands.wake_category_id')
             ->orderBy('wake_categories.relative_weighting', $direction);
+    }
+
+    public function scopeOrderByAssignmentPriority(Builder $builder, string $direction = 'asc') : Builder
+    {
+        return $builder->orderBy('stands.assignment_priority', $direction);
     }
 
     public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
