@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
-        $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
+        $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
         $schedule->command('srd:update')
             ->hourly()
