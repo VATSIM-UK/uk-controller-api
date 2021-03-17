@@ -47,5 +47,4 @@ class AirfieldFactory extends Factory
     {
         return Str::upper($this->faker->lexify('EG??'));
     }
-
 }
