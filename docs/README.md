@@ -58,6 +58,18 @@ running the following command:
 
 `./vendor/bin/phpunit`
 
+### Testing with Docker
+A separate database is available via the docker deployment on the same network to avoid losing the data contained in the migrations.
+
+The same deployment steps outlined above should be carried out, but append `--env=testing` to run them against the testing database.
+
+Copy the environment file `.env.testing.example` to `.env.testing` to allow these values to be used when running the test suite. 
+
+The test suite will use the `testing` environment via the `APP_ENV` variable set within `phpunit.xml` (the PHPUnit configuration).
+In this instance, the phpunit command should be run from within the `web` container so that the docker network is available:
+
+`docker exec -it web /bin/bash`
+
 ## Coding Style Checks
 
 To check that the code you have written adheres to the PSR-1 and PSR-2 standards, you can use PHP Codesniffer,
