@@ -247,7 +247,7 @@ class StandAdminControllerTest extends BaseApiTestCase
 
         $response = $this->makeAuthenticatedApiRequest(self::METHOD_POST, "admin/airfields/{$this->airfield->code}/stands", $this->generateStandData(['identifier' => $stand->identifier, 'terminal_id' => null]));
 
-        $response->assertStatus(400);
+        $response->assertStatus(409);
         $response->assertJson(['message' => 'Stand identifier in use for airfield.']);
     }
 

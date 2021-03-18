@@ -201,13 +201,23 @@ paths:
                   stand_id:
                     type: string
         '400':
-          description: Duplicate stand identifier or invalid terminal
+          description: Invalid terminal
           content:
             'application/json':
               schema:
                 properties:
                   message:
                     type: string
+                    default: Invalid terminal for airfield.
+        '409':
+          description: Duplicate stand identifier
+          content:
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+                    default: Stand identifier in use for airfield.
         '422':
           description: Validation errors detected
             

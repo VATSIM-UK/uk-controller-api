@@ -84,7 +84,7 @@ class StandAdminController extends BaseController
     {
         $validatorsInUse = $airfield->stands->pluck('identifier');
         if ($validatorsInUse->contains($request->get('identifier'))) {
-            return response()->json(['message' => 'Stand identifier in use for airfield.'], 400);
+            return response()->json(['message' => 'Stand identifier in use for airfield.'], 409);
         }
 
         // form request will validate existence of terminal if specified.
