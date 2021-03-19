@@ -251,6 +251,27 @@ class StandAdminControllerTest extends BaseApiTestCase
         $response->assertJson(['message' => 'Stand identifier in use for airfield.']);
     }
 
+    public function testValidatesForPositiveAssignmentPriority()
+    {
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_POST, "admin/airfields/{$this->airfield->code}/stands", ['assignment_priority' => -1]);
+
+        $response->assertJsonValidationErrors(['assignment_priority']);
+    }
+
+    public function testAssignmentPriorityNotMandatory()
+    {
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_POST, "admin/airfields/{$this->airfield->code}/stands", []);
+
+        $response->assertJsonMissingValidationErrors(['assignment_priority']);
+    }
+
+    public function testAssignmentPriorityAllowsPositiveNumber()
+    {
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_POST, "admin/airfields/{$this->airfield->code}/stands", ['assignment_priority' => 100]);
+
+        $response->assertJsonMissingValidationErrors(['assignment_priority']);
+    }
+
     public function testCreatesStandWithValidFields()
     {
         $validTerminal = Terminal::factory()->create(['airfield_id' => $this->airfield->id]);

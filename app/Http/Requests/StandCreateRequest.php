@@ -30,7 +30,8 @@ class StandCreateRequest extends FormRequest
             'longitude' => 'required|numeric|between:-180,180',
             'terminal_id' => 'nullable|exists:terminals,id',
             'wake_category_id' => 'required|exists:wake_categories,id',
-            'max_aircraft_id' => 'nullable|exists:aircraft,id'
+            'max_aircraft_id' => 'nullable|exists:aircraft,id',
+            'assignment_priority' => 'nullable|integer|min:1' 
         ];
     }
 }

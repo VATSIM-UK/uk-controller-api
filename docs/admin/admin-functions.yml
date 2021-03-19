@@ -131,6 +131,9 @@ components:
         terminal_id:
           type: integer
           nullable: true
+        assignment_priority:
+          type: integer
+          example: 100
 
 paths:
   /stand-types:

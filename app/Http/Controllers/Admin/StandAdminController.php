@@ -94,6 +94,8 @@ class StandAdminController extends BaseController
             }
         }
 
+        $standDefaultAssignmentPriority = 100;
+
         $stand = Stand::create([
             'identifier' => $request->get('identifier'),
             'airfield_id' => $airfield->id,
@@ -103,6 +105,7 @@ class StandAdminController extends BaseController
             'wake_category_id' => $request->get('wake_category_id'),
             'max_aircraft_id' => $request->get('max_aircraft_id'),
             'terminal_id' => $request->get('terminal_id'),
+            'assignment_priority' => $request->get('assignment_priority', $standDefaultAssignmentPriority)
         ]);
 
         return response()->json(['stand_id' => $stand->id], 201);
