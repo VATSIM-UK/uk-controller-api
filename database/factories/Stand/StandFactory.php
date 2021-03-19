@@ -28,7 +28,7 @@ class StandFactory extends Factory
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
             'wake_category_id' => 1,
-            'general_use' => false
+            'assignment_priority' => $this->faker->numberBetween(0, 1000),
         ];
     }
 }

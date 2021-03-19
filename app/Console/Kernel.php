@@ -81,5 +81,6 @@ class Kernel extends ConsoleKernel
             ->when(function () {
                 return $this->app->make(SrdService::class)->newSrdShouldBeAvailable();
             });
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 }

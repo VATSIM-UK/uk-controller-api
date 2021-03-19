@@ -34,14 +34,14 @@ class Stand extends Model
         'wake_category_id',
         'max_aircraft_id',
         'is_cargo',
-        'general_use',
+        'assignment_priority',
     ];
 
     protected $casts = [
         'type_id' => 'integer',
         'latitude' => 'double',
         'longitude' => 'double',
-        'general_use' => 'boolean',
+        'assignment_priority' => 'integer',
     ];
 
     public function assignment(): HasOne
@@ -164,11 +164,6 @@ class Stand extends Model
         });
     }
 
-    public function scopeGeneralUse(Builder $builder): Builder
-    {
-        return $builder->where('general_use', true);
-    }
-
     public function pairedStands(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -197,6 +192,11 @@ class Stand extends Model
     {
         return $builder->join('wake_categories', 'wake_categories.id', 'stands.wake_category_id')
             ->orderBy('wake_categories.relative_weighting', $direction);
+    }
+
+    public function scopeOrderByAssignmentPriority(Builder $builder, string $direction = 'asc') : Builder
+    {
+        return $builder->orderBy('stands.assignment_priority', $direction);
     }
 
     public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
