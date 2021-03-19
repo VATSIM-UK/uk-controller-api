@@ -31,7 +31,7 @@ class StandCreateRequest extends FormRequest
             'terminal_id' => 'nullable|exists:terminals,id',
             'wake_category_id' => 'required|exists:wake_categories,id',
             'max_aircraft_id' => 'nullable|exists:aircraft,id',
-            'assignment_priority' => 'nullable|integer|min:1' 
+            'assignment_priority' => 'nullable|integer|min:1'
         ];
     }
 }
