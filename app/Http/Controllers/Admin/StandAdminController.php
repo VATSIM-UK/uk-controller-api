@@ -10,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use App\Services\StandAdminService;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\StandCreateRequest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class StandAdminController extends BaseController
 {
