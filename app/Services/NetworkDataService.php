@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Events\NetworkAircraftDisconnectedEvent;
-use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
@@ -19,6 +18,7 @@ class NetworkDataService
 {
     const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
     const MAX_PROCESSING_DISTANCE = 700;
+    private Collection $allAircraftBeforeUpdate;
 
     /**
      * @var Coordinate[]
@@ -32,6 +32,10 @@ class NetworkDataService
 
     public function updateNetworkData(): void
     {
+        $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft) {
+            return [$aircraft->callsign => $aircraft];
+        });
+
         // Download the network data and check that it was successful
         $networkResponse = null;
         try {
@@ -47,31 +51,30 @@ class NetworkDataService
         }
 
         // Process clients
-        $this->processPilots($networkResponse->json('pilots', []));
+        $this->processPilots(new Collection($networkResponse->json('pilots', [])));
         $this->handleTimeouts();
     }
 
     /**
      * Loop through each client in the clients array from the network data
-     *
-     * @param array $clients
      */
-    private function processPilots(array $pilots): void
+    private function processPilots(Collection $pilots): void
     {
-        foreach ($pilots as $pilot) {
-            if (!$this->shouldProcessPilot($pilot)) {
-                continue;
+        $filteredPilots = $pilots->filter(
+            function (array $pilot) {
+                return $this->shouldProcessPilot($pilot);
             }
-
-            event(
-                new NetworkAircraftUpdatedEvent(
-                    self::createOrUpdateNetworkAircraft(
-                        $pilot['callsign'],
-                        $this->formatPilot($pilot)
-                    )
-                )
+        )
+            ->map(
+                function (array $pilot) {
+                    return $this->formatPilot($pilot);
+                }
             );
-        }
+
+        NetworkAircraft::upsert(
+            $filteredPilots->toArray(),
+            ['callsign']
+        );
     }
 
     private function shouldProcessPilot(array $pilot): bool
@@ -101,7 +104,20 @@ class NetworkDataService
             'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),
             'planned_flighttype' => $this->getFlightplanDataElement($pilot, 'flight_rules'),
             'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
+            'transponder_last_updated_at' => $this->getTransponderUpdatedAtTime($pilot),
         ];
+    }
+
+    /**
+     * Set the transponder updated at time based on whether the transponder has been changed
+     * since the last time we polled.
+     */
+    private function getTransponderUpdatedAtTime(array $pilot): Carbon
+    {
+        return $this->allAircraftBeforeUpdate->has($pilot['callsign']) &&
+        $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder === $pilot['transponder']
+            ? $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder_last_updated_at
+            : Carbon::now();
     }
 
     /**

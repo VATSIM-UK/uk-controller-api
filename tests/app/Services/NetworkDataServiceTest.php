@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Mockery;
@@ -113,7 +114,11 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'network_aircraft',
             array_merge(
                 $this->getTransformedPilotData('VIR25A'),
-                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+                [
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                    'transponder_last_updated_at' => Carbon::now()
+                ]
             ),
         );
     }
@@ -127,7 +132,52 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'network_aircraft',
             array_merge(
                 $this->getTransformedPilotData('BAW123', false),
-                ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
+                [
+                    'created_at' => '2020-05-30 17:30:00',
+                    'updated_at' => Carbon::now()
+                ]
+            ),
+        );
+    }
+
+    public function testItUpdatesExistingAircraftTransponderChangedAtFromDataFeed()
+    {
+        $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $this->getTransformedPilotData('BAW123', false, 111),
+                [
+                    'created_at' => '2020-05-30 17:30:00',
+                    'updated_at' => Carbon::now(),
+                    'transponder_last_updated_at' => Carbon::now(),
+                ]
+            ),
+        );
+    }
+
+    public function testItDoesntUpdateExistingAircraftTransponderChangedAtFromDataFeedIfSame()
+    {
+        // Update the transponder 15 minutes ago
+        $transponderUpdatedAt = Carbon::now()->subMinutes(15);
+        DB::table('network_aircraft')->where('callsign', 'BAW123')->update(
+            ['transponder_last_updated_at', $transponderUpdatedAt]
+        );
+
+        $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $this->getTransformedPilotData('BAW123', false, 1234),
+                [
+                    'created_at' => '2020-05-30 17:30:00',
+                    'updated_at' => Carbon::now(),
+                    'transponder_last_updated_at' => $transponderUpdatedAt,
+                ]
             ),
         );
     }
@@ -444,7 +494,8 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         string $callsign,
         bool $hasFlightplan,
         float $latitude = null,
-        float $longitude = null
+        float $longitude = null,
+        int $transponder = null
     ): array {
         return [
             'callsign' => $callsign,
@@ -452,7 +503,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'longitude' => $longitude ?? -6.21,
             'altitude' => 35123,
             'groundspeed' => 123,
-            'transponder' => 457,
+            'transponder' => $transponder ?? 457,
             'flight_plan' => $hasFlightplan
                 ? [
                     'aircraft' => 'B738',
@@ -466,9 +517,13 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         ];
     }
 
-    private function getTransformedPilotData(string $callsign, bool $hasFlightplan = true): array
+    private function getTransformedPilotData(
+        string $callsign,
+        bool $hasFlightplan = true,
+        string $transponder = null
+    ): array
     {
-        $pilot = $this->getPilotData($callsign, $hasFlightplan);
+        $pilot = $this->getPilotData($callsign, $hasFlightplan, $transponder);
         $baseData = [
             'callsign' => $pilot['callsign'],
             'latitude' => $pilot['latitude'],
