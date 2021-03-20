@@ -18,7 +18,7 @@ class StandAdminController extends BaseController
 
     private const STAND_NOT_IN_AIRFIELD_ERROR = ['message' => 'Stand not part of airfield.'];
     private const INVALID_TERMINAL_ERROR = ['message' => 'Invalid terminal for airfield.'];
-    private const INVALID_IDENTIFIER_ERROR = ['message' => 'Stand identifier in use for airfield.']; 
+    private const INVALID_IDENTIFIER_ERROR = ['message' => 'Stand identifier in use for airfield.'];
 
     public function __construct(StandAdminService $standAdminService)
     {
@@ -157,7 +157,7 @@ class StandAdminController extends BaseController
      * @return array
      */
     private function formatObjectForStandFromRequest(StandCreateRequest $request, int $airfield_id) : array
-    {        
+    {
         $standDefaultAssignmentPriority = 100;
 
         return [
