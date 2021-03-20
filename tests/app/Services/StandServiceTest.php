@@ -616,7 +616,6 @@ class StandServiceTest extends BaseFunctionalTestCase
                 AirlineTerminalArrivalStandAllocator::class,
                 CargoArrivalStandAllocator::class,
                 DomesticInternationalStandAllocator::class,
-                GeneralUseArrivalStandAllocator::class,
                 FallbackArrivalStandAllocator::class,
             ],
             $this->service->getAllocatorPreference()

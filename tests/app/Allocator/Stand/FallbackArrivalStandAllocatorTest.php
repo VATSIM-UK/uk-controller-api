@@ -33,7 +33,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
         $stand->refresh();
@@ -68,7 +68,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
         $stand->refresh();
@@ -94,7 +94,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
         $stand->refresh();
@@ -118,29 +118,29 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals('AEU252', $assignment->callsign);
     }
 
-    public function testAssignsAllStands()
+    public function testItAssignsStandsInPriorityOrder()
     {
-        // Create a stand that isn't for general allocation
-        $notGeneralUse = Stand::create(
+        // Create a stand that is low priority for allocation
+        $lowPriority = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => '55C',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => false,
+                'assignment_priority' => 100,
             ]
         );
 
         // Create a stand that can only accept an A380 and create the aircraft
-        $generalUse = Stand::create(
+        $highPriority = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => false,
+                'assignment_priority' => 1,
             ]
         );
 
@@ -160,7 +160,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
         $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertContains($assignment->stand_id, [$notGeneralUse->id, $generalUse->id]);
+        $this->assertEquals($assignment->stand_id, $highPriority->id);
         $this->assertEquals('AEU252', $assignment->callsign);
     }
 
@@ -174,9 +174,8 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
                 'type_id' => StandType::cargo()->first()->id,
-                'general_use' => true,
             ]
         );
 
@@ -188,7 +187,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
         $stand->refresh();
@@ -222,7 +221,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
         $stand->refresh();

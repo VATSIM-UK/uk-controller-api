@@ -43,7 +43,8 @@
             "database/migrations"
         ],
         "psr-4": {
-            "App\\": ["app/" ,"tests/app/"]
+            "App\\": ["app/" ,"tests/app/"],
+            "Database\\Factories\\": "database/factories/"
         }
 
     },

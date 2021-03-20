@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
-        $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
+        $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
         $schedule->command('schedule-monitor:sync')
             ->dailyAt('07:01');
@@ -82,5 +82,6 @@ class Kernel extends ConsoleKernel
             ->dailyAt('08:01');
         $schedule->command('srd:update')
             ->hourlyAt([1,2,3,4,5,6,7]);
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 }

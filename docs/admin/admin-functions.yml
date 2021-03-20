@@ -1,0 +1,178 @@
+openapi: '3.0.2'
+info:
+  title: UK Controller Plugin API - Admin Functions 
+  version: '1.0'
+components:
+  schemas:
+    StandType:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    Terminal:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    StandListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        airfield_id:
+          type: integer
+        identifier:
+          type: string
+        latitude:
+          type: integer 
+        longitude:
+          type: integer
+        terminal_id:
+          type: integer
+        wake_category_id:
+          type: integer
+        assignment_priority:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        airlines_count:
+          type: integer
+        'type':
+          $ref: '#/components/schemas/StandType'
+        terminal:
+          $ref: '#/components/schemas/Terminal'
+        wake_category:
+          $ref: '#/components/schemas/WakeCategory'
+    WakeCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        description:
+          type: string
+        relative_weighting:
+          type: integer
+      example:
+        id: 3
+        code: "LM"
+        description: "Lower Medium"
+        relative_weighting: 10
+    Airline:
+      properties:
+        icao_code:
+          type: string
+        name:
+          type: string
+        callsign:
+          type: string
+        is_cargo:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    StandDetailed:
+      allOf:
+        - $ref: '#/components/schemas/StandListItem'
+        - type: object
+          properties:
+            airlines:
+              type: array
+              items: 
+                $ref: '#/components/schemas/Airline'
+    Airfield:
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        transition_altitude:
+          type: integer
+        stands_count:
+          type: integer
+
+paths:
+  /stand-types:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  types:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/StandType'
+  /airfields:
+    get:
+      parameters:
+      - in: query
+        name: all
+        required: false
+        schema:
+          type: boolean
+        description: 'Include airfields without stands'
+      description: 'Get a list of airfields with or without stands. See query parameter.'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  airfields:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Airfield'
+
+
+
+  /airfields/{icao}/stands:
+    get:
+      description: 'Get a list of stands from their airfield'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  stands:
+                    type: array 
+                    items:
+                      $ref: '#/components/schemas/StandListItem'
+  /airfields/{icao}/stands/{stand_id}:
+    get:
+      responses:
+        '200':
+          description: OK
+          content: 
+            'application/json':
+              schema:
+                properties:
+                  stand:
+                    $ref: '#/components/schemas/StandDetailed'
