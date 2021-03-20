@@ -4,6 +4,7 @@ namespace App\Listeners\Hold;
 
 use App\Events\HoldUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
+use App\Listeners\HighPriority;
 use App\Models\Hold\AssignedHold;
 
 class UnassignHoldOnDisconnect
