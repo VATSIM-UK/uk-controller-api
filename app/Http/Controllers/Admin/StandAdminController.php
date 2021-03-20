@@ -110,7 +110,7 @@ class StandAdminController extends BaseController
      * @param StandCreateRequest $request
      * @return JsonResponse
      */
-    public function modifyStand(Airfield $airfield, Stand $stand, StandCreateRequest $request) : JsonResponse
+    public function modifyStand(Airfield $airfield, Stand $stand, StandCreateRequest $request) : JsonResponse //NOSONAR
     {
         if ($stand->airfield_id != $airfield->id) {
             return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
