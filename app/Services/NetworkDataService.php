@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Events\NetworkAircraftDisconnectedEvent;
+use App\Events\NetworkAircraftUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -51,8 +53,38 @@ class NetworkDataService
         }
 
         // Process clients
-        $this->processPilots(new Collection($networkResponse->json('pilots', [])));
+        $concernedPilots = $this->formatPilotData($networkResponse);
+        $this->processPilots($concernedPilots);
         $this->handleTimeouts();
+        $this->triggerUpdatedEvents($concernedPilots);
+    }
+
+    private function triggerUpdatedEvents(Collection $concernedPilots)
+    {
+        NetworkAircraft::whereIn('callsign', $concernedPilots->pluck('callsign'))
+            ->get()
+            ->each(function (NetworkAircraft $aircraft) {
+                event(new NetworkAircraftUpdatedEvent($aircraft));
+            });
+    }
+
+    private function formatPilotData(Response $response): Collection
+    {
+        return $this->mapPilotData($this->filterPilotData(new Collection($response->json('pilots', []))));
+    }
+
+    private function mapPilotData(Collection $pilotData): Collection
+    {
+        $pilotData->filter(function (array $pilot) {
+            return $this->formatPilot($pilot);
+        });
+    }
+
+    private function filterPilotData(Collection $pilotData): Collection
+    {
+        return $pilotData->filter(function (array $pilot) {
+            return $this->shouldProcessPilot($pilot);
+        });
     }
 
     /**
