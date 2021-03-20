@@ -134,6 +134,26 @@ components:
         assignment_priority:
           type: integer
           example: 100
+  responses:
+    StandNotInAirfield:
+      description: Stand not in airfield
+      content:
+        'application/json':
+          schema:
+            properties:
+              message:
+                type: string
+                default: Stand not part of airfield. 
+    DuplicateStandIdentifier:
+      description: Duplicate stand identifier
+      content:
+        'application/json':
+          schema:
+            properties:
+              message:
+                type: string
+                default: Stand identifier in use for airfield.
+
 
 paths:
   /stand-types:
@@ -213,16 +233,9 @@ paths:
                     type: string
                     default: Invalid terminal for airfield.
         '409':
-          description: Duplicate stand identifier
-          content:
-            'application/json':
-              schema:
-                properties:
-                  message:
-                    type: string
-                    default: Stand identifier in use for airfield.
+          $ref: '#/components/responses/DuplicateStandIdentifier'
         '422':
-          description: Validation errors detected
+          description: Validation errors detected        
             
   /airfields/{icao}/stands/{stand_id}:
     get:
@@ -235,3 +248,42 @@ paths:
                 properties:
                   stand:
                     $ref: '#/components/schemas/StandDetailed'
+        '404':
+          $ref: '#/components/responses/StandNotInAirfield'
+    put:
+      description: 'Modify existing stand'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/StandCreation'
+      responses:
+        '204':
+          description: 'No content (successful operation)'
+        '400':
+          description: Invalid terminal
+          content:
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+                    default: Invalid terminal for airfield.
+        '404':
+          description: Stand not in airfield
+          content:
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+                    default: Stand not part of airfield. 
+        '409':
+          $ref: '#/components/responses/DuplicateStandIdentifier'
+    delete:
+      description: Delete stand
+      responses:
+        '204':
+          description: 'No content (successful operation)'
+        '404':
+          $ref: '#/components/responses/StandNotInAirfield'

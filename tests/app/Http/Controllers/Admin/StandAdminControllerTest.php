@@ -312,6 +312,73 @@ class StandAdminControllerTest extends BaseApiTestCase
         ]);
     }
 
+    public function testStandCanBeModified()
+    {
+        $terminal = Terminal::factory()->create(['airfield_id' => $this->airfield->id]);
+        $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id, 'terminal_id' => $terminal->id]);
+        $changedIdentifier = "215L";
+
+        $data = $this->generateStandData(['identifier' => $changedIdentifier, 'terminal_id' => $terminal->id]);
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}", $data);
+
+        $response->assertStatus(204);
+        
+        $this->assertDatabaseHas('stands', [
+            'id' => $stand->id,
+            'identifier' => $changedIdentifier
+        ]);
+    }
+
+    public function testStandCantBeModifiedWhenNotInAirfield()
+    {
+        $stand = Stand::factory()->create();
+
+        $data = $this->generateStandData();
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}", $data);
+
+        $response->assertStatus(404); 
+        $response->assertJson(['message' => 'Stand not part of airfield.']);
+    }
+
+    public function testStandCantBeModifiedToExistingIdentifier()
+    {
+        $identifier = '541C';
+
+        Stand::factory()->create(['airfield_id' => $this->airfield->id, 'identifier' => $identifier]);
+        $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
+
+        $data = $this->generateStandData(['identifier' => $identifier, 'terminal_id' => $stand->terminal_id]);
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}", $data);
+
+
+        $response->assertStatus(409);
+        $response->assertJson(['message' => 'Stand identifier in use for airfield.']);
+    }
+
+    public function testDeletesStand()
+    {
+        $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}");
+
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('stands', [
+            'airfield_id' => $this->airfield->id,
+            'id' => $stand->id
+        ]);
+    }
+
+    public function testDoesntDeleteStandWhenNotPartOfAirfield()
+    {
+        $stand = Stand::factory()->create();
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}");
+
+        $response->assertStatus(404);
+        $response->assertJson(['message' => 'Stand not part of airfield.']);
+    }
+
     private function generateStandData(array $overrides = []) : array
     {
         return array_merge([

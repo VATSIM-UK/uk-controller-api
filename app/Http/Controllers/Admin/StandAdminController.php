@@ -10,10 +10,15 @@ use Illuminate\Http\JsonResponse;
 use App\Services\StandAdminService;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\StandCreateRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class StandAdminController extends BaseController
 {
     private StandAdminService $service;
+
+    private const STAND_NOT_IN_AIRFIELD_ERROR = ['message' => 'Stand not part of airfield.'];
+    private const INVALID_TERMINAL_ERROR = ['message' => 'Invalid terminal for airfield.'];
+    private const INVALID_IDENTIFIER_ERROR = ['message' => 'Stand identifier in use for airfield.']; 
 
     public function __construct(StandAdminService $standAdminService)
     {
@@ -65,7 +70,7 @@ class StandAdminController extends BaseController
     public function getStandDetails(Airfield $airfield, Stand $stand): JsonResponse
     {
         if ($stand->airfield_id != $airfield->id) {
-            return response()->json(['message' => 'Stand not part of airfield.'], 404);
+            return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
         }
 
         $stand->load(['terminal', 'wakeCategory', 'type', 'airlines']);
@@ -84,21 +89,80 @@ class StandAdminController extends BaseController
     {
         $validatorsInUse = $airfield->stands->pluck('identifier');
         if ($validatorsInUse->contains($request->get('identifier'))) {
-            return response()->json(['message' => 'Stand identifier in use for airfield.'], 409);
+            return response()->json(self::INVALID_IDENTIFIER_ERROR, 409);
         }
 
         // form request will validate existence of terminal if specified.
-        if ($terminal = Terminal::find($request->get('terminal_id'))) {
-            if ($terminal->airfield_id != $airfield->id) { // NOSONAR (cant merge the if statements, despite what sonar says!)
-                return response()->json(['message' => 'Invalid terminal for airfield.'], 400);
-            }
+        if (!$this->checkForTerminalValidity($request->get('terminal_id', null), $airfield->id)) {
+            return response()->json(self::INVALID_TERMINAL_ERROR, 400);
         }
 
+        $stand = Stand::create($this->formatObjectForStandFromRequest($request, $airfield->id));
+
+        return response()->json(['stand_id' => $stand->id], 201);
+    }
+
+    /**
+     * Modify a stand which is contained within a given airfield.
+     *
+     * @param Airfield $airfield
+     * @param Stand $stand
+     * @param StandCreateRequest $request
+     * @return JsonResponse
+     */
+    public function modifyStand(Airfield $airfield, Stand $stand, StandCreateRequest $request) : JsonResponse
+    {
+        if ($stand->airfield_id != $airfield->id) {
+            return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
+        }
+
+        $validatorsInUse = $airfield->stands->pluck('identifier');
+        if ($validatorsInUse->contains($request->get('identifier'))) {
+            return response()->json(self::INVALID_IDENTIFIER_ERROR, 409);
+        }
+
+        if (!$this->checkForTerminalValidity($request->get('terminal_id', null), $airfield->id)) {
+            return response()->json(self::INVALID_TERMINAL_ERROR, 400);
+        }
+
+        $stand->update($this->formatObjectForStandFromRequest($request, $airfield->id));
+
+        return response()->json([], 204);
+    }
+
+    /**
+     * Delete a stand which is contained within a given airfield.
+     *
+     * @param Airfield $airfield
+     * @param Stand $stand
+     * @return JsonResponse
+     */
+    public function deleteStand(Airfield $airfield, Stand $stand) : JsonResponse
+    {
+        if ($stand->airfield_id != $airfield->id) {
+            return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
+        }
+
+        $stand->delete();
+
+        return response()->json([], 204);
+    }
+
+    /**
+     * Produce an object ideally used when doing mass assignment from
+     * the validated request.
+     *
+     * @param StandCreateRequest $request
+     * @param integer $airfield_id
+     * @return array
+     */
+    private function formatObjectForStandFromRequest(StandCreateRequest $request, int $airfield_id) : array
+    {        
         $standDefaultAssignmentPriority = 100;
 
-        $stand = Stand::create([
+        return [
             'identifier' => $request->get('identifier'),
-            'airfield_id' => $airfield->id,
+            'airfield_id' => $airfield_id,
             'type_id' => $request->get('type_id'),
             'latitude' => $request->get('latitude'),
             'longitude' => $request->get('longitude'),
@@ -106,8 +170,23 @@ class StandAdminController extends BaseController
             'max_aircraft_id' => $request->get('max_aircraft_id'),
             'terminal_id' => $request->get('terminal_id'),
             'assignment_priority' => $request->get('assignment_priority', $standDefaultAssignmentPriority)
-        ]);
-
-        return response()->json(['stand_id' => $stand->id], 201);
+        ];
+    }
+    
+    /**
+     * Check that a terminal is attached to a given airfield.
+     *
+     * @param integer|null $terminal_id
+     * @param integer $airfield_id
+     * @return boolean
+     */
+    private function checkForTerminalValidity(?int $terminal_id, int $airfield_id): bool
+    {
+        if ($terminal = Terminal::find($terminal_id)) {
+            if ($terminal->airfield_id != $airfield_id) { // NOSONAR (cant merge the if statements, despite what sonar says!)
+                return false;
+            }
+        }
+        return true;
     }
 }
