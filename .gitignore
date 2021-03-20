@@ -4,6 +4,7 @@
 Homestead.json
 Homestead.yaml
 .env
+.env.testing
 node_modules/
 tests/_coverage
 storage/*
