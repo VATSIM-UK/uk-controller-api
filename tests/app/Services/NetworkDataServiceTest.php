@@ -35,6 +35,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 $this->getPilotData('VIR25A', true),
                 $this->getPilotData('BAW123', false),
                 $this->getPilotData('RYR824', true),
+                $this->getPilotData('LOT551', true, 44.372, 26.040),
             ]
         ];
 
@@ -155,6 +156,19 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => 'LON_S_CTR'
             ]
+        );
+    }
+
+    public function testItDoesntUpdateAircraftOutOfRangeFromTheDataFeed()
+    {
+        $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'LOT551',
+            ],
         );
     }
 
@@ -426,12 +440,16 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         NetworkDataService::firstOrCreateNetworkAircraft('AAL123');
     }
 
-    private function getPilotData(string $callsign, bool $hasFlightplan): array
-    {
+    private function getPilotData(
+        string $callsign,
+        bool $hasFlightplan,
+        float $latitude = null,
+        float $longitude = null
+    ): array {
         return [
             'callsign' => $callsign,
-            'latitude' => 54.66,
-            'longitude' => -6.21,
+            'latitude' => $latitude ?? 54.66,
+            'longitude' => $longitude ?? -6.21,
             'altitude' => 35123,
             'groundspeed' => 123,
             'transponder' => 457,

@@ -235,6 +235,7 @@ class StandTest extends BaseFunctionalTestCase
         Stand::find(3)->update(['wake_category_id' => 5]);
 
         $stands = Stand::appropriateWakeCategory($a330)->get()->pluck('id')->toArray();
+        sort($stands);
 
         $this->assertEquals([1, 3], $stands);
     }
@@ -294,5 +295,25 @@ class StandTest extends BaseFunctionalTestCase
 
         $stands = Stand::notReserved()->get()->pluck('id')->toArray();
         $this->assertEquals([1, 3, $extraStand->id], $stands);
+    }
+
+    public function testOrderByAssignmentPriorityOrdersAscending()
+    {
+        Stand::where('id', 1)->update(['assignment_priority' => 2]);
+        Stand::where('id', 2)->update(['assignment_priority' => 3]);
+        Stand::where('id', 3)->update(['assignment_priority' => 1]);
+
+        $stands = Stand::orderByAssignmentPriority()->get()->pluck('id')->toArray();
+        $this->assertEquals([3, 1, 2], $stands);
+    }
+
+    public function testOrderByAssignmentPriorityOrdersDescending()
+    {
+        Stand::where('id', 1)->update(['assignment_priority' => 2]);
+        Stand::where('id', 2)->update(['assignment_priority' => 3]);
+        Stand::where('id', 3)->update(['assignment_priority' => 1]);
+
+        $stands = Stand::orderByAssignmentPriority('desc')->get()->pluck('id')->toArray();
+        $this->assertEquals([2, 1, 3], $stands);
     }
 }

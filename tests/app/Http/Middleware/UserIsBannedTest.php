@@ -23,7 +23,7 @@ class UserIsBannedTest extends BaseApiTestCase
 
         $this->json(
             'GET',
-            '/',
+            '/authorise',
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
@@ -40,7 +40,7 @@ class UserIsBannedTest extends BaseApiTestCase
         $token = $this->activeUser()->createToken('access', [AuthServiceProvider::SCOPE_USER])->accessToken;
         $this->json(
             'GET',
-            '/',
+            '/authorise',
             [],
             ['Authorization' => 'Bearer ' . $token]
         )
@@ -49,6 +49,6 @@ class UserIsBannedTest extends BaseApiTestCase
                     'message' => 'Nothing here but us teapots...',
                 ]
             )
-            ->assertStatus(418);
+            ->assertStatus(200);
     }
 }

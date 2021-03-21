@@ -11,6 +11,7 @@ class LogAdminActionTest extends BaseApiTestCase
 
     protected static $tokenScope = [
         AuthServiceProvider::SCOPE_VERSION_ADMIN,
+        AuthServiceProvider::SCOPE_USER,
     ];
 
     public function testItConstructs()

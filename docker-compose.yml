@@ -32,10 +32,30 @@ services:
       - "3306:3306"
     volumes:
       - mysqldata:/var/lib/mysql
+      - ./.docker/mysql/etc/mysql/my.cnf:/etc/mysql/conf.d/config-file.cnf
     environment:
       MYSQL_DATABASE: uk_plugin
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+    networks:
+      - ukcp-network
+
+  # Database for test suite
+  mysql-test:
+    image: mysql:8.0
+    container_name: mysql-test
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3360:3360"
+    volumes:
+      - mysqltestdata:/var/lib/mysql
+      - ./.docker/mysql/etc/mysql/my.cnf:/etc/mysql/conf.d/config-file.cnf
+    environment:
+      MYSQL_DATABASE: uk_plugin
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+      MYSQL_TCP_PORT: 3360
     networks:
       - ukcp-network
 
@@ -60,4 +80,6 @@ networks:
 #Volumes
 volumes:
   mysqldata:
+    driver: local
+  mysqltestdata:
     driver: local

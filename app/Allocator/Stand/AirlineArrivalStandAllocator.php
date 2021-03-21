@@ -4,7 +4,7 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
@@ -15,19 +15,11 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
         $this->airlineService = $airlineService;
     }
 
-    protected function getPossibleStands(NetworkAircraft $aircraft): Collection
+    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
     {
         $airline = $this->airlineService->getAirlineForAircraft($aircraft);
-        if ($airline === null) {
-            return new Collection();
-	}
-
-
-        $query = $this->getArrivalAirfieldStandQuery($aircraft)
-            ->airline($airline)
-            ->orderByRaw('airline_stand.destination IS NULL DESC')
-            ->inRandomOrder()
-	    ->get();
-	dd($query->toSql(), $query->getBindings());
+        return $airline === null
+            ? null
+            : $stands->airline($airline)->orderByRaw('airline_stand.destination IS NULL DESC');
     }
 }

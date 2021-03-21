@@ -8,8 +8,8 @@ use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
 use App\Listeners\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\ReserveInFirProximity;
+use App\Models\FlightInformationRegion\FlightInformationRegion;
 use App\Models\Squawk\SquawkReservationMeasurementPoint;
-use App\Services\SectorfileService;
 use App\Services\SquawkService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application;
@@ -39,14 +39,24 @@ class SquawkServiceProvider extends ServiceProvider
         $this->app->singleton(ReserveInFirProximity::class, function (Application $app) {
             return new ReserveInFirProximity(
                 $app->make(SquawkService::class),
-                SquawkReservationMeasurementPoint::get()->pluck('latLong')->toArray()
+                FlightInformationRegion::with('proximityMeasuringPoints')
+                    ->get()
+                    ->pluck('proximityMeasuringPoints')
+                    ->flatten()
+                    ->pluck('latLong')
+                    ->toArray()
             );
         });
 
         $this->app->singleton(ReclaimIfLeftFirProximity::class, function (Application $app) {
             return new ReclaimIfLeftFirProximity(
                 $app->make(SquawkService::class),
-                SquawkReservationMeasurementPoint::get()->pluck('latLong')->toArray()
+                FlightInformationRegion::with('proximityMeasuringPoints')
+                    ->get()
+                    ->pluck('proximityMeasuringPoints')
+                    ->flatten()
+                    ->pluck('latLong')
+                    ->toArray()
             );
         });
 

@@ -1,0 +1,37 @@
+{
+  "name": "uk-controller-api",
+  "version": "3.5.0",
+  "description": "Central API for the UK Controller Plugin",
+  "main": "tailwind.config.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.2.1",
+    "laravel-mix": "^6.0.6",
+    "lodash": "^4.17.19",
+    "postcss": "^8.1.14",
+    "postcss-import": "^14.0.0",
+    "tailwindcss": "^2.0.3"
+  },
+  "scripts": {
+    "dev": "yarn run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "yarn run production",
+    "production": "mix --production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VATSIM-UK/uk-controller-api.git"
+  },
+  "author": "VATSIM United Kingdom Division",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/VATSIM-UK/uk-controller-api/issues"
+  },
+  "homepage": "https://github.com/VATSIM-UK/uk-controller-api#readme"
+}

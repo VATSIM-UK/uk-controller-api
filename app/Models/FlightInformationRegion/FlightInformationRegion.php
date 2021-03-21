@@ -15,4 +15,9 @@ class FlightInformationRegion extends Model
     {
         return $this->hasMany(FlightInformationRegionBoundary::class);
     }
+
+    public function proximityMeasuringPoints(): HasMany
+    {
+        return $this->hasMany(FirProximityMeasuringPoint::class);
+    }
 }

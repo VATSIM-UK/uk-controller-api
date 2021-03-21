@@ -6,18 +6,6 @@ use App\Http\Middleware\MiddlewareKeys;
 
 // Routes that the plugin user will use
 Route::middleware('plugin.user')->group(function () {
-
-    // Default routes, just used to check if the API is available and the user is authenticated
-    Route::get(
-        '/',
-        [
-            'middleware' => [
-                'user.lastlogin',
-            ],
-            'uses' => 'TeapotController@teapot',
-        ]
-    );
-
     Route::get(
         '/authorise',
         [
@@ -66,13 +54,24 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('notifications/unread', 'NotificationController@getUnreadNotifications');
     Route::put('notifications/read/{id}', 'NotificationController@readNotification')
         ->where('id', '[0-9]+');
+
+    // Version checking
+    Route::get(
+        'version/{version}/status',
+        [
+            'middleware' => [
+                'user.version',
+            ],
+            'uses' => 'VersionController@getVersionStatus',
+        ]
+    )->where('version', '[A-Za-z0-9\.\-]+');
 });
 
 // Routes for user administration
 Route::middleware('admin.user')->group(function () {
 
     // A test route for useradmin access
-    Route::get('useradmin', 'TeapotController@teapot');
+    Route::get('useradmin', 'TeapotController@normalTeapots');
 
     // Get user
     Route::get(
@@ -140,7 +139,7 @@ Route::middleware('admin.user')->group(function () {
 // Routes for user administration
 Route::middleware('admin.version')->group(function () {
     // A test route for useradmin access
-    Route::get('versionadmin', 'TeapotController@teapot');
+    Route::get('versionadmin', 'TeapotController@normalTeapots');
 
     // Routes for returning information about versions
     Route::get('version', 'VersionController@getAllVersions');
@@ -168,12 +167,31 @@ Route::middleware('admin.dependency')->group(function () {
         );
 });
 
+// Routes for data management.
+Route::middleware('admin.data')->group(function () {
+    Route::get('dataadmin', 'TeapotController@normalTeapots');
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/airfields', 'Admin\\StandAdminController@getAirfields');
+        Route::post('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@createNewStand');
+        Route::get('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@getStandsForAirfield');
+        Route::get('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@getStandDetails');
+        Route::put('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@modifyStand');
+        Route::delete('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@deleteStand');
+
+        Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
+    });
+});
+
 Route::middleware('admin.github')->group(function () {
     Route::post('github', 'GithubController@processGithubWebhook');
 });
 
 // Routes that can be hit by anybody at all, mostly login and informational routes
 Route::middleware('public')->group(function () {
+    Route::get('/', function () {
+        return response()->json(['message' => 'Welcome to the UK Controller Plugin API']);
+    });
 
     // Aircraft
     Route::get('aircraft', 'AircraftController@getAllAircraft');
@@ -187,17 +205,6 @@ Route::middleware('public')->group(function () {
         ->where('id', '[0-9]+');
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
     Route::get('handoffs', 'SidController@getSidHandoffsDependency');
-
-    // Version checking
-    Route::get(
-        'version/{version}/status',
-        [
-            'middleware' => [
-                'user.version',
-            ],
-            'uses' => 'VersionController@getVersionStatus',
-        ]
-    )->where('version', '[A-Za-z0-9\.\-]+');
 
     // Controller positions
     Route::get('controller', 'ControllerPositionController@getAllControllers');

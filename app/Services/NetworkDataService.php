@@ -8,13 +8,27 @@ use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Location\Coordinate;
+use Location\Distance\Haversine;
 
 class NetworkDataService
 {
     const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
+    const MAX_PROCESSING_DISTANCE = 700;
+
+    /**
+     * @var Coordinate[]
+     */
+    private Collection $measuringPoints;
+
+    public function __construct(Collection $measuringPoints)
+    {
+        $this->measuringPoints = $measuringPoints;
+    }
 
     public function updateNetworkData(): void
     {
@@ -45,6 +59,10 @@ class NetworkDataService
     private function processPilots(array $pilots): void
     {
         foreach ($pilots as $pilot) {
+            if (!$this->shouldProcessPilot($pilot)) {
+                continue;
+            }
+
             event(
                 new NetworkAircraftUpdatedEvent(
                     self::createOrUpdateNetworkAircraft(
@@ -54,6 +72,15 @@ class NetworkDataService
                 )
             );
         }
+    }
+
+    private function shouldProcessPilot(array $pilot): bool
+    {
+        return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
+            return LocationService::metersToNauticalMiles(
+                $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
+            ) < self::MAX_PROCESSING_DISTANCE;
+        });
     }
 
     /**

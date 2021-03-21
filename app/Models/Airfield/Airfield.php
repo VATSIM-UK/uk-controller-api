@@ -6,6 +6,8 @@ use App\Helpers\MinStack\MinStackDataProviderInterface;
 use App\Models\Aircraft\SpeedGroup;
 use App\Models\Controller\ControllerPosition;
 use App\Models\MinStack\MslAirfield;
+use App\Models\Stand\Stand;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,6 +16,8 @@ use Location\Coordinate;
 
 class Airfield extends Model implements MinStackDataProviderInterface
 {
+    use HasFactory;
+
     public $timestamps = true;
 
     protected $table = 'airfield';
@@ -112,6 +116,15 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'origin_airfield_id',
             'destination_airfield_id'
         )->withPivot('prenote_id', 'flight_rule_id');
+    }
+
+
+    public function stands() : HasMany
+    {
+        return $this->hasMany(
+            Stand::class,
+            'airfield_id',
+        );
     }
 
     public function getCoordinateAttribute(): Coordinate

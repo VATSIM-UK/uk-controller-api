@@ -198,7 +198,7 @@ return [
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
      */
-    'max_request_size_in_kb' => 250,
+    'max_request_size_in_kb' => 500,
 
     /*
      * Define the optional SSL context for your WebSocket connections.
@@ -209,7 +209,7 @@ return [
         'capath' => env('LARAVEL_WEBSOCKETS_SSL_CA', null),
         'local_pk' => env('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', null),
         'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
-        'verify_peer' => env('APP_ENV') === 'production',
+        'verify_peer' => env('WEBSOCKETS_VERIFY_PEER', false),
         'allow_self_signed' => env('APP_ENV') !== 'production',
     ],
 

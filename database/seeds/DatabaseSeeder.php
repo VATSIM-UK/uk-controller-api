@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         ],
         HoldTableSeeder::class => [
             'holds',
+            'deemed_separated_holds',
         ],
         HoldRestrictionTableSeeder::class => [
             'hold_restrictions',

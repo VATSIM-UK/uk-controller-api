@@ -39,6 +39,6 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
     {
         Artisan::call(self::ARTISAN_COMMAND);
         $token = explode(PHP_EOL, Artisan::output())[1];
-        $this->get('/useradmin', ['Authorization' => 'Bearer ' . $token])->assertStatus(418);
+        $this->get('/useradmin', ['Authorization' => 'Bearer ' . $token])->assertStatus(200);
     }
 }

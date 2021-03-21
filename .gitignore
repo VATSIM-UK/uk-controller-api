@@ -4,6 +4,7 @@
 Homestead.json
 Homestead.yaml
 .env
+.env.testing
 node_modules/
 tests/_coverage
 storage/*
@@ -11,3 +12,8 @@ storage/*
 public/storage
 bootstrap/cache/
 .phpunit.result.cache
+/public/js
+/public/css
+/public/build
+/public/vendor
+/public/mix-manifest.json
