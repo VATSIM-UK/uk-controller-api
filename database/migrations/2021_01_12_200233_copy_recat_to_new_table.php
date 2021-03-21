@@ -29,7 +29,8 @@ class CopyRecatToNewTable extends Migration
                 [
                     'wake_category_scheme_id' => $recatScheme,
                     'relative_weighting' => $key + 1,
-                ]);
+                ]
+            );
         }
 
         DB::table('wake_categories')

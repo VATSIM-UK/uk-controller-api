@@ -15,7 +15,6 @@ class AddWakeCategorySchemeIdToAirfield extends Migration
      */
     public function up()
     {
-
         Schema::table('airfield', function (Blueprint $table) {
             $ukSchemeId = DB::table('wake_category_schemes')
                 ->where('key', 'UK')

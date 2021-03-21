@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class AddSpeedGroupData extends Migration
 {
-
     const SPEED_GROUPS = [
         'EGKK' => [
             '1' => [

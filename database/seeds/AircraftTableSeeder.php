@@ -8,7 +8,6 @@ class AircraftTableSeeder extends Seeder
 {
     public function run()
     {
-
         $b738 = Aircraft::create(
             [
                 'code' => 'B738',

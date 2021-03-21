@@ -141,7 +141,7 @@ class DepartureService
                     'expires_at' => $expiresAt
                 ]
             ),
-            function (DepartureRestriction $interval) use ($airfield, $sids){
+            function (DepartureRestriction $interval) use ($airfield, $sids) {
                 $this->addSidToDepartureRestriction($interval, $airfield, $sids);
                 $this->triggerRestrictionUpdatedEvent($interval);
             }
