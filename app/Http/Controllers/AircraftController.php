@@ -42,7 +42,7 @@ class AircraftController extends BaseController
                 );
             }
         )->get()->mapWithKeys(
-            function (Aircraft $aircraft) use (&$categories, $schemeName) {
+            function (Aircraft $aircraft) use ($schemeName) {
                 return [
                     $aircraft->code => $aircraft->wakeCategories()->whereHas(
                         'scheme',

@@ -28,7 +28,7 @@ class DepartureRestriction extends Model
             'interval' => $this->interval,
             'type' => $this->type->key,
             'expires_at' => $this->expires_at->toDateTimeString(),
-            'sids' => $this->sids->mapToGroups(function (Sid $sid, $key) {
+            'sids' => $this->sids->mapToGroups(function (Sid $sid) {
                 return [$sid->airfield->code => $sid->identifier];
             })->toArray(),
         ];
