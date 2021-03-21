@@ -20,11 +20,13 @@ class WakeCategorySchemeTest extends BaseFunctionalTestCase
                 [
                     'id' => 3,
                     'code' => 'LM',
+                    'description' => 'Lower Medium',
                     'subsequent_departure_intervals' => [],
                 ],
                 [
                     'id' => 5,
                     'code' => 'H',
+                    'description' => 'Heavy',
                     'subsequent_departure_intervals' => [
                         [
                             'id' => 3,
