@@ -55,8 +55,8 @@ class NetworkDataService
         // Process clients
         $concernedPilots = $this->formatPilotData($networkResponse);
         $this->processPilots($concernedPilots);
-        $this->handleTimeouts();
         $this->triggerUpdatedEvents($concernedPilots);
+        $this->handleTimeouts();
     }
 
     private function triggerUpdatedEvents(Collection $concernedPilots)
@@ -75,7 +75,7 @@ class NetworkDataService
 
     private function mapPilotData(Collection $pilotData): Collection
     {
-        $pilotData->filter(function (array $pilot) {
+        return $pilotData->filter(function (array $pilot) {
             return $this->formatPilot($pilot);
         });
     }
@@ -161,12 +161,7 @@ class NetworkDataService
     }
 
     /**
-     * If any aircraft has passed the timeout window, remove it from the list.
-     *
-     * NOTE: Events should always fire before final deletion because the listeners
-     * will use the aircraft data to mark things such as squawk assignments as deleted
-     * and send further events. As a last resort calling delete here will delete any
-     * foreign key references left over.
+     * If any aircraft has passed the timeout window, trigger the timeout event to have it removed.
      */
     private function handleTimeouts(): void
     {
@@ -177,7 +172,6 @@ class NetworkDataService
                     $aircraft->getConnection()->transaction(
                         function () use ($aircraft) {
                             event(new NetworkAircraftDisconnectedEvent($aircraft));
-                            $aircraft->delete();
                         }
                     );
                 }
