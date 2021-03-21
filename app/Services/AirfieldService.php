@@ -43,8 +43,13 @@ class AirfieldService
                 'id' => $speedGroup->id,
                 'aircraft_types' => $speedGroup->aircraft->pluck('code')->toArray(),
                 'engine_types' => $speedGroup->engineTypes->pluck('euroscope_type')->toArray(),
-                'next_group_penalty' => $speedGroup->relatedGroups->mapWithKeys(function (SpeedGroup $related) {
-                    return [$related->id => $related->pivot->penalty];
+                'related_groups' => $speedGroup->relatedGroups->mapWithKeys(function (SpeedGroup $related) {
+                    return [
+                        $related->id => [
+                            'following_interval_penalty' => $related->pivot->penalty,
+                            'set_following_interval_to' => $related->pivot->set_interval_to,
+                        ],
+                    ];
                 })->toArray(),
             ];
         }

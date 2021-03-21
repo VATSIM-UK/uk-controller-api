@@ -463,6 +463,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
 
         $speedGroup2->engineTypes()->sync([1]);
         $speedGroup2->relatedGroups()->sync([$speedGroup->id => ['penalty' => 120]]);
+        $speedGroup->relatedGroups()->sync([$speedGroup2->id => ['set_interval_to' => 1]]);
 
         $expected = [
             [
@@ -478,7 +479,12 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                         'engine_types' => [
                             'P'
                         ],
-                        'next_group_penalty' => [],
+                        'related_groups' => [
+                            $speedGroup->id => [
+                                'following_interval_penalty' => null,
+                                'set_following_interval_to' => 1,
+                            ],
+                        ],
                     ],
                     [
                         'id' => $speedGroup2->id,
@@ -486,8 +492,11 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                             'J'
                         ],
                         'aircraft_types' => [],
-                        'next_group_penalty' => [
-                            $speedGroup->id => 120,
+                        'related_groups' => [
+                            $speedGroup2->id => [
+                                'following_interval_penalty' => 120,
+                                'set_following_interval_to' => null,
+                            ],
                         ],
                     ],
                 ],
