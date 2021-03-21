@@ -9,7 +9,9 @@ use App\Jobs\Network\DeleteNetworkAircraft;
 use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Jobs\Stand\TriggerUnassignmentOnDisconnect;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Foundation\Bus\PendingChain;
 use Illuminate\Support\Facades\Bus;
+use Mockery;
 
 class AircraftDisconnectedTest extends BaseFunctionalTestCase
 {
@@ -25,20 +27,19 @@ class AircraftDisconnectedTest extends BaseFunctionalTestCase
 
     public function testItQueuesUpJobs()
     {
+        $pendingChain = Mockery::mock(PendingChain::class);
         Bus::shouldReceive('chain')->with(
             [
-                [
-                    new TriggerUnassignmentOnDisconnect($this->aircraft),
-                    new UnassignHoldOnDisconnect($this->aircraft),
-                    new MarkAssignmentDeletedOnDisconnect($this->aircraft),
-                    new DeleteNetworkAircraft($this->aircraft),
-                ]
-            ]
+                new TriggerUnassignmentOnDisconnect($this->aircraft),
+                new UnassignHoldOnDisconnect($this->aircraft),
+                new MarkAssignmentDeletedOnDisconnect($this->aircraft),
+                new DeleteNetworkAircraft($this->aircraft),
+            ],
         )
             ->once()
-            ->andReturnSelf();
+            ->andReturn($pendingChain);
 
-        Bus::shouldReceive('dispatch')->once();
+        $pendingChain->shouldReceive('dispatch')->once();
         $this->handler->handle(new NetworkAircraftDisconnectedEvent($this->aircraft));
     }
 }

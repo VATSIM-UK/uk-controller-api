@@ -75,7 +75,7 @@ class NetworkDataService
 
     private function mapPilotData(Collection $pilotData): Collection
     {
-        return $pilotData->filter(function (array $pilot) {
+        return $pilotData->map(function (array $pilot) {
             return $this->formatPilot($pilot);
         });
     }
@@ -92,19 +92,8 @@ class NetworkDataService
      */
     private function processPilots(Collection $pilots): void
     {
-        $filteredPilots = $pilots->filter(
-            function (array $pilot) {
-                return $this->shouldProcessPilot($pilot);
-            }
-        )
-            ->map(
-                function (array $pilot) {
-                    return $this->formatPilot($pilot);
-                }
-            );
-
         NetworkAircraft::upsert(
-            $filteredPilots->toArray(),
+            $pilots->toArray(),
             ['callsign']
         );
     }
@@ -129,7 +118,7 @@ class NetworkDataService
             'longitude' => $pilot['longitude'],
             'altitude' => $pilot['altitude'],
             'groundspeed' => $pilot['groundspeed'],
-            'transponder' => Str::padLeft($pilot['transponder'], '0', 4),
+            'transponder' => $pilot['transponder'],
             'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
             'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
             'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),
