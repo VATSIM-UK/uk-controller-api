@@ -11,6 +11,7 @@ class WakeCategoryTest extends BaseFunctionalTestCase
         $expected = [
             'id' => 3,
             'code' => 'LM',
+            'description' => 'Lower Medium',
             'subsequent_departure_intervals' => [
                 [
                     'id' => 1,

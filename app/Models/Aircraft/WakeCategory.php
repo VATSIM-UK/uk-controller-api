@@ -31,6 +31,7 @@ class WakeCategory extends Model
         return [
             'id' => $this->id,
             'code' => $this->code,
+            'description' => $this->description,
             'subsequent_departure_intervals' => $this->departureIntervals->sortBy('relative_weighting')->map(
                 function (WakeCategory $subsequent) {
                     return [
@@ -60,6 +61,6 @@ class WakeCategory extends Model
 
     public function scheme(): BelongsTo
     {
-        return $this->belongsTo(WakeCategoryScheme::class);
+        return $this->belongsTo(WakeCategoryScheme::class, 'wake_category_scheme_id');
     }
 }

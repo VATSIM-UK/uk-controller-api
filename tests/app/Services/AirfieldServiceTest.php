@@ -7,6 +7,7 @@ use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
 class AirfieldServiceTest extends BaseFunctionalTestCase
@@ -444,6 +445,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsAirfieldDependency()
     {
+        DB::table('speed_groups')->delete();
         Airfield::find(2)->update(['wake_category_scheme_id' => 2]);
         $speedGroup = SpeedGroup::create(
             [
@@ -480,7 +482,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                             'P'
                         ],
                         'related_groups' => [
-                            $speedGroup->id => [
+                            $speedGroup2->id => [
                                 'following_interval_penalty' => null,
                                 'set_following_interval_to' => 1,
                             ],
@@ -493,7 +495,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                         ],
                         'aircraft_types' => [],
                         'related_groups' => [
-                            $speedGroup2->id => [
+                            $speedGroup->id => [
                                 'following_interval_penalty' => 120,
                                 'set_following_interval_to' => null,
                             ],

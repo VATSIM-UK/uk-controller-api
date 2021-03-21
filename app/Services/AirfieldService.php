@@ -26,7 +26,7 @@ class AirfieldService
                     return [
                         'id' => $airfield->id,
                         'identifier' => $airfield->code,
-                        'wake_scheme' => $airfield->wake_scheme_id,
+                        'wake_scheme' => $airfield->wake_category_scheme_id,
                         'departure_speed_groups' => $this->getSpeedGroupsForAirfield($airfield),
                         'top_down_order' => $airfield->controllers()->orderBy('order')->pluck('callsign')->toArray(),
                     ];
