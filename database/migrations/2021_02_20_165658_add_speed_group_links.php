@@ -144,9 +144,6 @@ class AddSpeedGroupLinks extends Migration
         'EGCC_GROUP_3' => [
             'EGCC_GROUP_4' => 3,
         ],
-        'EGCC_GROUP_4' => [
-            'EGCC_GROUP_2' => -1,
-        ],
         'EGGP_GROUP_0' => [
             'EGGP_GROUP_0' => 1,
             'EGGP_GROUP_1' => 2,
@@ -160,19 +157,11 @@ class AddSpeedGroupLinks extends Migration
             'EGGP_GROUP_4' => 3,
         ],
         'EGGP_GROUP_2' => [
-            'EGGP_GROUP_0' => -1,
             'EGGP_GROUP_3' => 1,
             'EGGP_GROUP_4' => 2,
         ],
         'EGGP_GROUP_3' => [
-            'EGGP_GROUP_0' => -1,
-            'EGGP_GROUP_1' => -1,
             'EGGP_GROUP_4' => 1,
-        ],
-        'EGGP_GROUP_4' => [
-            'EGGP_GROUP_0' => -1,
-            'EGGP_GROUP_1' => -1,
-            'EGGP_GROUP_2' => -1,
         ],
     ];
 

@@ -479,6 +479,7 @@ class AddSpeedGroupData extends Migration
                 ],
             ],
         ],
+
     ];
 
     /**
