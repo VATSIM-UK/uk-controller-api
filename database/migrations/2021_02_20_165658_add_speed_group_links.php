@@ -163,6 +163,106 @@ class AddSpeedGroupLinks extends Migration
         'EGGP_GROUP_3' => [
             'EGGP_GROUP_4' => 1,
         ],
+        'EGGD_GROUP_1' => [
+            'EGGD_GROUP_1' => 2,
+            'EGGD_GROUP_2' => 3,
+            'EGGD_GROUP_3' => 4,
+            'EGGD_GROUP_4' => 5,
+        ],
+        'EGGD_GROUP_2' => [
+            'EGGD_GROUP_3' => 1,
+            'EGGD_GROUP_4' => 2,
+        ],
+        'EGGD_GROUP_3' => [
+            'EGGD_GROUP_4' => 1,
+        ],
+        'EGFF_GROUP_1' => [
+            'EGFF_GROUP_2' => 1,
+            'EGFF_GROUP_3' => 2,
+            'EGFF_GROUP_4' => 2,
+            'EGFF_GROUP_5' => 2,
+            'EGFF_GROUP_6' => 2,
+        ],
+        'EGFF_GROUP_2' => [
+            'EGFF_GROUP_3' => 1,
+            'EGFF_GROUP_4' => 2,
+            'EGFF_GROUP_5' => 2,
+            'EGFF_GROUP_6' => 2,
+        ],
+        'EGFF_GROUP_3' => [
+            'EGFF_GROUP_1' => -1,
+            'EGFF_GROUP_4' => 1,
+            'EGFF_GROUP_5' => 2,
+            'EGFF_GROUP_6' => 2,
+        ],
+        'EGFF_GROUP_4' => [
+            'EGFF_GROUP_1' => -1,
+            'EGFF_GROUP_2' => -1,
+            'EGFF_GROUP_5' => 1,
+            'EGFF_GROUP_6' => 2,
+        ],
+        'EGFF_GROUP_5' => [
+            'EGFF_GROUP_1' => -1,
+            'EGFF_GROUP_2' => -1,
+            'EGFF_GROUP_3' => -1,
+            'EGFF_GROUP_6' => 1,
+        ],
+        'EGPH_GROUP_1' => [
+            'EGPH_GROUP_2' => 1,
+            'EGPH_GROUP_3' => 2,
+            'EGPH_GROUP_4' => 3,
+            'EGPH_GROUP_5' => 4,
+            'EGPH_GROUP_6' => 5,
+        ],
+        'EGPH_GROUP_2' => [
+            'EGPH_GROUP_3' => 1,
+            'EGPH_GROUP_4' => 2,
+            'EGPH_GROUP_5' => 3,
+            'EGPH_GROUP_6' => 4,
+        ],
+        'EGPH_GROUP_3' => [
+            'EGPH_GROUP_1' => -1,
+            'EGPH_GROUP_4' => 1,
+            'EGPH_GROUP_5' => 2,
+            'EGPH_GROUP_6' => 3,
+        ],
+        'EGPH_GROUP_4' => [
+            'EGPH_GROUP_1' => -1,
+            'EGPH_GROUP_2' => -1,
+            'EGPH_GROUP_5' => 2,
+            'EGPH_GROUP_6' => 3,
+        ],
+        'EGPH_GROUP_5' => [
+            'EGPH_GROUP_1' => -1,
+            'EGPH_GROUP_2' => -1,
+            'EGPH_GROUP_3' => -1,
+            'EGPH_GROUP_6' => 3,
+        ],
+        'EGPH_GROUP_6' => [
+            'EGPH_GROUP_1' => -1,
+            'EGPH_GROUP_2' => -1,
+            'EGPH_GROUP_3' => -1,
+            'EGPH_GROUP_4' => -1,
+        ],
+        'EGPF_GROUP_0' => [
+            'EGPF_GROUP_0' => 1,
+            'EGPF_GROUP_1' => 2,
+            'EGPF_GROUP_2' => 3,
+            'EGPF_GROUP_3' => 4,
+            'EGPF_GROUP_4' => 5,
+        ],
+        'EGPF_GROUP_1' => [
+            'EGPF_GROUP_2' => 1,
+            'EGPF_GROUP_3' => 2,
+            'EGPF_GROUP_4' => 3,
+        ],
+        'EGPF_GROUP_2' => [
+            'EGPF_GROUP_3' => 1,
+            'EGPF_GROUP_4' => 2,
+        ],
+        'EGPF_GROUP_3' => [
+            'EGPF_GROUP_4' => 1,
+        ],
     ];
 
     /**
@@ -204,6 +304,25 @@ class AddSpeedGroupLinks extends Migration
             'EGCC_GROUP_0' => 1,
             'EGCC_GROUP_1' => 1,
             'EGCC_GROUP_2' => 1,
+        ],
+        'EGGD_GROUP_4' => [
+            'EGGD_GROUP_2' => 1,
+            'EGGD_GROUP_1' => 1,
+        ],
+        'EGGD_GROUP_3' => [
+            'EGGD_GROUP_1' => 1,
+        ],
+        'EGPF_GROUP_2' => [
+            'EGPF_GROUP_0' => 1,
+        ],
+        'EGPF_GROUP_3' => [
+            'EGPF_GROUP_0' => 1,
+            'EGPF_GROUP_1' => 1,
+        ],
+        'EGPF_GROUP_4' => [
+            'EGPF_GROUP_0' => 1,
+            'EGPF_GROUP_1' => 1,
+            'EGPF_GROUP_2' => 1,
         ],
     ];
 
