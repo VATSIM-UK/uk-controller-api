@@ -9,7 +9,7 @@ use App\Models\Airfield\Terminal;
 use Illuminate\Http\JsonResponse;
 use App\Services\StandAdminService;
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\StandCreateRequest;
+use App\Http\Requests\StandRequest;
 
 class StandAdminController extends BaseController
 {
@@ -81,10 +81,10 @@ class StandAdminController extends BaseController
      * Create a new stand from a validated request.
      *
      * @param Airfield $airfield
-     * @param StandCreateRequest $request
+     * @param StandRequest $request
      * @return JsonResponse
      */
-    public function createNewStand(Airfield $airfield, StandCreateRequest $request): JsonResponse
+    public function createNewStand(Airfield $airfield, StandRequest $request): JsonResponse
     {
         $validatorsInUse = $airfield->stands->pluck('identifier');
         if ($validatorsInUse->contains($request->get('identifier'))) {
@@ -106,17 +106,19 @@ class StandAdminController extends BaseController
      *
      * @param Airfield $airfield
      * @param Stand $stand
-     * @param StandCreateRequest $request
+     * @param StandRequest $request
      * @return JsonResponse
      */
-    public function modifyStand(Airfield $airfield, Stand $stand, StandCreateRequest $request) : JsonResponse //NOSONAR
+    public function modifyStand(Airfield $airfield, Stand $stand, StandRequest $request) : JsonResponse //NOSONAR
     {
         if ($stand->airfield_id != $airfield->id) {
             return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
         }
 
         $validatorsInUse = $airfield->stands->pluck('identifier');
-        if ($validatorsInUse->contains($request->get('identifier'))) {
+        // we don't need to check the identifier if it is the same.
+        $identifierUnchanged = $stand->identifier == $request->get('identifier');
+        if ($validatorsInUse->contains($request->get('identifier')) && !$identifierUnchanged) {
             return response()->json(self::INVALID_IDENTIFIER_ERROR, 409);
         }
 
@@ -151,11 +153,11 @@ class StandAdminController extends BaseController
      * Produce an object ideally used when doing mass assignment from
      * the validated request.
      *
-     * @param StandCreateRequest $request
+     * @param StandRequest $request
      * @param integer $airfield_id
      * @return array
      */
-    private function formatObjectForStandFromRequest(StandCreateRequest $request, int $airfield_id) : array
+    private function formatObjectForStandFromRequest(StandRequest $request, int $airfield_id) : array
     {
         $standDefaultAssignmentPriority = 100;
 

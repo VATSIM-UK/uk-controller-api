@@ -355,6 +355,16 @@ class StandAdminControllerTest extends BaseApiTestCase
         $response->assertJson(['message' => 'Stand identifier in use for airfield.']);
     }
 
+    public function testStandCanBeSavedWhenIdentifierDoesntChange()
+    {
+        $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
+
+        $data = $this->generateStandData(['identifier' => $stand->identifier, 'terminal_id' => $stand->terminal_id]);
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}", $data);
+
+        $response->assertStatus(204);
+    }
+
     public function testDeletesStand()
     {
         $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
