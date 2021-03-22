@@ -55,7 +55,6 @@ class Kernel extends ConsoleKernel
         AllocateStandForArrival::class,
         StandReservationsImport::class,
         RecatCategoriesImport::class,
-        CleanDepartureRestrictions::class,
         UpdateSrd::class,
         DataAdminCreate::class
     ];

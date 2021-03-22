@@ -112,8 +112,6 @@ class DatabaseSeeder extends Seeder
             'airline_terminal',
         ],
         DepartureIntervalTableSeeder::class => [
-            'departure_restrictions',
-            'departure_restriction_sid',
             'sid_departure_interval_groups',
             'sid_departure_interval_group_sid_departure_interval_group',
         ],

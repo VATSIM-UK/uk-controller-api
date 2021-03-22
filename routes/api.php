@@ -15,14 +15,6 @@ Route::middleware('plugin.user')->group(function () {
             'uses' => 'TeapotController@normalTeapots',
         ]
     );
-
-    // Departures
-    Route::post('departure/restrictions', 'DepartureController@createRestriction');
-    Route::put('departure/restriction/{id}', 'DepartureController@updateRestriction')
-        ->where('id', '[0-9]+');
-    Route::delete('departure/restriction/{id}', 'DepartureController@deleteRestriction')
-        ->where('id', '[0-9]+');
-
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
     Route::get('dependency/{id}', 'DependencyController@getDependency')
@@ -216,9 +208,6 @@ Route::middleware('public')->group(function () {
     Route::get('airfield-ownership', 'AirfieldController@getAirfieldOwnershipDependency');
 
     // Departures
-    Route::get('departure/restrictions', 'DepartureController@getActiveDepartureRestrictions');
-    Route::get('departure/intervals/wake-uk/dependency', 'DepartureController@getDepartureUkWakeIntervalsDependency');
-    Route::get('departure/intervals/wake-recat/dependency', 'DepartureController@getDepartureRecatWakeIntervalsDependency');
     Route::get('departure/intervals/sid-groups/dependency', 'DepartureController@getDepartureSidIntervalGroupsDependency');
 
     // Holds
