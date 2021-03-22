@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
-use App\Console\Commands\CleanDepartureRestrictions;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
@@ -20,8 +19,6 @@ use App\Console\Commands\UserCreate;
 use App\Console\Commands\WakeCategoriesImport;
 use App\Services\SrdService;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
 use App\Console\Commands\DeleteUserTokens;
