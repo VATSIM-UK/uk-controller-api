@@ -54,12 +54,10 @@ class AircraftControllerTest extends BaseApiTestCase
             [
                 'id' => Aircraft::where('code', 'B738')->firstOrFail()->id,
                 'code' => 'B738',
-                'wake_category_id' => WakeCategory::where('code', 'LM')->firstOrFail()->id,
             ],
             [
                 'id' => Aircraft::where('code', 'A333')->firstOrFail()->id,
                 'code' => 'A333',
-                'wake_category_id' => WakeCategory::where('code', 'H')->firstOrFail()->id,
             ],
         ];
 
@@ -86,7 +84,6 @@ class AircraftControllerTest extends BaseApiTestCase
         Aircraft::create(
             [
                 'code' => 'XXXX',
-                'wake_category_id' => 1,
                 'wingspan' => 0,
                 'length' => 0,
                 'allocate_stands' => false,

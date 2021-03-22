@@ -9,9 +9,12 @@ use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use util\Traits\WithWakeCategories;
 
 class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
+    use WithWakeCategories;
+
     /**
      * @var AirlineArrivalStandAllocator
      */
@@ -35,7 +38,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesStandsInWeightAscendingOrder()
     {
-        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
+        $this->setWakeCategoryForAircraft('B738', 'S');
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
@@ -54,7 +57,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesStandsAtAppropriateWeight()
     {
-        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'UM')->first()->id]);
+        $this->setWakeCategoryForAircraft('B738', 'UM');
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
