@@ -3,7 +3,9 @@
 namespace App\Models\Metars;
 
 use App\Exceptions\MetarException;
+use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Metar extends Model
 {
@@ -27,5 +29,10 @@ class Metar extends Model
 
         $value = substr($matches[0], 1);
         return (int) ($value[0] === '0') ? substr($value, 1) : $value;
+    }
+
+    public function airfield(): BelongsTo
+    {
+        return $this->belongsTo(Airfield::class);
     }
 }

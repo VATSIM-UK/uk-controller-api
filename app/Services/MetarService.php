@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\MetarsUpdatedEvent;
 use App\Exceptions\MetarException;
 use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
@@ -139,6 +140,8 @@ class MetarService
             $metarsToUpdate,
             ['airfield_id'],
         );
+
+        event(new MetarsUpdatedEvent(Metar::with('airfield')->get()));
     }
 
     private function getMetarQueryString(Collection $airfields): string

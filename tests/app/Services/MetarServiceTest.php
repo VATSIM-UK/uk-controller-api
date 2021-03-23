@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Events\MetarsUpdatedEvent;
 use App\Models\Metars\Metar;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -20,6 +21,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesAllMetars()
     {
+        $this->expectsEvents(MetarsUpdatedEvent::class);
         Metar::create(['airfield_id' => 1, 'metar_string' => 'bla']);
 
         $dataResponse = [
@@ -69,6 +71,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesBadResponsesGracefully()
     {
+        $this->doesntExpectEvents(MetarsUpdatedEvent::class);
         Http::fake(
             [
                 config(self::URL_CONFIG_KEY) => Http::response('', 500),
