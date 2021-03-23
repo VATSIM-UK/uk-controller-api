@@ -13,7 +13,7 @@ class CreateMetarTable extends Migration
      */
     public function up()
     {
-        Schema::create('metar', function (Blueprint $table) {
+        Schema::create('metars', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('airfield_id')->unique()->comment('The airfield the METAR applies to');
             $table->text('metar_string')->comment('The raw METAR text');
@@ -30,6 +30,6 @@ class CreateMetarTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('metar');
+        Schema::dropIfExists('metars');
     }
 }
