@@ -18,6 +18,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class StandObserverTest extends BaseUnitTestCase
 {
     use DatabaseTransactions;
+
     private Stand $stand;
     
     public function setUp() : void
@@ -29,6 +30,13 @@ class StandObserverTest extends BaseUnitTestCase
         $this->stand = Stand::factory()->create();
 
         Carbon::setTestNow(Carbon::now());
+
+        $this->mockStandDependency = Dependency::create([
+            'key' => StandService::STAND_DEPENDENCY_KEY,
+            'action' => 'StandController@getStandsDependency',
+            'local_file' => 'stands.json',
+            'per_user' => 0,
+        ]);
     }
 
     public function testCallsDependencyTouchMethodOnCreated()
