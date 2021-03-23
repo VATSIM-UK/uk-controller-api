@@ -7,7 +7,7 @@ use App\BaseFunctionalTestCase;
 class MetarTest extends BaseFunctionalTestCase
 {
     /**
-     * @dataProvider 
+     * @dataProvider
      */
     public function testItParsesTheQnhFromTheMetar(string $metar, ?int $expected)
     {

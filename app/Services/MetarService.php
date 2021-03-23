@@ -1,9 +1,14 @@
 <?php
+
 namespace App\Services;
 
 use App\Exceptions\MetarException;
+use App\Models\Airfield\Airfield;
+use App\Models\Metars\Metar;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -38,11 +43,11 @@ class MetarService
     /**
      * Returns the QNH from a METAR.
      *
-     * @param  string $metar
+     * @param string $metar
      * @return mixed The QNH
      * @throws MetarException If the METAR doesn't have a QNH or has more than one
      */
-    public function getQnhFromMetar(string $metar) : int
+    public function getQnhFromMetar(string $metar): int
     {
         $matches = [];
         preg_match('/Q\d{4}/', $metar, $matches);
@@ -54,7 +59,7 @@ class MetarService
 
         // Strip the Q and handle pressures < 1000hpa
         $value = substr($matches[0], 1);
-        return (int) ($value[0] === '0') ? substr($value, 1) : $value;
+        return (int)($value[0] === '0') ? substr($value, 1) : $value;
     }
 
     /**
@@ -63,7 +68,7 @@ class MetarService
      * @param string $icao
      * @return int|null
      */
-    public function getQnhFromVatsimMetar(string $icao) : ?int
+    public function getQnhFromVatsimMetar(string $icao): ?int
     {
         // Don't go and get it again if we already have iu
         if (isset($this->metarCache[$icao])) {
@@ -81,7 +86,7 @@ class MetarService
             ]
         );
 
-        $metarString = (string) $metar->getBody();
+        $metarString = (string)$metar->getBody();
         if (
             $metar->getStatusCode() !== 200 ||
             strpos($metarString, 'No METAR available for') === 0
@@ -100,10 +105,49 @@ class MetarService
         } catch (MetarException $exception) {
             Log::info(
                 'Unable to get QNH from METAR',
-                ['icao' => $icao, 'metar' => $metar->getBody()->getContents() ]
+                ['icao' => $icao, 'metar' => $metar->getBody()->getContents()]
             );
         }
 
         return $qnh;
+    }
+
+    public function updateAllMetars(): void
+    {
+        $metarAirfields = Airfield::all();
+        $metarResponse = Http::get(config('metar.vatsim_url'), ['id' => $this->getMetarQueryString($metarAirfields)]);
+        if (!$metarResponse->ok()) {
+            Log::error(
+                sprintf(
+                    'Metar download failed, endpoint returned %d: %s',
+                    $metarResponse->status(),
+                    $metarResponse->body()
+                )
+            );
+            return;
+        }
+
+        $metarsToUpdate = [];
+        foreach (explode("\n", $metarResponse->body()) as $metar) {
+            $metarsToUpdate[] = [
+                'airfield_id' => $metarAirfields->where('code', $this->getMetarAirfield($metar))->first()->id,
+                'metar_string' => $metar,
+            ];
+        }
+
+        Metar::upsert(
+            $metarsToUpdate,
+            ['airfield_id'],
+        );
+    }
+
+    private function getMetarQueryString(Collection $airfields): string
+    {
+        return $airfields->implode('code', ',');
+    }
+
+    private function getMetarAirfield(string $metar): string
+    {
+        return substr($metar, 0, 4);
     }
 }

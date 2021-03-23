@@ -12,6 +12,7 @@ use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\RecatCategoriesImport;
 use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
+use App\Console\Commands\UpdateMetars;
 use App\Console\Commands\UpdateSrd;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
@@ -55,7 +56,8 @@ class Kernel extends ConsoleKernel
         StandReservationsImport::class,
         RecatCategoriesImport::class,
         UpdateSrd::class,
-        DataAdminCreate::class
+        DataAdminCreate::class,
+        UpdateMetars::class,
     ];
 
     /**
