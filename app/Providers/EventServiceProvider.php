@@ -2,34 +2,31 @@
 
 namespace App\Providers;
 
-use App\Models\Stand\Stand;
-use App\Observers\StandObserver;
 use App\Events\HoldAssignedEvent;
-use App\Events\StandVacatedEvent;
-use App\Events\StandAssignedEvent;
-use App\Events\StandOccupiedEvent;
 use App\Events\HoldUnassignedEvent;
-use App\Events\StandUnassignedEvent;
+use App\Events\NetworkAircraftDisconnectedEvent;
+use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
-use App\Listeners\Stand\OccupyStands;
-use App\Listeners\Network\RecordFirEntry;
-use App\Events\NetworkAircraftUpdatedEvent;
+use App\Events\StandAssignedEvent;
+use App\Events\StandOccupiedEvent;
+use App\Events\StandUnassignedEvent;
+use App\Events\StandVacatedEvent;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
-use App\Listeners\Squawk\ReserveInFirProximity;
-use App\Events\NetworkAircraftDisconnectedEvent;
-use App\Listeners\Hold\UnassignHoldOnDisconnect;
+use App\Listeners\Network\AircraftDisconnected;
+use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
+use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
+use App\Listeners\Squawk\ReserveInFirProximity;
+use App\Listeners\Stand\AssignOccupiedStandsForDeparture;
+use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
+use App\Listeners\Stand\OccupyStands;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
 use App\Listeners\Stand\UnassignVacatedDepartureStand;
-use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
-use App\Listeners\Stand\TriggerUnassignmentOnDisconnect;
-use App\Listeners\Stand\AssignOccupiedStandsForDeparture;
-use App\Listeners\Squawk\MarkAssignmentDeletedOnDisconnect;
-use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
+use App\Models\Stand\Stand;
+use App\Observers\StandObserver;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment as MarkStandAssignmentDeletedOnUnassignment;
 
 /**
  * Class EventServiceProvider
@@ -51,9 +48,7 @@ class EventServiceProvider extends ServiceProvider
             RecordHoldUnassignment::class,
         ],
         NetworkAircraftDisconnectedEvent::class => [
-            UnassignHoldOnDisconnect::class,
-            MarkAssignmentDeletedOnDisconnect::class,
-            TriggerUnassignmentOnDisconnect::class,
+            AircraftDisconnected::class,
         ],
         NetworkAircraftUpdatedEvent::class => [
             // RecordFirEntry::class, This is quite intensive on CPU and isn't used at the moment
