@@ -166,8 +166,11 @@ Route::middleware('admin.data')->group(function () {
 
     Route::prefix('admin')->group(function () {
         Route::get('/airfields', 'Admin\\StandAdminController@getAirfields');
+        Route::post('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@createNewStand');
         Route::get('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@getStandsForAirfield');
         Route::get('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@getStandDetails');
+        Route::put('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@modifyStand');
+        Route::delete('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@deleteStand');
 
         Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
     });
