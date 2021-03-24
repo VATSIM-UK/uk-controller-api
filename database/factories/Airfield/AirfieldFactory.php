@@ -45,6 +45,6 @@ class AirfieldFactory extends Factory
 
     private function getAirfieldIcao(): string
     {
-        return Str::upper($this->faker->lexify('EG??'));
+        return Str::upper($this->faker->unique()->lexify('EG??'));
     }
 }
