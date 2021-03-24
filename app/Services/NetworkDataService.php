@@ -8,6 +8,7 @@ use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +20,7 @@ class NetworkDataService
 {
     const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
     const MAX_PROCESSING_DISTANCE = 700;
+    private Collection $allAircraftBeforeUpdate;
 
     /**
      * @var Coordinate[]
@@ -32,6 +34,10 @@ class NetworkDataService
 
     public function updateNetworkData(): void
     {
+        $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft) {
+            return [$aircraft->callsign => $aircraft];
+        });
+
         // Download the network data and check that it was successful
         $networkResponse = null;
         try {
@@ -47,31 +53,49 @@ class NetworkDataService
         }
 
         // Process clients
-        $this->processPilots($networkResponse->json('pilots', []));
+        $concernedPilots = $this->formatPilotData($networkResponse);
+        $this->processPilots($concernedPilots);
+        $this->triggerUpdatedEvents($concernedPilots);
         $this->handleTimeouts();
+    }
+
+    private function triggerUpdatedEvents(Collection $concernedPilots)
+    {
+        NetworkAircraft::whereIn('callsign', $concernedPilots->pluck('callsign'))
+            ->get()
+            ->each(function (NetworkAircraft $aircraft) {
+                event(new NetworkAircraftUpdatedEvent($aircraft));
+            });
+    }
+
+    private function formatPilotData(Response $response): Collection
+    {
+        return $this->mapPilotData($this->filterPilotData(new Collection($response->json('pilots', []))));
+    }
+
+    private function mapPilotData(Collection $pilotData): Collection
+    {
+        return $pilotData->map(function (array $pilot) {
+            return $this->formatPilot($pilot);
+        });
+    }
+
+    private function filterPilotData(Collection $pilotData): Collection
+    {
+        return $pilotData->filter(function (array $pilot) {
+            return $this->shouldProcessPilot($pilot);
+        });
     }
 
     /**
      * Loop through each client in the clients array from the network data
-     *
-     * @param array $clients
      */
-    private function processPilots(array $pilots): void
+    private function processPilots(Collection $pilots): void
     {
-        foreach ($pilots as $pilot) {
-            if (!$this->shouldProcessPilot($pilot)) {
-                continue;
-            }
-
-            event(
-                new NetworkAircraftUpdatedEvent(
-                    self::createOrUpdateNetworkAircraft(
-                        $pilot['callsign'],
-                        $this->formatPilot($pilot)
-                    )
-                )
-            );
-        }
+        NetworkAircraft::upsert(
+            $pilots->toArray(),
+            ['callsign']
+        );
     }
 
     private function shouldProcessPilot(array $pilot): bool
@@ -94,14 +118,27 @@ class NetworkDataService
             'longitude' => $pilot['longitude'],
             'altitude' => $pilot['altitude'],
             'groundspeed' => $pilot['groundspeed'],
-            'transponder' => Str::padLeft($pilot['transponder'], '0', 4),
+            'transponder' => $pilot['transponder'],
             'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
             'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
             'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),
             'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),
             'planned_flighttype' => $this->getFlightplanDataElement($pilot, 'flight_rules'),
             'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
+            'transponder_last_updated_at' => $this->getTransponderUpdatedAtTime($pilot),
         ];
+    }
+
+    /**
+     * Set the transponder updated at time based on whether the transponder has been changed
+     * since the last time we polled.
+     */
+    private function getTransponderUpdatedAtTime(array $pilot): Carbon
+    {
+        return $this->allAircraftBeforeUpdate->has($pilot['callsign']) &&
+        $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder === $pilot['transponder']
+            ? $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder_last_updated_at
+            : Carbon::now();
     }
 
     /**
@@ -113,12 +150,7 @@ class NetworkDataService
     }
 
     /**
-     * If any aircraft has passed the timeout window, remove it from the list.
-     *
-     * NOTE: Events should always fire before final deletion because the listeners
-     * will use the aircraft data to mark things such as squawk assignments as deleted
-     * and send further events. As a last resort calling delete here will delete any
-     * foreign key references left over.
+     * If any aircraft has passed the timeout window, trigger the timeout event to have it removed.
      */
     private function handleTimeouts(): void
     {
@@ -129,7 +161,6 @@ class NetworkDataService
                     $aircraft->getConnection()->transaction(
                         function () use ($aircraft) {
                             event(new NetworkAircraftDisconnectedEvent($aircraft));
-                            $aircraft->delete();
                         }
                     );
                 }

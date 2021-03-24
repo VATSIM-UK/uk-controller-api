@@ -5,9 +5,8 @@ namespace App\Events;
 use App\Models\Hold\AssignedHold;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class HoldAssignedEvent implements ShouldBroadcast
+class HoldAssignedEvent extends HighPriorityBroadcastEvent
 {
     const CHANNEL = 'hold-assignments';
 

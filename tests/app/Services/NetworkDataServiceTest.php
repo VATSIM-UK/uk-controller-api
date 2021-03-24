@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Mockery;
@@ -33,13 +34,13 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->networkData = [
             'pilots' => [
                 $this->getPilotData('VIR25A', true),
-                $this->getPilotData('BAW123', false),
+                $this->getPilotData('BAW123', false, null, null, '1234'),
                 $this->getPilotData('RYR824', true),
                 $this->getPilotData('LOT551', true, 44.372, 26.040),
             ]
         ];
 
-        Carbon::setTestNow(Carbon::now());
+        Carbon::setTestNow(Carbon::now()->startOfSecond());
         Date::setTestNow(Carbon::now());
         $this->service = $this->app->make(NetworkDataService::class);
     }
@@ -48,7 +49,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         Http::fake(
             [
-                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode($this->networkData), 200)
+                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode($this->networkData))
             ]
         );
     }
@@ -113,7 +114,11 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'network_aircraft',
             array_merge(
                 $this->getTransformedPilotData('VIR25A'),
-                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+                [
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                    'transponder_last_updated_at' => Carbon::now()
+                ]
             ),
         );
     }
@@ -126,8 +131,53 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
-                $this->getTransformedPilotData('BAW123', false),
-                ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
+                $this->getTransformedPilotData('BAW123', false, '1234'),
+                [
+                    'created_at' => '2020-05-30 17:30:00',
+                    'updated_at' => Carbon::now()
+                ]
+            ),
+        );
+    }
+
+    public function testItUpdatesExistingAircraftTransponderChangedAtFromDataFeed()
+    {
+        $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $this->getTransformedPilotData('RYR824', false),
+                [
+                    'created_at' => '2020-05-30 17:30:00',
+                    'updated_at' => Carbon::now(),
+                    'transponder_last_updated_at' => Carbon::now(),
+                ]
+            ),
+        );
+    }
+
+    public function testItDoesntUpdateExistingAircraftTransponderChangedAtFromDataFeedIfSame()
+    {
+        // Update the transponder 15 minutes ago
+        $transponderUpdatedAt = Carbon::now()->subMinutes(15);
+        DB::table('network_aircraft')->where('callsign', 'BAW123')->update(
+            ['transponder_last_updated_at' => $transponderUpdatedAt]
+        );
+
+        $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            array_merge(
+                $this->getTransformedPilotData('BAW123', false, '1234'),
+                [
+                    'created_at' => '2020-05-30 17:30:00',
+                    'updated_at' => Carbon::now(),
+                    'transponder_last_updated_at' => $transponderUpdatedAt,
+                ]
             ),
         );
     }
@@ -177,12 +227,6 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->expectsEvents(NetworkAircraftDisconnectedEvent::class);
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'BAW789'
-            ]
-        );
     }
 
     public function testItFiresUpdatedEventsOnDataFeed()
@@ -444,7 +488,8 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         string $callsign,
         bool $hasFlightplan,
         float $latitude = null,
-        float $longitude = null
+        float $longitude = null,
+        string $transponder = null
     ): array {
         return [
             'callsign' => $callsign,
@@ -452,7 +497,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'longitude' => $longitude ?? -6.21,
             'altitude' => 35123,
             'groundspeed' => 123,
-            'transponder' => 457,
+            'transponder' => $transponder ?? '0457',
             'flight_plan' => $hasFlightplan
                 ? [
                     'aircraft' => 'B738',
@@ -466,9 +511,13 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         ];
     }
 
-    private function getTransformedPilotData(string $callsign, bool $hasFlightplan = true): array
+    private function getTransformedPilotData(
+        string $callsign,
+        bool $hasFlightplan = true,
+        string $transponder = null
+    ): array
     {
-        $pilot = $this->getPilotData($callsign, $hasFlightplan);
+        $pilot = $this->getPilotData($callsign, $hasFlightplan, null, null, $transponder);
         $baseData = [
             'callsign' => $pilot['callsign'],
             'latitude' => $pilot['latitude'],

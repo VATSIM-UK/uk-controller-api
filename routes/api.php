@@ -246,6 +246,9 @@ Route::middleware('public')->group(function () {
     Route::get('stand/assignment/{callsign}', 'StandController@getStandAssignmentForAircraft')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 
+    // Wake categories
+    Route::get('wake-schemes/dependency', 'WakeController@getWakeSchemesDependency');
+
     // Admin login
     Route::prefix('admin')->group(function () {
         Route::post('login', 'UserController@adminLogin');
