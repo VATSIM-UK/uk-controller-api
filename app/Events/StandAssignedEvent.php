@@ -5,9 +5,8 @@ namespace App\Events;
 use App\Models\Stand\StandAssignment;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class StandAssignedEvent implements ShouldBroadcast
+class StandAssignedEvent extends HighPriorityBroadcastEvent
 {
     const CHANNEL = 'stand-assignments';
 

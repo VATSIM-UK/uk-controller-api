@@ -14,8 +14,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class StandAdminControllerTest extends BaseApiTestCase
 {
-    use DatabaseTransactions;
-
     protected static $tokenScope = [
         AuthServiceProvider::SCOPE_DATA_ADMIN,
     ];
@@ -82,7 +80,6 @@ class StandAdminControllerTest extends BaseApiTestCase
 
     public function testAirfieldsWithoutStandsCanBeRetrieved()
     {
-
         $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields?all=true");
 
         $response->assertStatus(200);

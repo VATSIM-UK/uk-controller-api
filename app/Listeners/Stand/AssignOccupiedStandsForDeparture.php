@@ -3,6 +3,7 @@
 namespace App\Listeners\Stand;
 
 use App\Events\StandOccupiedEvent;
+use App\Listeners\HighPriority;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
@@ -10,6 +11,8 @@ use App\Services\StandService;
 
 class AssignOccupiedStandsForDeparture
 {
+    use HighPriority;
+
     private StandService $standService;
 
     public function __construct(StandService $standService)

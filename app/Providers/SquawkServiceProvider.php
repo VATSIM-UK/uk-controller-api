@@ -5,7 +5,7 @@ use App\Allocator\Squawk\General\AirfieldPairingSquawkAllocator;
 use App\Allocator\Squawk\General\CcamsSquawkAllocator;
 use App\Allocator\Squawk\General\OrcamSquawkAllocator;
 use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
-use App\Listeners\Squawk\MarkAssignmentDeletedOnDisconnect;
+use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\ReserveInFirProximity;
 use App\Models\FlightInformationRegion\FlightInformationRegion;
