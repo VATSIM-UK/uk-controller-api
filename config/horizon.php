@@ -170,22 +170,24 @@ return [
             'queue' => ['high', 'default'],
             'balance' => 'auto',
             'minProcesses' => 1,
-            'maxProcesses' => 2,
+            'maxProcesses' => 4,
+            'balanceMaxShift' => 1,
+            'balanceCooldown' => 5,
             'memory' => 128,
             'tries' => 1,
             'nice' => 0,
         ],
     ],
-
     'environments' => [
         'production' => [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['high', 'default'],
                 'balance' => 'auto',
-                'min-processes' => 1,
-                'max-processes' => 2,
-                'tries' => 3,
+                'minProcesses' => 1,
+                'maxProcesses' => 4,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 5,
             ],
         ],
 
