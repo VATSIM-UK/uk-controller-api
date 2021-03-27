@@ -6,6 +6,7 @@ use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
+use App\Events\NetworkDataUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use App\Events\StandAssignedEvent;
@@ -54,6 +55,8 @@ class EventServiceProvider extends ServiceProvider
             // RecordFirEntry::class, This is quite intensive on CPU and isn't used at the moment
             ReserveInFirProximity::class,
             ReclaimIfLeftFirProximity::class,
+        ],
+        NetworkDataUpdatedEvent::class => [
             OccupyStands::class,
         ],
         StandAssignedEvent::class => [

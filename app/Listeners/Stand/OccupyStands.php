@@ -15,9 +15,10 @@ class OccupyStands implements ShouldQueue
         $this->standService = $standService;
     }
 
-    public function handle(NetworkAircraftUpdatedEvent $event) : bool
+    public function handle() : bool
     {
-        $this->standService->setOccupiedStand($event->getAircraft());
+        $this->standService->vacateStands();
+        $this->standService->setOccupiedStands();
         return true;
     }
 }

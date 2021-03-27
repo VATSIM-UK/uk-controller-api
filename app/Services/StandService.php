@@ -18,6 +18,7 @@ use App\Models\Vatsim\NetworkAircraft;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Location\Distance\Haversine;
 
 class StandService
@@ -343,35 +344,46 @@ class StandService
         return $this->allStands;
     }
 
-    private function vacateStand(NetworkAircraft $aircraft)
+    /**
+     * Vacate the stands of any aircraft
+     */
+    public function vacateStands(): void
     {
-        $aircraft->occupiedStand()->sync([]);
-        event(new StandVacatedEvent($aircraft));
+        $aircraftThatHaveVacatedOccupiedStands = NetworkAircraft::with('occupiedStand')
+            ->whereHas('occupiedStand')
+            ->where(function (Builder $subquery) {
+                $subquery->where('groundspeed', '>', self::MAX_OCCUPANCY_SPEED)
+                    ->orWhere('altitude', '>', self::MAX_OCCUPANCY_SPEED);
+            })
+            ->get();
+
+        DB::table('aircraft_stand')
+            ->whereIn('callsign', $aircraftThatHaveVacatedOccupiedStands->pluck('callsign'))
+            ->delete();
+
+        $aircraftThatHaveVacatedOccupiedStands->each(function (NetworkAircraft $aircraft) {
+            event(new StandVacatedEvent($aircraft));
+        });
     }
 
-    public function setOccupiedStand(NetworkAircraft $aircraft): ?Stand
+    public function setOccupiedStands(): void
     {
-        // If an aircraft cannot occupy a stand, we don't need to check any further. Vacate stand if there is one.
-        if (!$this->canOccupyStand($aircraft)) {
-            if ($aircraft->occupiedStand()->exists()) {
-                $this->vacateStand($aircraft);
+        $aircraftThatCanOccupyStands = NetworkAircraft::with('occupiedStand')
+            ->where('groundspeed', '<=', self::MAX_OCCUPANCY_SPEED)
+            ->orWhere('altitude', '<=', self::MAX_OCCUPANCY_SPEED)
+            ->get();
+
+        $aircraftThatCanOccupyStands->each(function (NetworkAircraft $aircraft) {
+            // The aircraft hasn't un-occupied it stand.
+            if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand()->first())) {
+                return $aircraft->occupiedStand->first();
             }
-            return null;
-        }
 
-        /*
-         * The aircraft is still occupying its stand.
-         */
-        if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand()->first())) {
-            return $aircraft->occupiedStand->first();
-        }
-
-        // If there's a stand that's viable, occupy the stand.
-        if ($selectedStand = $this->getOccupiedStand($aircraft)) {
-            $this->occupyStand($aircraft, $selectedStand);
-        }
-
-        return $selectedStand;
+            // If there's a stand that's viable, occupy the stand.
+            if ($selectedStand = $this->getOccupiedStand($aircraft)) {
+                $this->occupyStand($aircraft, $selectedStand);
+            }
+        });
     }
 
     /**
@@ -427,14 +439,7 @@ class StandService
     private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
     {
         $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
-        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS &&
-            $this->canOccupyStand($aircraft);
-    }
-
-    private function canOccupyStand(NetworkAircraft $aircraft)
-    {
-        return $aircraft->altitude <= self::MAX_OCCUPANCY_ALTITUDE &&
-            $aircraft->groundspeed <= self::MAX_OCCUPANCY_SPEED;
+        return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS;
     }
 
     /**
