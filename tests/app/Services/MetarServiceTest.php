@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\MetarsUpdatedEvent;
+use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -19,14 +20,18 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(MetarService::class);
     }
 
-    public function testItUpdatesAllMetars()
+    public function testMetarsPreferTheQnhOverAltimeter()
     {
         $this->expectsEvents(MetarsUpdatedEvent::class);
         Metar::create(['airfield_id' => 1, 'metar_string' => 'bla']);
+        $noPressureAirfield = Airfield::factory()->make();
+        $noMetarAirfield = Airfield::factory()->make();
 
         $dataResponse = [
-            'EGLL ABC DEF',
-            'EGKR GHI JKL',
+            'EGLL Q1001', // Will pull through the QNH as 1001
+            'EGBB Q0991 A2992', // Will pull through the QNH as 991
+            'EGKR A2992', // Will pull through altimeter and convert it to QNH,
+            $noPressureAirfield->code, // Wont pull through a QNH as there is none.
         ];
 
         Http::fake(
@@ -49,7 +54,17 @@ class MetarServiceTest extends BaseFunctionalTestCase
             'metars',
             [
                 'airfield_id' => 1,
-                'EGLL ABC DEF'
+                'raw' => 'EGLL Q1001',
+                'qnh' => 1001,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'metars',
+            [
+                'airfield_id' => 2,
+                'raw' => 'EGLL Q0991',
+                'qnh' => 991,
             ]
         );
 
@@ -57,14 +72,24 @@ class MetarServiceTest extends BaseFunctionalTestCase
             'metars',
             [
                 'airfield_id' => 3,
-                'EGKR GHI JKL'
+                'raw' => 'EGKR A2992',
+                'qnh' => 1013,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'metars',
+            [
+                'airfield_id' => $noPressureAirfield->id,
+                'raw' => $noPressureAirfield->code,
+                'qnh' => null,
             ]
         );
 
         $this->assertDatabaseMissing(
             'metars',
             [
-                'airfield_id' => 2,
+                'airfield_id' => $noMetarAirfield->id,
             ]
         );
     }

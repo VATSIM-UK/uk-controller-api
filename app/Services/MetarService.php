@@ -20,97 +20,9 @@ use Illuminate\Support\Facades\Log;
  */
 class MetarService
 {
-    /**
-     * @var Client
-     */
-    private $httpClient;
-
-    /**
-     * A cache of METARs that have been retrieved from VATSIM in this request
-     *
-     * @var array
-     */
-    private $metarCache = [];
-
-    /**
-     * MetarService constructor.
-     * @param Client $httpClient
-     */
-    public function __construct(Client $httpClient)
+    private function getMetarQueryString(Collection $airfields): string
     {
-        $this->httpClient = $httpClient;
-    }
-
-    /**
-     * Returns the QNH from a METAR.
-     *
-     * @param string $metar
-     * @return mixed The QNH
-     * @throws MetarException If the METAR doesn't have a QNH or has more than one
-     */
-    public function getQnhFromMetar(string $metar): int
-    {
-        $matches = [];
-        preg_match('/Q\d{4}/', $metar, $matches);
-
-        // Check for dodgy metars
-        if (empty($matches)) {
-            throw new MetarException('QNH not found in METAR: ' . $metar);
-        }
-
-        // Strip the Q and handle pressures < 1000hpa
-        $value = substr($matches[0], 1);
-        return (int)($value[0] === '0') ? substr($value, 1) : $value;
-    }
-
-    /**
-     * Downloads a METAR from VATSIM and returns the QNH
-     *
-     * @param string $icao
-     * @return int|null
-     */
-    public function getQnhFromVatsimMetar(string $icao): ?int
-    {
-        // Don't go and get it again if we already have iu
-        if (isset($this->metarCache[$icao])) {
-            return $this->getQnhFromMetar($this->metarCache[$icao]);
-        }
-
-        $metar = $this->httpClient->get(
-            config('metar.vatsim_url'),
-            [
-                RequestOptions::ALLOW_REDIRECTS => true,
-                RequestOptions::HTTP_ERRORS => false,
-                RequestOptions::QUERY => [
-                    'id' => $icao,
-                ],
-            ]
-        );
-
-        $metarString = (string)$metar->getBody();
-        if (
-            $metar->getStatusCode() !== 200 ||
-            strpos($metarString, 'No METAR available for') === 0
-        ) {
-            Log::info('Failed to download METAR for ' . $icao);
-            return null;
-        }
-
-        // Cache the METAR for later
-        $this->metarCache[$icao] = $metarString;
-
-        // Parse the QNH from the METAR
-        $qnh = null;
-        try {
-            $qnh = $this->getQnhFromMetar($metarString);
-        } catch (MetarException $exception) {
-            Log::info(
-                'Unable to get QNH from METAR',
-                ['icao' => $icao, 'metar' => $metar->getBody()->getContents()]
-            );
-        }
-
-        return $qnh;
+        return $airfields->implode('code', ',');
     }
 
     public function updateAllMetars(): void
@@ -130,10 +42,7 @@ class MetarService
 
         $metarsToUpdate = [];
         foreach (explode("\n", $metarResponse->body()) as $metar) {
-            $metarsToUpdate[] = [
-                'airfield_id' => $metarAirfields->where('code', $this->getMetarAirfield($metar))->first()->id,
-                'metar_string' => $metar,
-            ];
+            $metarsToUpdate[] = $this->processMetar($metar, $metarAirfields);
         }
 
         Metar::upsert(
@@ -144,9 +53,54 @@ class MetarService
         event(new MetarsUpdatedEvent(Metar::with('airfield')->get()));
     }
 
-    private function getMetarQueryString(Collection $airfields): string
+    /**
+     * Process a given METAR and make it ready for inserting.
+     */
+    private function processMetar(string $metar, Collection $metarAirfields): array
     {
-        return $airfields->implode('code', ',');
+        return [
+            'airfield_id' => $metarAirfields->where('code', $this->getMetarAirfield($metar))->first()->id,
+            'raw' => trim($metar),
+            'qnh' => $this->getQnhFromMetar($metar)
+        ];
+    }
+
+    /**
+     * Try to get the QNH out of the METAR, if it's not there, parse it from the altimeter.
+     */
+    private function getQnhFromMetar(string $metar): ?int
+    {
+        return $this->parseQnhFromMetar($metar) ?? $this->parseAltimeterAsQnhFromMetar($metar);
+    }
+
+    /**
+     * Parse the QNH string from the METAR
+     */
+    private function parseQnhFromMetar(string $metar): ?int
+    {
+        $matches = [];
+        preg_match('/Q(\d{4})/', $metar, $matches);
+        return empty($matches) ? null : $this->convertQnhToInteger($matches[1]);
+    }
+
+    /**
+     * Parse the altimeter out of the METAR as its QNH.
+     */
+    private function parseAltimeterAsQnhFromMetar(string $metar): ?int
+    {
+        $matches = [];
+        preg_match('/A(\d{4})/', $metar, $matches);
+        return empty($matches) ? null : $this->convertAltimeterToQnh($matches[1]);
+    }
+
+    private function convertAltimeterToQnh(string $altimeter): int
+    {
+        return ((float) sprintf('%s.%s', substr($altimeter, 0, 2), substr($altimeter, 2))) * 33.8639;
+    }
+
+    private function convertQnhToInteger(string $qnh): int
+    {
+        return (int) ($qnh[0] === '0') ? substr($qnh, 1) : $qnh;
     }
 
     private function getMetarAirfield(string $metar): string

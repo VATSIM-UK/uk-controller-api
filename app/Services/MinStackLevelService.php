@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\MinStacksUpdatedEvent;
 use App\Helpers\MinStack\MinStackCalculableInterface;
 use App\Models\Airfield\Airfield;
 use App\Models\MinStack\MslAirfield;
@@ -9,6 +10,7 @@ use App\Models\MinStack\MslTma;
 use App\Models\Tma;
 use Carbon\Carbon;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Collection;
 
 class MinStackLevelService
 {
@@ -91,6 +93,40 @@ class MinStackLevelService
         });
 
         return $minStackLevels;
+    }
+
+    public function updateMinimumStackLevelsFromMetars(Collection $metars): void
+    {
+        $changedAirfieldMinimumStackLevels = $this->updateAirfieldMinimumStackLevels($metars);
+        $changedTmaMinimumStackLevels = $this->updateTmaMinimumStackLevels($metars);
+
+        if ($changedAirfieldMinimumStackLevels->isEmpty() && $changedTmaMinimumStackLevels->isEmpty()) {
+            return;
+        }
+
+        event(
+            new MinStacksUpdatedEvent(
+                $changedAirfieldMinimumStackLevels->toArray(),
+                $changedTmaMinimumStackLevels->toArray()
+            )
+        );
+    }
+
+    private function updateAirfieldMinimumStackLevels(Collection $metars): Collection
+    {
+        $currentMinimumStackLevels = MslAirfield::all()->mapWithKeys(function (MslAirfield $msl) {
+            return [$msl->airfield_id => $msl];
+        });
+
+        $updatedMinimumStackLevels = [];
+        foreach (Airfield::with('mslCalculationAirfields')->get()->toArray() as $airfield) {
+
+        }
+    }
+
+    private function updateTmaMinimumStackLevels(Collection $metars): Collection
+    {
+
     }
 
     /**

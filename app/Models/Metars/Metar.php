@@ -11,11 +11,13 @@ class Metar extends Model
 {
     protected $fillable = [
         'airfield_id',
-        'metar_string',
+        'qnh',
+        'raw',
     ];
 
     protected $casts = [
         'airfield_id' => 'integer',
+        'qnh' => 'integer',
     ];
 
     public function getQnh(): ?int

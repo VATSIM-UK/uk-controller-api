@@ -2,6 +2,8 @@
 
 namespace App\Helpers\MinStack;
 
+use Illuminate\Support\Collection;
+
 /**
  * Interface MinStackCalculableInterface
  *
@@ -10,10 +12,5 @@ namespace App\Helpers\MinStack;
  */
 interface MinStackCalculableInterface
 {
-    /**
-     * Return the minimum stack level
-     *
-     * @return int|null
-     */
-    public function calculateMinStack() : ?int;
+    public function calculateMinStack(Collection $metars) : ?int;
 }
