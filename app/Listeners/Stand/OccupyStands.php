@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Stand;
 
-use App\Events\NetworkAircraftUpdatedEvent;
+use App\Events\NetworkDataUpdatedEvent;
 use App\Services\StandService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -15,9 +15,8 @@ class OccupyStands implements ShouldQueue
         $this->standService = $standService;
     }
 
-    public function handle() : bool
+    public function handle(NetworkDataUpdatedEvent $event) : bool
     {
-        $this->standService->vacateStands();
         $this->standService->setOccupiedStands();
         return true;
     }

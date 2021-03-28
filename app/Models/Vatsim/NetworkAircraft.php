@@ -91,7 +91,7 @@ class NetworkAircraft extends Model
             'aircraft_stand',
             'callsign',
             'stand_id'
-        )->withTimestamps();
+        )->withPivot('updated_at');
     }
 
     public function getAircraftTypeAttribute(): string

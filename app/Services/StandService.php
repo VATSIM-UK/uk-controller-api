@@ -15,6 +15,7 @@ use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -345,45 +346,138 @@ class StandService
     }
 
     /**
-     * Vacate the stands of any aircraft
+     * @return Collection | NetworkAircraft[]
      */
-    public function vacateStands(): void
+    private function getAircraftWithOccupiedStandsThatCanNoLongerOccupyThem(): Collection
     {
-        $aircraftThatHaveVacatedOccupiedStands = NetworkAircraft::with('occupiedStand')
+        return NetworkAircraft::with('occupiedStand')
             ->whereHas('occupiedStand')
             ->where(function (Builder $subquery) {
                 $subquery->where('groundspeed', '>', self::MAX_OCCUPANCY_SPEED)
                     ->orWhere('altitude', '>', self::MAX_OCCUPANCY_SPEED);
             })
             ->get();
+    }
 
-        DB::table('aircraft_stand')
-            ->whereIn('callsign', $aircraftThatHaveVacatedOccupiedStands->pluck('callsign'))
-            ->delete();
-
-        $aircraftThatHaveVacatedOccupiedStands->each(function (NetworkAircraft $aircraft) {
-            event(new StandVacatedEvent($aircraft));
-        });
+    /**
+     * @return Collection | NetworkAircraft[]
+     */
+    private function getAircraftThatCanOccupyStands(): Collection
+    {
+        return NetworkAircraft::with('occupiedStand')
+            ->where('groundspeed', '<=', self::MAX_OCCUPANCY_SPEED)
+            ->orWhere('altitude', '<=', self::MAX_OCCUPANCY_SPEED)
+            ->get();
     }
 
     public function setOccupiedStands(): void
     {
-        $aircraftThatCanOccupyStands = NetworkAircraft::with('occupiedStand')
-            ->where('groundspeed', '<=', self::MAX_OCCUPANCY_SPEED)
-            ->orWhere('altitude', '<=', self::MAX_OCCUPANCY_SPEED)
+        $occupiedStandsToRemove = $this->getAircraftWithOccupiedStandsThatCanNoLongerOccupyThem();
+        $aircraftThatCanOccupyStands = $this->getAircraftThatCanOccupyStands();
+        $standOccupationsToUpdate = new Collection();
+
+        foreach ($aircraftThatCanOccupyStands as $aircraft) {
+            // Still occupying that same stand, nothing to do.
+            $currentlyOccupiedStand = $aircraft->occupiedStand->first();
+            if (
+                $currentlyOccupiedStand &&
+                $this->standOccupied($aircraft, $currentlyOccupiedStand)
+            ) {
+                continue;
+            }
+
+            $selectedStand = $this->getOccupiedStand($aircraft);
+            if ($this->occupiedStandShouldBeRemoved($currentlyOccupiedStand, $selectedStand)) {
+                $occupiedStandsToRemove->add($aircraft);
+            } else if ($this->occupiedStandShouldBeUpdated($currentlyOccupiedStand, $selectedStand)) {
+                $standOccupationsToUpdate->add(
+                    tap(
+                        $aircraft,
+                        function (NetworkAircraft $aircraft) use ($selectedStand) {
+                            $aircraft->standToBeOccupied = $selectedStand;
+                        }
+                    )
+                );
+            }
+        }
+
+        $this->vacateStands($occupiedStandsToRemove);
+        $this->occupyStands($standOccupationsToUpdate);
+    }
+
+    private function vacateStands(Collection $aircraftToVacate): void
+    {
+        // Delete all the allocations
+        DB::table('aircraft_stand')
+            ->whereIn('callsign', $aircraftToVacate->pluck('callsign'))
+            ->delete();
+
+        // Fire events
+        $aircraftToVacate->each(function (NetworkAircraft $aircraft) {
+            event(new StandVacatedEvent($aircraft));
+        });
+    }
+
+    private function occupyStands(Collection $standsToOccupy): void
+    {
+        // Update all the occupations
+        $mappedOccupations = $standsToOccupy->map(function (NetworkAircraft $aircraft) {
+            return [
+                'callsign' => $aircraft->callsign,
+                'stand_id' => $aircraft->standToBeOccupied->id,
+                'updated_at' => Carbon::now(),
+            ];
+        });
+
+        // Update the occupations
+        DB::table('aircraft_stand')->upsert(
+            $mappedOccupations->toArray(),
+            ['callsign']
+        );
+
+        // Remove the conflicting assignments
+        $this->deleteConflictingAssignmentsFollowingOccupation($mappedOccupations);
+
+        $standsToOccupy->each(function (NetworkAircraft $aircraft) {
+            event(new StandOccupiedEvent($aircraft, $aircraft->standToBeOccupied));
+        });
+    }
+
+    /**
+     * Given some stands that have been recently occupied, remove any conflicting stand assignments.
+     */
+    private function deleteConflictingAssignmentsFollowingOccupation(Collection $newOccupations): void
+    {
+        $conflictingAssignments = StandAssignment::whereNotIn('callsign', $newOccupations->pluck('callsign'))
+            ->whereIn('stand_id', $newOccupations->pluck('stand_id'))
             ->get();
 
-        $aircraftThatCanOccupyStands->each(function (NetworkAircraft $aircraft) {
-            // The aircraft hasn't un-occupied it stand.
-            if ($aircraft->occupiedStand->first() && $this->standOccupied($aircraft, $aircraft->occupiedStand()->first())) {
-                return $aircraft->occupiedStand->first();
-            }
+        StandAssignment::whereIn('callsign', $conflictingAssignments->pluck('callsign'))
+            ->delete();
 
-            // If there's a stand that's viable, occupy the stand.
-            if ($selectedStand = $this->getOccupiedStand($aircraft)) {
-                $this->occupyStand($aircraft, $selectedStand);
-            }
+        $conflictingAssignments->each(function (StandAssignment $assignment) {
+            event(new StandUnassignedEvent($assignment->callsign));
         });
+    }
+
+    /**
+     * Occupied stands should be updated if:
+     *
+     * 1. There isn't one currently occupied, but they're now occupying one.
+     * 2. They were occupying one, but they're now occupying a different one.
+     */
+    private function occupiedStandShouldBeUpdated(?Stand $currentStand, ?Stand $selectedStand): bool
+    {
+        return (!$currentStand && $selectedStand) ||
+            ($currentStand && $selectedStand && $currentStand->id !== $selectedStand->id);
+    }
+
+    /**
+     * An occupied stand should be removed, if the aircraft has one, but is no longer actually occupying it.
+     */
+    private function occupiedStandShouldBeRemoved(?Stand $currentStand, ?Stand $selectedStand): bool
+    {
+        return ($currentStand && !$selectedStand);
     }
 
     /**
@@ -407,33 +501,6 @@ class StandService
         }
 
         return $selectedStand;
-    }
-
-    /*
-     * Delete any stand assignment that isn't for the given aircraft
-     */
-    private function occupyStand(NetworkAircraft $aircraft, Stand $stand)
-    {
-        // Remove any conflicting assignments
-        $conflictingAssignment = StandAssignment::where('callsign', '<>', $aircraft->callsign)
-            ->where('stand_id', $stand->id)
-            ->first();
-
-        if ($conflictingAssignment) {
-            $this->deleteStandAssignment($conflictingAssignment);
-        }
-
-        $alreadyOccupiedStand = $aircraft->occupiedStand->first();
-        $alreadyOccupied = $alreadyOccupiedStand !== null &&
-            $alreadyOccupiedStand->id === $stand->id;
-
-        // Mark the stand as occupied
-        $aircraft->occupiedStand()->sync([$stand->id]);
-
-        // Trigger an event so other listeners can process it if its a new occupation
-        if (!$alreadyOccupied) {
-            event(new StandOccupiedEvent($aircraft, $stand));
-        }
     }
 
     private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
