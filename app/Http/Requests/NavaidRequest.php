@@ -24,7 +24,7 @@ class NavaidRequest extends FormRequest
      */
     public function rules()
     {
-        $uniqueRule = $this->method() == 'POST' ? 
+        $uniqueRule = $this->method() == 'POST' ?
             Rule::unique('navaids', 'identifier') :
             Rule::unique('navaids', 'identifier')->ignore($this->identifier, 'identifier');
 
