@@ -53,6 +53,13 @@ class NavaidAdminController extends BaseController
         return response()->json(['identifier' => $navaid->identifier], 201);
     }
 
+    /**
+     * Modify the existing navaid.
+     *
+     * @param Navaid $navaid
+     * @param NavaidRequest $request
+     * @return void
+     */
     public function modifyNavaid(Navaid $navaid, NavaidRequest $request)
     {
         $error = $this->validateLatLongValues($request);
@@ -66,6 +73,12 @@ class NavaidAdminController extends BaseController
         return response()->json(['identifier' => $navaid->identifier]);
     }
 
+    /**
+     * Delete the Navaid
+     *
+     * @param Navaid $navaid
+     * @return void
+     */
     public function deleteNavaid(Navaid $navaid)
     {
         $navaid->delete();
@@ -73,6 +86,12 @@ class NavaidAdminController extends BaseController
         return response()->json([], 204);
     }
 
+    /**
+     * Attempt to validate the values provided by the latitude / longitude strings
+     *
+     * @param NavaidRequest $request
+     * @return string|null
+     */
     private function validateLatLongValues(NavaidRequest &$request) : ?string
     {
         try {

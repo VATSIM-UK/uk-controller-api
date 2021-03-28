@@ -409,6 +409,8 @@ paths:
                   navaid:
                     type: object
                     $ref: '#/components/schemas/NavaidDetail'
+        '404':
+          description: Not found
     put:
       tags:
         - "navaids"
@@ -429,6 +431,8 @@ paths:
                     example: NQY
         '400':
           description: Invalid latitude / longitude values
+        '404':
+          description: Not found
         '422':
           description: Validation errors
     delete:
@@ -437,3 +441,5 @@ paths:
       responses:
         '204':
           description: Successful (no content)
+        '404':
+          description: Not found
