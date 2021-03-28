@@ -17,6 +17,11 @@ class Navaid extends Model
         'longitude',
     ];
 
+    protected $casts = [
+        'latitude' => 'string',
+        'longitude' => 'string'
+    ];
+
     public function holds() : HasMany
     {
         return $this->hasMany(Hold::class);
