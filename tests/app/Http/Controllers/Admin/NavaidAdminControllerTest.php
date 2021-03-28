@@ -25,7 +25,7 @@ class NavaidAdminControllerTest extends BaseApiTestCase
         $response = $this->makeAuthenticatedApiRequest('GET', $this->baseEndpoint);
         
         $response->assertStatus(200);
-        $response->assertJson(['navaids' => [$navaid->toArray()]]);
+        $response->assertJson(['navaids' => $navaid->withCount('holds')->get()->toArray()]);
     }
 
     public function testNavaidCanBeRetrievedByIdentifier()
