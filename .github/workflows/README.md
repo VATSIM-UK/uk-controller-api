@@ -1,12 +1,12 @@
-# Github Actions
+# GitHub Actions
 
 This repository has three Actions workflows:
 
 | Name | Triggers | Branch Restrictions | Description |
 |-|-|-|-|
-| **Build and Test** | [`push`, `pull_request`] | | This workflow installs and compiles dependencies and assets before running the test and coverage suite. |
+| **Test** | [`push`, `pull_request`] | | This workflow installs and compiles dependencies and assets before running the test and coverage suite against UKCP. |
 | **Release** | [`repository_dispatch`: types[`release-trigger`]] | `main` | This workflow runs semantic release against the main branch to tag and publish a new release. |
-| **Deploy** | [`repository-dispatch`: types[`manual-trigger`, `deploy-trigger`]] | `main` | This workflow initiates a GitHub deployment, installs and compiles dependencies, generates configuration files from secrets and uploads the application to VATSIM UK's production systems. The workflow is responsible for all server-side file management including version housekeeping. |
+| **Deploy** | [`repository-dispatch`: types[`manual-trigger`, `deploy-trigger`]] | `main` | This workflow initiates a GitHub deployment, installs and compiles dependenices, generates configuration files from secrets and uploads the application to VATSIM UK's production systems. The workflow is responsible for all server-side file management including version housekeeping. |
 
 ## Important Notes
 
@@ -18,7 +18,7 @@ Worklows **Release** is configured to be triggered by upstream workflows. The bu
 
 This may be necessary from time to time should a given deployment fail or if you need to update the value of a secret and deploy just configuration changes.
 
-There is **no way** to trigger a workflow manually within the Github User Interface. However, the workflow will trigger on a repository dispatch event of the type `manual-trigger`. Therefore, we can use an authenticated API request to trigger a deployment.
+There is **no way** to trigger a workflow manually within the GitHub User Interface. However, the workflow will trigger on a repository dispatch event of the type `manual-trigger`. Therefore, we can use an authenticated API request to trigger a deployment.
 
 Below is an example of the curl request you need to make to trigger a deployment.
 
@@ -38,31 +38,13 @@ curl -X POST \
 
 ## .env Configuration
 
-**This is being reworked and may change shortly, see the `deploy.yml` file for latest info.**
+The `deploy.yml` workflow has been designed to populate the .env file based on a secret with the contents of the entire .env file.
 
-The `deploy.yml` workflow has been designed to copy the .env.example file to .env (**.env.example MUST CONTINUE TO REFLECT THE PARAMETERS USED IN PRODUCTION**)
-
-From there, the workflow replaces variables found in the .env file if there is a matching key in the runner's system environment that is populated from the `<step>.<env>` section of the workflow. This env can be populated using both plaintext and secrets as required.
-
-Below is an example of the step that generates the env:
-
-```yaml
-- name: Populate .env
-  env:
-    APP_KEY: ${{ secrets.APP_KEY }}
-    DB_MYSQL_USER: db_user
-  run: |
-  ...
-```
-
-### To add a new value to your .env file
-
-1. If the value should be kept secret, **create a secret** for it using the same key as found in the .env file
-2. Update the workflow step to include that new secret within the env for the step as shown above. Make sure that the key matches the `.env` file.
+To add a new value to the .env file, simply update the ENV_FILE_CONTENTS secret.
 
 ## Secrets
 
-Workflows running on main require a number of secrets to run successfully. **If a secret is not present, it will be presented to the job as `null` or `0` and will lead to unexpected results**
+Workflows running on main require a number of secrets to run successfuly. **If a secret is not present, it will be presented to the job as `null` or `0` and will lead to unexpected results**
 
 ### Job Secrets
 
@@ -70,8 +52,8 @@ Below is a table of all secrets used within the workflows directly. See [.env Co
 
 | Name | Used In | Description |
 |-|-|-|
-| `PAT` | [`build-and-test.yml`, `release.yml`] | Personal Access Token with `repo` permissions. More Info: see above under [Actions -> Important Notes](#important-notes) |
-| `ACTIONS_DISCORD_WEBHOOK` | `deploy.yml` | Discord Incoming Webhook Token for Deployment status Slack Notifications |
+| `PAT` | [`test.yml`, `release.yml`] | Personal Access Token with `repo` permissions. More Info: see above under [Actions -> Important Notes](#important-notes) |
+| `ACTIONS_DISCORD_WEBHOOK` | `deploy.yml` | Discord Incoming Webhook Token for Deployment status notifications |
 | `APPLICATION_ROOT` | `deploy.yml` | Specifies the target deployment application root for use when uploading and for creating / managing additional app directories / links. |
 | `SSH_HOST` | `deploy.yml` | SSH target host for deployment |
 | `SSH_PORT` | `deploy.yml` | SSH port for deployment |
