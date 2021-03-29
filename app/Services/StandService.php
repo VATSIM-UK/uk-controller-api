@@ -48,7 +48,13 @@ class StandService
      */
     private const ASSIGN_STAND_MINUTES_BEFORE = 15.0;
 
-    private $allStands = [];
+    /**
+     * The maximum distance in meters from an airfields centre that we bother
+     * checking if an aircraft is sat on a stand. This is about 2.5 nautical miles.
+     */
+    private const DISTANCE_FROM_AIRFIELD_TO_CHECK_STANDS = 5000;
+
+    private $allStandsByAirfield = [];
 
     /**
      * @var ArrivalStandAllocatorInterface[]
@@ -65,17 +71,15 @@ class StandService
 
     public function getStandsDependency(): Collection
     {
-        return $this->getAllStands()->groupBy('airfield_id')->mapWithKeys(
-            function (Collection $collection) {
+        return $this->getAllStandsByAirfield()->mapWithKeys(
+            function (Airfield $airfield) {
                 return [
-                    Airfield::find($collection->first()->airfield_id)->code => $collection->map(
-                        function (Stand $stand) {
-                            return [
-                                'id' => $stand->id,
-                                'identifier' => $stand->identifier
-                            ];
-                        }
-                    ),
+                    $airfield->code => $airfield->stands->mapWithKeys(function (Stand $stand) {
+                        return [
+                            'id' => $stand->id,
+                            'identifier' => $stand->identifier
+                        ];
+                    }),
                 ];
             }
         )->toBase();
@@ -339,13 +343,15 @@ class StandService
     /**
      * @return Collection|Stand[]
      */
-    private function getAllStands(): Collection
+    private function getAllStandsByAirfield(): Collection
     {
-        $this->allStands = Stand::all()->toBase();
-        return $this->allStands;
+        $this->allStandsByAirfield = Airfield::with('stands')->get()->toBase();
+        return $this->allStandsByAirfield;
     }
 
     /**
+     * Any aircraft that is moving or is in the air, cannot be occupying a stand.
+     *
      * @return Collection | NetworkAircraft[]
      */
     private function getAircraftWithOccupiedStandsThatCanNoLongerOccupyThem(): Collection
@@ -354,22 +360,41 @@ class StandService
             ->whereHas('occupiedStand')
             ->where(function (Builder $subquery) {
                 $subquery->where('groundspeed', '>', self::MAX_OCCUPANCY_SPEED)
-                    ->orWhere('altitude', '>', self::MAX_OCCUPANCY_SPEED);
+                    ->orWhere('altitude', '>', self::MAX_OCCUPANCY_ALTITUDE);
             })
             ->get();
     }
 
     /**
+     * Get the aircraft that can potentially occupy a different stand
+     *
+     * We ignore anything that hasn't moved since it was last deemed to occupy a stand because we know its
+     * still there.
+     *
      * @return Collection | NetworkAircraft[]
      */
     private function getAircraftThatCanOccupyStands(): Collection
     {
         return NetworkAircraft::with('occupiedStand')
-            ->where('groundspeed', '<=', self::MAX_OCCUPANCY_SPEED)
-            ->orWhere('altitude', '<=', self::MAX_OCCUPANCY_SPEED)
+            ->leftJoin('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
+            ->where(function (Builder $subquery) {
+                // Either they've moved slightly, so we should recheck, or they aren't currently occupying anything.
+                $subquery->whereRaw('network_aircraft.latitude <> aircraft_stand.latitude')
+                    ->orWhereRaw('network_aircraft.longitude <> aircraft_stand.longitude')
+                    ->orWhereNull('aircraft_stand.latitude');
+            })
+            ->where(function (Builder $subquery) {
+                // They not moving
+                $subquery->where('groundspeed', '<=', self::MAX_OCCUPANCY_SPEED)
+                    ->orWhere('altitude', '<=', self::MAX_OCCUPANCY_SPEED);
+            })
+            ->select('network_aircraft.*')
             ->get();
     }
 
+    /**
+     * Go through every aircraft we're tracking and check whether or not they're occupying a stand.
+     */
     public function setOccupiedStands(): void
     {
         $occupiedStandsToRemove = $this->getAircraftWithOccupiedStandsThatCanNoLongerOccupyThem();
@@ -405,6 +430,9 @@ class StandService
         $this->occupyStands($standOccupationsToUpdate);
     }
 
+    /**
+     * Vacate stands where required and trigger the vacation event.
+     */
     private function vacateStands(Collection $aircraftToVacate): void
     {
         // Delete all the allocations
@@ -418,11 +446,16 @@ class StandService
         });
     }
 
+    /**
+     * Occupy the stands that are newly occupied, and remove conflicting assignments.
+     */
     private function occupyStands(Collection $standsToOccupy): void
     {
         // Update all the occupations
         $mappedOccupations = $standsToOccupy->map(function (NetworkAircraft $aircraft) {
             return [
+                'latitude' => $aircraft->latitude,
+                'longitude' => $aircraft->longitude,
                 'callsign' => $aircraft->callsign,
                 'stand_id' => $aircraft->standToBeOccupied->id,
                 'updated_at' => Carbon::now(),
@@ -488,15 +521,22 @@ class StandService
         $selectedStand = null;
         $selectedStandDistance = PHP_INT_MAX;
 
-        foreach ($this->getAllStands() as $stand) {
-            $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+        foreach ($this->getAllStandsByAirfield() as $airfield) {
 
-            if (
-                $this->standOccupied($aircraft, $stand) &&
-                $distanceFromStand < $selectedStandDistance
-            ) {
-                $selectedStand = $stand;
-                $selectedStandDistance = $distanceFromStand;
+            $distanceFromAirfield = $airfield->coordinate->getDistance($aircraft->latLong, new Haversine());
+            if ($distanceFromAirfield > self::DISTANCE_FROM_AIRFIELD_TO_CHECK_STANDS) {
+                continue;
+            }
+
+            foreach ($airfield->stands as $stand) {
+                $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+                if (
+                    $this->standOccupied($aircraft, $stand) &&
+                    $distanceFromStand < $selectedStandDistance
+                ) {
+                    $selectedStand = $stand;
+                    $selectedStandDistance = $distanceFromStand;
+                }
             }
         }
 

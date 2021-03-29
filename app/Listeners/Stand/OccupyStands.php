@@ -4,9 +4,10 @@ namespace App\Listeners\Stand;
 
 use App\Events\NetworkDataUpdatedEvent;
 use App\Services\StandService;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OccupyStands implements ShouldQueue
+class OccupyStands implements ShouldQueue, ShouldBeUnique
 {
     private StandService $standService;
 
