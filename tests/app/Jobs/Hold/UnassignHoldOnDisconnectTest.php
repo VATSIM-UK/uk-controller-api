@@ -1,40 +1,42 @@
 <?php
 
-namespace App\Listeners\Hold;
+namespace App\Jobs\Hold;
 
 use App\BaseFunctionalTestCase;
-use App\BaseUnitTestCase;
 use App\Events\HoldUnassignedEvent;
-use App\Events\NetworkAircraftDisconnectedEvent;
+use App\Models\Hold\AssignedHold;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 
 class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
 {
+
+    private UnassignHoldOnDisconnect $listener;
+
+    public function setUp() : void
+    {
+        parent::setUp();
+        $this->listener = new UnassignHoldOnDisconnect(NetworkAircraft::find('BAW123'));
+        Carbon::setTestNow(Carbon::now());
+    }
+
     public function testItDoesNotTriggerAHoldUnassignedEventIfAircraftNotHolding()
     {
+        AssignedHold::where('callsign', 'BAW123')->delete();
         $this->doesntExpectEvents(HoldUnassignedEvent::class);
-        $listener = new UnassignHoldOnDisconnect();
-        $this->assertTrue(
-            $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'AAL1234'])))
-        );
+        $this->listener->handle();
     }
 
     public function testItTriggersAHoldUnassignedEventIfAircraftIsAssignedHold()
     {
         $this->expectsEvents(HoldUnassignedEvent::class);
-        $listener = new UnassignHoldOnDisconnect();
-        $this->assertTrue(
-            $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])))
-        );
+        $this->listener->handle();
     }
 
     public function testItDeletesAssignedHold()
     {
-        $listener = new UnassignHoldOnDisconnect();
         $this->withoutEvents();
-        $this->assertTrue(
-            $listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])))
-        );
+        $this->listener->handle();
 
         $this->assertDatabaseMissing(
             'assigned_holds',

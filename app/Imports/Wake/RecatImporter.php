@@ -3,7 +3,8 @@
 namespace App\Imports\Wake;
 
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\RecatCategory;
+use App\Models\Aircraft\WakeCategory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -15,9 +16,16 @@ class RecatImporter implements ToCollection
 
     public function collection(Collection $rows): void
     {
-        $categories = RecatCategory::all()->mapWithKeys(function (RecatCategory $category) {
-            return [$category['code'] => $category['id']];
-        })->toArray();
+        $categories = WakeCategory::whereHas(
+            'scheme',
+            function (Builder $scheme) {
+                return $scheme->recat();
+            }
+        )->get()->mapWithKeys(
+            function (WakeCategory $category) {
+                return [$category['code'] => $category['id']];
+            }
+        )->toArray();
 
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
@@ -33,7 +41,14 @@ class RecatImporter implements ToCollection
                 );
             }
 
-            Aircraft::where('code', $row[0])->update(['recat_category_id' => $categories[$row[1]]]);
+            if ($aircraft = Aircraft::where('code', $row[0])->first()) {
+                $categoriesToKeep = $aircraft->wakeCategories->filter(function (WakeCategory $category) {
+                    return !$category->scheme->isRecat();
+                })->pluck('id')->toArray();
+
+                $aircraft->wakeCategories()->sync(array_merge($categoriesToKeep, [$categories[$row[1]]]));
+            }
+
             $this->output->progressAdvance();
         }
 

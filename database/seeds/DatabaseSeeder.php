@@ -50,7 +50,6 @@ class DatabaseSeeder extends Seeder
         ],
         AircraftTableSeeder::class => [
             'aircraft',
-            'wake_categories',
         ],
         PrenoteTableSeeder::class => [
             'prenotes',

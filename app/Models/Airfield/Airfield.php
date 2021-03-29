@@ -26,6 +26,8 @@ class Airfield extends Model implements MinStackDataProviderInterface
      */
     protected $fillable = [
         'code',
+        'latitude',
+        'longitude',
         'transition_altitude',
         'standard_high',
         'msl_calculation',
@@ -42,6 +44,8 @@ class Airfield extends Model implements MinStackDataProviderInterface
 
     protected $casts = [
         'groundspeed' => 'integer',
+        'latitude' => 'float',
+        'longitude' => 'float',
     ];
 
     /**

@@ -166,8 +166,17 @@ Route::middleware('admin.data')->group(function () {
 
     Route::prefix('admin')->group(function () {
         Route::get('/airfields', 'Admin\\StandAdminController@getAirfields');
+        Route::post('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@createNewStand');
         Route::get('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@getStandsForAirfield');
         Route::get('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@getStandDetails');
+        Route::put('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@modifyStand');
+        Route::delete('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@deleteStand');
+
+        Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
+        Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
+        Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
+        Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
+        Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
 
         Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
     });
@@ -242,6 +251,9 @@ Route::middleware('public')->group(function () {
     Route::get('stand/assignment', 'StandController@getStandAssignments');
     Route::get('stand/assignment/{callsign}', 'StandController@getStandAssignmentForAircraft')
         ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+
+    // Wake categories
+    Route::get('wake-schemes/dependency', 'WakeController@getWakeSchemesDependency');
 
     // Admin login
     Route::prefix('admin')->group(function () {

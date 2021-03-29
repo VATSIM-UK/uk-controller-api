@@ -46,7 +46,7 @@ class Importer implements WithHeadingRow, ToCollection
             }
 
             // Perform updates
-            Aircraft::updateOrCreate(
+            $aircraft = Aircraft::updateOrCreate(
                 [
                     'code' => $row[self::TYPE_DESIGNATOR_COLUMN],
                 ],
@@ -54,9 +54,14 @@ class Importer implements WithHeadingRow, ToCollection
                     'allocate_stands' => false,
                     'wingspan' => 0.0,
                     'length' => 0.0,
-                    'wake_category_id' => $wakeCategory->id,
                 ]
             );
+
+            $categoriesToKeep = $aircraft->wakeCategories->filter(function (WakeCategory $category) {
+                return !$category->scheme->isUk();
+            })->pluck('id')->toArray();
+            $aircraft->wakeCategories()->sync(array_merge($categoriesToKeep, [$wakeCategory->id]));
+
             $this->output->progressAdvance();
         }
 
