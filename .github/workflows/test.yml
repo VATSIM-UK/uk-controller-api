@@ -124,7 +124,7 @@ jobs:
       #
 
       # Environment Configuration
-      - name: Create empty Environment File
+      - name: Create Environment File
         run: cp .env.ci .env
 
       - name: Generate App Key
