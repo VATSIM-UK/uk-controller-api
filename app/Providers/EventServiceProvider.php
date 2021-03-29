@@ -16,6 +16,7 @@ use App\Events\StandVacatedEvent;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Network\AircraftDisconnected;
+use App\Listeners\Network\NetworkDataUpdated;
 use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
@@ -57,7 +58,7 @@ class EventServiceProvider extends ServiceProvider
             //ReclaimIfLeftFirProximity::class,
         ],
         NetworkDataUpdatedEvent::class => [
-            OccupyStands::class,
+            NetworkDataUpdated::class,
         ],
         StandAssignedEvent::class => [
             RecordStandAssignmentHistory::class,
