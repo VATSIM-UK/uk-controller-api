@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0']
+        php: ['7.4']
         composer: ['v2']
         experimental: [false]
     services:
@@ -167,10 +167,8 @@ jobs:
   trigger-release:
     name: Trigger Release
     needs: test
-    if: ${{ github.ref == 'refs/heads/main' && matrix.php == '7.4' }}
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    with:
-      php-version: ${{ matrix.php }}
     steps:
       #
       # RELEASE (main only)
