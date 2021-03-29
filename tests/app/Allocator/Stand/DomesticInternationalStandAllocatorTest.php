@@ -9,9 +9,12 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
+use util\Traits\WithWakeCategories;
 
 class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 {
+    use WithWakeCategories;
+
     /**
      * @var DomesticInternationalStandAllocator
      */
@@ -39,7 +42,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'type_id' => StandType::domestic()->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
 
@@ -51,7 +54,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
                 'type_id' => StandType::international()->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
     }
@@ -86,10 +89,10 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
                 'type_id' => StandType::domestic()->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 55,
             ]
         );
-        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'J')->first()->id]);
+        $this->setWakeCategoryForAircraft('B738', 'J');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
         $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
@@ -108,10 +111,10 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
                 'type_id' => StandType::domestic()->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 55,
             ]
         );
-        Aircraft::where('code', 'B738')->update(['wake_category_id' => WakeCategory::where('code', 'S')->first()->id]);
+        $this->setWakeCategoryForAircraft('B738', 'S');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
         $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
@@ -120,7 +123,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($expectedAssignment->stand_id, $weightAppropriateStand->id);
     }
 
-    public function testItOnlyAssignsGeneralUseStands()
+    public function testItPrefersHigherPriorityUseStands()
     {
         // Create a stand that isn't for general allocation
         Stand::create(
@@ -130,7 +133,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'general_use' => false,
+                'assignment_priority' => 2,
             ]
         );
 
@@ -153,7 +156,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'longitude' => -6.22258694,
                 'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
                 'type_id' => StandType::domestic()->first()->id,
-                'general_use' => true,
+                'assignment_priority' => 1,
             ]
         );
 

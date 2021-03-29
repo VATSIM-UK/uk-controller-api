@@ -4,9 +4,8 @@ namespace App\Events;
 
 use App\Models\Release\Enroute\EnrouteRelease;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class EnrouteReleaseEvent implements ShouldBroadcast
+class EnrouteReleaseEvent extends HighPriorityBroadcastEvent
 {
     const CHANNEL = 'enroute-releases';
 

@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         ],
         HoldTableSeeder::class => [
             'holds',
+            'deemed_separated_holds',
         ],
         HoldRestrictionTableSeeder::class => [
             'hold_restrictions',
@@ -49,7 +50,6 @@ class DatabaseSeeder extends Seeder
         ],
         AircraftTableSeeder::class => [
             'aircraft',
-            'wake_categories',
         ],
         PrenoteTableSeeder::class => [
             'prenotes',

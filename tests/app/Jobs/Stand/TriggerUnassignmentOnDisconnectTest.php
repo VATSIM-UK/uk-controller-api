@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners\Stand;
+namespace App\Jobs\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Events\NetworkAircraftDisconnectedEvent;
@@ -11,31 +11,26 @@ use App\Services\NetworkDataService;
 
 class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var TriggerUnassignmentOnDisconnect
-     */
-    private $listener;
+    private TriggerUnassignmentOnDisconnect $listener;
 
     public function setUp() : void
     {
         parent::setUp();
-        $this->listener = $this->app->make(TriggerUnassignmentOnDisconnect::class);
+        $this->listener = new TriggerUnassignmentOnDisconnect(NetworkAircraft::find('BAW123'));
     }
 
     public function testItFiresEventIfStandAssignmentExists()
     {
         $this->addStandAssignment('BAW123', 1);
         $this->expectsEvents(StandUnassignedEvent::class);
-        $this->assertTrue(
-            $this->listener->handle(new NetworkAircraftDisconnectedEvent(NetworkAircraft::find('BAW123')))
-        );
+        $this->listener->handle();
     }
 
     public function testItDeletesStandAssignments()
     {
         $this->addStandAssignment('BAW123', 1);
         $this->expectsEvents([]);
-        $this->listener->handle(new NetworkAircraftDisconnectedEvent(NetworkAircraft::find('BAW123')));
+        $this->listener->handle();
 
         $this->assertNull(StandAssignment::find('BAW123'));
     }
@@ -43,9 +38,7 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
     public function testDoesntFireEventIfNoAssignment()
     {
         $this->doesntExpectEvents(StandUnassignedEvent::class);
-        $this->assertTrue(
-            $this->listener->handle(new NetworkAircraftDisconnectedEvent(new NetworkAircraft(['callsign' => 'BAW123'])))
-        );
+        $this->listener->handle();
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
