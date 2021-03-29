@@ -20,13 +20,22 @@ class UpdateSrdTest extends BaseUnitTestCase
 
     public function testRunsSrdUpdateWithDataUpdate()
     {
-        $this->serviceMock->shouldReceive('updateSrdData')->once()->andReturn(true);
+        $this->serviceMock->shouldReceive('newSrdShouldBeAvailable')->andReturnTrue();
+        $this->serviceMock->shouldReceive('updateSrdData')->once()->andReturnFalse();
         Artisan::call('srd:update');
     }
 
     public function testRunsSrdUpdateWithNoDataUpdate()
     {
-        $this->serviceMock->shouldReceive('updateSrdData')->once()->andReturn(false);
+        $this->serviceMock->shouldReceive('newSrdShouldBeAvailable')->andReturnTrue();
+        $this->serviceMock->shouldReceive('updateSrdData')->once()->andReturnFalse();
+        Artisan::call('srd:update');
+    }
+
+    public function testItDoesntRunSrdUpdateIfNothingToUpdate()
+    {
+        $this->serviceMock->shouldReceive('newSrdShouldBeAvailable')->andReturnFalse();
+        $this->serviceMock->shouldNotReceive('updateSrdData');
         Artisan::call('srd:update');
     }
 }
