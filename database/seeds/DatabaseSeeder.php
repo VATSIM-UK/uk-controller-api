@@ -102,6 +102,7 @@ class DatabaseSeeder extends Seeder
             'stand_assignments_history',
             'stand_pairs',
             'stand_reservations',
+            'aircraft_stand',
         ],
         TerminalTableSeeder::class => [
             'terminals',

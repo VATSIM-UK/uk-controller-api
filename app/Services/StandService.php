@@ -74,7 +74,7 @@ class StandService
         return $this->getAllStandsByAirfield()->mapWithKeys(
             function (Airfield $airfield) {
                 return [
-                    $airfield->code => $airfield->stands->mapWithKeys(function (Stand $stand) {
+                    $airfield->code => $airfield->stands->map(function (Stand $stand) {
                         return [
                             'id' => $stand->id,
                             'identifier' => $stand->identifier
@@ -345,7 +345,7 @@ class StandService
      */
     private function getAllStandsByAirfield(): Collection
     {
-        $this->allStandsByAirfield = Airfield::with('stands')->get()->toBase();
+        $this->allStandsByAirfield = Airfield::with('stands')->whereHas('stands')->get()->toBase();
         return $this->allStandsByAirfield;
     }
 
@@ -386,7 +386,7 @@ class StandService
             ->where(function (Builder $subquery) {
                 // They not moving
                 $subquery->where('groundspeed', '<=', self::MAX_OCCUPANCY_SPEED)
-                    ->orWhere('altitude', '<=', self::MAX_OCCUPANCY_SPEED);
+                    ->where('altitude', '<=', self::MAX_OCCUPANCY_ALTITUDE);
             })
             ->select('network_aircraft.*')
             ->get();
@@ -439,11 +439,6 @@ class StandService
         DB::table('aircraft_stand')
             ->whereIn('callsign', $aircraftToVacate->pluck('callsign'))
             ->delete();
-
-        // Fire events
-        $aircraftToVacate->each(function (NetworkAircraft $aircraft) {
-            event(new StandVacatedEvent($aircraft));
-        });
     }
 
     /**
@@ -470,10 +465,6 @@ class StandService
 
         // Remove the conflicting assignments
         $this->deleteConflictingAssignmentsFollowingOccupation($mappedOccupations);
-
-        $standsToOccupy->each(function (NetworkAircraft $aircraft) {
-            event(new StandOccupiedEvent($aircraft, $aircraft->standToBeOccupied));
-        });
     }
 
     /**
@@ -522,7 +513,6 @@ class StandService
         $selectedStandDistance = PHP_INT_MAX;
 
         foreach ($this->getAllStandsByAirfield() as $airfield) {
-
             $distanceFromAirfield = $airfield->coordinate->getDistance($aircraft->latLong, new Haversine());
             if ($distanceFromAirfield > self::DISTANCE_FROM_AIRFIELD_TO_CHECK_STANDS) {
                 continue;

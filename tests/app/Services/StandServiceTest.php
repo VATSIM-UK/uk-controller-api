@@ -9,12 +9,9 @@ use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocator;
-use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
-use App\Events\StandOccupiedEvent;
 use App\Events\StandUnassignedEvent;
-use App\Events\StandVacatedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Aircraft\Aircraft;
@@ -24,6 +21,7 @@ use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class StandServiceTest extends BaseFunctionalTestCase
 {
@@ -424,128 +422,221 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntOccupyStandsIfAircraftTooHigh()
     {
-        $this->expectsEvents(StandVacatedEvent::class);
-        $this->doesntExpectEvents(StandOccupiedEvent::class);
-        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+        NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
                 'groundspeed' => 10,
                 'altitude' => 751
             ]
         );
-        $aircraft->occupiedStand()->sync([1]);
 
-        $this->assertNull($this->service->setOccupiedStand($aircraft));
-        $aircraft->refresh();
-        $this->assertEmpty($aircraft->occupiedStand);
+        $this->service->setOccupiedStands();
+        $this->assertDatabaseMissing(
+            'aircraft_stand',
+            [
+                'callsign' => 'RYR787',
+            ]
+        );
     }
 
     public function testItRemovesOccupiedStandIfAircraftTooHigh()
     {
-        $this->expectsEvents(StandVacatedEvent::class);
-        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
                 'groundspeed' => 0,
                 'altitude' => 751
             ]
         );
         $aircraft->occupiedStand()->sync([1]);
 
-        $this->service->setOccupiedStand($aircraft);
-        $aircraft->refresh();
-        $this->assertEmpty($aircraft->occupiedStand);
+        $this->service->setOccupiedStands();
+        $this->assertDatabaseMissing(
+            'aircraft_stand',
+            [
+                'callsign' => 'RYR787',
+            ]
+        );
     }
 
     public function testItDoesntOccupyStandsIfAircraftTooFast()
     {
-        $this->expectsEvents(StandVacatedEvent::class);
-        $this->doesntExpectEvents(StandOccupiedEvent::class);
-        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+        NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
                 'groundspeed' => 6,
                 'altitude' => 0
             ]
         );
-        $aircraft->occupiedStand()->sync([1]);
 
-        $this->assertNull($this->service->setOccupiedStand($aircraft));
-        $aircraft->refresh();
-        $this->assertEmpty($aircraft->occupiedStand);
+        $this->service->setOccupiedStands();
+        $this->assertDatabaseMissing(
+            'aircraft_stand',
+            [
+                'callsign' => 'RYR787',
+            ]
+        );
     }
 
     public function testItRemovesOccupiedStandIfAircraftTooFast()
     {
-        $this->expectsEvents(StandVacatedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
                 'groundspeed' => 11,
                 'altitude' => 0
             ]
         );
 
         $aircraft->occupiedStand()->sync([1]);
-        $this->service->setOccupiedStand($aircraft);
-        $aircraft->refresh();
-        $this->assertEmpty($aircraft->occupiedStand);
+        $this->service->setOccupiedStands();
+        $this->assertDatabaseMissing(
+            'aircraft_stand',
+            [
+                'callsign' => 'RYR787',
+            ]
+        );
     }
 
-    public function testItReturnsCurrentStandIfStillOccupied()
+    public function testItOccupiesAFreshStand()
     {
-        $this->doesntExpectEvents(StandOccupiedEvent::class);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $this->service->setOccupiedStands();
+        $aircraft->refresh();
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItHandlesCurrentStandIfStillOccupied()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
                 'groundspeed' => 0,
                 'altitude' => 0
             ]
         );
         $aircraft->occupiedStand()->sync([2]);
-        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
+        $this->service->setOccupiedStands();
         $aircraft->refresh();
         $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
     }
 
-    public function testItDoesntReturnCurrentStandIfNoLongerOccupied()
+    public function testItDoesntChangeOccupiedStandIfTheAircraftHasMovedLatitudeSinceOccupancy()
     {
-        $this->expectsEvents([StandOccupiedEvent::class]);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
                 'groundspeed' => 0,
                 'altitude' => 0
             ]
         );
-        $aircraft->occupiedStand()->sync([1]);
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -0.48601389]]);
 
-        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
+        $this->service->setOccupiedStands();
+        $aircraft->refresh();
+        $this->assertEquals(1, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItChangesOccupiedStandIfTheAircraftHasMovedLatitudeSinceOccupancy()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 53.65883639, 'longitude' =>  -0.48601389]]);
+
+        $this->service->setOccupiedStands();
         $aircraft->refresh();
         $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
     }
 
-    public function testItUsurpsAssignedStands()
+    public function testItChangesOccupiedStandIfTheAircraftHasMovedLongitudeSinceOccupancy()
     {
-        $this->expectsEvents([StandOccupiedEvent::class, StandUnassignedEvent::class]);
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -5.22198972]]);
+
+        $this->service->setOccupiedStands();
+        $aircraft->refresh();
+        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
+    }
+
+    public function testItRemovesOccupiedStandIfTheAircraftChangesLatitudeAndIsNoLongerOnStand()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 53.65883639,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -0.48601389]]);
+
+        $this->service->setOccupiedStands();
+        $aircraft->refresh();
+        $this->assertNull($aircraft->occupiedStand->first());
+    }
+
+    public function testItRemovesOccupiedStandIfTheAircraftChangesLongitudeAndIsNoLongerOnStand()
+    {
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -5.22198972,
+                'groundspeed' => 0,
+                'altitude' => 0
+            ]
+        );
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -0.48601389]]);
+
+        $this->service->setOccupiedStands();
+        $aircraft->refresh();
+        $this->assertNull($aircraft->occupiedStand->first());
+    }
+
+    public function testItUsurpsAssignedStands()
+    {
+        $this->expectsEvents(StandUnassignedEvent::class);
+        NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
                 'groundspeed' => 0,
                 'altitude' => 0
             ]
@@ -553,54 +644,33 @@ class StandServiceTest extends BaseFunctionalTestCase
 
         $assignment = $this->addStandAssignment('BAW123', 2);
 
-        $this->service->setOccupiedStand($aircraft);
+        $this->service->setOccupiedStands();
         $this->assertDeleted($assignment);
-    }
-
-    public function testItReturnsOccupiedStandIfStandIsOccupied()
-    {
-        $this->doesntExpectEvents(StandOccupiedEvent::class);
-        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
-            'RYR787',
-            [
-                'latitude' => 54.65883639,
-                'longitude' => -6.22198972,
-                'groundspeed' => 0,
-                'altitude' => 0
-            ]
-        );
-        $aircraft->occupiedStand()->sync([2]);
-
-        $this->assertEquals(2, $this->service->setOccupiedStand($aircraft)->id);
-        $aircraft->refresh();
-        $this->assertCount(1, $aircraft->occupiedStand);
-        $this->assertEquals(2, $aircraft->occupiedStand->first()->id);
     }
 
     public function testItReturnsClosestOccupiedStandIfMultipleInContention()
     {
-        $this->expectsEvents(StandOccupiedEvent::class);
         // Create an extra stand that's the closest
         $newStand = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => 'TEST',
-                'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'latitude' => 51.47437111,
+                'longitude' => -0.48953611,
             ]
         );
 
         $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
             'RYR787',
             [
-                'latitude' => 54.658828,
-                'longitude' => -6.222070,
+                'latitude' => 51.47437111,
+                'longitude' => -0.48953611,
                 'groundspeed' => 0,
                 'altitude' => 0
             ]
         );
 
-        $this->assertEquals($newStand->id, $this->service->setOccupiedStand($aircraft)->id);
+        $this->service->setOccupiedStands();
         $aircraft->refresh();
         $this->assertCount(1, $aircraft->occupiedStand);
         $this->assertEquals($newStand->id, $aircraft->occupiedStand->first()->id);
