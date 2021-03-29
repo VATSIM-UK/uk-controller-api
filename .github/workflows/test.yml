@@ -49,7 +49,7 @@ jobs:
       - name: Configure MySQL
         run: |
           mysql -e "CREATE DATABASE IF NOT EXISTS ukcp;" -h127.0.0.1 -P32574 -uroot -proot
-          mysql -e "SET GLOBAL sql_require_primary_key = ON;" -h127.0.0.1 -P32574 -uroot -proot
+          mysql -e "SET GLOBAL sql_require_primary_key = OFF;" -h127.0.0.1 -P32574 -uroot -proot
 
       - name: Configure PHP
         uses: shivammathur/setup-php@v2
