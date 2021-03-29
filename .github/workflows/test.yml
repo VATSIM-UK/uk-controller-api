@@ -167,7 +167,7 @@ jobs:
   trigger-release:
     name: Trigger Release
     needs: test
-    if: github.ref == 'refs/heads/main' && matrix.php == '7.4'
+    if: ${{ github.ref == 'refs/heads/main' && matrix.php == '7.4' }}
     runs-on: ubuntu-latest
     steps:
       #
