@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.2.1",
+    "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.19",
     "postcss": "^8.1.14",
@@ -33,5 +34,26 @@
   "bugs": {
     "url": "https://github.com/VATSIM-UK/uk-controller-api/issues"
   },
-  "homepage": "https://github.com/VATSIM-UK/uk-controller-api#readme"
+  "homepage": "https://github.com/VATSIM-UK/uk-controller-api#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "repositoryUrl": "https://github.com/VATSIM-UK/uk-controller-api",
+    "branches": ["main"],
+    "tagFormat": "${version}",
+    "plugins": [
+      "@semantic-release/npm",
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/github",
+        {
+            "releasedLabels": false
+        }
+      ]
+    ]
+  }
 }
