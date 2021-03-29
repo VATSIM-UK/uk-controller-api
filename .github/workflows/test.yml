@@ -130,6 +130,13 @@ jobs:
       - name: Generate App Key
         run: php artisan key:generate
 
+      # Run Database Migration & Seed
+      - name: Migrate Database
+        run: php artisan migrate
+
+      - name: Seed Database
+        run: php artisan db:seed
+
       # Publish/Install Packages
       - name: Install Passport
         run: php artisan passport:install
@@ -139,13 +146,6 @@ jobs:
 
       - name: Optimize
         run: php artisan optimize
-
-      # Run Database Migration & Seed
-      - name: Migrate Database
-        run: php artisan migrate
-
-      - name: Seed Database
-        run: php artisan db:seed
 
       # Start Application
       - name: Serve Application
