@@ -169,6 +169,8 @@ jobs:
     needs: test
     if: ${{ github.ref == 'refs/heads/main' && matrix.php == '7.4' }}
     runs-on: ubuntu-latest
+    with:
+      php-version: ${{ matrix.php }}
     steps:
       #
       # RELEASE (main only)
