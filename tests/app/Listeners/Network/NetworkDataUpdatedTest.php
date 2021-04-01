@@ -3,6 +3,8 @@
 namespace App\Listeners\Network;
 
 use App\BaseUnitTestCase;
+use App\Jobs\Squawk\ReserveActiveSquawks;
+use App\Jobs\Stand\AssignStandsForDeparture;
 use App\Jobs\Stand\OccupyStands;
 use Illuminate\Foundation\Bus\PendingChain;
 use Illuminate\Support\Facades\Bus;
@@ -24,6 +26,8 @@ class NetworkDataUpdatedTest extends BaseUnitTestCase
         Bus::shouldReceive('chain')->with(
             [
                 new OccupyStands(),
+                new AssignStandsForDeparture(),
+                new ReserveActiveSquawks(),
             ],
         )
             ->once()

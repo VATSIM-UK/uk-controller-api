@@ -52,11 +52,6 @@ class EventServiceProvider extends ServiceProvider
         NetworkAircraftDisconnectedEvent::class => [
             AircraftDisconnected::class,
         ],
-        NetworkAircraftUpdatedEvent::class => [
-            // RecordFirEntry::class, This is quite intensive on CPU and isn't used at the moment
-            //ReserveInFirProximity::class,
-            //ReclaimIfLeftFirProximity::class,
-        ],
         NetworkDataUpdatedEvent::class => [
             NetworkDataUpdated::class,
         ],

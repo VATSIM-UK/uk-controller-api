@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Network;
 
+use App\Jobs\Squawk\ReserveActiveSquawks;
 use App\Jobs\Stand\AssignStandsForDeparture;
 use App\Jobs\Stand\OccupyStands;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -19,6 +20,7 @@ class NetworkDataUpdated implements ShouldQueue, ShouldBeUnique
             [
                 new OccupyStands(),
                 new AssignStandsForDeparture(),
+                new ReserveActiveSquawks(),
             ]
         )->dispatch();
         return true;

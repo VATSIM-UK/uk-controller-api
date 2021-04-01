@@ -226,4 +226,9 @@ class SquawkService
 
         return null;
     }
+
+    public function reserveSquawksInFirProximity(): void
+    {
+
+    }
 }
