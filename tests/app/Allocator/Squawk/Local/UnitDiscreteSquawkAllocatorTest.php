@@ -30,7 +30,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             'squawk_assignments',
             [
                 'callsign' => 'BMI11A',
-                'assignment_type' => 'UNIT_DISCREET',
+                'assignment_type' => 'UNIT_DISCRETE',
                 'code' => '7203',
             ]
         );
@@ -46,7 +46,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             'squawk_assignments',
             [
                 'callsign' => 'BMI11A',
-                'assignment_type' => 'UNIT_DISCREET',
+                'assignment_type' => 'UNIT_DISCRETE',
                 'code' => '7203',
             ]
         );
@@ -67,7 +67,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             'squawk_assignments',
             [
                 'callsign' => 'BMI11A',
-                'assignment_type' => 'UNIT_DISCREET',
+                'assignment_type' => 'UNIT_DISCRETE',
                 'code' => $code,
             ]
         );
@@ -136,7 +136,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'code' => $code,
-                'assignment_type' => 'UNIT_DISCREET',
+                'assignment_type' => 'UNIT_DISCRETE',
             ]
         );
     }

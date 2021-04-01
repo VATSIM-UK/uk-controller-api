@@ -64,6 +64,6 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator
 
     protected function getAssignmentType(): string
     {
-        return 'UNIT_DISCREET';
+        return 'UNIT_DISCRETE';
     }
 }
