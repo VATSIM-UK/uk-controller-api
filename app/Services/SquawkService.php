@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use App\Allocator\Squawk\General\GeneralSquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAllocatorInterface;
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
+use App\Models\Squawk\SquawkAssignment;
 use App\Models\Vatsim\NetworkAircraft;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -22,19 +21,19 @@ use Illuminate\Support\Facades\DB;
 class SquawkService
 {
     /**
-     * @var GeneralSquawkAllocatorInterface[]
+     * @var SquawkAllocatorInterface[]
      */
-    private $generalAllocators;
+    private array $generalAllocators;
 
     /**
      * @var SquawkAllocatorInterface[]
      */
-    private $localAllocators;
+    private array $localAllocators;
 
     /**
      * Constructor
      *
-     * @param GeneralSquawkAllocatorInterface[] $generalAllocators
+     * @param SquawkAllocatorInterface[] $generalAllocators
      * @param SquawkAllocatorInterface[] $localAllocators
      */
     public function __construct(
@@ -53,14 +52,11 @@ class SquawkService
      */
     public function deleteSquawkAssignment(string $callsign): bool
     {
-        foreach ($this->generalAllocators as $allocator) {
-            if ($allocator->delete($callsign)) {
-                event(new SquawkUnassignedEvent($callsign));
-                return true;
-            }
+        if ($destroyed = SquawkAssignment::destroy($callsign)) {
+            event(new SquawkUnassignedEvent($callsign));
         }
 
-        return false;
+        return $destroyed;
     }
 
     /**
@@ -71,13 +67,7 @@ class SquawkService
      */
     public function getAssignedSquawk(string $callsign): ?SquawkAssignmentInterface
     {
-        $assignment = null;
-        foreach ($this->generalAllocators as $allocator) {
-            if ($assignment = $allocator->fetch($callsign)) {
-                break;
-            }
-        }
-        return $assignment;
+        return SquawkAssignment::find($callsign);
     }
 
     /**
@@ -145,7 +135,7 @@ class SquawkService
     public function getGeneralAllocatorPreference(): array
     {
         return array_map(
-            function (GeneralSquawkAllocatorInterface $allocator) {
+            function (SquawkAllocatorInterface $allocator) {
                 return get_class($allocator);
             },
             $this->generalAllocators
