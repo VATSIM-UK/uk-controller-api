@@ -1236,6 +1236,104 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItAssignsOccupiedStandsAtDepartureAirfields()
+    {
+        $this->expectsEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft->occupiedStand()->sync([2]);
+        $this->service->assignStandsForDeparture();
+
+        $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
+    }
+
+    public function testItUpdatesAssignedOccupiedStandsAtDepartureAirfields()
+    {
+        $this->expectsEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft->occupiedStand()->sync([2]);
+        $this->addStandAssignment('RYR787', 1);
+
+        $this->service->assignStandsForDeparture();
+
+        $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
+        $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 1)->exists());
+    }
+
+    public function testItDoesntAssignStandsAtNonDepartureAirfields()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGBB',
+            ]
+        );
+        $aircraft->occupiedStand()->sync([2]);
+        $this->service->assignStandsForDeparture();
+
+        $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+    }
+
+    public function testItRemovesAssignmentsAtDepartureAirfieldIfStandUnoccupied()
+    {
+        $this->expectsEvents(StandUnassignedEvent::class);
+        NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $this->addStandAssignment('RYR787', 1);
+
+        $this->service->assignStandsForDeparture();
+        $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+    }
+
+    public function testItDoesntRemoveStandAssignmentsIfNoStandOccupiedButAssignmentNotAtDepartureAirfield()
+    {
+        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        NetworkDataService::firstOrCreateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGBB',
+            ]
+        );
+        $this->addStandAssignment('RYR787', 1);
+
+        $this->service->assignStandsForDeparture();
+        $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->exists());
+    }
+
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
         NetworkDataService::firstOrCreateNetworkAircraft($callsign);

@@ -66,12 +66,6 @@ class EventServiceProvider extends ServiceProvider
         StandUnassignedEvent::class => [
             MarkStandAssignmentDeletedOnUnassignment::class,
         ],
-        StandOccupiedEvent::class => [
-            AssignOccupiedStandsForDeparture::class,
-        ],
-        StandVacatedEvent::class => [
-            UnassignVacatedDepartureStand::class,
-        ]
     ];
 
     public function boot()

@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Network;
 
+use App\Jobs\Stand\AssignStandsForDeparture;
 use App\Jobs\Stand\OccupyStands;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,6 +18,7 @@ class NetworkDataUpdated implements ShouldQueue, ShouldBeUnique
         Bus::chain(
             [
                 new OccupyStands(),
+                new AssignStandsForDeparture(),
             ]
         )->dispatch();
         return true;

@@ -577,6 +577,45 @@ class StandService
         )->get();
     }
 
+    private function getDepartureStandsToAssign(): Collection
+    {
+        return NetworkAircraft::join('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
+            ->join('stands', 'aircraft_stand.stand_id', '=', 'stands.id')
+            ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
+            ->leftJoin('stand_assignments', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
+            ->whereRaw('aircraft_stand.stand_id <> stand_assignments.stand_id')
+            ->orWhereNull('stand_assignments.stand_id')
+            ->whereRaw('airfield.code = network_aircraft.planned_depairport')
+            ->select(['network_aircraft.*', 'aircraft_stand.stand_id'])
+            ->get();
+    }
+
+    private function getDepartureStandsToUnassign(): Collection
+    {
+        return StandAssignment::join('network_aircraft', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
+            ->join('stands', 'stand_assignments.stand_id', '=', 'stands.id')
+            ->join('airfield', 'stands.airfield_id', '=', 'airfield.id')
+            ->leftJoin('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
+            ->whereRaw('airfield.code = network_aircraft.planned_depairport')
+            ->whereNull('aircraft_stand.callsign')
+            ->select('stand_assignments.*')
+            ->get();
+    }
+
+    /**
+     * Assign aircraft to their occupied stand if at their departure airfield. Remove the assignments
+     * if they've left the stand.
+     */
+    public function assignStandsForDeparture(): void
+    {
+        $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
+            $this->assignStandToAircraft($aircraft->callsign, $aircraft->stand_id);
+        });
+        $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
+            $this->deleteStandAssignment($assignment);
+        });
+    }
+
     /**
      * Criteria for whether a stand should be allocated
      *
