@@ -9,6 +9,9 @@ use App\Events\SquawkUnassignedEvent;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use App\Models\Squawk\SquawkAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -155,70 +158,47 @@ class SquawkService
         );
     }
 
-    public function reserveSquawkForAircraft(string $callsign): ?SquawkAssignmentInterface
-    {
-        $assignment = null;
-        DB::transaction(
-            function () use ($callsign, &$assignment) {
-                $aircraft = NetworkAircraft::find($callsign);
-                if (!$aircraft) {
-                    return;
-                }
-
-                foreach ($this->generalAllocators as $allocator) {
-                    if ($allocator->fetch($callsign)) {
-                        // The current squawk has changed from what's assigned, so delete it
-                        $allocator->delete($callsign);
-                        event(new SquawkUnassignedEvent($callsign));
-                        break;
-                    }
-                }
-
-                // The aircraft is squawking a reserved code, so we can't reserve it.
-                if ($this->squawkIsNotAssignable($aircraft->squawk)) {
-                    return;
-                }
-
-                // Try and do a new allocation
-                $assignment = $this->assignCodeToAircraft($callsign, $aircraft->transponder);
-            }
-        );
-
-        return $assignment;
-    }
-
     /**
-     * Returns if a squawk is a non-allocatable code code.
+     * Get all the aircraft that:
      *
-     * @param string $code
-     * @return bool
-     */
-    private function squawkIsNotAssignable(string $code): bool
-    {
-        return NonAssignableSquawkCode::where('code', $code)->exists();
-    }
-
-    /**
-     * Try to assign a specific code to an aircraft
+     * 1. Either don't have a squawk code assigned, or it's different to what they're squawking
+     * 2. Haven't changed their transponder in a while
+     * 3. Are not squawk a forbidden code
+     * 4. Are not squawking a code that's already assigned
      *
-     * @param string $callsign
-     * @param string $code
-     * @return SquawkAssignmentInterface|null
+     * @return Collection|NetworkAircraft[]
      */
-    private function assignCodeToAircraft(string $callsign, string $code): ?SquawkAssignmentInterface
+    private function getSquawksToAssign(): Collection
     {
-        foreach ($this->generalAllocators as $allocator) {
-            if ($newAssignment = $allocator->assignToCallsign($code, $callsign)) {
-                event(new SquawkAssignmentEvent($newAssignment));
-                return $newAssignment;
-            }
-        }
-
-        return null;
+        return NetworkAircraft::leftJoin('squawk_assignments', 'squawk_assignments.callsign', '=', 'network_aircraft.callsign')
+            ->where(function (Builder $subQuery) {
+                $subQuery->whereRaw('`squawk_assignments`.`code` <> `network_aircraft`.`transponder`')
+                    ->orWhereNull('squawk_assignments.code');
+            })
+            ->where('transponder_last_updated_at', '<', Carbon::now()->subMinutes(2))
+            ->whereNotIn('network_aircraft.transponder', NonAssignableSquawkCode::all()->pluck('code'))
+            ->whereNotIn('network_aircraft.transponder', SquawkAssignment::all()->pluck('code'))
+            ->select('network_aircraft.*')
+            ->get();
     }
 
     public function reserveSquawksInFirProximity(): void
     {
+        $squawksAlreadyReserved = [];
+        foreach ($this->getSquawksToAssign() as $aircraft) {
+            if (array_search($aircraft->transponder, $squawksAlreadyReserved)) {
+                continue;
+            }
 
+            $assignment = SquawkAssignment::updateOrCreate(
+                [
+                    'callsign' => $aircraft->callsign,
+                    'code' => $aircraft->transponder,
+                    'assignment_type' => 'NON_UK',
+                ]
+            );
+            event(new SquawkAssignmentEvent($assignment));
+            $squawksAlreadyReserved[] = $aircraft->transponder;
+        }
     }
 }

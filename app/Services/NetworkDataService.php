@@ -56,18 +56,8 @@ class NetworkDataService
         // Process clients
         $concernedPilots = $this->formatPilotData($networkResponse);
         $this->processPilots($concernedPilots);
-        $this->triggerUpdatedEvents($concernedPilots);
         $this->handleTimeouts();
-    }
-
-    private function triggerUpdatedEvents(Collection $concernedPilots)
-    {
         event(new NetworkDataUpdatedEvent());
-        NetworkAircraft::whereIn('callsign', $concernedPilots->pluck('callsign'))
-            ->get()
-            ->each(function (NetworkAircraft $aircraft) {
-                event(new NetworkAircraftUpdatedEvent($aircraft));
-            });
     }
 
     private function formatPilotData(Response $response): Collection
