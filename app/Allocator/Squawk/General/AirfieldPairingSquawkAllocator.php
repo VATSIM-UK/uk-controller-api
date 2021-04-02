@@ -13,7 +13,7 @@ class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator
      */
     private function getDestinationStrings(string $destination): array
     {
-       return [
+        return [
             substr($destination, 0, 1),
             substr($destination, 0, 2),
             substr($destination, 0, 3),

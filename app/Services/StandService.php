@@ -414,7 +414,7 @@ class StandService
             $selectedStand = $this->getOccupiedStand($aircraft);
             if ($this->occupiedStandShouldBeRemoved($currentlyOccupiedStand, $selectedStand)) {
                 $occupiedStandsToRemove->add($aircraft);
-            } else if ($this->occupiedStandShouldBeUpdated($currentlyOccupiedStand, $selectedStand)) {
+            } elseif ($this->occupiedStandShouldBeUpdated($currentlyOccupiedStand, $selectedStand)) {
                 $standOccupationsToUpdate->add(
                     tap(
                         $aircraft,
