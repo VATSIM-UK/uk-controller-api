@@ -172,6 +172,12 @@ Route::middleware('admin.data')->group(function () {
         Route::put('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@modifyStand');
         Route::delete('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@deleteStand');
 
+        Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
+        Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
+        Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
+        Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
+        Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
+
         Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
     });
 });
