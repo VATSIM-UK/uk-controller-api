@@ -32,15 +32,24 @@ class WakeCategory extends Model
             'id' => $this->id,
             'code' => $this->code,
             'description' => $this->description,
-            'subsequent_departure_intervals' => $this->departureIntervals->sortBy('relative_weighting')->map(
-                function (WakeCategory $subsequent) {
-                    return [
-                        'id' => $subsequent->id,
-                        'interval' => $subsequent->pivot->interval,
-                        'intermediate' => $subsequent->pivot->intermediate,
-                    ];
-                }
-            )->values()->toArray(),
+            'subsequent_departure_intervals' => $this->departureIntervals
+                ->sortBy('relative_weighting')
+                ->map(
+                    function (WakeCategory $subsequent) {
+                        return [
+                            'id' => $subsequent->id,
+                            'interval' => $subsequent->pivot->interval,
+                            'intermediate' => (bool) $subsequent->pivot->intermediate,
+                        ];
+                    }
+                )
+                ->values()
+                ->sortBy([
+                    ['id', 'asc'],
+                    ['interval', 'asc'],
+                    ['intermediate', 'asc'],
+                ])
+                ->toArray(),
         ];
     }
 

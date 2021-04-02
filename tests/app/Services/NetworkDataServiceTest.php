@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\NetworkAircraftDisconnectedEvent;
-use App\Events\NetworkAircraftUpdatedEvent;
+use App\Events\NetworkDataUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
@@ -56,7 +56,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesErrorCodesFromNetworkDataFeed()
     {
-        $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
+        $this->doesntExpectEvents(NetworkDataUpdatedEvent::class);
         Http::fake(
             [
                 NetworkDataService::NETWORK_DATA_URL => Http::response('', 500)
@@ -73,7 +73,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesExceptionsFromNetworkDataFeed()
     {
-        $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
+        $this->doesntExpectEvents(NetworkDataUpdatedEvent::class);
         Http::fake(
             function () {
                 throw new Exception('LOL');
@@ -90,7 +90,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesMissingClientData()
     {
-        $this->doesntExpectEvents(NetworkAircraftUpdatedEvent::class);
+        $this->expectsEvents(NetworkDataUpdatedEvent::class);
         Http::fake(
             [
                 NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode(['not_clients' => '']), 200)
@@ -231,8 +231,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItFiresUpdatedEventsOnDataFeed()
     {
-        $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
-        $this->expectsEvents(NetworkAircraftUpdatedEvent::class);
+        $this->expectsEvents(NetworkDataUpdatedEvent::class);
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
     }

@@ -3,28 +3,21 @@
 namespace App\Events;
 
 use App\BaseFunctionalTestCase;
-use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
-use App\Models\Squawks\Allocation;
+use App\Models\Squawk\SquawkAssignment;
 
 class SquawkAssignmentEventTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var SquawkAssignmentEvent
-     */
-    private $event;
-
-    /**
-     * @var Allocation
-     */
-    private $assignment;
+    private SquawkAssignmentEvent $event;
+    private SquawkAssignment $assignment;
 
     public function setUp() : void
     {
         parent::setUp();
-        $this->assignment = new CcamsSquawkAssignment(
+        $this->assignment = new SquawkAssignment(
             [
                 'callsign' => 'BAW123',
                 'code' => '7213',
+                'assignment_type' => 'CCAMS',
             ]
         );
         $this->event = new SquawkAssignmentEvent($this->assignment);
