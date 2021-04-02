@@ -13,6 +13,6 @@ class ReserveActiveSquawks implements ShouldQueue
 
     public function handle(SquawkService $squawkService): void
     {
-        $squawkService->reserveSquawksInFirProximity();
+        $squawkService->reserveActiveSquawks();
     }
 }

@@ -6,7 +6,7 @@ use App\BaseUnitTestCase;
 use App\Services\SquawkService;
 use Mockery;
 
-class ReserveActiveSquawkTest extends BaseUnitTestCase
+class ReserveActiveSquawksTest extends BaseUnitTestCase
 {
     private ReserveActiveSquawks $assign;
 
@@ -19,7 +19,7 @@ class ReserveActiveSquawkTest extends BaseUnitTestCase
     public function testHandleCallsStandService()
     {
         $squawkService = Mockery::mock(SquawkService::class);
-        $squawkService->expects('reserveSquawksInFirProximity')->withNoArgs()->once();
+        $squawkService->expects('reserveActiveSquawks')->withNoArgs()->once();
         $this->assign->handle($squawkService);
     }
 }

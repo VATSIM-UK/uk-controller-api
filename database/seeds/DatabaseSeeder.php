@@ -89,10 +89,7 @@ class DatabaseSeeder extends Seeder
             'unit_discrete_squawk_ranges',
         ],
         SquawkAssignmentTablesSeeder::class => [
-            'ccams_squawk_assignments',
-            'orcam_squawk_assignments',
-            'airfield_pairing_squawk_assignments',
-            'unit_discrete_squawk_assignments',
+            'squawk_assignments',
             'unit_discrete_squawk_range_rules',
             'squawk_assignments_history',
         ],

@@ -182,19 +182,21 @@ class SquawkService
             ->get();
     }
 
-    public function reserveSquawksInFirProximity(): void
+    public function reserveActiveSquawks(): void
     {
         $squawksAlreadyReserved = [];
         foreach ($this->getSquawksToAssign() as $aircraft) {
-            if (array_search($aircraft->transponder, $squawksAlreadyReserved)) {
+            if (array_search($aircraft->transponder, $squawksAlreadyReserved) !== false) {
                 continue;
             }
 
             $assignment = SquawkAssignment::updateOrCreate(
                 [
                     'callsign' => $aircraft->callsign,
+                ],
+                [
                     'code' => $aircraft->transponder,
-                    'assignment_type' => 'NON_UK',
+                    'assignment_type' => 'NON_UKCP',
                 ]
             );
             event(new SquawkAssignmentEvent($assignment));
