@@ -50,6 +50,10 @@ class DropOldSquawkAssignmentsTables extends Migration
             $squawks = $squawks->merge($this->getAssignmentsToInsertFromTable($type, $table));
         }
 
+        if ($squawks->isEmpty()) {
+            return;
+        }
+
         $squawks = $squawks->unique('code');
         $squawks = $squawks->unique('callsign');
 

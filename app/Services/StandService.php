@@ -54,7 +54,7 @@ class StandService
      */
     private const DISTANCE_FROM_AIRFIELD_TO_CHECK_STANDS = 5000;
 
-    private $allStandsByAirfield = [];
+    private Collection $allStandsByAirfield;
 
     /**
      * @var ArrivalStandAllocatorInterface[]
@@ -345,7 +345,10 @@ class StandService
      */
     private function getAllStandsByAirfield(): Collection
     {
-        $this->allStandsByAirfield = Airfield::with('stands')->whereHas('stands')->get()->toBase();
+        if ($this->allStandsByAirfield->isEmpty()) {
+            $this->allStandsByAirfield = Airfield::with('stands')->whereHas('stands')->get()->toBase();
+        }
+
         return $this->allStandsByAirfield;
     }
 

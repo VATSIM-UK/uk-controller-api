@@ -14,8 +14,7 @@ class AddIndexesToNetworkAircraft extends Migration
     public function up()
     {
         Schema::table('network_aircraft', function (Blueprint $table) {
-            $table->index('altitude');
-            $table->index('groundspeed');
+            $table->index(['groundspeed', 'altitude']);
         });
     }
 
@@ -27,8 +26,7 @@ class AddIndexesToNetworkAircraft extends Migration
     public function down()
     {
         Schema::table('network_aircraft', function (Blueprint $table) {
-            $table->dropIndex('network_aircraft_altitude');
-            $table->dropIndex('network_aircraft_groundspeed');
+            $table->dropIndex('network_aircraft_groundspeed_altitude');
         });
     }
 }
