@@ -54,7 +54,7 @@ class StandService
      */
     private const DISTANCE_FROM_AIRFIELD_TO_CHECK_STANDS = 5000;
 
-    private Collection $allStandsByAirfield;
+    private ?Collection $allStandsByAirfield = null;
 
     /**
      * @var ArrivalStandAllocatorInterface[]
