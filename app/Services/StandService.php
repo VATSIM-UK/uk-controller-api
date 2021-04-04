@@ -345,7 +345,7 @@ class StandService
      */
     private function getAllStandsByAirfield(): Collection
     {
-        if ($this->allStandsByAirfield->isEmpty()) {
+        if (!$this->allStandsByAirfield) {
             $this->allStandsByAirfield = Airfield::with('stands')->whereHas('stands')->get()->toBase();
         }
 
