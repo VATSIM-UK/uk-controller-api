@@ -64,16 +64,16 @@
         },
         {
             "name": "beyondcode/laravel-websockets",
-            "version": "2.0.0-beta.32",
+            "version": "2.0.0-beta.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beyondcode/laravel-websockets.git",
-                "reference": "6be62b149dfeb45b0a5dac52cf38d02a9b9f23ee"
+                "reference": "1bb727f322cac0241b6a405ebc8024416fd5c9a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beyondcode/laravel-websockets/zipball/6be62b149dfeb45b0a5dac52cf38d02a9b9f23ee",
-                "reference": "6be62b149dfeb45b0a5dac52cf38d02a9b9f23ee",
+                "url": "https://api.github.com/repos/beyondcode/laravel-websockets/zipball/1bb727f322cac0241b6a405ebc8024416fd5c9a9",
+                "reference": "1bb727f322cac0241b6a405ebc8024416fd5c9a9",
                 "shasum": ""
             },
             "require": {
@@ -89,7 +89,7 @@
                 "illuminate/queue": "^6.3|^7.0|^8.0",
                 "illuminate/routing": "^6.3|^7.0|^8.0",
                 "illuminate/support": "^6.3|^7.0|^8.0",
-                "pusher/pusher-php-server": "^4.0",
+                "pusher/pusher-php-server": "^4.0|^5.0",
                 "react/promise": "^2.0",
                 "symfony/http-kernel": "^4.0|^5.0",
                 "symfony/psr-http-message-bridge": "^1.1|^2.0"
@@ -151,7 +151,11 @@
                 "laravel-websockets",
                 "php"
             ],
-            "time": "2020-12-07T18:18:58+00:00"
+            "support": {
+                "issues": "https://github.com/beyondcode/laravel-websockets/issues",
+                "source": "https://github.com/beyondcode/laravel-websockets/tree/2.0.0-beta.34"
+            },
+            "time": "2021-03-30T15:11:58+00:00"
         },
         {
             "name": "brick/math",
