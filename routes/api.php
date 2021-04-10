@@ -23,6 +23,7 @@ Route::middleware('plugin.user')->group(function () {
 
     // Events
     Route::get('plugin-events/sync', 'PluginEventsController@getLatestPluginEventId');
+    Route::get('plugin-events/recent', 'PluginEventsController@getRecentPluginEvents');
 
     // Holds
     Route::put('hold/assigned', 'HoldController@assignHold');

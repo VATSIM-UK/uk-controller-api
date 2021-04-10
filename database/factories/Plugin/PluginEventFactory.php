@@ -27,7 +27,7 @@ class PluginEventFactory extends Factory
         return [
             'event' => [
                 'foo' => $this->faker->firstName(),
-                'foo' => $this->faker->lastName(),
+                'bar' => $this->faker->lastName(),
             ],
         ];
     }
