@@ -36,6 +36,8 @@ class MapAircraftWakeCategories extends Migration
                 ];
             }
         }
+
+        DB::table('aircraft_wake_category')->insert($formattedAircraft);
     }
 
     /**

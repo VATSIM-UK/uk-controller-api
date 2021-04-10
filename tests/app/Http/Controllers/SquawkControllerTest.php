@@ -2,9 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
-use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use App\Models\Squawks\Range;
+use App\Models\Squawk\SquawkAssignment;
 
 class SquawkControllerTest extends BaseApiTestCase
 {
@@ -54,7 +53,7 @@ class SquawkControllerTest extends BaseApiTestCase
 
     public function testGetSquawkAssignmentReturnsSquawk()
     {
-        CcamsSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0707']);
+        SquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0707', 'assignment_type' => 'CCAMS']);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_GET,
             self::SQUAWK_ASSIGNMENT_URI

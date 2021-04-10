@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
+use App\Events\NetworkDataUpdatedEvent;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
@@ -55,17 +56,8 @@ class NetworkDataService
         // Process clients
         $concernedPilots = $this->formatPilotData($networkResponse);
         $this->processPilots($concernedPilots);
-        $this->triggerUpdatedEvents($concernedPilots);
         $this->handleTimeouts();
-    }
-
-    private function triggerUpdatedEvents(Collection $concernedPilots)
-    {
-        NetworkAircraft::whereIn('callsign', $concernedPilots->pluck('callsign'))
-            ->get()
-            ->each(function (NetworkAircraft $aircraft) {
-                event(new NetworkAircraftUpdatedEvent($aircraft));
-            });
+        event(new NetworkDataUpdatedEvent());
     }
 
     private function formatPilotData(Response $response): Collection

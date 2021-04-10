@@ -9,25 +9,19 @@ use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
-use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
+use App\Models\Squawk\SquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
-use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use TestingUtils\Traits\WithSeedUsers;
 
 class SquawkServiceTest extends BaseFunctionalTestCase
 {
     use WithSeedUsers;
 
-    /**
-     * SquawkService
-     *
-     * @var SquawkService
-     */
-    private $squawkService;
+    private SquawkService $squawkService;
 
     public function setUp(): void
     {
@@ -40,20 +34,11 @@ class SquawkServiceTest extends BaseFunctionalTestCase
     {
         $this->expectsEvents(SquawkUnassignedEvent::class);
 
-        // CCAMS shouldn't be called because ORCAM deleted a squawk
-        OrcamSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123']);
-        CcamsSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123']);
-
+        SquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123', 'assignment_type' => 'ORCAM']);
         $this->assertTrue($this->squawkService->deleteSquawkAssignment('BAW123'));
 
         $this->assertDatabaseMissing(
-            'orcam_squawk_assignments',
-            [
-                'callsign' => 'BAW123',
-            ]
-        );
-        $this->assertDatabaseHas(
-            'ccams_squawk_assignments',
+            'squawk_assignments',
             [
                 'callsign' => 'BAW123',
             ]
@@ -68,8 +53,8 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsAssignedSquawk()
     {
-        $assignment = OrcamSquawkAssignment::find(
-            OrcamSquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123'])->callsign
+        $assignment = SquawkAssignment::find(
+            SquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123', 'assignment_type' => 'ORCAM'])->callsign
         );
         $this->assertEquals($assignment, $this->squawkService->getAssignedSquawk('BAW123'));
     }
@@ -149,121 +134,160 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->squawkService->getLocalAllocatorPreference());
     }
 
-    public function testSquawkReservationDoesNothingIfAircraftNotOnline()
+    public function testReserveActiveSquawksReservesIfNoAssignmentExistsForAircraft()
     {
-        CcamsSquawkRange::create(
+        DB::table('network_aircraft')->delete();
+        DB::table('network_aircraft')->insert(
             [
-                'first' => '0303',
-                'last' => '0303',
+                'callsign' => 'RYR999',
+                'transponder' => '1234',
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
             ]
         );
-        $this->squawkService->reserveSquawkForAircraft('UAE4');
-        $this->assertDatabaseMissing(
-            'ccams_squawk_assignments',
-            [
-                'callsign' => 'UAE4',
-            ]
-        );
-    }
+        $this->expectsEvents(SquawkAssignmentEvent::class);
 
-    public function testItReservesSquawkForAircraftNotCurrentlyAllocated()
-    {
-        $this->expectsEvents([SquawkAssignmentEvent::class]);
-        $this->doesntExpectEvents([SquawkUnassignedEvent::class]);
-        Carbon::setTestNow(Carbon::now());
-        NetworkAircraft::where('callsign', 'BAW123')->update(
-            [
-                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
-                'transponder' => '0303',
-                'planned_depairport' => 'EDDF',
-                'planned_destairport' => 'EGLL',
-            ]
-        );
-        OrcamSquawkRange::create(
-            [
-                'origin' => 'ED',
-                'first' => '0303',
-                'last' => '0303',
-            ]
-        );
-        $this->squawkService->reserveSquawkForAircraft('BAW123');
+        $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
+            'squawk_assignments',
             [
-                'callsign' => 'BAW123',
-                'code' => '0303'
+                'callsign' => 'RYR999',
+                'code' => '1234',
+                'assignment_type' => 'NON_UKCP',
             ]
         );
     }
 
-    public function testItReservesSquawkForAircraftCurrentlyAllocated()
+    public function testReserveActiveSquawksReservesIfSquawkCodeDifferentToAssignedAndHasntChanged()
     {
-        $this->expectsEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
-        Carbon::setTestNow(Carbon::now());
-        NetworkAircraft::where('callsign', 'BAW123')->update(
+        DB::table('network_aircraft')->delete();
+        DB::table('network_aircraft')->insert(
             [
-                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
-                'transponder' => '0303',
-                'planned_depairport' => 'EDDF',
-                'planned_destairport' => 'EGLL',
+                'callsign' => 'RYR999',
+                'transponder' => '1234',
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
             ]
         );
-        OrcamSquawkRange::create(
-            [
-                'origin' => 'ED',
-                'first' => '0303',
-                'last' => '0303',
-            ]
-        );
-        CcamsSquawkAssignment::create(
-            [
-                'callsign' => 'BAW123',
-                'code' => '0101'
-            ]
-        );
+        SquawkAssignment::create(['callsign' => 'RYR999', 'code' => '5678', 'assignment_type' => 'ORCAM']);
+        $this->expectsEvents(SquawkAssignmentEvent::class);
 
-        $this->squawkService->reserveSquawkForAircraft('BAW123');
-        $this->assertDatabaseMissing(
-            'ccams_squawk_assignments',
-            [
-                'callsign' => 'BAW123',
-            ]
-        );
+        $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
+            'squawk_assignments',
             [
-                'callsign' => 'BAW123',
-                'code' => '0303'
+                'callsign' => 'RYR999',
+                'code' => '1234',
+                'assignment_type' => 'NON_UKCP',
             ]
         );
     }
 
-    public function testItDoesNothingIfNonAssignableCodeBeingSquawked()
+    public function testReserveActiveSquawksReservesForTheFirstAircraftWithTheSquawk()
     {
-        $this->doesntExpectEvents([SquawkUnassignedEvent::class, SquawkAssignmentEvent::class]);
-        Carbon::setTestNow(Carbon::now());
-        NetworkAircraft::where('callsign', 'BAW123')->update(
+        DB::table('network_aircraft')->delete();
+        DB::table('network_aircraft')->insert(
             [
-                'transponder_last_updated_at' => Carbon::now()->subMinutes(2),
-                'transponder' => '7000',
-                'planned_depairport' => 'EDDF',
-                'planned_destairport' => 'EGLL',
+                [
+                    'callsign' => 'RYR999',
+                    'transponder' => '1234',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                ],
+                [
+                    'callsign' => 'WZZ888',
+                    'transponder' => '1234',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                ],
+            ],
+        );
+        $this->expectsEvents(SquawkAssignmentEvent::class);
+
+        $this->squawkService->reserveActiveSquawks();
+        $this->assertDatabaseHas(
+            'squawk_assignments',
+            [
+                'callsign' => 'RYR999',
+                'code' => '1234',
+                'assignment_type' => 'NON_UKCP',
             ]
         );
-        OrcamSquawkRange::create(
-            [
-                'origin' => 'ED',
-                'first' => '7000',
-                'last' => '7000',
-            ]
-        );
-
-        $this->squawkService->reserveSquawkForAircraft('BAW123');
-
         $this->assertDatabaseMissing(
-            'orcam_squawk_assignments',
+            'squawk_assignments',
             [
-                'callsign' => 'BAW123',
+                'callsign' => 'WZZ888',
+            ]
+        );
+    }
+
+    public function testReserveActiveSquawksDoesntReserveIfSquawkChangedRecently()
+    {
+        DB::table('network_aircraft')->delete();
+        DB::table('network_aircraft')->insert(
+            [
+                [
+                    'callsign' => 'RYR999',
+                    'transponder' => '1234',
+                    'transponder_last_updated_at' => Carbon::now()->subMinute()
+                ],
+            ],
+        );
+        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+
+        $this->squawkService->reserveActiveSquawks();
+        $this->assertDatabaseMissing(
+            'squawk_assignments',
+            [
+                'callsign' => 'RYR999',
+            ]
+        );
+    }
+
+    public function testReserveActiveSquawksDoesntReserveIfSquawkIsForbiddenCode()
+    {
+        DB::table('network_aircraft')->delete();
+        DB::table('network_aircraft')->insert(
+            [
+                [
+                    'callsign' => 'RYR999',
+                    'transponder' => '7700',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                ],
+            ],
+        );
+        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+
+        $this->squawkService->reserveActiveSquawks();
+        $this->assertDatabaseMissing(
+            'squawk_assignments',
+            [
+                'callsign' => 'RYR999',
+            ]
+        );
+    }
+
+    public function testReserveActiveSquawksDoesntReserveIfSquawkIsTakenBySomeoneElse()
+    {
+        DB::table('network_aircraft')->delete();
+        DB::table('network_aircraft')->insert(
+            [
+                [
+                    'callsign' => 'RYR999',
+                    'transponder' => '1234',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                ],
+                [
+                    'callsign' => 'WZZ888',
+                    'transponder' => '1234',
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                ],
+            ],
+        );
+        SquawkAssignment::create(['callsign' => 'WZZ888', 'code' => '1234', 'assignment_type' => 'ORCAM']);
+        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+
+        $this->squawkService->reserveActiveSquawks();
+        $this->assertDatabaseMissing(
+            'squawk_assignments',
+            [
+                'callsign' => 'RYR999',
             ]
         );
     }

@@ -4,8 +4,7 @@ namespace App\Listeners\Squawk;
 
 use App\BaseFunctionalTestCase;
 use App\Events\SquawkAssignmentEvent;
-use App\Models\Squawk\Ccams\CcamsSquawkAssignment;
-use App\Models\Squawks\Allocation;
+use App\Models\Squawk\SquawkAssignment;
 use App\Models\User\User;
 use Carbon\Carbon;
 
@@ -27,10 +26,11 @@ class RecordSquawkAssignmentHistoryTest extends BaseFunctionalTestCase
     {
         $this->actingAs(User::find(self::ACTIVE_USER_CID));
         $assignment = new SquawkAssignmentEvent(
-            new CcamsSquawkAssignment(
+            new SquawkAssignment(
                 [
                     'callsign' => 'BAW123',
-                    'code' => '0001'
+                    'code' => '0001',
+                    'assignment_type' => 'CCAMS',
                 ]
             )
         );
@@ -50,10 +50,11 @@ class RecordSquawkAssignmentHistoryTest extends BaseFunctionalTestCase
     public function testItCreatesAnAssignmentHistoryNoUser()
     {
         $assignment = new SquawkAssignmentEvent(
-            new CcamsSquawkAssignment(
+            new SquawkAssignment(
                 [
                     'callsign' => 'BAW123',
-                    'code' => '0001'
+                    'code' => '0001',
+                    'assignment_type' => 'CCAMS',
                 ]
             )
         );
@@ -74,10 +75,11 @@ class RecordSquawkAssignmentHistoryTest extends BaseFunctionalTestCase
     {
         $this->actingAs(User::find(self::ACTIVE_USER_CID));
         $assignment = new SquawkAssignmentEvent(
-            new CcamsSquawkAssignment(
+            new SquawkAssignment(
                 [
                     'callsign' => 'BAW123',
-                    'code' => '0001'
+                    'code' => '0001',
+                    'assignment_type' => 'CCAMS',
                 ]
             )
         );

@@ -3,131 +3,37 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAssignmentInterface;
-use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
-use App\Services\NetworkDataService;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Database\Eloquent\Builder;
 
-class OrcamSquawkAllocator extends AbstractSquawkAllocator implements GeneralSquawkAllocatorInterface
+class OrcamSquawkAllocator extends AbstractSquawkAllocator
 {
     /**
-     * Generate rules to match flights by their origin in order
-     * of relevance.
-     *
-     * @param string $origin
-     * @return Collection
+     * Returns a list of origins strings to try.
      */
-    private function getPossibleRangesForFlight(string $origin): Collection
+    private function getOriginStrings(string $origin): array
     {
-        $originStrings = [
+        return [
             substr($origin, 0, 1),
             substr($origin, 0, 2),
             substr($origin, 0, 3),
             $origin
         ];
-
-        return OrcamSquawkRange::whereIn('origin', $originStrings)
-            ->orderByRaw('LENGTH(origin) DESC')
-            ->get();
     }
 
-    public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
+    protected function getOrderedSquawkRangesQuery(array $details): Builder
     {
-        if (!isset($details['origin'])) {
-            Log::error('Origin not provided for ORCAM squawk allocation', [$callsign, $details]);
-            return null;
-        }
-
-        $assignment = null;
-        DB::transaction(
-            function () use (&$assignment, $callsign, $details) {
-                $this->getPossibleRangesForFlight($details['origin'])->each(
-                    function (OrcamSquawkRange $range) use (&$assignment, $callsign) {
-                        $allSquawks = $range->getAllSquawksInRange();
-                        $possibleSquawks = $allSquawks->diff(
-                            OrcamSquawkAssignment::whereIn('code', $allSquawks)
-                                ->pluck('code')->all()
-                        );
-
-                        if ($possibleSquawks->isEmpty()) {
-                            return true;
-                        }
-
-                        $assignment = $this->assignSquawkFromAvailableCodes(
-                            $callsign,
-                            $possibleSquawks->shuffle()
-                        );
-                        return false;
-                    }
-                );
-            }
-        );
-
-        return $assignment;
+        return OrcamSquawkRange::whereIn('origin', $this->getOriginStrings($details['origin']))
+            ->orderByRaw('LENGTH(origin) DESC');
     }
 
-    public function delete(string $callsign): bool
+    protected function canAllocateSquawk(array $details): bool
     {
-        return OrcamSquawkAssignment::destroy($callsign);
+        return isset($details['origin']);
     }
 
-    public function fetch(string $callsign): ?SquawkAssignmentInterface
+    protected function getAssignmentType(): string
     {
-        return OrcamSquawkAssignment::find($callsign);
-    }
-
-    public function assignToCallsign(string $code, string $callsign): ?SquawkAssignmentInterface
-    {
-        $assignment = null;
-        OrcamSquawkRange::all()->each(
-            function (OrcamSquawkRange $range) use ($code, $callsign, &$assignment) {
-                if ($range->squawkInRange($code)) {
-                    // Lock the range to prevent a dupe assignment
-                    OrcamSquawkRange::lockForUpdate($range->id)->first();
-
-                    // Assign the code, if we can.
-                    if (!OrcamSquawkAssignment::where('code', $code)->first()) {
-                        $assignment = $this->assignSquawkFromAvailableCodes(
-                            $callsign,
-                            new BaseCollection([$code])
-                        );
-                    }
-
-                    // In any case, if we've found the range with the code, we shouldn't try others.
-                    return false;
-                }
-
-                return true;
-            }
-        );
-
-        return $assignment;
-    }
-
-    /**
-     * @param string $callsign
-     * @param BaseCollection $possibleSquawks
-     * @return SquawkAssignmentInterface|null
-     */
-    private function assignSquawkFromAvailableCodes(
-        string $callsign,
-        BaseCollection $possibleSquawks
-    ): ?SquawkAssignmentInterface {
-        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        return $this->assignSquawk(
-            function (string $code) use ($callsign) {
-                return OrcamSquawkAssignment::updateOrCreate(
-                    [
-                        'callsign' => $callsign,
-                        'code' => $code,
-                    ]
-                );
-            },
-            $possibleSquawks
-        );
+        return 'ORCAM';
     }
 }

@@ -91,7 +91,7 @@ class Stand extends Model
             'aircraft_stand',
             'stand_id',
             'callsign'
-        )->withTimestamps();
+        )->withPivot('updated_at');
     }
 
     public function scopeUnassigned(Builder $builder): Builder

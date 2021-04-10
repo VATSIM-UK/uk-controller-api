@@ -3,9 +3,11 @@
 namespace App\Models\Vatsim;
 
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAssignment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
 
 class NetworkAircraft extends Model
@@ -91,7 +93,12 @@ class NetworkAircraft extends Model
             'aircraft_stand',
             'callsign',
             'stand_id'
-        )->withTimestamps();
+        )->withPivot('latitude', 'longitude', 'updated_at');
+    }
+
+    public function assignedStand(): HasOne
+    {
+        return $this->hasOne(StandAssignment::class);
     }
 
     public function getAircraftTypeAttribute(): string
