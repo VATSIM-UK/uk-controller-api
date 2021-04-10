@@ -6,7 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignmentsHistory;
 
-class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
+class DeleteAssignmentHistoryOnUnassignmentTest extends BaseFunctionalTestCase
 {
     /**
      * @var DeleteAssignmentHistoryOnUnassignment

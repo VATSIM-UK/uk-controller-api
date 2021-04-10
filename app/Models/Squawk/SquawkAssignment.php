@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Models\Squawk\Orcam;
+namespace App\Models\Squawk;
 
 use App\Allocator\Squawk\SquawkAssignmentInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrcamSquawkAssignment extends Model implements SquawkAssignmentInterface
+class SquawkAssignment extends Model implements SquawkAssignmentInterface
 {
     protected $primaryKey = 'callsign';
 
@@ -18,11 +17,13 @@ class OrcamSquawkAssignment extends Model implements SquawkAssignmentInterface
 
     protected $dates = [
         'created_at',
+        'updated_at',
     ];
 
     protected $fillable = [
         'callsign',
         'code',
+        'assignment_type',
     ];
 
     public function getCode(): string
@@ -32,7 +33,7 @@ class OrcamSquawkAssignment extends Model implements SquawkAssignmentInterface
 
     public function getType(): string
     {
-        return "ORCAM";
+        return $this->assignment_type;
     }
 
     public function getCallsign(): string
