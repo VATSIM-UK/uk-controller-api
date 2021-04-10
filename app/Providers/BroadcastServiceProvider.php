@@ -13,6 +13,9 @@ use Pusher\Pusher;
 
 class BroadcastServiceProvider extends ServiceProvider
 {
+    /**
+     * @codeCoverageIgnore
+     */
     public function boot(BroadcastManager $broadcastManager)
     {
         $broadcastManager->extend(
