@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateJobBatchesTable extends Migration
 {
@@ -13,18 +14,21 @@ class CreateJobBatchesTable extends Migration
      */
     public function up()
     {
-        Schema::create('job_batches', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('name');
-            $table->integer('total_jobs');
-            $table->integer('pending_jobs');
-            $table->integer('failed_jobs');
-            $table->text('failed_job_ids');
-            $table->mediumText('options')->nullable();
-            $table->integer('cancelled_at')->nullable();
-            $table->integer('created_at');
-            $table->integer('finished_at')->nullable();
-        });
+        DB::statement(
+            'CREATE TABLE `job_batches` (
+                `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `total_jobs` int NOT NULL,
+                `pending_jobs` int NOT NULL,
+                `failed_jobs` int NOT NULL,
+                `failed_job_ids` text COLLATE utf8mb4_unicode_ci NOT NULL,
+                `options` mediumtext COLLATE utf8mb4_unicode_ci,
+                `cancelled_at` int DEFAULT NULL,
+                `created_at` int NOT NULL,
+                `finished_at` int DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
+        );
     }
 
     /**
