@@ -11,7 +11,8 @@ class PluginEventBroadcaster extends Broadcaster
 {
     private PusherBroadcaster $pusherBroadcaster;
 
-    public function __construct(PusherBroadcaster $pusherBroadcaster) {
+    public function __construct(PusherBroadcaster $pusherBroadcaster)
+    {
         $this->pusherBroadcaster = $pusherBroadcaster;
     }
 

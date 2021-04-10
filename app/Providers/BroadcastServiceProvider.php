@@ -23,7 +23,10 @@ class BroadcastServiceProvider extends ServiceProvider
                 return new PluginEventBroadcaster(
                     new PusherBroadcaster(
                         new Pusher(
-                            $config['key'], $config['secret'], $config['app_id'], $config['options'] ?? []
+                            $config['key'],
+                            $config['secret'],
+                            $config['app_id'],
+                            $config['options'] ?? []
                         )
                     )
                 );
