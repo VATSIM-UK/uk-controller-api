@@ -17,3 +17,4 @@ bootstrap/cache/
 /public/build
 /public/vendor
 /public/mix-manifest.json
+yarn-error.log
