@@ -17,7 +17,7 @@ class BroadcastServiceProvider extends ServiceProvider
     {
         $broadcastManager->extend(
             'plugin-events',
-            function (Application $application) {
+            function () {
                 $config = config('broadcasting.connections.pusher');
 
                 return new PluginEventBroadcaster(
