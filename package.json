@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.2.1",
+    "commitizen": "^4.2.3",
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.19",
@@ -23,7 +24,8 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "prod": "yarn run production",
-    "production": "mix --production"
+    "production": "mix --production",
+    "commit": "cz"
   },
   "repository": {
     "type": "git",
@@ -42,7 +44,9 @@
   },
   "release": {
     "repositoryUrl": "https://github.com/VATSIM-UK/uk-controller-api",
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "tagFormat": "${version}",
     "plugins": [
       "@semantic-release/commit-analyzer",
@@ -50,7 +54,7 @@
       [
         "@semantic-release/github",
         {
-            "releasedLabels": false
+          "releasedLabels": false
         }
       ]
     ]

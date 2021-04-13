@@ -30,5 +30,8 @@ return [
                 ],
             ],
         ],
+        'plugin-events' => [
+            'driver' => 'plugin-events',
+        ]
     ],
 ];

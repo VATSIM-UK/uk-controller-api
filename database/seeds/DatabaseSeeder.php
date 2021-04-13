@@ -109,6 +109,9 @@ class DatabaseSeeder extends Seeder
             'airline_stand',
             'airline_terminal',
         ],
+        PluginEventTableSeeder::class => [
+            'plugin_events',
+        ],
     ];
 
 
