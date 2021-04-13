@@ -16,7 +16,7 @@ class MarkAssignmentDeletedOnDisconnectTest extends BaseFunctionalTestCase
     public function setUp() : void
     {
         parent::setUp();
-        $this->listener = new MarkAssignmentDeletedOnDisconnect(new NetworkAircraft(['callsign' => 'BAW123']));
+        $this->listener = $this->app->make(MarkAssignmentDeletedOnDisconnect::class);
         $this->squawkService = Mockery::mock(SquawkService::class);
         Carbon::setTestNow(Carbon::now());
     }
@@ -24,6 +24,6 @@ class MarkAssignmentDeletedOnDisconnectTest extends BaseFunctionalTestCase
     public function testItDeletesSquawkAssignments()
     {
         $this->squawkService->shouldReceive('deleteSquawkAssignment')->with('BAW123');
-        $this->listener->handle($this->squawkService);
+        $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 }

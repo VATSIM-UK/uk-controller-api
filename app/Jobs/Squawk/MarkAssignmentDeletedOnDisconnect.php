@@ -2,26 +2,21 @@
 
 namespace App\Jobs\Squawk;
 
+use App\Jobs\Network\AircraftDisconnectedSubtask;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\SquawkService;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class MarkAssignmentDeletedOnDisconnect implements ShouldQueue
+class MarkAssignmentDeletedOnDisconnect implements AircraftDisconnectedSubtask
 {
-    use Dispatchable, SerializesModels, Queueable;
+    private SquawkService $squawkService;
 
-    private NetworkAircraft $disconnectingAircraft;
-
-    public function __construct(NetworkAircraft $disconnectingAircraft)
+    public function __construct(SquawkService $squawkService)
     {
-        $this->disconnectingAircraft = $disconnectingAircraft;
+        $this->squawkService = $squawkService;
     }
 
-    public function handle(SquawkService $squawkService): void
+    public function perform(NetworkAircraft $aircraft): void
     {
-        $squawkService->deleteSquawkAssignment($this->disconnectingAircraft->callsign);
+        $this->squawkService->deleteSquawkAssignment($aircraft->callsign);
     }
 }

@@ -3,24 +3,11 @@
 namespace App\Jobs\Network;
 
 use App\Models\Vatsim\NetworkAircraft;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class DeleteNetworkAircraft implements ShouldQueue
+class DeleteNetworkAircraft implements AircraftDisconnectedSubtask
 {
-    use Dispatchable, SerializesModels, Queueable;
-
-    private NetworkAircraft $disconnectingAircraft;
-
-    public function __construct(NetworkAircraft $disconnectingAircraft)
+    public function perform(NetworkAircraft $aircraft): void
     {
-        $this->disconnectingAircraft = $disconnectingAircraft;
-    }
-
-    public function handle(): void
-    {
-        $this->disconnectingAircraft->delete();
+        $aircraft->delete();
     }
 }
