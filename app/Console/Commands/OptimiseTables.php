@@ -22,6 +22,7 @@ class OptimiseTables extends Command
         'stand_assignments_history',
         'aircraft_stand',
         'stand_assignments',
+        'plugin_events',
     ];
 
     protected $signature = 'tables:optimise';

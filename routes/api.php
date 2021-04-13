@@ -21,6 +21,10 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('dependency/{id}', 'DependencyController@getDependency')
         ->where('id', '[0-9]+');
 
+    // Events
+    Route::get('plugin-events/sync', 'PluginEventsController@getLatestPluginEventId');
+    Route::get('plugin-events/recent', 'PluginEventsController@getRecentPluginEvents');
+
     // Holds
     Route::put('hold/assigned', 'HoldController@assignHold');
     Route::delete('hold/assigned/{callsign}', 'HoldController@deleteAssignedHold')
