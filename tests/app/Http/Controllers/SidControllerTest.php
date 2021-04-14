@@ -82,7 +82,7 @@ class SidControllerTest extends BaseApiTestCase
     public function testItReturnsAllSids()
     {
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->assertStatus(200)
-            ->assertExactJson($this->app->make(SidService::class)->getSidsDependency());
+            ->assertExactJson($this->app->make(SidService::class)->getAllSids());
     }
 
     public function testItReturns200OnGetAllSids()
@@ -245,40 +245,8 @@ class SidControllerTest extends BaseApiTestCase
 
     public function testItReturnsSidsDependency()
     {
-        $expected = $expected = [
-            [
-                'id' => 1,
-                'identifier' => 'TEST1X',
-                'airfield' => 'EGLL',
-                'handoff' => 1,
-                'initial_altitude' => 3000,
-                'departure_interval_group' => null,
-                'prenotes' => [
-                    1,
-                ],
-            ],
-            [
-                'id' => 2,
-                'airfield' => 'EGLL',
-                'identifier' => 'TEST1Y',
-                'handoff' => 1,
-                'initial_altitude' => 4000,
-                'prenotes' => [],
-                'departure_interval_group' => null,
-            ],
-            [
-                'id' => 3,
-                'airfield' => 'EGBB',
-                'identifier' => 'TEST1A',
-                'handoff' => 2,
-                'initial_altitude' => 5000,
-                'prenotes' => [],
-                'departure_interval_group' => null,
-            ],
-        ];
-
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/dependency')
             ->assertOk()
-            ->assertJson($expected);
+            ->assertJson($this->app->make(SidService::class)->getSidsDependency());
     }
 }
