@@ -2,19 +2,17 @@
 
 namespace App\Allocator\Squawk\General;
 
-use App\Allocator\Squawk\SquawkAssignmentCategories;
 use App\BaseFunctionalTestCase;
-use App\Models\Squawk\Orcam\OrcamSquawkAssignment;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
+use App\Models\Squawk\SquawkAssignment;
 use App\Models\Vatsim\NetworkAircraft;
-use Carbon\Carbon;
 
 class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
 {
     /**
      * @var OrcamSquawkAllocator
      */
-    private $allocator;
+    private OrcamSquawkAllocator $allocator;
 
     public function setUp(): void
     {
@@ -107,32 +105,6 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertSquawkNotAsssigned('BMI11A');
     }
 
-    public function testItReturnsNullIfAllocationNotFound()
-    {
-        $this->assertNull($this->allocator->fetch('MMMMM'));
-    }
-
-    public function testItReturnsAllocationIfExists()
-    {
-        $this->createSquawkAssignment('VIR25F', '0001');
-        $expected = OrcamSquawkAssignment::find('VIR25F');
-
-        $this->assertEquals($expected, $this->allocator->fetch('VIR25F'));
-    }
-
-    public function testItDeletesAllocations()
-    {
-        $this->createSquawkAssignment('VIR25F', '0001');
-
-        $this->assertTrue($this->allocator->delete('VIR25F'));
-        $this->assertSquawkNotAsssigned('VIR25F');
-    }
-
-    public function testItReturnsFalseForNonDeletedAllocations()
-    {
-        $this->assertFalse($this->allocator->delete('LALALA'));
-    }
-
     private function createSquawkRange(
         string $origin,
         string $first,
@@ -156,10 +128,11 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
                 'callsign' => $callsign
             ]
         );
-        OrcamSquawkAssignment::create(
+        SquawkAssignment::create(
             [
                 'callsign' => $callsign,
                 'code' => $code,
+                'assignment_type' => 'ORCAM',
             ]
         );
     }
@@ -167,7 +140,7 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
     private function assertSquawkNotAsssigned(string $callsign)
     {
         $this->assertDatabaseMissing(
-            'orcam_squawk_assignments',
+            'squawk_assignments',
             [
                 'callsign' => $callsign
             ]
@@ -177,34 +150,12 @@ class OrcamSquawkAllocatorTest extends BaseFunctionalTestCase
     private function assertSquawkAssigned(string $callsign, string $code)
     {
         $this->assertDatabaseHas(
-            'orcam_squawk_assignments',
+            'squawk_assignments',
             [
                 'callsign' => $callsign,
                 'code' => $code,
+                'assignment_type' => 'ORCAM',
             ]
         );
-    }
-
-    public function testItAssignsToCallsignIfFree()
-    {
-        $this->createSquawkRange('L', '0001', '0007');
-        $this->assertEquals('0002', $this->allocator->assignToCallsign('0002', 'RYR111')->getCode());
-        $this->assertSquawkAssigned('RYR111', '0002');
-    }
-
-    public function testItDoesntAssignIfNotInRange()
-    {
-        $this->createSquawkRange('L', '0001', '0007');
-        $this->assertNull($this->allocator->assignToCallsign('RYR111', '0010'));
-        $this->assertSquawkNotAsssigned('RYR111');
-    }
-
-    public function testItDoesntAssignIfAlreadyAssigned()
-    {
-        $this->createSquawkAssignment('RYR234', '0001');
-        $this->createSquawkRange('L', '0001', '0007');
-        $this->assertNull($this->allocator->assignToCallsign('RYR111', '0001'));
-        $this->assertSquawkNotAsssigned('RYR111');
-        $this->assertSquawkAssigned('RYR234', '0001');
     }
 }

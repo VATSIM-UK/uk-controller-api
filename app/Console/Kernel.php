@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
+use App\Console\Commands\CleanPluginEvents;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
@@ -53,7 +54,8 @@ class Kernel extends ConsoleKernel
         StandReservationsImport::class,
         RecatCategoriesImport::class,
         UpdateSrd::class,
-        DataAdminCreate::class
+        DataAdminCreate::class,
+        CleanPluginEvents::class,
     ];
 
     /**
@@ -74,11 +76,13 @@ class Kernel extends ConsoleKernel
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
         $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
+        $schedule->command('schedule-monitor:sync')
+            ->dailyAt('07:01');
+        $schedule->command('schedule-monitor:clean')
+            ->dailyAt('08:01');
         $schedule->command('srd:update')
-            ->hourly()
-            ->when(function () {
-                return $this->app->make(SrdService::class)->newSrdShouldBeAvailable();
-            });
+            ->hourlyAt([1,2,3,4,5,6,7]);
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        $schedule->command('plugin-events:clean')->everyTenMinutes();
     }
 }

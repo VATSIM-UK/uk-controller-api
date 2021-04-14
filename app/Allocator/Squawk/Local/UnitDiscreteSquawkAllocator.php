@@ -3,25 +3,43 @@
 namespace App\Allocator\Squawk\Local;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
-use App\Allocator\Squawk\SquawkAllocatorInterface;
-use App\Allocator\Squawk\SquawkAssignmentInterface;
-use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Services\ControllerService;
-use App\Services\NetworkDataService;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as BaseCollection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator implements SquawkAllocatorInterface
+class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator
 {
-    private function getApplicableRanges(string $unit, array $details): Collection
+    protected function getOrderedSquawkRangesQuery(array $details): Builder
     {
-        $ranges = UnitDiscreteSquawkRange::with('rules')
-            ->whereIn('unit', $this->getApplicableUnits($unit))
-            ->get();
+        $parsedUnit = ControllerService::getControllerFacilityFromCallsign(
+            $details['unit']
+        );
+        $details['unit_type'] = isset($details['unit'])
+            ? ControllerService::getControllerLevelFromCallsign($details['unit'])
+            : '';
+
+        return UnitDiscreteSquawkRange::with('rules')
+            ->whereIn('unit', $this->getApplicableUnits($parsedUnit));
+    }
+
+    private function getApplicableUnits(string $unit): array
+    {
+        return array_merge(
+            UnitDiscreteSquawkRangeGuest::where('guest_unit', $unit)
+                ->pluck('primary_unit')
+                ->all(),
+            [$unit]
+        );
+    }
+
+    /**
+     * For this particular allocator, we filter the ranges to only those where
+     * the flight rules or unit types match.
+     */
+    protected function filterRanges(Collection $ranges, array $details): Collection
+    {
         return $ranges->filter(
             function (UnitDiscreteSquawkRange $range) use ($details) {
                 if ($range->rules->isEmpty()) {
@@ -39,99 +57,13 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator implements Squ
         );
     }
 
-    private function getApplicableUnits(string $unit): array
+    protected function canAllocateSquawk(array $details): bool
     {
-        return array_merge(
-            UnitDiscreteSquawkRangeGuest::where('guest_unit', $unit)
-                ->pluck('primary_unit')
-                ->all(),
-            [$unit]
-        );
+        return isset($details['unit']);
     }
 
-    public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
+    protected function getAssignmentType(): string
     {
-        $unit = isset($details['unit']) ? ControllerService::getControllerFacilityFromCallsign(
-            $details['unit']
-        ) : null;
-        if (!$unit) {
-            Log::error('Unit not provided for local squawk assignment');
-            return null;
-        }
-
-        // Add the unit level for validation rules
-        $details['unit_type'] = isset($details['unit'])
-            ? ControllerService::getControllerLevelFromCallsign($details['unit'])
-            : '';
-
-        $assignment = null;
-
-        DB::transaction(
-            function () use (&$assignment, $callsign, $details, $unit) {
-                $this->getApplicableRanges($unit, $details)->each(
-                    function (UnitDiscreteSquawkRange $range) use (
-                        &$assignment,
-                        $callsign
-                    ) {
-                        $allSquawks = $range->getAllSquawksInRange();
-                        $possibleSquawks = $allSquawks->diff(
-                            UnitDiscreteSquawkAssignment::whereIn('code', $allSquawks)
-                                ->where('unit', $range->unit)
-                                ->pluck('code')
-                                ->all()
-                        );
-
-                        if ($possibleSquawks->isEmpty()) {
-                            return true;
-                        }
-
-                        $assignment = $this->assignSquawkFromAvailableCodes(
-                            $callsign,
-                            $range->unit,
-                            $possibleSquawks->shuffle()
-                        );
-                        return false;
-                    }
-                );
-            }
-        );
-
-        return $assignment;
-    }
-
-    public function delete(string $callsign): bool
-    {
-        return UnitDiscreteSquawkAssignment::destroy($callsign);
-    }
-
-    public function fetch(string $callsign): ?SquawkAssignmentInterface
-    {
-        return UnitDiscreteSquawkAssignment::find($callsign);
-    }
-
-    /**
-     * @param string $callsign
-     * @param string $unit
-     * @param BaseCollection $possibleSquawks
-     * @return SquawkAssignmentInterface|null
-     */
-    private function assignSquawkFromAvailableCodes(
-        string $callsign,
-        string $unit,
-        BaseCollection $possibleSquawks
-    ): ?SquawkAssignmentInterface {
-        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
-        return $this->assignSquawk(
-            function (string $code) use ($callsign, $unit) {
-                return UnitDiscreteSquawkAssignment::updateOrCreate(
-                    [
-                        'callsign' => $callsign,
-                        'unit' => $unit,
-                        'code' => $code,
-                    ]
-                );
-            },
-            $possibleSquawks
-        );
+        return 'UNIT_DISCRETE';
     }
 }

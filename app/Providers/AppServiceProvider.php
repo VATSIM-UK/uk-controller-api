@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use Illuminate\Validation\Rule;
+use App\Services\SectorfileService;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +31,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Rule::macro('latitudeString', function () {
+            return 'regex:' . SectorfileService::SECTORFILE_LATITUDE_REGEX;
+        });
+
+        Rule::macro('longitudeString', function () {
+            return 'regex:' . SectorfileService::SECTORFILE_LONGITUDE_REGEX;
+        });
     }
 }

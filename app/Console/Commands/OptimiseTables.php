@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Schema;
 class OptimiseTables extends Command
 {
     const TABLES_TO_OPTIMISE = [
-        'ccams_squawk_assignments',
-        'orcam_squawk_assignments',
-        'airfield_pairing_squawk_assignments',
-        'unit_discrete_squawk_assignments',
-        'unit_discrete_squawk_range_rules',
         'squawk_assignments_history',
         'assigned_holds',
         'assigned_holds_history',
@@ -26,6 +21,8 @@ class OptimiseTables extends Command
         'stand_assignments',
         'stand_assignments_history',
         'aircraft_stand',
+        'stand_assignments',
+        'plugin_events',
     ];
 
     protected $signature = 'tables:optimise';

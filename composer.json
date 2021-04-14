@@ -22,7 +22,9 @@
         "mjaschen/phpgeo": "^3.0",
         "laravel/horizon": "^5.7",
         "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0"
+        "fruitcake/laravel-cors": "^2.0",
+        "spatie/laravel-schedule-monitor": "^2.2",
+        "ohdearapp/ohdear-php-sdk": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.13",

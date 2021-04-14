@@ -20,6 +20,10 @@ Route::middleware('plugin.user')->group(function () {
     Route::get('dependency/{id}', 'DependencyController@getDependency')
         ->where('id', '[0-9]+');
 
+    // Events
+    Route::get('plugin-events/sync', 'PluginEventsController@getLatestPluginEventId');
+    Route::get('plugin-events/recent', 'PluginEventsController@getRecentPluginEvents');
+
     // Holds
     Route::put('hold/assigned', 'HoldController@assignHold');
     Route::delete('hold/assigned/{callsign}', 'HoldController@deleteAssignedHold')
@@ -170,6 +174,12 @@ Route::middleware('admin.data')->group(function () {
         Route::get('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@getStandDetails');
         Route::put('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@modifyStand');
         Route::delete('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@deleteStand');
+
+        Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
+        Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
+        Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
+        Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
+        Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
 
         Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
     });
