@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use Carbon\Carbon;
@@ -12,6 +13,50 @@ use OutOfRangeException;
 
 class AirfieldService
 {
+    public function getAirfieldsDependency(): array
+    {
+        return Airfield::with(
+            'speedGroups',
+            'speedGroups.aircraft',
+            'speedGroups.engineTypes',
+            'speedGroups.relatedGroups'
+        )
+            ->get()->map(
+                function (Airfield $airfield) {
+                    return [
+                        'id' => $airfield->id,
+                        'identifier' => $airfield->code,
+                        'wake_scheme' => $airfield->wake_category_scheme_id,
+                        'departure_speed_groups' => $this->getSpeedGroupsForAirfield($airfield),
+                        'top_down_order' => $airfield->controllers()->orderBy('order')->pluck('callsign')->toArray(),
+                    ];
+                }
+            )->toArray();
+    }
+
+    private function getSpeedGroupsForAirfield(Airfield $airfield): array
+    {
+        $speedGroups = [];
+
+        foreach ($airfield->speedGroups as $speedGroup) {
+            $speedGroups[] = [
+                'id' => $speedGroup->id,
+                'aircraft_types' => $speedGroup->aircraft->pluck('code')->toArray(),
+                'engine_types' => $speedGroup->engineTypes->pluck('euroscope_type')->toArray(),
+                'related_groups' => $speedGroup->relatedGroups->mapWithKeys(function (SpeedGroup $related) {
+                    return [
+                        $related->id => [
+                            'following_interval_penalty' => $related->pivot->penalty,
+                            'set_following_interval_to' => $related->pivot->set_interval_to,
+                        ],
+                    ];
+                })->toArray(),
+            ];
+        }
+
+        return $speedGroups;
+    }
+
     /**
      * @return array
      */

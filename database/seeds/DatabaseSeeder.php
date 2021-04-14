@@ -109,6 +109,10 @@ class DatabaseSeeder extends Seeder
             'airline_stand',
             'airline_terminal',
         ],
+        DepartureIntervalTableSeeder::class => [
+            'sid_departure_interval_groups',
+            'sid_departure_interval_group_sid_departure_interval_group',
+        ],
         PluginEventTableSeeder::class => [
             'plugin_events',
         ],

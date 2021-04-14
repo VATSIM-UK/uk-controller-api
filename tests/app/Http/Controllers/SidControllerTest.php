@@ -11,7 +11,7 @@ class SidControllerTest extends BaseApiTestCase
 {
     const SID_URI_1 = 'sid/1';
     const SID_URI_55 = 'sid/55';
-    
+
     protected static $tokenScope = [
         AuthServiceProvider::SCOPE_USER,
         AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
@@ -92,6 +92,7 @@ class SidControllerTest extends BaseApiTestCase
                 'prenotes' => [
                     1,
                 ],
+                'sid_departure_interval_group_id' => null,
             ],
             [
                 'id' => 2,
@@ -101,6 +102,7 @@ class SidControllerTest extends BaseApiTestCase
                 'initial_altitude' => 4000,
                 'handoff_id' => 1,
                 'prenotes' => [],
+                'sid_departure_interval_group_id' => null,
             ],
             [
                 'id' => 3,
@@ -110,11 +112,12 @@ class SidControllerTest extends BaseApiTestCase
                 'initial_altitude' => 5000,
                 'handoff_id' => 2,
                 'prenotes' => [],
+                'sid_departure_interval_group_id' => null,
             ],
         ];
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->
-        assertStatus(200)
-        ->assertExactJson($expected);
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->assertStatus(200)
+            ->assertExactJson($expected);
     }
 
     public function testItReturns200OnGetAllSids()
@@ -273,5 +276,44 @@ class SidControllerTest extends BaseApiTestCase
             'initial_altitude' => 'test',
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
+    }
+
+    public function testItReturnsSidsDependency()
+    {
+        $expected = $expected = [
+            [
+                'id' => 1,
+                'identifier' => 'TEST1X',
+                'airfield' => 'EGLL',
+                'handoff' => 1,
+                'initial_altitude' => 3000,
+                'departure_interval_group' => null,
+                'prenotes' => [
+                    1,
+                ],
+            ],
+            [
+                'id' => 2,
+                'airfield' => 'EGLL',
+                'identifier' => 'TEST1Y',
+                'handoff' => 1,
+                'initial_altitude' => 4000,
+                'prenotes' => [],
+                'departure_interval_group' => null,
+            ],
+            [
+                'id' => 3,
+                'airfield' => 'EGBB',
+                'identifier' => 'TEST1A',
+                'handoff' => 2,
+                'initial_altitude' => 5000,
+                'prenotes' => [],
+                'departure_interval_group' => null,
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/dependency')
+            ->assertOk()
+            ->assertJson($expected);
     }
 }
