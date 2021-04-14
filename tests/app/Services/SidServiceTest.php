@@ -40,6 +40,7 @@ class SidServiceTest extends BaseFunctionalTestCase
             'airfield_id' => 1,
             'handoff_id' => 1,
             'initial_altitude' => 3000,
+            'initial_heading' => null,
             'sid_departure_interval_group_id' => null,
         ];
         $this->assertEquals($expected, $this->service->getSid(1));
@@ -135,6 +136,7 @@ public function testItDeletesSids()
         Sid::find(1)->update(['sid_departure_interval_group_id' => 1]);
         Sid::find(2)->update(['sid_departure_interval_group_id' => 2]);
         Sid::find(3)->update(['sid_departure_interval_group_id' => 3]);
+        Sid::find(2)->update(['initial_heading' => 255]);
         $expected = [
             [
                 'id' => 1,
@@ -142,6 +144,7 @@ public function testItDeletesSids()
                 'airfield' => 'EGLL',
                 'handoff' => 1,
                 'initial_altitude' => 3000,
+                'initial_heading' => null,
                 'departure_interval_group' => 1,
                 'prenotes' => [
                     1,
@@ -153,6 +156,7 @@ public function testItDeletesSids()
                 'identifier' => 'TEST1Y',
                 'handoff' => 1,
                 'initial_altitude' => 4000,
+                'initial_heading' => 255,
                 'prenotes' => [],
                 'departure_interval_group' => 2,
             ],
@@ -162,6 +166,7 @@ public function testItDeletesSids()
                 'identifier' => 'TEST1A',
                 'handoff' => 2,
                 'initial_altitude' => 5000,
+                'initial_heading' => null,
                 'prenotes' => [],
                 'departure_interval_group' => 3,
             ],
