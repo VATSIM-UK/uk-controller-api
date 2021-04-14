@@ -52,6 +52,7 @@ class SidServiceTest extends BaseFunctionalTestCase
 
     public function testItGetsAllSids()
     {
+        Sid::where('identifier', 'TEST1Y')->update(['initial_heading' => 255]);
         $expected = [
             [
                 'id' => 1,
@@ -59,6 +60,7 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'handoff_id' => 1,
                 'initial_altitude' => 3000,
+                'initial_heading' => null,
                 'prenotes' => [
                     1,
                 ],
@@ -70,6 +72,7 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'handoff_id' => 1,
                 'initial_altitude' => 4000,
+                'initial_heading' => 255,
                 'prenotes' => [],
                 'sid_departure_interval_group_id' => null,
             ],
@@ -79,6 +82,7 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 2,
                 'handoff_id' => 2,
                 'initial_altitude' => 5000,
+                'initial_heading' => null,
                 'prenotes' => [],
                 'sid_departure_interval_group_id' => null,
             ],
