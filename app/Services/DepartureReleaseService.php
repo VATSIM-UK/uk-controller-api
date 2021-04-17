@@ -7,7 +7,6 @@ use App\Events\DepartureReleaseRequestedEvent;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use Carbon\Carbon;
 use App\Models\Release\Departure\DepartureReleaseRequest;
-use Illuminate\Support\Facades\DB;
 
 class DepartureReleaseService
 {
@@ -17,7 +16,7 @@ class DepartureReleaseService
         int $requestingController,
         array $targetControllers,
         int $expiresInSeconds
-    ): void
+    ): int
     {
         $releaseRequest = DepartureReleaseRequest::create(
             [
@@ -30,6 +29,7 @@ class DepartureReleaseService
 
         $releaseRequest->controllerPositions()->sync($targetControllers);
         event(new DepartureReleaseRequestedEvent($releaseRequest));
+        return $releaseRequest->id;
     }
 
     public function approveReleaseRequest(

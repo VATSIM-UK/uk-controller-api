@@ -39,7 +39,7 @@ class DepartureReleaseController
             ]
         );
 
-        $this->departureReleaseService->makeReleaseRequest(
+        $releaseId = $this->departureReleaseService->makeReleaseRequest(
             $validated['callsign'],
             Auth::id(),
             $validated['requesting_controller_id'],
@@ -47,7 +47,7 @@ class DepartureReleaseController
             $validated['expires_in_seconds']
         );
 
-        return response()->json(null, 201);
+        return response()->json(['id' => $releaseId], 201);
     }
 
     public function approveReleaseRequest(

@@ -24,10 +24,11 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'expires_in_seconds' => 125,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/release/request', $requestData)
-            ->assertCreated();
-
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/release/request', $requestData);
         $latestRelease = DepartureReleaseRequest::latest()->first()->id;
+
+        $response->assertCreated()
+            ->assertJson(['id' => $latestRelease]);
 
         $this->assertDatabaseHas(
             'departure_release_requests',

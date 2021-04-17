@@ -23,14 +23,13 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testItCreatesADepartureReleaseRequest()
     {
         $this->expectsEvents(DepartureReleaseRequestedEvent::class);
-        $this->service->makeReleaseRequest(
+        $latestRelease = $this->service->makeReleaseRequest(
             'BAW123',
             self::ACTIVE_USER_CID,
             1,
             [2, 3],
             125
         );
-        $latestRelease = DepartureReleaseRequest::latest()->first()->id;
 
         $this->assertDatabaseHas(
             'departure_release_requests',
