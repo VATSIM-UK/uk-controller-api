@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\DepartureReleaseApprovedEvent;
+use App\Events\DepartureReleaseRejectedEvent;
 use App\Events\DepartureReleaseRequestedEvent;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use Carbon\Carbon;
@@ -50,5 +51,24 @@ class DepartureReleaseService
 
         $controller->decision->approve($approvingUserId, $approvalExpiresInSeconds);
         event(new DepartureReleaseApprovedEvent($controller->decision));
+    }
+
+    public function rejectReleaseRequest(
+        DepartureReleaseRequest $request,
+        int $rejectingControllerId,
+        int $rejectingUserId
+    ): void {
+        $controller = $request->controllerPositions()
+            ->wherePivot('controller_position_id', $rejectingControllerId)
+            ->first();
+
+        if (!$controller) {
+            throw new DepartureReleaseDecisionNotAllowedException(
+                sprintf('Controller id %d cannot reject this release', $rejectingControllerId)
+            );
+        }
+
+        $controller->decision->reject($rejectingUserId);
+        event(new DepartureReleaseRejectedEvent($controller->decision));
     }
 }

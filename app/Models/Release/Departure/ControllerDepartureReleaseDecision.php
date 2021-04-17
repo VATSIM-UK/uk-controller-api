@@ -19,4 +19,14 @@ class ControllerDepartureReleaseDecision extends Pivot
             ]
         );
     }
+
+    public function reject(int $userId)
+    {
+        $this->update(
+            [
+                'rejected_by' => $userId,
+                'rejected_at' => Carbon::now(),
+            ]
+        );
+    }
 }
