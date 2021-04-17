@@ -16,11 +16,17 @@ class CreateDepartureReleasesTable extends Migration
         Schema::create('departure_release_requests', function (Blueprint $table) {
             $table->id();
             $table->string('callsign')->comment('The callsign that the release pertains to');
-            $table->unsignedInteger('user_id')->comment('The user triggering the release');
+            $table->unsignedInteger('user_id')->comment('The user triggering the release, for audit purposes');
+            $table->unsignedBigInteger('controller_position_id')
+                ->comment('The controller position being used to request release');
             $table->timestamp('created_at')->comment('When the release was triggered');
             $table->timestamp('expires_at')->comment('When the release request expires');
 
             $table->foreign('user_id')->references('id')->on('user')->cascadeOnDelete();
+            $table->foreign('controller_position_id', 'departure_release_controller_position')
+                ->references('id')
+                ->on('controller_positions')
+                ->cascadeOnDelete();
         });
     }
 

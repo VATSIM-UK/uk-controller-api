@@ -19,6 +19,10 @@ Broadcast::channel('enroute-releases', function (User $user) {
     return $user->exists();
 });
 
+Broadcast::channel('departure-releases', function (User $user) {
+    return $user->exists();
+});
+
 Broadcast::channel('stand-assignments', function (User $user) {
     return $user->exists();
 });

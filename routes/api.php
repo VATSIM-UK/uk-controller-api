@@ -15,6 +15,10 @@ Route::middleware('plugin.user')->group(function () {
             'uses' => 'TeapotController@normalTeapots',
         ]
     );
+
+    // Departure releases
+    Route::post('departure/release/request', 'DepartureReleaseController@makeReleaseRequest');
+
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
     Route::get('dependency/{id}', 'DependencyController@getDependency')
