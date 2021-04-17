@@ -18,6 +18,10 @@ Route::middleware('plugin.user')->group(function () {
 
     // Departure releases
     Route::post('departure/release/request', 'DepartureReleaseController@makeReleaseRequest');
+    Route::put(
+        'departure/release/request/{id}/approve',
+        'DepartureReleaseController@approveReleaseRequest'
+    );
 
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');

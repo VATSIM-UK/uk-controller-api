@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Controller\ControllerPosition;
+use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
+use App\Models\Release\Departure\DepartureReleaseRequest;
 use App\Rules\Controller\ControllerPositionValid;
 use App\Services\DepartureReleaseService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DepartureReleaseController
 {
@@ -33,7 +35,7 @@ class DepartureReleaseController
                     'integer',
                     new ControllerPositionValid(),
                 ],
-                'expires_in_seconds' => 'required|integer',
+                'expires_in_seconds' => 'required|integer|min:1',
             ]
         );
 
@@ -46,5 +48,41 @@ class DepartureReleaseController
         );
 
         return response()->json(null, 201);
+    }
+
+    public function approveReleaseRequest(
+        Request $request,
+        int $id
+    ): JsonResponse {
+        $departureReleaseRequest = DepartureReleaseRequest::findOrFail($id);
+
+        $validated = $request->validate(
+            [
+                'controller_position_id' => 'required|integer',
+                'expires_in_seconds' => 'required|integer|min:1',
+            ]
+        );
+
+        $responseData = null;
+        try {
+            $this->departureReleaseService->approveReleaseRequest(
+                $departureReleaseRequest,
+                $validated['controller_position_id'],
+                Auth::id(),
+                $validated['expires_in_seconds']
+            );
+            $responseCode = 200;
+        } catch (DepartureReleaseDecisionNotAllowedException $decisionNotAllowedException) {
+            Log::warning(
+                sprintf(
+                    'User %d attempted to approve release %d without permission',
+                    Auth::id(),
+                    $departureReleaseRequest->id
+                )
+            );
+            $responseCode = 422;
+            $responseData = ['message' => 'You cannot approve this release'];
+        }
+        return response()->json($responseData, $responseCode);
     }
 }

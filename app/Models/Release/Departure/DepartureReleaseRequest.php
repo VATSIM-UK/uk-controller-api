@@ -29,6 +29,7 @@ class DepartureReleaseRequest extends Model
     public function controllerPositions(): BelongsToMany
     {
         return $this->belongsToMany(ControllerPosition::class)
-            ->withPivot('released_at', 'release_expires_at', 'rejected_at');
+            ->using(ControllerDepartureReleaseDecision::class)
+            ->as('decision');
     }
 }

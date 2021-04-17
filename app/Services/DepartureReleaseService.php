@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Events\DepartureReleaseApprovedEvent;
 use App\Events\DepartureReleaseRequestedEvent;
+use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use Carbon\Carbon;
 use App\Models\Release\Departure\DepartureReleaseRequest;
+use Illuminate\Support\Facades\DB;
 
 class DepartureReleaseService
 {
@@ -27,5 +30,25 @@ class DepartureReleaseService
 
         $releaseRequest->controllerPositions()->sync($targetControllers);
         event(new DepartureReleaseRequestedEvent($releaseRequest));
+    }
+
+    public function approveReleaseRequest(
+        DepartureReleaseRequest $request,
+        int $approvingControllerId,
+        int $approvingUserId,
+        int $approvalExpiresInSeconds
+    ): void {
+        $controller = $request->controllerPositions()
+            ->wherePivot('controller_position_id', $approvingControllerId)
+            ->first();
+
+        if (!$controller) {
+            throw new DepartureReleaseDecisionNotAllowedException(
+                sprintf('Controller id %d cannot approve this release', $approvingControllerId)
+            );
+        }
+
+        $controller->decision->approve($approvingUserId, $approvalExpiresInSeconds);
+        event(new DepartureReleaseApprovedEvent($controller->decision));
     }
 }
