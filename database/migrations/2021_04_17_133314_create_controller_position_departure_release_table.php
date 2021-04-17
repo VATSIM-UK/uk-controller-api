@@ -13,27 +13,30 @@ class CreateControllerPositionDepartureReleaseTable extends Migration
      */
     public function up()
     {
-        Schema::create('controller_position_departure_release', function (Blueprint $table) {
+        Schema::create('controller_position_departure_release_request', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('controller_position_id')
                 ->comment('The controller position the release has been requested from');
-            $table->unsignedBigInteger('departure_release_id')
+            $table->unsignedBigInteger('departure_release_request_id')
                 ->comment('The release that is being requested');
             $table->unsignedInteger('released_by')->nullable()->comment('Who gave the release');
             $table->timestamp('released_at')->nullable()->comment('What time the release was given');
             $table->timestamp('release_expires_at')->nullable()->comment('When the release expired');
             $table->timestamp('rejected_at')->nullable()->comment('When the release was rejected');
 
-            $table->foreign('released_by')->references('id')->on('user')->cascadeOnDelete();
-            $table->unique(['controller_position_id', 'departure_release_id'], 'controller_release_unique');
-            $table->foreign('controller_position_id', 'departure_release_controller_position')
+            $table->foreign('released_by', 'departure_release_request_released_by')
+                ->references('id')
+                ->on('user')
+                ->cascadeOnDelete();
+            $table->unique(['controller_position_id', 'departure_release_request_id'], 'controller_release_request_unique');
+            $table->foreign('controller_position_id', 'departure_release_requested_controller')
                 ->references('id')
                 ->on('controller_positions')
                 ->cascadeOnDelete();
 
-            $table->foreign('departure_release_id', 'departure_release_departure_release')
+            $table->foreign('departure_release_request_id', 'departure_release_request_release')
                 ->references('id')
-                ->on('departure_releases')
+                ->on('departure_release_requests')
                 ->cascadeOnDelete();
         });
     }
@@ -45,6 +48,6 @@ class CreateControllerPositionDepartureReleaseTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('controller_position_departure_release');
+        Schema::dropIfExists('controller_position_departure_release_request');
     }
 }

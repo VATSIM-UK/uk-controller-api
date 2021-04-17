@@ -13,7 +13,7 @@ class CreateDepartureReleasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('departure_releases', function (Blueprint $table) {
+        Schema::create('departure_release_requests', function (Blueprint $table) {
             $table->id();
             $table->string('callsign')->comment('The callsign that the release pertains to');
             $table->unsignedInteger('user_id')->comment('The user triggering the release');
@@ -31,6 +31,6 @@ class CreateDepartureReleasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('departure_releases');
+        Schema::dropIfExists('departure_release_requests');
     }
 }

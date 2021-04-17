@@ -4,7 +4,7 @@ namespace App\Models\Release\Departure;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DepartureRelease extends Model
+class DepartureReleaseRequest extends Model
 {
     const UPDATED_AT = null;
 
