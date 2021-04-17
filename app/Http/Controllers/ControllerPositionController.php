@@ -20,6 +20,7 @@ class ControllerPositionController extends BaseController
         $positions = ControllerPosition::all()->mapWithKeys(function (ControllerPosition $position) {
             return [
                 $position->callsign => [
+                    'id' => $position->id,
                     'frequency' => $position->frequency,
                     'top-down' => $position->topDownAirfields->pluck('code')->toArray()
                 ],

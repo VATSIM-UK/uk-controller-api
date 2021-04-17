@@ -39,24 +39,28 @@ class ControllerPositionControllerTest extends BaseApiTestCase
     {
         $expected = [
             "EGLL_S_TWR" => [
+                'id' => 1,
                 "frequency" => 118.5,
                 "top-down" => [
                     "EGLL",
                 ],
             ],
             "EGLL_N_APP" =>[
+                'id' => 2,
                 "frequency" => 119.72,
                 "top-down" => [
                     "EGLL",
                 ],
             ],
             "LON_S_CTR" => [
+                'id' => 3,
                 "frequency" => 129.42,
                 "top-down" => [
                     "EGLL",
                 ],
             ],
             "LON_C_CTR" => [
+                'id' => 4,
                 "frequency" => 127.1,
                 "top-down" => [
                     "EGBB",
