@@ -17,8 +17,7 @@ class DepartureReleaseService
         int $requestingController,
         array $targetControllers,
         int $expiresInSeconds
-    ): int
-    {
+    ): int {
         $releaseRequest = DepartureReleaseRequest::create(
             [
                 'callsign' => $callsign,
