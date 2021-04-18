@@ -1224,11 +1224,11 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsAircraftWhoAreEligibleForArrivalStandAllocation()
     {
+        $this->addStandAssignment('BAW456', 2);
         $this->assertEquals(
             collect(
                 [
                     NetworkAircraft::find('BAW123'),
-                    NetworkAircraft::find('BAW456'),
                     NetworkAircraft::find('BAW789')
                 ]
             ),

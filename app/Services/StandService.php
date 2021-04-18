@@ -577,7 +577,9 @@ class StandService
         return NetworkAircraft::whereIn(
             'planned_destairport',
             Airfield::all()->pluck('code')->toArray()
-        )->get();
+        )
+            ->whereDoesntHave('assignedStand')
+            ->get();
     }
 
     private function getDepartureStandsToAssign(): Collection
