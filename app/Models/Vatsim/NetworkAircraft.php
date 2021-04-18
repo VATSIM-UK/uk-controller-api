@@ -98,7 +98,7 @@ class NetworkAircraft extends Model
 
     public function assignedStand(): HasOne
     {
-        return $this->hasOne(StandAssignment::class);
+        return $this->hasOne(StandAssignment::class, 'callsign', 'callsign');
     }
 
     public function getAircraftTypeAttribute(): string
