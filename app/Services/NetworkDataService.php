@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\NetworkDataUpdatedEvent;
+use App\Jobs\Network\AircraftDisconnected;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
@@ -152,7 +153,7 @@ class NetworkDataService
                 function (NetworkAircraft $aircraft) {
                     $aircraft->getConnection()->transaction(
                         function () use ($aircraft) {
-                            event(new NetworkAircraftDisconnectedEvent($aircraft));
+                            AircraftDisconnected::dispatch($aircraft);
                         }
                     );
                 }

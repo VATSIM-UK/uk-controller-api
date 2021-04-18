@@ -3,7 +3,6 @@
 namespace App\Jobs\Stand;
 
 use App\BaseFunctionalTestCase;
-use App\Events\NetworkAircraftDisconnectedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
@@ -16,21 +15,21 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
     public function setUp() : void
     {
         parent::setUp();
-        $this->listener = new TriggerUnassignmentOnDisconnect(NetworkAircraft::find('BAW123'));
+        $this->listener = $this->app->make(TriggerUnassignmentOnDisconnect::class);
     }
 
     public function testItFiresEventIfStandAssignmentExists()
     {
         $this->addStandAssignment('BAW123', 1);
         $this->expectsEvents(StandUnassignedEvent::class);
-        $this->listener->handle();
+        $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 
     public function testItDeletesStandAssignments()
     {
         $this->addStandAssignment('BAW123', 1);
         $this->expectsEvents([]);
-        $this->listener->handle();
+        $this->listener->perform(NetworkAircraft::find('BAW123'));
 
         $this->assertNull(StandAssignment::find('BAW123'));
     }
@@ -38,7 +37,7 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
     public function testDoesntFireEventIfNoAssignment()
     {
         $this->doesntExpectEvents(StandUnassignedEvent::class);
-        $this->listener->handle();
+        $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
