@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers\Admin;
 
@@ -17,13 +17,13 @@ class NavaidAdminControllerTest extends BaseApiTestCase
     protected static $tokenScope = [
         AuthServiceProvider::SCOPE_DATA_ADMIN,
     ];
-    
+
     public function testNavaidsCanBeListed()
     {
         $navaid = Navaid::factory()->create();
 
         $response = $this->makeAuthenticatedApiRequest('GET', $this->baseEndpoint);
-        
+
         $response->assertStatus(200);
         $response->assertJson(['navaids' => $navaid->withCount('holds')->get()->toArray()]);
     }
@@ -44,8 +44,8 @@ class NavaidAdminControllerTest extends BaseApiTestCase
 
         $response = $this->makeAuthenticatedApiRequest('POST', $this->baseEndpoint, [
             'identifier' => $this->identifier,
-            'latitude' => 'N050.26.33.160',
-            'longitude' => 'W004.33.19.000'
+            'latitude' => 123,
+            'longitude' => 456,
         ]);
 
         $response->assertJsonValidationErrors('identifier');
@@ -55,69 +55,67 @@ class NavaidAdminControllerTest extends BaseApiTestCase
     {
         $response = $this->makeAuthenticatedApiRequest('POST', $this->baseEndpoint, [
             'identifier' => 'LONGERIDENTIFIER',
-            'latitude' => 'N050.26.33.160',
-            'longitude' => 'W004.33.19.000'
+            'latitude' => 123,
+            'longitude' => 456,
         ]);
 
         $response->assertJsonValidationErrors('identifier');
     }
 
-    public function testValidationErrorsOnBadlyFormattedLatitudeString()
+    public function testValidationErrorsOnBadLatitude()
     {
         $response = $this->makeAuthenticatedApiRequest('POST', $this->baseEndpoint, [
             'identifier' => $this->identifier,
-            'latitude' => 'N91.26.33.160',
-            'longitude' => 'W003.33.19.000'
+            'latitude' => 'abc',
+            'longitude' => 456,
         ]);
 
         $response->assertJsonValidationErrors('latitude');
         $this->assertDatabaseMissing('navaids', ['identifier' => $this->identifier]);
     }
 
-    public function testValidationErrorsOnBadlyFormattedLongitudeString()
+    public function testValidationErrorsOnBadLongitude()
     {
         $response = $this->makeAuthenticatedApiRequest('POST', $this->baseEndpoint, [
             'identifier' => $this->identifier,
-            'latitude' => 'N091.26.33.160',
-            'longitude' => 'W03.33.19.000'
+            'latitude' => 123,
+            'longitude' => 'abc',
         ]);
 
         $response->assertJsonValidationErrors('longitude');
         $this->assertDatabaseMissing('navaids', ['identifier' => $this->identifier]);
     }
 
-    public function testNavaidNotCreatedWithInvalidLatitudeString()
+    public function testNavaidNotCreatedWithInvalidLatitude()
     {
         $response = $this->makeAuthenticatedApiRequest('POST', $this->baseEndpoint, [
             'identifier' => $this->identifier,
-            'latitude' => 'N091.26.33.160',
-            'longitude' => 'W003.33.19.000'
+            'latitude' => 'abc',
+            'longitude' => 456,
         ]);
 
-        $response->assertStatus(400);
-        $response->assertJson(['message' => 'Cannot have more than 90 degrees of latitude']);
+        $response->assertStatus(422);
         $this->assertDatabaseMissing('navaids', ['identifier' => $this->identifier]);
     }
 
-    public function testNavaidNotCreatedWithInvalidLongitudeString()
+    public function testNavaidNotCreatedWithInvalidLongitude()
     {
         $response = $this->makeAuthenticatedApiRequest('POST', $this->baseEndpoint, [
             'identifier' => $this->identifier,
-            'latitude' => 'N050.26.33.160',
-            'longitude' => 'W190.33.19.000'
+            'latitude' => 123,
+            'longitude' => 'abc',
         ]);
 
-        $response->assertStatus(400);
-        $response->assertJson(['message' => 'Cannot have more than 180 degrees of longitude']);
+        $response->assertStatus(422);
         $this->assertDatabaseMissing('navaids', ['identifier' => $this->identifier]);
     }
 
     public function testNavaidCanBeCreatedWithValidData()
     {
-        $data = [            
+        $data = [
             'identifier' => $this->identifier,
-            'latitude' => 'N050.26.33.160',
-            'longitude' => 'W003.33.19.000'
+            'latitude' => 123,
+            'longitude' => 456,
         ];
 
         $response = $this->makeAuthenticatedApiRequest('POST', $this->baseEndpoint, $data);
@@ -132,12 +130,12 @@ class NavaidAdminControllerTest extends BaseApiTestCase
     {
         $navaid = Navaid::factory()->create(['identifier' => $this->identifier]);
 
-        $data = [            
+        $data = [
             'identifier' => $this->identifier,
-            'latitude' => 'N050.26.33.160',
-            'longitude' => 'W003.33.19.000'
+            'latitude' => 123,
+            'longitude' => 456,
         ];
-        
+
         $response = $this->makeAuthenticatedApiRequest('PUT', "{$this->baseEndpoint}/{$navaid->identifier}", $data);
 
         $response->assertStatus(200);
@@ -148,12 +146,12 @@ class NavaidAdminControllerTest extends BaseApiTestCase
     {
         $navaid = Navaid::factory()->create();
 
-        $data = [            
+        $data = [
             'identifier' => 'NQZ',
-            'latitude' => 'N050.26.33.160',
-            'longitude' => 'W003.33.19.000'
+            'latitude' => 123,
+            'longitude' => 456,
         ];
-        
+
         $response = $this->makeAuthenticatedApiRequest('PUT', "{$this->baseEndpoint}/{$navaid->identifier}", $data);
 
         $response->assertStatus(200);
