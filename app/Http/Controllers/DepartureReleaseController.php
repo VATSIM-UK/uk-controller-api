@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use App\Rules\Controller\ControllerPositionValid;
 use App\Services\DepartureReleaseService;
@@ -28,12 +29,22 @@ class DepartureReleaseController
                 'requesting_controller_id' => [
                     'required',
                     'integer',
-                    new ControllerPositionValid(),
+                    function ($attribute, $value, $fail) {
+                        if (!ControllerPosition::where('id', $value)->canRequestDepartureReleases()->exists()) {
+                            $fail(sprintf('Controller position %d cannot request departure releases', $value));
+                        }
+                    },
+                    'not_in:target_controller_ids.*',
                 ],
                 'target_controller_ids' => 'required|array',
                 'target_controller_ids.*' => [
                     'integer',
-                    new ControllerPositionValid(),
+                    function ($attribute, $value, $fail) {
+                        if (!ControllerPosition::where('id', $value)->canReceiveDepartureReleases()->exists()) {
+                            $fail(sprintf('Controller position %d cannot receive departure releases', $value));
+                        }
+                    },
+                    'different:requesting_controller_id',
                 ],
                 'expires_in_seconds' => 'required|integer|min:1',
             ]

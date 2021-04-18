@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Controller\ControllerPosition;
 
 class ControllerPositionControllerTest extends BaseApiTestCase
 {
@@ -44,6 +45,8 @@ class ControllerPositionControllerTest extends BaseApiTestCase
                 "top-down" => [
                     "EGLL",
                 ],
+                'requests_departure_releases' => true,
+                'receives_departure_releases' => false,
             ],
             "EGLL_N_APP" =>[
                 'id' => 2,
@@ -51,6 +54,8 @@ class ControllerPositionControllerTest extends BaseApiTestCase
                 "top-down" => [
                     "EGLL",
                 ],
+                'requests_departure_releases' => true,
+                'receives_departure_releases' => true,
             ],
             "LON_S_CTR" => [
                 'id' => 3,
@@ -58,6 +63,8 @@ class ControllerPositionControllerTest extends BaseApiTestCase
                 "top-down" => [
                     "EGLL",
                 ],
+                'requests_departure_releases' => true,
+                'receives_departure_releases' => true,
             ],
             "LON_C_CTR" => [
                 'id' => 4,
@@ -65,6 +72,8 @@ class ControllerPositionControllerTest extends BaseApiTestCase
                 "top-down" => [
                     "EGBB",
                 ],
+                'requests_departure_releases' => false,
+                'receives_departure_releases' => false,
             ],
         ];
 

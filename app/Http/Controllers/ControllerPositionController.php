@@ -22,7 +22,9 @@ class ControllerPositionController extends BaseController
                 $position->callsign => [
                     'id' => $position->id,
                     'frequency' => $position->frequency,
-                    'top-down' => $position->topDownAirfields->pluck('code')->toArray()
+                    'top-down' => $position->topDownAirfields->pluck('code')->toArray(),
+                    'requests_departure_releases' => $position->requests_departure_releases,
+                    'receives_departure_releases' => $position->receives_departure_releases,
                 ],
             ];
         });

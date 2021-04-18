@@ -4,6 +4,7 @@ namespace App\Models\Controller;
 
 use App\Models\Airfield\Airfield;
 use App\Models\Sid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -19,11 +20,15 @@ class ControllerPosition extends Model
     protected $fillable = [
         'callsign',
         'frequency',
+        'requests_departure_releases',
+        'receives_departure_releases',
         'created_at',
     ];
 
     protected $casts = [
         'frequency' => 'float',
+        'requests_departure_releases' => 'boolean',
+        'receives_departure_releases' => 'boolean',
     ];
 
     public function topDownAirfields() : BelongsToMany
@@ -34,5 +39,15 @@ class ControllerPosition extends Model
             'controller_position_id',
             'airfield_id'
         );
+    }
+
+    public function scopeCanRequestDepartureReleases(Builder $query): Builder
+    {
+        return $query->where('requests_departure_releases', true);
+    }
+
+    public function scopeCanReceiveDepartureReleases(Builder $query): Builder
+    {
+        return $query->where('receives_departure_releases', true);
     }
 }

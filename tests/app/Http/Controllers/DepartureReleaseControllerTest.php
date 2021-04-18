@@ -98,6 +98,22 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                     'expires_in_seconds' => 125,
                 ]
             ],
+            'Requesting controller cannot request releases' => [
+                [
+                    'callsign' => 'BAW123',
+                    'requesting_controller_id' => 4,
+                    'target_controller_ids' => [2, 3],
+                    'expires_in_seconds' => 125,
+                ]
+            ],
+            'Requesting controller is requesting release of themselves' => [
+                [
+                    'callsign' => 'BAW123',
+                    'requesting_controller_id' => 2,
+                    'target_controller_ids' => [2, 3],
+                    'expires_in_seconds' => 125,
+                ]
+            ],
             'Target controllers missing' => [
                 [
                     'callsign' => 'BAW123',
@@ -118,6 +134,14 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
                     'target_controller_ids' => [2, 12345],
+                    'expires_in_seconds' => 125,
+                ]
+            ],
+            'Target controller cannot receive releases' => [
+                [
+                    'callsign' => 'BAW123',
+                    'requesting_controller_id' => 1,
+                    'target_controller_ids' => [2, 4],
                     'expires_in_seconds' => 125,
                 ]
             ],
