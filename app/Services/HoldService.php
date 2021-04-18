@@ -50,7 +50,7 @@ class HoldService
                 });
 
             $assignmentsToRemove->each(function (AssignedHold $assignedHold) {
-               event(new HoldUnassignedEvent($assignedHold->callsign));
+                event(new HoldUnassignedEvent($assignedHold->callsign));
             });
 
             AssignedHold::whereIn('callsign', $assignmentsToRemove->pluck('callsign'))
