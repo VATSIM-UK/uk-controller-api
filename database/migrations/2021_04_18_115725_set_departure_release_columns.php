@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\DependencyService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,8 @@ class SetDepartureReleaseColumns extends Migration
             ->where('callsign', 'LIKE', '%_APP')
             ->orWhere('callsign', 'LIKE', '%_CTR')
             ->update(['receives_departure_releases' => true, 'updated_at' => Carbon::now()]);
+
+        DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
     }
 
     /**
