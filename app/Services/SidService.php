@@ -39,6 +39,7 @@ class SidService
                 'identifier' => $sid->identifier,
                 'departure_interval_group' => $sid->sid_departure_interval_group_id,
                 'initial_altitude' => $sid->initial_altitude,
+                'initial_heading' => $sid->initial_heading,
                 'handoff' => $sid->handoff_id,
                 'prenotes' => $sid->prenotes->map(function (Prenote $prenote) {
                     return $prenote->id;

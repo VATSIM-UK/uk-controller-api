@@ -21,6 +21,7 @@ class Sid extends Model
         'airfield_id',
         'identifier',
         'initial_altitude',
+        'initial_heading',
         'handoff_id',
         'sid_departure_interval_group_id',
         'created_at',
