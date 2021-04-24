@@ -7,6 +7,7 @@ use App\Services\VersionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Exceptions\Version\VersionNotFoundException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -79,6 +80,8 @@ class VersionController extends BaseController
         if (($publishDataResponse = $this->checkPublishData($request)) !== null) {
             return $publishDataResponse;
         }
+
+        Log::info('Received new version from GitHub', $request->json()->all());
 
         try {
             $this->versionService->publishNewVersionFromGithub($request->json('release.tag_name'));
