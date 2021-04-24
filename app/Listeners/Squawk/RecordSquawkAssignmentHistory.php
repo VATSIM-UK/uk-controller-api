@@ -4,9 +4,10 @@ namespace App\Listeners\Squawk;
 
 use App\Events\SquawkAssignmentEvent;
 use App\Models\Squawk\SquawkAssignmentsHistory;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Auth;
 
-class RecordSquawkAssignmentHistory
+class RecordSquawkAssignmentHistory implements ShouldQueue
 {
     /**
      * Handle any squawk allocation event

@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         ],
         HoldTableSeeder::class => [
             'holds',
+            'deemed_separated_holds',
         ],
         HoldRestrictionTableSeeder::class => [
             'hold_restrictions',
@@ -49,7 +50,6 @@ class DatabaseSeeder extends Seeder
         ],
         AircraftTableSeeder::class => [
             'aircraft',
-            'wake_categories',
         ],
         PrenoteTableSeeder::class => [
             'prenotes',
@@ -89,10 +89,7 @@ class DatabaseSeeder extends Seeder
             'unit_discrete_squawk_ranges',
         ],
         SquawkAssignmentTablesSeeder::class => [
-            'ccams_squawk_assignments',
-            'orcam_squawk_assignments',
-            'airfield_pairing_squawk_assignments',
-            'unit_discrete_squawk_assignments',
+            'squawk_assignments',
             'unit_discrete_squawk_range_rules',
             'squawk_assignments_history',
         ],
@@ -102,6 +99,7 @@ class DatabaseSeeder extends Seeder
             'stand_assignments_history',
             'stand_pairs',
             'stand_reservations',
+            'aircraft_stand',
         ],
         TerminalTableSeeder::class => [
             'terminals',
@@ -110,6 +108,13 @@ class DatabaseSeeder extends Seeder
             'airlines',
             'airline_stand',
             'airline_terminal',
+        ],
+        DepartureIntervalTableSeeder::class => [
+            'sid_departure_interval_groups',
+            'sid_departure_interval_group_sid_departure_interval_group',
+        ],
+        PluginEventTableSeeder::class => [
+            'plugin_events',
         ],
     ];
 

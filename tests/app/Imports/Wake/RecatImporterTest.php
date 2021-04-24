@@ -4,7 +4,7 @@ namespace App\Imports\Wake;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\RecatCategory;
+use App\Models\Aircraft\WakeCategory;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
@@ -65,9 +65,21 @@ class RecatImporterTest extends BaseFunctionalTestCase
     public function testItUpdatesRecatCategories()
     {
         $this->import->collection(collect()->push(['B738', 'F']));
-        $this->assertEquals(
-            RecatCategory::where('code', 'F')->first()->id,
-            Aircraft::where('code', 'B738')->first()->recat_category_id
+
+        $this->assertDatabaseHas(
+            'aircraft_wake_category',
+            [
+                'aircraft_id' => Aircraft::where('code', 'B738')->first()->id,
+                'wake_category_id' => WakeCategory::where('code', 'F')->first()->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'aircraft_wake_category',
+            [
+                'aircraft_id' => Aircraft::where('code', 'B738')->first()->id,
+                'wake_category_id' => WakeCategory::where('code', 'LM')->first()->id,
+            ]
         );
     }
 

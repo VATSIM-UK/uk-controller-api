@@ -33,6 +33,9 @@ class AirfieldController extends BaseController
         return response()->json($this->airfieldService->getAllAirfieldsWithRelations());
     }
 
+    /**
+     * @deprecated
+     */
     public function getAirfieldOwnershipDependency() : JsonResponse
     {
         $ownership = Airfield::all()->mapWithKeys(function (Airfield $airfield) {
@@ -42,5 +45,10 @@ class AirfieldController extends BaseController
         });
 
         return response()->json($ownership);
+    }
+
+    public function getAirfieldDependency(): JsonResponse
+    {
+        return response()->json($this->airfieldService->getAirfieldsDependency());
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
+use App\Console\Commands\CleanPluginEvents;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
@@ -12,15 +13,18 @@ use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\RecatCategoriesImport;
 use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
+use App\Console\Commands\UpdateSrd;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
 use App\Console\Commands\WakeCategoriesImport;
+use App\Services\SrdService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
 use App\Console\Commands\DeleteUserTokens;
 use App\Console\Commands\CreateUserToken;
+use App\Console\Commands\DataAdminCreate;
 
 class Kernel extends ConsoleKernel
 {
@@ -49,6 +53,9 @@ class Kernel extends ConsoleKernel
         AllocateStandForArrival::class,
         StandReservationsImport::class,
         RecatCategoriesImport::class,
+        UpdateSrd::class,
+        DataAdminCreate::class,
+        CleanPluginEvents::class,
     ];
 
     /**
@@ -67,7 +74,15 @@ class Kernel extends ConsoleKernel
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('msl:generate')->hourlyAt([25, 55]);
-        $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping();
+        $schedule->command('networkdata:update')->everyMinute()->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
+        $schedule->command('schedule-monitor:sync')
+            ->dailyAt('07:01');
+        $schedule->command('schedule-monitor:clean')
+            ->dailyAt('08:01');
+        $schedule->command('srd:update')
+            ->hourlyAt([1,2,3,4,5,6,7]);
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        $schedule->command('plugin-events:clean')->everyTenMinutes();
     }
 }

@@ -1,10 +1,20 @@
 <?php
+
 namespace App\Providers;
 
+use App\Jobs\Hold\UnassignHoldOnDisconnect;
+use App\Jobs\Network\AircraftDisconnected;
+use App\Jobs\Network\DeleteNetworkAircraft;
+use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
+use App\Jobs\Stand\TriggerUnassignmentOnDisconnect;
 use App\Listeners\Network\RecordFirEntry;
+use App\Models\FlightInformationRegion\FlightInformationRegion;
+use App\Services\NetworkDataService;
+use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-class NetworkServiceProvider extends ServiceProvider
+class NetworkServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Registers the SquawkPressureService with the app.
@@ -12,5 +22,32 @@ class NetworkServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(RecordFirEntry::class);
+        $this->app->singleton(NetworkDataService::class, function () {
+            return new NetworkDataService(
+                FlightInformationRegion::with('proximityMeasuringPoints')
+                    ->get()
+                    ->pluck('proximityMeasuringPoints')
+                    ->flatten()
+                    ->pluck('latLong')
+            );
+        });
+        $this->app->bindMethod(
+            [AircraftDisconnected::class, 'handle'],
+            function (AircraftDisconnected $job, Application $application) {
+                $job->handle(
+                    collect([
+                        $application->make(UnassignHoldOnDisconnect::class),
+                        $application->make(MarkAssignmentDeletedOnDisconnect::class),
+                        $application->make(TriggerUnassignmentOnDisconnect::class),
+                        $application->make(DeleteNetworkAircraft::class),
+                    ])
+                );
+            }
+        );
+    }
+
+    public function provides()
+    {
+        return [RecordFirEntry::class, NetworkDataService::class];
     }
 }

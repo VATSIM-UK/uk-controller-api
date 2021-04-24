@@ -40,20 +40,21 @@ class ImporterTest extends BaseFunctionalTestCase
         $aircraft = Aircraft::all();
         $this->assertCount(1, $aircraft);
         $this->assertEquals('AXXX', $aircraft->first()->code);
-        $this->assertEquals(1, $aircraft->first()->wake_category_id);
+        $this->assertEquals(1, $aircraft->first()->wakeCategories->first()->id);
     }
 
     public function testItUpdatesAWakeCategoryListing()
     {
-        Aircraft::create(
+        $aircraft = Aircraft::create(
             [
                 'code' => 'AXXX',
-                'wake_category_id' => 3,
                 'allocate_stands' => false,
                 'wingspan' => 0.0,
                 'length' => 0.0,
             ]
         );
+        $aircraft->wakeCategories()->sync([3, 7]);
+
         $rows = (new Collection())
             ->push(
                 [
@@ -66,7 +67,7 @@ class ImporterTest extends BaseFunctionalTestCase
         $aircraft = Aircraft::all();
         $this->assertCount(1, $aircraft);
         $this->assertEquals('AXXX', $aircraft->first()->code);
-        $this->assertEquals(1, $aircraft->first()->wake_category_id);
+        $this->assertEquals([1, 7], $aircraft->first()->wakeCategories->pluck('id')->toArray());
     }
 
     public function testItImportsMultipleListings()
@@ -91,11 +92,11 @@ class ImporterTest extends BaseFunctionalTestCase
 
         $firstAircraft = $aircraft->first();
         $this->assertEquals('AXXX', $firstAircraft->code);
-        $this->assertEquals(1, $firstAircraft->wake_category_id);
+        $this->assertEquals(1, $firstAircraft->wakeCategories->first()->id);
 
         $secondAircraft = $aircraft->get(1);
         $this->assertEquals('BZZZ', $secondAircraft->code);
-        $this->assertEquals(3, $secondAircraft->wake_category_id);
+        $this->assertEquals(3, $secondAircraft->wakeCategories->first()->id);
     }
 
     /**
@@ -115,7 +116,7 @@ class ImporterTest extends BaseFunctionalTestCase
         $aircraft = Aircraft::all();
 
         $this->assertEquals('AXXX', $aircraft->first()->code);
-        $this->assertEquals($expectedTypeId, $aircraft->first()->wake_category_id);
+        $this->assertEquals($expectedTypeId, $aircraft->first()->wakeCategories->first()->id);
     }
 
     public function wakeTypesProvider(): array

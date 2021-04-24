@@ -18,21 +18,21 @@ class StandTableSeeder extends Seeder
                 [
                     'airfield_id' => 1,
                     'identifier' => '1L',
-                    'latitude' => 54.65875500,
-                    'longitude' => -6.22258694,
+                    'latitude' => 51.47436111, // 501 at LL
+                    'longitude' => -0.48953611,
                     'wake_category_id' => 3,
                 ],
                 [
                     'airfield_id' => 1,
                     'identifier' => '251',
-                    'latitude' => 54.65883639,
-                    'longitude' => -6.22198972,
+                    'latitude' => 51.47187222, // 512 at LL
+                    'longitude' => -0.48601389,
                     'wake_category_id' => 3,
                 ],
                 [
                     'airfield_id' => 2,
                     'identifier' => '32',
-                    'latitude' => 52.44979111,
+                    'latitude' => 52.44979111, // 20 at BB
                     'longitude' => -1.73186694,
                     'wake_category_id' => 3,
                 ],

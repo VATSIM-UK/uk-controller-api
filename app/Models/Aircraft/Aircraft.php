@@ -4,6 +4,7 @@ namespace App\Models\Aircraft;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Aircraft extends Model
 {
@@ -28,13 +29,11 @@ class Aircraft extends Model
         'length' => 'double',
     ];
 
-    public function wakeCategory() : BelongsTo
+    public function wakeCategories() : BelongsToMany
     {
-        return $this->belongsTo(WakeCategory::class);
-    }
-
-    public function recatCategory() : BelongsTo
-    {
-        return $this->belongsTo(RecatCategory::class);
+        return $this->belongsToMany(
+            WakeCategory::class,
+            'aircraft_wake_category',
+        );
     }
 }

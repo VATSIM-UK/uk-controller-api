@@ -14,8 +14,7 @@ class DomesticInternationalStandAllocator extends AbstractArrivalStandAllocator
             return null;
         }
 
-        return $this->getDomesticInternationalScope($aircraft, $stands)
-            ->generalUse();
+        return $this->getDomesticInternationalScope($aircraft, $stands);
     }
 
     protected function getDomesticInternationalScope(NetworkAircraft $aircraft, Builder $builder): Builder

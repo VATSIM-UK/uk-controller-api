@@ -16,9 +16,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stand extends Model
 {
+    use HasFactory;
+
     const QUERY_AIRLINE_ID_COLUMN = 'airlines.id';
 
     protected $fillable = [
@@ -31,14 +34,14 @@ class Stand extends Model
         'wake_category_id',
         'max_aircraft_id',
         'is_cargo',
-        'general_use',
+        'assignment_priority',
     ];
 
     protected $casts = [
         'type_id' => 'integer',
         'latitude' => 'double',
         'longitude' => 'double',
-        'general_use' => 'boolean',
+        'assignment_priority' => 'integer',
     ];
 
     public function assignment(): HasOne
@@ -88,7 +91,7 @@ class Stand extends Model
             'aircraft_stand',
             'stand_id',
             'callsign'
-        )->withTimestamps();
+        )->withPivot('updated_at');
     }
 
     public function scopeUnassigned(Builder $builder): Builder
@@ -161,11 +164,6 @@ class Stand extends Model
         });
     }
 
-    public function scopeGeneralUse(Builder $builder): Builder
-    {
-        return $builder->where('general_use', true);
-    }
-
     public function pairedStands(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -196,10 +194,19 @@ class Stand extends Model
             ->orderBy('wake_categories.relative_weighting', $direction);
     }
 
+    public function scopeOrderByAssignmentPriority(Builder $builder, string $direction = 'asc') : Builder
+    {
+        return $builder->orderBy('stands.assignment_priority', $direction);
+    }
+
     public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
     {
         return $builder->whereHas('wakeCategory', function (Builder $query) use ($aircraftType) {
-            $query->greaterRelativeWeighting($aircraftType->wakeCategory);
+            $query->greaterRelativeWeighting(
+                $aircraftType->wakeCategories()->whereHas('scheme', function (Builder $scheme) {
+                    $scheme->uk();
+                })->first()
+            );
         });
     }
 

@@ -1,0 +1,445 @@
+openapi: '3.0.2'
+info:
+  title: UK Controller Plugin API - Admin Functions 
+  version: '1.0'
+components:
+  schemas:
+    StandType:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    Terminal:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    StandListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        airfield_id:
+          type: integer
+        identifier:
+          type: string
+        latitude:
+          type: integer 
+        longitude:
+          type: integer
+        terminal_id:
+          type: integer
+        wake_category_id:
+          type: integer
+        assignment_priority:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        airlines_count:
+          type: integer
+        'type':
+          $ref: '#/components/schemas/StandType'
+        terminal:
+          $ref: '#/components/schemas/Terminal'
+        wake_category:
+          $ref: '#/components/schemas/WakeCategory'
+    WakeCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        description:
+          type: string
+        relative_weighting:
+          type: integer
+      example:
+        id: 3
+        code: "LM"
+        description: "Lower Medium"
+        relative_weighting: 10
+    Airline:
+      properties:
+        icao_code:
+          type: string
+        name:
+          type: string
+        callsign:
+          type: string
+        is_cargo:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    StandDetailed:
+      allOf:
+        - $ref: '#/components/schemas/StandListItem'
+        - type: object
+          properties:
+            airlines:
+              type: array
+              items: 
+                $ref: '#/components/schemas/Airline'
+    Airfield:
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        transition_altitude:
+          type: integer
+        stands_count:
+          type: integer
+    StandCreation:
+      properties:
+        type_id:
+          type: integer
+          description: Stand type id
+        latitude:
+          type: number
+        longitude:
+          type: number
+        identifier:
+          type: string
+        wake_category_id:
+          type: integer
+        max_aircraft_id:
+          type: integer
+          nullable: true
+        terminal_id:
+          type: integer
+          nullable: true
+        assignment_priority:
+          type: integer
+          example: 100
+    HoldModel:
+
+      properties:
+        id:
+          type: integer
+        navaid_id:
+          type: integer
+        inbound_heading:
+          type: integer
+        maximum_altitude:
+          type: integer
+        turn_direction:
+          type: string
+        description:
+          type: string
+    Navaid:
+      properties:
+        identifier:
+          type: string
+          example: WILLO
+        latitude:
+          type: string
+          example: N050.59.06.000
+          description: Latitude in string formats with degrees and minutes
+        longitude:
+          type: string
+          example: W000.11.30.000
+          description: Latitude in string formats with degrees and minutes
+    NavaidModel:
+      allOf:
+      - $ref: '#/components/schemas/Navaid'
+      - type: object
+        properties:
+          id:
+            type: integer
+          created_at:
+            type: string
+            example: "2021-03-14T18:32:46.000000Z"
+          updated_at:
+            type: string
+            example: "2021-03-14T18:32:46.000000Z"
+            nullable: true
+    NavaidListItem:
+      allOf:
+        - $ref: '#/components/schemas/NavaidModel'
+        - type: object
+          properties:
+            hold_count:
+              type: integer
+    NavaidDetail:
+      allOf:
+        - $ref: '#/components/schemas/NavaidModel'
+        - type: object
+          properties:
+            holds:
+              type: array
+              items:
+                $ref: '#/components/schemas/HoldModel'
+
+  responses:
+    StandNotInAirfield:
+      description: Stand not in airfield
+      content:
+        'application/json':
+          schema:
+            properties:
+              message:
+                type: string
+                default: Stand not part of airfield. 
+    DuplicateStandIdentifier:
+      description: Duplicate stand identifier
+      content:
+        'application/json':
+          schema:
+            properties:
+              message:
+                type: string
+                default: Stand identifier in use for airfield.
+
+paths:
+  /stand-types:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  types:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/StandType'
+  /airfields:
+    get:
+      tags:
+        - "airfields"
+      parameters:
+      - in: query
+        name: all
+        required: false
+        schema:
+          type: boolean
+        description: 'Include airfields without stands'
+      description: 'Get a list of airfields with or without stands. See query parameter.'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  airfields:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Airfield'
+
+
+
+  /airfields/{icao}/stands:
+    get:
+      tags:
+        - "stands"
+      description: 'Get a list of stands from their airfield'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  stands:
+                    type: array 
+                    items:
+                      $ref: '#/components/schemas/StandListItem'
+    post:
+      tags:
+        - "stands"
+      description: 'Create a new stand'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/StandCreation'
+      responses:
+        '201':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                properties:
+                  stand_id:
+                    type: string
+        '400':
+          description: Invalid terminal
+          content:
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+                    default: Invalid terminal for airfield.
+        '409':
+          $ref: '#/components/responses/DuplicateStandIdentifier'
+        '422':
+          description: Validation errors detected        
+            
+  /airfields/{icao}/stands/{stand_id}:
+    get:
+      tags:
+        - "stands"
+      responses:
+        '200':
+          description: OK
+          content: 
+            'application/json':
+              schema:
+                properties:
+                  stand:
+                    $ref: '#/components/schemas/StandDetailed'
+        '404':
+          $ref: '#/components/responses/StandNotInAirfield'
+    put:
+      tags:
+        - "stands"
+      description: 'Modify existing stand'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/StandCreation'
+      responses:
+        '204':
+          description: 'No content (successful operation)'
+        '400':
+          description: Invalid terminal
+          content:
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+                    default: Invalid terminal for airfield.
+        '404':
+          description: Stand not in airfield
+          content:
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+                    default: Stand not part of airfield. 
+        '409':
+          $ref: '#/components/responses/DuplicateStandIdentifier'
+    delete:
+      description: Delete stand
+      tags:
+        - "stands"
+      responses:
+        '204':
+          description: 'No content (successful operation)'
+        '404':
+          $ref: '#/components/responses/StandNotInAirfield'
+  
+  /navaids:
+    get:
+      tags:
+        - "navaids"
+      responses:
+        '200':
+          description: List of navaids
+          content:
+            'application/json':
+              schema:
+                properties:
+                  navaids:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NavaidListItem'
+    post:
+      tags:
+        - "navaids"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Navaid'
+      responses:
+        '201':
+          description: Created
+          content:
+            'application/json':
+              schema:
+                properties:
+                  identifier:
+                    type: string
+                    example: 'NQY'
+        '400':
+            description: Invalid latitude / longitude values
+        '422':
+            description: Validation errors
+  /navaids/{identifier}:
+    get:
+      tags:
+        - "navaids"
+      responses:
+        '200':
+          description: Details of navaid
+          content:
+            'application/json':
+              schema:
+                properties:
+                  navaid:
+                    type: object
+                    $ref: '#/components/schemas/NavaidDetail'
+        '404':
+          description: Not found
+    put:
+      tags:
+        - "navaids"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Navaid'      
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            'application/json':
+              schema:
+                properties:
+                  identifier:
+                    type: string
+                    example: NQY
+        '400':
+          description: Invalid latitude / longitude values
+        '404':
+          description: Not found
+        '422':
+          description: Validation errors
+    delete:
+      tags:
+        - "navaids"
+      responses:
+        '204':
+          description: Successful (no content)
+        '404':
+          description: Not found

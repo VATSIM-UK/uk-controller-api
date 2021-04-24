@@ -3,15 +3,21 @@
 namespace App\Models\Airfield;
 
 use App\Helpers\MinStack\MinStackDataProviderInterface;
+use App\Models\Aircraft\SpeedGroup;
 use App\Models\Controller\ControllerPosition;
 use App\Models\MinStack\MslAirfield;
+use App\Models\Stand\Stand;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
 
 class Airfield extends Model implements MinStackDataProviderInterface
 {
+    use HasFactory;
+
     public $timestamps = true;
 
     protected $table = 'airfield';
@@ -21,9 +27,12 @@ class Airfield extends Model implements MinStackDataProviderInterface
      */
     protected $fillable = [
         'code',
+        'latitude',
+        'longitude',
         'transition_altitude',
         'standard_high',
         'msl_calculation',
+        'wake_category_scheme_id',
         'created_at',
         'updated_at'
     ];
@@ -37,6 +46,8 @@ class Airfield extends Model implements MinStackDataProviderInterface
 
     protected $casts = [
         'groundspeed' => 'integer',
+        'latitude' => 'float',
+        'longitude' => 'float',
     ];
 
     /**
@@ -111,8 +122,22 @@ class Airfield extends Model implements MinStackDataProviderInterface
         )->withPivot('prenote_id', 'flight_rule_id');
     }
 
+
+    public function stands() : HasMany
+    {
+        return $this->hasMany(
+            Stand::class,
+            'airfield_id',
+        );
+    }
+
     public function getCoordinateAttribute(): Coordinate
     {
         return new Coordinate($this->latitude, $this->longitude);
+    }
+
+    public function speedGroups(): HasMany
+    {
+        return $this->hasMany(SpeedGroup::class);
     }
 }
