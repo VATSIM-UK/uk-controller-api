@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Version\VersionAlreadyExistsException;
+use App\Models\Version\Version;
 use App\Services\VersionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,40 +37,18 @@ class VersionController extends BaseController
      * Checks whether the plugin is using the correct version
      * and returns this information.
      *
-     * @param  string $version The requested version
+     * @deprecated In UKCP 3.0.0 this is no longer used
+     * @see getVersion
+     * @param  Version $version The requested version
      * @param  VersionService $versionService A service for formatting responses.
      * @return JsonResponse
      */
-    public function getVersionStatus(string $version) : JsonResponse
+    public function getVersionStatus(Version $version) : JsonResponse
     {
         // Return an appropriate response.
         return response()
-            ->json($this->versionService->getVersionResponse($version))
+            ->json($this->versionService->getVersionResponse($version->version))
             ->setStatusCode(200);
-    }
-
-    /**
-     * Creates or updates a version and sets its allowable status
-     *
-     * @param string $version
-     * @return JsonResponse
-     */
-    public function createOrUpdateVersion(Request $request, string $version) : JsonResponse
-    {
-        $check = $this->checkForSuppliedData(
-            $request,
-            [
-                'allowed' => 'required|boolean',
-            ]
-        );
-
-        if ($check) {
-            return $check;
-        }
-
-        $created = $this->versionService->createOrUpdateVersion($version, $request->json('allowed'));
-        
-        return response()->json()->setStatusCode($created ? 201 : 204);
     }
 
     /**
@@ -87,18 +66,12 @@ class VersionController extends BaseController
     /**
      * Returns information about a version
      *
-     * @string $version The version string
+     * @param Version $version
      * @return JsonResponse
      */
-    public function getVersion(string $version): JsonResponse
+    public function getVersion(Version $version): JsonResponse
     {
-        try {
-            return response()
-                ->json($this->versionService->getVersion($version))
-                ->setStatusCode(200);
-        } catch (VersionNotFoundException $e) {
-            return response()->json()->setStatusCode(404);
-        }
+        return response()->json($this->versionService->getFullVersionDetails($version));
     }
 
     public function createNewPluginVersion(Request $request): JsonResponse
@@ -131,10 +104,5 @@ class VersionController extends BaseController
         );
 
         return $validator->fails() ? response()->json([], 400) : null;
-    }
-
-    public function getLatestVersionDetails(): JsonResponse
-    {
-        return response()->json($this->versionService->getLatestVersionGithubDetails());
     }
 }

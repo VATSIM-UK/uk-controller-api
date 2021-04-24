@@ -74,15 +74,17 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->service->getVersionResponse(self::CURRENT_VERSION));
     }
 
-    public function testGetVersionThrowsExceptionIfDoesNotExist()
+    public function testGetVersionReturnsVersionInformation()
     {
-        $this->expectException(VersionNotFoundException::class);
-        $this->service->getVersion('666');
-    }
+        $expected = [
+            'id' => 3,
+            'version' => '2.0.1',
+            'core_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPluginCore.dll',
+            'updater_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPluginUpdater.dll',
+            'loader_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPlugin.dll',
+        ];
 
-    public function testGetVersionReturnsAVersion()
-    {
-        $this->assertEquals(1, $this->service->getVersion(self::DEPRECATED_VERSION)->id);
+        $this->assertEquals($expected, $this->service->getFullVersionDetails(Version::find(3)));
     }
 
     public function testGetAllVersionsReturnsAllVersions()
@@ -209,15 +211,5 @@ class VersionServiceTest extends BaseFunctionalTestCase
     {
         $this->expectException(VersionAlreadyExistsException::class);
         $this->service->publishNewVersionFromGithub('1.0.0');
-    }
-
-    public function testItReturnsLatestVersionInformation()
-    {
-        $expected = [
-            'version' => '2.0.1',
-            'libs_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPluginLibs.dll',
-            'plugin_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPlugin.dll',
-        ];
-        $this->assertEquals($expected, $this->service->getLatestVersionGithubDetails());
     }
 }

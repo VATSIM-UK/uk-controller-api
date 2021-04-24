@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Version\Version;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -27,6 +28,12 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = 'horizon';
+
+    public function boot()
+    {
+        parent::boot();
+        Route::model('version', Version::class);
+    }
 
     /**
      * Define the routes for the application.

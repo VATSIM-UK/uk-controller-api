@@ -49,4 +49,11 @@ class Version extends Model
 
         return $this;
     }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $value === 'latest'
+            ? Version::orderByDesc('id')->firstOrFail()
+            : Version::where('version', $value)->withTrashed()->firstOrFail();
+    }
 }

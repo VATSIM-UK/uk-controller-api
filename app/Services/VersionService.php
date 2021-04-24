@@ -24,6 +24,7 @@ class VersionService extends ServiceProvider
     /**
      * Determines an appropriate JSON response, given two versions.
      *
+     * @deprecated Superseded in Version 3.0.0 of UKCP
      * @param  string $userVersion The version of the plugin that the user client reports.
      * @return array A response to be converted to JSON and returned.
      */
@@ -168,15 +169,16 @@ class VersionService extends ServiceProvider
         Version::whereNotIn('id', $versionsToKeep)->delete();
     }
 
-    public function getLatestVersionGithubDetails(): array
+    public function getFullVersionDetails(Version $version): array
     {
-        $latest = Version::orderByDesc('id')->first();
-        $assetsUrl = "https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/{$latest->version}";
+        $assetsUrl = "https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/{$version->version}";
 
         return [
-            'version' => $latest->version,
-            'libs_download_url' => $assetsUrl . '/UKControllerPluginLibs.dll',
-            'plugin_download_url' => $assetsUrl . '/UKControllerPlugin.dll',
+            'id' => $version->id,
+            'version' => $version->version,
+            'updater_download_url' => sprintf('%s/UKControllerPluginUpdater.dll', $assetsUrl),
+            'core_download_url' => sprintf('%s/UKControllerPluginCore.dll', $assetsUrl),
+            'loader_download_url' => sprintf('%s/UKControllerPlugin.dll', $assetsUrl),
         ];
     }
 }
