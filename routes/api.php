@@ -67,6 +67,7 @@ Route::middleware('api')->group(
             }
         );
 
+
         // Routes for user administration
         Route::middleware('admin.user')->group(
             function () {
