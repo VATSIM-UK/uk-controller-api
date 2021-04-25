@@ -42,7 +42,6 @@ class Kernel extends ConsoleKernel
         GenerateRegionalPressures::class,
         UserAdminCreate::class,
         UserCreate::class,
-        \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
         GenerateMinStackLevels::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
