@@ -18,15 +18,15 @@ Route::middleware('plugin.user')->group(function () {
 
     // Departure releases
     Route::post('departure/release/request', 'DepartureReleaseController@makeReleaseRequest');
-    Route::put(
+    Route::patch(
         'departure/release/request/{id}/approve',
         'DepartureReleaseController@approveReleaseRequest'
     );
-    Route::put(
+    Route::patch(
         'departure/release/request/{id}/reject',
         'DepartureReleaseController@rejectReleaseRequest'
     );
-    Route::put(
+    Route::patch(
         'departure/release/request/{id}/acknowledge',
         'DepartureReleaseController@acknowledgeReleaseRequest'
     );

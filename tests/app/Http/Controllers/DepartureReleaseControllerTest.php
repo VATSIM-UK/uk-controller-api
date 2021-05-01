@@ -204,7 +204,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'expires_in_seconds' => 10,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $approvalData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
             ->assertOk();
 
         $this->assertDatabaseHas(
@@ -274,19 +274,19 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/approve', $request->id);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $approvalData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
             ->assertStatus(422);
     }
 
     public function testItReturnsNotFoundIfNoReleaseToApprove()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/55/approve', [])
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/55/approve', [])
             ->assertNotFound();
     }
 
     public function testReleasesCannotBeApprovedByUnauthenticatedUsers()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/1/approve', [])
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/1/approve', [])
             ->assertUnauthorized();
     }
 
@@ -307,7 +307,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'controller_position_id' => 2,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $rejectionData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $rejectionData)
             ->assertOk();
 
         $this->assertDatabaseHas(
@@ -357,19 +357,19 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/reject', $request->id);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $approvalData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
             ->assertStatus(422);
     }
 
     public function testItReturnsNotFoundIfNoReleaseToReject()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/55/reject', [])
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/55/reject', [])
             ->assertNotFound();
     }
 
     public function testReleasesCannotBeRejectedByUnauthenticatedUsers()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/1/reject', [])
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/1/reject', [])
             ->assertUnauthorized();
     }
 
@@ -390,7 +390,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'controller_position_id' => 2,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $rejectionData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $rejectionData)
             ->assertOk();
 
         $this->assertDatabaseHas(
@@ -440,19 +440,19 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $approvalData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
             ->assertStatus(422);
     }
 
     public function testItReturnsNotFoundIfNoReleaseToAcknowledge()
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/55/acknowledge', [])
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/55/acknowledge', [])
             ->assertNotFound();
     }
 
     public function testReleasesCannotBeAcknowledgedByUnauthenticatedUsers()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/1/acknowledge', [])
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/1/acknowledge', [])
             ->assertUnauthorized();
     }
 }
