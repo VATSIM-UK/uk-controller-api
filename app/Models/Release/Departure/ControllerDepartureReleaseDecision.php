@@ -9,6 +9,9 @@ class ControllerDepartureReleaseDecision extends Pivot
 {
     public $incrementing = true;
 
+    /**
+     * Approve the departure release for a given amount of time.
+     */
     public function approve(int $userId, int $expiresInSeconds)
     {
         $this->update(
@@ -20,12 +23,29 @@ class ControllerDepartureReleaseDecision extends Pivot
         );
     }
 
+    /**
+     * Reject the departure release
+     */
     public function reject(int $userId)
     {
         $this->update(
             [
                 'rejected_by' => $userId,
                 'rejected_at' => Carbon::now(),
+            ]
+        );
+    }
+
+    /**
+     * Acknowledge the departure release but take no further
+     * action.
+     */
+    public function acknowledge(int $userId)
+    {
+        $this->update(
+            [
+                'acknowledged_by' => $userId,
+                'acknowledged_at' => Carbon::now(),
             ]
         );
     }

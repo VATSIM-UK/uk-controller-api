@@ -372,4 +372,87 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/1/reject', [])
             ->assertUnauthorized();
     }
+
+    public function testItAcknowledgesARelease()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->controllerPositions()->sync([2, 3]);
+        $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
+
+        $rejectionData = [
+            'controller_position_id' => 2,
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $rejectionData)
+            ->assertOk();
+
+        $this->assertDatabaseHas(
+            'controller_position_departure_release_request',
+            [
+                'departure_release_request_id' => $request->id,
+                'controller_position_id' => 2,
+                'acknowledged_by' => self::ACTIVE_USER_CID,
+                'acknowledged_at' => Carbon::now()->toDateTimeString()
+            ]
+        );
+    }
+
+    public function badAcknowledgementDataProvider(): array
+    {
+        return [
+            'Controller position id missing' => [
+                [
+                ]
+            ],
+            'Controller position id not integer' => [
+                [
+                    'controller_position_id' => 'abc',
+                ]
+            ],
+            'Controller position invalid' => [
+                [
+                    'controller_position_id' => 55,
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider badAcknowledgementDataProvider
+     */
+    public function testReleasesCannotBeAcknowledgedOnBadData(array $approvalData)
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->controllerPositions()->sync([2, 3]);
+        $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, $route, $approvalData)
+            ->assertStatus(422);
+    }
+
+    public function testItReturnsNotFoundIfNoReleaseToAcknowledge()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/55/acknowledge', [])
+            ->assertNotFound();
+    }
+
+    public function testReleasesCannotBeAcknowledgedByUnauthenticatedUsers()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PUT, 'departure/release/request/1/acknowledge', [])
+            ->assertUnauthorized();
+    }
 }

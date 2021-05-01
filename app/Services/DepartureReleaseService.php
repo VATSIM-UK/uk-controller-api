@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\DepartureReleaseAcknowledgedEvent;
 use App\Events\DepartureReleaseApprovedEvent;
 use App\Events\DepartureReleaseRejectedEvent;
 use App\Events\DepartureReleaseRequestedEvent;
@@ -11,6 +12,9 @@ use App\Models\Release\Departure\DepartureReleaseRequest;
 
 class DepartureReleaseService
 {
+    /**
+     * Request a departure release from the given controllers.
+     */
     public function makeReleaseRequest(
         string $callsign,
         int $requestingUserId,
@@ -32,6 +36,9 @@ class DepartureReleaseService
         return $releaseRequest->id;
     }
 
+    /**
+     * Approve a departure release on behalf of a single controller.
+     */
     public function approveReleaseRequest(
         DepartureReleaseRequest $request,
         int $approvingControllerId,
@@ -52,6 +59,9 @@ class DepartureReleaseService
         event(new DepartureReleaseApprovedEvent($controller->decision));
     }
 
+    /**
+     * Reject a departure release on behalf of a single controller.
+     */
     public function rejectReleaseRequest(
         DepartureReleaseRequest $request,
         int $rejectingControllerId,
@@ -69,5 +79,27 @@ class DepartureReleaseService
 
         $controller->decision->reject($rejectingUserId);
         event(new DepartureReleaseRejectedEvent($controller->decision));
+    }
+
+    /**
+     * Acknowledge a departure release as received on behalf of a single controller
+     */
+    public function acknowledgeReleaseRequest(
+        DepartureReleaseRequest $request,
+        int $acknowledgingControllerId,
+        int $acknowledgingUserId
+    ): void {
+        $controller = $request->controllerPositions()
+            ->wherePivot('controller_position_id', $acknowledgingControllerId)
+            ->first();
+
+        if (!$controller) {
+            throw new DepartureReleaseDecisionNotAllowedException(
+                sprintf('Controller id %d cannot acknowledge this release', $acknowledgingControllerId)
+            );
+        }
+
+        $controller->decision->acknowledge($acknowledgingUserId);
+        event(new DepartureReleaseAcknowledgedEvent($controller->decision));
     }
 }

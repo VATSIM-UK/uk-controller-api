@@ -26,6 +26,10 @@ Route::middleware('plugin.user')->group(function () {
         'departure/release/request/{id}/reject',
         'DepartureReleaseController@rejectReleaseRequest'
     );
+    Route::put(
+        'departure/release/request/{id}/acknowledge',
+        'DepartureReleaseController@acknowledgeReleaseRequest'
+    );
 
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');

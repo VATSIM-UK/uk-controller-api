@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Events\DepartureReleaseAcknowledgedEvent;
 use App\Events\DepartureReleaseApprovedEvent;
 use App\Events\DepartureReleaseRejectedEvent;
 use App\Events\DepartureReleaseRequestedEvent;
@@ -107,6 +108,8 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'released_at' => Carbon::now()->toDateTimeString(),
                 'release_expires_at' => Carbon::now()->addSeconds(125)->toDateTimeString(),
                 'rejected_at' => null,
+                'acknowledged_at' => null,
+                'acknowledged_by' => null,
             ]
         );
     }
@@ -152,6 +155,55 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'released_by' => null,
                 'released_at' => null,
                 'release_expires_at' => null,
+                'acknowledged_at' => null,
+                'acknowledged_by' => null,
+            ]
+        );
+    }
+
+    public function testItThrowsExceptionIfControllerCannotAcknowledgeRequest()
+    {
+        $this->expectException(DepartureReleaseDecisionNotAllowedException::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->controllerPositions()->sync([2, 3]);
+
+        $this->service->acknowledgeReleaseRequest($request, 55, self::ACTIVE_USER_CID);
+    }
+
+    public function testItAcknowledgesADepartureRelease()
+    {
+        $this->expectsEvents(DepartureReleaseAcknowledgedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->controllerPositions()->sync([2, 3]);
+
+        $this->service->acknowledgeReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+
+        $this->assertDatabaseHas(
+            'controller_position_departure_release_request',
+            [
+                'departure_release_request_id' => $request->id,
+                'controller_position_id' => 2,
+                'rejected_by' => null,
+                'rejected_at' => null,
+                'released_by' => null,
+                'released_at' => null,
+                'release_expires_at' => null,
+                'acknowledged_at' => Carbon::now()->toDateTimeString(),
+                'acknowledged_by' => self::ACTIVE_USER_CID,
             ]
         );
     }

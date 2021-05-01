@@ -19,12 +19,18 @@ class CreateControllerPositionDepartureReleaseTable extends Migration
                 ->comment('The controller position the release has been requested from');
             $table->unsignedBigInteger('departure_release_request_id')
                 ->comment('The release that is being requested');
+            $table->unsignedInteger('acknowledged_by')->nullable()->comment('Who acknowledged the release');
+            $table->timestamp('acknowledged_at')->nullable()->comment('What time the release was acknowledged');
             $table->unsignedInteger('released_by')->nullable()->comment('Who gave the release');
             $table->timestamp('released_at')->nullable()->comment('What time the release was given');
             $table->timestamp('release_expires_at')->nullable()->comment('When the release expired');
             $table->unsignedInteger('rejected_by')->nullable()->comment('Who rejected the release');
             $table->timestamp('rejected_at')->nullable()->comment('When the release was rejected');
 
+            $table->foreign('acknowledged_by', 'departure_release_request_acknowledged_by')
+                ->references('id')
+                ->on('user')
+                ->cascadeOnDelete();
             $table->foreign('released_by', 'departure_release_request_released_by')
                 ->references('id')
                 ->on('user')

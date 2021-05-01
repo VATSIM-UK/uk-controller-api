@@ -130,4 +130,38 @@ class DepartureReleaseController
         }
         return response()->json($responseData, $responseCode);
     }
+
+    public function acknowledgeReleaseRequest(
+        Request $request,
+        int $id
+    ): JsonResponse {
+        $departureReleaseRequest = DepartureReleaseRequest::findOrFail($id);
+
+        $validated = $request->validate(
+            [
+                'controller_position_id' => 'required|integer',
+            ]
+        );
+
+        $responseData = null;
+        try {
+            $this->departureReleaseService->acknowledgeReleaseRequest(
+                $departureReleaseRequest,
+                $validated['controller_position_id'],
+                Auth::id()
+            );
+            $responseCode = 200;
+        } catch (DepartureReleaseDecisionNotAllowedException $decisionNotAllowedException) {
+            Log::warning(
+                sprintf(
+                    'User %d attempted to reject release %d without permission',
+                    Auth::id(),
+                    $departureReleaseRequest->id
+                )
+            );
+            $responseCode = 422;
+            $responseData = ['message' => 'You cannot reject this release'];
+        }
+        return response()->json($responseData, $responseCode);
+    }
 }
