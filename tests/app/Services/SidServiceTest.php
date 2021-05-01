@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Sid;
 
 class SidServiceTest extends BaseFunctionalTestCase
 {
@@ -40,6 +40,8 @@ class SidServiceTest extends BaseFunctionalTestCase
             'airfield_id' => 1,
             'handoff_id' => 1,
             'initial_altitude' => 3000,
+            'initial_heading' => null,
+            'sid_departure_interval_group_id' => null,
         ];
         $this->assertEquals($expected, $this->service->getSid(1));
     }
@@ -51,6 +53,7 @@ class SidServiceTest extends BaseFunctionalTestCase
 
     public function testItGetsAllSids()
     {
+        Sid::where('identifier', 'TEST1Y')->update(['initial_heading' => 255]);
         $expected = [
             [
                 'id' => 1,
@@ -58,9 +61,11 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'handoff_id' => 1,
                 'initial_altitude' => 3000,
+                'initial_heading' => null,
                 'prenotes' => [
                     1,
                 ],
+                'sid_departure_interval_group_id' => null,
             ],
             [
                 'id' => 2,
@@ -68,7 +73,9 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'handoff_id' => 1,
                 'initial_altitude' => 4000,
+                'initial_heading' => 255,
                 'prenotes' => [],
+                'sid_departure_interval_group_id' => null,
             ],
             [
                 'id' => 3,
@@ -76,13 +83,17 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 2,
                 'handoff_id' => 2,
                 'initial_altitude' => 5000,
+                'initial_heading' => null,
                 'prenotes' => [],
+                'sid_departure_interval_group_id' => null,
             ],
         ];
+
         $this->assertEquals($expected, $this->service->getAllSids());
     }
 
-    public function testItDeletesSids()
+
+public function testItDeletesSids()
     {
         $this->assertDatabaseHas('sid', ['id' => 1]);
         $this->service->deleteSid(1);
@@ -115,7 +126,52 @@ class SidServiceTest extends BaseFunctionalTestCase
                 'identifier' => 'TEST1M',
                 'initial_altitude' => 55000,
                 'airfield_id' => 2,
+                'sid_departure_interval_group_id' => null,
             ]
         );
+    }
+
+    public function testItGetsSidsDependency()
+    {
+        Sid::find(1)->update(['sid_departure_interval_group_id' => 1]);
+        Sid::find(2)->update(['sid_departure_interval_group_id' => 2]);
+        Sid::find(3)->update(['sid_departure_interval_group_id' => 3]);
+        Sid::find(2)->update(['initial_heading' => 255]);
+        $expected = [
+            [
+                'id' => 1,
+                'identifier' => 'TEST1X',
+                'airfield' => 'EGLL',
+                'handoff' => 1,
+                'initial_altitude' => 3000,
+                'initial_heading' => null,
+                'departure_interval_group' => 1,
+                'prenotes' => [
+                    1,
+                ],
+            ],
+            [
+                'id' => 2,
+                'airfield' => 'EGLL',
+                'identifier' => 'TEST1Y',
+                'handoff' => 1,
+                'initial_altitude' => 4000,
+                'initial_heading' => 255,
+                'prenotes' => [],
+                'departure_interval_group' => 2,
+            ],
+            [
+                'id' => 3,
+                'airfield' => 'EGBB',
+                'identifier' => 'TEST1A',
+                'handoff' => 2,
+                'initial_altitude' => 5000,
+                'initial_heading' => null,
+                'prenotes' => [],
+                'departure_interval_group' => 3,
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getSidsDependency());
     }
 }

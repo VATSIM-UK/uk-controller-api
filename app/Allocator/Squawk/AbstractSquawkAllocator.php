@@ -2,32 +2,91 @@
 
 namespace App\Allocator\Squawk;
 
-use Closure;
+use App\Models\Squawk\AbstractSquawkRange;
+use App\Models\Squawk\SquawkAssignment;
+use App\Services\NetworkDataService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 
-abstract class AbstractSquawkAllocator
+abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
-    /**
-     * Assign a squawk code from those provided. If a clash is detected,
-     * try the next one in sequence.
-     *
-     * @param Closure $assign A function that will create and return the squawk assignment
-     * @param Collection $potentialCodes All the potential codes we've identified
-     * @return SquawkAssignmentInterface|null
-     */
-    public static function assignSquawk(Closure $assign, Collection $potentialCodes): ?SquawkAssignmentInterface
+    final public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
-        foreach ($potentialCodes as $code) {
-            try {
-                return $assign($code);
-            } catch (QueryException $queryException) {
-                if ($queryException->errorInfo[1] !== 1062) {
-                    throw $queryException;
+        // Check if the allocator can actually allocate a squawk
+        if (!$this->canAllocateSquawk($details)) {
+            return null;
+        }
+
+        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+
+        // Loop the possible squawk ranges and possible codes and try to assign one
+        foreach ($this->getPossibleSquawkRanges($details) as $range) {
+            foreach ($range->getAllSquawksInRange()->shuffle() as $potentialCode) {
+                if ($assignment = $this->tryAssignSquawk($callsign, $potentialCode)) {
+                    return $assignment;
                 }
             }
         }
 
         return null;
     }
+
+    /**
+     * Return all the possible squawk ranges that we're able to allocate from.
+     *
+     * @return Collection | AbstractSquawkRange[]
+     */
+    final private function getPossibleSquawkRanges(array $details): Collection
+    {
+        return $this->filterRanges(
+            $this->getOrderedSquawkRangesQuery($details)
+                ->inRandomOrder()
+                ->get(),
+            $details
+        );
+    }
+
+    final private function tryAssignSquawk($callsign, $code): ?SquawkAssignmentInterface
+    {
+        try {
+            return SquawkAssignment::updateOrCreate(
+                ['callsign' => $callsign],
+                [
+                    'callsign' => $callsign,
+                    'code' => $code,
+                    'assignment_type' => $this->getAssignmentType(),
+                ],
+            );
+        } catch (QueryException $queryException) {
+            if ($queryException->errorInfo[1] !== 1062) {
+                throw $queryException;
+            }
+
+            return null;
+        }
+    }
+
+    protected function filterRanges(Collection $ranges, array $details): Collection
+    {
+        // By default, don't apply any filtering
+        return $ranges;
+    }
+
+    /**
+     * Returns a query builder object, with ordering where applicable, that when executed
+     * will return a collection of possible ranges that the squawk can be assigned from.
+     */
+    abstract protected function getOrderedSquawkRangesQuery(array $details): Builder;
+
+    /**
+     * Returns whether or not the particular allocator can allocate a squawk, given details
+     * provided.
+     */
+    abstract protected function canAllocateSquawk(array $details): bool;
+
+    /**
+     * Returns the type of assignment made by this allocator so it can be recorded and audited.
+     */
+    abstract protected function getAssignmentType(): string;
 }

@@ -28,7 +28,6 @@ class MapAircraftWakeCategories extends Migration
                 'wake_category_id' => $aircraft->wake_category_id,
                 'created_at' => Carbon::now(),
             ];
-
             if ($aircraft->recat_category_id) {
                 $formattedAircraft[] = [
                     'aircraft_id' => $aircraft->id,

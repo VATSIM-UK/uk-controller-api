@@ -3,15 +3,15 @@
 namespace App\Services;
 
 use App\Models\Airfield\Airfield;
+use App\Models\Controller\Prenote;
 use App\Models\Sid;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class SidService
 {
     /**
+     * @deprecated
      * @return array
      */
     public function getInitialAltitudeDependency() : array
@@ -28,6 +28,24 @@ class SidService
         });
 
         return $altitudes;
+    }
+
+    public function getSidsDependency()
+    {
+        return Sid::with('airfield', 'prenotes')->get()->map(function (Sid $sid) {
+            return [
+                'id' => $sid->id,
+                'airfield' => $sid->airfield->code,
+                'identifier' => $sid->identifier,
+                'departure_interval_group' => $sid->sid_departure_interval_group_id,
+                'initial_altitude' => $sid->initial_altitude,
+                'initial_heading' => $sid->initial_heading,
+                'handoff' => $sid->handoff_id,
+                'prenotes' => $sid->prenotes->map(function (Prenote $prenote) {
+                    return $prenote->id;
+                })->toArray(),
+            ];
+        })->toArray();
     }
 
     /**

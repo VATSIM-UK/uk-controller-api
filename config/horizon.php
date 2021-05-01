@@ -178,7 +178,6 @@ return [
             'nice' => 0,
         ],
     ],
-
     'environments' => [
         'production' => [
             'supervisor-1' => [
@@ -189,7 +188,6 @@ return [
                 'maxProcesses' => 4,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 5,
-                'tries' => 3,
             ],
         ],
 

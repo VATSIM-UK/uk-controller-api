@@ -61,6 +61,8 @@ RUN chown www:www /run/nginx.pid
 RUN mkdir -p /var/log/supervisor
 RUN chown www:www /var/log/supervisor
 RUN mkdir -p /etc/supervisor
+RUN mkdir -p /run/supervisor
+RUN chown www:www /run/supervisor
 
 # Copy supervisor scripts
 COPY ./etc/supervisor /etc/supervisor/

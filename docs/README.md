@@ -1,11 +1,14 @@
 # uk-controller-api
 
+![Production Deploy Status](https://github.com/VATSIM-UK/uk-controller-api/workflows/Deploy/badge.svg?branch=main)
 ![Build and Test](https://github.com/VATSIM-UK/uk-controller-api/workflows/Build%20and%20Test/badge.svg)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=security_rating)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=VATSIM-UK_uk-controller-api&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=VATSIM-UK_uk-controller-api)
 [![codecov](https://codecov.io/gh/VATSIM-UK/uk-controller-api/branch/main/graph/badge.svg)](https://codecov.io/gh/VATSIM-UK/uk-controller-api)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 The API backend to the UK Controller Plugin, provides the plugin with information such
 as dependency files, squawk allocations and user authentication.

@@ -12,12 +12,12 @@ class DeleteNetworkAircraftTest extends BaseFunctionalTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->handler = new DeleteNetworkAircraft(NetworkAircraft::find('BAW123'));
+        $this->handler = $this->app->make(DeleteNetworkAircraft::class);
     }
 
     public function testItDeletesTheAircraft()
     {
-        $this->handler->handle();
+        $this->handler->perform(NetworkAircraft::find('BAW123'));
         $this->assertNull(NetworkAircraft::find('BAW123'));
     }
 }

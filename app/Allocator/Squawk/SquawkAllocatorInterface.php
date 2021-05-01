@@ -13,20 +13,4 @@ interface SquawkAllocatorInterface
      * @return SquawkAssignmentInterface|null
      */
     public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface;
-
-    /**
-     * Deletes the allocation for a given callsign.
-     *
-     * @param string $callsign
-     * @return mixed
-     */
-    public function delete(string $callsign): bool;
-
-    /**
-     * Fetches the allocation for a given callsign.
-     *
-     * @param string $callsign
-     * @return mixed
-     */
-    public function fetch(string $callsign): ?SquawkAssignmentInterface;
 }

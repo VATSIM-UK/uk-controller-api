@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Providers;
 
 use App\Allocator\Squawk\General\AirfieldPairingSquawkAllocator;
@@ -9,12 +10,12 @@ use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
 use App\Listeners\Squawk\ReserveInFirProximity;
 use App\Models\FlightInformationRegion\FlightInformationRegion;
-use App\Models\Squawk\SquawkReservationMeasurementPoint;
 use App\Services\SquawkService;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application;
 
-class SquawkServiceProvider extends ServiceProvider
+class SquawkServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Registers the SquawkPressureService with the app.
@@ -36,34 +37,15 @@ class SquawkServiceProvider extends ServiceProvider
             );
         });
 
-        $this->app->singleton(ReserveInFirProximity::class, function (Application $app) {
-            return new ReserveInFirProximity(
-                $app->make(SquawkService::class),
-                FlightInformationRegion::with('proximityMeasuringPoints')
-                    ->get()
-                    ->pluck('proximityMeasuringPoints')
-                    ->flatten()
-                    ->pluck('latLong')
-                    ->toArray()
-            );
-        });
-
-        $this->app->singleton(ReclaimIfLeftFirProximity::class, function (Application $app) {
-            return new ReclaimIfLeftFirProximity(
-                $app->make(SquawkService::class),
-                FlightInformationRegion::with('proximityMeasuringPoints')
-                    ->get()
-                    ->pluck('proximityMeasuringPoints')
-                    ->flatten()
-                    ->pluck('latLong')
-                    ->toArray()
-            );
-        });
-
         $this->app->singleton(MarkAssignmentDeletedOnDisconnect::class, function (Application $app) {
             return new MarkAssignmentDeletedOnDisconnect(
                 $app->make(SquawkService::class)
             );
         });
+    }
+
+    public function provides()
+    {
+        return [SquawkService::class, MarkAssignmentDeletedOnDisconnect::class];
     }
 }

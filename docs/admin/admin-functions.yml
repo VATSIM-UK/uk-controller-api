@@ -1,6 +1,6 @@
 openapi: '3.0.2'
 info:
-  title: UK Controller Plugin API - Admin Functions 
+  title: UK Controller Plugin API - Admin Functions
   version: '1.0'
 components:
   schemas:
@@ -38,7 +38,7 @@ components:
         identifier:
           type: string
         latitude:
-          type: integer 
+          type: integer
         longitude:
           type: integer
         terminal_id:
@@ -96,7 +96,7 @@ components:
           properties:
             airlines:
               type: array
-              items: 
+              items:
                 $ref: '#/components/schemas/Airline'
     Airfield:
       properties:
@@ -134,6 +134,67 @@ components:
         assignment_priority:
           type: integer
           example: 100
+    HoldModel:
+
+      properties:
+        id:
+          type: integer
+        navaid_id:
+          type: integer
+        inbound_heading:
+          type: integer
+        maximum_altitude:
+          type: integer
+        turn_direction:
+          type: string
+        description:
+          type: string
+    Navaid:
+      properties:
+        identifier:
+          type: string
+          example: WILLO
+        latitude:
+          type: number
+          format: double
+          example: 50.985
+          description: Latitude in decimal degrees format with precision to 7 decimal places
+        longitude:
+          type: number
+          format: double
+          example: 0.2616667
+          description: Longitude in decimal degrees format with precision to 7 decimal places
+    NavaidModel:
+      allOf:
+      - $ref: '#/components/schemas/Navaid'
+      - type: object
+        properties:
+          id:
+            type: integer
+          created_at:
+            type: string
+            example: "2021-03-14T18:32:46.000000Z"
+          updated_at:
+            type: string
+            example: "2021-03-14T18:32:46.000000Z"
+            nullable: true
+    NavaidListItem:
+      allOf:
+        - $ref: '#/components/schemas/NavaidModel'
+        - type: object
+          properties:
+            hold_count:
+              type: integer
+    NavaidDetail:
+      allOf:
+        - $ref: '#/components/schemas/NavaidModel'
+        - type: object
+          properties:
+            holds:
+              type: array
+              items:
+                $ref: '#/components/schemas/HoldModel'
+
   responses:
     StandNotInAirfield:
       description: Stand not in airfield
@@ -143,7 +204,7 @@ components:
             properties:
               message:
                 type: string
-                default: Stand not part of airfield. 
+                default: Stand not part of airfield.
     DuplicateStandIdentifier:
       description: Duplicate stand identifier
       content:
@@ -153,7 +214,6 @@ components:
               message:
                 type: string
                 default: Stand identifier in use for airfield.
-
 
 paths:
   /stand-types:
@@ -167,10 +227,12 @@ paths:
                 properties:
                   types:
                     type: array
-                    items: 
+                    items:
                       $ref: '#/components/schemas/StandType'
   /airfields:
     get:
+      tags:
+        - "airfields"
       parameters:
       - in: query
         name: all
@@ -195,6 +257,8 @@ paths:
 
   /airfields/{icao}/stands:
     get:
+      tags:
+        - "stands"
       description: 'Get a list of stands from their airfield'
       responses:
         '200':
@@ -204,10 +268,12 @@ paths:
               schema:
                 properties:
                   stands:
-                    type: array 
+                    type: array
                     items:
                       $ref: '#/components/schemas/StandListItem'
     post:
+      tags:
+        - "stands"
       description: 'Create a new stand'
       requestBody:
         content:
@@ -235,14 +301,16 @@ paths:
         '409':
           $ref: '#/components/responses/DuplicateStandIdentifier'
         '422':
-          description: Validation errors detected        
-            
+          description: Validation errors detected
+
   /airfields/{icao}/stands/{stand_id}:
     get:
+      tags:
+        - "stands"
       responses:
         '200':
           description: OK
-          content: 
+          content:
             'application/json':
               schema:
                 properties:
@@ -251,6 +319,8 @@ paths:
         '404':
           $ref: '#/components/responses/StandNotInAirfield'
     put:
+      tags:
+        - "stands"
       description: 'Modify existing stand'
       requestBody:
         content:
@@ -277,13 +347,101 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Stand not part of airfield. 
+                    default: Stand not part of airfield.
         '409':
           $ref: '#/components/responses/DuplicateStandIdentifier'
     delete:
       description: Delete stand
+      tags:
+        - "stands"
       responses:
         '204':
           description: 'No content (successful operation)'
         '404':
           $ref: '#/components/responses/StandNotInAirfield'
+
+  /navaids:
+    get:
+      tags:
+        - "navaids"
+      responses:
+        '200':
+          description: List of navaids
+          content:
+            'application/json':
+              schema:
+                properties:
+                  navaids:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NavaidListItem'
+    post:
+      tags:
+        - "navaids"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Navaid'
+      responses:
+        '201':
+          description: Created
+          content:
+            'application/json':
+              schema:
+                properties:
+                  identifier:
+                    type: string
+                    example: 'NQY'
+        '400':
+            description: Invalid latitude / longitude values
+        '422':
+            description: Validation errors
+  /navaids/{identifier}:
+    get:
+      tags:
+        - "navaids"
+      responses:
+        '200':
+          description: Details of navaid
+          content:
+            'application/json':
+              schema:
+                properties:
+                  navaid:
+                    type: object
+                    $ref: '#/components/schemas/NavaidDetail'
+        '404':
+          description: Not found
+    put:
+      tags:
+        - "navaids"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Navaid'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            'application/json':
+              schema:
+                properties:
+                  identifier:
+                    type: string
+                    example: NQY
+        '400':
+          description: Invalid latitude / longitude values
+        '404':
+          description: Not found
+        '422':
+          description: Validation errors
+    delete:
+      tags:
+        - "navaids"
+      responses:
+        '204':
+          description: Successful (no content)
+        '404':
+          description: Not found

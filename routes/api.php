@@ -15,11 +15,14 @@ Route::middleware('plugin.user')->group(function () {
             'uses' => 'TeapotController@normalTeapots',
         ]
     );
-
     // Dependencies
     Route::get('dependency', 'DependencyController@getAllDependencies');
     Route::get('dependency/{id}', 'DependencyController@getDependency')
         ->where('id', '[0-9]+');
+
+    // Events
+    Route::get('plugin-events/sync', 'PluginEventsController@getLatestPluginEventId');
+    Route::get('plugin-events/recent', 'PluginEventsController@getRecentPluginEvents');
 
     // Holds
     Route::put('hold/assigned', 'HoldController@assignHold');
@@ -172,6 +175,12 @@ Route::middleware('admin.data')->group(function () {
         Route::put('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@modifyStand');
         Route::delete('/airfields/{airfield:code}/stands/{stand}', 'Admin\\StandAdminController@deleteStand');
 
+        Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
+        Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
+        Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
+        Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
+        Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
+
         Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
     });
 });
@@ -195,7 +204,7 @@ Route::middleware('public')->group(function () {
     // Initial altitudes and sids
     Route::get('sid', 'SidController@getAllSids');
     Route::get('sid/{id}', 'SidController@getSid')
-        ->where('sid', 'd+');
+        ->where('id', '[0-9]+');
     Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
     Route::get('handoffs', 'SidController@getSidHandoffsDependency');
 
@@ -205,7 +214,11 @@ Route::middleware('public')->group(function () {
 
     // Airfields
     Route::get('airfield', 'AirfieldController@getAllAirfields');
+    Route::get('airfield/dependency', 'AirfieldController@getAirfieldDependency');
     Route::get('airfield-ownership', 'AirfieldController@getAirfieldOwnershipDependency');
+
+    // Departures
+    Route::get('departure/intervals/sid-groups/dependency', 'DepartureController@getDepartureSidIntervalGroupsDependency');
 
     // Holds
     Route::get('hold', 'HoldController@getAllHolds');
@@ -238,6 +251,9 @@ Route::middleware('public')->group(function () {
 
     // Enroute releases
     Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
+
+    // Sids
+    Route::get('sid/dependency', 'SidController@getSidsDependency');
 
     // Stands
     Route::get('stand/status', 'StandController@getAirfieldStandStatus');

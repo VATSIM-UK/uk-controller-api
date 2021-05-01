@@ -3,17 +3,16 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
 class AirfieldServiceTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var AirfieldService
-     */
-    private $service;
+    private AirfieldService $service;
 
     /**
      * @var ControllerPosition
@@ -39,6 +38,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 1,
                 'code' => 'EGLL',
                 'transition_altitude' => 6000,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [
                     1,
                     2,
@@ -54,6 +54,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 2,
                 'code' => 'EGBB',
                 'transition_altitude' => 6000,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [
                     4,
                 ],
@@ -63,6 +64,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'id' => 3,
                 'code' => 'EGKR',
                 'transition_altitude' => 6000,
+                'wake_category_scheme_id' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
             ],
@@ -439,5 +441,91 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
     {
         $this->expectException(ModelNotFoundException::class);
         AirfieldService::deleteTopDownOrder('EGXY');
+    }
+
+    public function testItReturnsAirfieldDependency()
+    {
+        DB::table('speed_groups')->delete();
+        Airfield::find(2)->update(['wake_category_scheme_id' => 2]);
+        $speedGroup = SpeedGroup::create(
+            [
+                'airfield_id' => 1,
+                'key' => 'SG1'
+            ]
+        );
+        $speedGroup->engineTypes()->sync([2]);
+        $speedGroup->aircraft()->sync([1]);
+
+        $speedGroup2 = SpeedGroup::create(
+            [
+                'airfield_id' => 1,
+                'key' => 'SG2'
+            ]
+        );
+
+        $speedGroup2->engineTypes()->sync([1]);
+        $speedGroup2->relatedGroups()->sync([$speedGroup->id => ['penalty' => 120]]);
+        $speedGroup->relatedGroups()->sync([$speedGroup2->id => ['set_interval_to' => 1]]);
+
+        $expected = [
+            [
+                'id' => 1,
+                'identifier' => 'EGLL',
+                'wake_scheme' => 1,
+                'departure_speed_groups' => [
+                    [
+                        'id' => $speedGroup->id,
+                        'aircraft_types' => [
+                            'B738',
+                        ],
+                        'engine_types' => [
+                            'P'
+                        ],
+                        'related_groups' => [
+                            $speedGroup2->id => [
+                                'following_interval_penalty' => null,
+                                'set_following_interval_to' => 1,
+                            ],
+                        ],
+                    ],
+                    [
+                        'id' => $speedGroup2->id,
+                        'engine_types' => [
+                            'J'
+                        ],
+                        'aircraft_types' => [],
+                        'related_groups' => [
+                            $speedGroup->id => [
+                                'following_interval_penalty' => 120,
+                                'set_following_interval_to' => null,
+                            ],
+                        ],
+                    ],
+                ],
+                'top_down_order' => [
+                    'EGLL_S_TWR',
+                    'EGLL_N_APP',
+                    'LON_S_CTR',
+                ],
+            ],
+            [
+                'id' => 2,
+                'identifier' => 'EGBB',
+                'wake_scheme' => 2,
+                'departure_speed_groups' => [],
+                'top_down_order' => [
+                    'LON_C_CTR',
+                ],
+            ],
+            [
+                'id' => 3,
+                'identifier' => 'EGKR',
+                'wake_scheme' => 1,
+                'departure_speed_groups' => [],
+                'top_down_order' => [],
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getAirfieldsDependency());
     }
 }

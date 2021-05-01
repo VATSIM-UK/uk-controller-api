@@ -11,7 +11,7 @@ class SidControllerTest extends BaseApiTestCase
 {
     const SID_URI_1 = 'sid/1';
     const SID_URI_55 = 'sid/55';
-    
+
     protected static $tokenScope = [
         AuthServiceProvider::SCOPE_USER,
         AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
@@ -81,40 +81,8 @@ class SidControllerTest extends BaseApiTestCase
 
     public function testItReturnsAllSids()
     {
-        $expected = [
-            [
-                'id' => 1,
-                'identifier' => 'TEST1X',
-                'airfield_id' => 1,
-                'handoff_id' => null,
-                'initial_altitude' => 3000,
-                'handoff_id' => 1,
-                'prenotes' => [
-                    1,
-                ],
-            ],
-            [
-                'id' => 2,
-                'identifier' => 'TEST1Y',
-                'airfield_id' => 1,
-                'handoff_id' => null,
-                'initial_altitude' => 4000,
-                'handoff_id' => 1,
-                'prenotes' => [],
-            ],
-            [
-                'id' => 3,
-                'identifier' => 'TEST1A',
-                'airfield_id' => 2,
-                'handoff_id' => null,
-                'initial_altitude' => 5000,
-                'handoff_id' => 2,
-                'prenotes' => [],
-            ],
-        ];
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->
-        assertStatus(200)
-        ->assertExactJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid')->assertStatus(200)
+            ->assertExactJson($this->app->make(SidService::class)->getAllSids());
     }
 
     public function testItReturns200OnGetAllSids()
@@ -273,5 +241,12 @@ class SidControllerTest extends BaseApiTestCase
             'initial_altitude' => 'test',
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
+    }
+
+    public function testItReturnsSidsDependency()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'sid/dependency')
+            ->assertOk()
+            ->assertJson($this->app->make(SidService::class)->getSidsDependency());
     }
 }
