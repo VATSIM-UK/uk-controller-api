@@ -7,6 +7,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class MetarServiceTest extends BaseFunctionalTestCase
 {
@@ -23,9 +24,9 @@ class MetarServiceTest extends BaseFunctionalTestCase
     public function testMetarsPreferTheQnhOverAltimeter()
     {
         $this->expectsEvents(MetarsUpdatedEvent::class);
-        Metar::create(['airfield_id' => 1, 'metar_string' => 'bla']);
-        $noPressureAirfield = Airfield::factory()->make();
-        $noMetarAirfield = Airfield::factory()->make();
+        Metar::create(['airfield_id' => 1, 'raw' => 'bla']);
+        $noPressureAirfield = Airfield::factory()->create();
+        $noMetarAirfield = Airfield::factory()->create();
 
         $dataResponse = [
             'EGLL Q1001', // Will pull through the QNH as 1001
@@ -34,19 +35,23 @@ class MetarServiceTest extends BaseFunctionalTestCase
             $noPressureAirfield->code, // Wont pull through a QNH as there is none.
         ];
 
+
+        $expectedUrl = config(self::URL_CONFIG_KEY) . '?id=' . urlencode(
+            sprintf('EGLL,EGBB,EGKR,%s,%s', $noPressureAirfield->code, $noMetarAirfield->code)
+        );
         Http::fake(
             [
-                config(self::URL_CONFIG_KEY) => Http::response(implode("\n", $dataResponse), 200),
+                $expectedUrl => Http::response(implode("\n", $dataResponse)),
             ]
         );
 
         $this->service->updateAllMetars();
 
         // Check the request
-        Http::assertSent(function (Request $request) {
+        Http::assertSent(function (Request $request) use ($noPressureAirfield, $noMetarAirfield) {
             return $request->method() === 'GET' &&
-                $request->url() === config(self::URL_CONFIG_KEY) &&
-                $request['id'] === 'EGLL,EGBB,EGKR';
+                Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
+                $request['id'] === sprintf('EGLL,EGBB,EGKR,%s,%s', $noPressureAirfield->code, $noMetarAirfield->code);
         });
 
         // Check the metars are in the database
@@ -63,7 +68,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
             'metars',
             [
                 'airfield_id' => 2,
-                'raw' => 'EGLL Q0991',
+                'raw' => 'EGBB Q0991 A2992',
                 'qnh' => 991,
             ]
         );
@@ -99,16 +104,17 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $this->doesntExpectEvents(MetarsUpdatedEvent::class);
         Http::fake(
             [
-                config(self::URL_CONFIG_KEY) => Http::response('', 500),
+                config(self::URL_CONFIG_KEY) . '?id=' . urlencode('EGLL,EGBB,EGKR') => Http::response('', 500),
             ]
         );
 
         $this->service->updateAllMetars();
 
         // Check the request
+        // Check the request
         Http::assertSent(function (Request $request) {
             return $request->method() === 'GET' &&
-                $request->url() === config(self::URL_CONFIG_KEY) &&
+                Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
                 $request['id'] === 'EGLL,EGBB,EGKR';
         });
 

@@ -3,32 +3,16 @@
 namespace App\Services;
 
 use App\Events\MinStacksUpdatedEvent;
-use App\Helpers\MinStack\MinStackCalculableInterface;
 use App\Helpers\MinStack\MinStackCalculator;
 use App\Models\Airfield\Airfield;
 use App\Models\MinStack\MslAirfield;
 use App\Models\MinStack\MslTma;
 use App\Models\Tma;
-use Carbon\Carbon;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
 
 class MinStackLevelService
 {
-    /**
-     * @var Application
-     */
-    private $application;
-
-    /**
-     * MinStackLevelService constructor.
-     * @param Application $application
-     */
-    public function __construct(Application $application)
-    {
-        $this->application = $application;
-    }
-
     /**
      * @param string $icao
      * @return int|null
@@ -112,7 +96,8 @@ class MinStackLevelService
         $changedTmaMinimumStackLevels = $this->updateTmaMinimumStackLevels($changedAirfieldMinimumStackLevels);
         event(
             new MinStacksUpdatedEvent(
-                $changedAirfieldMinimumStackLevels->toArray(), $changedTmaMinimumStackLevels->toArray()
+                $changedAirfieldMinimumStackLevels->toArray(),
+                $changedTmaMinimumStackLevels->toArray()
             )
         );
     }

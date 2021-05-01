@@ -3,7 +3,16 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Events\MinStacksUpdatedEvent;
+use App\Models\Airfield\Airfield;
+use App\Models\Metars\Metar;
+use App\Models\MinStack\MslAirfield;
+use App\Models\MinStack\MslTma;
+use App\Models\Tma;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Mockery;
 
 class MinStackLevelServiceTest extends BaseFunctionalTestCase
@@ -13,10 +22,11 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
      */
     private $service;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = $this->app->make(MinStackLevelService::class);
+        Event::fake();
     }
 
     public function testItConstructs()
@@ -64,146 +74,264 @@ class MinStackLevelServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(['MTMA' => 6000], $this->service->getAllTmaMinStackLevels());
     }
 
-    public function testItGeneratesMinStackLevelsForAirfields()
+    public function testItAddsAirfieldMslsFromMetars()
     {
-        Carbon::setTestNow(Carbon::now());
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        Tma::where('msl_airfield_id', 2)->update(['msl_airfield_id' => 3]);
 
-        // Mock the METAR service because we don't want to make actual calls to VATSIM
-        $metarService = Mockery::mock(MetarService::class);
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGLL')
-            ->once()
-            ->andReturn(1012);
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
 
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGBB')
-            ->once()
-            ->andReturn(1014);
-
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGKR')
-            ->never();
-
-        $this->app->instance(MetarService::class, $metarService);
-        $this->service->updateAirfieldMinStackLevelsFromVatsimMetarServer();
-
-        $this->assertDatabaseHas(
-            'msl_airfield',
-            [
-                'airfield_id' => 1,
-                'msl' => 8000,
-                'generated_at' => Carbon::now()
-            ]
-        );
-
+        $this->assertDatabaseCount('msl_tma', 0);
+        $this->assertDatabaseCount('msl_airfield', 1);
         $this->assertDatabaseHas(
             'msl_airfield',
             [
                 'airfield_id' => 2,
-                'msl' => 7000,
-                'generated_at' => Carbon::now()
+                'msl' => 7000
             ]
         );
 
-        $this->assertDatabaseMissing(
+        Event::assertDispatched(MinStacksUpdatedEvent::class, function($event) {
+            return $event->airfield === ['EGBB' => 7000] &&
+                $event->tma === [];
+        });
+    }
+
+    public function testItAddsTmaMslsIfAirfieldUpdated()
+    {
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
+
+        $this->assertDatabaseCount('msl_tma', 1);
+        $this->assertDatabaseCount('msl_airfield', 1);
+        $this->assertDatabaseHas(
             'msl_airfield',
             [
-                'airfield_id' => 3,
+                'airfield_id' => 2,
+                'msl' => 7000
             ]
         );
-    }
-
-    public function testItReturnsUpdatedAirfieldMsls()
-    {
-        Carbon::setTestNow(Carbon::now());
-
-        // Mock the METAR service because we don't want to make actual calls to VATSIM
-        $metarService = Mockery::mock(MetarService::class);
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGLL')
-            ->once()
-            ->andReturn(1012);
-
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGBB')
-            ->once()
-            ->andReturn(1014);
-
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGKR')
-            ->never();
-
-        $this->app->instance(MetarService::class, $metarService);
-
-        $expected = [
-            'EGLL' => 8000,
-            'EGBB' => 7000,
-        ];
-        $actual =$this->service->updateAirfieldMinStackLevelsFromVatsimMetarServer();
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testItGeneratesMinStackLevelsForTmas()
-    {
-        Carbon::setTestNow(Carbon::now());
-
-        // Mock the METAR service because we don't want to make actual calls to VATSIM
-        $metarService = Mockery::mock(MetarService::class);
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGLL')
-            ->once()
-            ->andReturn(1014);
-
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGBB')
-            ->once()
-            ->andReturn(977);
-
-        $this->app->instance(MetarService::class, $metarService);
-        $this->service->updateTmaMinStackLevelsFromVatsimMetarServer();
-
-        $this->assertDatabaseHas(
-            'msl_tma',
-            [
-                'tma_id' => 1,
-                'msl' => 7000,
-                'generated_at' => Carbon::now()
-            ]
-        );
-
         $this->assertDatabaseHas(
             'msl_tma',
             [
                 'tma_id' => 2,
-                'msl' => 9000,
-                'generated_at' => Carbon::now()
+                'msl' => 7000
             ]
         );
+
+        Event::assertDispatched(MinStacksUpdatedEvent::class, function($event) {
+            return $event->airfield === ['EGBB' => 7000] &&
+                $event->tma === ['MTMA' => 7000];
+        });
     }
 
-    public function testItReturnsUpdateMslsForTmas()
+    public function testItUpdatesAirfieldMslsFromMetars()
     {
-        Carbon::setTestNow(Carbon::now());
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        Tma::where('msl_airfield_id', 2)->update(['msl_airfield_id' => 3]);
+        MslAirfield::create(['airfield_id' => 2, 'msl' => 8000]);
 
-        // Mock the METAR service because we don't want to make actual calls to VATSIM
-        $metarService = Mockery::mock(MetarService::class);
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGLL')
-            ->once()
-            ->andReturn(1014);
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
 
-        $metarService->shouldReceive('getQnhFromVatsimMetar')
-            ->with('EGBB')
-            ->once()
-            ->andReturn(977);
+        $this->assertDatabaseCount('msl_tma', 0);
+        $this->assertDatabaseCount('msl_airfield', 1);
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 2,
+                'msl' => 7000
+            ]
+        );
 
-        $this->app->instance(MetarService::class, $metarService);
+        Event::assertDispatched(MinStacksUpdatedEvent::class, function($event) {
+            return $event->airfield === ['EGBB' => 7000] &&
+                $event->tma === [];
+        });
+    }
 
-        $expected = [
-            'LTMA' => 7000,
-            'MTMA' => 9000
-        ];
-        $actual = $this->service->updateTmaMinStackLevelsFromVatsimMetarServer();
-        $this->assertEquals($expected, $actual);
+    public function testItUpdatesTmaMslsIfAirfieldUpdated()
+    {
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        MslAirfield::create(['airfield_id' => 2, 'msl' => 8000]);
+        MslTma::create(['tma_id' => 2, 'msl' => 8000]);
+
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
+
+        $this->assertDatabaseCount('msl_tma', 1);
+        $this->assertDatabaseCount('msl_airfield', 1);
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 2,
+                'msl' => 7000
+            ]
+        );
+        $this->assertDatabaseHas(
+            'msl_tma',
+            [
+                'tma_id' => 2,
+                'msl' => 7000
+            ]
+        );
+
+        Event::assertDispatched(MinStacksUpdatedEvent::class, function($event) {
+            return $event->airfield === ['EGBB' => 7000] &&
+                $event->tma === ['MTMA' => 7000];
+        });
+    }
+
+    public function testItDoesntUpdateMslsIfNothingChanged()
+    {
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        MslAirfield::create(['airfield_id' => 2, 'msl' => 7000]);
+
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
+
+        $this->assertDatabaseCount('msl_tma', 0);
+        $this->assertDatabaseCount('msl_airfield', 1);
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 2,
+                'msl' => 7000
+            ]
+        );
+        Event::assertNotDispatched(MinStacksUpdatedEvent::class);
+    }
+
+    public function testItDoesntUpdateTmaMslIfControllingAirfieldNotChanged()
+    {
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        MslAirfield::create(['airfield_id' => 2, 'msl' => 7000]);
+        MslAirfield::create(['airfield_id' => 3, 'msl' => 8000]);
+        Airfield::find(3)->mslCalculationAirfields()->sync([3]);
+
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014]), new Metar(['airfield_id' => 3, 'qnh' => 1014])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
+
+        $this->assertDatabaseCount('msl_tma', 0);
+        $this->assertDatabaseCount('msl_airfield', 2);
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 2,
+                'msl' => 7000
+            ]
+        );
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 3,
+                'msl' => 7000
+            ]
+        );
+
+        Event::assertDispatched(MinStacksUpdatedEvent::class, function($event) {
+            return $event->airfield === ['EGKR' => 7000] &&
+                $event->tma === [];
+        });
+    }
+
+    public function testItDoesntUpdateAirfieldMslIfThereIsntACalculationAvailable()
+    {
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        MslAirfield::create(['airfield_id' => 2, 'msl' => 7000]);
+        MslAirfield::create(['airfield_id' => 3, 'msl' => 8000]);
+
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014]), new Metar(['airfield_id' => 3, 'qnh' => 1014])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
+
+        $this->assertDatabaseCount('msl_tma', 0);
+        $this->assertDatabaseCount('msl_airfield', 2);
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 2,
+                'msl' => 7000
+            ]
+        );
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 3,
+                'msl' => 8000
+            ]
+        );
+
+        Event::assertNotDispatched(MinStacksUpdatedEvent::class);
+    }
+
+    public function testItUsesLowestApplicableQnh()
+    {
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        Tma::where('msl_airfield_id', 2)->update(['msl_airfield_id' => 3]);
+        Airfield::find(2)->mslCalculationAirfields()->sync([2, 3]);
+
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014]), new Metar(['airfield_id' => 3, 'qnh' => 1012])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
+
+        $this->assertDatabaseCount('msl_tma', 0);
+        $this->assertDatabaseCount('msl_airfield', 1);
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 2,
+                'msl' => 8000
+            ]
+        );
+
+        Event::assertDispatched(MinStacksUpdatedEvent::class, function($event) {
+            return $event->airfield === ['EGBB' => 8000] &&
+                $event->tma === [];
+        });
+    }
+
+    public function testItIgnoresNullQnhInMetars()
+    {
+        // Tidy up tables first
+        DB::table('msl_tma')->delete();
+        DB::table('msl_airfield')->delete();
+        Tma::where('msl_airfield_id', 2)->update(['msl_airfield_id' => 3]);
+        Airfield::find(2)->mslCalculationAirfields([2, 3]);
+
+        $metars = collect([new Metar(['airfield_id' => 2, 'qnh' => 1014]), new Metar(['airfield_id' => 3, 'qnh' => null])]);
+        $this->service->updateMinimumStackLevelsFromMetars($metars);
+
+        $this->assertDatabaseCount('msl_tma', 0);
+        $this->assertDatabaseCount('msl_airfield', 1);
+        $this->assertDatabaseHas(
+            'msl_airfield',
+            [
+                'airfield_id' => 2,
+                'msl' => 7000
+            ]
+        );
+
+        Event::assertDispatched(MinStacksUpdatedEvent::class, function($event) {
+            return $event->airfield === ['EGBB' => 7000] &&
+                $event->tma === [];
+        });
     }
 }
