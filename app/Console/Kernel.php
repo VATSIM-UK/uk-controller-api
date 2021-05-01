@@ -7,8 +7,6 @@ use App\Console\Commands\CleanPluginEvents;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
-use App\Console\Commands\GenerateMinStackLevels;
-use App\Console\Commands\GenerateRegionalPressures;
 use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\RecatCategoriesImport;
 use App\Console\Commands\SrdImport;
@@ -39,11 +37,9 @@ class Kernel extends ConsoleKernel
         CreateUserToken::class,
         DeleteExpiredTokens::class,
         DeleteUserTokens::class,
-        GenerateRegionalPressures::class,
         UserAdminCreate::class,
         UserCreate::class,
         \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
-        GenerateMinStackLevels::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,
@@ -68,7 +64,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('regional:generate')->hourlyAt([25, 55]);
         $schedule->command('tokens:delete-expired')->daily();
         $schedule->command('squawks:clean-history')->daily();
         $schedule->command('stands:clean-history')->daily();
