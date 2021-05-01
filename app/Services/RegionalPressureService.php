@@ -13,7 +13,6 @@ use Illuminate\Support\Collection;
  */
 class RegionalPressureService
 {
-
     public function updateRegionalPressuresFromMetars(Collection $metars): void
     {
         // Get all the current values and format
