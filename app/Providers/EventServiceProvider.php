@@ -12,7 +12,7 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
-use App\Listeners\Metar\UpdateMinimumStackLevels;
+use App\Listeners\Metar\MetarsUpdated;
 use App\Listeners\Network\NetworkDataUpdated;
 use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
@@ -51,7 +51,7 @@ class EventServiceProvider extends ServiceProvider
             DeleteAssignmentHistoryOnUnassignment::class,
         ],
         MetarsUpdatedEvent::class => [
-            UpdateMinimumStackLevels::class,
+            MetarsUpdated::class,
         ],
     ];
 
