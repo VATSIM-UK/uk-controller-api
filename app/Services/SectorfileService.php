@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Location\Coordinate;
 
@@ -86,5 +87,32 @@ class SectorfileService
     private static function convertToDecimal(int $degrees, int $minutes, float $seconds, int $multiplier): float
     {
         return ($degrees + ($minutes / 60) + ($seconds / 3600)) * $multiplier;
+    }
+
+    public static function convertLatitudeToSectorfileFormat(float $latitude): string
+    {
+        return self::convertToSectorfileFormat($latitude < 0.0 ? 'S' : 'N', abs($latitude));
+    }
+
+    public static function convertLongitudeToSectorfileFormat(float $longitude): string
+    {
+        return self::convertToSectorfileFormat($longitude < 0.0 ? 'W' : 'E', abs($longitude));
+    }
+
+    private static function convertToSectorfileFormat(string $prefix, float $coordinate)
+    {
+        $degrees = (int) $coordinate;
+        $minutes = (int) (($coordinate - $degrees) * 60);
+        $seconds = number_format(($coordinate - $degrees - ($minutes / 60)) * 3600, 3);
+        $secondsSplit = explode('.', $seconds);
+
+        return sprintf(
+            '%s%s.%s.%s.%s',
+            $prefix,
+            Str::padLeft($degrees, 3, '0'),
+            Str::padLeft($minutes, 2, '0'),
+            Str::padLeft($secondsSplit[0], 2, '0'),
+            $secondsSplit[1]
+        );
     }
 }

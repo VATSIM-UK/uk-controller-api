@@ -3,6 +3,7 @@
 namespace App\Listeners\Network;
 
 use App\BaseUnitTestCase;
+use App\Jobs\Hold\RemoveAssignmentsForAircraftLeavingHold;
 use App\Jobs\Squawk\ReserveActiveSquawks;
 use App\Jobs\Stand\AssignStandsForDeparture;
 use App\Jobs\Stand\OccupyStands;
@@ -28,6 +29,7 @@ class NetworkDataUpdatedTest extends BaseUnitTestCase
                 new OccupyStands(),
                 new AssignStandsForDeparture(),
                 new ReserveActiveSquawks(),
+                new RemoveAssignmentsForAircraftLeavingHold()
             ],
         )
             ->once()

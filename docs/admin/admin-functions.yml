@@ -1,6 +1,6 @@
 openapi: '3.0.2'
 info:
-  title: UK Controller Plugin API - Admin Functions 
+  title: UK Controller Plugin API - Admin Functions
   version: '1.0'
 components:
   schemas:
@@ -38,7 +38,7 @@ components:
         identifier:
           type: string
         latitude:
-          type: integer 
+          type: integer
         longitude:
           type: integer
         terminal_id:
@@ -96,7 +96,7 @@ components:
           properties:
             airlines:
               type: array
-              items: 
+              items:
                 $ref: '#/components/schemas/Airline'
     Airfield:
       properties:
@@ -155,13 +155,15 @@ components:
           type: string
           example: WILLO
         latitude:
-          type: string
-          example: N050.59.06.000
-          description: Latitude in string formats with degrees and minutes
+          type: number
+          format: double
+          example: 50.985
+          description: Latitude in decimal degrees format with precision to 7 decimal places
         longitude:
-          type: string
-          example: W000.11.30.000
-          description: Latitude in string formats with degrees and minutes
+          type: number
+          format: double
+          example: 0.2616667
+          description: Longitude in decimal degrees format with precision to 7 decimal places
     NavaidModel:
       allOf:
       - $ref: '#/components/schemas/Navaid'
@@ -202,7 +204,7 @@ components:
             properties:
               message:
                 type: string
-                default: Stand not part of airfield. 
+                default: Stand not part of airfield.
     DuplicateStandIdentifier:
       description: Duplicate stand identifier
       content:
@@ -225,7 +227,7 @@ paths:
                 properties:
                   types:
                     type: array
-                    items: 
+                    items:
                       $ref: '#/components/schemas/StandType'
   /airfields:
     get:
@@ -266,7 +268,7 @@ paths:
               schema:
                 properties:
                   stands:
-                    type: array 
+                    type: array
                     items:
                       $ref: '#/components/schemas/StandListItem'
     post:
@@ -299,8 +301,8 @@ paths:
         '409':
           $ref: '#/components/responses/DuplicateStandIdentifier'
         '422':
-          description: Validation errors detected        
-            
+          description: Validation errors detected
+
   /airfields/{icao}/stands/{stand_id}:
     get:
       tags:
@@ -308,7 +310,7 @@ paths:
       responses:
         '200':
           description: OK
-          content: 
+          content:
             'application/json':
               schema:
                 properties:
@@ -345,7 +347,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    default: Stand not part of airfield. 
+                    default: Stand not part of airfield.
         '409':
           $ref: '#/components/responses/DuplicateStandIdentifier'
     delete:
@@ -357,7 +359,7 @@ paths:
           description: 'No content (successful operation)'
         '404':
           $ref: '#/components/responses/StandNotInAirfield'
-  
+
   /navaids:
     get:
       tags:
@@ -418,7 +420,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Navaid'      
+              $ref: '#/components/schemas/Navaid'
       responses:
         '200':
           description: Successful operation
