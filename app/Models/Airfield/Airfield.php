@@ -97,18 +97,6 @@ class Airfield extends Model implements MinStackDataProviderInterface
         return $this->standard_high;
     }
 
-    /**
-     * @return array
-     */
-    public function getMslCalculationAttribute(): ?array
-    {
-        if (!isset($this->attributes['msl_calculation'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['msl_calculation'], true);
-    }
-
     public function controllers() : BelongsToMany
     {
         return $this->belongsToMany(
