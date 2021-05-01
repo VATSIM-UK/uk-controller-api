@@ -28,13 +28,18 @@ class AddMslAirfields extends Migration
                     'airfield_id' => $airfield->id,
                     'msl_airfield_id' => $airfieldIdMap[$mslAirfieldArray['airfield']],
                 ];
-            } else {
+            } else if (isset($mslAirfieldArray['airfields'])) {
                 foreach ($mslAirfieldArray['airfields'] as $mslAirfield) {
                     $mslAirfields[] = [
                         'airfield_id' => $airfield->id,
                         'msl_airfield_id' => $airfieldIdMap[$mslAirfield],
                     ];
                 }
+            } else {
+                $mslAirfields[] = [
+                    'airfield_id' => $airfield->id,
+                    'msl_airfield_id' => $airfield->id,
+                ];
             }
         }
 

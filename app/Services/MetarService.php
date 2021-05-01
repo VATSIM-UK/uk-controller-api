@@ -3,11 +3,8 @@
 namespace App\Services;
 
 use App\Events\MetarsUpdatedEvent;
-use App\Exceptions\MetarException;
 use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -47,7 +44,7 @@ class MetarService
 
         Metar::upsert(
             $metarsToUpdate,
-            ['airfield_id'],
+            ['airfield_id']
         );
 
         event(new MetarsUpdatedEvent(Metar::with('airfield')->get()));

@@ -17,7 +17,7 @@ class UpdateMinimumStackLevels implements ShouldQueue
 
     public function handle(MetarsUpdatedEvent $metars): bool
     {
-        $this->service->updateMinimumStackLevelsFromMetars($metars);
+        $this->service->updateMinimumStackLevelsFromMetars($metars->getMetars());
         return true;
     }
 }
