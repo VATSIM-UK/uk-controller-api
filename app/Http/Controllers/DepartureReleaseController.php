@@ -7,6 +7,8 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use App\Rules\Controller\ControllerPositionValid;
 use App\Services\DepartureReleaseService;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +73,7 @@ class DepartureReleaseController
             [
                 'controller_position_id' => 'required|integer',
                 'expires_in_seconds' => 'required|integer|min:1',
+                'released_at' => 'present|nullable|date_format:Y-m-d H:i:s|after:now',
             ]
         );
 
@@ -80,7 +83,10 @@ class DepartureReleaseController
                 $departureReleaseRequest,
                 $validated['controller_position_id'],
                 Auth::id(),
-                $validated['expires_in_seconds']
+                $validated['expires_in_seconds'],
+                $validated['released_at'] === null
+                    ? CarbonImmutable::now()
+                    : CarbonImmutable::parse($validated['released_at'])
             );
             $responseCode = 200;
         } catch (DepartureReleaseDecisionNotAllowedException $decisionNotAllowedException) {

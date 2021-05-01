@@ -10,6 +10,7 @@ use App\Events\DepartureReleaseRequestedEvent;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 {
@@ -52,6 +53,9 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'released_at' => null,
                 'release_expires_at' => null,
                 'rejected_at' => null,
+                'acknowledged_by' => null,
+                'acknowledged_at' => null,
+                'release_valid_from' => null,
             ]
         );
 
@@ -64,6 +68,9 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'released_at' => null,
                 'release_expires_at' => null,
                 'rejected_at' => null,
+                'acknowledged_by' => null,
+                'acknowledged_at' => null,
+                'release_valid_from' => null,
             ]
         );
     }
@@ -81,7 +88,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
         $request->controllerPositions()->sync([2, 3]);
 
-        $this->service->approveReleaseRequest($request, 55, self::ACTIVE_USER_CID, 125);
+        $this->service->approveReleaseRequest($request, 55, self::ACTIVE_USER_CID, 125, CarbonImmutable::now());
     }
 
     public function testItApprovesADepartureRelease()
@@ -97,7 +104,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
         $request->controllerPositions()->sync([2, 3]);
 
-        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, 125);
+        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, 125, CarbonImmutable::now()->addMinutes(3));
 
         $this->assertDatabaseHas(
             'controller_position_departure_release_request',
@@ -106,10 +113,11 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'controller_position_id' => 2,
                 'released_by' => self::ACTIVE_USER_CID,
                 'released_at' => Carbon::now()->toDateTimeString(),
-                'release_expires_at' => Carbon::now()->addSeconds(125)->toDateTimeString(),
+                'release_expires_at' => Carbon::now()->addMinutes(3)->addSeconds(125)->toDateTimeString(),
                 'rejected_at' => null,
                 'acknowledged_at' => null,
                 'acknowledged_by' => null,
+                'release_valid_from' => Carbon::now()->addMinutes(3)->toDateTimeString(),
             ]
         );
     }
@@ -157,6 +165,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'release_expires_at' => null,
                 'acknowledged_at' => null,
                 'acknowledged_by' => null,
+                'release_valid_from' => null,
             ]
         );
     }
@@ -204,6 +213,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'release_expires_at' => null,
                 'acknowledged_at' => Carbon::now()->toDateTimeString(),
                 'acknowledged_by' => self::ACTIVE_USER_CID,
+                'release_valid_from' => null,
             ]
         );
     }

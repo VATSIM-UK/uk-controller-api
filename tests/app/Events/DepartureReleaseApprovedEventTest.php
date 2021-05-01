@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\Release\Departure\ControllerDepartureReleaseDecision;
 use Carbon\Carbon;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Database\Eloquent\Model;
 
 class DepartureReleaseApprovedEventTest extends BaseFunctionalTestCase
 {
@@ -42,8 +43,31 @@ class DepartureReleaseApprovedEventTest extends BaseFunctionalTestCase
             'id' => 1,
             'controller_position_id' => 2,
             'expires_at' => Carbon::now()->addMinutes(2)->toDateTimeString(),
+            'released_at' => null,
         ];
 
         $this->assertEquals($expected, $this->event->broadcastWith());
+    }
+
+    public function testItHasBroadcastDataWithReleaseAtTime()
+    {
+        $event2 = new DepartureReleaseApprovedEvent(
+            new ControllerDepartureReleaseDecision(
+                [
+                    'departure_release_request_id' => 1,
+                    'controller_position_id' => 2,
+                    'release_expires_at' => Carbon::now()->addMinutes(2),
+                    'release_valid_from' => Carbon::now()->addMinute(),
+                ]
+            )
+        );
+        $expected = [
+            'id' => 1,
+            'controller_position_id' => 2,
+            'expires_at' => Carbon::now()->addMinutes(2)->toDateTimeString(),
+            'released_at' => Carbon::now()->addMinute()->toDateTimeString(),
+        ];
+
+        $this->assertEquals($expected, $event2->broadcastWith());
     }
 }

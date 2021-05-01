@@ -202,6 +202,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $approvalData = [
             'controller_position_id' => 2,
             'expires_in_seconds' => 10,
+            'released_at' => null,
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
@@ -213,7 +214,42 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'departure_release_request_id' => $request->id,
                 'controller_position_id' => 2,
                 'released_by' => self::ACTIVE_USER_CID,
-                'release_expires_at' => Carbon::now()->addSeconds(10)->toDateTimeString()
+                'release_expires_at' => Carbon::now()->addSeconds(10)->toDateTimeString(),
+                'release_valid_from' => Carbon::now()->toDateTimeString(),
+            ]
+        );
+    }
+
+    public function testItApprovesAReleaseWithValidFromTime()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->controllerPositions()->sync([2, 3]);
+        $route = sprintf('departure/release/request/%d/approve', $request->id);
+
+        $approvalData = [
+            'controller_position_id' => 2,
+            'expires_in_seconds' => 10,
+            'released_at' => Carbon::now()->addMinutes(2)->toDateTimeString(),
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
+            ->assertOk();
+
+        $this->assertDatabaseHas(
+            'controller_position_departure_release_request',
+            [
+                'departure_release_request_id' => $request->id,
+                'controller_position_id' => 2,
+                'released_by' => self::ACTIVE_USER_CID,
+                'release_expires_at' => Carbon::now()->addMinutes(2)->addSeconds(10)->toDateTimeString(),
+                'release_valid_from' => Carbon::now()->addMinutes(2)->toDateTimeString(),
             ]
         );
     }
@@ -224,35 +260,68 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'Controller position id missing' => [
                 [
                     'expires_in_seconds' => 10,
+                    'released_at' => null,
                 ]
             ],
             'Controller position id not integer' => [
                 [
                     'controller_position_id' => 'abc',
                     'expires_in_seconds' => 10,
+                    'released_at' => null,
                 ]
             ],
             'Expires in seconds missing' => [
                 [
                     'controller_position_id' => 2,
+                    'released_at' => null,
                 ]
             ],
             'Expires in seconds not an integer' => [
                 [
                     'controller_position_id' => 2,
                     'expires_in_seconds' => 'abc',
+                    'released_at' => null,
                 ]
             ],
             'Expires in seconds too low' => [
                 [
                     'controller_position_id' => 2,
                     'expires_in_seconds' => 0,
+                    'released_at' => null,
                 ]
             ],
             'Controller position invalid' => [
                 [
                     'controller_position_id' => 55,
                     'expires_in_seconds' => 10,
+                    'released_at' => null,
+                ]
+            ],
+            'Released at missing' => [
+                [
+                    'controller_position_id' => 2,
+                    'expires_in_seconds' => 10,
+                ]
+            ],
+            'Released at not a date' => [
+                [
+                    'controller_position_id' => 2,
+                    'expires_in_seconds' => 10,
+                    'released_at' => 'abc',
+                ]
+            ],
+            'Released at invalid date' => [
+                [
+                    'controller_position_id' => 2,
+                    'expires_in_seconds' => 10,
+                    'released_at' => Carbon::now()->addMinutes(5)->toDateTimeString('minute'),
+                ]
+            ],
+            'Released at in the past' => [
+                [
+                    'controller_position_id' => 2,
+                    'expires_in_seconds' => 10,
+                    'released_at' => Carbon::now()->subMinute()->toDateTimeString(),
                 ]
             ],
         ];

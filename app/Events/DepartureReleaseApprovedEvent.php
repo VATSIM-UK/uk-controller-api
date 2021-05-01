@@ -20,6 +20,9 @@ class DepartureReleaseApprovedEvent extends HighPriorityBroadcastEvent
             'id' => $this->approval->departure_release_request_id,
             'controller_position_id' => $this->approval->controller_position_id,
             'expires_at' => $this->approval->release_expires_at->toDateTimeString(),
+            'released_at' => $this->approval->release_valid_from
+                ? $this->approval->release_valid_from->toDateTimeString()
+                : null,
         ];
     }
 

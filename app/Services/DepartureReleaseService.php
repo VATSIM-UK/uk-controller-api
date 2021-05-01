@@ -9,6 +9,7 @@ use App\Events\DepartureReleaseRequestedEvent;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use Carbon\Carbon;
 use App\Models\Release\Departure\DepartureReleaseRequest;
+use Carbon\CarbonImmutable;
 
 class DepartureReleaseService
 {
@@ -43,7 +44,8 @@ class DepartureReleaseService
         DepartureReleaseRequest $request,
         int $approvingControllerId,
         int $approvingUserId,
-        int $approvalExpiresInSeconds
+        int $approvalExpiresInSeconds,
+        CarbonImmutable $releaseValidFrom
     ): void {
         $controller = $request->controllerPositions()
             ->wherePivot('controller_position_id', $approvingControllerId)
@@ -55,7 +57,7 @@ class DepartureReleaseService
             );
         }
 
-        $controller->decision->approve($approvingUserId, $approvalExpiresInSeconds);
+        $controller->decision->approve($approvingUserId, $approvalExpiresInSeconds, $releaseValidFrom);
         event(new DepartureReleaseApprovedEvent($controller->decision));
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models\Release\Departure;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ControllerDepartureReleaseDecision extends Pivot
@@ -12,13 +13,14 @@ class ControllerDepartureReleaseDecision extends Pivot
     /**
      * Approve the departure release for a given amount of time.
      */
-    public function approve(int $userId, int $expiresInSeconds)
+    public function approve(int $userId, int $expiresInSeconds, CarbonImmutable $releaseValidFrom)
     {
         $this->update(
             [
+                'release_valid_from' => $releaseValidFrom,
                 'released_by' => $userId,
                 'released_at' => Carbon::now(),
-                'release_expires_at' => Carbon::now()->addSeconds($expiresInSeconds),
+                'release_expires_at' => $releaseValidFrom->addSeconds($expiresInSeconds)
             ]
         );
     }

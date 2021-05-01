@@ -22,6 +22,7 @@ class CreateControllerPositionDepartureReleaseTable extends Migration
             $table->unsignedInteger('acknowledged_by')->nullable()->comment('Who acknowledged the release');
             $table->timestamp('acknowledged_at')->nullable()->comment('What time the release was acknowledged');
             $table->unsignedInteger('released_by')->nullable()->comment('Who gave the release');
+            $table->timestamp('release_valid_from')->nullable()->comment('What time the release is valid from');
             $table->timestamp('released_at')->nullable()->comment('What time the release was given');
             $table->timestamp('release_expires_at')->nullable()->comment('When the release expired');
             $table->unsignedInteger('rejected_by')->nullable()->comment('Who rejected the release');
