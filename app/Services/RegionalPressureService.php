@@ -1,115 +1,99 @@
 <?php
+
 namespace App\Services;
 
-use App\Exceptions\MetarException;
-use App\Models\Airfield\Airfield;
+use App\Events\RegionalPressuresUpdatedEvent;
 use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Models\AltimeterSettingRegions\RegionalPressureSetting;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use Psr\Http\Message\ResponseInterface;
-use SimpleXMLElement;
+use Illuminate\Support\Collection;
 
 /**
  * Service for generating the regional pressure settings based on the airfields
  * that comprise each Altimeter Setting Region.
- *
- * Class RegionalPressureService
- * @package App\Services
  */
 class RegionalPressureService
 {
-    // HTTP Client for making requests
-    private $http;
 
-    // The URI to get the METAR data from
-    private $metarUri;
-
-    // The error last error
-    private $lastError;
-
-    // Parses parts of METARs for us.
-    private $metarParser;
-
-    // The error constant for a request failure
-    const ERROR_REQUEST_FAILED = "requestFailed";
-
-    // The error constant for invalid XML
-    const ERROR_INVALID_XML = "invalidXml";
-
-    // The cache key for our regional pressures
-    const RPS_CACHE_KEY = 'regional_pressures';
-
-    // The lowest default QNH value
-    const LOWEST_QNH_DEFAULT = 9999;
-
-    // Error strings
-    const ERROR_DESCRIPTIONS = [
-        self::ERROR_REQUEST_FAILED => 'Data request failed.',
-        self::ERROR_INVALID_XML => 'Failed to retrieve METAR data: host returned invalid XML.',
-    ];
-
-    /**
-     * RegionalPressureService constructor.
-     *
-     * @param Client       $http        HTTP Client
-     * @param string       $metarUri    The URI to retrieve METARs from
-     * @param MetarService $metarParser A service to parse METARs for us
-     */
-    public function __construct(Client $http, string $metarUri, MetarService $metarParser)
+    public function updateRegionalPressuresFromMetars(Collection $metars): void
     {
-        $this->http = $http;
-        $this->metarUri = $metarUri;
-        $this->metarParser = $metarParser;
-    }
+        // Get all the current values and format
+        $currentRegionalPressures = RegionalPressureSetting::with('altimeterSettingRegion')->get()->mapWithKeys(
+            function (RegionalPressureSetting $regionalPressureSetting) {
+                return [
+                    $regionalPressureSetting->altimeterSettingRegion->key => [
+                        'altimeter_setting_region_id' => $regionalPressureSetting->altimeterSettingRegion->id,
+                        'value' => $regionalPressureSetting->value,
+                    ],
+                ];
+            }
+        );
 
-    /**
-     * Generate each of the regional pressures
-     *
-     * @return array|null
-     */
-    public function generateRegionalPressures() : ?array
-    {
-        // Request from the server and check it's valid.
-        $xml = $this->getResponse();
-        if (!$xml) {
-            return null;
+        // Get the latest values
+        $newRegionalPressures = new Collection();
+        foreach (AltimeterSettingRegion::with('airfields')->get() as $altimeterSettingRegion) {
+            $relevantMetars = $metars->whereIn('airfield_id', $altimeterSettingRegion->airfields->pluck('id'))
+                ->whereNotNull('qnh');
+
+            if ($relevantMetars->isEmpty()) {
+                continue;
+            }
+
+            $newRegionalPressures->put(
+                $altimeterSettingRegion->key,
+                [
+                    'altimeter_setting_region_id' => $altimeterSettingRegion->id,
+                    'value' => $this->calculateRegionalPressure($relevantMetars),
+                ]
+            );
         }
 
-        $airfieldQnh = $this->parsePressuresFromXML($xml);
+        // Work out which regional pressures have changed and upsert. Broadcast the changes if there are any.
+        $updatedRegionalPressures = $this->getUpdatedRegionalPressures(
+            $newRegionalPressures,
+            $currentRegionalPressures
+        );
+        if ($updatedRegionalPressures->isNotEmpty()) {
+            RegionalPressureSetting::upsert(
+                $updatedRegionalPressures->values()->toArray(),
+                ['altimeter_setting_region_id'],
+                ['value']
+            );
 
-        return AltimeterSettingRegion::with('airfields')->get()->mapWithKeys(
-            function (AltimeterSettingRegion $asr) use ($airfieldQnh) {
-                $regionalPressure = $this->calculateRegionalPressure($asr, $airfieldQnh);
-                RegionalPressureSetting::updateOrCreate(
-                    [
-                        'altimeter_setting_region_id' => $asr->id,
-                    ],
-                    [
-                        'value' => $regionalPressure,
-                    ]
-                );
-                return [$asr->key => $this->calculateRegionalPressure($asr, $airfieldQnh)];
-            }
-        )->toArray();
+            event(
+                new RegionalPressuresUpdatedEvent(
+                    $updatedRegionalPressures->mapWithKeys(
+                        function (array $regionalPressureData, string $region) {
+                            return [$region => $regionalPressureData['value']];
+                        }
+                    )->toArray()
+                )
+            );
+        }
     }
 
-    public function calculateRegionalPressure(AltimeterSettingRegion $asr, array $airfieldQnhs) : ?int
+    private function getUpdatedRegionalPressures(
+        Collection $newRegionalPressures,
+        Collection $currentRegionalPressures
+    ): Collection {
+        $updated = new Collection();
+        foreach ($newRegionalPressures as $key => $newRegionalPressure) {
+            if (!isset($currentRegionalPressures[$key]) || $currentRegionalPressures[$key] !== $newRegionalPressure) {
+                $updated->put($key, $newRegionalPressure);
+            }
+        }
+
+        return $updated;
+    }
+
+    /**
+     * Regional pressure is the lowest QNH - 1
+     */
+    private function calculateRegionalPressure(Collection $relevantMetars): int
     {
-        $lowestQnh = $asr->airfields->reduce(function (int $carry, Airfield $item) use ($airfieldQnhs) {
-            if (!isset($airfieldQnhs[$item->code])) {
-                return $carry;
-            }
-
-            return $carry < $airfieldQnhs[$item->code]
-                ? $carry
-                : $airfieldQnhs[$item->code];
-        }, self::LOWEST_QNH_DEFAULT);
-
-        return $lowestQnh !== self::LOWEST_QNH_DEFAULT ? $lowestQnh - 1 : self::LOWEST_QNH_DEFAULT;
+        return $relevantMetars->pluck('qnh')->min() - 1;
     }
 
-    public function getRegionalPressureArray() : array
+    public function getRegionalPressureArray(): array
     {
         return RegionalPressureSetting::with('altimeterSettingRegion')->get()->mapWithKeys(
             function (RegionalPressureSetting $rps) {
@@ -118,61 +102,5 @@ class RegionalPressureService
                 ];
             }
         )->toArray();
-    }
-
-    /**
-     * Parses all the pressures from the XML.
-     *
-     * @param  SimpleXMLElement $xml XML to be parsed
-     * @return array Array of airfield => pressure
-     */
-    private function parsePressuresFromXML(SimpleXMLElement $xml) : array
-    {
-        $pressures = [];
-        // Loop each airfield and find its QNH
-        foreach ($xml->data->children() as $airfield) {
-            try {
-                $pressures[(string) $airfield->station_id] =
-                    $this->metarParser->getQnhFromMetar((string) $airfield->raw_text);
-            } catch (MetarException $e) {
-                $pressures[(string) $airfield->station_id] = self::LOWEST_QNH_DEFAULT;
-            }
-        }
-
-        return $pressures;
-    }
-
-    /**
-     * Checks the response we get from the METAR server.
-     *
-     * @return bool|SimpleXMLElement False if something goes wrong, the XML otherwise.
-     */
-    private function getResponse()
-    {
-        // Make the request
-        try {
-            $response = $this->http->get($this->metarUri);
-        } catch (ClientException $exception) {
-            $this->lastError = self::ERROR_REQUEST_FAILED;
-            return false;
-        }
-
-        // Check we have valid XML
-        @$xml = simplexml_load_string($response->getBody()->getContents());
-        if ($xml === false) {
-            $this->lastError = self::ERROR_INVALID_XML;
-        }
-
-        return $xml;
-    }
-
-    /**
-     * Returns the last error.
-     *
-     * @return string
-     */
-    public function getLastError() : string
-    {
-        return $this->lastError;
     }
 }

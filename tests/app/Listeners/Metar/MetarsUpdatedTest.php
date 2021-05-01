@@ -4,6 +4,7 @@ namespace App\Listeners\Metar;
 
 use App\BaseUnitTestCase;
 use App\Events\MetarsUpdatedEvent;
+use App\Jobs\AltimeterSettingRegion\UpdateRegionalPressureSettings;
 use App\Jobs\MinStack\UpdateMinimumStackLevels;
 use App\Models\Metars\Metar;
 use Illuminate\Support\Facades\Bus;
@@ -26,5 +27,11 @@ class MetarsUpdatedTest extends BaseUnitTestCase
     {
         $this->handler->handle(new MetarsUpdatedEvent($this->metars));
         Bus::assertDispatched(UpdateMinimumStackLevels::class);
+    }
+
+    public function testItDispatchesRegionalPressureUpdateJob()
+    {
+        $this->handler->handle(new MetarsUpdatedEvent($this->metars));
+        Bus::assertDispatched(UpdateRegionalPressureSettings::class);
     }
 }
