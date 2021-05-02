@@ -60,7 +60,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
             [
                 'airfield_id' => 1,
                 'raw' => 'EGLL Q1001',
-                'qnh' => 1001,
+                'parsed->qnh' => 1001,
             ]
         );
 
@@ -69,7 +69,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
             [
                 'airfield_id' => 2,
                 'raw' => 'EGBB Q0991 A2992',
-                'qnh' => 991,
+                'parsed->qnh' => 991,
             ]
         );
 
@@ -78,7 +78,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
             [
                 'airfield_id' => 3,
                 'raw' => 'EGKR A2992',
-                'qnh' => 1013,
+                'parsed->qnh' => 1013,
             ]
         );
 
@@ -87,7 +87,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
             [
                 'airfield_id' => $noPressureAirfield->id,
                 'raw' => $noPressureAirfield->code,
-                'qnh' => null,
+                'parsed->qnh' => null,
             ]
         );
 

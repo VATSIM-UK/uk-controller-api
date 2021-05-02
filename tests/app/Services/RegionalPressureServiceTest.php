@@ -6,7 +6,6 @@ use App\BaseFunctionalTestCase;
 use App\Events\RegionalPressuresUpdatedEvent;
 use App\Models\AltimeterSettingRegions\RegionalPressureSetting;
 use App\Models\Metars\Metar;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 
 class RegionalPressureServiceTest extends BaseFunctionalTestCase
@@ -24,9 +23,9 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
     {
         $metars = collect(
             [
-                new Metar(['airfield_id' => 1, 'qnh' => 1015]),
-                new Metar(['airfield_id' => 2, 'qnh' => 1014]),
-                new Metar(['airfield_id' => 3, 'qnh' => 1013]),
+                new Metar(['airfield_id' => 1, 'parsed' => ['qnh' => 1015]]),
+                new Metar(['airfield_id' => 2, 'parsed' => ['qnh' => 1014]]),
+                new Metar(['airfield_id' => 3, 'parsed' => ['qnh' => 1013]]),
             ]
         );
         $this->service->updateRegionalPressuresFromMetars($metars);
@@ -47,9 +46,12 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
             ],
         );
 
-        Event::assertDispatched(RegionalPressuresUpdatedEvent::class, function ($event) {
-            return $event->pressures === ['ASR_BOBBINGTON' => 1012, 'ASR_TOPPINGTON' => 1013];
-        });
+        Event::assertDispatched(
+            RegionalPressuresUpdatedEvent::class,
+            function ($event) {
+                return $event->pressures === ['ASR_BOBBINGTON' => 1012, 'ASR_TOPPINGTON' => 1013];
+            }
+        );
     }
 
     public function testItGeneratesUpdatesRegionalPressures()
@@ -59,9 +61,9 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $metars = collect(
             [
-                new Metar(['airfield_id' => 1, 'qnh' => 1015]),
-                new Metar(['airfield_id' => 2, 'qnh' => 1014]),
-                new Metar(['airfield_id' => 3, 'qnh' => 1013]),
+                new Metar(['airfield_id' => 1, 'parsed' => ['qnh' => 1015]]),
+                new Metar(['airfield_id' => 2, 'parsed' => ['qnh' => 1014]]),
+                new Metar(['airfield_id' => 3, 'parsed' => ['qnh' => 1013]]),
             ]
         );
         $this->service->updateRegionalPressuresFromMetars($metars);
@@ -82,17 +84,20 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
             ],
         );
 
-        Event::assertDispatched(RegionalPressuresUpdatedEvent::class, function ($event) {
-            return $event->pressures === ['ASR_BOBBINGTON' => 1012, 'ASR_TOPPINGTON' => 1013];
-        });
+        Event::assertDispatched(
+            RegionalPressuresUpdatedEvent::class,
+            function ($event) {
+                return $event->pressures === ['ASR_BOBBINGTON' => 1012, 'ASR_TOPPINGTON' => 1013];
+            }
+        );
     }
 
     public function testItHandlesNoRelevantMetars()
     {
         $metars = collect(
             [
-                new Metar(['airfield_id' => 1, 'qnh' => 1015]),
-                new Metar(['airfield_id' => 3, 'qnh' => 1013]),
+                new Metar(['airfield_id' => 1, 'parsed' => ['qnh' => 1015]]),
+                new Metar(['airfield_id' => 3, 'parsed' => ['qnh' => 1013]]),
             ]
         );
         $this->service->updateRegionalPressuresFromMetars($metars);
@@ -106,9 +111,12 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
             ],
         );
 
-        Event::assertDispatched(RegionalPressuresUpdatedEvent::class, function ($event) {
-            return $event->pressures === ['ASR_BOBBINGTON' => 1012];
-        });
+        Event::assertDispatched(
+            RegionalPressuresUpdatedEvent::class,
+            function ($event) {
+                return $event->pressures === ['ASR_BOBBINGTON' => 1012];
+            }
+        );
     }
 
     public function testItOnlyUpdatesChangedPressure()
@@ -118,9 +126,9 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $metars = collect(
             [
-                new Metar(['airfield_id' => 1, 'qnh' => 1015]),
-                new Metar(['airfield_id' => 2, 'qnh' => 1014]),
-                new Metar(['airfield_id' => 3, 'qnh' => 1013]),
+                new Metar(['airfield_id' => 1, 'parsed' => ['qnh' => 1015]]),
+                new Metar(['airfield_id' => 2, 'parsed' => ['qnh' => 1014]]),
+                new Metar(['airfield_id' => 3, 'parsed' => ['qnh' => 1013]]),
             ]
         );
         $this->service->updateRegionalPressuresFromMetars($metars);
@@ -141,9 +149,12 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
             ],
         );
 
-        Event::assertDispatched(RegionalPressuresUpdatedEvent::class, function ($event) {
-            return $event->pressures === ['ASR_TOPPINGTON' => 1013];
-        });
+        Event::assertDispatched(
+            RegionalPressuresUpdatedEvent::class,
+            function ($event) {
+                return $event->pressures === ['ASR_TOPPINGTON' => 1013];
+            }
+        );
     }
 
     public function testItDoesntUpdateIfNothingChanged()
@@ -153,9 +164,9 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
         $metars = collect(
             [
-                new Metar(['airfield_id' => 1, 'qnh' => 1015]),
-                new Metar(['airfield_id' => 2, 'qnh' => 1014]),
-                new Metar(['airfield_id' => 3, 'qnh' => 1013]),
+                new Metar(['airfield_id' => 1, 'parsed' => ['qnh' => 1015]]),
+                new Metar(['airfield_id' => 2, 'parsed' => ['qnh' => 1014]]),
+                new Metar(['airfield_id' => 3, 'parsed' => ['qnh' => 1013]]),
             ]
         );
         $this->service->updateRegionalPressuresFromMetars($metars);

@@ -58,7 +58,9 @@ class MetarService
         return [
             'airfield_id' => $metarAirfields->where('code', $this->getMetarAirfield($metar))->first()->id,
             'raw' => trim($metar),
-            'qnh' => $this->getQnhFromMetar($metar)
+            'parsed' => json_encode([
+                'qnh' => $this->getQnhFromMetar($metar)
+            ]),
         ];
     }
 
