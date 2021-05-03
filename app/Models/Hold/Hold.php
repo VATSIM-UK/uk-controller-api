@@ -1,11 +1,14 @@
 <?php
 namespace App\Models\Hold;
 
+use App\Models\Hold\Hold;
 use App\Models\Navigation\Navaid;
+use App\Models\Hold\HoldRestriction;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Model for a hold
@@ -15,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Hold extends Model
 {
+    use HasFactory;
+
     protected $hidden = [
         'created_at',
         'updated_at',
