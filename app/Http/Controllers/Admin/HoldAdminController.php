@@ -133,6 +133,6 @@ class HoldAdminController extends BaseController
      */
     private function checkHoldBelongsToNavaid(Navaid $navaid, Hold $hold): bool
     {
-        return $navaid->id == $hold->navaid_id;
+        return $navaid->id === $hold->navaid_id;
     }
 }
