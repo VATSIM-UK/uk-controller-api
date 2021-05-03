@@ -21,10 +21,7 @@ class HoldAdminController extends BaseController
      */
     public function getHolds(Navaid $navaid) : JsonResponse
     {
-        $holds = $navaid->load(['holds'])->holds;
-
-        // load the restrictions relation of the holds
-        $holds->load(['restrictions']);
+        $holds = $navaid->load(['holds', 'holds.restrictions'])->holds;
 
         return response()->json(['holds' => $holds]);
     }
