@@ -13,7 +13,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
     const LONGITUDE_DEGREES_ERROR_MESSAGE = 'Cannot have more than 180 degrees of longitude';
     const MINUTES_ERROR_MESSAGE = 'Cannot have more than 60 minutes';
     const SECONDS_ERROR_MESSAGE = 'Cannot have more than 60 seconds';
-    
+
     /**
      * @dataProvider invalidSectorfileLatitudeFormatProvider
      */
@@ -125,5 +125,25 @@ class SectorfileServiceTest extends BaseUnitTestCase
             [self::VALID_TIMBA_LATITUDE, self::VALID_TIMBA_LONGITUDE, 50.94556, 0.26167], // TIMBA
             ['S050.59.06.000', 'W000.11.30.000', -50.985, -0.19167], // WILLO down under
         ];
+    }
+
+    public function testItConvertsLatitudeToSectorfileFormat()
+    {
+        $this->assertEquals('N050.56.44.000', SectorfileService::convertLatitudeToSectorfileFormat(50.9455556));
+    }
+
+    public function testItConvertsLatitudeToSectorfileFormatBelowEquator()
+    {
+        $this->assertEquals('S050.56.44.000', SectorfileService::convertLatitudeToSectorfileFormat(-50.9455556));
+    }
+
+    public function testItConvertsLongitudeToSectorfileFormat()
+    {
+        $this->assertEquals('E000.15.42.000', SectorfileService::convertLongitudeToSectorfileFormat(0.2616667));
+    }
+
+    public function testItConvertsLongitudeToSectorfileFormatWestOfMeridian()
+    {
+        $this->assertEquals('W000.15.42.000', SectorfileService::convertLongitudeToSectorfileFormat(-0.2616667));
     }
 }

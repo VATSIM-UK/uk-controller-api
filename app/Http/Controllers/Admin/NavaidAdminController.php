@@ -42,14 +42,7 @@ class NavaidAdminController extends BaseController
      */
     public function createNavaid(NavaidRequest $request) : JsonResponse
     {
-        $error = $this->validateLatLongValues($request);
-
-        if (isset($error)) {
-            return response()->json(['message' => $error], 400);
-        }
-
         $navaid = Navaid::create($request->validated());
-
         return response()->json(['identifier' => $navaid->identifier], 201);
     }
 
@@ -58,18 +51,10 @@ class NavaidAdminController extends BaseController
      *
      * @param Navaid $navaid
      * @param NavaidRequest $request
-     * @return void
      */
-    public function modifyNavaid(Navaid $navaid, NavaidRequest $request)
+    public function modifyNavaid(Navaid $navaid, NavaidRequest $request): JsonResponse
     {
-        $error = $this->validateLatLongValues($request);
-
-        if (isset($error)) {
-            return response()->json(['message' => $error], 400);
-        }
-
         $navaid->update($request->validated());
-
         return response()->json(['identifier' => $navaid->identifier]);
     }
 
@@ -77,31 +62,10 @@ class NavaidAdminController extends BaseController
      * Delete the Navaid
      *
      * @param Navaid $navaid
-     * @return void
      */
-    public function deleteNavaid(Navaid $navaid)
+    public function deleteNavaid(Navaid $navaid): JsonResponse
     {
         $navaid->delete();
-        
         return response()->json([], 204);
-    }
-
-    /**
-     * Attempt to validate the values provided by the latitude / longitude strings
-     *
-     * @param NavaidRequest $request
-     * @return string|null
-     */
-    private function validateLatLongValues(NavaidRequest &$request) : ?string
-    {
-        try {
-            SectorfileService::coordinateFromSectorfile($request->get('latitude'), $request->get('longitude'));
-        } catch (InvalidArgumentException $e) {
-            // exceptions should only be scoped to issues with values - format of string dealt
-            // with in form request
-            return $e->getMessage();
-        }
-
-        return null;
     }
 }

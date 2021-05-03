@@ -30,8 +30,8 @@ class NavaidRequest extends FormRequest
 
         return [
             'identifier' => ["required", "string", "max:5", $uniqueRule],
-            'latitude' => ["required", "string", Rule::latitudeString()],
-            'longitude' => ["required", "string", Rule::longitudeString()]
+            'latitude' => ["required", "numeric"],
+            'longitude' => ["required", "numeric"]
         ];
     }
 }
