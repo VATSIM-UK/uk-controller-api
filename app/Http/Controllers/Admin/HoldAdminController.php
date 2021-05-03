@@ -45,7 +45,7 @@ class HoldAdminController extends BaseController
             return response()->json(self::DESCRIPTION_NOT_UNIQUE_RESPONSE, 409);
         }
 
-        $hold = $navaid->holds()->create(  
+        $hold = $navaid->holds()->create(
             array_merge($request->validated(), compact('description'))
         );
 
@@ -60,7 +60,7 @@ class HoldAdminController extends BaseController
      * @return JsonResponse
      */
     public function getHold(Navaid $navaid, Hold $hold) : JsonResponse
-    {   
+    {
         if (! $this->checkHoldBelongsToNavaid($navaid, $hold)) {
             return response()->json(self::HOLD_NOT_IN_NAVAID_RESPONSE, 404);
         }
@@ -123,7 +123,7 @@ class HoldAdminController extends BaseController
         $existingDescriptions = $navaid->holds->pluck('description');
 
         return $existingDescriptions->contains($description);
-    }   
+    }
 
     /**
      * Checks whether the given Hold has the parent
