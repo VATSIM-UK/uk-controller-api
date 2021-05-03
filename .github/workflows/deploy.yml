@@ -202,6 +202,7 @@ jobs:
             # Deployment Tasks
             $PHP_PATH artisan optimize
             $PHP_PATH artisan horizon:publish
+            $PHP_PATH artisan schedule-monitor:sync
 
             # Link Storage
             $PHP_PATH artisan storage:link
