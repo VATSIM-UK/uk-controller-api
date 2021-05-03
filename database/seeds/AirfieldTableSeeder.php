@@ -8,30 +8,32 @@ class AirfieldTableSeeder extends Seeder
 {
     public function run()
     {
-        Airfield::create(
+        $airfield1 = Airfield::create(
             [
                 'code' => 'EGLL',
                 'latitude' => 51.4775,
                 'longitude' => -0.461389,
                 'transition_altitude' => 6000,
                 'standard_high' => true,
-                'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGLL']),
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]
         );
-        Airfield::create(
+        $airfield1->mslCalculationAirfields()->sync([$airfield1->id]);
+
+        $airfield2 = Airfield::create(
             [
                 'code' => 'EGBB',
                 'latitude' => 52.453889,
                 'longitude' => -1.748056,
                 'transition_altitude' => 6000,
                 'standard_high' => false,
-                'msl_calculation' => json_encode(['type' => 'direct', 'airfield' => 'EGBB']),
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]
         );
+        $airfield2->mslCalculationAirfields()->sync([$airfield2->id]);
+
         Airfield::create(
             [
                 'code' => 'EGKR',
@@ -39,7 +41,6 @@ class AirfieldTableSeeder extends Seeder
                 'longitude' => -0.138611,
                 'transition_altitude' => 6000,
                 'standard_high' => true,
-                'msl_calculation' => null,
                 'created_at' => Carbon::now()->subHour(),
                 'updated_at' => Carbon::now(),
             ]

@@ -1,21 +1,19 @@
 <?php
 namespace App\Services;
 
-use App\BaseUnitTestCase;
-use App\Exceptions\MetarException;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\RequestOptions;
-use Mockery;
+use App\BaseFunctionalTestCase;
+use App\Events\MetarsUpdatedEvent;
+use App\Models\Airfield\Airfield;
+use App\Models\Metars\Metar;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
-class MetarServiceTest extends BaseUnitTestCase
+class MetarServiceTest extends BaseFunctionalTestCase
 {
     const URL_CONFIG_KEY = 'metar.vatsim_url';
 
-    /**
-     * @var MetarService
-     */
-    private $service;
+    private MetarService $service;
 
     public function setUp() : void
     {
@@ -23,147 +21,121 @@ class MetarServiceTest extends BaseUnitTestCase
         $this->service = $this->app->make(MetarService::class);
     }
 
-    public function testItConstructs()
+    public function testMetarsPreferTheQnhOverAltimeter()
     {
-        $this->assertInstanceOf(MetarService::class, $this->service);
+        $this->expectsEvents(MetarsUpdatedEvent::class);
+        Metar::create(['airfield_id' => 1, 'raw' => 'bla']);
+        $noPressureAirfield = Airfield::factory()->create();
+        $noMetarAirfield = Airfield::factory()->create();
+
+        $dataResponse = [
+            'EGLL Q1001', // Will pull through the QNH as 1001
+            'EGBB Q0991 A2992', // Will pull through the QNH as 991
+            'EGKR A2992', // Will pull through altimeter and convert it to QNH,
+            $noPressureAirfield->code, // Wont pull through a QNH as there is none.
+        ];
+
+
+        $expectedUrl = config(self::URL_CONFIG_KEY) . '?id=' . urlencode(
+            sprintf('EGLL,EGBB,EGKR,%s,%s', $noPressureAirfield->code, $noMetarAirfield->code)
+        );
+        Http::fake(
+            [
+                $expectedUrl => Http::response(implode("\n", $dataResponse)),
+            ]
+        );
+
+        $this->service->updateAllMetars();
+
+        // Check the request
+        Http::assertSent(function (Request $request) use ($noPressureAirfield, $noMetarAirfield) {
+            return $request->method() === 'GET' &&
+                Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
+                $request['id'] === sprintf('EGLL,EGBB,EGKR,%s,%s', $noPressureAirfield->code, $noMetarAirfield->code);
+        });
+
+        // Check the metars are in the database
+        $this->assertDatabaseHas(
+            'metars',
+            [
+                'airfield_id' => 1,
+                'raw' => 'EGLL Q1001',
+                'parsed->qnh' => 1001,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'metars',
+            [
+                'airfield_id' => 2,
+                'raw' => 'EGBB Q0991 A2992',
+                'parsed->qnh' => 991,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'metars',
+            [
+                'airfield_id' => 3,
+                'raw' => 'EGKR A2992',
+                'parsed->qnh' => 1013,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'metars',
+            [
+                'airfield_id' => $noPressureAirfield->id,
+                'raw' => $noPressureAirfield->code,
+                'parsed->qnh' => null,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'metars',
+            [
+                'airfield_id' => $noMetarAirfield->id,
+            ]
+        );
     }
 
-    public function testItThrowsAnExceptionIfNoQnh()
+    public function testItHandlesBadResponsesGracefully()
     {
-        $metar = 'EGGD BKN100';
-        $this->expectException(MetarException::class);
-        $this->expectExceptionMessage('QNH not found in METAR: ' . $metar);
+        $this->doesntExpectEvents(MetarsUpdatedEvent::class);
+        Http::fake(
+            [
+                config(self::URL_CONFIG_KEY) . '?id=' . urlencode('EGLL,EGBB,EGKR') => Http::response('', 500),
+            ]
+        );
 
-        $this->service->getQnhFromMetar($metar);
-    }
+        $this->service->updateAllMetars();
 
-    public function testItFindsAFourDigitQNH()
-    {
-        $metar = 'EGGD Q1001';
-        $this->assertEquals(1001, $this->service->getQnhFromMetar($metar));
-    }
+        // Check the request
+        // Check the request
+        Http::assertSent(function (Request $request) {
+            return $request->method() === 'GET' &&
+                Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
+                $request['id'] === 'EGLL,EGBB,EGKR';
+        });
 
-    public function testItFindsAThreeDigitQNH()
-    {
-        $metar = 'EGGD Q0998';
-        $this->assertEquals(998, $this->service->getQnhFromMetar($metar));
-    }
-
-    public function testItUsesTheFirstQNHPresent()
-    {
-        $metar = 'EGGD Q1029 Q1001';
-        $this->assertEquals(1029, $this->service->getQnhFromMetar($metar));
-    }
-
-    public function testItReturnsNullIfVatsimMetarDownloadFails()
-    {
-        $mockResponse = new Response(418, []);
-
-        $mockClient = Mockery::mock(Client::class);
-        $mockClient->shouldReceive('get')
-            ->with(
-                config(self::URL_CONFIG_KEY),
-                [
-                    RequestOptions::ALLOW_REDIRECTS => true,
-                    RequestOptions::HTTP_ERRORS => false,
-                    RequestOptions::QUERY => [
-                        'id' => 'EGLL',
-                    ],
-                ]
-            )
-            ->andReturn($mockResponse);
-
-        $serviceWithMockedHttp = new MetarService($mockClient);
-        $this->assertNull($serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
-    }
-
-    public function testItReturnsNullIfNoMetarAvailable()
-    {
-        $mockResponse = new Response(200, [], 'No METAR available for EGLL');
-
-        $mockClient = Mockery::mock(Client::class);
-        $mockClient->shouldReceive('get')
-            ->with(
-                config(self::URL_CONFIG_KEY),
-                [
-                    RequestOptions::ALLOW_REDIRECTS => true,
-                    RequestOptions::HTTP_ERRORS => false,
-                    RequestOptions::QUERY => [
-                        'id' => 'EGLL',
-                    ],
-                ]
-            )
-            ->andReturn($mockResponse);
-
-        $serviceWithMockedHttp = new MetarService($mockClient);
-        $this->assertNull($serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
-    }
-
-    public function testItReturnsNullIfMetarNotValid()
-    {
-        $mockResponse = new Response(200, [], 'EGLL 1234567');
-
-        $mockClient = Mockery::mock(Client::class);
-        $mockClient->shouldReceive('get')
-            ->with(
-                config(self::URL_CONFIG_KEY),
-                [
-                    RequestOptions::ALLOW_REDIRECTS => true,
-                    RequestOptions::HTTP_ERRORS => false,
-                    RequestOptions::QUERY => [
-                        'id' => 'EGLL',
-                    ],
-                ]
-            )
-            ->andReturn($mockResponse);
-
-        $serviceWithMockedHttp = new MetarService($mockClient);
-        $this->assertNull($serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
-    }
-
-    public function testItReturnsQnhIfValidMetar()
-    {
-        $mockResponse = new Response(200, [], 'EGLL 02012KT Q1014');
-
-        $mockClient = Mockery::mock(Client::class);
-        $mockClient->shouldReceive('get')
-            ->with(
-                config(self::URL_CONFIG_KEY),
-                [
-                    RequestOptions::ALLOW_REDIRECTS => true,
-                    RequestOptions::HTTP_ERRORS => false,
-                    RequestOptions::QUERY => [
-                        'id' => 'EGLL',
-                    ],
-                ]
-            )
-            ->andReturn($mockResponse);
-
-        $serviceWithMockedHttp = new MetarService($mockClient);
-        $this->assertEquals(1014, $serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
-    }
-
-    public function testItCachesMetars()
-    {
-        $mockResponse = new Response(200, [], 'EGLL 02012KT Q1014');
-
-        $mockClient = Mockery::mock(Client::class);
-        $mockClient->shouldReceive('get')
-            ->once()
-            ->with(
-                config(self::URL_CONFIG_KEY),
-                [
-                    RequestOptions::ALLOW_REDIRECTS => true,
-                    RequestOptions::HTTP_ERRORS => false,
-                    RequestOptions::QUERY => [
-                        'id' => 'EGLL',
-                    ],
-                ]
-            )
-            ->andReturn($mockResponse);
-
-        $serviceWithMockedHttp = new MetarService($mockClient);
-        $this->assertEquals(1014, $serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
-        $this->assertEquals(1014, $serviceWithMockedHttp->getQnhFromVatsimMetar('EGLL'));
+        // Check the metars aren't there
+        $this->assertDatabaseMissing(
+            'metars',
+            [
+                'airfield_id' => 1,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'metars',
+            [
+                'airfield_id' => 2,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'metars',
+            [
+                'airfield_id' => 3,
+            ]
+        );
     }
 }

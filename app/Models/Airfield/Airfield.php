@@ -31,7 +31,6 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'longitude',
         'transition_altitude',
         'standard_high',
-        'msl_calculation',
         'wake_category_scheme_id',
         'created_at',
         'updated_at'
@@ -39,7 +38,6 @@ class Airfield extends Model implements MinStackDataProviderInterface
 
     protected $hidden = [
         'standard_high',
-        'msl_calculation',
         'created_at',
         'updated_at',
     ];
@@ -53,9 +51,19 @@ class Airfield extends Model implements MinStackDataProviderInterface
     /**
      * @return HasOne
      */
-    public function msl() : HasOne
+    public function msl(): HasOne
     {
         return $this->hasOne(MslAirfield::class);
+    }
+
+    public function mslCalculationAirfields(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Airfield::class,
+            'msl_calculation_airfields',
+            'airfield_id',
+            'msl_airfield_id',
+        );
     }
 
     /**
@@ -87,18 +95,6 @@ class Airfield extends Model implements MinStackDataProviderInterface
     public function standardPressureHigh(): bool
     {
         return $this->standard_high;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMslCalculationAttribute(): ?array
-    {
-        if (!isset($this->attributes['msl_calculation'])) {
-            return null;
-        }
-
-        return json_decode($this->attributes['msl_calculation'], true);
     }
 
     public function controllers() : BelongsToMany

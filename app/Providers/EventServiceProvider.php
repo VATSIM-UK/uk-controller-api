@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
+use App\Events\MetarsUpdatedEvent;
 use App\Events\NetworkDataUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
@@ -11,6 +12,7 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
+use App\Listeners\Metar\MetarsUpdated;
 use App\Listeners\Network\NetworkDataUpdated;
 use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
@@ -47,6 +49,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         StandUnassignedEvent::class => [
             DeleteAssignmentHistoryOnUnassignment::class,
+        ],
+        MetarsUpdatedEvent::class => [
+            MetarsUpdated::class,
         ],
     ];
 
