@@ -41,7 +41,7 @@ class HoldAdminController extends BaseController
         // use description if specified, otherwise default to the navaid identifier.
         $description = $request->get('description') ?? $navaid->identifier;
 
-        if ($this->doesDescriptionAlreadyExist($navaid, $description)) {
+        if ($this->descriptionAlreadyExists($navaid, $description)) {
             return response()->json(self::DESCRIPTION_NOT_UNIQUE_RESPONSE, 409);
         }
 
@@ -85,7 +85,7 @@ class HoldAdminController extends BaseController
         $description = $request->get('description') ?? $navaid->identifier;
 
         $descriptionChanged = ($hold->description != $request->get('description'));
-        if ($this->doesDescriptionAlreadyExist($navaid, $description) && $descriptionChanged) {
+        if ($this->descriptionAlreadyExists($navaid, $description) && $descriptionChanged) {
             return response()->json(self::DESCRIPTION_NOT_UNIQUE_RESPONSE, 409);
         }
 
@@ -118,11 +118,9 @@ class HoldAdminController extends BaseController
      * @param string $description
      * @return boolean
      */
-    private function doesDescriptionAlreadyExist(Navaid $navaid, string $description): bool
+    private function descriptionAlreadyExists(Navaid $navaid, string $description): bool
     {
-        $existingDescriptions = $navaid->holds->pluck('description');
-
-        return $existingDescriptions->contains($description);
+        return $navaid->holds->where('description', $description)->count() > 0;
     }
 
     /**
