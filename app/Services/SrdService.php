@@ -65,8 +65,11 @@ class SrdService
     private function updateLocalSrdData(): void
     {
         Artisan::call(sprintf('srd:import %s', self::SRD_DOWNLOAD_FILE));
-        $this->getImportsFilesystem()->delete(self::SRD_CURRENT_FILE);
-        $this->getImportsFilesystem()->move(self::SRD_DOWNLOAD_FILE, self::SRD_CURRENT_FILE);
+        $filesystem = $this->getImportsFilesystem();
+        if ($filesystem->exists(self::SRD_CURRENT_FILE)) {
+            $filesystem->delete(self::SRD_CURRENT_FILE);
+        }
+        $filesystem->move(self::SRD_DOWNLOAD_FILE, self::SRD_CURRENT_FILE);
         $this->setSrdLastUpdatedDate();
     }
 
