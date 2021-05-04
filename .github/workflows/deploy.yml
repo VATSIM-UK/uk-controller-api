@@ -192,7 +192,6 @@ jobs:
             cd $RELEASE_DIRECTORY
 
             # Stop Application / Services
-            sudo systemctl stop ukcp
             sudo systemctl stop ukcp-horizon
             $PHP_PATH artisan down
 
@@ -210,7 +209,6 @@ jobs:
             # Start Websockets and Horizon
             $PHP_PATH artisan up
             sudo systemctl start ukcp-horizon
-            sudo systemctl start ukcp
 
             # This will interpolate the values as --revision="vx.y.z" and --repository="vatsim-uk/uk-controller-api"
             echo artisan bugsnag:deploy --branch="main" --revision="$TAG" --repository="$GITHUB_REPOSITORY"
