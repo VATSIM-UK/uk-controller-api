@@ -154,7 +154,7 @@ class AddMissingStanstedStands extends Migration
                 ->toArray();
             
             if (!empty($airlinePairings)) {
-                DB::table('airline_stand')->insert($airlinePairings);   
+                DB::table('airline_stand')->insert($airlinePairings);
             }
         }
 
