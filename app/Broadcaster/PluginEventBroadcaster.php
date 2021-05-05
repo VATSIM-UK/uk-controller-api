@@ -34,8 +34,8 @@ class PluginEventBroadcaster extends Broadcaster
 
     public function broadcast(array $channels, $event, array $payload = [])
     {
-        $this->pusherBroadcaster->broadcast($channels, $event, $payload);
-        unset($payload['socket']);
+        $payloadWithoutSocket = $payload;
+        unset($payloadWithoutSocket['socket']);
         PluginEvent::create(
             [
                 'event' => [
@@ -45,5 +45,6 @@ class PluginEventBroadcaster extends Broadcaster
                 ]
             ]
         );
+        $this->pusherBroadcaster->broadcast($channels, $event, $payload);
     }
 }
