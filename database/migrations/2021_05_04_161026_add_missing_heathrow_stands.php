@@ -4,6 +4,8 @@ use App\Services\SectorfileService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use App\Services\DependencyService;
+use App\Services\StandService;
 
 class AddMissingHeathrowStands extends Migration
 {
@@ -123,6 +125,8 @@ class AddMissingHeathrowStands extends Migration
                 );
             }
         }
+        
+        DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 
     /**
