@@ -5,6 +5,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Services\DependencyService;
+use App\Services\StandService;
 
 class AddMissingStanstedStands extends Migration
 {
@@ -163,6 +165,8 @@ class AddMissingStanstedStands extends Migration
         DB::table('stands')
             ->whereIn('id', array_column($mappedStandsToDeprioritise, 'id'))
             ->update(['assignment_priority' => DB::raw('`assignment_priority` + 1')]);
+        
+        DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 
     /**
