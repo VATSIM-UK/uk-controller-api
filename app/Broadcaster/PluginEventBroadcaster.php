@@ -41,7 +41,7 @@ class PluginEventBroadcaster extends Broadcaster
                 'event' => [
                     'channel' => (string) $channels[0],
                     'event' => $event,
-                    'data' => $payload,
+                    'data' => $payloadWithoutSocket,
                 ]
             ]
         );
