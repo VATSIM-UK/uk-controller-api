@@ -70,7 +70,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('networkdata:update')->everyMinute()
-            ->graceTimeInMinutes(3);
+            ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
         $schedule->command('schedule-monitor:sync')
