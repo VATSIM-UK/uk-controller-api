@@ -29,12 +29,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = 'horizon';
 
-    public function boot()
-    {
-        parent::boot();
-        Route::model('version', Version::class);
-    }
-
     /**
      * Define the routes for the application.
      *

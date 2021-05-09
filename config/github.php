@@ -13,4 +13,5 @@ return [
         'url' => env('GITHUB_ISSUE_REPO_PLUGIN', ''),
         'label' =>  env('UKSF_LABEL_NAME_PLUGIN', ''),
     ],
+    'latest_release_assets_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download',
 ];

@@ -171,8 +171,7 @@ class VersionService extends ServiceProvider
 
     public function getFullVersionDetails(Version $version): array
     {
-        $assetsUrl = "https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/{$version->version}";
-
+        $assetsUrl = sprintf('%s/%s', config('github.latest_release_assets_url'), $version->version);
         return [
             'id' => $version->id,
             'version' => $version->version,
