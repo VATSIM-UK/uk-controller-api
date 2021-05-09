@@ -134,21 +134,30 @@ components:
         assignment_priority:
           type: integer
           example: 100
-    HoldModel:
-
+    HoldRequest:
       properties:
-        id:
-          type: integer
-        navaid_id:
-          type: integer
         inbound_heading:
           type: integer
+        mininum_altitude:
+          type: string
         maximum_altitude:
           type: integer
         turn_direction:
           type: string
         description:
           type: string
+          nullable: true  
+    HoldModel:
+      allOf:
+        - $ref: '#/components/schemas/HoldRequest'
+      properties:
+        id:
+          type: integer
+        navaid_id:
+          type: integer
+        description:
+          type: string
+          nullable: false
     Navaid:
       properties:
         identifier:
@@ -214,6 +223,25 @@ components:
               message:
                 type: string
                 default: Stand identifier in use for airfield.
+    HoldNotAssociatedWithNavaid:
+      description: Hold not associated with Navaid
+      content:
+        'application/json':
+          schema:
+            properties:
+              message:
+                type: string
+                default: 'Hold not associated with Navaid.'
+    ConflictOnHoldDescription:
+      description: Conflict
+      content:
+        'application/json':
+          schema:
+            properties:
+              message:
+                type: string
+                default: Description of hold already used.
+
 
 paths:
   /stand-types:
@@ -445,3 +473,83 @@ paths:
           description: Successful (no content)
         '404':
           description: Not found
+
+  /navaids/{identifier}/holds:
+    get:
+      tags:
+        - "holds"
+      responses:
+        '200':
+          description: Holds associated with the specified Navaid.
+          content: 
+            'application/json':
+              schema:
+                properties:
+                  holds:
+                    type: array
+                    items: 
+                      $ref:  "#/components/schemas/HoldModel"
+        '404':
+          description: Not found
+    post:
+      tags:
+        - "holds"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/HoldRequest'
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            'application/json':
+              schema:
+                properties:
+                  hold_id:
+                    type: integer 
+                    example: 1
+        '422':
+          description: Validation errors
+        '409':
+          $ref: '#/components/responses/ConflictOnHoldDescription'
+
+  /navaids/{identifier}/holds/{hold_id}:
+    delete:
+      tags:
+        - "holds"
+      responses:
+        '204':
+          description: No content / success
+        '404':
+          $ref: '#/components/responses/HoldNotAssociatedWithNavaid'
+    get:
+      tags:
+        - "holds"
+      responses:
+        '200':
+          description: Hold of a given Navaid
+          content:
+            'application/json':
+              schema:
+                properties:
+                  hold:
+                    type: object
+                    $ref: '#/components/schemas/HoldModel'
+        '404':
+          $ref: '#/components/responses/HoldNotAssociatedWithNavaid'
+    put:
+      tags:
+        - "holds"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/HoldRequest'
+      responses:
+        '404':
+          $ref: '#/components/responses/HoldNotAssociatedWithNavaid'
+        '409':
+          $ref: '#/components/responses/ConflictOnHoldDescription'
+        '204':
+          description: No content
