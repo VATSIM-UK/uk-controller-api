@@ -2,35 +2,22 @@
 
 namespace App\Services;
 
-use App\Helpers\MinStack\MinStackCalculableInterface;
+use App\Events\MinStacksUpdatedEvent;
+use App\Helpers\MinStack\MinStackCalculator;
 use App\Models\Airfield\Airfield;
 use App\Models\MinStack\MslAirfield;
 use App\Models\MinStack\MslTma;
 use App\Models\Tma;
-use Carbon\Carbon;
-use Illuminate\Foundation\Application;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
 
 class MinStackLevelService
 {
     /**
-     * @var Application
-     */
-    private $application;
-
-    /**
-     * MinStackLevelService constructor.
-     * @param Application $application
-     */
-    public function __construct(Application $application)
-    {
-        $this->application = $application;
-    }
-
-    /**
      * @param string $icao
      * @return int|null
      */
-    public function getMinStackLevelForAirfield(string $icao) : ?int
+    public function getMinStackLevelForAirfield(string $icao): ?int
     {
         $airfield = Airfield::where('code', $icao)->first();
 
@@ -45,7 +32,7 @@ class MinStackLevelService
      * @param string $name
      * @return int|null
      */
-    public function getMinStackLevelForTma(string $name) : ?int
+    public function getMinStackLevelForTma(string $name): ?int
     {
         $tma = Tma::where('name', $name)->first();
         if ($tma === null || $tma->msl === null) {
@@ -58,18 +45,20 @@ class MinStackLevelService
     /**
      * @return array
      */
-    public function getAllAirfieldMinStackLevels() : array
+    public function getAllAirfieldMinStackLevels(): array
     {
         $airfields = Airfield::all();
         $minStackLevels = [];
 
-        $airfields->each(function (Airfield $airfield) use (&$minStackLevels) {
-            if ($airfield->msl === null) {
-                return;
-            }
+        $airfields->each(
+            function (Airfield $airfield) use (&$minStackLevels) {
+                if ($airfield->msl === null) {
+                    return;
+                }
 
-            $minStackLevels[$airfield->code] = $airfield->msl->msl;
-        });
+                $minStackLevels[$airfield->code] = $airfield->msl->msl;
+            }
+        );
 
         return $minStackLevels;
     }
@@ -77,109 +66,155 @@ class MinStackLevelService
     /**
      * @return array
      */
-    public function getAllTmaMinStackLevels() : array
+    public function getAllTmaMinStackLevels(): array
     {
         $airfields = Tma::all();
         $minStackLevels = [];
 
-        $airfields->each(function (Tma $tma) use (&$minStackLevels) {
-            if ($tma->msl === null) {
-                return;
-            }
+        $airfields->each(
+            function (Tma $tma) use (&$minStackLevels) {
+                if ($tma->msl === null) {
+                    return;
+                }
 
-            $minStackLevels[$tma->name] = $tma->msl->msl;
-        });
+                $minStackLevels[$tma->name] = $tma->msl->msl;
+            }
+        );
 
         return $minStackLevels;
     }
 
-    /**
-     * Update all min stack levels in the database from the VATSIM metar server.
-     *
-     * @return array
-     */
-    public function updateAirfieldMinStackLevelsFromVatsimMetarServer() : array
+    public function updateMinimumStackLevelsFromMetars(Collection $metars): void
     {
-        $airfields = Airfield::all();
-
-        $minStackLevels = [];
-        $airfields->each(function (Airfield $airfield) use (&$minStackLevels) {
-            if ($airfield->msl_calculation === null) {
-                return;
-            }
-
-            $minStackCalculation = $this->application->makeWith(
-                MinStackCalculableInterface::class,
-                $airfield->msl_calculation
-            );
-
-            $minStackLevels[$airfield->id] = $minStackCalculation->calculateMinStack();
-        });
-
-        foreach ($minStackLevels as $airfield => $minStack) {
-            if (!isset($minStack)) {
-                continue;
-            }
-
-            MslAirfield::updateOrCreate(
-                [
-                    'airfield_id' => $airfield,
-                ],
-                [
-                    'msl' => $minStack,
-                    'generated_at' => Carbon::now(),
-                ]
-            );
+        // Update MSLs for airfields. If they've not changed, then nothing has changed.
+        $changedAirfieldMinimumStackLevels = $this->updateAirfieldMinimumStackLevels($metars);
+        if ($changedAirfieldMinimumStackLevels->isEmpty()) {
+            return;
         }
 
-        $returnValue = [];
-        foreach ($minStackLevels as $airfield => $minStackLevel) {
-            $returnValue[$airfields->find($airfield)->code] = $minStackLevel;
-        }
-
-        return $returnValue;
+        // Check for updated TMA MSLs
+        $changedTmaMinimumStackLevels = $this->updateTmaMinimumStackLevels($changedAirfieldMinimumStackLevels);
+        event(
+            new MinStacksUpdatedEvent(
+                $changedAirfieldMinimumStackLevels->toArray(),
+                $changedTmaMinimumStackLevels->toArray()
+            )
+        );
     }
 
-    /**
-     * Update all TMA min stack levels in the database from the VATSIM metar server.
-     *
-     * @return array
-     */
-    public function updateTmaMinStackLevelsFromVatsimMetarServer() : array
+    private function updateAirfieldMinimumStackLevels(Collection $metars): Collection
     {
-        $tmas = Tma::all();
+        // Get all the current MSLs
+        $currentMinimumStackLevels = MslAirfield::with('airfield')->get()->mapWithKeys(
+            function (MslAirfield $msl) {
+                return [
+                    $msl->airfield->code => [
+                        'airfield_id' => $msl->airfield_id,
+                        'msl' => $msl->msl,
+                    ],
+                ];
+            }
+        );
 
-        $minStackLevels = [];
-        $tmas->each(function (Tma $tma) use (&$minStackLevels) {
-            $minStackCalculation = $this->application->makeWith(
-                MinStackCalculableInterface::class,
-                $tma->mslAirfield->msl_calculation
-            );
+        // Get new minimum stack levels
+        $newMinimumStackLevels = new Collection();
+        foreach (Airfield::with('mslCalculationAirfields')->get() as $airfield) {
+            $relevantMetars = $metars->whereIn('airfield_id', $airfield->mslCalculationAirfields->pluck('id'))
+                ->whereNotNull('qnh');
 
-            $minStackLevels[$tma->id] = $minStackCalculation->calculateMinStack();
-        });
-
-        foreach ($minStackLevels as $tma => $minStack) {
-            if (!isset($minStack)) {
+            if ($relevantMetars->isEmpty()) {
                 continue;
             }
 
-            MslTma::updateOrCreate(
+            $newMinimumStackLevels->put(
+                $airfield->code,
                 [
-                    'tma_id' => $tma,
-                ],
-                [
-                    'msl' => $minStack,
-                    'generated_at' => Carbon::now(),
+                    'airfield_id' => $airfield->id,
+                    'msl' => $this->calculateAirfieldMsl($airfield, $relevantMetars),
                 ]
             );
         }
 
-        $returnValue = [];
-        foreach ($minStackLevels as $tma => $minStackLevel) {
-            $returnValue[$tmas->find($tma)->name] = $minStackLevel;
+        // Work out which MSLs have changed and upsert
+        $updatedMinimumStackLevels = $this->getUpdatedMsls($newMinimumStackLevels, $currentMinimumStackLevels);
+        if ($updatedMinimumStackLevels->isNotEmpty()) {
+            MslAirfield::upsert(
+                $updatedMinimumStackLevels->values()->toArray(),
+                ['airfield_id'],
+                ['msl']
+            );
         }
 
-        return $returnValue;
+        // Return them in correct format for event
+        return $updatedMinimumStackLevels->mapWithKeys(
+            function (array $mslData, string $airfieldCode) {
+                return [$airfieldCode => $mslData['msl']];
+            }
+        );
+    }
+
+    private function getUpdatedMsls(
+        Collection $newMinimumStackLevels,
+        Collection $currentMinimumStackLevels
+    ): Collection {
+        $updated = new Collection();
+        foreach ($newMinimumStackLevels as $key => $newMsl) {
+            if (!isset($currentMinimumStackLevels[$key]) || $currentMinimumStackLevels[$key] !== $newMsl) {
+                $updated->put($key, $newMsl);
+            }
+        }
+
+        return $updated;
+    }
+
+    private function calculateAirfieldMsl(Airfield $airfield, Collection $relevantMetars): int
+    {
+        return MinStackCalculator::calculateMinStack($airfield, $relevantMetars->pluck('qnh')->min());
+    }
+
+    private function updateTmaMinimumStackLevels(Collection $updatedAirfieldMsls): Collection
+    {
+        // Get all the current MSLs
+        $currentMinimumStackLevels = MslTma::with('tma')->get()->mapWithKeys(
+            function (MslTma $msl) {
+                return [
+                    $msl->tma->name => [
+                        'tma_id' => $msl->tma->id,
+                        'msl' => $msl->msl,
+                    ],
+                ];
+            }
+        );
+
+        // Get all the new MSLs
+        $newMinimumStackLevels = Tma::with('msl', 'mslAirfield')->get()->filter(function (Tma $tma) use ($updatedAirfieldMsls) {
+            return $updatedAirfieldMsls->has($tma->mslAirfield->code);
+        })->mapWithKeys(
+            function (Tma $tma) use ($updatedAirfieldMsls) {
+                return [
+                    $tma->name => [
+                        'tma_id' => $tma->id,
+                        'msl' => $updatedAirfieldMsls[$tma->mslAirfield->code],
+                    ],
+                ];
+            }
+        );
+
+        // Check which ones have changed and upsert if required
+        $updatedMinimumStackLevels = $this->getUpdatedMsls($newMinimumStackLevels, $currentMinimumStackLevels);
+        if ($updatedMinimumStackLevels->isNotEmpty()) {
+            MslTma::upsert(
+                $updatedMinimumStackLevels->values()->toArray(),
+                ['tma_id'],
+                ['msl']
+            );
+        }
+
+        // Map to output format
+        return $updatedMinimumStackLevels->mapWithKeys(
+            function (array $msldata, string $tmaName) {
+                return [$tmaName => $msldata['msl']];
+            }
+        );
     }
 }

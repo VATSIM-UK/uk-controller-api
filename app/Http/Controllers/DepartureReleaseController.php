@@ -65,10 +65,8 @@ class DepartureReleaseController
 
     public function approveReleaseRequest(
         Request $request,
-        int $id
+        DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
-        $departureReleaseRequest = DepartureReleaseRequest::findOrFail($id);
-
         $validated = $request->validate(
             [
                 'controller_position_id' => 'required|integer',
@@ -105,10 +103,8 @@ class DepartureReleaseController
 
     public function rejectReleaseRequest(
         Request $request,
-        int $id
+        DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
-        $departureReleaseRequest = DepartureReleaseRequest::findOrFail($id);
-
         $validated = $request->validate(
             [
                 'controller_position_id' => 'required|integer',
@@ -139,10 +135,8 @@ class DepartureReleaseController
 
     public function acknowledgeReleaseRequest(
         Request $request,
-        int $id
+        DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
-        $departureReleaseRequest = DepartureReleaseRequest::findOrFail($id);
-
         $validated = $request->validate(
             [
                 'controller_position_id' => 'required|integer',

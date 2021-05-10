@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         AirfieldTableSeeder::class => [
             'airfield',
             'airfield_pairing_prenotes',
+            'msl_calculation_airfields',
+            'metars',
         ],
         TmaTableSeeder::class => [
             'tma',

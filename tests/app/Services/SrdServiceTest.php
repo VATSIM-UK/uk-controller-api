@@ -90,9 +90,13 @@ class SrdServiceTest extends BaseFunctionalTestCase
 
         if ($shouldRecieveMove) {
             $mockFileSystem->shouldReceive('move')->with(self::SRD_DOWNLOAD_FILE, self::SRD_CURRENT_FILE);
+            $mockFileSystem->shouldReceive('delete')->with(self::SRD_CURRENT_FILE);
+            $mockFileSystem->shouldReceive('exists')->with(self::SRD_CURRENT_FILE)->andReturn(true);
             Artisan::shouldReceive('call')->with('srd:import downloaded-srd.xls')->once();
         } else {
             $mockFileSystem->shouldNotReceive('move');
+            $mockFileSystem->shouldNotReceive('delete');
+            $mockFileSystem->shouldNotReceive('exists');
             Artisan::shouldReceive('call')->never();
         }
 
