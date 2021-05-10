@@ -37,6 +37,10 @@ Route::middleware('api')->group(
                     'departure/release/request/{departureReleaseRequest}/acknowledge',
                     'DepartureReleaseController@acknowledgeReleaseRequest'
                 );
+                Route::delete(
+                    'departure/release/request/{departureReleaseRequest}',
+                    'DepartureReleaseController@cancelReleaseRequest'
+                );
 
                 // Events
                 Route::get('plugin-events/sync', 'PluginEventsController@getLatestPluginEventId');

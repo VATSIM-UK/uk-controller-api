@@ -499,4 +499,40 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/1/acknowledge', [])
             ->assertUnauthorized();
     }
+
+    public function testItCancelsARelease()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d', $request->id);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $route)
+            ->assertOk();
+
+        $this->assertSoftDeleted('departure_release_requests', ['id' => $request->id]);
+    }
+
+    public function testItReturnsUnprocessableIfReleaseCancelledByNonRequestingUser()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::BANNED_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d', $request->id);
+        
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $route)
+            ->assertStatus(422);
+    }
 }

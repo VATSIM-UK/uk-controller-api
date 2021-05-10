@@ -87,4 +87,9 @@ class DepartureReleaseRequest extends Model
             ]
         );
     }
+
+    public function cancel()
+    {
+        $this->delete();
+    }
 }

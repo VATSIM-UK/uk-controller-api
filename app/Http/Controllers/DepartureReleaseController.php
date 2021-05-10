@@ -164,4 +164,29 @@ class DepartureReleaseController
         }
         return response()->json($responseData, $responseCode);
     }
+
+    public function cancelReleaseRequest(
+        Request $request,
+        DepartureReleaseRequest $departureReleaseRequest
+    ): JsonResponse {
+        $responseData = null;
+        try {
+            $this->departureReleaseService->cancelReleaseRequest(
+                $departureReleaseRequest,
+                Auth::id()
+            );
+            $responseCode = 200;
+        } catch (DepartureReleaseDecisionNotAllowedException $decisionNotAllowedException) {
+            Log::warning(
+                sprintf(
+                    'User %d attempted to cancel release %d without permission',
+                    Auth::id(),
+                    $departureReleaseRequest->id
+                )
+            );
+            $responseCode = 422;
+            $responseData = ['message' => 'You cannot cancel this release'];
+        }
+        return response()->json($responseData, $responseCode);
+    }
 }

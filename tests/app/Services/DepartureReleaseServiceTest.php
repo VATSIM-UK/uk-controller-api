@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\DepartureReleaseAcknowledgedEvent;
 use App\Events\DepartureReleaseApprovedEvent;
 use App\Events\DepartureReleaseRejectedEvent;
+use App\Events\DepartureReleaseRequestCancelledEvent;
 use App\Events\DepartureReleaseRequestedEvent;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use App\Models\Release\Departure\DepartureReleaseRequest;
@@ -197,5 +198,39 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'release_valid_from' => null,
             ]
         );
+    }
+
+    public function testItCancelsADepartureReleaseRequest()
+    {
+        $this->expectsEvents(DepartureReleaseRequestCancelledEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+
+        $this->service->cancelReleaseRequest($request, self::ACTIVE_USER_CID);
+        $this->assertSoftDeleted($request);
+    }
+
+    public function testOnlyTheRequestingUserCanCancelARequest()
+    {
+        $this->expectException(DepartureReleaseDecisionNotAllowedException::class);
+        $this->doesntExpectEvents(DepartureReleaseRequestCancelledEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+
+        $this->service->cancelReleaseRequest($request, self::BANNED_USER_CID);
     }
 }

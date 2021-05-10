@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Events\DepartureReleaseAcknowledgedEvent;
 use App\Events\DepartureReleaseApprovedEvent;
 use App\Events\DepartureReleaseRejectedEvent;
+use App\Events\DepartureReleaseRequestCancelledEvent;
 use App\Events\DepartureReleaseRequestedEvent;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use Carbon\Carbon;
@@ -83,6 +84,23 @@ class DepartureReleaseService
 
         $request->acknowledge($acknowledgingUserId);
         event(new DepartureReleaseAcknowledgedEvent($request));
+    }
+
+    /**
+     * Acknowledge a departure release as received on behalf of a single controller
+     * @throws DepartureReleaseDecisionNotAllowedException
+     */
+    public function cancelReleaseRequest(
+        DepartureReleaseRequest $request,
+        int $cancellingUserId
+    ): void {
+        if ($request->user_id !== $cancellingUserId) {
+            throw new DepartureReleaseDecisionNotAllowedException(
+                sprintf('Controller id %d cannot cancel this release', $cancellingUserId)
+            );
+        }
+        $request->cancel();
+        event(new DepartureReleaseRequestCancelledEvent($request));
     }
 
     private function checkDecisionAllowed(
