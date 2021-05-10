@@ -2,14 +2,14 @@
 
 namespace App\Events;
 
-use App\Models\Release\Departure\ControllerDepartureReleaseDecision;
+use App\Models\Release\Departure\DepartureReleaseRequest;
 use Illuminate\Broadcasting\PrivateChannel;
 
 class DepartureReleaseApprovedEvent extends HighPriorityBroadcastEvent
 {
-    private ControllerDepartureReleaseDecision $approval;
+    private DepartureReleaseRequest $approval;
 
-    public function __construct(ControllerDepartureReleaseDecision $approval)
+    public function __construct(DepartureReleaseRequest $approval)
     {
         $this->approval = $approval;
     }
@@ -17,8 +17,7 @@ class DepartureReleaseApprovedEvent extends HighPriorityBroadcastEvent
     public function broadcastWith()
     {
         return [
-            'id' => $this->approval->departure_release_request_id,
-            'controller_position_id' => $this->approval->controller_position_id,
+            'id' => $this->approval->id,
             'expires_at' => $this->approval->release_expires_at->toDateTimeString(),
             'released_at' => $this->approval->release_valid_from
                 ? $this->approval->release_valid_from->toDateTimeString()

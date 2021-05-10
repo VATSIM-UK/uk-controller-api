@@ -20,10 +20,11 @@ class DepartureReleaseRequestedEventTest extends BaseFunctionalTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
+
         $this->event = new DepartureReleaseRequestedEvent($request);
     }
 
@@ -43,7 +44,7 @@ class DepartureReleaseRequestedEventTest extends BaseFunctionalTestCase
             'callsign' => 'BAW123',
             'expires_at' => Carbon::now()->addMinutes(2)->toDateTimeString(),
             'requesting_controller' => 1,
-            'target_controllers' => [2, 3],
+            'target_controller' => 2,
         ];
 
         $this->assertEquals($expected, $this->event->broadcastWith());

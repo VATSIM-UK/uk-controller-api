@@ -2,14 +2,14 @@
 
 namespace App\Events;
 
-use App\Models\Release\Departure\ControllerDepartureReleaseDecision;
+use App\Models\Release\Departure\DepartureReleaseRequest;
 use Illuminate\Broadcasting\PrivateChannel;
 
 class DepartureReleaseRejectedEvent extends HighPriorityBroadcastEvent
 {
-    private ControllerDepartureReleaseDecision $rejection;
+    private DepartureReleaseRequest $rejection;
 
-    public function __construct(ControllerDepartureReleaseDecision $rejection)
+    public function __construct(DepartureReleaseRequest $rejection)
     {
         $this->rejection = $rejection;
     }
@@ -17,8 +17,7 @@ class DepartureReleaseRejectedEvent extends HighPriorityBroadcastEvent
     public function broadcastWith()
     {
         return [
-            'id' => $this->rejection->departure_release_request_id,
-            'controller_position_id' => $this->rejection->controller_position_id,
+            'id' => $this->rejection->id,
         ];
     }
 

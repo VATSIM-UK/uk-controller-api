@@ -19,7 +19,7 @@ class DepartureReleaseRequestedEvent extends HighPriorityBroadcastEvent
         return [
             'callsign' => $this->release->callsign,
             'requesting_controller' => $this->release->controller_position_id,
-            'target_controllers' => $this->release->controllerPositions->pluck('id')->toArray(),
+            'target_controller' => $this->release->target_controller_position_id,
             'expires_at' => $this->release->expires_at->toDateTimeString(),
         ];
     }

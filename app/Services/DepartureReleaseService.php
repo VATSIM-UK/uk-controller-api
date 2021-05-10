@@ -10,6 +10,7 @@ use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException
 use Carbon\Carbon;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\CarbonImmutable;
+use Exception;
 
 class DepartureReleaseService
 {
@@ -20,7 +21,7 @@ class DepartureReleaseService
         string $callsign,
         int $requestingUserId,
         int $requestingController,
-        array $targetControllers,
+        int $targetController,
         int $expiresInSeconds
     ): int {
         $releaseRequest = DepartureReleaseRequest::create(
@@ -28,17 +29,18 @@ class DepartureReleaseService
                 'callsign' => $callsign,
                 'user_id' => $requestingUserId,
                 'controller_position_id' => $requestingController,
+                'target_controller_position_id' => $targetController,
                 'expires_at' => Carbon::now()->addSeconds($expiresInSeconds)
             ]
         );
 
-        $releaseRequest->controllerPositions()->sync($targetControllers);
         event(new DepartureReleaseRequestedEvent($releaseRequest));
         return $releaseRequest->id;
     }
 
     /**
      * Approve a departure release on behalf of a single controller.
+     * @throws DepartureReleaseDecisionNotAllowedException
      */
     public function approveReleaseRequest(
         DepartureReleaseRequest $request,
@@ -47,61 +49,51 @@ class DepartureReleaseService
         int $approvalExpiresInSeconds,
         CarbonImmutable $releaseValidFrom
     ): void {
-        $controller = $request->controllerPositions()
-            ->wherePivot('controller_position_id', $approvingControllerId)
-            ->first();
+        $this->checkDecisionAllowed($request, $approvingControllerId, 'approve');
 
-        if (!$controller) {
-            throw new DepartureReleaseDecisionNotAllowedException(
-                sprintf('Controller id %d cannot approve this release', $approvingControllerId)
-            );
-        }
-
-        $controller->decision->approve($approvingUserId, $approvalExpiresInSeconds, $releaseValidFrom);
-        event(new DepartureReleaseApprovedEvent($controller->decision));
+        $request->approve($approvingUserId, $approvalExpiresInSeconds, $releaseValidFrom);
+        event(new DepartureReleaseApprovedEvent($request));
     }
 
     /**
      * Reject a departure release on behalf of a single controller.
+     * @throws DepartureReleaseDecisionNotAllowedException
      */
     public function rejectReleaseRequest(
         DepartureReleaseRequest $request,
         int $rejectingControllerId,
         int $rejectingUserId
     ): void {
-        $controller = $request->controllerPositions()
-            ->wherePivot('controller_position_id', $rejectingControllerId)
-            ->first();
+        $this->checkDecisionAllowed($request, $rejectingControllerId, 'reject');
 
-        if (!$controller) {
-            throw new DepartureReleaseDecisionNotAllowedException(
-                sprintf('Controller id %d cannot reject this release', $rejectingControllerId)
-            );
-        }
-
-        $controller->decision->reject($rejectingUserId);
-        event(new DepartureReleaseRejectedEvent($controller->decision));
+        $request->reject($rejectingUserId);
+        event(new DepartureReleaseRejectedEvent($request));
     }
 
     /**
      * Acknowledge a departure release as received on behalf of a single controller
+     * @throws DepartureReleaseDecisionNotAllowedException
      */
     public function acknowledgeReleaseRequest(
         DepartureReleaseRequest $request,
         int $acknowledgingControllerId,
         int $acknowledgingUserId
     ): void {
-        $controller = $request->controllerPositions()
-            ->wherePivot('controller_position_id', $acknowledgingControllerId)
-            ->first();
+        $this->checkDecisionAllowed($request, $acknowledgingControllerId, 'acknowledge');
 
-        if (!$controller) {
+        $request->acknowledge($acknowledgingUserId);
+        event(new DepartureReleaseAcknowledgedEvent($request));
+    }
+
+    private function checkDecisionAllowed(
+        DepartureReleaseRequest $request,
+        int $decisionControllerId,
+        string $action
+    ): void {
+        if ($request->target_controller_position_id !== $decisionControllerId) {
             throw new DepartureReleaseDecisionNotAllowedException(
-                sprintf('Controller id %d cannot acknowledge this release', $acknowledgingControllerId)
+                sprintf('Controller id %d cannot %s this release', $decisionControllerId, $action)
             );
         }
-
-        $controller->decision->acknowledge($acknowledgingUserId);
-        event(new DepartureReleaseAcknowledgedEvent($controller->decision));
     }
 }

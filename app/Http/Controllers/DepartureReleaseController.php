@@ -38,8 +38,8 @@ class DepartureReleaseController
                     },
                     'not_in:target_controller_ids.*',
                 ],
-                'target_controller_ids' => 'required|array',
-                'target_controller_ids.*' => [
+                'target_controller_id' => [
+                    'required',
                     'integer',
                     function ($attribute, $value, $fail) {
                         if (!ControllerPosition::where('id', $value)->canReceiveDepartureReleases()->exists()) {
@@ -56,7 +56,7 @@ class DepartureReleaseController
             $validated['callsign'],
             Auth::id(),
             $validated['requesting_controller_id'],
-            $validated['target_controller_ids'],
+            $validated['target_controller_id'],
             $validated['expires_in_seconds']
         );
 

@@ -2,27 +2,28 @@
 
 namespace App\Events;
 
-use App\BaseFunctionalTestCase;
-use App\Models\Release\Departure\ControllerDepartureReleaseDecision;
+use App\BaseUnitTestCase;
+use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\Carbon;
 use Illuminate\Broadcasting\PrivateChannel;
 
-class DepartureReleaseAcknowledgedEventTest extends BaseFunctionalTestCase
+class DepartureReleaseAcknowledgedEventTest extends BaseUnitTestCase
 {
     private DepartureReleaseAcknowledgedEvent $event;
+    private DepartureReleaseRequest $request;
 
     public function setUp(): void
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
-        $this->event = new DepartureReleaseAcknowledgedEvent(
-            new ControllerDepartureReleaseDecision(
-                [
-                    'departure_release_request_id' => 1,
-                    'controller_position_id' => 2,
-                ]
-            )
+        $this->request = new DepartureReleaseRequest(
+            [
+                'controller_position_id' => 2,
+                'release_expires_at' => Carbon::now()->addMinutes(2)
+            ]
         );
+        $this->request->id = 1;
+        $this->event = new DepartureReleaseAcknowledgedEvent($this->request);
     }
 
     public function testItBroadcastsOnChannel()
@@ -39,7 +40,6 @@ class DepartureReleaseAcknowledgedEventTest extends BaseFunctionalTestCase
     {
         $expected = [
             'id' => 1,
-            'controller_position_id' => 2,
         ];
 
         $this->assertEquals($expected, $this->event->broadcastWith());

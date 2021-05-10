@@ -20,7 +20,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $requestData = [
             'callsign' => 'BAW123',
             'requesting_controller_id' => 1,
-            'target_controller_ids' => [2, 3],
+            'target_controller_id' => 2,
             'expires_in_seconds' => 125,
         ];
 
@@ -36,23 +36,8 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addSeconds(125)
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'controller_position_departure_release_request',
-            [
-                'departure_release_request_id' => $latestRelease,
-                'controller_position_id' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'controller_position_departure_release_request',
-            [
-                'departure_release_request_id' => $latestRelease,
-                'controller_position_id' => 3,
             ]
         );
     }
@@ -63,7 +48,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'Missing callsign' => [
                 [
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -71,14 +56,14 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 123,
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 125,
                 ]
             ],
             'Missing requesting controller_id' => [
                 [
                     'callsign' => 'BAW123',
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -86,7 +71,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 'abc',
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -94,7 +79,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 12345,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -102,7 +87,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 4,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -110,22 +95,22 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 2,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 125,
                 ]
             ],
-            'Target controllers missing' => [
+            'Target controller missing' => [
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
                     'expires_in_seconds' => 125,
                 ]
             ],
-            'Target controllers not an array' => [
+            'Target controller not an integer' => [
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => 2,
+                    'target_controller_id' => 'abc',
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -133,7 +118,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => [2, 12345],
+                    'target_controller_id' => 12345,
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -141,7 +126,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => [2, 4],
+                    'target_controller_id' => 4,
                     'expires_in_seconds' => 125,
                 ]
             ],
@@ -149,14 +134,14 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                 ]
             ],
             'Expires in seconds not integer' => [
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 'abc',
                 ]
             ],
@@ -164,7 +149,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'requesting_controller_id' => 1,
-                    'target_controller_ids' => [2, 3],
+                    'target_controller_id' => 2,
                     'expires_in_seconds' => 0,
                 ]
             ],
@@ -193,10 +178,10 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/approve', $request->id);
 
         $approvalData = [
@@ -209,10 +194,9 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             ->assertOk();
 
         $this->assertDatabaseHas(
-            'controller_position_departure_release_request',
+            'departure_release_requests',
             [
-                'departure_release_request_id' => $request->id,
-                'controller_position_id' => 2,
+                'id' => $request->id,
                 'released_by' => self::ACTIVE_USER_CID,
                 'release_expires_at' => Carbon::now()->addSeconds(10)->toDateTimeString(),
                 'release_valid_from' => Carbon::now()->toDateTimeString(),
@@ -227,10 +211,11 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
+
         $route = sprintf('departure/release/request/%d/approve', $request->id);
 
         $approvalData = [
@@ -243,10 +228,9 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             ->assertOk();
 
         $this->assertDatabaseHas(
-            'controller_position_departure_release_request',
+            'departure_release_requests',
             [
-                'departure_release_request_id' => $request->id,
-                'controller_position_id' => 2,
+                'id' => $request->id,
                 'released_by' => self::ACTIVE_USER_CID,
                 'release_expires_at' => Carbon::now()->addMinutes(2)->addSeconds(10)->toDateTimeString(),
                 'release_valid_from' => Carbon::now()->addMinutes(2)->toDateTimeString(),
@@ -337,10 +321,10 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/approve', $request->id);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
@@ -366,10 +350,10 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/reject', $request->id);
 
         $rejectionData = [
@@ -380,10 +364,9 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             ->assertOk();
 
         $this->assertDatabaseHas(
-            'controller_position_departure_release_request',
+            'departure_release_requests',
             [
-                'departure_release_request_id' => $request->id,
-                'controller_position_id' => 2,
+                'id' => $request->id,
                 'rejected_by' => self::ACTIVE_USER_CID,
                 'rejected_at' => Carbon::now()->toDateTimeString()
             ]
@@ -420,10 +403,10 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/reject', $request->id);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
@@ -449,10 +432,10 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
 
         $rejectionData = [
@@ -463,10 +446,9 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             ->assertOk();
 
         $this->assertDatabaseHas(
-            'controller_position_departure_release_request',
+            'departure_release_requests',
             [
-                'departure_release_request_id' => $request->id,
-                'controller_position_id' => 2,
+                'id' => $request->id,
                 'acknowledged_by' => self::ACTIVE_USER_CID,
                 'acknowledged_at' => Carbon::now()->toDateTimeString()
             ]
@@ -503,10 +485,10 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
                 'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
-        $request->controllerPositions()->sync([2, 3]);
         $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
