@@ -301,13 +301,6 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                     'released_at' => Carbon::now()->addMinutes(5)->toDateTimeString('minute'),
                 ]
             ],
-            'Released at in the past' => [
-                [
-                    'controller_position_id' => 2,
-                    'expires_in_seconds' => 10,
-                    'released_at' => Carbon::now()->subMinute()->toDateTimeString(),
-                ]
-            ],
         ];
     }
 

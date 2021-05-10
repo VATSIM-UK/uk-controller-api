@@ -71,7 +71,7 @@ class DepartureReleaseController
             [
                 'controller_position_id' => 'required|integer',
                 'expires_in_seconds' => 'required|integer|min:1',
-                'released_at' => 'present|nullable|date_format:Y-m-d H:i:s|after:now',
+                'released_at' => 'present|nullable|date_format:Y-m-d H:i:s',
             ]
         );
 
