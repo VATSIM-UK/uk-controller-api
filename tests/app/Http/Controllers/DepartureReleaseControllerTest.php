@@ -535,4 +535,10 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $route)
             ->assertStatus(422);
     }
+    
+    public function testItReturnsNotFoundIfNoReleaseToCancel()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'departure/release/request/55')
+            ->assertNotFound();
+    }
 }
