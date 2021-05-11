@@ -10,12 +10,13 @@ use Illuminate\Broadcasting\PrivateChannel;
 class DepartureReleaseRequestedEventTest extends BaseFunctionalTestCase
 {
     private DepartureReleaseRequestedEvent $event;
+    private DepartureReleaseRequest $request;
 
     public function setUp(): void
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
-        $request = DepartureReleaseRequest::create(
+        $this->request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
                 'user_id' => self::ACTIVE_USER_CID,
@@ -25,7 +26,7 @@ class DepartureReleaseRequestedEventTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->event = new DepartureReleaseRequestedEvent($request);
+        $this->event = new DepartureReleaseRequestedEvent($this->request);
     }
 
     public function testItBroadcastsOnChannel()
@@ -41,6 +42,7 @@ class DepartureReleaseRequestedEventTest extends BaseFunctionalTestCase
     public function testItHasBroadcastData()
     {
         $expected = [
+            'id' => $this->request->id,
             'callsign' => 'BAW123',
             'expires_at' => Carbon::now()->addMinutes(2)->toDateTimeString(),
             'requesting_controller' => 1,
