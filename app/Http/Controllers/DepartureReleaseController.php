@@ -166,7 +166,6 @@ class DepartureReleaseController
     }
 
     public function cancelReleaseRequest(
-        Request $request,
         DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
         $responseData = null;
