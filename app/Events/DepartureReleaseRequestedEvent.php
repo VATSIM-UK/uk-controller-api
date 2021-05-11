@@ -17,6 +17,7 @@ class DepartureReleaseRequestedEvent extends HighPriorityBroadcastEvent
     public function broadcastWith()
     {
         return [
+            'id' => $this->release->id,
             'callsign' => $this->release->callsign,
             'requesting_controller' => $this->release->controller_position_id,
             'target_controller' => $this->release->target_controller_position_id,
