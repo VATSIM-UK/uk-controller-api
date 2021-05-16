@@ -5,7 +5,7 @@ namespace App\Http\Requests\DepartureRelease;
 use App\Rules\Controller\ControllerPositionValid;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RejectDepartureReleaseRequest extends FormRequest
+class RejectDepartureRelease extends FormRequest
 {
     public function rules()
     {

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
-use App\Http\Requests\DepartureRelease\AcknowledgeDepartureReleaseRequest;
-use App\Http\Requests\DepartureRelease\ApproveDepartureReleaseRequest;
-use App\Http\Requests\DepartureRelease\RejectDepartureReleaseRequest;
+use App\Http\Requests\DepartureRelease\AcknowledgeDepartureRelease;
+use App\Http\Requests\DepartureRelease\ApproveDepartureRelease;
+use App\Http\Requests\DepartureRelease\RejectDepartureRelease;
+use App\Http\Requests\DepartureRelease\RequestDepartureRelease;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use App\Rules\Controller\ControllerPositionValid;
@@ -26,48 +27,21 @@ class DepartureReleaseController
         $this->departureReleaseService = $departureReleaseService;
     }
 
-    public function makeReleaseRequest(Request $request): JsonResponse
+    public function makeReleaseRequest(RequestDepartureRelease $request): JsonResponse
     {
-        $validated = $request->validate(
-            [
-                'callsign' => 'required|string',
-                'requesting_controller_id' => [
-                    'required',
-                    'integer',
-                    function ($attribute, $value, $fail) {
-                        if (!ControllerPosition::where('id', $value)->canRequestDepartureReleases()->exists()) {
-                            $fail(sprintf('Controller position %d cannot request departure releases', $value));
-                        }
-                    },
-                    'not_in:target_controller_ids.*',
-                ],
-                'target_controller_id' => [
-                    'required',
-                    'integer',
-                    function ($attribute, $value, $fail) {
-                        if (!ControllerPosition::where('id', $value)->canReceiveDepartureReleases()->exists()) {
-                            $fail(sprintf('Controller position %d cannot receive departure releases', $value));
-                        }
-                    },
-                    'different:requesting_controller_id',
-                ],
-                'expires_in_seconds' => 'required|integer|min:1',
-            ]
-        );
-
         $releaseId = $this->departureReleaseService->makeReleaseRequest(
-            $validated['callsign'],
+            $request->validated()['callsign'],
             Auth::id(),
-            $validated['requesting_controller_id'],
-            $validated['target_controller_id'],
-            $validated['expires_in_seconds']
+            $request->validated()['requesting_controller_id'],
+            $request->validated()['target_controller_id'],
+            $request->validated()['expires_in_seconds']
         );
 
         return response()->json(['id' => $releaseId], 201);
     }
 
     public function approveReleaseRequest(
-        ApproveDepartureReleaseRequest $request,
+        ApproveDepartureRelease $request,
         DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
         $responseData = null;
@@ -97,7 +71,7 @@ class DepartureReleaseController
     }
 
     public function rejectReleaseRequest(
-        RejectDepartureReleaseRequest $request,
+        RejectDepartureRelease $request,
         DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
         $responseData = null;
@@ -123,7 +97,7 @@ class DepartureReleaseController
     }
 
     public function acknowledgeReleaseRequest(
-        AcknowledgeDepartureReleaseRequest $request,
+        AcknowledgeDepartureRelease $request,
         DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
         $responseData = null;
