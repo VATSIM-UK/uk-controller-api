@@ -112,8 +112,7 @@ class DepartureReleaseController
         int $requestId,
         string $actionType,
         Closure $action
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $responseData = null;
         try {
             $action();
