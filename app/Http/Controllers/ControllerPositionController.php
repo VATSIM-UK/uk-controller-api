@@ -23,8 +23,13 @@ class ControllerPositionController extends BaseController
         return response()->json(ControllerPosition::all());
     }
 
-    public function getControllerPositionsDependency() : JsonResponse
+    public function getLegacyControllerPositionsDependency() : JsonResponse
     {
         return response()->json($this->controllerService->getLegacyControllerPositionsDependency());
+    }
+
+    public function getControllerPositionsDependency() : JsonResponse
+    {
+        return response()->json($this->controllerService->getControllerPositionsDependency());
     }
 }

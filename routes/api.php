@@ -262,7 +262,8 @@ Route::middleware('api')->group(
 
                 // Controller positions
                 Route::get('controller', 'ControllerPositionController@getAllControllers');
-                Route::get('controller-positions', 'ControllerPositionController@getControllerPositionsDependency');
+                Route::get('controller-positions', 'ControllerPositionController@getLegacyControllerPositionsDependency');
+                Route::get('controller-positions-v2', 'ControllerPositionController@getControllerPositionsDependency');
 
                 // Airfields
                 Route::get('airfield', 'AirfieldController@getAllAirfields');
