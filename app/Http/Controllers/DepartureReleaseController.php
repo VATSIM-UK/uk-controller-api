@@ -183,7 +183,7 @@ class DepartureReleaseController
                     $departureReleaseRequest->id
                 )
             );
-            $responseCode = 422;
+            $responseCode = 403;
             $responseData = ['message' => 'You cannot cancel this release'];
         }
         return response()->json($responseData, $responseCode);

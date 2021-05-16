@@ -531,11 +531,11 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             ]
         );
         $route = sprintf('departure/release/request/%d', $request->id);
-        
+
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $route)
-            ->assertStatus(422);
+            ->assertForbidden();
     }
-    
+
     public function testItReturnsNotFoundIfNoReleaseToCancel()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'departure/release/request/55')
