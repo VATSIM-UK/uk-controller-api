@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
+use App\Http\Requests\DepartureRelease\AcknowledgeDepartureReleaseRequest;
+use App\Http\Requests\DepartureRelease\ApproveDepartureReleaseRequest;
+use App\Http\Requests\DepartureRelease\RejectDepartureReleaseRequest;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use App\Rules\Controller\ControllerPositionValid;
@@ -64,27 +67,19 @@ class DepartureReleaseController
     }
 
     public function approveReleaseRequest(
-        Request $request,
+        ApproveDepartureReleaseRequest $request,
         DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
-        $validated = $request->validate(
-            [
-                'controller_position_id' => 'required|integer',
-                'expires_in_seconds' => 'required|integer|min:1',
-                'released_at' => 'present|nullable|date_format:Y-m-d H:i:s',
-            ]
-        );
-
         $responseData = null;
         try {
             $this->departureReleaseService->approveReleaseRequest(
                 $departureReleaseRequest,
-                $validated['controller_position_id'],
+                $request->validated()['controller_position_id'],
                 Auth::id(),
-                $validated['expires_in_seconds'],
-                $validated['released_at'] === null
+                $request->validated()['expires_in_seconds'],
+                $request->validated()['released_at'] === null
                     ? CarbonImmutable::now()
-                    : CarbonImmutable::parse($validated['released_at'])
+                    : CarbonImmutable::parse($request->validated()['released_at'])
             );
             $responseCode = 200;
         } catch (DepartureReleaseDecisionNotAllowedException $decisionNotAllowedException) {
@@ -95,27 +90,21 @@ class DepartureReleaseController
                     $departureReleaseRequest->id
                 )
             );
-            $responseCode = 422;
+            $responseCode = 403;
             $responseData = ['message' => 'You cannot approve this release'];
         }
         return response()->json($responseData, $responseCode);
     }
 
     public function rejectReleaseRequest(
-        Request $request,
+        RejectDepartureReleaseRequest $request,
         DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
-        $validated = $request->validate(
-            [
-                'controller_position_id' => 'required|integer',
-            ]
-        );
-
         $responseData = null;
         try {
             $this->departureReleaseService->rejectReleaseRequest(
                 $departureReleaseRequest,
-                $validated['controller_position_id'],
+                $request->validated()['controller_position_id'],
                 Auth::id()
             );
             $responseCode = 200;
@@ -127,27 +116,21 @@ class DepartureReleaseController
                     $departureReleaseRequest->id
                 )
             );
-            $responseCode = 422;
+            $responseCode = 403;
             $responseData = ['message' => 'You cannot reject this release'];
         }
         return response()->json($responseData, $responseCode);
     }
 
     public function acknowledgeReleaseRequest(
-        Request $request,
+        AcknowledgeDepartureReleaseRequest $request,
         DepartureReleaseRequest $departureReleaseRequest
     ): JsonResponse {
-        $validated = $request->validate(
-            [
-                'controller_position_id' => 'required|integer',
-            ]
-        );
-
         $responseData = null;
         try {
             $this->departureReleaseService->acknowledgeReleaseRequest(
                 $departureReleaseRequest,
-                $validated['controller_position_id'],
+                $request->validated()['controller_position_id'],
                 Auth::id()
             );
             $responseCode = 200;
@@ -159,7 +142,7 @@ class DepartureReleaseController
                     $departureReleaseRequest->id
                 )
             );
-            $responseCode = 422;
+            $responseCode = 403;
             $responseData = ['message' => 'You cannot reject this release'];
         }
         return response()->json($responseData, $responseCode);

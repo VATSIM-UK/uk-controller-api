@@ -330,6 +330,30 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             ->assertNotFound();
     }
 
+    public function testReleasesCannotBeApprovedByWrongControllerPosition()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
+
+        $approvalData = [
+            'controller_position_id' => 3,
+        ];
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PATCH,
+            $route,
+            $approvalData
+        )->assertForbidden();
+    }
+
     public function testReleasesCannotBeApprovedByUnauthenticatedUsers()
     {
         $this->makeUnauthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/1/approve', [])
@@ -389,7 +413,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
     /**
      * @dataProvider badRejectionDataProvider
      */
-    public function testReleasesCannotBeRejectedOnBadData(array $approvalData)
+    public function testReleasesCannotBeRejectedOnBadData(array $rejectedData)
     {
         $request = DepartureReleaseRequest::create(
             [
@@ -402,7 +426,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         );
         $route = sprintf('departure/release/request/%d/reject', $request->id);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $rejectedData)
             ->assertStatus(422);
     }
 
@@ -410,6 +434,30 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/55/reject', [])
             ->assertNotFound();
+    }
+
+    public function testReleasesCannotBeRejectedByWrongControllerPosition()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
+
+        $rejectedData = [
+            'controller_position_id' => 3,
+        ];
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PATCH,
+            $route,
+            $rejectedData
+        )->assertForbidden();
     }
 
     public function testReleasesCannotBeRejectedByUnauthenticatedUsers()
@@ -471,7 +519,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
     /**
      * @dataProvider badAcknowledgementDataProvider
      */
-    public function testReleasesCannotBeAcknowledgedOnBadData(array $approvalData)
+    public function testReleasesCannotBeAcknowledgedOnBadData(array $acknowledgeData)
     {
         $request = DepartureReleaseRequest::create(
             [
@@ -484,7 +532,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         );
         $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $acknowledgeData)
             ->assertStatus(422);
     }
 
@@ -492,6 +540,30 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, 'departure/release/request/55/acknowledge', [])
             ->assertNotFound();
+    }
+
+    public function testReleasesCannotBeAcknowledgedByWrongControllerPosition()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d/acknowledge', $request->id);
+
+        $acknowledgeData = [
+            'controller_position_id' => 3,
+        ];
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PATCH,
+            $route,
+            $acknowledgeData
+        )->assertForbidden();
     }
 
     public function testReleasesCannotBeAcknowledgedByUnauthenticatedUsers()
@@ -519,7 +591,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         $this->assertSoftDeleted('departure_release_requests', ['id' => $request->id]);
     }
 
-    public function testItReturnsUnprocessableIfReleaseCancelledByNonRequestingUser()
+    public function testItReturnsForbiddenIfReleaseCancelledByNonRequestingUser()
     {
         $request = DepartureReleaseRequest::create(
             [
