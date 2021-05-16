@@ -36,44 +36,32 @@ class ControllerPositionControllerTest extends BaseApiTestCase
             ->assertJson($expected);
     }
 
-    public function testItReturnsControllerPositionsDependency()
+    public function testItReturnsLegacyControllerPositionsDependency()
     {
         $expected = [
             "EGLL_S_TWR" => [
-                'id' => 1,
                 "frequency" => 118.5,
                 "top-down" => [
                     "EGLL",
                 ],
-                'requests_departure_releases' => true,
-                'receives_departure_releases' => false,
             ],
             "EGLL_N_APP" =>[
-                'id' => 2,
                 "frequency" => 119.72,
                 "top-down" => [
                     "EGLL",
                 ],
-                'requests_departure_releases' => true,
-                'receives_departure_releases' => true,
             ],
             "LON_S_CTR" => [
-                'id' => 3,
                 "frequency" => 129.42,
                 "top-down" => [
                     "EGLL",
                 ],
-                'requests_departure_releases' => true,
-                'receives_departure_releases' => true,
             ],
             "LON_C_CTR" => [
-                'id' => 4,
                 "frequency" => 127.1,
                 "top-down" => [
                     "EGBB",
                 ],
-                'requests_departure_releases' => false,
-                'receives_departure_releases' => false,
             ],
         ];
 
