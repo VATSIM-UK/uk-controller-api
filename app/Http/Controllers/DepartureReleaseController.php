@@ -7,14 +7,10 @@ use App\Http\Requests\DepartureRelease\AcknowledgeDepartureRelease;
 use App\Http\Requests\DepartureRelease\ApproveDepartureRelease;
 use App\Http\Requests\DepartureRelease\RejectDepartureRelease;
 use App\Http\Requests\DepartureRelease\RequestDepartureRelease;
-use App\Models\Controller\ControllerPosition;
 use App\Models\Release\Departure\DepartureReleaseRequest;
-use App\Rules\Controller\ControllerPositionValid;
 use App\Services\DepartureReleaseService;
-use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
