@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Requests\DepartureRelease;
+namespace App\Http\Requests\Release\Departure;
 
 use App\Models\Controller\ControllerPosition;
-use App\Rules\Controller\ControllerPositionValid;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RequestDepartureRelease extends FormRequest

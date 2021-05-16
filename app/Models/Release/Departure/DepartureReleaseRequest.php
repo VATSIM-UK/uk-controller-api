@@ -49,7 +49,7 @@ class DepartureReleaseRequest extends Model
     /**
      * Approve the departure release for a given amount of time.
      */
-    public function approve(int $userId, int $expiresInSeconds, CarbonImmutable $releaseValidFrom)
+    public function approve(int $userId, int $expiresInSeconds, CarbonImmutable $releaseValidFrom): void
     {
         $this->update(
             [
@@ -64,7 +64,7 @@ class DepartureReleaseRequest extends Model
     /**
      * Reject the departure release
      */
-    public function reject(int $userId)
+    public function reject(int $userId): void
     {
         $this->update(
             [
@@ -78,7 +78,7 @@ class DepartureReleaseRequest extends Model
      * Acknowledge the departure release but take no further
      * action.
      */
-    public function acknowledge(int $userId)
+    public function acknowledge(int $userId): void
     {
         $this->update(
             [
@@ -91,5 +91,12 @@ class DepartureReleaseRequest extends Model
     public function cancel()
     {
         $this->delete();
+    }
+
+    public function decisionMade(): bool
+    {
+        return $this->acknowledged_by !== null ||
+            $this->approved_by !== null ||
+            $this->rejected_by !== null;
     }
 }

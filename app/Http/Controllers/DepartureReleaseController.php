@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
-use App\Http\Requests\DepartureRelease\AcknowledgeDepartureRelease;
-use App\Http\Requests\DepartureRelease\ApproveDepartureRelease;
-use App\Http\Requests\DepartureRelease\RejectDepartureRelease;
-use App\Http\Requests\DepartureRelease\RequestDepartureRelease;
+use App\Http\Requests\Release\Departure\AcknowledgeDepartureRelease;
+use App\Http\Requests\Release\Departure\ApproveDepartureRelease;
+use App\Http\Requests\Release\Departure\RejectDepartureRelease;
+use App\Http\Requests\Release\Departure\RequestDepartureRelease;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use App\Services\DepartureReleaseService;
 use Carbon\CarbonImmutable;

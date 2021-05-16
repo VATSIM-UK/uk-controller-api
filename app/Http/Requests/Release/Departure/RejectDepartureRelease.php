@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\DepartureRelease;
+namespace App\Http\Requests\Release\Departure;
 
 use App\Rules\Controller\ControllerPositionValid;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AcknowledgeDepartureRelease extends FormRequest
+class RejectDepartureRelease extends FormRequest
 {
     public function rules()
     {
