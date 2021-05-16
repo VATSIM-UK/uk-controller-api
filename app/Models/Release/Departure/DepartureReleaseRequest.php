@@ -95,8 +95,6 @@ class DepartureReleaseRequest extends Model
 
     public function decisionMade(): bool
     {
-        return $this->acknowledged_by !== null ||
-            $this->approved_by !== null ||
-            $this->rejected_by !== null;
+        return $this->released_by !== null || $this->rejected_by !== null;
     }
 }

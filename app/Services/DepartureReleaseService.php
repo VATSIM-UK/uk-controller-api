@@ -7,11 +7,11 @@ use App\Events\DepartureReleaseApprovedEvent;
 use App\Events\DepartureReleaseRejectedEvent;
 use App\Events\DepartureReleaseRequestCancelledEvent;
 use App\Events\DepartureReleaseRequestedEvent;
+use App\Exceptions\Release\Departure\DepartureReleaseAlreadyDecidedException;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use Carbon\Carbon;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\CarbonImmutable;
-use Exception;
 
 class DepartureReleaseService
 {
@@ -41,7 +41,7 @@ class DepartureReleaseService
 
     /**
      * Approve a departure release on behalf of a single controller.
-     * @throws DepartureReleaseDecisionNotAllowedException
+     * @throws DepartureReleaseDecisionNotAllowedException|DepartureReleaseAlreadyDecidedException
      */
     public function approveReleaseRequest(
         DepartureReleaseRequest $request,
@@ -58,7 +58,7 @@ class DepartureReleaseService
 
     /**
      * Reject a departure release on behalf of a single controller.
-     * @throws DepartureReleaseDecisionNotAllowedException
+     * @throws DepartureReleaseDecisionNotAllowedException|DepartureReleaseAlreadyDecidedException
      */
     public function rejectReleaseRequest(
         DepartureReleaseRequest $request,
@@ -73,7 +73,7 @@ class DepartureReleaseService
 
     /**
      * Acknowledge a departure release as received on behalf of a single controller
-     * @throws DepartureReleaseDecisionNotAllowedException
+     * @throws DepartureReleaseDecisionNotAllowedException|DepartureReleaseAlreadyDecidedException
      */
     public function acknowledgeReleaseRequest(
         DepartureReleaseRequest $request,
@@ -111,6 +111,12 @@ class DepartureReleaseService
         if ($request->target_controller_position_id !== $decisionControllerId) {
             throw new DepartureReleaseDecisionNotAllowedException(
                 sprintf('Controller id %d cannot %s this release', $decisionControllerId, $action)
+            );
+        }
+
+        if ($request->decisionMade()) {
+            throw new DepartureReleaseAlreadyDecidedException(
+                sprintf('Cannot %s release id %d, decision already made', $action, $request->id)
             );
         }
     }

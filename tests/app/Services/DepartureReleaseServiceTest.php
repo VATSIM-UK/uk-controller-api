@@ -8,6 +8,7 @@ use App\Events\DepartureReleaseApprovedEvent;
 use App\Events\DepartureReleaseRejectedEvent;
 use App\Events\DepartureReleaseRequestCancelledEvent;
 use App\Events\DepartureReleaseRequestedEvent;
+use App\Exceptions\Release\Departure\DepartureReleaseAlreadyDecidedException;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\Carbon;
@@ -102,6 +103,40 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testReleasesCannotBeApprovedIfAlreadyApproved()
+    {
+        $this->expectException(DepartureReleaseAlreadyDecidedException::class);
+        $this->doesntExpectEvents(DepartureReleaseApprovedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->approve(self::ACTIVE_USER_CID, 25, CarbonImmutable::now());
+        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, 125, CarbonImmutable::now()->addMinutes(3));
+    }
+
+    public function testReleasesCannotBeApprovedIfAlreadyRejected()
+    {
+        $this->expectException(DepartureReleaseAlreadyDecidedException::class);
+        $this->doesntExpectEvents(DepartureReleaseApprovedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->reject(self::ACTIVE_USER_CID);
+        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, 125, CarbonImmutable::now()->addMinutes(3));
+    }
+
     public function testItThrowsExceptionIfControllerCannotRejectRequest()
     {
         $this->expectException(DepartureReleaseDecisionNotAllowedException::class);
@@ -151,6 +186,40 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testReleasesCannotBeRejectedIfAlreadyApproved()
+    {
+        $this->expectException(DepartureReleaseAlreadyDecidedException::class);
+        $this->doesntExpectEvents(DepartureReleaseRejectedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->approve(self::ACTIVE_USER_CID, 25, CarbonImmutable::now());
+        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+    }
+
+    public function testReleasesCannotBeRejectedIfAlreadyRejected()
+    {
+        $this->expectException(DepartureReleaseAlreadyDecidedException::class);
+        $this->doesntExpectEvents(DepartureReleaseRejectedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->reject(self::ACTIVE_USER_CID);
+        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+    }
+
     public function testItThrowsExceptionIfControllerCannotAcknowledgeRequest()
     {
         $this->expectException(DepartureReleaseDecisionNotAllowedException::class);
@@ -198,6 +267,40 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'release_valid_from' => null,
             ]
         );
+    }
+
+    public function testReleasesCannotBeAcknowledgedIfAlreadyApproved()
+    {
+        $this->expectException(DepartureReleaseAlreadyDecidedException::class);
+        $this->doesntExpectEvents(DepartureReleaseAcknowledgedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->approve(self::ACTIVE_USER_CID, 25, CarbonImmutable::now());
+        $this->service->acknowledgeReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+    }
+
+    public function testReleasesCannotBeAcknowledgedIfAlreadyRejected()
+    {
+        $this->expectException(DepartureReleaseAlreadyDecidedException::class);
+        $this->doesntExpectEvents(DepartureReleaseAcknowledgedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $request->reject(self::ACTIVE_USER_CID);
+        $this->service->acknowledgeReleaseRequest($request, 2, self::ACTIVE_USER_CID);
     }
 
     public function testItCancelsADepartureReleaseRequest()
