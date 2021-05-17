@@ -1260,16 +1260,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.8.1",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1"
+                "reference": "dc960a912984efb74d0a90222870c72c87f10c91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/35ea11d335fd638b5882ff1725228b3d35496ab1",
-                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/dc960a912984efb74d0a90222870c72c87f10c91",
+                "reference": "dc960a912984efb74d0a90222870c72c87f10c91",
                 "shasum": ""
             },
             "require": {
@@ -1329,9 +1329,9 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/1.8.1"
+                "source": "https://github.com/guzzle/psr7/tree/1.8.2"
             },
-            "time": "2021-03-21T16:25:00+00:00"
+            "time": "2021-04-26T09:17:50+00:00"
         },
         {
             "name": "knplabs/github-api",
@@ -2999,16 +2999,16 @@
         },
         {
             "name": "ohdearapp/ohdear-php-sdk",
-            "version": "3.1.2",
+            "version": "3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ohdearapp/ohdear-php-sdk.git",
-                "reference": "b5e7561947e04428e022c3d9271a0859a6d9c930"
+                "reference": "0e80dd11797f00ef4beb69046eba80599af21eb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ohdearapp/ohdear-php-sdk/zipball/b5e7561947e04428e022c3d9271a0859a6d9c930",
-                "reference": "b5e7561947e04428e022c3d9271a0859a6d9c930",
+                "url": "https://api.github.com/repos/ohdearapp/ohdear-php-sdk/zipball/0e80dd11797f00ef4beb69046eba80599af21eb4",
+                "reference": "0e80dd11797f00ef4beb69046eba80599af21eb4",
                 "shasum": ""
             },
             "require": {
@@ -3049,9 +3049,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ohdearapp/ohdear-php-sdk/issues",
-                "source": "https://github.com/ohdearapp/ohdear-php-sdk/tree/3.1.2"
+                "source": "https://github.com/ohdearapp/ohdear-php-sdk/tree/3.1.3"
             },
-            "time": "2021-03-02T13:05:05+00:00"
+            "time": "2021-05-15T12:58:24+00:00"
         },
         {
             "name": "opis/closure",
