@@ -23,6 +23,25 @@ Route::middleware('api')->group(
                 Route::get('dependency/{id}', 'DependencyController@getDependency')
                     ->where('id', '[0-9]+');
 
+                // Departure releases
+                Route::post('departure/release/request', 'DepartureReleaseController@makeReleaseRequest');
+                Route::patch(
+                    'departure/release/request/{departureReleaseRequest}/approve',
+                    'DepartureReleaseController@approveReleaseRequest'
+                );
+                Route::patch(
+                    'departure/release/request/{departureReleaseRequest}/reject',
+                    'DepartureReleaseController@rejectReleaseRequest'
+                );
+                Route::patch(
+                    'departure/release/request/{departureReleaseRequest}/acknowledge',
+                    'DepartureReleaseController@acknowledgeReleaseRequest'
+                );
+                Route::delete(
+                    'departure/release/request/{departureReleaseRequest}',
+                    'DepartureReleaseController@cancelReleaseRequest'
+                );
+
                 // Events
                 Route::get('plugin-events/sync', 'PluginEventsController@getLatestPluginEventId');
                 Route::get('plugin-events/recent', 'PluginEventsController@getRecentPluginEvents');
@@ -243,7 +262,8 @@ Route::middleware('api')->group(
 
                 // Controller positions
                 Route::get('controller', 'ControllerPositionController@getAllControllers');
-                Route::get('controller-positions', 'ControllerPositionController@getControllerPositionsDependency');
+                Route::get('controller-positions', 'ControllerPositionController@getLegacyControllerPositionsDependency');
+                Route::get('controller-positions-v2', 'ControllerPositionController@getControllerPositionsDependency');
 
                 // Airfields
                 Route::get('airfield', 'AirfieldController@getAllAirfields');
