@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
+use App\Console\Commands\CleanDepartureReleaseRequestHistory;
 use App\Console\Commands\CleanPluginEvents;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
@@ -53,6 +54,7 @@ class Kernel extends ConsoleKernel
         DataAdminCreate::class,
         UpdateMetars::class,
         CleanPluginEvents::class,
+        CleanDepartureReleaseRequestHistory::class,
     ];
 
     /**
@@ -68,6 +70,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('squawks:clean-history')->daily();
         $schedule->command('stands:clean-history')->daily();
         $schedule->command('holds:clean-history')->daily();
+        $schedule->command('departure-releases:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('networkdata:update')->everyMinute()
             ->graceTimeInMinutes(3)
