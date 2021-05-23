@@ -16,6 +16,9 @@ class AddDepartureReleaseRequestsIndexes extends Migration
         Schema::table('departure_release_requests', function (Blueprint $table) {
             $table->index('expires_at');
             $table->index('release_expires_at');
+            $table->index('released_at');
+            $table->index('callsign');
+            $table->index('rejected_at');
             $table->index('deleted_at');
         });
     }
