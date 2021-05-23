@@ -5,6 +5,7 @@ namespace App\Models\Release\Departure;
 use App\Models\Controller\ControllerPosition;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -56,7 +57,7 @@ class DepartureReleaseRequest extends Model
                 'release_valid_from' => $releaseValidFrom,
                 'released_by' => $userId,
                 'released_at' => Carbon::now(),
-                'release_expires_at' => $releaseValidFrom->addSeconds($expiresInSeconds)
+                'release_expires_at' => $releaseValidFrom->addSeconds($expiresInSeconds),
             ]
         );
     }
@@ -96,5 +97,26 @@ class DepartureReleaseRequest extends Model
     public function decisionMade(): bool
     {
         return $this->released_by !== null || $this->rejected_by !== null;
+    }
+
+    public function scopeActiveFor(Builder $builder, string $callsign): Builder
+    {
+        return $builder->where('callsign', $callsign)
+            ->whereNull('rejected_at')
+            ->where(
+                function (Builder $builder) {
+                    return $builder->where(
+                        function (Builder $builder) {
+                            $builder->where('expires_at', '>', Carbon::now())
+                                ->whereNull('released_at');
+                        }
+                    )->orWhere(
+                        function (Builder $builder) {
+                            $builder->whereNotNull('released_at')
+                                ->where('release_expires_at', '>', Carbon::now());
+                        }
+                    );
+                }
+            );
     }
 }
