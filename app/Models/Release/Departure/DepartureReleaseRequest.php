@@ -50,14 +50,14 @@ class DepartureReleaseRequest extends Model
     /**
      * Approve the departure release for a given amount of time.
      */
-    public function approve(int $userId, int $expiresInSeconds, CarbonImmutable $releaseValidFrom): void
+    public function approve(int $userId, ?int $expiresInSeconds, CarbonImmutable $releaseValidFrom): void
     {
         $this->update(
             [
                 'release_valid_from' => $releaseValidFrom,
                 'released_by' => $userId,
                 'released_at' => Carbon::now(),
-                'release_expires_at' => $releaseValidFrom->addSeconds($expiresInSeconds),
+                'release_expires_at' => $expiresInSeconds ? $releaseValidFrom->addSeconds($expiresInSeconds) : null,
             ]
         );
     }

@@ -227,6 +227,39 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         );
     }
 
+    public function testItApprovesAReleaseWithNoExpiryTime()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d/approve', $request->id);
+
+        $approvalData = [
+            'controller_position_id' => 2,
+            'expires_in_seconds' => null,
+            'released_at' => null,
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
+            ->assertOk();
+
+        $this->assertDatabaseHas(
+            'departure_release_requests',
+            [
+                'id' => $request->id,
+                'released_by' => self::ACTIVE_USER_CID,
+                'release_expires_at' => null,
+                'release_valid_from' => Carbon::now()->toDateTimeString(),
+            ]
+        );
+    }
+
     public function testItApprovesAReleaseWithValidFromTime()
     {
         $request = DepartureReleaseRequest::create(

@@ -103,6 +103,38 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItApprovesADepartureReleaseWithNoExpiryTime()
+    {
+        $this->expectsEvents(DepartureReleaseApprovedEvent::class);
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+
+        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, null, CarbonImmutable::now()->addMinutes(3));
+
+        $this->assertDatabaseHas(
+            'departure_release_requests',
+            [
+                'id' => $request->id,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'released_by' => self::ACTIVE_USER_CID,
+                'released_at' => Carbon::now()->toDateTimeString(),
+                'release_expires_at' => null,
+                'rejected_at' => null,
+                'acknowledged_at' => null,
+                'acknowledged_by' => null,
+                'release_valid_from' => Carbon::now()->addMinutes(3)->toDateTimeString(),
+            ]
+        );
+    }
+
     public function testReleasesCannotBeApprovedIfAlreadyApproved()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);

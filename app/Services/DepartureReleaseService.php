@@ -47,7 +47,7 @@ class DepartureReleaseService
         DepartureReleaseRequest $request,
         int $approvingControllerId,
         int $approvingUserId,
-        int $approvalExpiresInSeconds,
+        ?int $approvalExpiresInSeconds,
         CarbonImmutable $releaseValidFrom
     ): void {
         $this->checkDecisionAllowed($request, $approvingControllerId, 'approve');
