@@ -12,10 +12,10 @@ class CancelOutstandingDepartureReleaseRequests implements AircraftDisconnectedS
     public function perform(NetworkAircraft $aircraft): void
     {
         DepartureReleaseRequest::where('callsign', $aircraft->callsign)->each(
-                function (DepartureReleaseRequest $request) {
+            function (DepartureReleaseRequest $request) {
                     $request->delete();
                     event(new DepartureReleaseRequestCancelledEvent($request));
                 }
-            );
+        );
     }
 }
