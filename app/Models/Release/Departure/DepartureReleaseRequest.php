@@ -6,6 +6,7 @@ use App\Models\Controller\ControllerPosition;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DepartureReleaseRequest extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     const UPDATED_AT = null;
 
