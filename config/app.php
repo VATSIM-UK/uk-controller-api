@@ -167,8 +167,6 @@ return [
          */
         Laravel\Passport\PassportServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        BeyondCode\LaravelWebSockets\WebSocketsServiceProvider::class,
-        Sentry\Laravel\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -181,10 +179,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RegionalPressureServiceProvider::class,
         App\Providers\SquawkServiceProvider::class,
         App\Providers\StandServiceProvider::class,
-        App\Providers\MinStackCalculationServiceProvider::class,
         App\Providers\NetworkServiceProvider::class,
     ],
 

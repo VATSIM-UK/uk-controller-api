@@ -189,7 +189,6 @@ jobs:
             cd $RELEASE_DIRECTORY
 
             # Stop Application / Services
-            sudo systemctl stop ukcp
             sudo systemctl stop ukcp-horizon
             $PHP_PATH artisan down
 
@@ -199,6 +198,7 @@ jobs:
             # Deployment Tasks
             $PHP_PATH artisan optimize
             $PHP_PATH artisan horizon:publish
+            $PHP_PATH artisan schedule-monitor:sync
 
             # Link Storage
             $PHP_PATH artisan storage:link
@@ -206,7 +206,6 @@ jobs:
             # Start Websockets and Horizon
             $PHP_PATH artisan up
             sudo systemctl start ukcp-horizon
-            sudo systemctl start ukcp
 
             # Cache & Logs
             $PHP_PATH artisan route:cache

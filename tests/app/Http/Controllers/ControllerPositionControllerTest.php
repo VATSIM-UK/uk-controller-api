@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Controller\ControllerPosition;
+use App\Services\ControllerService;
 
 class ControllerPositionControllerTest extends BaseApiTestCase
 {
@@ -31,11 +33,10 @@ class ControllerPositionControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'controller')
-            ->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'controller')->assertJson($expected);
     }
 
-    public function testItReturnsControllerPositionsDependency()
+    public function testItReturnsLegacyControllerPositionsDependency()
     {
         $expected = [
             "EGLL_S_TWR" => [
@@ -44,7 +45,7 @@ class ControllerPositionControllerTest extends BaseApiTestCase
                     "EGLL",
                 ],
             ],
-            "EGLL_N_APP" =>[
+            "EGLL_N_APP" => [
                 "frequency" => 119.72,
                 "top-down" => [
                     "EGLL",
@@ -64,7 +65,13 @@ class ControllerPositionControllerTest extends BaseApiTestCase
             ],
         ];
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'controller-positions')
-            ->assertJson($expected);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'controller-positions')->assertJson($expected);
+    }
+
+    public function testItControllerPositionsDependency()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'controller-positions-v2')->assertExactJson(
+                $this->app->make(ControllerService::class)->getControllerPositionsDependency()->toArray()
+            );
     }
 }

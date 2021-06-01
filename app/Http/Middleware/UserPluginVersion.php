@@ -23,12 +23,7 @@ class UserPluginVersion
      */
     public function handle(Request $request, Closure $next)
     {
-        $version = Version::where('version', '=', $request->route('version'))->first();
-
-        if ($version !== null) {
-            Auth::user()->setLastVersion($version->id);
-        }
-
+        Auth::user()->setLastVersion($request->route('version')->id);
         return $next($request);
     }
 }

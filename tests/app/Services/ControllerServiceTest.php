@@ -119,4 +119,53 @@ class ControllerServiceTest extends BaseFunctionalTestCase
             ['lon_s_ctr', 'LON'],
         ];
     }
+
+    public function testItCreatesControllerPositionsDependency()
+    {
+        $expected = [
+            [
+                'id' => 1,
+                'callsign' => 'EGLL_S_TWR',
+                'frequency' => 118.5,
+                'top_down' => [
+                    'EGLL',
+                ],
+                'requests_departure_releases' => true,
+                'receives_departure_releases' => false,
+            ],
+            [
+                'id' => 2,
+                'callsign' => 'EGLL_N_APP',
+                'frequency' => 119.72,
+                'top_down' => [
+                    'EGLL',
+                ],
+                'requests_departure_releases' => true,
+                'receives_departure_releases' => true,
+            ],
+            [
+                'id' => 3,
+                'callsign' => 'LON_S_CTR',
+                'frequency' => 129.42,
+                'top_down' => [
+                    'EGLL',
+                ],
+                'requests_departure_releases' => true,
+                'receives_departure_releases' => true,
+            ],
+            [
+                'id' => 4,
+                'callsign' => 'LON_C_CTR',
+                'frequency' => 127.1,
+                'top_down' => [
+                    'EGBB',
+                ],
+                'requests_departure_releases' => false,
+                'receives_departure_releases' => false,
+            ],
+        ];
+
+        $actual = $this->service->getControllerPositionsDependency()->toArray();
+        $this->assertSame($expected, $actual);
+    }
 }

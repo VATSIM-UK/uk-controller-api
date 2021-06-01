@@ -77,6 +77,9 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class
         ],
+        'api' => [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
         'web.admin' => [
             MiddlewareKeys::ADMIN_WEB . ':web_admin',
         ],

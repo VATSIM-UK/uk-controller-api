@@ -1,8 +1,10 @@
 <?php
 namespace App\Services;
 
-use App\Exceptions\VersionNotFoundException;
+use App\Exceptions\Version\VersionAlreadyExistsException;
+use App\Exceptions\Version\VersionNotFoundException;
 use App\Models\Version\Version;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
@@ -17,16 +19,19 @@ use Illuminate\Support\ServiceProvider;
  */
 class VersionService extends ServiceProvider
 {
+    private const VERSIONS_TO_KEEP = 3;
+
     /**
      * Determines an appropriate JSON response, given two versions.
      *
+     * @deprecated Superseded in Version 3.0.0 of UKCP
      * @param  string $userVersion The version of the plugin that the user client reports.
      * @return array A response to be converted to JSON and returned.
      */
     public function getVersionResponse(string $userVersion)
     {
         // If the version is unknown, fail.
-        $version = Version::where('version', $userVersion)->first();
+        $version = Version::where('version', $userVersion)->withTrashed()->first();
         if ($version === null) {
             return [
                 'version_disabled' => true,
@@ -36,8 +41,7 @@ class VersionService extends ServiceProvider
         }
 
         // Get the latest version and then do comparisons to make the appropriate response.
-        $latestVersion = Version::where('allowed', true)
-            ->orderBy('id', 'desc')
+        $latestVersion = Version::orderBy('id', 'desc')
             ->first();
 
         return $this->getPossibleVersionResponse($version, $latestVersion);
@@ -53,7 +57,7 @@ class VersionService extends ServiceProvider
      */
     private function getPossibleVersionResponse(Version $userVersion, Version $latestVersion)
     {
-        if (!$userVersion->allowed) {
+        if ($userVersion->trashed()) {
             // They're using a deprecated version
             Log::info('Attempt to use deprecated version ' . $userVersion->version . ', which was rejected by the API');
             $jsonArray = [
@@ -91,13 +95,13 @@ class VersionService extends ServiceProvider
      */
     public function getVersion(string $versionString) : Version
     {
-        $version = Version::where('version', '=', $versionString);
+        $version = Version::where('version', '=', $versionString)->withTrashed()->first();
 
-        if (!$version->exists()) {
+        if (!$version) {
             throw new VersionNotFoundException('Version ' . $versionString . ' not found');
         }
 
-        return $version->first();
+        return $version;
     }
 
     /**
@@ -107,7 +111,7 @@ class VersionService extends ServiceProvider
      */
     public function getAllVersions() : Collection
     {
-        return Version::all();
+        return Version::withTrashed()->get();
     }
 
     /**
@@ -123,7 +127,7 @@ class VersionService extends ServiceProvider
                 'version' => $versionString,
             ],
             [
-                'allowed' => $allowed,
+                'deleted_at' => $allowed ? null : Carbon::now(),
             ]
         );
 
@@ -138,12 +142,42 @@ class VersionService extends ServiceProvider
      */
     public function toggleVersionAllowed(string $versionString)
     {
-        $version = Version::where('version', '=', $versionString);
+        $version = Version::withTrashed()->where('version', '=', $versionString)->first();
 
-        if (!$version->exists()) {
+        if (!$version) {
             throw new VersionNotFoundException('Version ' . $versionString . ' not found');
         }
 
-        $version->first()->toggleAllowed();
+        $version->toggleAllowed();
+    }
+
+    public function publishNewVersionFromGithub(string $tag)
+    {
+        if (Version::withTrashed()->where('version', $tag)->exists()) {
+            throw new VersionAlreadyExistsException();
+        }
+
+        // Create the version
+        Version::create(
+            [
+                'version' => $tag
+            ]
+        );
+
+        // Retire old versions
+        $versionsToKeep = Version::orderBy('id', 'desc')->limit(self::VERSIONS_TO_KEEP)->pluck('id')->toArray();
+        Version::whereNotIn('id', $versionsToKeep)->delete();
+    }
+
+    public function getFullVersionDetails(Version $version): array
+    {
+        $assetsUrl = sprintf('%s/%s', config('github.latest_release_assets_url'), $version->version);
+        return [
+            'id' => $version->id,
+            'version' => $version->version,
+            'updater_download_url' => sprintf('%s/UKControllerPluginUpdater.dll', $assetsUrl),
+            'core_download_url' => sprintf('%s/UKControllerPluginCore.dll', $assetsUrl),
+            'loader_download_url' => sprintf('%s/UKControllerPlugin.dll', $assetsUrl),
+        ];
     }
 }

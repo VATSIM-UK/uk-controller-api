@@ -14,18 +14,26 @@ class ControllerPositionsTableSeeder extends Seeder
                 [
                     'callsign' => 'EGLL_S_TWR',
                     'frequency' => 118.500,
+                    'requests_departure_releases' => true,
+                    'receives_departure_releases' => false,
                 ],
                 [
                     'callsign' => 'EGLL_N_APP',
+                    'requests_departure_releases' => true,
+                    'receives_departure_releases' => true,
                     'frequency' => 119.720,
                 ],
                 [
                     'callsign' => 'LON_S_CTR',
                     'frequency' => 129.420,
+                    'requests_departure_releases' => true,
+                    'receives_departure_releases' => true,
                 ],
                 [
                     'callsign' => 'LON_C_CTR',
-                    'frequency' => 127.100
+                    'frequency' => 127.100,
+                    'requests_departure_releases' => false,
+                    'receives_departure_releases' => false,
                 ],
             ]
         );

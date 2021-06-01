@@ -151,7 +151,7 @@ return [
     |
     */
 
-    'memory_limit' => 64,
+    'memory_limit' => 32,
 
     /*
     |--------------------------------------------------------------------------
@@ -170,10 +170,10 @@ return [
             'queue' => ['high', 'default'],
             'balance' => 'auto',
             'minProcesses' => 1,
-            'maxProcesses' => 4,
+            'maxProcesses' => 3,
             'balanceMaxShift' => 1,
-            'balanceCooldown' => 5,
-            'memory' => 128,
+            'balanceCooldown' => 15,
+            'memory' => 32,
             'tries' => 1,
             'nice' => 0,
         ],
@@ -185,9 +185,9 @@ return [
                 'queue' => ['high', 'default'],
                 'balance' => 'auto',
                 'minProcesses' => 1,
-                'maxProcesses' => 4,
+                'maxProcesses' => 3,
                 'balanceMaxShift' => 1,
-                'balanceCooldown' => 5,
+                'balanceCooldown' => 15,
             ],
         ],
 

@@ -1,7 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\Exceptions\VersionNotFoundException;
+use App\Exceptions\Version\VersionAlreadyExistsException;
+use App\Exceptions\Version\VersionNotFoundException;
 use Carbon\Carbon;
 use App\BaseFunctionalTestCase;
 use App\Models\Version\Version;
@@ -21,6 +22,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(VersionService::class);
+        Carbon::setTestNow(Carbon::now());
     }
 
     public function testItConstructs()
@@ -72,15 +74,17 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->service->getVersionResponse(self::CURRENT_VERSION));
     }
 
-    public function testGetVersionThrowsExceptionIfDoesNotExist()
+    public function testGetVersionReturnsVersionInformation()
     {
-        $this->expectException(VersionNotFoundException::class);
-        $this->service->getVersion('666');
-    }
+        $expected = [
+            'id' => 3,
+            'version' => '2.0.1',
+            'core_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPluginCore.dll',
+            'updater_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPluginUpdater.dll',
+            'loader_download_url' => 'https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/2.0.1/UKControllerPlugin.dll',
+        ];
 
-    public function testGetVersionReturnsAVersion()
-    {
-        $this->assertEquals(1, $this->service->getVersion(self::DEPRECATED_VERSION)->id);
+        $this->assertEquals($expected, $this->service->getFullVersionDetails(Version::find(3)));
     }
 
     public function testGetAllVersionsReturnsAllVersions()
@@ -101,9 +105,9 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version',
             [
                 'version' => '3.0.0',
-                'allowed' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'deleted_at' => null,
             ]
         );
     }
@@ -116,9 +120,9 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version',
             [
                 'version' => self::ALLOWED_OLD_VERSION,
-                'allowed' => 0,
                 'created_at' => '2017-12-03 00:00:00',
-                'updated_at' => Carbon::now(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
+                'deleted_at' => Carbon::now()->toDateTimeString(),
             ]
         );
     }
@@ -131,10 +135,81 @@ class VersionServiceTest extends BaseFunctionalTestCase
 
     public function testToggleVersionAllowedTogglesAllowed()
     {
-        $this->assertTrue(Version::find(2)->allowed);
+        $this->assertFalse(Version::find(2)->trashed());
         $this->service->toggleVersionAllowed(self::ALLOWED_OLD_VERSION);
-        $this->assertFalse(Version::find(2)->allowed);
+        $this->assertTrue(Version::withTrashed()->find(2)->trashed());
         $this->service->toggleVersionAllowed(self::ALLOWED_OLD_VERSION);
-        $this->assertTrue(Version::find(2)->allowed);
+        $this->assertFalse(Version::find(2)->trashed());
+    }
+
+    public function testItPublishesANewGithubVersion()
+    {
+        $this->service->publishNewVersionFromGithub('3.0.0');
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '3.0.0',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'deleted_at' => null,
+            ]
+        );
+    }
+
+    public function testItRetiresOldVersions()
+    {
+        $this->service->createOrUpdateVersion('2.0.2', true);
+        $this->service->createOrUpdateVersion('2.0.3', true);
+        $this->service->createOrUpdateVersion('2.0.4', true);
+        $this->service->publishNewVersionFromGithub('3.0.0');
+
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.0',
+                'deleted_at' => Carbon::now(),
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.1',
+                'deleted_at' => Carbon::now(),
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.2',
+                'deleted_at' => Carbon::now(),
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.3',
+                'deleted_at' => null,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '2.0.4',
+                'deleted_at' => null,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '3.0.0',
+                'deleted_at' => null,
+            ]
+        );
+    }
+
+    public function testItThrowsExceptionIfPublishingExistingVersion()
+    {
+        $this->expectException(VersionAlreadyExistsException::class);
+        $this->service->publishNewVersionFromGithub('1.0.0');
     }
 }

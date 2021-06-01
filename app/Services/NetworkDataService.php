@@ -43,7 +43,7 @@ class NetworkDataService
         // Download the network data and check that it was successful
         $networkResponse = null;
         try {
-            $networkResponse = Http::get(self::NETWORK_DATA_URL);
+            $networkResponse = Http::timeout(10)->get(self::NETWORK_DATA_URL);
         } catch (Exception $exception) {
             Log::warning('Failed to download network data, exception was ' . $exception->getMessage());
             return;
