@@ -5,9 +5,7 @@ use App\Services\DependencyService;
 use App\Services\HandoffService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AddPcNorthEastPosition extends Migration
 {
@@ -18,7 +16,7 @@ class AddPcNorthEastPosition extends Migration
      */
     public function up()
     {
-        $position = DB::table('controller_positions')
+        DB::table('controller_positions')
             ->insert(
                 [
                     'callsign' => 'MAN_NE_CTR',
