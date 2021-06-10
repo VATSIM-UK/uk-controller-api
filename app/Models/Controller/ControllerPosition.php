@@ -3,13 +3,15 @@
 namespace App\Models\Controller;
 
 use App\Models\Airfield\Airfield;
-use App\Models\Sid;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ControllerPosition extends Model
 {
+    use HasFactory;
+
     public $timestamps = true;
 
     protected $hidden = [

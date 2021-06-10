@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Jobs\Hold\UnassignHoldOnDisconnect;
 use App\Jobs\Network\AircraftDisconnected;
 use App\Jobs\Network\DeleteNetworkAircraft;
+use App\Jobs\Release\Departure\CancelOutstandingDepartureReleaseRequests;
 use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Jobs\Stand\TriggerUnassignmentOnDisconnect;
 use App\Listeners\Network\RecordFirEntry;
@@ -39,6 +40,7 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
                         $application->make(UnassignHoldOnDisconnect::class),
                         $application->make(MarkAssignmentDeletedOnDisconnect::class),
                         $application->make(TriggerUnassignmentOnDisconnect::class),
+                        $application->make(CancelOutstandingDepartureReleaseRequests::class),
                         $application->make(DeleteNetworkAircraft::class),
                     ])
                 );
