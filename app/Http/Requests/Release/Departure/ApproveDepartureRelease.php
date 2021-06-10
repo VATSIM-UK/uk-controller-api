@@ -10,7 +10,7 @@ class ApproveDepartureRelease extends FormRequest
     public function rules()
     {
         return [
-            'expires_in_seconds' => 'required|integer|min:1',
+            'expires_in_seconds' => 'present|nullable|integer|min:1',
             'released_at' => 'present|nullable|date_format:Y-m-d H:i:s',
             'controller_position_id' => [
                 'required',

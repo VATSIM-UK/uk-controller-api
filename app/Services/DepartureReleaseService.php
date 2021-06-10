@@ -47,7 +47,7 @@ class DepartureReleaseService
         DepartureReleaseRequest $request,
         int $approvingControllerId,
         int $approvingUserId,
-        int $approvalExpiresInSeconds,
+        ?int $approvalExpiresInSeconds,
         CarbonImmutable $releaseValidFrom
     ): void {
         $this->checkDecisionAllowed($request, $approvingControllerId, 'approve');
@@ -119,5 +119,20 @@ class DepartureReleaseService
                 sprintf('Cannot %s release id %d, decision already made', $action, $request->id)
             );
         }
+    }
+
+    public function cancelReleasesForAirborneAircraft(): void
+    {
+        $requestsToProcess = DepartureReleaseRequest::query()
+            ->join('network_aircraft', 'network_aircraft.callsign', '=', 'departure_release_requests.callsign')
+            ->where('network_aircraft.groundspeed', '>=', 50)
+            ->where('network_aircraft.altitude', '>=', 1000)
+            ->select('departure_release_requests.*')
+            ->get();
+
+        $requestsToProcess->each(function (DepartureReleaseRequest $request) {
+            $request->delete();
+            event(new DepartureReleaseRequestCancelledEvent($request));
+        });
     }
 }

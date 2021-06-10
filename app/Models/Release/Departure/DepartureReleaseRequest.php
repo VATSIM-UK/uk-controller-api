@@ -6,6 +6,7 @@ use App\Models\Controller\ControllerPosition;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DepartureReleaseRequest extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     const UPDATED_AT = null;
 
@@ -50,14 +51,14 @@ class DepartureReleaseRequest extends Model
     /**
      * Approve the departure release for a given amount of time.
      */
-    public function approve(int $userId, int $expiresInSeconds, CarbonImmutable $releaseValidFrom): void
+    public function approve(int $userId, ?int $expiresInSeconds, CarbonImmutable $releaseValidFrom): void
     {
         $this->update(
             [
                 'release_valid_from' => $releaseValidFrom,
                 'released_by' => $userId,
                 'released_at' => Carbon::now(),
-                'release_expires_at' => $releaseValidFrom->addSeconds($expiresInSeconds),
+                'release_expires_at' => $expiresInSeconds ? $releaseValidFrom->addSeconds($expiresInSeconds) : null,
             ]
         );
     }

@@ -5,6 +5,7 @@ namespace App\Models\Vatsim;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,6 +13,8 @@ use Location\Coordinate;
 
 class NetworkAircraft extends Model
 {
+    use HasFactory;
+
     const AIRCRAFT_TYPE_REGEX = '/^[0-9A-Z]{4}/';
 
     const AIRCRAFT_TYPE_SEPARATOR = '/';

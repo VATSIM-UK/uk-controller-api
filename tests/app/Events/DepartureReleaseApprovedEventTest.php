@@ -21,7 +21,7 @@ class DepartureReleaseApprovedEventTest extends BaseUnitTestCase
             [
                 'controller_position_id' => 2,
                 'release_expires_at' => Carbon::now()->addMinutes(2),
-                'released_at' => Carbon::now()->addMinute()->toDateTimeString(),
+                'release_valid_from' => Carbon::now()->addMinute(),
             ]
         );
         $this->request->id = 1;
@@ -40,10 +40,21 @@ class DepartureReleaseApprovedEventTest extends BaseUnitTestCase
 
     public function testItHasBroadcastData()
     {
-        $this->request->release_valid_from = Carbon::now()->addMinute();
         $expected = [
             'id' => 1,
             'expires_at' => Carbon::now()->addMinutes(2)->toDateTimeString(),
+            'released_at' => Carbon::now()->addMinute()->toDateTimeString(),
+        ];
+
+        $this->assertEquals($expected, $this->event->broadcastWith());
+    }
+
+    public function testItHasBroadcastWithNoApprovalTime()
+    {
+        $this->request->release_expires_at = null;
+        $expected = [
+            'id' => 1,
+            'expires_at' => null,
             'released_at' => Carbon::now()->addMinute()->toDateTimeString(),
         ];
 

@@ -3,6 +3,7 @@
 namespace App\Listeners\Network;
 
 use App\Jobs\Hold\RemoveAssignmentsForAircraftLeavingHold;
+use App\Jobs\Release\Departure\CancelRequestsForDepartedAircraft;
 use App\Jobs\Squawk\ReserveActiveSquawks;
 use App\Jobs\Stand\AssignStandsForDeparture;
 use App\Jobs\Stand\OccupyStands;
@@ -22,7 +23,8 @@ class NetworkDataUpdated implements ShouldQueue, ShouldBeUnique
                 new OccupyStands(),
                 new AssignStandsForDeparture(),
                 new ReserveActiveSquawks(),
-                new RemoveAssignmentsForAircraftLeavingHold()
+                new RemoveAssignmentsForAircraftLeavingHold(),
+                new CancelRequestsForDepartedAircraft(),
             ]
         )->dispatch();
         return true;
