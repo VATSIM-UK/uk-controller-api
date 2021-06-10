@@ -35,4 +35,13 @@ class Handler extends ExceptionHandler
         StandNotFoundException::class,
         StandAlreadyAssignedException::class
     ];
+
+    public function report(Throwable $exception)
+    {
+        if (app()->bound('sentry') && $this->shouldReport($exception)) {
+            app('sentry')->captureException($exception);
+        }
+
+        parent::report($exception);
+    }
 }

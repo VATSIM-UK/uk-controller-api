@@ -8,7 +8,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['bugsnag', 'custom'],
+            'channels' => ['custom'],
         ],
         'custom' => [
             'driver' => 'custom',
@@ -19,9 +19,6 @@ return [
             'driver' => 'custom',
             'via' => NullLoggerFactory::class,
             'name' => 'NullLogger',
-        ],
-        'bugsnag' => [
-            'driver' => 'bugsnag'
         ]
     ],
 ];

@@ -40,7 +40,6 @@ class Kernel extends ConsoleKernel
         DeleteUserTokens::class,
         UserAdminCreate::class,
         UserCreate::class,
-        \Bugsnag\BugsnagLaravel\Commands\DeployCommand::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
         ClearAssignedHoldsHistory::class,

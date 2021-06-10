@@ -200,14 +200,25 @@ jobs:
             $PHP_PATH artisan up
             sudo systemctl start ukcp-horizon
 
-            # This will interpolate the values as --revision="vx.y.z" and --repository="vatsim-uk/uk-controller-api"
-            echo artisan bugsnag:deploy --branch="main" --revision="$TAG" --repository="$GITHUB_REPOSITORY"
-
             # Cache & Logs
             $PHP_PATH artisan route:cache
             $PHP_PATH artisan view:cache
             mv storage/logs/laravel.log storage/logs/laravel.log.`date +%s`; true
-          envs: RELEASE_DIRECTORY,PHP_PATH,TAG,GITHUB_REPOSITORY
+          envs: RELEASE_DIRECTORY,PHP_PATH,GITHUB_REPOSITORY
+
+      #
+      # SENTRY
+      # Create a Sentry release
+      #
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: vatsim-uk
+          SENTRY_PROJECT: ukcp-api
+        with:
+          environment: production
+          version: ${{ github.sha }}
 
       #
       # HOUSEKEEPING
