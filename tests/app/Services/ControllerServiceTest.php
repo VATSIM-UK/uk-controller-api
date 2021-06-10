@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Controller\ControllerPosition;
 
 class ControllerServiceTest extends BaseFunctionalTestCase
 {
@@ -19,6 +20,7 @@ class ControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesLegacyControllerPositionsDependency()
     {
+        $positionWithNoTopDown = ControllerPosition::factory()->create();
         $expected = [
             'EGLL_S_TWR' => [
                 'frequency' => 118.5,
@@ -44,6 +46,10 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                     'EGBB',
                 ],
             ],
+            $positionWithNoTopDown->callsign => [
+                'frequency' => $positionWithNoTopDown->frequency,
+                'top-down' => [],
+            ]
         ];
 
         $actual = $this->service->getLegacyControllerPositionsDependency();
@@ -122,6 +128,7 @@ class ControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesControllerPositionsDependency()
     {
+        $positionWithNoTopDown = ControllerPosition::factory()->create();
         $expected = [
             [
                 'id' => 1,
@@ -160,6 +167,14 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                 'top_down' => [
                     'EGBB',
                 ],
+                'requests_departure_releases' => false,
+                'receives_departure_releases' => false,
+            ],
+            [
+                'id' => $positionWithNoTopDown->id,
+                'callsign' => $positionWithNoTopDown->callsign,
+                'frequency' => $positionWithNoTopDown->frequency,
+                'top_down' => [],
                 'requests_departure_releases' => false,
                 'receives_departure_releases' => false,
             ],
