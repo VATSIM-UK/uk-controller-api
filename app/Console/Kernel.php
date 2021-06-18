@@ -80,7 +80,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('schedule-monitor:clean')
             ->dailyAt('08:01');
         $schedule->command('srd:update')
-            ->hourlyAt([1,2,3,4,5,6,7]);
+            ->cron('0 1-7 * * *');
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('plugin-events:clean')->everyTenMinutes();
         $schedule->command('metars:update')->everyFiveMinutes();
