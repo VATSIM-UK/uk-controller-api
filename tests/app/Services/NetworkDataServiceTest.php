@@ -38,6 +38,9 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 $this->getPilotData('BAW123', false, null, null, '1234'),
                 $this->getPilotData('RYR824', true),
                 $this->getPilotData('LOT551', true, 44.372, 26.040),
+                $this->getPilotData('BMI221', true, null, null, '777'),
+                $this->getPilotData('BMI222', true, null, null, '12a4'),
+                $this->getPilotData('BMI223', true, null, null, '7778'),
             ]
         ];
 
@@ -220,6 +223,31 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             'network_aircraft',
             [
                 'callsign' => 'LOT551',
+            ],
+        );
+    }
+
+    public function testItDoesntUpdateAircraftWithInvalidTransponderFromDataFeed()
+    {
+        $this->withoutEvents();
+        $this->fakeNetworkDataReturn();
+        $this->service->updateNetworkData();
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'BMI221',
+            ],
+        );
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'BMI222',
+            ],
+        );
+        $this->assertDatabaseMissing(
+            'network_aircraft',
+            [
+                'callsign' => 'BMI223',
             ],
         );
     }

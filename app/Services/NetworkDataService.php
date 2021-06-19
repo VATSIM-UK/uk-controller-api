@@ -76,7 +76,8 @@ class NetworkDataService
     private function filterPilotData(Collection $pilotData): Collection
     {
         return $pilotData->filter(function (array $pilot) {
-            return $this->shouldProcessPilot($pilot);
+            return $this->shouldProcessPilot($pilot) &&
+                $this->pilotValid($pilot);
         });
     }
 
@@ -203,5 +204,10 @@ class NetworkDataService
         }
 
         return $aircraft;
+    }
+
+    private function pilotValid(array $pilot): bool
+    {
+        return preg_match('/^[0-7]{4}$/', $pilot['transponder']);
     }
 }
