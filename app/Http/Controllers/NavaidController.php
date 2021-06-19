@@ -11,11 +11,15 @@ class NavaidController extends BaseController
     public function __invoke(): JsonResponse
     {
         $navaids = Navaid::all()->map(function (Navaid $navaid) {
+            $sectorfileCoordinate = SectorfileService::convertToSectorfileCoordinate(
+                $navaid->latitude,
+                $navaid->longitude
+            );
             return [
                 'id' => $navaid->id,
                 'identifier' => $navaid->identifier,
-                'latitude' => SectorfileService::convertLatitudeToSectorfileFormat($navaid->latitude),
-                'longitude' => SectorfileService::convertLongitudeToSectorfileFormat($navaid->longitude),
+                'latitude' => $sectorfileCoordinate->getLatitude(),
+                'longitude' => $sectorfileCoordinate->getLongitude(),
             ];
         });
         return response()->json($navaids);

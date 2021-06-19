@@ -127,23 +127,35 @@ class SectorfileServiceTest extends BaseUnitTestCase
         ];
     }
 
-    public function testItConvertsLatitudeToSectorfileFormat()
+    /**
+     * @dataProvider sectorfileFormatProvider
+     */
+    public function testItConvertsToSectorfileFormat(float $latitude, float $longitude, string $expected)
     {
-        $this->assertEquals('N050.56.44.000', SectorfileService::convertLatitudeToSectorfileFormat(50.9455556));
+        $this->assertSame(
+            $expected,
+            (string) SectorfileService::convertToSectorfileCoordinate($latitude, $longitude)
+        );
     }
 
-    public function testItConvertsLatitudeToSectorfileFormatBelowEquator()
+    public function sectorfileFormatProvider()
     {
-        $this->assertEquals('S050.56.44.000', SectorfileService::convertLatitudeToSectorfileFormat(-50.9455556));
-    }
-
-    public function testItConvertsLongitudeToSectorfileFormat()
-    {
-        $this->assertEquals('E000.15.42.000', SectorfileService::convertLongitudeToSectorfileFormat(0.2616667));
-    }
-
-    public function testItConvertsLongitudeToSectorfileFormatWestOfMeridian()
-    {
-        $this->assertEquals('W000.15.42.000', SectorfileService::convertLongitudeToSectorfileFormat(-0.2616667));
+        return [
+            'North east' => [
+                50.9455556,
+                0.2616667,
+                'N050.56.44.000 E000.15.42.000'
+            ],
+            'South west' => [
+                -50.9455556,
+                -0.2616667,
+                'S050.56.44.000 W000.15.42.000'
+            ],
+            'Sixty seconds' => [
+                50.5205556,
+                -1.3333333,
+                'N050.31.14.000 W001.20.00.000'
+            ],  // This is KATHY
+        ];
     }
 }

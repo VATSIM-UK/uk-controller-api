@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\Sectorfile\Coordinate as SectorfileCoordinate;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Location\Coordinate;
@@ -89,21 +90,35 @@ class SectorfileService
         return ($degrees + ($minutes / 60) + ($seconds / 3600)) * $multiplier;
     }
 
-    public static function convertLatitudeToSectorfileFormat(float $latitude): string
+    public static function convertToSectorfileCoordinate(float $latitude, float $longitude): SectorfileCoordinate
+    {
+        return new SectorfileCoordinate(
+            self::convertLatitudeToSectorfileFormat($latitude),
+            self::convertLongitudeToSectorfileFormat($longitude)
+        );
+    }
+
+    private static function convertLatitudeToSectorfileFormat(float $latitude): string
     {
         return self::convertToSectorfileFormat($latitude < 0.0 ? 'S' : 'N', abs($latitude));
     }
 
-    public static function convertLongitudeToSectorfileFormat(float $longitude): string
+    private static function convertLongitudeToSectorfileFormat(float $longitude): string
     {
         return self::convertToSectorfileFormat($longitude < 0.0 ? 'W' : 'E', abs($longitude));
     }
 
-    private static function convertToSectorfileFormat(string $prefix, float $coordinate)
+    private static function convertToSectorfileFormat(string $prefix, float $coordinate): string
     {
         $degrees = (int) $coordinate;
         $minutes = (int) (($coordinate - $degrees) * 60);
         $seconds = number_format(($coordinate - $degrees - ($minutes / 60)) * 3600, 3);
+
+        if ($seconds === '60.000') {
+            $seconds = '0.000';
+            $minutes++;
+        }
+
         $secondsSplit = explode('.', $seconds);
 
         return sprintf(
