@@ -339,7 +339,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $expected->save();
         $expected->refresh();
         $this->assertEquals(
-            $this->filterBySet($expected->toArray()),
+            $expected->toArray(),
             NetworkDataService::createPlaceholderAircraft('AAL123')->toArray()
         );
 
@@ -413,15 +413,5 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         }
 
         return $baseData;
-    }
-
-    private function filterBySet(array $data): array
-    {
-        return array_filter(
-            $data,
-            function ($value) {
-                return isset($value);
-            }
-        );
     }
 }

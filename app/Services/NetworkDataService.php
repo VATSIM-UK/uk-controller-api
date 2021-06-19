@@ -179,12 +179,6 @@ class NetworkDataService
 
     public static function createPlaceholderAircraft(string $callsign): NetworkAircraft
     {
-         NetworkAircraft::upsert(
-             [
-                 'callsign' => $callsign,
-             ],
-             ['callsign'],
-         );
-         return NetworkAircraft::find($callsign);
+        return self::createOrUpdateNetworkAircraft($callsign);
     }
 }
