@@ -42,7 +42,7 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
-        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        NetworkDataService::createPlaceholderAircraft($callsign);
         return StandAssignment::create(
             [
                 'callsign' => $callsign,

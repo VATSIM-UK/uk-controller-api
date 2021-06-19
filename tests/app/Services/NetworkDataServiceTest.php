@@ -314,68 +314,9 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testItReturnsExistingModelIfDuplicateInsert()
+    public function testItCreatesPlaceholderAircraft()
     {
-        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
-        $mock->shouldReceive('updateOrCreate')
-            ->andReturnUsing(
-                function () {
-                    $pdoException = new PDOException();
-                    $pdoException->errorInfo = [1 => 1062];
-                    throw new QueryException('', [], $pdoException);
-                }
-            );
-        $original = new NetworkAircraft(['callsign' => 'AAL123']);
-        $mock->shouldReceive('find')->andReturn($original);
-
-        $this->assertEquals($original, NetworkDataService::createOrUpdateNetworkAircraft('AAL123'));
-    }
-
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testItThrowsQueryExceptionIfNotDuplicateViolation()
-    {
-        $this->expectException(QueryException::class);
-        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
-        $mock->shouldReceive('updateOrCreate')
-            ->andReturnUsing(
-                function () {
-                    $pdoException = new PDOException();
-                    $pdoException->errorInfo = [1 => 9999];
-                    throw new QueryException('', [], $pdoException);
-                }
-            );
-        $original = new NetworkAircraft(['callsign' => 'AAL123']);
-        $mock->shouldReceive('find')->andReturn($original);
-
-        NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
-    }
-
-    public function testItCreatesNetworkAircraftInFirstOrCreate()
-    {
-        $expectedData = $this->getTransformedPilotData('AAL123');
-        $actual = NetworkDataService::firstOrCreateNetworkAircraft('AAL123', $expectedData);
-        $actual->refresh();
-        $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($expected->toArray(), $actual->toArray());
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $expectedData,
-                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
-            ),
-        );
-    }
-
-    public function testItCreatesNetworkAircraftInFirstOrCreateCallsignOnly()
-    {
-        $actual = NetworkDataService::firstOrCreateNetworkAircraft('AAL123');
+        $actual = NetworkDataService::createPlaceholderAircraft('AAL123');
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
@@ -388,21 +329,18 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItFindsNetworkAircraftFirstOrCreateWithData()
+    public function testItFindsNetworkAircraftInCreatePlaceholder()
     {
         Carbon::setTestNow(Carbon::now());
         $expectedData = $this->getTransformedPilotData('AAL123');
         $expected = NetworkAircraft::create($expectedData);
-        $expected->created_at = Carbon::now()->subHour(2);
-        $expected->updated_at = Carbon::now()->subHour(1);
+        $expected->created_at = Carbon::now()->subHours(2);
+        $expected->updated_at = Carbon::now();
         $expected->save();
         $expected->refresh();
         $this->assertEquals(
             $this->filterBySet($expected->toArray()),
-            NetworkDataService::firstOrCreateNetworkAircraft(
-                'AAL123',
-                ['groundspeed' => '234567']
-            )->toArray()
+            NetworkDataService::createPlaceholderAircraft('AAL123')->toArray()
         );
 
         $this->assertDatabaseHas(
@@ -410,81 +348,11 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
             array_merge(
                 $expectedData,
                 [
-                    'created_at' => Carbon::now()->subHour(2)->toDateTimeString(),
-                    'updated_at' => Carbon::now()->subHour(1)->toDateTimeString(),
+                    'created_at' => Carbon::now()->subHours(2)->toDateTimeString(),
+                    'updated_at' => Carbon::now()->toDateTimeString(),
                 ]
             ),
         );
-    }
-
-    public function testItFindsNetworkAircraftFirstOrCreateCallsignOnly()
-    {
-        Carbon::setTestNow(Carbon::now());
-        $expectedData = $this->getTransformedPilotData('AAL123');
-        $expected = NetworkAircraft::create($expectedData);
-        $expected->created_at = Carbon::now()->subHour(2);
-        $expected->updated_at = Carbon::now()->subHour(1);
-        $expected->save();
-        $expected->refresh();
-
-        $this->assertEquals(
-            $this->filterBySet($expected->toArray()),
-            NetworkDataService::firstOrCreateNetworkAircraft('AAL123')->toArray()
-        );
-
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $expectedData,
-                [
-                    'created_at' => Carbon::now()->subHour(2)->toDateTimeString(),
-                    'updated_at' => Carbon::now()->subHour(1)->toDateTimeString(),
-                ]
-            ),
-        );
-    }
-
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testItReturnsExistingModelIfDuplicateInsertOnFirstOrCreate()
-    {
-        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
-        $mock->shouldReceive('firstOrCreate')
-            ->andReturnUsing(
-                function () {
-                    $pdoException = new PDOException();
-                    $pdoException->errorInfo = [1 => 1062];
-                    throw new QueryException('', [], $pdoException);
-                }
-            );
-        $original = new NetworkAircraft(['callsign' => 'AAL123']);
-        $mock->shouldReceive('find')->andReturn($original);
-
-        $this->assertEquals($original, NetworkDataService::firstOrCreateNetworkAircraft('AAL123'));
-    }
-
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testItThrowsQueryExceptionIfNotDuplicateViolationOnFirstOrCreate()
-    {
-        $this->expectException(QueryException::class);
-        $mock = Mockery::mock('overload:App\\Models\\Vatsim\\NetworkAircraft');
-        $mock->shouldReceive('firstOrCreate')
-            ->andReturnUsing(
-                function () {
-                    $pdoException = new PDOException();
-                    $pdoException->errorInfo = [1 => 9999];
-                    throw new QueryException('', [], $pdoException);
-                }
-            );
-        $original = new NetworkAircraft(['callsign' => 'AAL123']);
-        $mock->shouldReceive('find')->andReturn($original);
-
-        NetworkDataService::firstOrCreateNetworkAircraft('AAL123');
     }
 
     private function getPilotData(
