@@ -24,7 +24,7 @@ class NetworkAircraftFactory extends Factory
     {
         return [
             'callsign' => $this->faker->word,
-            'transponder_last_updated_at' => Carbon::now(),
+            'transponder_last_updated_at' => null,
         ];
     }
 }
