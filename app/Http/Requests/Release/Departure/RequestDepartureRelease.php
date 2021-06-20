@@ -4,6 +4,8 @@ namespace App\Http\Requests\Release\Departure;
 
 use App\Models\Controller\ControllerPosition;
 use App\Models\Release\Departure\DepartureReleaseRequest;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RequestDepartureRelease extends FormRequest
@@ -14,11 +16,6 @@ class RequestDepartureRelease extends FormRequest
             'callsign' => [
                 'required',
                 'string',
-                function ($attribute, $value, $fail) {
-                    if (DepartureReleaseRequest::activeFor($value)->exists()) {
-                        $fail(sprintf('Cannot create release request for %s, one already active', $value));
-                    }
-                },
             ],
             'requesting_controller_id' => [
                 'required',
@@ -42,5 +39,32 @@ class RequestDepartureRelease extends FormRequest
             ],
             'expires_in_seconds' => 'required|integer|min:1',
         ];
+    }
+
+    public function validator()
+    {
+        return $this->createDefaultValidator($this->container->make(ValidationFactory::class))->after(
+            function (Validator $validator) {
+                $validated = $validator->validated();
+                if (!isset($validated['callsign'], $validated['target_controller_id'])) {
+                    return;
+                }
+
+                $activeRequest = DepartureReleaseRequest::activeFor($validated['callsign'])
+                    ->target($validated['target_controller_id'])
+                    ->exists();
+
+                if ($activeRequest) {
+                    $validator->errors()->add(
+                        'callsign',
+                        sprintf(
+                            'Cannot create release request for %s, one already active for target %d',
+                            $validated['callsign'],
+                            $validated['target_controller_id']
+                        )
+                    );
+                }
+            }
+        );
     }
 }
