@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\AirfieldService;
+use App\Services\DependencyService;
 use App\Services\HandoffService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
@@ -60,6 +61,12 @@ class AddLondonAreaNorthSplits extends Migration
         $this->addToHandoff('EGNM_SID');
         $this->addToHandoff('EGCN_SID');
         $this->addToHandoff('EGNT_SID');
+
+        // Touch dependencies
+        DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');
+        DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS_V2');
+        DependencyService::touchDependencyByKey('DEPENDENCY_AIRFIELD_OWNERSHIP');
+        DependencyService::touchDependencyByKey('DEPENDENCY_HANDOFF');
     }
 
     /**
