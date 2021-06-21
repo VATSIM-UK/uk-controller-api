@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.2.1",
-    "commitizen": "^4.2.3",
+    "commitizen": "^4.2.4",
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.21",
