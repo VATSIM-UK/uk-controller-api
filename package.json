@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.2.1",
+    "@tailwindcss/forms": "^0.3.3",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.6",
