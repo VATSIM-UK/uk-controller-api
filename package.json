@@ -14,7 +14,7 @@
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.21",
     "postcss": "^8.3.5",
-    "postcss-import": "^14.0.0",
+    "postcss-import": "^14.0.2",
     "tailwindcss": "^2.0.3"
   },
   "scripts": {
