@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 
 class DepartureReleaseControllerTest extends BaseApiTestCase
 {
@@ -12,6 +13,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now()->startOfSecond());
+        CarbonImmutable::setTestNow(Carbon::now()->startOfSecond());
         $this->withoutEvents();
     }
 
