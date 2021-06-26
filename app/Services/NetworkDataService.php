@@ -165,45 +165,22 @@ class NetworkDataService
         string $callsign,
         array $details = []
     ): NetworkAircraft {
-        try {
-            $aircraft = NetworkAircraft::updateOrCreate(
-                ['callsign' => $callsign],
-                array_merge(
-                    ['callsign' => $callsign],
-                    $details
-                )
-            );
-            $aircraft->touch();
-        } catch (QueryException $queryException) {
-            if ($queryException->errorInfo[1] !== 1062) {
-                throw $queryException;
-            }
-            $aircraft = NetworkAircraft::find($callsign);
-        }
-
-        return $aircraft;
+        NetworkAircraft::upsert(
+            array_merge(
+                [
+                    'callsign' => $callsign,
+                ],
+                $details
+            ),
+            ['callsign'],
+            array_merge(['callsign'], array_keys($details)),
+        );
+        return NetworkAircraft::find($callsign);
     }
 
-    public static function firstOrCreateNetworkAircraft(
-        string $callsign,
-        array $details = []
-    ): NetworkAircraft {
-        try {
-            $aircraft = NetworkAircraft::firstOrCreate(
-                ['callsign' => $callsign],
-                array_merge(
-                    ['callsign' => $callsign],
-                    $details
-                )
-            );
-        } catch (QueryException $queryException) {
-            if ($queryException->errorInfo[1] !== 1062) {
-                throw $queryException;
-            }
-            $aircraft = NetworkAircraft::find($callsign);
-        }
-
-        return $aircraft;
+    public static function createPlaceholderAircraft(string $callsign): NetworkAircraft
+    {
+        return self::createOrUpdateNetworkAircraft($callsign);
     }
 
     private function pilotValid(array $pilot): bool

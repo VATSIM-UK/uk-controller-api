@@ -18,7 +18,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
             return null;
         }
 
-        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        NetworkDataService::createPlaceholderAircraft($callsign);
 
         // Loop the possible squawk ranges and possible codes and try to assign one
         foreach ($this->getPossibleSquawkRanges($details) as $range) {
