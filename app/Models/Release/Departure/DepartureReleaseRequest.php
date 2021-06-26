@@ -120,4 +120,9 @@ class DepartureReleaseRequest extends Model
                 }
             );
     }
+
+    public function scopeTarget(Builder $builder, int $targetController): Builder
+    {
+        return $builder->where('target_controller_position_id', $targetController);
+    }
 }
