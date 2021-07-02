@@ -64,6 +64,12 @@
         {
           "releasedLabels": false
         }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["docs/CHANGELOG.md"]
+        }
       ]
     ]
   }

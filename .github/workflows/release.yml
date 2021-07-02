@@ -35,7 +35,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          npx -p @semantic-release/changelog -p semantic-release@17 semantic-release
+          npx -p @semantic-release/changelog -p @semantic-release/git -p semantic-release@17 semantic-release
 
   trigger-deployment:
     name: Trigger Deployment
