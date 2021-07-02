@@ -128,4 +128,22 @@ class DepartureReleaseRequestTest extends BaseFunctionalTestCase
 
         $this->assertTrue(DepartureReleaseRequest::activeFor('EZY890')->exists());
     }
+
+    public function testScopeActiveForIncludesActiveApprovedReleasesIfNoExpiryTime()
+    {
+        $release = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'EZY890',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->subMinute(),
+            ]
+        );
+        $release->released_at = Carbon::now()->subMinutes(2);
+        $release->release_expires_at = null;
+        $release->save();
+
+        $this->assertTrue(DepartureReleaseRequest::activeFor('EZY890')->exists());
+    }
 }
