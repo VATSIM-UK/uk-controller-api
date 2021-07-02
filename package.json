@@ -56,7 +56,7 @@
         "@semantic-release/changelog",
         {
           "changelogFile": "docs/CHANGELOG.md",
-          "changelogTitle": "UK Controller Plugin API Changelog"
+          "changelogTitle": "# UK Controller Plugin API Changelog"
         }
       ],
       [
