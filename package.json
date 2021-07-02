@@ -8,6 +8,7 @@
     "test": "tests"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
     "@tailwindcss/forms": "^0.3.3",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "3.3.0",
@@ -51,6 +52,13 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "docs/CHANGELOG.md",
+          "changelogTitle": "UK Controller Plugin API Changelog"
+        }
+      ],
       [
         "@semantic-release/github",
         {
