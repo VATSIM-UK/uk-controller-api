@@ -30,50 +30,6 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->assertInstanceOf(VersionService::class, $this->service);
     }
 
-    public function testResponseUnknownVersion()
-    {
-        $expected = [
-            'version_disabled' => true,
-            'message' => 'This version of UK Controller Plugin is unknown.',
-            'update_available' => true,
-        ];
-
-        $this->assertEquals($expected, $this->service->getVersionResponse('notaversion'));
-    }
-
-    public function testResponseNotAllowedVersion()
-    {
-        $expected = [
-            'update_available' => true,
-            'message' => 'This version of the UK Controller Plugin has been removed from service. ' .
-                'In order to continue using the plugin, you must download the latest version from the website.',
-            'version_disabled' => true,
-        ];
-
-        $this->assertEquals($expected, $this->service->getVersionResponse(self::DEPRECATED_VERSION));
-    }
-
-    public function testResponseUpdateAvailable()
-    {
-        $expected = [
-            'update_available' => true,
-            'message' => 'A new version of the UK Controller Plugin is available from the VATSIM UK Website.',
-            'version_disabled' => false,
-        ];
-
-        $this->assertEquals($expected, $this->service->getVersionResponse(self::ALLOWED_OLD_VERSION));
-    }
-
-    public function testResponseUpToDate()
-    {
-        $expected = [
-            'update_available' => false,
-            'version_disabled' => false,
-        ];
-
-        $this->assertEquals($expected, $this->service->getVersionResponse(self::CURRENT_VERSION));
-    }
-
     public function testGetVersionReturnsVersionInformation()
     {
         $expected = [

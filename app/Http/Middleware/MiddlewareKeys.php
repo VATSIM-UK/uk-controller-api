@@ -13,7 +13,6 @@ class MiddlewareKeys
     const USER_BANNED = 'user.banned';
     const USER_DISABLED = 'user.disabled';
     const USER_LASTLOGIN = 'user.lastlogin';
-    const USER_PLUGIN_VERSION = 'user.version';
     const SCOPES = 'scopes';
     const SCOPE = 'scope';
     const VATSIM_CID = 'vatsim.cid';
