@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
 use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
 use App\Exceptions\Prenote\PrenoteCancellationNotAllowedException;
