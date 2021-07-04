@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PrenoteMessageController;
 use App\Rules\VatsimCallsign;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\MiddlewareKeys;
@@ -72,6 +73,11 @@ Route::middleware('api')->group(
                 Route::get('notifications/unread', 'NotificationController@getUnreadNotifications');
                 Route::put('notifications/read/{id}', 'NotificationController@readNotification')
                     ->where('id', '[0-9]+');
+
+                // Prenotes
+                Route::prefix('prenote-messages')->group(function () {
+                    Route::post('', [PrenoteMessageController::class, 'create']);
+                });
 
                 // Version checking
                 Route::get(

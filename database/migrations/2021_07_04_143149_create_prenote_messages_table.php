@@ -16,9 +16,9 @@ class CreatePrenoteMessagesTable extends Migration
         Schema::create('prenote_messages', function (Blueprint $table) {
             $table->id();
             $table->string('callsign');
-            $table->string('departure_airfield')
+            $table->string('departure_airfield', 4)
                 ->comment('The airfield the aircraft is departing');
-            $table->string('destination_airfield')
+            $table->string('destination_airfield', 4)
                 ->nullable()
                 ->comment('The airfield the aircraft is arriving to');
             $table->string('departure_sid')
@@ -50,6 +50,9 @@ class CreatePrenoteMessagesTable extends Migration
                 ->references('id')
                 ->on('user')
                 ->cascadeOnDelete();
+
+            $table->index('deleted_at');
+            $table->index('acknowledged_at');
         });
     }
 

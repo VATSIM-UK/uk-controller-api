@@ -31,6 +31,8 @@ class ControllerPosition extends Model
         'frequency' => 'float',
         'requests_departure_releases' => 'boolean',
         'receives_departure_releases' => 'boolean',
+        'sends_prenotes' => 'boolean',
+        'receives_prenotes' => 'boolean',
     ];
 
     public function topDownAirfields() : BelongsToMany
@@ -51,5 +53,15 @@ class ControllerPosition extends Model
     public function scopeCanReceiveDepartureReleases(Builder $query): Builder
     {
         return $query->where('receives_departure_releases', true);
+    }
+
+    public function scopeCanSendPrenotes(Builder $query): Builder
+    {
+        return $query->where('sends_prenotes', true);
+    }
+
+    public function scopeCanReceivePrenotes(Builder $query): Builder
+    {
+        return $query->where('receives_prenotes', true);
     }
 }

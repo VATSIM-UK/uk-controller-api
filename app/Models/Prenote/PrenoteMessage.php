@@ -2,6 +2,8 @@
 
 namespace App\Models\Prenote;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,6 +21,7 @@ class PrenoteMessage extends Model
         'user_id',
         'controller_position_id',
         'target_controller_position_id',
+        'expires_at',
     ];
 
     protected $dates = [
@@ -26,4 +29,16 @@ class PrenoteMessage extends Model
         'expires_at',
         'acknowledged_at',
     ];
+
+    public function scopeTarget(Builder $query, int $targetController): Builder
+    {
+        return $query->where('target_controller_position_id', $targetController);
+    }
+
+    public function scopeActiveFor(Builder $query, string $callsign): Builder
+    {
+        return $query->where('callsign', $callsign)
+            ->whereNull('acknowledged_at')
+            ->where('expires_at', '>', Carbon::now());
+    }
 }
