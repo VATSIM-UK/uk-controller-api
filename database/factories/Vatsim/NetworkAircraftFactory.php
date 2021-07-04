@@ -23,7 +23,7 @@ class NetworkAircraftFactory extends Factory
     public function definition()
     {
         return [
-            'callsign' => $this->faker->word,
+            'callsign' => $this->faker->unique()->word,
             'transponder_last_updated_at' => null,
         ];
     }
