@@ -9,6 +9,10 @@
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.2.3",
+    "@semantic-release/release-notes-generator": "^9.0.3",
     "@tailwindcss/forms": "^0.3.3",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "3.3.0",
@@ -16,6 +20,7 @@
     "lodash": "^4.17.21",
     "postcss": "^8.3.5",
     "postcss-import": "^14.0.2",
+    "semantic-release": "17",
     "tailwindcss": "^2.2.4"
   },
   "scripts": {
@@ -68,7 +73,9 @@
       [
         "@semantic-release/git",
         {
-          "assets": ["docs/CHANGELOG.md"]
+          "assets": [
+            "docs/CHANGELOG.md"
+          ]
         }
       ]
     ]
