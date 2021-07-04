@@ -77,6 +77,9 @@ Route::middleware('api')->group(
                 // Prenotes
                 Route::prefix('prenote-messages')->group(function () {
                     Route::post('', [PrenoteMessageController::class, 'create']);
+                    Route::prefix('{prenoteMessage}')->group(function () {
+                        Route::patch('acknowledge', [PrenoteMessageController::class, 'acknowledge']);
+                    });
                 });
 
                 // Version checking

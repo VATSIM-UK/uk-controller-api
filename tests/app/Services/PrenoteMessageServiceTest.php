@@ -4,7 +4,13 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\Prenote\NewPrenoteMessageEvent;
+use App\Events\Prenote\PrenoteAcknowledgedEvent;
+use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
+use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
+use App\Models\Controller\Prenote;
+use App\Models\Prenote\PrenoteMessage;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Event;
 
 class PrenoteMessageServiceTest extends BaseFunctionalTestCase
@@ -17,6 +23,22 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now()->startOfSecond());
         $this->service = $this->app->make(PrenoteMessageService::class);
         Event::fake();
+    }
+
+    public function createPrenoteMessage(): PrenoteMessage
+    {
+        return PrenoteMessage::findOrfail(
+            $this->service->createPrenoteMessage(
+                'BAW123',
+                'EGLL',
+                'MODMI1G',
+                'EGJJ',
+                self::ACTIVE_USER_CID,
+                1,
+                2,
+                15
+            )
+        );
     }
 
     public function testItCreatesAPrenoteMessage()
@@ -50,18 +72,20 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        Event::assertDispatched(function (NewPrenoteMessageEvent $event) use ($prenoteId) {
-            return $event->broadcastWith() === [
-                'id' => $prenoteId,
-                'callsign' => 'BAW123',
-                'departure_airfield' => 'EGLL',
-                'departure_sid' => 'MODMI1G',
-                'destination_airfield' => 'EGJJ',
-                'sending_controller' => 1,
-                'target_controller' => 2,
-                'expires_at' => Carbon::now()->addSeconds(15)->toDateTimeString()
-            ];
-        });
+        Event::assertDispatched(
+            function (NewPrenoteMessageEvent $event) use ($prenoteId) {
+                return $event->broadcastWith() === [
+                        'id' => $prenoteId,
+                        'callsign' => 'BAW123',
+                        'departure_airfield' => 'EGLL',
+                        'departure_sid' => 'MODMI1G',
+                        'destination_airfield' => 'EGJJ',
+                        'sending_controller' => 1,
+                        'target_controller' => 2,
+                        'expires_at' => Carbon::now()->addSeconds(15)->toDateTimeString(),
+                    ];
+            }
+        );
     }
 
     public function testItCreatesAPrenoteMessageWithNoSid()
@@ -95,18 +119,20 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        Event::assertDispatched(function (NewPrenoteMessageEvent $event) use ($prenoteId) {
-            return $event->broadcastWith() === [
-                'id' => $prenoteId,
-                'callsign' => 'BAW123',
-                'departure_airfield' => 'EGLL',
-                'departure_sid' => null,
-                'destination_airfield' => 'EGJJ',
-                'sending_controller' => 1,
-                'target_controller' => 2,
-                'expires_at' => Carbon::now()->addSeconds(15)->toDateTimeString()
-            ];
-        });
+        Event::assertDispatched(
+            function (NewPrenoteMessageEvent $event) use ($prenoteId) {
+                return $event->broadcastWith() === [
+                        'id' => $prenoteId,
+                        'callsign' => 'BAW123',
+                        'departure_airfield' => 'EGLL',
+                        'departure_sid' => null,
+                        'destination_airfield' => 'EGJJ',
+                        'sending_controller' => 1,
+                        'target_controller' => 2,
+                        'expires_at' => Carbon::now()->addSeconds(15)->toDateTimeString(),
+                    ];
+            }
+        );
     }
 
     public function testItCreatesAPrenoteMessageWithNoDestination()
@@ -140,17 +166,63 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        Event::assertDispatched(function (NewPrenoteMessageEvent $event) use ($prenoteId) {
-            return $event->broadcastWith() === [
-                'id' => $prenoteId,
+        Event::assertDispatched(
+            function (NewPrenoteMessageEvent $event) use ($prenoteId) {
+                return $event->broadcastWith() === [
+                        'id' => $prenoteId,
+                        'callsign' => 'BAW123',
+                        'departure_airfield' => 'EGLL',
+                        'departure_sid' => 'MODMI1G',
+                        'destination_airfield' => null,
+                        'sending_controller' => 1,
+                        'target_controller' => 2,
+                        'expires_at' => Carbon::now()->addSeconds(15)->toDateTimeString(),
+                    ];
+            }
+        );
+    }
+
+    public function testItAcknowledgesAPrenote()
+    {
+        $prenote = $this->createPrenoteMessage();
+        $this->service->acknowledgePrenoteMessage(
+            $prenote,
+            self::ACTIVE_USER_CID,
+            2
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_messages',
+            [
+                'id' => $prenote->id,
                 'callsign' => 'BAW123',
-                'departure_airfield' => 'EGLL',
-                'departure_sid' => 'MODMI1G',
-                'destination_airfield' => null,
-                'sending_controller' => 1,
-                'target_controller' => 2,
-                'expires_at' => Carbon::now()->addSeconds(15)->toDateTimeString()
-            ];
-        });
+                'acknowledged_at' => Carbon::now()->toDateTimeString(),
+                'acknowledged_by' => self::ACTIVE_USER_CID,
+            ]
+        );
+
+        Event::assertDispatched(
+            function (PrenoteAcknowledgedEvent $event) use ($prenote) {
+                return $event->broadcastWith() === [
+                        'id' => $prenote->id,
+                    ];
+            }
+        );
+    }
+
+    public function testItThrowsExceptionIfControllerIsntTargetOfPrenote()
+    {
+        $this->expectException(PrenoteAcknowledgementNotAllowedException::class);
+        $this->service->acknowledgePrenoteMessage($this->createPrenoteMessage(), self::ACTIVE_USER_CID, 1);
+    }
+
+    public function testItThrowsExceptionIfPrenoteAlreadyAcknowledged()
+    {
+        $this->expectException(PrenoteAlreadyAcknowledgedException::class);
+        $this->service->acknowledgePrenoteMessage(
+            $this->createPrenoteMessage()->acknowledge(self::ACTIVE_USER_CID),
+            self::ACTIVE_USER_CID,
+            2
+        );
     }
 }

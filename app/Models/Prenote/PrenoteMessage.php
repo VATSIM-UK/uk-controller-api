@@ -41,4 +41,17 @@ class PrenoteMessage extends Model
             ->whereNull('acknowledged_at')
             ->where('expires_at', '>', Carbon::now());
     }
+
+    public function acknowledged(): bool
+    {
+        return $this->acknowledged_at !== null;
+    }
+
+    public function acknowledge(int $userId): PrenoteMessage
+    {
+        $this->acknowledged_by = $userId;
+        $this->acknowledged_at = Carbon::now();
+        $this->save();
+        return $this;
+    }
 }

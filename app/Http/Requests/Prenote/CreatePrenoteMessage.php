@@ -9,7 +9,7 @@ use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreatePrenoteMessageRequest extends FormRequest
+class CreatePrenoteMessage extends FormRequest
 {
     public function rules()
     {

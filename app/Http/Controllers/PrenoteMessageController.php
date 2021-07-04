@@ -4,8 +4,13 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Requests\Prenote\CreatePrenoteMessageRequest;
+use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
+use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
+use App\Http\Requests\Prenote\AcknowledgePrenoteMessage;
+use App\Http\Requests\Prenote\CreatePrenoteMessage;
+use App\Models\Prenote\PrenoteMessage;
 use App\Services\PrenoteMessageService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class PrenoteMessageController
@@ -17,7 +22,7 @@ class PrenoteMessageController
         $this->prenoteMessageService = $prenoteMessageService;
     }
 
-    public function create(CreatePrenoteMessageRequest $request)
+    public function create(CreatePrenoteMessage $request): JsonResponse
     {
         $validated = $request->validated();
         $messageId = $this->prenoteMessageService->createPrenoteMessage(
@@ -32,5 +37,22 @@ class PrenoteMessageController
         );
 
         return response()->json(['id' => $messageId], 201);
+    }
+
+    public function acknowledge(PrenoteMessage $prenoteMessage, AcknowledgePrenoteMessage $request): JsonResponse
+    {
+        try {
+            $this->prenoteMessageService->acknowledgePrenoteMessage(
+                $prenoteMessage,
+                Auth::id(),
+                $request->validated()['controller_position_id']
+            );
+        } catch (PrenoteAcknowledgementNotAllowedException $notAllowedException) {
+            return response()->json(['message' => $notAllowedException->getMessage()], 403);
+        } catch (PrenoteAlreadyAcknowledgedException $alreadyAcknowledgedException) {
+            return response()->json(['message' => $alreadyAcknowledgedException->getMessage()], 409);
+        }
+
+        return response()->json();
     }
 }

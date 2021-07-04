@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Events\Prenote\NewPrenoteMessageEvent;
+use App\Events\Prenote\PrenoteAcknowledgedEvent;
+use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
+use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
 use App\Models\Prenote\PrenoteMessage;
 use Carbon\Carbon;
 
@@ -34,5 +37,24 @@ class PrenoteMessageService
 
         event(new NewPrenoteMessageEvent($prenoteMessage));
         return $prenoteMessage->id;
+    }
+
+    public function acknowledgePrenoteMessage(
+        PrenoteMessage $message,
+        int $userId,
+        int $controllerId
+    ) {
+        if ($message->target_controller_position_id !== $controllerId) {
+            throw new PrenoteAcknowledgementNotAllowedException(
+                sprintf('Controller id %d cannot acknowledge this prenote', $controllerId)
+            );
+        }
+
+        if ($message->acknowledged()) {
+            throw new PrenoteAlreadyAcknowledgedException('This prenote is already acknowledged');
+        }
+
+        $message->acknowledge($userId);
+        event(new PrenoteAcknowledgedEvent($message));
     }
 }
