@@ -5,8 +5,10 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use App\Events\Prenote\NewPrenoteMessageEvent;
 use App\Events\Prenote\PrenoteAcknowledgedEvent;
+use App\Events\Prenote\PrenoteDeletedEvent;
 use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
 use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
+use App\Exceptions\Prenote\PrenoteCancellationNotAllowedException;
 use App\Models\Controller\Prenote;
 use App\Models\Prenote\PrenoteMessage;
 use Carbon\Carbon;
@@ -223,6 +225,35 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
             $this->createPrenoteMessage()->acknowledge(self::ACTIVE_USER_CID),
             self::ACTIVE_USER_CID,
             2
+        );
+    }
+
+    public function testItDeletesAPrenote()
+    {
+        $prenote = $this->createPrenoteMessage();
+        $this->service->cancelPrenoteMessage(
+            $prenote,
+            self::ACTIVE_USER_CID
+        );
+
+        $this->assertSoftDeleted($prenote);
+
+        Event::assertDispatched(
+            function (PrenoteDeletedEvent $event) use ($prenote) {
+                return $event->broadcastWith() === [
+                        'id' => $prenote->id,
+                    ];
+            }
+        );
+    }
+
+    public function testOnlyTheUserCreatingAPrenoteCanDeleteIt()
+    {
+        $this->expectException(PrenoteCancellationNotAllowedException::class);
+        $prenote = $this->createPrenoteMessage();
+        $this->service->cancelPrenoteMessage(
+            $prenote,
+            1234
         );
     }
 }

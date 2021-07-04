@@ -371,6 +371,12 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         return sprintf('prenote-messages/%d/acknowledge', $messageId);
     }
 
+    public function testUnauthorisedUsersCantAcknowledgePrenoteMessages()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_PATCH, $this->getAcknowledgeRoute(123))
+            ->assertUnauthorized();
+    }
+
     public function testItAcknowledgesAPrenoteMessage()
     {
         $messageId = PrenoteMessage::create(
@@ -500,5 +506,69 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $this->getAcknowledgeRoute($messageId), $requestData)
             ->assertStatus(422);
+    }
+
+    private function getDeleteRoute(int $messageId): string
+    {
+        return sprintf('prenote-messages/%d', $messageId);
+    }
+
+    public function testUnauthorisedUsersCantCancelPrenoteMessages()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_DELETE, $this->getDeleteRoute(1))
+            ->assertUnauthorized();
+    }
+
+    public function testItDeletesAPrenoteMessage()
+    {
+        $messageId = PrenoteMessage::create(
+            [
+                'callsign' => 'BAW123',
+                'departure_airfield' => 'EGLL',
+                'departure_sid' => 'MODMI1G',
+                'destination_airfield' => 'EGJJ',
+                'controller_position_id' => 1,
+                'user_id' => self::ACTIVE_USER_CID,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addSeconds(115),
+            ]
+        )->id;
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $this->getDeleteRoute($messageId))
+            ->assertOk();
+
+        $this->assertSoftDeleted(
+            'prenote_messages',
+            [
+                'id' => $messageId,
+            ]
+        );
+    }
+
+    public function testItReturnsNotFoundIfNoMessageToDelete()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $this->getDeleteRoute(123))
+            ->assertNotFound()
+            ->assertJson([]);
+    }
+
+    public function testItReturnsForbiddenIfNotAllowedToDeleteMessage()
+    {
+        $messageId = PrenoteMessage::create(
+            [
+                'callsign' => 'BAW123',
+                'departure_airfield' => 'EGLL',
+                'departure_sid' => 'MODMI1G',
+                'destination_airfield' => 'EGJJ',
+                'controller_position_id' => 1,
+                'user_id' => self::BANNED_USER_CID,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addSeconds(115),
+            ]
+        )->id;
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $this->getDeleteRoute($messageId))
+            ->assertForbidden()
+            ->assertJsonStructure(['message']);
     }
 }

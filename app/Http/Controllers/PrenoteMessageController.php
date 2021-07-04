@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
 use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
+use App\Exceptions\Prenote\PrenoteCancellationNotAllowedException;
 use App\Http\Requests\Prenote\AcknowledgePrenoteMessage;
 use App\Http\Requests\Prenote\CreatePrenoteMessage;
 use App\Models\Prenote\PrenoteMessage;
@@ -51,6 +52,20 @@ class PrenoteMessageController
             return response()->json(['message' => $notAllowedException->getMessage()], 403);
         } catch (PrenoteAlreadyAcknowledgedException $alreadyAcknowledgedException) {
             return response()->json(['message' => $alreadyAcknowledgedException->getMessage()], 409);
+        }
+
+        return response()->json();
+    }
+
+    public function delete(PrenoteMessage $prenoteMessage): JsonResponse
+    {
+        try {
+            $this->prenoteMessageService->cancelPrenoteMessage(
+                $prenoteMessage,
+                Auth::id(),
+            );
+        } catch (PrenoteCancellationNotAllowedException $notAllowedException) {
+            return response()->json(['message' => $notAllowedException->getMessage()], 403);
         }
 
         return response()->json();

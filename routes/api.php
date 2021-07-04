@@ -79,6 +79,7 @@ Route::middleware('api')->group(
                     Route::post('', [PrenoteMessageController::class, 'create']);
                     Route::prefix('{prenoteMessage}')->group(function () {
                         Route::patch('acknowledge', [PrenoteMessageController::class, 'acknowledge']);
+                        Route::delete('', [PrenoteMessageController::class, 'delete']);
                     });
                 });
 
