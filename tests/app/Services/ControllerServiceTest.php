@@ -149,6 +149,8 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                 'top_down' => [
                     'EGLL',
                 ],
+                'requests_departure_releases' => true,
+                'receives_departure_releases' => true,
                 'sends_prenotes' => true,
                 'receives_prenotes' => true,
             ],
