@@ -5,10 +5,10 @@ namespace App\Providers;
 use App\Jobs\Hold\UnassignHoldOnDisconnect;
 use App\Jobs\Network\AircraftDisconnected;
 use App\Jobs\Network\DeleteNetworkAircraft;
+use App\Jobs\Prenote\CancelOutstandingPrenoteMessages;
 use App\Jobs\Release\Departure\CancelOutstandingDepartureReleaseRequests;
 use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Jobs\Stand\TriggerUnassignmentOnDisconnect;
-use App\Listeners\Network\RecordFirEntry;
 use App\Models\FlightInformationRegion\FlightInformationRegion;
 use App\Services\NetworkDataService;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -22,7 +22,6 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function register()
     {
-        $this->app->singleton(RecordFirEntry::class);
         $this->app->singleton(NetworkDataService::class, function () {
             return new NetworkDataService(
                 FlightInformationRegion::with('proximityMeasuringPoints')
@@ -41,6 +40,7 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
                         $application->make(MarkAssignmentDeletedOnDisconnect::class),
                         $application->make(TriggerUnassignmentOnDisconnect::class),
                         $application->make(CancelOutstandingDepartureReleaseRequests::class),
+                        $application->make(CancelOutstandingPrenoteMessages::class),
                         $application->make(DeleteNetworkAircraft::class),
                     ])
                 );
@@ -50,6 +50,6 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
 
     public function provides()
     {
-        return [RecordFirEntry::class, NetworkDataService::class];
+        return [NetworkDataService::class];
     }
 }

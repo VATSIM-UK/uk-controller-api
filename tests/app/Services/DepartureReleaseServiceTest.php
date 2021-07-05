@@ -370,6 +370,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
         $this->service->cancelReleaseRequest($request, self::BANNED_USER_CID);
     }
+
     public function testItCancelsRequestsForAirborneAircraft()
     {
         Event::fake();

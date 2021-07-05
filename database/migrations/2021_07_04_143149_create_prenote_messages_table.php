@@ -51,6 +51,7 @@ class CreatePrenoteMessagesTable extends Migration
                 ->on('user')
                 ->cascadeOnDelete();
 
+            $table->index('callsign');
             $table->index('deleted_at');
             $table->index('acknowledged_at');
         });

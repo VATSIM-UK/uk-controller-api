@@ -72,4 +72,19 @@ class PrenoteMessageService
         $message->delete();
         event(new PrenoteDeletedEvent($message));
     }
+
+    public function cancelMessagesForAirborneAircraft(): void
+    {
+        $messagesToProcess = PrenoteMessage::query()
+            ->join('network_aircraft', 'network_aircraft.callsign', '=', 'prenote_messages.callsign')
+            ->where('network_aircraft.groundspeed', '>=', 50)
+            ->where('network_aircraft.altitude', '>=', 1000)
+            ->select('prenote_messages.*')
+            ->get();
+
+        $messagesToProcess->each(function (PrenoteMessage $message) {
+            $message->delete();
+            event(new PrenoteDeletedEvent($message));
+        });
+    }
 }

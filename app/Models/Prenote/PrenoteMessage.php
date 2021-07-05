@@ -4,12 +4,13 @@ namespace App\Models\Prenote;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PrenoteMessage extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     const UPDATED_AT = null;
 

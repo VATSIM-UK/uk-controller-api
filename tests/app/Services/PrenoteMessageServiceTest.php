@@ -11,6 +11,7 @@ use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
 use App\Exceptions\Prenote\PrenoteCancellationNotAllowedException;
 use App\Models\Controller\Prenote;
 use App\Models\Prenote\PrenoteMessage;
+use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Event;
@@ -254,6 +255,66 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
         $this->service->cancelPrenoteMessage(
             $prenote,
             1234
+        );
+    }
+
+    public function testItCancelsRequestsForAirborneAircraft()
+    {
+        Event::fake();
+        $aircraft1 = NetworkAircraft::factory()->create(['groundspeed' => 49, 'altitude' => 1000]);
+        $aircraft2 = NetworkAircraft::factory()->create(['groundspeed' => 50, 'altitude' => 999]);
+        $aircraft3 = NetworkAircraft::factory()->create(['groundspeed' => 50, 'altitude' => 1000]);
+        $aircraft4 = NetworkAircraft::factory()->create(['groundspeed' => 51, 'altitude' => 1001]);
+
+        $prenote1 = PrenoteMessage::factory()->create(['callsign' => $aircraft1->callsign]);
+        $prenote2 = PrenoteMessage::factory()->create(['callsign' => $aircraft2->callsign]);
+        $prenote3 = PrenoteMessage::factory()->create(['callsign' => $aircraft3->callsign]);
+        $prenote4 = PrenoteMessage::factory()->create(['callsign' => $aircraft4->callsign]);
+        $prenote4a = PrenoteMessage::factory()->create(['callsign' => $aircraft4->callsign]);
+
+        $this->service->cancelMessagesForAirborneAircraft();
+
+        // Check models
+        $this->assertNotNull(PrenoteMessage::find($prenote1->id));
+        $this->assertNotNull(PrenoteMessage::find($prenote2->id));
+        $this->assertSoftDeleted('departure_release_requests', ['id' => $prenote3->id]);
+        $this->assertSoftDeleted('departure_release_requests', ['id' => $prenote4->id]);
+        $this->assertSoftDeleted('departure_release_requests', ['id' => $prenote4a->id]);
+
+        // Check events
+        Event::assertNotDispatched(
+            PrenoteDeletedEvent::class,
+            function (PrenoteDeletedEvent $event) use ($prenote1) {
+                return $event->broadcastWith() === ['id' => $prenote1->id];
+            }
+        );
+
+        Event::assertNotDispatched(
+            PrenoteDeletedEvent::class,
+            function (PrenoteDeletedEvent $event) use ($prenote2) {
+                return $event->broadcastWith() === ['id' => $prenote2->id];
+            }
+        );
+
+        Event::assertDispatched(
+            PrenoteDeletedEvent::class,
+            function (PrenoteDeletedEvent $event) use ($prenote3) {
+                return $event->broadcastWith() === ['id' => $prenote3->id];
+            }
+        );
+
+        Event::assertDispatched(
+            PrenoteDeletedEvent::class,
+            function (PrenoteDeletedEvent $event) use ($prenote4) {
+                return $event->broadcastWith() === ['id' => $prenote4->id];
+            }
+        );
+
+        Event::assertDispatched(
+            PrenoteDeletedEvent::class,
+            function (PrenoteDeletedEvent $event) use ($prenote4a) {
+                return $event->broadcastWith() === ['id' => $prenote4a->id];
+            }
         );
     }
 }
