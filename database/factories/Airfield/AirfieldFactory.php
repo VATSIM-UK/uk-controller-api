@@ -2,13 +2,13 @@
 
 namespace Database\Factories\Airfield;
 
-use App\Models\Model;
 use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class AirfieldFactory extends Factory
 {
+    use UsesAirfieldIcaoCodes;
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -37,14 +37,9 @@ class AirfieldFactory extends Factory
     private function getValidAirfieldCode(): string
     {
         while (true) {
-            if (!in_array($icao = $this->getAirfieldIcao(), self::SEEDED_AIRFIELDS)) {
+            if (!in_array($icao = $this->getAirfieldIcao($this->faker), self::SEEDED_AIRFIELDS)) {
                 return $icao;
             }
         }
-    }
-
-    private function getAirfieldIcao(): string
-    {
-        return Str::upper($this->faker->unique()->lexify('EG??'));
     }
 }
