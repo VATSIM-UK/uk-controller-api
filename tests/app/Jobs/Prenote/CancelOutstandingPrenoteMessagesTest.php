@@ -5,7 +5,6 @@ namespace App\Jobs\Prenote;
 use App\BaseFunctionalTestCase;
 use App\Events\Prenote\PrenoteDeletedEvent;
 use App\Models\Prenote\PrenoteMessage;
-use App\Models\Release\Departure\DepartureReleaseRequest;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
@@ -46,6 +45,6 @@ class CancelOutstandingPrenoteMessagesTest extends BaseFunctionalTestCase
 
         $this->assertSoftDeleted($prenote1);
         $this->assertSoftDeleted($prenote3);
-        $this->assertNotNull(DepartureReleaseRequest::where('callsign', 'BAW456')->first());
+        $this->assertNotNull(PrenoteMessage::where('callsign', 'BAW456')->first());
     }
 }

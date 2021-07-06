@@ -277,9 +277,9 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
         // Check models
         $this->assertNotNull(PrenoteMessage::find($prenote1->id));
         $this->assertNotNull(PrenoteMessage::find($prenote2->id));
-        $this->assertSoftDeleted('departure_release_requests', ['id' => $prenote3->id]);
-        $this->assertSoftDeleted('departure_release_requests', ['id' => $prenote4->id]);
-        $this->assertSoftDeleted('departure_release_requests', ['id' => $prenote4a->id]);
+        $this->assertSoftDeleted('prenote_messages', ['id' => $prenote3->id]);
+        $this->assertSoftDeleted('prenote_messages', ['id' => $prenote4->id]);
+        $this->assertSoftDeleted('prenote_messages', ['id' => $prenote4a->id]);
 
         // Check events
         Event::assertNotDispatched(
