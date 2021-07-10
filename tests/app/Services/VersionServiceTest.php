@@ -188,14 +188,14 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version',
             [
                 'version' => '2.0.3',
-                'deleted_at' => null,
+                'deleted_at' => Carbon::now(),
             ]
         );
         $this->assertDatabaseHas(
             'version',
             [
                 'version' => '2.0.4',
-                'deleted_at' => null,
+                'deleted_at' => Carbon::now(),
             ]
         );
         $this->assertDatabaseHas(

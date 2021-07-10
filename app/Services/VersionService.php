@@ -19,8 +19,6 @@ use Illuminate\Support\ServiceProvider;
  */
 class VersionService extends ServiceProvider
 {
-    private const VERSIONS_TO_KEEP = 3;
-
     /**
      * Determines an appropriate JSON response, given two versions.
      *
@@ -158,15 +156,14 @@ class VersionService extends ServiceProvider
         }
 
         // Create the version
-        Version::create(
+        $newVersion = Version::create(
             [
                 'version' => $tag
             ]
         );
 
         // Retire old versions
-        $versionsToKeep = Version::orderBy('id', 'desc')->limit(self::VERSIONS_TO_KEEP)->pluck('id')->toArray();
-        Version::whereNotIn('id', $versionsToKeep)->delete();
+        Version::where('id', '<>', $newVersion->id)->delete();
     }
 
     public function getFullVersionDetails(Version $version): array
