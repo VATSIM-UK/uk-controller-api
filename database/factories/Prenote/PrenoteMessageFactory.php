@@ -31,8 +31,8 @@ class PrenoteMessageFactory extends Factory
             'callsign' => 'BAW123',
             'departure_airfield' => $this->getAirfieldIcao($this->faker),
             'user_id' => $this->activeUser()->id,
-            'controller_position_id' => ControllerPosition::factory()->create()->id,
-            'target_controller_position_id' => ControllerPosition::factory()->create()->id,
+            'controller_position_id' => ControllerPosition::factory()->create(),
+            'target_controller_position_id' => ControllerPosition::factory()->create(),
             'expires_at' => Carbon::now()->addMinutes($this->faker->randomDigit()),
         ];
     }
