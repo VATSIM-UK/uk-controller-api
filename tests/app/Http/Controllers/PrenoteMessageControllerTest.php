@@ -17,7 +17,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
 
     public function testUnauthorisedUsersCantSendPrenoteMessages()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_POST, 'prenote-messages')->assertUnauthorized();
+        $this->makeUnauthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages')->assertUnauthorized();
     }
 
     public function badCreateDataProvider(): array
@@ -244,7 +244,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
      */
     public function testItDoesntCreateAReleaseOnBadData(array $requestData)
     {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenote-messages', $requestData)->assertStatus(422);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages', $requestData)->assertStatus(422);
 
         $this->assertDatabaseCount('prenote_messages', 0);
     }
@@ -274,7 +274,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
             'expires_in_seconds' => 115,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenote-messages', $requestData)->assertStatus(422);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages', $requestData)->assertStatus(422);
     }
 
     public function testItCreatesPrenoteMessages()
@@ -289,7 +289,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
             'expires_in_seconds' => 115,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenote-messages', $requestData)->assertCreated()
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages', $requestData)->assertCreated()
             ->assertJsonStructure(['id']);
 
         $this->assertDatabaseHas(
@@ -319,7 +319,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
             'expires_in_seconds' => 115,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenote-messages', $requestData)->assertCreated()
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages', $requestData)->assertCreated()
             ->assertJsonStructure(['id']);
 
         $this->assertDatabaseHas(
@@ -362,13 +362,13 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
             'expires_in_seconds' => 115,
         ];
 
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenote-messages', $requestData)->assertCreated()
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages', $requestData)->assertCreated()
             ->assertJsonStructure(['id']);
     }
 
     private function getAcknowledgeRoute(int $messageId): string
     {
-        return sprintf('prenote-messages/%d/acknowledge', $messageId);
+        return sprintf('prenotes/messages/%d/acknowledge', $messageId);
     }
 
     public function testUnauthorisedUsersCantAcknowledgePrenoteMessages()
@@ -510,7 +510,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
 
     private function getDeleteRoute(int $messageId): string
     {
-        return sprintf('prenote-messages/%d', $messageId);
+        return sprintf('prenotes/messages/%d', $messageId);
     }
 
     public function testUnauthorisedUsersCantCancelPrenoteMessages()

@@ -75,11 +75,13 @@ Route::middleware('api')->group(
                     ->where('id', '[0-9]+');
 
                 // Prenotes
-                Route::prefix('prenote-messages')->group(function () {
-                    Route::post('', [PrenoteMessageController::class, 'create']);
-                    Route::prefix('{prenoteMessage}')->group(function () {
-                        Route::patch('acknowledge', [PrenoteMessageController::class, 'acknowledge']);
-                        Route::delete('', [PrenoteMessageController::class, 'delete']);
+                Route::prefix('prenotes')->group(function () {
+                    Route::prefix('messages')->group(function () {
+                        Route::post('', [PrenoteMessageController::class, 'create']);
+                        Route::prefix('{prenoteMessage}')->group(function () {
+                            Route::patch('acknowledge', [PrenoteMessageController::class, 'acknowledge']);
+                            Route::delete('', [PrenoteMessageController::class, 'delete']);
+                        });
                     });
                 });
 
