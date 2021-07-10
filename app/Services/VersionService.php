@@ -19,8 +19,6 @@ use Illuminate\Support\ServiceProvider;
  */
 class VersionService extends ServiceProvider
 {
-    private const VERSIONS_TO_KEEP = 3;
-
     /**
      * Determines an appropriate JSON response, given two versions.
      *
