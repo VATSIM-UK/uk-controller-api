@@ -53,7 +53,7 @@ class PrenoteMessageController
             return response()->json(['message' => $alreadyAcknowledgedException->getMessage()], 409);
         }
 
-        return response()->json();
+        return response()->json([], 204);
     }
 
     public function delete(PrenoteMessage $prenoteMessage): JsonResponse
@@ -67,6 +67,6 @@ class PrenoteMessageController
             return response()->json(['message' => $notAllowedException->getMessage()], 403);
         }
 
-        return response()->json();
+        return response()->json([], 204);
     }
 }

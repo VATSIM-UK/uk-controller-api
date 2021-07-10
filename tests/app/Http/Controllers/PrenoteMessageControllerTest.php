@@ -397,7 +397,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $this->getAcknowledgeRoute($messageId), $requestData)
-            ->assertOk();
+            ->assertNoContent();
 
         $this->assertDatabaseHas(
             'prenote_messages',
@@ -439,7 +439,8 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $this->getAcknowledgeRoute($messageId), $requestData)
-            ->assertForbidden()->assertJsonStructure(['message']);
+            ->assertForbidden()
+            ->assertJsonStructure(['message']);
     }
 
     public function testItReturnsConflictIfAlreadyAcknowledged()
@@ -464,7 +465,8 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $this->getAcknowledgeRoute($messageId), $requestData)
-            ->assertStatus(409)->assertJsonStructure(['message']);
+            ->assertStatus(409)
+            ->assertJsonStructure(['message']);
     }
 
     public function badAcknowledgeDataProvider(): array
@@ -535,7 +537,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         )->id;
 
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, $this->getDeleteRoute($messageId))
-            ->assertOk();
+            ->assertNoContent();
 
         $this->assertSoftDeleted(
             'prenote_messages',
