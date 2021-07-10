@@ -9,6 +9,7 @@ use App\Events\Prenote\PrenoteDeletedEvent;
 use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
 use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
 use App\Exceptions\Prenote\PrenoteCancellationNotAllowedException;
+use App\Helpers\Prenote\CreatePrenoteMessageData;
 use App\Models\Controller\Prenote;
 use App\Models\Prenote\PrenoteMessage;
 use App\Models\Vatsim\NetworkAircraft;
@@ -32,14 +33,18 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
     {
         return PrenoteMessage::findOrfail(
             $this->service->createPrenoteMessage(
-                'BAW123',
-                'EGLL',
-                'MODMI1G',
-                'EGJJ',
-                self::ACTIVE_USER_CID,
-                1,
-                2,
-                15
+                CreatePrenoteMessageData::fromRequest(
+                    [
+                        'callsign' => 'BAW123',
+                        'departure_airfield' => 'EGLL',
+                        'departure_sid' => 'MODMI1G',
+                        'destination_airfield' => 'EGJJ',
+                        'requesting_controller_id' => 1,
+                        'target_controller_id' => 2,
+                        'expires_in_seconds' => 15,
+                    ],
+                    self::ACTIVE_USER_CID
+                )
             )
         );
     }
@@ -47,14 +52,18 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
     public function testItCreatesAPrenoteMessage()
     {
         $prenoteId = $this->service->createPrenoteMessage(
-            'BAW123',
-            'EGLL',
-            'MODMI1G',
-            'EGJJ',
-            self::ACTIVE_USER_CID,
-            1,
-            2,
-            15
+            CreatePrenoteMessageData::fromRequest(
+                [
+                    'callsign' => 'BAW123',
+                    'departure_airfield' => 'EGLL',
+                    'departure_sid' => 'MODMI1G',
+                    'destination_airfield' => 'EGJJ',
+                    'requesting_controller_id' => 1,
+                    'target_controller_id' => 2,
+                    'expires_in_seconds' => 15,
+                ],
+                self::ACTIVE_USER_CID
+            )
         );
 
         $this->assertDatabaseHas(
@@ -94,14 +103,18 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
     public function testItCreatesAPrenoteMessageWithNoSid()
     {
         $prenoteId = $this->service->createPrenoteMessage(
-            'BAW123',
-            'EGLL',
-            null,
-            'EGJJ',
-            self::ACTIVE_USER_CID,
-            1,
-            2,
-            15
+            CreatePrenoteMessageData::fromRequest(
+                [
+                    'callsign' => 'BAW123',
+                    'departure_airfield' => 'EGLL',
+                    'departure_sid' => null,
+                    'destination_airfield' => 'EGJJ',
+                    'requesting_controller_id' => 1,
+                    'target_controller_id' => 2,
+                    'expires_in_seconds' => 15,
+                ],
+                self::ACTIVE_USER_CID
+            )
         );
 
         $this->assertDatabaseHas(
@@ -141,14 +154,18 @@ class PrenoteMessageServiceTest extends BaseFunctionalTestCase
     public function testItCreatesAPrenoteMessageWithNoDestination()
     {
         $prenoteId = $this->service->createPrenoteMessage(
-            'BAW123',
-            'EGLL',
-            'MODMI1G',
-            null,
-            self::ACTIVE_USER_CID,
-            1,
-            2,
-            15
+            CreatePrenoteMessageData::fromRequest(
+                [
+                    'callsign' => 'BAW123',
+                    'departure_airfield' => 'EGLL',
+                    'departure_sid' => 'MODMI1G',
+                    'destination_airfield' => null,
+                    'requesting_controller_id' => 1,
+                    'target_controller_id' => 2,
+                    'expires_in_seconds' => 15,
+                ],
+                self::ACTIVE_USER_CID
+            )
         );
 
         $this->assertDatabaseHas(

@@ -8,31 +8,24 @@ use App\Events\Prenote\PrenoteDeletedEvent;
 use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
 use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
 use App\Exceptions\Prenote\PrenoteCancellationNotAllowedException;
+use App\Helpers\Prenote\CreatePrenoteMessageData;
 use App\Models\Prenote\PrenoteMessage;
 use Carbon\Carbon;
 
 class PrenoteMessageService
 {
-    public function createPrenoteMessage(
-        string $callsign,
-        string $departureAirfield,
-        ?string $departureSid,
-        ?string $destinationAirfield,
-        int $userId,
-        int $sendingControllerId,
-        int $targetControllerId,
-        int $expiresInSeconds
-    ): int {
+    public function createPrenoteMessage(CreatePrenoteMessageData $data): int
+    {
         $prenoteMessage = PrenoteMessage::create(
             [
-                'callsign' => $callsign,
-                'departure_airfield' => $departureAirfield,
-                'departure_sid' => $departureSid,
-                'destination_airfield' => $destinationAirfield,
-                'user_id' => $userId,
-                'controller_position_id' => $sendingControllerId,
-                'target_controller_position_id' => $targetControllerId,
-                'expires_at' => Carbon::now()->addSeconds($expiresInSeconds),
+                'callsign' => $data->getCallsign(),
+                'departure_airfield' => $data->getDepartureAirfield(),
+                'departure_sid' => $data->getDepartureSid(),
+                'destination_airfield' => $data->getDestinationAirfield(),
+                'user_id' => $data->getUserId(),
+                'controller_position_id' => $data->getRequestingControllerId(),
+                'target_controller_position_id' => $data->getTargetControllerId(),
+                'expires_at' => Carbon::now()->addSeconds($data->getExpiresInSeconds()),
             ]
         );
 

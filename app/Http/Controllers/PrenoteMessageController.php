@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\Prenote\PrenoteAcknowledgementNotAllowedException;
 use App\Exceptions\Prenote\PrenoteAlreadyAcknowledgedException;
 use App\Exceptions\Prenote\PrenoteCancellationNotAllowedException;
+use App\Helpers\Prenote\CreatePrenoteMessageData;
 use App\Http\Requests\Prenote\AcknowledgePrenoteMessage;
 use App\Http\Requests\Prenote\CreatePrenoteMessage;
 use App\Models\Prenote\PrenoteMessage;
@@ -24,16 +25,8 @@ class PrenoteMessageController
 
     public function create(CreatePrenoteMessage $request): JsonResponse
     {
-        $validated = $request->validated();
         $messageId = $this->prenoteMessageService->createPrenoteMessage(
-            $validated['callsign'],
-            $validated['departure_airfield'],
-            $validated['departure_sid'],
-            $validated['destination_airfield'],
-            Auth::id(),
-            $validated['requesting_controller_id'],
-            $validated['target_controller_id'],
-            $validated['expires_in_seconds'],
+            CreatePrenoteMessageData::fromRequest($request->validated(), Auth::id())
         );
 
         return response()->json(['id' => $messageId], 201);
