@@ -11,7 +11,6 @@ use App\Http\Middleware\UpdateDependency;
 use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
 use App\Http\Middleware\UserLastLogin;
-use App\Http\Middleware\UserPluginVersion;
 use App\Http\Middleware\VatsimCid;
 use App\Providers\AuthServiceProvider;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -32,7 +31,6 @@ class Kernel extends HttpKernel
         MiddlewareKeys::USER_BANNED => UserIsBanned::class,
         MiddlewareKeys::USER_DISABLED => UserIsDisabled::class,
         MiddlewareKeys::USER_LASTLOGIN => UserLastLogin::class,
-        MiddlewareKeys::USER_PLUGIN_VERSION => UserPluginVersion::class,
         MiddlewareKeys::SCOPES => CheckScopes::class,
         MiddlewareKeys::SCOPE => CheckForAnyScope::class,
         MiddlewareKeys::VATSIM_CID => VatsimCid::class,

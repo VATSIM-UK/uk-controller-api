@@ -35,24 +35,6 @@ class VersionController extends BaseController
     }
 
     /**
-     * Checks whether the plugin is using the correct version
-     * and returns this information.
-     *
-     * @deprecated In UKCP 3.0.0 this is no longer used
-     * @see getVersion
-     * @param  Version $version The requested version
-     * @param  VersionService $versionService A service for formatting responses.
-     * @return JsonResponse
-     */
-    public function getVersionStatus(Version $version) : JsonResponse
-    {
-        // Return an appropriate response.
-        return response()
-            ->json($this->versionService->getVersionResponse($version->version))
-            ->setStatusCode(200);
-    }
-
-    /**
      * Returns a collection of all the versions.
      *
      * @return JsonResponse

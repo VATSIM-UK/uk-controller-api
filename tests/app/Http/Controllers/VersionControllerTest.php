@@ -26,41 +26,6 @@ class VersionControllerTest extends BaseApiTestCase
         $this->assertInstanceOf(VersionController::class, $this->app->make(VersionController::class));
     }
 
-    public function testGetVersionStatusDoesNotAcceptPost()
-    {
-        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'version/1.0.0/status')
-            ->assertStatus(405);
-    }
-
-    public function testGetVersionStatusFailsIfVersionInvalid()
-    {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.1.2^^^^/status')
-            ->assertStatus(404);
-    }
-
-    public function testGetVersionStatusResponseValid()
-    {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.1/status')
-            ->assertJson(
-                [
-                    'update_available' => false,
-                    'version_disabled' => false,
-                ]
-            )->assertStatus(200);
-    }
-
-    public function testItSetsUserVersionInformation()
-    {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version/2.0.1/status')
-            ->assertJson(
-                [
-                    'update_available' => false,
-                    'version_disabled' => false,
-                ]
-            )->assertStatus(200);
-        $this->assertEquals(3, $this->activeUser()->last_version);
-    }
-
     public function testGetAllVersionsFailsWithoutVersionAdminScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);

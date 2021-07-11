@@ -72,17 +72,6 @@ Route::middleware('api')->group(
                 Route::get('notifications/unread', 'NotificationController@getUnreadNotifications');
                 Route::put('notifications/read/{id}', 'NotificationController@readNotification')
                     ->where('id', '[0-9]+');
-
-                // Version checking
-                Route::get(
-                    'version/{version}/status',
-                    [
-                        'middleware' => [
-                            'user.version',
-                        ],
-                        'uses' => 'VersionController@getVersionStatus',
-                    ]
-                )->where('version', '[A-Za-z0-9\.\-]+');
             }
         );
 
