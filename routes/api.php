@@ -84,17 +84,6 @@ Route::middleware('api')->group(
                         });
                     });
                 });
-
-                // Version checking
-                Route::get(
-                    'version/{version}/status',
-                    [
-                        'middleware' => [
-                            'user.version',
-                        ],
-                        'uses' => 'VersionController@getVersionStatus',
-                    ]
-                )->where('version', '[A-Za-z0-9\.\-]+');
             }
         );
 
