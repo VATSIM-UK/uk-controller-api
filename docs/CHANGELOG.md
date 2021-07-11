@@ -1,3 +1,12 @@
+# UK Controller Plugin API Changelog
+
+# [4.5.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.4.8...4.5.0) (2021-07-11)
+
+
+### Features
+
+* **prenotes:** Add the ability to pass prenote messages between plugins ([#593](https://github.com/VATSIM-UK/uk-controller-api/issues/593)) ([bfbb231](https://github.com/VATSIM-UK/uk-controller-api/commit/bfbb2311b93d5f70128aea1848fc4c2324ea3c03))
+
 UK Controller Plugin API Changelog
 
 ## [4.4.8](https://github.com/VATSIM-UK/uk-controller-api/compare/4.4.7...4.4.8) (2021-07-02)
