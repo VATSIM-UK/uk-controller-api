@@ -4,6 +4,7 @@ namespace App\Listeners\Network;
 
 use App\BaseUnitTestCase;
 use App\Jobs\Hold\RemoveAssignmentsForAircraftLeavingHold;
+use App\Jobs\Prenote\CancelMessagesForDepartedAircraft;
 use App\Jobs\Release\Departure\CancelRequestsForDepartedAircraft;
 use App\Jobs\Squawk\ReserveActiveSquawks;
 use App\Jobs\Stand\AssignStandsForDeparture;
@@ -31,7 +32,8 @@ class NetworkDataUpdatedTest extends BaseUnitTestCase
                 new AssignStandsForDeparture(),
                 new ReserveActiveSquawks(),
                 new RemoveAssignmentsForAircraftLeavingHold(),
-                new CancelRequestsForDepartedAircraft()
+                new CancelRequestsForDepartedAircraft(),
+                new CancelMessagesForDepartedAircraft(),
             ],
         )
             ->once()

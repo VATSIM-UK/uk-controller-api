@@ -16,11 +16,15 @@ class ControllerPositionsTableSeeder extends Seeder
                     'frequency' => 118.500,
                     'requests_departure_releases' => true,
                     'receives_departure_releases' => false,
+                    'sends_prenotes' => true,
+                    'receives_prenotes' => false,
                 ],
                 [
                     'callsign' => 'EGLL_N_APP',
                     'requests_departure_releases' => true,
                     'receives_departure_releases' => true,
+                    'sends_prenotes' => true,
+                    'receives_prenotes' => true,
                     'frequency' => 119.720,
                 ],
                 [
@@ -28,12 +32,16 @@ class ControllerPositionsTableSeeder extends Seeder
                     'frequency' => 129.420,
                     'requests_departure_releases' => true,
                     'receives_departure_releases' => true,
+                    'sends_prenotes' => true,
+                    'receives_prenotes' => true,
                 ],
                 [
                     'callsign' => 'LON_C_CTR',
                     'frequency' => 127.100,
                     'requests_departure_releases' => false,
                     'receives_departure_releases' => false,
+                    'sends_prenotes' => false,
+                    'receives_prenotes' => false,
                 ],
             ]
         );

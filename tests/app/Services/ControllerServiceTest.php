@@ -139,6 +139,8 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                 ],
                 'requests_departure_releases' => true,
                 'receives_departure_releases' => false,
+                'sends_prenotes' => true,
+                'receives_prenotes' => false,
             ],
             [
                 'id' => 2,
@@ -149,6 +151,8 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                 ],
                 'requests_departure_releases' => true,
                 'receives_departure_releases' => true,
+                'sends_prenotes' => true,
+                'receives_prenotes' => true,
             ],
             [
                 'id' => 3,
@@ -159,6 +163,8 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                 ],
                 'requests_departure_releases' => true,
                 'receives_departure_releases' => true,
+                'sends_prenotes' => true,
+                'receives_prenotes' => true,
             ],
             [
                 'id' => 4,
@@ -169,6 +175,8 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                 ],
                 'requests_departure_releases' => false,
                 'receives_departure_releases' => false,
+                'sends_prenotes' => false,
+                'receives_prenotes' => false,
             ],
             [
                 'id' => $positionWithNoTopDown->id,
@@ -177,6 +185,8 @@ class ControllerServiceTest extends BaseFunctionalTestCase
                 'top_down' => [],
                 'requests_departure_releases' => false,
                 'receives_departure_releases' => false,
+                'sends_prenotes' => false,
+                'receives_prenotes' => false,
             ],
         ];
 

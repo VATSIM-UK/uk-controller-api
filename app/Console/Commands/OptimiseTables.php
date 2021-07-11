@@ -24,6 +24,7 @@ class OptimiseTables extends Command
         'stand_assignments',
         'plugin_events',
         'departure_release_requests',
+        'prenote_messages',
     ];
 
     protected $signature = 'tables:optimise';

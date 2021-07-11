@@ -43,6 +43,8 @@ class ControllerService
                     'top_down' => $position->topDownAirfields->pluck('code')->toArray(),
                     'requests_departure_releases' => $position->requests_departure_releases,
                     'receives_departure_releases' => $position->receives_departure_releases,
+                    'sends_prenotes' => $position->sends_prenotes,
+                    'receives_prenotes' => $position->receives_departure_releases,
                 ];
             }
         );
