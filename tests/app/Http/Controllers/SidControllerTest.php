@@ -22,11 +22,6 @@ class SidControllerTest extends BaseApiTestCase
         $this->assertInstanceOf(SidController::class, $this->app->make(SidController::class));
     }
 
-    public function testItReturns200OnInitialAltitudeDataSuccess()
-    {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'initial-altitude')->assertStatus(200);
-    }
-
     public function testItReturnsHandoffData()
     {
         $expected = [
@@ -40,21 +35,6 @@ class SidControllerTest extends BaseApiTestCase
         ];
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'handoffs')->assertJson($expected);
-    }
-
-    public function testItReturnsInitialAltitudeData()
-    {
-        $expected = [
-            'EGLL' => [
-                'TEST1X' => 3000,
-                'TEST1Y' => 4000,
-            ],
-            'EGBB' => [
-                'TEST1A' => 5000,
-            ],
-        ];
-
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'initial-altitude')->assertJson($expected);
     }
 
     public function testItReturnsASid()

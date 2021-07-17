@@ -258,7 +258,6 @@ Route::middleware('api')->group(
                 Route::get('sid', 'SidController@getAllSids');
                 Route::get('sid/{id}', 'SidController@getSid')
                     ->where('id', '[0-9]+');
-                Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
                 Route::get('handoffs', 'SidController@getSidHandoffsDependency');
 
                 // Controller positions
