@@ -2,6 +2,7 @@
 
 use App\Services\DependencyService;
 use Illuminate\Database\Migrations\Migration;
+
 class RemoveInitialAltitudesDependency extends Migration
 {
     /**
