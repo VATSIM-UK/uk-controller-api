@@ -18,44 +18,6 @@ class ControllerServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(ControllerService::class);
     }
 
-    public function testItCreatesLegacyControllerPositionsDependency()
-    {
-        $positionWithNoTopDown = ControllerPosition::factory()->create();
-        $expected = [
-            'EGLL_S_TWR' => [
-                'frequency' => 118.5,
-                'top-down' => [
-                    'EGLL',
-                ],
-            ],
-            'EGLL_N_APP' => [
-                'frequency' => 119.72,
-                'top-down' => [
-                    'EGLL',
-                ],
-            ],
-            'LON_S_CTR' => [
-                'frequency' => 129.42,
-                'top-down' => [
-                    'EGLL',
-                ],
-            ],
-            'LON_C_CTR' => [
-                'frequency' => 127.1,
-                'top-down' => [
-                    'EGBB',
-                ],
-            ],
-            $positionWithNoTopDown->callsign => [
-                'frequency' => $positionWithNoTopDown->frequency,
-                'top-down' => [],
-            ]
-        ];
-
-        $actual = $this->service->getLegacyControllerPositionsDependency();
-        $this->assertSame($expected, $actual);
-    }
-
     public function testItCreatesLegacyAirfieldOwnershipDependency()
     {
         $expected = [
