@@ -45,7 +45,45 @@
   "homepage": "https://github.com/VATSIM-UK/uk-controller-api#readme",
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "./node_modules/cz-conventional-changelog",
+      "types": {
+        "feat": {
+          "title": "feat",
+          "description": "A new feature"
+        },
+        "fix": {
+          "title": "fix",
+          "description": "A bug fix"
+        },
+        "docs": {
+          "title": "docs",
+          "description": "Documentation only changes"
+        },
+        "style": {
+          "title": "style",
+          "description": "Changes that do not affect the meaning of the code (white space, formatting, missing semi-colons etc"
+        },
+        "refactor": {
+          "title": "refactor",
+          "description": "A code change that neither fixes a bug or adds a feature"
+        },
+        "perf": {
+          "title": "perf",
+          "description": "A change that improves performance"
+        },
+        "test": {
+          "title": "test",
+          "description": "Adding or updating the automated test suite"
+        },
+        "chore": {
+          "title": "chore",
+          "description": "Changes to the build process or auxiliary tools and libraries such as documentation generation"
+        },
+        "data": {
+          "title": "data",
+          "description": "Migrations and other updates to data, possibly consumed by the plugin binary"
+        }
+      }
     }
   },
   "release": {
@@ -55,8 +93,37 @@
     ],
     "tagFormat": "${version}",
     "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": [
+            {"type": "data", "release": "patch"}
+          ]
+        }
+      ],
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "angular",
+          "presetConfig": {
+            "types": [
+              {"type": "feat", "section": "Features"},
+              {"type": "fix", "section": "Bug Fixes"},
+              {"type": "perf", "section": "Performance Improvements"},
+              {"type": "revert", "section": "Reverts"},
+              {"type": "data", "section": "Data Updates"},
+              {"type": "chore", "section": "Miscellaneous Chores"},
+              {"type": "docs", "section": "Documentation"},
+              {"type": "style", "section": "Styles", "hidden": true},
+              {"type": "refactor", "section": "Code Refactoring", "hidden": true},
+              {"type": "test", "section": "Tests", "hidden": true},
+              {"type": "build", "section": "Build System", "hidden": true},
+              {"type": "ci", "section": "Continuous Integration", "hidden": true}
+            ]
+          }
+        }
+      ],
       [
         "@semantic-release/changelog",
         {
