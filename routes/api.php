@@ -196,6 +196,8 @@ Route::middleware('api')->group(
                 Route::prefix('admin')->group(
                     function () {
                         Route::get('/airfields', 'Admin\\StandAdminController@getAirfields');
+                        Route::get('/airfields/{airfield:code}/terminals', 'Admin\\StandAdminController@getTerminals');
+                        Route::get('/airfields/{airfield:code}/terminals/{terminal:key}/stands', 'Admin\\StandAdminController@getStandsByTerminal');
                         Route::post('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@createNewStand');
                         Route::get(
                             '/airfields/{airfield:code}/stands',

@@ -2,17 +2,18 @@
 
 namespace App\Models\Airfield;
 
-use App\Helpers\MinStack\MinStackDataProviderInterface;
-use App\Models\Aircraft\SpeedGroup;
-use App\Models\Controller\ControllerPosition;
-use App\Models\MinStack\MslAirfield;
-use App\Models\Stand\Stand;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
+use App\Models\Stand\Stand;
+use App\Models\Airfield\Terminal;
+use App\Models\Aircraft\SpeedGroup;
+use App\Models\MinStack\MslAirfield;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Controller\ControllerPosition;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Helpers\MinStack\MinStackDataProviderInterface;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Airfield extends Model implements MinStackDataProviderInterface
 {
@@ -125,6 +126,11 @@ class Airfield extends Model implements MinStackDataProviderInterface
             Stand::class,
             'airfield_id',
         );
+    }
+
+    public function terminals() : HasMany
+    {
+        return $this->hasMany(Terminal::class);
     }
 
     public function getCoordinateAttribute(): Coordinate

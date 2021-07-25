@@ -205,6 +205,15 @@ components:
                 $ref: '#/components/schemas/HoldModel'
 
   responses:
+    AirfieldNotFound:
+      description: Airfield not found
+      content:
+        'application/json':
+          schema:
+            properties:
+              message:
+                type: string
+                example: No query results for Airfield
     StandNotInAirfield:
       description: Stand not in airfield
       content:
@@ -387,6 +396,49 @@ paths:
           description: 'No content (successful operation)'
         '404':
           $ref: '#/components/responses/StandNotInAirfield'
+
+  /airfields/{identifier}/terminals:
+    get:
+      tags:
+        - "stands"
+      responses:
+        '200':
+          description: List of terminals for airfield
+          content: 
+            'application/json':
+              schema:
+                properties:
+                  terminals:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Terminal'
+        '404':
+          description: Terminals not found or configured for airfield
+          content: 
+            'application/json':
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: Airfield does not have terminals configured
+  
+  /airfields/{identifier}/terminals/{terminal_key}/stands:
+    get:
+      tags: 
+        - "stands"
+      responses:
+        '200':
+          description: List of stands in a configured terminal
+          content:
+            'application/json':
+              schema: 
+                properties:
+                  stands:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StandDetailed'
+        '404': 
+          $ref: '#/components/responses/AirfieldNotFound'
 
   /navaids:
     get:
