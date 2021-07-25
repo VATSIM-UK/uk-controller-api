@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+### [4.6.4](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.3...4.6.4) (2021-07-25)
+
+
+### Miscellaneous Chores
+
+* **changelog:** Change changelog preset ([d895eaf](https://github.com/VATSIM-UK/uk-controller-api/commit/d895eafa931d324cbe94db3c0c4c1fcd39e03f6d))
+* **yarn:** Add missing plugin ([97c4865](https://github.com/VATSIM-UK/uk-controller-api/commit/97c4865f6966413311e1945b8f34fb4588690cf1))
+
 ## [4.6.3](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.2...4.6.3) (2021-07-25)
 
 ## [4.6.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.1...4.6.2) (2021-07-25)
