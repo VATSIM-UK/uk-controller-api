@@ -15,6 +15,7 @@
     "@semantic-release/release-notes-generator": "^9.0.3",
     "@tailwindcss/forms": "^0.3.3",
     "commitizen": "^4.2.4",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.25",
     "lodash": "^4.17.21",
@@ -98,8 +99,14 @@
         {
           "preset": "angular",
           "releaseRules": [
-            {"type": "data", "release": "patch"},
-            {"type": "chore", "release": "patch"}
+            {
+              "type": "data",
+              "release": "patch"
+            },
+            {
+              "type": "chore",
+              "release": "patch"
+            }
           ]
         }
       ],
@@ -109,18 +116,66 @@
           "preset": "conventionalcommits",
           "presetConfig": {
             "types": [
-              {"type": "feat", "section": "Features", "hidden": false},
-              {"type": "fix", "section": "Bug Fixes", "hidden": false},
-              {"type": "perf", "section": "Performance Improvements", "hidden": false},
-              {"type": "revert", "section": "Reverts", "hidden": false},
-              {"type": "data", "section": "Data Updates", "hidden": false},
-              {"type": "chore", "section": "Miscellaneous Chores", "hidden": false},
-              {"type": "docs", "section": "Documentation", "hidden": false},
-              {"type": "style", "section": "Styles", "hidden": true},
-              {"type": "refactor", "section": "Code Refactoring", "hidden": true},
-              {"type": "test", "section": "Tests", "hidden": true},
-              {"type": "build", "section": "Build System", "hidden": true},
-              {"type": "ci", "section": "Continuous Integration", "hidden": true}
+              {
+                "type": "feat",
+                "section": "Features",
+                "hidden": false
+              },
+              {
+                "type": "fix",
+                "section": "Bug Fixes",
+                "hidden": false
+              },
+              {
+                "type": "perf",
+                "section": "Performance Improvements",
+                "hidden": false
+              },
+              {
+                "type": "revert",
+                "section": "Reverts",
+                "hidden": false
+              },
+              {
+                "type": "data",
+                "section": "Data Updates",
+                "hidden": false
+              },
+              {
+                "type": "chore",
+                "section": "Miscellaneous Chores",
+                "hidden": false
+              },
+              {
+                "type": "docs",
+                "section": "Documentation",
+                "hidden": false
+              },
+              {
+                "type": "style",
+                "section": "Styles",
+                "hidden": true
+              },
+              {
+                "type": "refactor",
+                "section": "Code Refactoring",
+                "hidden": true
+              },
+              {
+                "type": "test",
+                "section": "Tests",
+                "hidden": true
+              },
+              {
+                "type": "build",
+                "section": "Build System",
+                "hidden": true
+              },
+              {
+                "type": "ci",
+                "section": "Continuous Integration",
+                "hidden": true
+              }
             ]
           }
         }
