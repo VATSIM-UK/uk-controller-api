@@ -99,7 +99,7 @@
           "preset": "angular",
           "releaseRules": [
             {"type": "data", "release": "patch"},
-            {"type": "bump", "release": "patch"}
+            {"type": "chore", "release": "patch"}
           ]
         }
       ],
