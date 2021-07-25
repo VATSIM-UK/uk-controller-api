@@ -98,7 +98,8 @@
         {
           "preset": "angular",
           "releaseRules": [
-            {"type": "data", "release": "patch"}
+            {"type": "data", "release": "patch"},
+            {"type": "bump", "release": "patch")
           ]
         }
       ],
