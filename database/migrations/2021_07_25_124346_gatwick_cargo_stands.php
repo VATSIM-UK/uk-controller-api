@@ -21,6 +21,7 @@ class GatwickCargoStands extends Migration
         // Update the 15x stands to be higher-priority cargo
         DB::table('stands')
             ->whereIn('identifier', ['153', '154', '158', '159'])
+            ->where('airfield_id', $gatwick)
             ->update(
                 [
                     'assignment_priority' => 99,
@@ -31,6 +32,7 @@ class GatwickCargoStands extends Migration
 
         // Update the 23x stands to be lower-priority cargo
         DB::table('stands')
+            ->where('airfield_id', $gatwick)
             ->whereIn(
                 'identifier',
                 [
@@ -63,6 +65,7 @@ class GatwickCargoStands extends Migration
 
         // Update the 151/2 stands to be lowest-priority cargo stands as wrong side of the taxiway
         DB::table('stands')
+            ->where('airfield_id', $gatwick)
             ->whereIn(
                 'identifier',
                 [
