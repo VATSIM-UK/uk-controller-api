@@ -260,12 +260,10 @@ Route::middleware('api')->group(
                 Route::get('sid', 'SidController@getAllSids');
                 Route::get('sid/{id}', 'SidController@getSid')
                     ->where('id', '[0-9]+');
-                Route::get('initial-altitude', 'SidController@getInitialAltitudeDependency');
                 Route::get('handoffs', 'SidController@getSidHandoffsDependency');
 
                 // Controller positions
                 Route::get('controller', 'ControllerPositionController@getAllControllers');
-                Route::get('controller-positions', 'ControllerPositionController@getLegacyControllerPositionsDependency');
                 Route::get('controller-positions-v2', 'ControllerPositionController@getControllerPositionsDependency');
 
                 // Airfields

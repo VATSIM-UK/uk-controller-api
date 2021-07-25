@@ -5,9 +5,8 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
-use Auth;
-use Cache;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use InvalidArgumentException;
 use LogicException;
@@ -151,5 +150,20 @@ class DependencyServiceTest extends BaseFunctionalTestCase
         Cache::forget('DEPENDENCY_1_CACHE');
         Dependency::find(1)->update(['action' => 'FooController@foo']);
         DependencyService::fetchDependencyDataById(1);
+    }
+
+    public function testItDeletesADependency()
+    {
+        Cache::shouldReceive('forget')
+            ->with(self::GLOBAL_DEPENDENCY)
+            ->once();
+        DependencyService::deleteDependency(self::GLOBAL_DEPENDENCY);
+
+        $this->assertDatabaseMissing(
+            'dependencies',
+            [
+                'key' => self::GLOBAL_DEPENDENCY,
+            ]
+        );
     }
 }
