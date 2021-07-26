@@ -22,7 +22,7 @@
     "postcss": "^8.3.5",
     "postcss-import": "^14.0.2",
     "semantic-release": "17",
-    "tailwindcss": "^2.2.4"
+    "tailwindcss": "^2.2.7"
   },
   "scripts": {
     "dev": "yarn run development",
