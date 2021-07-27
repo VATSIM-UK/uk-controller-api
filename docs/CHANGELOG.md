@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.6.5](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.4...4.6.5) (2021-07-27)
+
+
+### Bug Fixes
+
+* **network:** fix phantom aircraft caused by network aircraft loop ([#613](https://github.com/VATSIM-UK/uk-controller-api/issues/613)) ([8e640f4](https://github.com/VATSIM-UK/uk-controller-api/commit/8e640f4eb24e5ce905ccd1fc1a26330e9202b65d))
+
 ### [4.6.4](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.3...4.6.4) (2021-07-25)
 
 
