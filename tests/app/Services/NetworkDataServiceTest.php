@@ -363,7 +363,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $expectedData = $this->getTransformedPilotData('AAL123');
         $expected = NetworkAircraft::create($expectedData);
         $expected->created_at = Carbon::now()->subHours(2);
-        $expected->updated_at = Carbon::now();
+        $expected->updated_at = Carbon::now()->subMinutes(5);
         $expected->save();
         $expected->refresh();
         $this->assertEquals(
@@ -377,7 +377,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                 $expectedData,
                 [
                     'created_at' => Carbon::now()->subHours(2)->toDateTimeString(),
-                    'updated_at' => Carbon::now()->toDateTimeString(),
+                    'updated_at' => Carbon::now()->subMinutes(5)->toDateTimeString(),
                 ]
             ),
         );

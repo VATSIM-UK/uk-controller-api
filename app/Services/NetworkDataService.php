@@ -180,7 +180,7 @@ class NetworkDataService
 
     public static function createPlaceholderAircraft(string $callsign): NetworkAircraft
     {
-        return self::createOrUpdateNetworkAircraft($callsign);
+        return NetworkAircraft::find($callsign) ?? self::createOrUpdateNetworkAircraft($callsign);
     }
 
     private function pilotValid(array $pilot): bool
