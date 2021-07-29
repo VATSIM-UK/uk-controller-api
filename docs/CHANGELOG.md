@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [4.7.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.5...4.7.0) (2021-07-29)
+
+
+### Features
+
+* Add endpoint to get stands by terminal ([#609](https://github.com/VATSIM-UK/uk-controller-api/issues/609)) ([60b7410](https://github.com/VATSIM-UK/uk-controller-api/commit/60b741063d3e4404a1cdbfab61e7e010ec11d6ae))
+
 ### [4.6.5](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.4...4.6.5) (2021-07-27)
 
 
