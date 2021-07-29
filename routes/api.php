@@ -195,24 +195,28 @@ Route::middleware('api')->group(
 
                 Route::prefix('admin')->group(
                     function () {
-                        Route::get('/airfields', 'Admin\\StandAdminController@getAirfields');
-                        Route::post('/airfields/{airfield:code}/stands', 'Admin\\StandAdminController@createNewStand');
-                        Route::get(
-                            '/airfields/{airfield:code}/stands',
-                            'Admin\\StandAdminController@getStandsForAirfield'
-                        );
-                        Route::get(
-                            '/airfields/{airfield:code}/stands/{stand}',
-                            'Admin\\StandAdminController@getStandDetails'
-                        );
-                        Route::put(
-                            '/airfields/{airfield:code}/stands/{stand}',
-                            'Admin\\StandAdminController@modifyStand'
-                        );
-                        Route::delete(
-                            '/airfields/{airfield:code}/stands/{stand}',
-                            'Admin\\StandAdminController@deleteStand'
-                        );
+                        Route::prefix('airfields')->group(function () {
+                            Route::get('', 'Admin\\StandAdminController@getAirfields');
+                            Route::get('/{airfield:code}/terminals', 'Admin\\StandAdminController@getTerminals');
+                            Route::get('/{airfield:code}/terminals/{terminal:key}/stands', 'Admin\\StandAdminController@getStandsByTerminal');
+                            Route::post('/{airfield:code}/stands', 'Admin\\StandAdminController@createNewStand');
+                            Route::get(
+                                '/{airfield:code}/stands',
+                                'Admin\\StandAdminController@getStandsForAirfield'
+                            );
+                            Route::get(
+                                '/{airfield:code}/stands/{stand}',
+                                'Admin\\StandAdminController@getStandDetails'
+                            );
+                            Route::put(
+                                '/{airfield:code}/stands/{stand}',
+                                'Admin\\StandAdminController@modifyStand'
+                            );
+                            Route::delete(
+                                '/{airfield:code}/stands/{stand}',
+                                'Admin\\StandAdminController@deleteStand'
+                            );
+                        });
 
                         Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
                         Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
