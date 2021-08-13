@@ -71,7 +71,7 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
                     'airline_id' => 1,
                     'stand_id' => 2,
                     'destination' => 'EGGD',
-                    'priority' => 100,
+                    'priority' => 3,
                 ],
                 [
                     'airline_id' => 1,
@@ -88,8 +88,8 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
-        $this->assertEquals(3, $this->allocator->allocate($aircraft)->stand_id);
-        $this->assertEquals(3, StandAssignment::find($aircraft->callsign)->stand_id);
+        $this->assertEquals(2, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals(2, StandAssignment::find($aircraft->callsign)->stand_id);
     }
 
     public function testItAllocatesAStandWithAnAppropriateWeight()
