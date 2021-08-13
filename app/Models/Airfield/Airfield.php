@@ -45,8 +45,8 @@ class Airfield extends Model implements MinStackDataProviderInterface
 
     protected $casts = [
         'groundspeed' => 'integer',
-        'latitude' => 'float',
-        'longitude' => 'float',
+        'latitude' => 'decimal',
+        'longitude' => 'decimal',
     ];
 
     /**
