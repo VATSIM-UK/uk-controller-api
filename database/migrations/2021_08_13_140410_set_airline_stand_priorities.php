@@ -16,7 +16,7 @@ class SetAirlineStandPriorities extends Migration
     {
         DB::table('airline_stand')
             ->join('stands', 'airline_stand.stand_id', '=', 'stands.id')
-            ->update(['airline_stand.priority' => 'stands.assignment_priority']);
+            ->update(['airline_stand.priority' => DB::raw('`stands`.`assignment_priority`')]);
     }
 
     /**
