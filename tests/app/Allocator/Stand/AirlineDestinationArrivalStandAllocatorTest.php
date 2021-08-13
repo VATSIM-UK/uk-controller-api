@@ -57,6 +57,39 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals(2, StandAssignment::find($aircraft->callsign)->stand_id);
     }
 
+    public function testItConsidersAirlinePreferences()
+    {
+        DB::table('airline_stand')->where('airline_id', 2)->where('stand_id', 1)->update(['priority' => 2]);
+        DB::table('airline_stand')->where('airline_id', 1)->where('stand_id', 3)->update(['priority' => 1]);
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'destination' => 'EGGD'
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'destination' => 'EGGD'
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
+        $this->assertEquals(3, $this->allocator->allocate($aircraft)->stand_id);
+        $this->assertEquals(3, StandAssignment::find($aircraft->callsign)->stand_id);
+    }
+
     public function testItAllocatesAStandWithAnAppropriateWeight()
     {
         $this->setWakeCategoryForAircraft('B738', 'UM');
