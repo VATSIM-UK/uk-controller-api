@@ -60,6 +60,16 @@ class HeathrowShuttlePriorities extends Migration
                     ]
                 );
         }
+
+        // Fallback, T5A
+        DB::table('airline_terminal')
+            ->insert(
+                [
+                    'airline_id' => $shuttle,
+                    'terminal_id' => DB::table('terminals')->where('key', 'EGLL_T5A')->first()->id,
+                    'created_at' => Carbon::now(),
+                ]
+        );
     }
 
     /**
