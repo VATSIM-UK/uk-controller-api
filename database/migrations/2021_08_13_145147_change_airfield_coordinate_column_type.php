@@ -15,7 +15,7 @@ class ChangeAirfieldCoordinateColumnType extends Migration
     public function up()
     {
         DB::statement('ALTER TABLE airfield MODIFY COLUMN latitude DECIMAL(10, 8)');
-        DB::statement('ALTER TABLE airfield MODIFY COLUMN longitude DECIMAL(10, 8)');
+        DB::statement('ALTER TABLE airfield MODIFY COLUMN longitude DECIMAL(11, 8)');
     }
 
     /**
