@@ -67,8 +67,8 @@ class StandAdminControllerTest extends BaseApiTestCase
     public function testAirfieldsWithStandsCanBeRetrieved()
     {
         $airfieldWithStands = Airfield::factory()->create();
-        $airfieldWithStands = Airfield::
         Stand::factory()->create(['airfield_id' => $airfieldWithStands->id]);
+
 
         $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields");
 
