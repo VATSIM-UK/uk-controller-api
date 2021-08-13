@@ -51,7 +51,6 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItConsidersAirlinePreferences()
     {
-        DB::table('airline_stand')->where('airline_id', 1)->where('stand_id', 1)->update(['priority' => 1]);
         DB::table('airline_stand')->insert(
             [
                 [
@@ -62,7 +61,8 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'destination' => null
+                    'destination' => null,
+                    'priority' => 1,
                 ],
                 [
                     'airline_id' => 2,
