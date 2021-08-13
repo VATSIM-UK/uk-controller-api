@@ -64,12 +64,14 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'destination' => 'EGGD',
+                    'priority' => 100,
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'destination' => 'EGGD'
+                    'destination' => 'EGGD',
+                    'priority' => 100,
                 ],
                 [
                     'airline_id' => 1,
