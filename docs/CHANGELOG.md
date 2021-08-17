@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.7.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.7.0...4.7.1) (2021-08-17)
+
+
+### Bug Fixes
+
+* **srd:** fix SRD download URL ([#632](https://github.com/VATSIM-UK/uk-controller-api/issues/632)) ([908e2be](https://github.com/VATSIM-UK/uk-controller-api/commit/908e2bef62bfe6b53a9d18a6ccc40142b155ba12)), closes [#631](https://github.com/VATSIM-UK/uk-controller-api/issues/631)
+
 ## [4.7.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.6.5...4.7.0) (2021-07-29)
 
 
