@@ -16,18 +16,22 @@ class CleanAcarsMessagesTest extends BaseFunctionalTestCase
             [
                 [
                     'message' => 'foo1',
+                    'successful' => true,
                     'created_at' => Carbon::now()->subMonth()->addSecond(),
                 ],
                 [
                     'message' => 'foo2',
+                    'successful' => true,
                     'created_at' => Carbon::now()->subMonth(),
                 ],
                 [
                     'message' => 'foo3',
+                    'successful' => true,
                     'created_at' => Carbon::now()->subMonth()->subSecond(),
                 ],
                 [
                     'message' => 'foo4',
+                    'successful' => true,
                     'created_at' => Carbon::now()->subMonth()->subHour(),
                 ],
             ]
