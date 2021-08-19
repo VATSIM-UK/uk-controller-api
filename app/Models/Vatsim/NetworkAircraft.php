@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Location\Coordinate;
 
 class NetworkAircraft extends Model
-{``
+{
     use HasFactory;
 
     const AIRCRAFT_TYPE_REGEX = '/^[0-9A-Z]{4}/';

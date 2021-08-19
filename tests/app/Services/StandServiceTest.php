@@ -35,6 +35,9 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->mockAcarsProvider = Mockery::mock(AcarsProviderInterface::class);
+        $this->app->instance(AcarsProviderInterface::class, $this->mockAcarsProvider);
+
         $this->service = $this->app->make(StandService::class);
         $this->dependency = Dependency::create(
             [
@@ -45,8 +48,6 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
         $this->dependency->updated_at = null;
         $this->dependency->save();
-        $this->mockAcarsProvider = Mockery::mock(AcarsProviderInterface::class);
-        $this->app->instance(AcarsProviderInterface::class, $this->mockAcarsProvider);
     }
 
     public function testItReturnsStandDependency()
@@ -716,6 +717,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->mockAcarsProvider->shouldNotReceive('SendTelex');
         $this->service->allocateStandsForArrivals();
         $this->assertDatabaseHas(
@@ -754,6 +756,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertDatabaseHas(
             'stand_assignments',
@@ -782,6 +785,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertDatabaseHas(
             'stand_assignments',
@@ -856,10 +860,10 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect(['BMI221']));
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect(['BMI221']))->once();
         $this->mockAcarsProvider->shouldReceive('SendTelex')->withArgs(function ($arg) {
             return $arg->getTarget() === 'BMI221';
-        });
+        })->once();
         $this->service->allocateStandsForArrivals();
         $this->assertDatabaseHas(
             'stand_assignments',
@@ -886,6 +890,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
@@ -906,6 +911,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
@@ -926,6 +932,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
@@ -951,6 +958,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
@@ -977,6 +985,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertTrue(StandAssignment::where('callsign', 'BMI221')->where('stand_id', 1)->exists());
     }
@@ -997,6 +1006,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
@@ -1017,6 +1027,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
@@ -1039,6 +1050,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect([]));
         $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
