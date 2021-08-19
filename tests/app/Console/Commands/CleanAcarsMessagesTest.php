@@ -15,23 +15,19 @@ class CleanAcarsMessagesTest extends BaseFunctionalTestCase
         DB::table('acars_messages')->insert(
             [
                 [
-                    'callsign' => 'BAW123',
-                    'message' => 'foo',
+                    'message' => 'foo1',
                     'created_at' => Carbon::now()->subMonth()->addSecond(),
                 ],
                 [
-                    'callsign' => 'RYR456',
-                    'message' => 'foo',
+                    'message' => 'foo2',
                     'created_at' => Carbon::now()->subMonth(),
                 ],
                 [
-                    'callsign' => 'EZY890',
-                    'message' => 'foo',
+                    'message' => 'foo3',
                     'created_at' => Carbon::now()->subMonth()->subSecond(),
                 ],
                 [
-                    'callsign' => 'VIR25F',
-                    'message' => 'foo',
+                    'message' => 'foo4',
                     'created_at' => Carbon::now()->subMonth()->subHour(),
                 ],
             ]
@@ -42,13 +38,13 @@ class CleanAcarsMessagesTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'acars_messages',
             [
-                'callsign' => 'BAW123',
+                'message' => 'foo1',
             ]
         );
         $this->assertDatabaseHas(
             'acars_messages',
             [
-                'callsign' => 'RYR456',
+                'message' => 'foo2',
             ]
         );
     }
