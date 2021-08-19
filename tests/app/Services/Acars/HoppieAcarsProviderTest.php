@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Http;
 
 class HoppieAcarsProviderTest extends BaseFunctionalTestCase
 {
-    private HoppieAcarsProvider $service;
+    private HoppieAcarsProvider $provider;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = $this->app->make(HoppieAcarsProvider::class);
+        $this->provider = $this->app->make(HoppieAcarsProvider::class);
     }
 
     public function testItThrowsExceptionOnRequestError()
@@ -29,7 +29,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
                 ]
             );
 
-            $this->service->GetOnlineCallsigns();
+            $this->provider->GetOnlineCallsigns();
         } catch (AcarsRequestException $exception) {
             $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
             $this->assertEquals(
@@ -55,7 +55,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
                 ]
             );
 
-            $this->service->GetOnlineCallsigns();
+            $this->provider->GetOnlineCallsigns();
         } catch (AcarsRequestException $exception) {
             $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
             $this->assertEquals(
@@ -80,7 +80,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertSame(['BAW123', 'BAW456'], $this->service->GetOnlineCallsigns());
+        $this->assertSame(['BAW123', 'BAW456'], $this->provider->GetOnlineCallsigns());
 
         $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
         $this->assertEquals(
@@ -101,7 +101,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertSame(['BAW123', 'BAW456'], $this->service->GetOnlineCallsigns());
+        $this->assertSame(['BAW123', 'BAW456'], $this->provider->GetOnlineCallsigns());
 
         Http::assertSent(function (Request $request) {
             return $request->isForm() &&
@@ -120,7 +120,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertSame([], $this->service->GetOnlineCallsigns());
+        $this->assertSame([], $this->provider->GetOnlineCallsigns());
     }
 
     public function testItSendsATelex()
@@ -139,7 +139,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
         );
         $message = new StandAssignedTelexMessage('BAW123', $assignment);
 
-        $this->service->SendTelex($message);
+        $this->provider->SendTelex($message);
 
         Http::assertSent(function (Request $request) use ($message) {
             return $request->isForm() &&
