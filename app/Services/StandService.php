@@ -567,7 +567,7 @@ class StandService
                 return null;
             })
             ->filter()
-            ->each(function(StandAssignment $standAssignment) use ($onlineAcarsCallsigns, $sendingAcarsMessages) {
+            ->each(function (StandAssignment $standAssignment) use ($onlineAcarsCallsigns, $sendingAcarsMessages) {
                 event(new StandAssignedEvent($standAssignment));
                 if ($sendingAcarsMessages && $onlineAcarsCallsigns->contains($standAssignment->callsign)) {
                     $this->sendAllocationAcarsMessage($standAssignment);

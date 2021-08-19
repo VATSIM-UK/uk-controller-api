@@ -6,5 +6,4 @@ use RuntimeException;
 
 class AcarsRequestException extends RuntimeException
 {
-
 }
