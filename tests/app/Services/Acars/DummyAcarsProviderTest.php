@@ -18,7 +18,7 @@ class DummyAcarsProviderTest extends BaseFunctionalTestCase
 
     public function testItReturnsNoCallsigns()
     {
-        $this->assertSame([], $this->provider->GetOnlineCallsigns());
+        $this->assertSame([], $this->provider->GetOnlineCallsigns()->toArray());
     }
 
     public function testItDoesntSendTelexMessages()
