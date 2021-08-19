@@ -4,6 +4,7 @@ namespace App\Services\Acars;
 
 use App\Exceptions\Acars\AcarsRequestException;
 use App\Helpers\Acars\TelexMessageInterface;
+use App\Models\Acars\AcarsMessage;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -27,18 +28,24 @@ class HoppieAcarsProvider implements AcarsProviderInterface
 
     private function makeRequest(string $messageType, string $target, string $data): Response
     {
+        $message = $this->buildRequestBody($messageType, $target, $data);
         return tap(
-            Http::asForm()->post(
+            Http::asForm()->timeout(3)->post(
                 config('acars.hoppie.url'),
-                $this->buildRequestBody($messageType, $target, $data)
+                $message
             ),
-            function (Response $response) {
-                if (!$response->successful()) {
-                    throw new AcarsRequestException('Acars request failed, message: ' . $response->body());
-                }
+            function (Response $response) use ($message) {
+                $success = $this->responseSuccessful($response);
 
-                if (Str::substr($response, 0, 2) !== 'ok') {
-                    throw new AcarsRequestException('Acars response not ok, message: ' . $response->body());
+                AcarsMessage::create(
+                    [
+                        'message' => http_build_query($message),
+                        'successful' => $success,
+                    ]
+                );
+
+                if (!$success) {
+                    throw new AcarsRequestException('Acars request failed, response: ' . $response->body());
                 }
             }
         );
@@ -58,5 +65,10 @@ class HoppieAcarsProvider implements AcarsProviderInterface
     private function getResponseBody(Response $response): string
     {
         return Str::substr($response->body(), 4, -1);
+    }
+
+    private function responseSuccessful(Response $response): bool
+    {
+        return $response->successful() && Str::substr($response, 0, 2) === 'ok';
     }
 }

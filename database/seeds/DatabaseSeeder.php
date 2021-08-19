@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -123,6 +124,10 @@ class DatabaseSeeder extends Seeder
         ]
     ];
 
+    const OTHER_TABLES_TO_TRUNCATE = [
+        'acars_messages',
+    ];
+
 
     /**
      * Run the database seeds.
@@ -131,15 +136,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Truncate all tables
         DB::statement("SET foreign_key_checks=0");
-        foreach (self::SEEDERS as $seeder => $tables) {
+        // Truncate all tables
+        foreach (self::SEEDERS as $tables) {
             foreach ($tables as $table) {
                 DB::table($table)->truncate();
             }
         }
 
-        // Seed
+        foreach (self::OTHER_TABLES_TO_TRUNCATE as $table) {
+            DB::table($table)->truncate();
+        }
+
+        // Seed tables
         foreach (self::SEEDERS as $seeder => $tables) {
             $this->call($seeder);
         }

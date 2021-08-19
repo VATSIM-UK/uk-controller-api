@@ -5,6 +5,7 @@ namespace App\Services\Acars;
 use App\BaseFunctionalTestCase;
 use App\Exceptions\Acars\AcarsRequestException;
 use App\Helpers\Acars\StandAssignedTelexMessage;
+use App\Models\Acars\AcarsMessage;
 use App\Models\Stand\StandAssignment;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -21,26 +22,75 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
 
     public function testItThrowsExceptionOnRequestError()
     {
-        $this->expectException(AcarsRequestException::class);
-        Http::fake(
-            [
-                config('acars.hoppie.url') => Http::response('ok {}', 500),
-            ]
-        );
+        try {
+            Http::fake(
+                [
+                    config('acars.hoppie.url') => Http::response('ok {}', 500),
+                ]
+            );
 
-        $this->service->GetOnlineCallsigns();
+            $this->service->GetOnlineCallsigns();
+        } catch (AcarsRequestException $exception) {
+            $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
+            $this->assertEquals(
+                $loggedMessage->message,
+                sprintf(
+                    'logon=%s&type=ping&to=VATSIMUK&from=VATSIMUK&packet=ALL-CALLSIGNS',
+                    config('acars.hoppie.login_code')
+                )
+            );
+            $this->assertFalse($loggedMessage->successful);
+            return;
+        }
+
+        self::fail('Expected an AcarsRequestException but did not get one');
     }
 
     public function testItThrowsExceptionOnBadResponse()
     {
-        $this->expectException(AcarsRequestException::class);
+        try {
+            Http::fake(
+                [
+                    config('acars.hoppie.url') => Http::response('notok {}'),
+                ]
+            );
+
+            $this->service->GetOnlineCallsigns();
+        } catch (AcarsRequestException $exception) {
+            $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
+            $this->assertEquals(
+                $loggedMessage->message,
+                sprintf(
+                    'logon=%s&type=ping&to=VATSIMUK&from=VATSIMUK&packet=ALL-CALLSIGNS',
+                    config('acars.hoppie.login_code')
+                )
+            );
+            $this->assertFalse($loggedMessage->successful);
+            return;
+        }
+
+        self::fail('Expected an AcarsRequestException but did not get one');
+    }
+
+    public function testItLogsOutboundMessages()
+    {
         Http::fake(
             [
-                config('acars.hoppie.url') => Http::response('notok {}'),
+                config('acars.hoppie.url') => Http::response('ok {BAW123 BAW456}'),
             ]
         );
 
-        $this->service->GetOnlineCallsigns();
+        $this->assertSame(['BAW123', 'BAW456'], $this->service->GetOnlineCallsigns());
+
+        $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
+        $this->assertEquals(
+            $loggedMessage->message,
+            sprintf(
+                'logon=%s&type=ping&to=VATSIMUK&from=VATSIMUK&packet=ALL-CALLSIGNS',
+                config('acars.hoppie.login_code')
+            )
+        );
+        $this->assertTrue($loggedMessage->successful);
     }
 
     public function testItReturnsOnlineCallsigns()
@@ -54,12 +104,10 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
         $this->assertSame(['BAW123', 'BAW456'], $this->service->GetOnlineCallsigns());
 
         Http::assertSent(function (Request $request) {
-            $loginCode = config('acars.hoppie.login_code');
-
             return $request->isForm() &&
                 $request->body() === sprintf(
                     'logon=%s&type=ping&to=VATSIMUK&from=VATSIMUK&packet=ALL-CALLSIGNS',
-                    $loginCode
+                    config('acars.hoppie.login_code')
                 );
         });
     }
@@ -94,12 +142,10 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
         $this->service->SendTelex($message);
 
         Http::assertSent(function (Request $request) use ($message) {
-            $loginCode = config('acars.hoppie.login_code');
-
             return $request->isForm() &&
                 $request->body() === sprintf(
                     'logon=%s&type=telex&to=BAW123&from=VATSIMUK&packet=%s',
-                    $loginCode,
+                    config('acars.hoppie.login_code'),
                     urlencode($message->getMessage())
                 );
         });
