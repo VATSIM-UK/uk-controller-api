@@ -9,6 +9,7 @@ class DummyAcarsProvider implements AcarsProviderInterface
 {
     public function SendTelex(TelexMessageInterface $message): void
     {
+        // Nothing to do - is dummy
     }
 
     public function GetOnlineCallsigns(): Collection
