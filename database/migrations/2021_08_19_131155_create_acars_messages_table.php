@@ -18,6 +18,8 @@ class CreateAcarsMessagesTable extends Migration
             $table->string('callsign')->index()->comment('Who the target of the message is');
             $table->text('message')->comment('The message itself');
             $table->timestamps();
+
+            $table->index('created_at');
         });
     }
 
