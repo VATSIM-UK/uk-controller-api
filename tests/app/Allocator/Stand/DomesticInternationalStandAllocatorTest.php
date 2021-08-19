@@ -59,6 +59,15 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItDoesntAssignStandIfAircraftDoesntHaveDepartureAirport()
+    {
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $aircraft->planned_depairport = null;
+        $aircraft->save();
+
+        $this->assertNull($this->allocator->allocate($aircraft));
+    }
+
     public function testItAssignsADomesticStand()
     {
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
