@@ -20,20 +20,17 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\Acars\AcarsProviderInterface;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
+use Mockery;
+use Mockery\MockInterface;
 
 class StandServiceTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var StandService
-     */
-    private $service;
-
-    /**
-     * @var Dependency
-     */
-    private $dependency;
+    private StandService $service;
+    private Dependency $dependency;
+    private MockInterface $mockAcarsProvider;
 
     public function setUp(): void
     {
@@ -48,6 +45,8 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
         $this->dependency->updated_at = null;
         $this->dependency->save();
+        $this->mockAcarsProvider = Mockery::mock(AcarsProviderInterface::class);
+        $this->app->instance(AcarsProviderInterface::class, $this->mockAcarsProvider);
     }
 
     public function testItReturnsStandDependency()
@@ -692,15 +691,23 @@ class StandServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItDeallocatesStandForDivertingAircraft()
+    public function testItAssignsArrivalStandToEligibleAircraftThatDontHaveAssignments()
     {
-        $this->addStandAssignment('BMI221', 3);
-        $this->expectsEvents(StandUnassignedEvent::class);
+        $this->expectsEvents(StandAssignedEvent::class);
+        StandReservation::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addMinute(),
+            ]
+        );
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'LXGB',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // London
@@ -709,19 +716,36 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->removeAllocationIfDestinationChanged($aircraft);
-        $this->assertNull(StandAssignment::find('BMI221'));
+        $this->mockAcarsProvider->shouldNotReceive('SendTelex');
+        $this->service->allocateStandsForArrivals();
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+            ]
+        );
     }
 
-    public function testItDoesntDeallocateStandIfAircraftNotDiverting()
+    public function testItAssignsArrivalStandToEligibleAircraftThatAreDiverting()
     {
-        $this->addStandAssignment('BMI221', 1);
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $this->addStandAssignment('BMI221', 3);
+        $this->expectsEvents(StandAssignedEvent::class);
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        StandReservation::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addMinute(),
+            ]
+        );
+
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // London
@@ -730,16 +754,22 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->removeAllocationIfDestinationChanged($aircraft);
-        $this->assertEquals(1, StandAssignment::find('BMI221')->stand_id);
+        $this->service->allocateStandsForArrivals();
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+            ]
+        );
     }
 
-    public function testItDoesntDeallocateStandIfForDepartureAirport()
+    public function testItDoesntChangeDiversionStandsIfCurrentAssignmentAtDepartureAirfield()
     {
         $this->addStandAssignment('BMI221', 3);
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        $this->doesntExpectEvents(StandAssignedEvent::class);
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -752,30 +782,19 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->removeAllocationIfDestinationChanged($aircraft);
-        $this->assertEquals(3, StandAssignment::find('BMI221')->stand_id);
-    }
-
-    public function testItDoesntDeallocateStandIfNoStandToDeallocate()
-    {
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
-            'BMI221',
+        $this->service->allocateStandsForArrivals();
+        $this->assertDatabaseHas(
+            'stand_assignments',
             [
-                'planned_aircraft' => 'B738',
-                'planned_destairport' => 'EGLL',
-                'groundspeed' => 150,
-                // London
-                'latitude' => 51.487202,
-                'longitude' => -0.466667,
+                'callsign' => 'BMI221',
+                'stand_id' => 3,
             ]
         );
-
-        $this->service->removeAllocationIfDestinationChanged($aircraft);
     }
 
-    public function testItAllocatesAStandFromAllocator()
+    public function testItDoesntSendAllocationMessageIfAircraftNotOnAcars()
     {
+        Config::set('stands.allocation_acars_message', true);
         $this->expectsEvents(StandAssignedEvent::class);
         StandReservation::create(
             [
@@ -786,10 +805,11 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'LXGB',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // London
@@ -798,15 +818,62 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $assignment = $this->service->allocateStandForAircraft($aircraft);
-        $this->assertEquals(1, $assignment->stand_id);
-        $this->assertEquals('BMI221', $assignment->callsign);
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect(['BMI222']));
+        $this->mockAcarsProvider->shouldNotReceive('SendTelex');
+        $this->service->allocateStandsForArrivals();
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+            ]
+        );
+    }
+
+    public function testItSendsAllocationMessage()
+    {
+        Config::set('stands.allocation_acars_message', true);
+        $this->expectsEvents(StandAssignedEvent::class);
+        StandReservation::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addMinute(),
+            ]
+        );
+
+        NetworkDataService::createOrUpdateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_depairport' => 'LXGB',
+                'planned_destairport' => 'EGLL',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+
+        $this->mockAcarsProvider->shouldReceive('GetOnlineCallsigns')->andReturn(collect(['BMI221']));
+        $this->mockAcarsProvider->shouldReceive('SendTelex')->withArgs(function ($arg) {
+            return $arg->getTarget() === 'BMI221';
+        });
+        $this->service->allocateStandsForArrivals();
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+            ]
+        );
     }
 
     public function testItDoesntAllocateStandIfPerformingCircuits()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -819,17 +886,18 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
-    public function testItDoesntPerformAllocationIfStandTooFarFromAirfield()
+    public function testItDoesntPerformAllocationIfAircraftTooFarFromAirfield()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 100,
                 // Lambourne
@@ -838,17 +906,18 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
     public function testItDoesntPerformAllocationIfAircraftHasNoGroundspeed()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 0,
                 // Lambourne
@@ -857,7 +926,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
@@ -869,10 +938,11 @@ class StandServiceTest extends BaseFunctionalTestCase
         });
 
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // Lambourne
@@ -881,17 +951,18 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
     public function testItDoesntPerformAllocationIfStandAlreadyAssigned()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // Lambourne
@@ -906,17 +977,18 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertTrue(StandAssignment::where('callsign', 'BMI221')->where('stand_id', 1)->exists());
     }
 
     public function testItDoesntReturnAllocationIfAirfieldNotFound()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGXX',
                 'groundspeed' => 150,
                 // Lambourne
@@ -925,17 +997,18 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
     public function testItDoesntPerformAllocationIfUnknownAircraftType()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B736',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // Lambourne
@@ -944,7 +1017,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
@@ -953,10 +1026,11 @@ class StandServiceTest extends BaseFunctionalTestCase
         Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
 
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkDataService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_depairport' => 'EGCC',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // Lambourne
@@ -965,7 +1039,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->service->allocateStandForAircraft($aircraft));
+        $this->service->allocateStandsForArrivals();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
     }
 
@@ -1219,20 +1293,6 @@ class StandServiceTest extends BaseFunctionalTestCase
                 ],
             ],
             $this->service->getAirfieldStandStatus('EGLL')
-        );
-    }
-
-    public function testItReturnsAircraftWhoAreEligibleForArrivalStandAllocation()
-    {
-        $this->addStandAssignment('BAW456', 2);
-        $this->assertEquals(
-            collect(
-                [
-                    NetworkAircraft::find('BAW123'),
-                    NetworkAircraft::find('BAW789')
-                ]
-            ),
-            $this->service->getAircraftEligibleForArrivalStandAllocation()->toBase()
         );
     }
 

@@ -6,18 +6,16 @@ use App\Models\Stand\StandAssignment;
 
 class StandAssignedTelexMessage implements TelexMessageInterface
 {
-    private string $callsign;
     private StandAssignment $standAssignment;
 
-    public function __construct(string $callsign, StandAssignment $standAssignment)
+    public function __construct(StandAssignment $standAssignment)
     {
-        $this->callsign = $callsign;
         $this->standAssignment = $standAssignment;
     }
 
     public function getTarget(): string
     {
-        return $this->callsign;
+        return $this->standAssignment->callsign;
     }
 
     public function getMessage(): string

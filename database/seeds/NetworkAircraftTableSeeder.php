@@ -12,10 +12,10 @@ class NetworkAircraftTableSeeder extends Seeder
             [
                 [
                     'callsign' => 'BAW123',
-                    'latitude' => 54.66,
-                    'longitude'=> -6.21,
+                    'latitude' => 57.310600, // ADN
+                    'longitude'=> -2.267220,
                     'altitude' => '35123',
-                    'groundspeed' => '35123',
+                    'groundspeed' => '351',
                     'planned_aircraft' => 'B738',
                     'planned_depairport' => 'EGKK',
                     'planned_destairport' => 'EGLL',
@@ -29,10 +29,10 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'BAW456',
-                    'latitude' => 54.66,
-                    'longitude'=> -6.21,
+                    'latitude' => 57.310600, // ADN
+                    'longitude'=> -2.267220,
                     'altitude' => '35123',
-                    'groundspeed' => '35123',
+                    'groundspeed' => '351',
                     'planned_aircraft' => 'B738',
                     'planned_depairport' => 'EGKK',
                     'planned_destairport' => 'EGLL',
@@ -46,10 +46,10 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'BAW789',
-                    'latitude' => 54.66,
-                    'longitude'=> -6.21,
+                    'latitude' => 57.310600, // ADN
+                    'longitude'=> -2.267220,
                     'altitude' => '35123',
-                    'groundspeed' => '35123',
+                    'groundspeed' => '351',
                     'planned_aircraft' => 'B738',
                     'planned_depairport' => 'EGKK',
                     'planned_destairport' => 'EGLL',
@@ -63,8 +63,8 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'RYR824',
-                    'latitude' => 54.66,
-                    'longitude'=> -6.21,
+                    'latitude' => 57.310600, // ADN
+                    'longitude'=> -2.267220,
                     'altitude' => '35123',
                     'groundspeed' => '123',
                     'planned_aircraft' => 'B738',

@@ -6,6 +6,7 @@ use App\Exceptions\Acars\AcarsRequestException;
 use App\Helpers\Acars\TelexMessageInterface;
 use App\Models\Acars\AcarsMessage;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -18,12 +19,12 @@ class HoppieAcarsProvider implements AcarsProviderInterface
         $this->makeRequest('telex', $message->getTarget(), $message->getMessage());
     }
 
-    public function GetOnlineCallsigns(): array
+    public function GetOnlineCallsigns(): Collection
     {
         $responseBody = $this->getResponseBody(
             $this->makeRequest('ping', self::VATUK_STATION_IDENTIFIER, 'ALL-CALLSIGNS')
         );
-        return $responseBody === '' ? [] : explode(' ', $responseBody);
+        return collect($responseBody === '' ? [] : explode(' ', $responseBody));
     }
 
     private function makeRequest(string $messageType, string $target, string $data): Response

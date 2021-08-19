@@ -30,7 +30,7 @@ class DummyAcarsProviderTest extends BaseFunctionalTestCase
                 'stand_id' => 2,
             ]
         );
-        $message = new StandAssignedTelexMessage('BAW123', $assignment);
+        $message = new StandAssignedTelexMessage($assignment);
         $this->provider->SendTelex($message);
     }
 }

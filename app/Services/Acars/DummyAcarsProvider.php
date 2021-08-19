@@ -3,6 +3,7 @@
 namespace App\Services\Acars;
 
 use App\Helpers\Acars\TelexMessageInterface;
+use Illuminate\Support\Collection;
 
 class DummyAcarsProvider implements AcarsProviderInterface
 {
@@ -10,8 +11,8 @@ class DummyAcarsProvider implements AcarsProviderInterface
     {
     }
 
-    public function GetOnlineCallsigns(): array
+    public function GetOnlineCallsigns(): Collection
     {
-        return [];
+        return collect();
     }
 }

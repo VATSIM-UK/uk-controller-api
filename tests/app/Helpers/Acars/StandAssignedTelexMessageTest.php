@@ -20,7 +20,7 @@ class StandAssignedTelexMessageTest extends BaseFunctionalTestCase
                 'stand_id' => 2,
             ]
         );
-        $this->message = new StandAssignedTelexMessage('BAW123', $this->assignment);
+        $this->message = new StandAssignedTelexMessage($this->assignment);
     }
 
     public function testItHasATarget()

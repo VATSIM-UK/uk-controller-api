@@ -80,7 +80,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertSame(['BAW123', 'BAW456'], $this->provider->GetOnlineCallsigns());
+        $this->assertSame(['BAW123', 'BAW456'], $this->provider->GetOnlineCallsigns()->toArray());
 
         $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
         $this->assertEquals(
@@ -101,7 +101,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertSame(['BAW123', 'BAW456'], $this->provider->GetOnlineCallsigns());
+        $this->assertSame(['BAW123', 'BAW456'], $this->provider->GetOnlineCallsigns()->toArray());
 
         Http::assertSent(function (Request $request) {
             return $request->isForm() &&
@@ -120,7 +120,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertSame([], $this->provider->GetOnlineCallsigns());
+        $this->assertSame([], $this->provider->GetOnlineCallsigns()->toArray());
     }
 
     public function testItSendsATelex()
@@ -137,7 +137,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
                 'stand_id' => 2,
             ]
         );
-        $message = new StandAssignedTelexMessage('BAW123', $assignment);
+        $message = new StandAssignedTelexMessage($assignment);
 
         $this->provider->SendTelex($message);
 

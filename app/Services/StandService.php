@@ -4,17 +4,16 @@ namespace App\Services;
 
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
-use App\Events\StandOccupiedEvent;
 use App\Events\StandUnassignedEvent;
-use App\Events\StandVacatedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
-use App\Models\Aircraft\Aircraft;
+use App\Helpers\Acars\StandAssignedTelexMessage;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\Acars\AcarsProviderInterface;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -61,12 +60,15 @@ class StandService
      */
     private $allocators;
 
+    private AcarsProviderInterface $acarsProvider;
+
     /**
      * @param ArrivalStandAllocatorInterface[] $allocators
      */
-    public function __construct(array $allocators)
+    public function __construct(array $allocators, AcarsProviderInterface $acarsProvider)
     {
         $this->allocators = $allocators;
+        $this->acarsProvider = $acarsProvider;
     }
 
     public function getStandsDependency(): Collection
@@ -542,44 +544,108 @@ class StandService
         return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS;
     }
 
+    public function allocateStandsForArrivals(): void
+    {
+        // Get all the eligible aircraft and assign them a stand
+        $onlineAcarsCallsigns = $this->acarsProvider->GetOnlineCallsigns();
+        $sendingAcarsMessages = config('stands.allocation_acars_message', false);
+        $allAirfields = Airfield::all()->mapWithKeys(function (Airfield $airfield) {
+            return [$airfield->code => $airfield];
+        });
+
+        $this->getAircraftEligibleForArrivalStandAllocation()
+            ->filter(function (NetworkAircraft $aircraft) use ($allAirfields) {
+                return $this->getTimeFromAirfieldInMinutes($aircraft, $allAirfields[$aircraft->planned_destairport])
+                    < self::ASSIGN_STAND_MINUTES_BEFORE;
+            })
+            ->map(function (NetworkAircraft $aircraft) {
+                foreach ($this->allocators as $allocator) {
+                    if ($allocation = $allocator->allocate($aircraft)) {
+                        return $allocation;
+                    }
+                }
+                return null;
+            })
+            ->filter()
+            ->each(function(StandAssignment $standAssignment) use ($onlineAcarsCallsigns, $sendingAcarsMessages) {
+                event(new StandAssignedEvent($standAssignment));
+                if ($sendingAcarsMessages && $onlineAcarsCallsigns->contains($standAssignment->callsign)) {
+                    $this->sendAllocationAcarsMessage($standAssignment);
+                }
+            });
+    }
+
+    private function sendAllocationAcarsMessage(StandAssignment $standAssignment)
+    {
+        $this->acarsProvider->SendTelex(new StandAssignedTelexMessage($standAssignment));
+    }
+
+    private function getAircraftEligibleForArrivalStandAllocation(): Collection
+    {
+        return $this->getAircraftWithoutAStandAssignmentThatRequireOneForArrival()->concat(
+            $this->getAircraftThatHaveArrivalStandAllocationsButRequireRenewing()
+        )->unique('callsign');
+    }
+
     /**
-     * Use the stand assignment rules to allocate a stand for a given aircraft
+     * Find aircraft that do not have an arrival stand assigned and are eligible.
+     * Additional criteria are:
+     *
+     * 1. Must not already have an assigned stand.
      */
-    public function allocateStandForAircraft(NetworkAircraft $aircraft): ?StandAssignment
+    private function getAircraftWithoutAStandAssignmentThatRequireOneForArrival(): Collection
     {
-        if (!$this->shouldAllocateStand($aircraft)) {
-            return null;
-        }
-
-        foreach ($this->allocators as $allocator) {
-            if ($allocation = $allocator->allocate($aircraft)) {
-                event(new StandAssignedEvent($allocation));
-                return $allocation;
-            }
-        }
-
-        return null;
-    }
-
-    public function removeAllocationIfDestinationChanged(NetworkAircraft $aircraft): void
-    {
-        if (
-            ($assignedStand = $this->getAssignedStandForAircraft($aircraft->callsign)) !== null &&
-            $assignedStand->airfield->code !== $aircraft->planned_destairport &&
-            $assignedStand->airfield->code !== $aircraft->planned_depairport
-        ) {
-            $this->deleteStandAssignmentByCallsign($aircraft->callsign);
-        }
-    }
-
-    public function getAircraftEligibleForArrivalStandAllocation(): Collection
-    {
-        return NetworkAircraft::whereIn(
-            'planned_destairport',
-            Airfield::all()->pluck('code')->toArray()
-        )
-            ->whereDoesntHave('assignedStand')
+        return $this->getBaseArrivalAllocationQuery()
+            ->leftJoin(
+                'stand_assignments',
+                'network_aircraft.callsign',
+                '=',
+                'stand_assignments.callsign'
+            )
+            ->whereNull('stand_assignments.callsign')
             ->get();
+    }
+
+    /**
+     * Find aircraft that already have an arrival stand, but we need to renew it.
+     * Additional criteria are:
+     *
+     * 1. The stand assigned is neither at their destination or departure airfield, which indicates
+     * a diversion scenario.
+     */
+    private function getAircraftThatHaveArrivalStandAllocationsButRequireRenewing(): Collection
+    {
+        return $this->getBaseArrivalAllocationQuery()->join(
+            'stand_assignments',
+            'network_aircraft.callsign',
+            '=',
+            'stand_assignments.callsign'
+        )
+            ->join('stands', 'stand_assignments.stand_id', '=', 'stands.id')
+            ->join('airfield', 'stands.airfield_id', '=', 'airfield.id')
+            ->whereRaw('airfield.code <> network_aircraft.planned_destairport')
+            ->whereRaw('airfield.code <> network_aircraft.planned_depairport')
+            ->get();
+    }
+
+    /**
+     * Get the base query for determining if an aircraft is eligible for arrival stand allocation.
+     * The criteria are:
+     *
+     * 1. Must be a known aircraft type
+     * 2. Must be a type of aircraft for which stands are assigned
+     * 3. Must be arriving into an airport that we care about
+     * 4. Must not be arriving into the same airport as departure airport (because circuits)
+     * 5. Must be moving, we can't calculate time until arrival if they're not moving.
+     */
+    private function getBaseArrivalAllocationQuery(): Builder
+    {
+        return NetworkAircraft::join('aircraft', 'aircraft.code', '=', 'network_aircraft.planned_aircraft')
+            ->where('aircraft.allocate_stands', '=', 1)
+            ->join('airfield AS arrival_airfield', 'network_aircraft.planned_destairport', '=', 'arrival_airfield.code')
+            ->whereRaw('network_aircraft.planned_depairport <> network_aircraft.planned_destairport')
+            ->where('network_aircraft.groundspeed', '>', 0)
+            ->select('network_aircraft.*');
     }
 
     private function getDepartureStandsToAssign(): Collection
@@ -619,28 +685,6 @@ class StandService
         $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
             $this->deleteStandAssignment($assignment);
         });
-    }
-
-    /**
-     * Criteria for whether a stand should be allocated
-     *
-     * 1. Cannot have the same departure and arrival airport (to cater for circuits)
-     * 2. Aircraft must not have an existing stand assignment
-     * 3. The arrival airfield must exist
-     * 4. The aircraft has to be moving (to prevent divide by zero errors)
-     * 5. The aircraft must have a discernible aircraft type
-     * 6. The aircraft type should be one that we allocate stands to
-     * 7. The aircraft needs to be within a certain number of minutes from landing
-     */
-    private function shouldAllocateStand(NetworkAircraft $aircraft): bool
-    {
-        return $aircraft->planned_depairport !== $aircraft->planned_destairport &&
-            StandAssignment::where('callsign', $aircraft->callsign)->doesntExist() &&
-            ($arrivalAirfield = Airfield::where('code', $aircraft->planned_destairport)->first()) !== null &&
-            $aircraft->groundspeed &&
-            ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
-            $aircraftType->allocate_stands &&
-            $this->getTimeFromAirfieldInMinutes($aircraft, $arrivalAirfield) < self::ASSIGN_STAND_MINUTES_BEFORE;
     }
 
     /**
