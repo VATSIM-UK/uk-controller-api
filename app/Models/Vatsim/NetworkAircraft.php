@@ -5,6 +5,7 @@ namespace App\Models\Vatsim;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,6 +15,8 @@ use Location\Coordinate;
 class NetworkAircraft extends Model
 {
     use HasFactory;
+
+    private const TIME_OUT_MINUTES = 20;
 
     const AIRCRAFT_TYPE_REGEX = '/^[0-9A-Z]{4}/';
 
@@ -60,6 +63,14 @@ class NetworkAircraft extends Model
             if ($aircraft->isDirty('transponder')) {
                 $aircraft->transponder_last_updated_at = Carbon::now();
             }
+        });
+    }
+
+    public static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('network_aircraft.updated_at', '>', Carbon::now()->subMinutes(self::TIME_OUT_MINUTES));
         });
     }
 
@@ -127,5 +138,10 @@ class NetworkAircraft extends Model
     public function isIfr(): bool
     {
         return $this->planned_flighttype === 'I';
+    }
+
+    public function scopeTimedOut(Builder $builder): Builder
+    {
+        return $builder->where('network_aircraft.updated_at', '<', Carbon::now()->subMinutes(self::TIME_OUT_MINUTES));
     }
 }
