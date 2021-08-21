@@ -69,7 +69,7 @@ class NetworkAircraft extends Model
     public static function booted()
     {
         parent::booted();
-        static::addGlobalScope('active', function(Builder $builder) {
+        static::addGlobalScope('active', function (Builder $builder) {
             $builder->where('network_aircraft.updated_at', '>', Carbon::now()->subMinutes(self::TIME_OUT_MINUTES));
         });
     }
