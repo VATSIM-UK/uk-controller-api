@@ -10,7 +10,7 @@ class CleanAcarsMessages extends Command
 {
     protected $signature = 'acars:clean-history';
 
-    protected $description = 'Delete any acars message history that is older than a specified age';
+    protected $description = 'Delete any acars message history that is older than one month';
 
     public function handle(): int
     {
