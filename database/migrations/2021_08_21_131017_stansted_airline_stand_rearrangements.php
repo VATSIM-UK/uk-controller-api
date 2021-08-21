@@ -30,28 +30,29 @@ class StanstedAirlineStandRearrangements extends Migration
          */
         DB::table('stands')
             ->where('airfield_id', $stansted)
-            ->whereIn('identifier',
-                      [
-                          '11',
-                          '12',
-                          '13',
-                          '15',
-                          '22',
-                          '23',
-                          '24',
-                          '32',
-                          '33',
-                          '34',
-                          '43',
-                          '44',
-                          '50',
-                          '51',
-                          '52',
-                          '53',
-                          '61',
-                          '62',
-                          '63'
-                      ]
+            ->whereIn(
+                'identifier',
+                [
+                    '11',
+                    '12',
+                    '13',
+                    '15',
+                    '22',
+                    '23',
+                    '24',
+                    '32',
+                    '33',
+                    '34',
+                    '43',
+                    '44',
+                    '50',
+                    '51',
+                    '52',
+                    '53',
+                    '61',
+                    '62',
+                    '63'
+                ]
             )
             ->update(['assignment_priority' => 5, 'updated_at' => Carbon::now()]);
 
