@@ -20,6 +20,8 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
         $airline = $this->airlineService->getAirlineForAircraft($aircraft);
         return $airline === null
             ? null
-            : $stands->airline($airline)->orderByRaw('airline_stand.destination IS NULL DESC');
+            : $stands->airline($airline)
+                ->orderByRaw('airline_stand.destination IS NULL DESC')
+                ->orderBy('airline_stand.priority');
     }
 }

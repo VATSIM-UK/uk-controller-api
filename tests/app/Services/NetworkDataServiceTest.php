@@ -256,6 +256,12 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
+        Queue::assertNotPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+            return $job->aircraft->callsign === 'BAW123';
+        });
+        Queue::assertNotPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+            return $job->aircraft->callsign === 'BAW456 ';
+        });
         Queue::assertPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
             return $job->aircraft->callsign === 'BAW789';
         });

@@ -1,5 +1,25 @@
 # UK Controller Plugin API Changelog
 
+## [4.8.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.7.1...4.8.0) (2021-08-21)
+
+
+### Features
+
+* **stands:** Allow airlines to have prioritised stands ([#625](https://github.com/VATSIM-UK/uk-controller-api/issues/625)) ([a431aa2](https://github.com/VATSIM-UK/uk-controller-api/commit/a431aa2a49e7a09bcc05852861faa11a67eea679))
+
+
+### Bug Fixes
+
+* **airfield:** fix rounding errors on airfield coordinates ([#626](https://github.com/VATSIM-UK/uk-controller-api/issues/626)) ([b064316](https://github.com/VATSIM-UK/uk-controller-api/commit/b06431611e4737933a2a4f0d9fc22177b50b4d26))
+* **networkdata:** data races with timing out aircraft ([#635](https://github.com/VATSIM-UK/uk-controller-api/issues/635)) ([67e348c](https://github.com/VATSIM-UK/uk-controller-api/commit/67e348ca62bb2e109cd3e9ed37f3cb5fe0146e1f)), closes [#634](https://github.com/VATSIM-UK/uk-controller-api/issues/634)
+
+
+### Data Updates
+
+* **stands:** add heathrow corporate and executive stand assignment ([#623](https://github.com/VATSIM-UK/uk-controller-api/issues/623)) ([d853d64](https://github.com/VATSIM-UK/uk-controller-api/commit/d853d64cbf23589989477f9faa6347ced9c28cd1)), closes [#620](https://github.com/VATSIM-UK/uk-controller-api/issues/620)
+* **stands:** add JetBlue Heathrow Stand Assignments ([#622](https://github.com/VATSIM-UK/uk-controller-api/issues/622)) ([9dc36a3](https://github.com/VATSIM-UK/uk-controller-api/commit/9dc36a3c1d784e16593b33d47c4e4c0c0f08c8db)), closes [#621](https://github.com/VATSIM-UK/uk-controller-api/issues/621)
+* **stands:** update airline preferences at Stansted ([#636](https://github.com/VATSIM-UK/uk-controller-api/issues/636)) ([f553d9a](https://github.com/VATSIM-UK/uk-controller-api/commit/f553d9a4211eb38d0faeb747a6474fb47704103e)), closes [#627](https://github.com/VATSIM-UK/uk-controller-api/issues/627)
+
 ### [4.7.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.7.0...4.7.1) (2021-08-17)
 
 

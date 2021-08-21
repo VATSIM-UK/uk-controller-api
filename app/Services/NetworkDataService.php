@@ -148,7 +148,8 @@ class NetworkDataService
      */
     private function handleTimeouts(): void
     {
-        NetworkAircraft::where('updated_at', '<', Carbon::now()->subMinutes(20))
+        NetworkAircraft::withoutGlobalScope('active')
+            ->timedOut()
             ->get()
             ->each(
                 function (NetworkAircraft $aircraft) {
