@@ -19,6 +19,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Location\Distance\Haversine;
 
 class StandService
@@ -546,9 +547,11 @@ class StandService
 
     public function allocateStandsForArrivals(): void
     {
-        // Get all the eligible aircraft and assign them a stand
-        $onlineAcarsCallsigns = $this->acarsProvider->GetOnlineCallsigns();
-        $sendingAcarsMessages = config('stands.allocation_acars_message', false);
+        // To send messages via ACARS, we need to know who's online
+        $onlineAcarsCallsigns = config('stands.allocation_acars_message', false)
+            ? $this->acarsProvider->GetOnlineCallsigns()
+            : new Collection();
+
         $allAirfields = Airfield::all()->mapWithKeys(function (Airfield $airfield) {
             return [$airfield->code => $airfield];
         });
@@ -567,9 +570,9 @@ class StandService
                 return null;
             })
             ->filter()
-            ->each(function (StandAssignment $standAssignment) use ($onlineAcarsCallsigns, $sendingAcarsMessages) {
+            ->each(function (StandAssignment $standAssignment) use ($onlineAcarsCallsigns) {
                 event(new StandAssignedEvent($standAssignment));
-                if ($sendingAcarsMessages && $onlineAcarsCallsigns->contains($standAssignment->callsign)) {
+                if ($onlineAcarsCallsigns->contains($standAssignment->callsign)) {
                     $this->sendAllocationAcarsMessage($standAssignment);
                 }
             });
