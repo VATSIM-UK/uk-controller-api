@@ -1228,8 +1228,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(
             collect(
                 [
-                    NetworkAircraft::find('BAW123'),
-                    NetworkAircraft::find('BAW789')
+                    NetworkAircraft::find('BAW123')
                 ]
             ),
             $this->service->getAircraftEligibleForArrivalStandAllocation()->toBase()
