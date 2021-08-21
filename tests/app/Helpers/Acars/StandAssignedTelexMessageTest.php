@@ -36,7 +36,9 @@ VATSIM UK Stand Assignment
 
 You have been provisionally assigned stand 251/EGLL.
 
-This message is non-binding, subject to change at controller discretion and is for planning purposes only.
+This message is for planning purposes only, is non-binding, and may change subject to availability and controller discretion.
+
+You will be notified if another automatic assignment is made.
 END;
 
         $expected = Str::replace("\r\n", "\n", $expected);

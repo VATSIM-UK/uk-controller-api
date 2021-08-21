@@ -24,8 +24,9 @@ class StandAssignedTelexMessage implements TelexMessageInterface
             "VATSIM UK Stand Assignment\n" .
             "--------------------------\n\n" .
             "You have been provisionally assigned stand %s.\n\n" .
-            "This message is non-binding, subject to change at controller discretion " .
-            "and is for planning purposes only.",
+            "This message is for planning purposes only, is non-binding, " .
+            "and may change subject to availability and controller discretion.\n\n" .
+            "You will be notified if another automatic assignment is made.",
             $this->getStandAssignmentString()
         );
     }
