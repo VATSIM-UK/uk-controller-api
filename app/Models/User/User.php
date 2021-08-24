@@ -35,7 +35,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $fillable = [
         'last_login',
-        'last_version',
     ];
 
     /**
@@ -56,19 +55,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function touchLastLogin() : User
     {
         $this->last_login = Carbon::now();
-        $this->save();
-        return $this;
-    }
-
-    /**
-     * Sets the users last logged in version
-     *
-     * @param integer $versionId Id of the version
-     * @return this
-     */
-    public function setLastVersion(int $versionId) : User
-    {
-        $this->last_version = $versionId;
         $this->save();
         return $this;
     }

@@ -43,14 +43,6 @@ class UserTest extends BaseFunctionalTestCase
         $this->assertTrue($this->activeUser()->accountStatus->active);
     }
 
-    public function testItCanHaveALastUsedVersion()
-    {
-        $user = $this->activeUser();
-        $user->setLastVersion(1);
-
-        $this->assertEquals(1, $this->activeUser()->last_version);
-    }
-
     public function testItCanHaveALastLogin()
     {
         Carbon::setTestNow(Carbon::now());

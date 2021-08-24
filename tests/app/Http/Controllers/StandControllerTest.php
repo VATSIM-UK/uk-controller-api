@@ -243,7 +243,7 @@ class StandControllerTest extends BaseApiTestCase
 
     private function addStandAssignment(string $callsign, int $standId)
     {
-        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        NetworkDataService::createPlaceholderAircraft($callsign);
         StandAssignment::create(
             [
                 'callsign' => $callsign,

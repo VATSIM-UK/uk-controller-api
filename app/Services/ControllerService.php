@@ -8,30 +8,6 @@ use Illuminate\Support\Collection;
 
 class ControllerService
 {
-    /**
-     * Get the legacy dependency as represented in controller-positions.json.
-     *
-     * @return array
-     * @deprecated
-     */
-    public function getLegacyControllerPositionsDependency(): array
-    {
-        $controllers = ControllerPosition::with('topDownAirfields')->get();
-        $dependency = [];
-        $controllers->each(
-            function (ControllerPosition $controller) use (&$dependency) {
-                $dependency[$controller->callsign] = [
-                    'frequency' => (float)$controller->frequency,
-                ];
-
-                $dependency[$controller->callsign]['top-down'] =
-                    $controller->topDownAirfields->pluck('code')->toArray();
-            }
-        );
-
-        return $dependency;
-    }
-
     public function getControllerPositionsDependency(): Collection
     {
         return ControllerPosition::with('topDownAirfields')->orderBy('id')->get()->map(
@@ -43,6 +19,8 @@ class ControllerService
                     'top_down' => $position->topDownAirfields->pluck('code')->toArray(),
                     'requests_departure_releases' => $position->requests_departure_releases,
                     'receives_departure_releases' => $position->receives_departure_releases,
+                    'sends_prenotes' => $position->sends_prenotes,
+                    'receives_prenotes' => $position->receives_departure_releases,
                 ];
             }
         );

@@ -21,7 +21,7 @@ class DepartureReleaseApprovedEvent extends HighPriorityBroadcastEvent
             'expires_at' => $this->approval->release_expires_at
                 ? $this->approval->release_expires_at->toDateTimeString()
                 : null,
-            'released_at' => $this->approval->release_valid_from,
+            'released_at' => $this->approval->release_valid_from->toDateTimeString(),
         ];
     }
 

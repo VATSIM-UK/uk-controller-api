@@ -141,7 +141,8 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => 'RYR999',
                 'transponder' => '1234',
-                'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                'updated_at' => Carbon::now(),
             ]
         );
         $this->expectsEvents(SquawkAssignmentEvent::class);
@@ -164,7 +165,8 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => 'RYR999',
                 'transponder' => '1234',
-                'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                'updated_at' => Carbon::now(),
             ]
         );
         SquawkAssignment::create(['callsign' => 'RYR999', 'code' => '5678', 'assignment_type' => 'ORCAM']);
@@ -189,12 +191,14 @@ class SquawkServiceTest extends BaseFunctionalTestCase
                 [
                     'callsign' => 'RYR999',
                     'transponder' => '1234',
-                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                    'updated_at' => Carbon::now(),
                 ],
                 [
                     'callsign' => 'WZZ888',
                     'transponder' => '1234',
-                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3)
+                    'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
+                    'updated_at' => Carbon::now(),
                 ],
             ],
         );
@@ -225,7 +229,8 @@ class SquawkServiceTest extends BaseFunctionalTestCase
                 [
                     'callsign' => 'RYR999',
                     'transponder' => '1234',
-                    'transponder_last_updated_at' => Carbon::now()->subMinute()
+                    'transponder_last_updated_at' => Carbon::now()->subMinute(),
+                    'updated_at' => Carbon::now(),
                 ],
             ],
         );

@@ -66,7 +66,6 @@ class StandAdminControllerTest extends BaseApiTestCase
 
     public function testAirfieldsWithStandsCanBeRetrieved()
     {
-
         $airfieldWithStands = Airfield::factory()->create();
         Stand::factory()->create(['airfield_id' => $airfieldWithStands->id]);
 
@@ -384,6 +383,39 @@ class StandAdminControllerTest extends BaseApiTestCase
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Stand not part of airfield.']);
+    }
+
+    public function testReturns404WhenAirfieldDoesNotHaveTerminal()
+    {
+        $airfieldWithoutTerminal = Airfield::factory()->create();
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields/{$airfieldWithoutTerminal->code}/terminals");
+
+        $response->assertStatus(404);
+        $response->assertJson(['message' => 'Airfield does not have terminals configured.']);
+    }
+
+    public function testReturnsTerminalOfAirfield()
+    {
+        $airfieldWithTerminal = Airfield::factory()->create();
+        $terminal = Terminal::factory()->create(['airfield_id' => $airfieldWithTerminal->id]);
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields/{$airfieldWithTerminal->code}/terminals");
+
+        $response->assertStatus(200);
+        $response->assertJson(['terminals' => [$terminal->toArray()]]);
+    }
+
+    public function testStandsCanBeRetrievedByTerminal()
+    {
+        $airfieldWithTerminal = Airfield::factory()->create();
+        $terminal = Terminal::factory()->create(['airfield_id' => $airfieldWithTerminal->id]);
+        $stands = Stand::factory()->count(2)->create(['terminal_id' => $terminal->id]);
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields/{$airfieldWithTerminal->code}/terminals/{$terminal->key}/stands");
+        
+        $response->assertStatus(200);
+        $response->assertJson(['stands' => $stands->toArray()]);
     }
 
     private function generateStandData(array $overrides = []) : array

@@ -71,10 +71,7 @@ class HoldController extends BaseController
         }
 
         $callsign = $request->json('callsign');
-        NetworkDataService::firstOrCreateNetworkAircraft(
-            $callsign,
-            ['callsign' => $callsign]
-        );
+        NetworkDataService::createPlaceholderAircraft($callsign);
         $assignedHold = AssignedHold::updateOrCreate(
             ['callsign' => $callsign],
             [

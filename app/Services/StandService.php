@@ -198,7 +198,7 @@ class StandService
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
-        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        NetworkDataService::createPlaceholderAircraft($callsign);
         $currentAssignment = StandAssignment::where('stand_id', $standId)->first();
 
         if ($currentAssignment && $currentAssignment->callsign !== $callsign) {
@@ -223,7 +223,7 @@ class StandService
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
-        NetworkDataService::firstOrCreateNetworkAircraft($callsign);
+        NetworkDataService::createPlaceholderAircraft($callsign);
         $currentAssignment = StandAssignment::with('aircraft', 'stand.pairedStands.assignment')
             ->where('stand_id', $standId)
             ->first();

@@ -100,6 +100,17 @@ class DepartureReleaseRequest extends Model
         return $this->released_by !== null || $this->rejected_by !== null;
     }
 
+    /*
+     * A release request is determined to be "active" for a given callsign if:
+     *
+     *  1. It has not been rejected by the target controller AND
+     *  2a. It has not been approved by the target controller and the release request hasn't expired OR
+     *  2b. It has been approved by the controller AND
+     *  2bi. It has no expiry time OR
+     *  2bii. The expiry time has not yet been reached
+     *
+     * All of this, assuming that the model has not been deleted via SoftDeletes.
+     */
     public function scopeActiveFor(Builder $builder, string $callsign): Builder
     {
         return $builder->where('callsign', $callsign)
@@ -114,10 +125,20 @@ class DepartureReleaseRequest extends Model
                     )->orWhere(
                         function (Builder $builder) {
                             $builder->whereNotNull('released_at')
-                                ->where('release_expires_at', '>', Carbon::now());
+                                ->where(
+                                    function (Builder $builder) {
+                                        $builder->whereNull('release_expires_at')
+                                            ->orWhere('release_expires_at', '>', Carbon::now());
+                                    }
+                                );
                         }
                     );
                 }
             );
+    }
+
+    public function scopeTarget(Builder $builder, int $targetController): Builder
+    {
+        return $builder->where('target_controller_position_id', $targetController);
     }
 }

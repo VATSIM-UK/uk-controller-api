@@ -19,73 +19,6 @@ use Illuminate\Support\ServiceProvider;
  */
 class VersionService extends ServiceProvider
 {
-    private const VERSIONS_TO_KEEP = 3;
-
-    /**
-     * Determines an appropriate JSON response, given two versions.
-     *
-     * @deprecated Superseded in Version 3.0.0 of UKCP
-     * @param  string $userVersion The version of the plugin that the user client reports.
-     * @return array A response to be converted to JSON and returned.
-     */
-    public function getVersionResponse(string $userVersion)
-    {
-        // If the version is unknown, fail.
-        $version = Version::where('version', $userVersion)->withTrashed()->first();
-        if ($version === null) {
-            return [
-                'version_disabled' => true,
-                'message' => 'This version of UK Controller Plugin is unknown.',
-                'update_available' => true,
-            ];
-        }
-
-        // Get the latest version and then do comparisons to make the appropriate response.
-        $latestVersion = Version::orderBy('id', 'desc')
-            ->first();
-
-        return $this->getPossibleVersionResponse($version, $latestVersion);
-    }
-
-    /**
-     * Generate the appropriate response array when the version
-     * that we've been provided with at least exists.
-     *
-     * @param  Version $userVersion   The users version.
-     * @param  Version $latestVersion The latest version.
-     * @return array The response.
-     */
-    private function getPossibleVersionResponse(Version $userVersion, Version $latestVersion)
-    {
-        if ($userVersion->trashed()) {
-            // They're using a deprecated version
-            Log::info('Attempt to use deprecated version ' . $userVersion->version . ', which was rejected by the API');
-            $jsonArray = [
-                'update_available' => true,
-                'message' => 'This version of the UK Controller Plugin has been removed from service. ' .
-                    'In order to continue using the plugin, you must download the latest version from the website.',
-                'version_disabled' => true,
-            ];
-        } elseif ($userVersion->version !== $latestVersion->version) {
-            // They're using a version that is still allowed, but an update is available
-            Log::info('Attempt to use old version ' . $userVersion->version . ', which was accepted by the API');
-            $jsonArray = [
-                'update_available' => true,
-                'message' => 'A new version of the UK Controller Plugin is available from the VATSIM UK Website.',
-                'version_disabled' => false,
-            ];
-        } else {
-            // All up to date
-            $jsonArray = [
-                'update_available' => false,
-                'version_disabled' => false,
-            ];
-        }
-
-        // Return the JSON.
-        return $jsonArray;
-    }
-
     /**
      * Return a version model based on the version string
      *
@@ -158,15 +91,14 @@ class VersionService extends ServiceProvider
         }
 
         // Create the version
-        Version::create(
+        $newVersion = Version::create(
             [
                 'version' => $tag
             ]
         );
 
         // Retire old versions
-        $versionsToKeep = Version::orderBy('id', 'desc')->limit(self::VERSIONS_TO_KEEP)->pluck('id')->toArray();
-        Version::whereNotIn('id', $versionsToKeep)->delete();
+        Version::where('id', '<>', $newVersion->id)->delete();
     }
 
     public function getFullVersionDetails(Version $version): array

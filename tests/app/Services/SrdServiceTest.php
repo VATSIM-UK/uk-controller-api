@@ -61,8 +61,10 @@ class SrdServiceTest extends BaseFunctionalTestCase
 
     private function mockSrdHttpCall(int $statusCode, string $responseData)
     {
+        $urlFormat = 'https://nats-uk.ead-it.com/cms-nats/export/sites/default/en/Publications/' .
+            'digital-datasets/srd/FAB-UK-and-Ireland-SRD-%s_EXCEL-and-NOTES.xls';
         Http::fake([
-           'http://www.nats-uk.ead-it.com/aip/current/srd/SRD_Spreadsheet.xls' => Http::response(
+           sprintf($urlFormat, AiracService::getPreviousAiracDay()->format('d-F-Y')) => Http::response(
                $responseData,
                $statusCode
            )

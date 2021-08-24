@@ -8,14 +8,21 @@
     "test": "tests"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.2.3",
+    "@semantic-release/release-notes-generator": "^9.0.3",
     "@tailwindcss/forms": "^0.3.3",
     "commitizen": "^4.2.4",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
     "cz-conventional-changelog": "3.3.0",
-    "laravel-mix": "^6.0.6",
+    "laravel-mix": "^6.0.27",
     "lodash": "^4.17.21",
-    "postcss": "^8.3.5",
+    "postcss": "^8.3.6",
     "postcss-import": "^14.0.2",
-    "tailwindcss": "^2.2.2"
+    "semantic-release": "17",
+    "tailwindcss": "^2.2.7"
   },
   "scripts": {
     "dev": "yarn run development",
@@ -39,7 +46,45 @@
   "homepage": "https://github.com/VATSIM-UK/uk-controller-api#readme",
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "./node_modules/cz-conventional-changelog",
+      "types": {
+        "feat": {
+          "title": "feat",
+          "description": "A new feature"
+        },
+        "fix": {
+          "title": "fix",
+          "description": "A bug fix"
+        },
+        "docs": {
+          "title": "docs",
+          "description": "Documentation only changes"
+        },
+        "style": {
+          "title": "style",
+          "description": "Changes that do not affect the meaning of the code (white space, formatting, missing semi-colons etc"
+        },
+        "refactor": {
+          "title": "refactor",
+          "description": "A code change that neither fixes a bug or adds a feature"
+        },
+        "perf": {
+          "title": "perf",
+          "description": "A change that improves performance"
+        },
+        "test": {
+          "title": "test",
+          "description": "Adding or updating the automated test suite"
+        },
+        "chore": {
+          "title": "chore",
+          "description": "Changes to the build process or auxiliary tools and libraries such as documentation generation"
+        },
+        "data": {
+          "title": "data",
+          "description": "Migrations and other updates to data, possibly consumed by the plugin binary"
+        }
+      }
     }
   },
   "release": {
@@ -49,12 +94,111 @@
     ],
     "tagFormat": "${version}",
     "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": [
+            {
+              "type": "data",
+              "release": "patch"
+            },
+            {
+              "type": "chore",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "conventionalcommits",
+          "presetConfig": {
+            "types": [
+              {
+                "type": "feat",
+                "section": "Features",
+                "hidden": false
+              },
+              {
+                "type": "fix",
+                "section": "Bug Fixes",
+                "hidden": false
+              },
+              {
+                "type": "perf",
+                "section": "Performance Improvements",
+                "hidden": false
+              },
+              {
+                "type": "revert",
+                "section": "Reverts",
+                "hidden": false
+              },
+              {
+                "type": "data",
+                "section": "Data Updates",
+                "hidden": false
+              },
+              {
+                "type": "chore",
+                "section": "Miscellaneous Chores",
+                "hidden": false
+              },
+              {
+                "type": "docs",
+                "section": "Documentation",
+                "hidden": false
+              },
+              {
+                "type": "style",
+                "section": "Styles",
+                "hidden": true
+              },
+              {
+                "type": "refactor",
+                "section": "Code Refactoring",
+                "hidden": true
+              },
+              {
+                "type": "test",
+                "section": "Tests",
+                "hidden": true
+              },
+              {
+                "type": "build",
+                "section": "Build System",
+                "hidden": true
+              },
+              {
+                "type": "ci",
+                "section": "Continuous Integration",
+                "hidden": true
+              }
+            ]
+          }
+        }
+      ],
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "docs/CHANGELOG.md",
+          "changelogTitle": "# UK Controller Plugin API Changelog"
+        }
+      ],
       [
         "@semantic-release/github",
         {
           "releasedLabels": false
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "docs/CHANGELOG.md"
+          ]
         }
       ]
     ]

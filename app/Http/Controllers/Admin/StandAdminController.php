@@ -150,6 +150,37 @@ class StandAdminController extends BaseController
     }
 
     /**
+     * Get a list of terminals for an Airfield if configured.
+     *
+     * @param Airfield $airfield
+     * @return JsonResponse
+     */
+    public function getTerminals(Airfield $airfield) : JsonResponse
+    {
+        $terminals = $airfield->load('terminals')->terminals;
+
+        if ($terminals->count() < 1) {
+            return response()->json(['message' => 'Airfield does not have terminals configured.'], 404);
+        }
+
+        return response()->json(['terminals' => $terminals]);
+    }
+
+    /**
+     * Get stands by an existing terminal.
+     *
+     * @param Airfield $airfield
+     * @param Terminal $terminal
+     * @return JsonResponse
+     */
+    public function getStandsByTerminal(Airfield $airfield, Terminal $terminal) : JsonResponse
+    {
+        $stands = $terminal->load('stands')->stands;
+        
+        return response()->json(['stands' => $stands->load(['type', 'wakeCategory'])]);
+    }
+
+    /**
      * Produce an object ideally used when doing mass assignment from
      * the validated request.
      *
