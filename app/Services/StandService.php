@@ -225,6 +225,7 @@ class StandService
 
         NetworkDataService::createPlaceholderAircraft($callsign);
         $currentAssignment = StandAssignment::with('aircraft', 'stand.pairedStands.assignment')
+            ->whereHas('aircraft')
             ->where('stand_id', $standId)
             ->first();
 
