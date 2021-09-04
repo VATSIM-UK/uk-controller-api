@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+### [4.8.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.0...4.8.1) (2021-09-04)
+
+
+### Bug Fixes
+
+* **stands:** fix issue with job overlap ([#639](https://github.com/VATSIM-UK/uk-controller-api/issues/639)) ([7731ebd](https://github.com/VATSIM-UK/uk-controller-api/commit/7731ebddfb02a74eca7593f70e942e2bde3069dd)), closes [#637](https://github.com/VATSIM-UK/uk-controller-api/issues/637)
+
+
+### Data Updates
+
+* **stands:** east midlands stand refresh ([#642](https://github.com/VATSIM-UK/uk-controller-api/issues/642)) ([562c507](https://github.com/VATSIM-UK/uk-controller-api/commit/562c50760d40ed0baf23ba6190405c0ee3d9cabd)), closes [#641](https://github.com/VATSIM-UK/uk-controller-api/issues/641)
+
 ## [4.8.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.7.1...4.8.0) (2021-08-21)
 
 
