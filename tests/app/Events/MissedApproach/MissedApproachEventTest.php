@@ -9,7 +9,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 
 class MissedApproachEventTest extends BaseUnitTestCase
 {
-    private MissedApproachNotification $missedApproach;
     private MissedApproachEvent $event;
 
     public function setUp(): void
@@ -17,7 +16,13 @@ class MissedApproachEventTest extends BaseUnitTestCase
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
         $this->event = new MissedApproachEvent(
-            new MissedApproachNotification(['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID])
+            new MissedApproachNotification(
+                [
+                    'callsign' => 'BAW123',
+                    'user_id' => self::ACTIVE_USER_CID,
+                    'expires_at' => Carbon::now()->startOfSecond()->addMinutes(3),
+                ]
+            )
         );
     }
 
@@ -35,6 +40,7 @@ class MissedApproachEventTest extends BaseUnitTestCase
     {
         $expected = [
             'callsign' => 'BAW123',
+            'expires_at' => Carbon::now()->startOfSecond()->addMinutes(3)->toDateTimeString(),
         ];
         $this->assertEquals($expected, $this->event->broadcastWith());
     }

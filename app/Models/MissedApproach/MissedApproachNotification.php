@@ -11,9 +11,11 @@ class MissedApproachNotification extends Model
     protected $fillable = [
         'callsign',
         'user_id',
+        'expires_at',
     ];
 
     protected $dates = [
         'created_at',
+        'expires_at',
     ];
 }
