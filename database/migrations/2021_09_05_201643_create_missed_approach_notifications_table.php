@@ -17,6 +17,7 @@ class CreateMissedApproachNotificationsTable extends Migration
             $table->id();
             $table->string('callsign')->index()->comment('The callsign the notification relates to');
             $table->unsignedInteger('user_id')->comment('Who sent the notification');
+            $table->timestamp('created_at')->index();
             $table->timestamp('expires_at')->index()->comment('When the notification expires');
         });
     }
