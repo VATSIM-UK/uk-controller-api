@@ -17,7 +17,7 @@
     "commitizen": "^4.2.4",
     "conventional-changelog-conventionalcommits": "^4.6.0",
     "cz-conventional-changelog": "3.3.0",
-    "laravel-mix": "^6.0.28",
+    "laravel-mix": "^6.0.29",
     "lodash": "^4.17.21",
     "postcss": "^8.3.6",
     "postcss-import": "^14.0.2",
