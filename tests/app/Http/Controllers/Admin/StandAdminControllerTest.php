@@ -410,7 +410,7 @@ class StandAdminControllerTest extends BaseApiTestCase
     {
         $airfieldWithTerminal = Airfield::factory()->create();
         $terminal = Terminal::factory()->create(['airfield_id' => $airfieldWithTerminal->id]);
-        $stands = Stand::factory()->count(2)->create(['terminal_id' => $terminal->id]);
+        $stands = Stand::factory()->count(2)->create(['terminal_id' => $terminal->id])->fresh();
 
         $response = $this->makeAuthenticatedApiRequest(self::METHOD_GET, "admin/airfields/{$airfieldWithTerminal->code}/terminals/{$terminal->key}/stands");
         
