@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
 use App\Console\Commands\CleanDepartureReleaseRequestHistory;
+use App\Console\Commands\CleanMissedApproachNotifications;
 use App\Console\Commands\CleanPluginEvents;
 use App\Console\Commands\CleanPrenoteMessageHistory;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
@@ -56,6 +57,7 @@ class Kernel extends ConsoleKernel
         CleanPluginEvents::class,
         CleanDepartureReleaseRequestHistory::class,
         CleanPrenoteMessageHistory::class,
+        CleanMissedApproachNotifications::class,
     ];
 
     /**
@@ -73,6 +75,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('departure-releases:clean-history')->daily();
         $schedule->command('prenote-messages:clean-history')->daily();
+        $schedule->command('missed-approaches:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('networkdata:update')->everyMinute()
             ->graceTimeInMinutes(3)
