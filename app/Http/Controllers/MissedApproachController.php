@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Exceptions\MissedApproach\MissedApproachAlreadyActiveException;
 use App\Http\Requests\MissedApproach\CreateMissedApproachNotification;
 use App\Services\MissedApproachService;
