@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
-use App\Console\Commands\SrdImport;
 use App\Exceptions\SrdUpdateFailedException;
 use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -11,7 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Mockery;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class SrdServiceTest extends BaseFunctionalTestCase
 {
@@ -35,7 +34,8 @@ class SrdServiceTest extends BaseFunctionalTestCase
                 'SRD_UPDATED_AT',
                 Mockery::on(function (Carbon $value) {
                     return $value->isSameAs('Y-m-d H:i:s', AiracService::getBaseAiracDate());
-                }))
+                })
+            )
             ->andReturn($returnValue);
     }
 
@@ -61,14 +61,14 @@ class SrdServiceTest extends BaseFunctionalTestCase
 
     private function mockSrdHttpCall(int $statusCode, string $responseData)
     {
-        $urlFormat = 'https://nats-uk.ead-it.com/cms-nats/export/sites/default/en/Publications/' .
-            'digital-datasets/srd/FAB-UK-and-Ireland-SRD-%s_EXCEL-and-NOTES.xls';
+        $url = 'https://nats-uk.ead-it.com/cms-nats/export/sites/default/en/' .
+            'Publications/digital-datasets/srd/SRD_Spreadsheet.xls';
         Http::fake([
-           sprintf($urlFormat, AiracService::getPreviousAiracDay()->format('d-F-Y')) => Http::response(
-               $responseData,
-               $statusCode
-           )
-        ]);
+                       $url => Http::response(
+                           $responseData,
+                           $statusCode
+                       )
+                   ]);
     }
 
     public function testItThrowsExceptionWhenSrdDownloadFails()
