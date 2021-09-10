@@ -202,7 +202,7 @@ Route::middleware('api')->group(
                                     Route::get('', 'Admin\\StandAdminController@getTerminals');
                                     Route::get('{terminal:key}/stands', 'Admin\\StandAdminController@getStandsByTerminal');
                                 });
-                                Route::prefix('stands')->group(function() {
+                                Route::prefix('stands')->group(function () {
                                     Route::post('', 'Admin\\StandAdminController@createNewStand');
                                     Route::get(
                                         '',
