@@ -395,7 +395,7 @@ class StandAdminControllerTest extends BaseApiTestCase
         $response->assertStatus(204);
 
         $stand->refresh();
-        $this->assertSoftDeleted($stand);
+        $this->assertTrue($stand->isClosed());
     }
 
     public function testDoesntCloseStandWhenNotPartOfAirfield()
@@ -406,6 +406,9 @@ class StandAdminControllerTest extends BaseApiTestCase
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Stand not part of airfield.']);
+
+        $stand->refresh();
+        $this->assertFalse($stand->isClosed());
     }
 
     public function testOpensStand()
@@ -428,6 +431,8 @@ class StandAdminControllerTest extends BaseApiTestCase
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Stand not part of airfield.']);
+
+        $stand->refresh();
         $this->assertTrue($stand->isClosed());
     }
 
