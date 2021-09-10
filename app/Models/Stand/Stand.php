@@ -15,12 +15,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Location\Coordinate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stand extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    const DELETED_AT = 'closed_at';
 
     const QUERY_AIRLINE_ID_COLUMN = 'airlines.id';
 
@@ -250,5 +253,16 @@ class Stand extends Model
     public function reservationsInNextHour(): HasMany
     {
         return $this->hasMany(StandReservation::class)->upcoming(Carbon::now()->addHour());
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closed_at !== null;
+    }
+
+    public function close(): Stand
+    {
+        $this->update(['closed_at' => Carbon::now()]);
+        return $this;
     }
 }

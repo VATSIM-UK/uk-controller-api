@@ -127,8 +127,10 @@ class StandService
             'pairedStands.occupier',
             'pairedStands.activeReservations'
         )
+            ->withTrashed()
             ->airfield($airfield)
             ->get();
+
         $stands->sortBy('identifier', SORT_NATURAL);
 
         $standStatuses = [];
@@ -155,7 +157,10 @@ class StandService
             'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code: null,
             'max_aircraft_type' => $stand->maxAircraft ? $stand->maxAircraft->code : null,
         ];
-        if ($stand->occupier->first()) {
+
+        if ($stand->isClosed()) {
+            $standData['status'] = 'closed';
+        } elseif ($stand->occupier->first()) {
             $standData['status'] = 'occupied';
             $standData['callsign'] = $stand->occupier->first()->callsign;
         } elseif ($stand->assignment) {
