@@ -375,6 +375,18 @@ class StandAdminControllerTest extends BaseApiTestCase
         ]);
     }
 
+    public function testClosesStand()
+    {
+        $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}/close");
+
+        $response->assertStatus(204);
+
+        $stand->refresh();
+        $this->assertSoftDeleted($stand);
+    }
+
     public function testDoesntDeleteStandWhenNotPartOfAirfield()
     {
         $stand = Stand::factory()->create();

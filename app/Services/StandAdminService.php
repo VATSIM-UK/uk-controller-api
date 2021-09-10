@@ -28,6 +28,10 @@ class StandAdminService
      */
     public function getStandsByAirfield(Airfield $airfield) : Collection
     {
-        return Stand::with(['type', 'terminal', 'wakeCategory'])->withCount(['airlines'])->where('airfield_id', $airfield->id)->get();
+        return Stand::with(['type', 'terminal', 'wakeCategory'])
+            ->withTrashed()
+            ->withCount(['airlines'])
+            ->where('airfield_id', $airfield->id)
+            ->get();
     }
 }

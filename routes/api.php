@@ -197,25 +197,35 @@ Route::middleware('api')->group(
                     function () {
                         Route::prefix('airfields')->group(function () {
                             Route::get('', 'Admin\\StandAdminController@getAirfields');
-                            Route::get('/{airfield:code}/terminals', 'Admin\\StandAdminController@getTerminals');
-                            Route::get('/{airfield:code}/terminals/{terminal:key}/stands', 'Admin\\StandAdminController@getStandsByTerminal');
-                            Route::post('/{airfield:code}/stands', 'Admin\\StandAdminController@createNewStand');
-                            Route::get(
-                                '/{airfield:code}/stands',
-                                'Admin\\StandAdminController@getStandsForAirfield'
-                            );
-                            Route::get(
-                                '/{airfield:code}/stands/{stand}',
-                                'Admin\\StandAdminController@getStandDetails'
-                            );
-                            Route::put(
-                                '/{airfield:code}/stands/{stand}',
-                                'Admin\\StandAdminController@modifyStand'
-                            );
-                            Route::delete(
-                                '/{airfield:code}/stands/{stand}',
-                                'Admin\\StandAdminController@deleteStand'
-                            );
+                            Route::prefix('{airfield:code}')->group(function () {
+                                Route::prefix('terminals')->group(function () {
+                                    Route::get('', 'Admin\\StandAdminController@getTerminals');
+                                    Route::get('{terminal:key}/stands', 'Admin\\StandAdminController@getStandsByTerminal');
+                                });
+                                Route::prefix('stands')->group(function() {
+                                    Route::post('', 'Admin\\StandAdminController@createNewStand');
+                                    Route::get(
+                                        '',
+                                        'Admin\\StandAdminController@getStandsForAirfield'
+                                    );
+                                    Route::get(
+                                        '{stand}',
+                                        'Admin\\StandAdminController@getStandDetails'
+                                    );
+                                    Route::put(
+                                        '{stand}',
+                                        'Admin\\StandAdminController@modifyStand'
+                                    );
+                                    Route::delete(
+                                        '{stand}',
+                                        'Admin\\StandAdminController@deleteStand'
+                                    );
+                                    Route::patch(
+                                        'close',
+                                        'Admin\\StandAdminController@closeStand'
+                                    );
+                                });
+                            });
                         });
 
                         Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
