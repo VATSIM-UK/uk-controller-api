@@ -127,7 +127,6 @@ class StandService
             'pairedStands.occupier',
             'pairedStands.activeReservations'
         )
-            ->withTrashed()
             ->airfield($airfield)
             ->get();
 
