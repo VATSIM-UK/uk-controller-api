@@ -15,15 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Location\Coordinate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stand extends Model
 {
-    use HasFactory, SoftDeletes;
-
-    const DELETED_AT = 'closed_at';
+    use HasFactory;
 
     const QUERY_AIRLINE_ID_COLUMN = 'airlines.id';
 
@@ -38,6 +35,7 @@ class Stand extends Model
         'max_aircraft_id',
         'is_cargo',
         'assignment_priority',
+        'closed_at',
     ];
 
     protected $casts = [
@@ -45,6 +43,12 @@ class Stand extends Model
         'latitude' => 'double',
         'longitude' => 'double',
         'assignment_priority' => 'integer',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'closed_at',
     ];
 
     public function assignment(): HasOne
@@ -107,7 +111,7 @@ class Stand extends Model
 
     public function scopeAvailable(Builder $builder): Builder
     {
-        return $this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder)));
+        return $this->scopeNotClosed($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
     }
 
     public function scopeAirline(Builder $builder, Airline $airline): Builder
@@ -264,5 +268,16 @@ class Stand extends Model
     {
         $this->update(['closed_at' => Carbon::now()]);
         return $this;
+    }
+
+    public function open(): Stand
+    {
+        $this->update(['closed_at' => null]);
+        return $this;
+    }
+
+    public function scopeNotClosed(Builder $query): Builder
+    {
+        return $query->whereNull('closed_at');
     }
 }

@@ -224,6 +224,10 @@ Route::middleware('api')->group(
                                         'close',
                                         'Admin\\StandAdminController@closeStand'
                                     );
+                                    Route::patch(
+                                        'open',
+                                        'Admin\\StandAdminController@openStand'
+                                    );
                                 });
                             });
                         });

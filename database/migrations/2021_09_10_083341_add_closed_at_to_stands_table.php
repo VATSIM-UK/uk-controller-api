@@ -14,7 +14,7 @@ class AddClosedAtToStandsTable extends Migration
     public function up()
     {
         Schema::table('stands', function (Blueprint $table) {
-            $table->softDeletes('closed_at')->index()->comment('When the stand was closed for use');
+            $table->timestamp('closed_at')->nullable()->index()->comment('When the stand was closed for use');
         });
     }
 
