@@ -144,7 +144,7 @@ class StandAdminController extends BaseController
             return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
         }
 
-        $stand->forceDelete();
+        $stand->delete();
 
         return response()->json([], 204);
     }
