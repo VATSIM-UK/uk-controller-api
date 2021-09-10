@@ -208,26 +208,28 @@ Route::middleware('api')->group(
                                         '',
                                         'Admin\\StandAdminController@getStandsForAirfield'
                                     );
-                                    Route::get(
-                                        '{stand}',
-                                        'Admin\\StandAdminController@getStandDetails'
-                                    );
-                                    Route::put(
-                                        '{stand}',
-                                        'Admin\\StandAdminController@modifyStand'
-                                    );
-                                    Route::delete(
-                                        '{stand}',
-                                        'Admin\\StandAdminController@deleteStand'
-                                    );
-                                    Route::patch(
-                                        'close',
-                                        'Admin\\StandAdminController@closeStand'
-                                    );
-                                    Route::patch(
-                                        'open',
-                                        'Admin\\StandAdminController@openStand'
-                                    );
+                                    Route::prefix('{stand}')->group(function () {
+                                        Route::get(
+                                            '',
+                                            'Admin\\StandAdminController@getStandDetails'
+                                        );
+                                        Route::put(
+                                            '',
+                                            'Admin\\StandAdminController@modifyStand'
+                                        );
+                                        Route::delete(
+                                            '',
+                                            'Admin\\StandAdminController@deleteStand'
+                                        );
+                                        Route::patch(
+                                            'close',
+                                            'Admin\\StandAdminController@closeStand'
+                                        );
+                                        Route::patch(
+                                            'open',
+                                            'Admin\\StandAdminController@openStand'
+                                        );
+                                    });
                                 });
                             });
                         });

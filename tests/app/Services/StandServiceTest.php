@@ -1232,8 +1232,6 @@ class StandServiceTest extends BaseFunctionalTestCase
                     'identifier' => 'TEST10',
                     'type' => null,
                     'status' => 'closed',
-                    'callsign' => null,
-                    'reserved_at' => null,
                     'airlines' => [],
                     'max_wake_category' => 'LM',
                     'max_aircraft_type' => null,
