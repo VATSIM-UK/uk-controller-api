@@ -375,6 +375,16 @@ class StandAdminControllerTest extends BaseApiTestCase
         ]);
     }
 
+    public function testDoesntDeleteStandWhenNotPartOfAirfield()
+    {
+        $stand = Stand::factory()->create();
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}");
+
+        $response->assertStatus(404);
+        $response->assertJson(['message' => 'Stand not part of airfield.']);
+    }
+
     public function testClosesStand()
     {
         $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
@@ -387,11 +397,11 @@ class StandAdminControllerTest extends BaseApiTestCase
         $this->assertSoftDeleted($stand);
     }
 
-    public function testDoesntDeleteStandWhenNotPartOfAirfield()
+    public function testDoesntCloseStandWhenNotPartOfAirfield()
     {
         $stand = Stand::factory()->create();
 
-        $response = $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}");
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}/close");
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Stand not part of airfield.']);
