@@ -15,7 +15,7 @@
     "@semantic-release/release-notes-generator": "^9.0.3",
     "@tailwindcss/forms": "^0.3.3",
     "commitizen": "^4.2.4",
-    "conventional-changelog-conventionalcommits": "^4.6.0",
+    "conventional-changelog-conventionalcommits": "^4.6.1",
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.29",
     "lodash": "^4.17.21",
