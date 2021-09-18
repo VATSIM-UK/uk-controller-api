@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.8.4](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.3...4.8.4) (2021-09-18)
+
+
+### Bug Fixes
+
+* **prenotes:** Allow ground and delivery to prenote ([ce8a746](https://github.com/VATSIM-UK/uk-controller-api/commit/ce8a746f41d0471c956d821d6855cfdec4b3aef8))
+
 ### [4.8.3](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.2...4.8.3) (2021-09-09)
 
 
