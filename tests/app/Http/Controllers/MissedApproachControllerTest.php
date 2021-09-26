@@ -17,7 +17,8 @@ class MissedApproachControllerTest extends BaseApiTestCase
     public function testItCreatesAMissedApproach()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'missed-approaches', ['callsign' => 'BAW123'])
-            ->assertCreated();
+            ->assertCreated()
+            ->assertJsonStructure(['id', 'expires_at']);
 
         $this->assertDatabaseHas(
             'missed_approach_notifications',

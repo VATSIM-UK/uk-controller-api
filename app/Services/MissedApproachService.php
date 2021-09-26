@@ -12,22 +12,23 @@ class MissedApproachService
 {
     const MESSAGE_ACTIVE_MINUTES = 3;
 
-    public function sendMissedApproachNotification(string $callsign): void
+    public function sendMissedApproachNotification(string $callsign): MissedApproachNotification
     {
         if ($this->missedApproachActive($callsign)) {
             throw new MissedApproachAlreadyActiveException('Missed approach already active for ' . $callsign);
         }
 
-        event(
-            new MissedApproachEvent(
-                MissedApproachNotification::create(
-                    [
-                        'callsign' => $callsign,
-                        'user_id' => Auth::id(),
-                        'expires_at' => Carbon::now()->addMinutes(self::MESSAGE_ACTIVE_MINUTES)
-                    ]
-                )
-            )
+        return tap(
+            MissedApproachNotification::create(
+                [
+                    'callsign' => $callsign,
+                    'user_id' => Auth::id(),
+                    'expires_at' => Carbon::now()->addMinutes(self::MESSAGE_ACTIVE_MINUTES)
+                ]
+            ),
+            function (MissedApproachNotification $notification) {
+                event(new MissedApproachEvent($notification));
+            }
         );
     }
 

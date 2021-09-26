@@ -18,6 +18,7 @@ class MissedApproachEvent extends HighPriorityBroadcastEvent
     public function broadcastWith(): array
     {
         return [
+            'id' => $this->missedApproach->id,
             'callsign' => $this->missedApproach->callsign,
             'expires_at' => $this->missedApproach->expires_at->toDateTimeString(),
         ];

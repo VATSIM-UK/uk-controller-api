@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Exceptions\MissedApproach\MissedApproachAlreadyActiveException;
@@ -20,8 +19,11 @@ class MissedApproachController
     public function create(CreateMissedApproachNotification $request): JsonResponse
     {
         try {
-            $this->service->sendMissedApproachNotification($request->validated()['callsign']);
-            return response()->json([], 201);
+            $notification = $this->service->sendMissedApproachNotification($request->validated()['callsign']);
+            return response()->json(
+                ['id' => $notification['id'], 'expires_at' => $notification->expires_at->toDateTimeString()],
+                201
+            );
         } catch (MissedApproachAlreadyActiveException $alreadyActiveException) {
             return response()->json(['message' => $alreadyActiveException->getMessage()], 409);
         }

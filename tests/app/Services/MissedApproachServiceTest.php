@@ -38,11 +38,13 @@ class MissedApproachServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAMissedApproachNotification()
     {
-        $this->service->sendMissedApproachNotification('BAW123');
+        $notification = $this->service->sendMissedApproachNotification('BAW123');
         $this->assertDatabaseHas(
             'missed_approach_notifications',
             [
-                'callsign' => 'BAW123'
+                'id' => $notification->id,
+                'callsign' => 'BAW123',
+                'expires_at' => Carbon::now()->addMinutes(3)->startOfSecond(),
             ]
         );
     }
@@ -67,10 +69,9 @@ class MissedApproachServiceTest extends BaseFunctionalTestCase
     {
         $this->service->sendMissedApproachNotification('BAW123');
         Event::assertDispatched(MissedApproachEvent::class, function (MissedApproachEvent $event) {
-            return $event->broadcastWith() === [
-                    'callsign' => 'BAW123',
-                    'expires_at' => Carbon::now()->addMinutes(3)->startOfSecond()->toDateTimeString()
-                ];
+            return $event->broadcastWith()['callsign'] === 'BAW123' &&
+                $event->broadcastWith()['expires_at'] === Carbon::now()->addMinutes(3)->startOfSecond(
+                )->toDateTimeString();
         });
     }
 }
