@@ -1,5 +1,26 @@
 # UK Controller Plugin API Changelog
 
+### [4.8.4](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.3...4.8.4) (2021-09-18)
+
+
+### Bug Fixes
+
+* **prenotes:** Allow ground and delivery to prenote ([ce8a746](https://github.com/VATSIM-UK/uk-controller-api/commit/ce8a746f41d0471c956d821d6855cfdec4b3aef8))
+
+### [4.8.3](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.2...4.8.3) (2021-09-09)
+
+
+### Bug Fixes
+
+* **srd:** Update SRD download url ([#657](https://github.com/VATSIM-UK/uk-controller-api/issues/657)) ([4c80fe1](https://github.com/VATSIM-UK/uk-controller-api/commit/4c80fe1d2d4a966946336eacb7f789074c67b2ec))
+
+### [4.8.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.1...4.8.2) (2021-09-06)
+
+
+### Bug Fixes
+
+* **prenotes:** Broadcast prenote messages ([#648](https://github.com/VATSIM-UK/uk-controller-api/issues/648)) ([03fb5b7](https://github.com/VATSIM-UK/uk-controller-api/commit/03fb5b78461d035e14508231ba94a222527d6ee3))
+
 ### [4.8.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.0...4.8.1) (2021-09-04)
 
 

@@ -2,10 +2,11 @@
 
 namespace App\Events\Prenote;
 
+use App\Events\HighPriorityBroadcastEvent;
 use App\Models\Prenote\PrenoteMessage;
 use Illuminate\Broadcasting\PrivateChannel;
 
-class PrenoteDeletedEvent
+class PrenoteDeletedEvent extends HighPriorityBroadcastEvent
 {
     private PrenoteMessage $message;
 
