@@ -25,6 +25,7 @@ class OptimiseTables extends Command
         'plugin_events',
         'departure_release_requests',
         'prenote_messages',
+        'missed_approach_notifications',
     ];
 
     protected $signature = 'tables:optimise';

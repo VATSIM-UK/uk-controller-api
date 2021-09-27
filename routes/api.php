@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MissedApproachController;
 use App\Http\Controllers\PrenoteMessageController;
 use App\Rules\VatsimCallsign;
 use Illuminate\Support\Facades\Route;
@@ -83,6 +84,11 @@ Route::middleware('api')->group(
                             Route::delete('', [PrenoteMessageController::class, 'delete']);
                         });
                     });
+                });
+
+                // Missed approaches
+                Route::prefix('missed-approaches')->group(function () {
+                    Route::post('', [MissedApproachController::class, 'create']);
                 });
             }
         );
