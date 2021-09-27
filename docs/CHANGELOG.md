@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [4.9.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.4...4.9.0) (2021-09-27)
+
+
+### Features
+
+* **missed-approach:** Automated missed approach notifications ([#654](https://github.com/VATSIM-UK/uk-controller-api/issues/654)) ([d97f942](https://github.com/VATSIM-UK/uk-controller-api/commit/d97f942ecd83ec6cae08d0c71d2fe86d23912ff4))
+* **stands:** Allow stands to be temporarily closed ([#659](https://github.com/VATSIM-UK/uk-controller-api/issues/659)) ([9ca6010](https://github.com/VATSIM-UK/uk-controller-api/commit/9ca60104b3001ffc9624da95d7857962d4e9e00b))
+
 ### [4.8.4](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.3...4.8.4) (2021-09-18)
 
 
