@@ -34,7 +34,7 @@ class StandTest extends BaseFunctionalTestCase
         $this->assertEquals([1], $stands);
     }
 
-    public function testAvailableOnlyReturnsUnassignedUnoccupiedUnreservedStands()
+    public function testAvailableOnlyReturnsUnassignedUnoccupiedUnreservedOpenStands()
     {
         $extraStand = Stand::find(1)->replicate();
         $extraStand->identifier = 'NEW';
@@ -50,6 +50,11 @@ class StandTest extends BaseFunctionalTestCase
 
         NetworkAircraft::find('BAW123')->occupiedStand()->sync([1]);
         StandAssignment::create(['callsign' => 'BAW123', 'stand_id' => 2]);
+
+        $closedStand = Stand::find(1)->replicate();
+        $closedStand->identifier = 'CLOSED';
+        $closedStand->closed_at = Carbon::now();
+        $closedStand->save();
 
         $stands = Stand::available()->get()->pluck('id')->toArray();
         $this->assertEquals([3], $stands);

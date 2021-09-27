@@ -10,6 +10,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Aircraft\WakeCategory;
 use App\Providers\AuthServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class StandAdminControllerTest extends BaseApiTestCase
@@ -383,6 +384,56 @@ class StandAdminControllerTest extends BaseApiTestCase
 
         $response->assertStatus(404);
         $response->assertJson(['message' => 'Stand not part of airfield.']);
+    }
+
+    public function testClosesStand()
+    {
+        $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}/close");
+
+        $response->assertStatus(204);
+
+        $stand->refresh();
+        $this->assertTrue($stand->isClosed());
+    }
+
+    public function testDoesntCloseStandWhenNotPartOfAirfield()
+    {
+        $stand = Stand::factory()->create();
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}/close");
+
+        $response->assertStatus(404);
+        $response->assertJson(['message' => 'Stand not part of airfield.']);
+
+        $stand->refresh();
+        $this->assertFalse($stand->isClosed());
+    }
+
+    public function testOpensStand()
+    {
+        $stand = Stand::factory()->create(['airfield_id' => $this->airfield->id]);
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}/open");
+
+        $response->assertStatus(204);
+
+        $stand->refresh();
+        $this->assertFalse($stand->isClosed());
+    }
+
+    public function testDoesntOpenStandWhenNotPartOfAirfield()
+    {
+        $stand = Stand::factory()->create(['closed_at' => Carbon::now()]);
+
+        $response = $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, "admin/airfields/{$this->airfield->code}/stands/{$stand->id}/open");
+
+        $response->assertStatus(404);
+        $response->assertJson(['message' => 'Stand not part of airfield.']);
+
+        $stand->refresh();
+        $this->assertTrue($stand->isClosed());
     }
 
     public function testReturns404WhenAirfieldDoesNotHaveTerminal()

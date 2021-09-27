@@ -1136,6 +1136,17 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        // Stand 10 is closed
+        $stand10 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST10',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand10->close();
+
         $this->assertEquals(
             [
                 [
@@ -1213,6 +1224,14 @@ class StandServiceTest extends BaseFunctionalTestCase
                     'status' => 'reserved_soon',
                     'callsign' => null,
                     'reserved_at' => Carbon::now()->addMinutes(59)->startOfSecond(),
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST10',
+                    'type' => null,
+                    'status' => 'closed',
                     'airlines' => [],
                     'max_wake_category' => 'LM',
                     'max_aircraft_type' => null,
