@@ -170,7 +170,7 @@ jobs:
       # Run Coverage Suite
       - name: Upload Code Coverage Report
         if: matrix.php == '7.4'
-        run: bash <(curl -s https://codecov.io/bash)
+        uses: codecov/codecov-action@v2
 
   trigger-release:
     name: Trigger Release
