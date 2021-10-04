@@ -171,6 +171,9 @@ jobs:
       - name: Upload Code Coverage Report
         if: matrix.php == '7.4'
         uses: codecov/codecov-action@v2
+        with: 
+          fail_ci_if_error: true
+          verbose: true
 
   trigger-release:
     name: Trigger Release
