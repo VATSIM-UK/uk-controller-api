@@ -3,7 +3,7 @@
 use App\Services\DependencyService;
 use App\Services\HandoffService;
 use Carbon\Carbon;
-use Illuminate\Database\Migrations\Migration;   
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
 class ChannelIslandSidTruncations extends Migration
