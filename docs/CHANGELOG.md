@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+### [4.9.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.0...4.9.1) (2021-10-08)
+
+
+### Data Updates
+
+* **egnc:** Update carlisle atc positions ([#682](https://github.com/VATSIM-UK/uk-controller-api/issues/682)) ([68d6e9a](https://github.com/VATSIM-UK/uk-controller-api/commit/68d6e9af9e478e67306eebe08d45d5499d3a9c69))
+* **sids:** New Channel Island SIDs ([#681](https://github.com/VATSIM-UK/uk-controller-api/issues/681)) ([a3a3759](https://github.com/VATSIM-UK/uk-controller-api/commit/a3a3759cf54e9e897acf7db2c3722f393afd607a))
+
 ## [4.9.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.8.4...4.9.0) (2021-09-27)
 
 
