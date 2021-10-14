@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.1...4.9.2) (2021-10-14)
+
+
+### Data Updates
+
+* **edinburgh:** close stands ([#688](https://github.com/VATSIM-UK/uk-controller-api/issues/688)) ([ad0a9e0](https://github.com/VATSIM-UK/uk-controller-api/commit/ad0a9e00dbd8fe865d008c00506a6660682380df))
+
 ### [4.9.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.0...4.9.1) (2021-10-08)
 
 
