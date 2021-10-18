@@ -18,7 +18,7 @@ class RenameStands extends Migration
      */
     public function up()
     {
-        $stands = fopen(self:: STANDS_TO_RENAME_FILE, 'r');
+        $stands = fopen(self::STANDS_TO_RENAME_FILE, 'r');
         while ($line = fgetcsv($stands)) {
             Stand::whereHas('airfield', function (Builder $airfield) use ($line) {
                 $airfield->where('code', $line[0]);
