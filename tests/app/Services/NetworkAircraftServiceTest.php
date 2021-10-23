@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 use Mockery;
 use PDOException;
 
-class NetworkDataServiceTest extends BaseFunctionalTestCase
+class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 {
     /**
      * @var array[]
@@ -25,7 +25,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     private $networkData;
 
     /**
-     * @var NetworkDataService
+     * @var NetworkAircraftService
      */
     private $service;
 
@@ -47,14 +47,14 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         Queue::fake();
         Carbon::setTestNow(Carbon::now()->startOfSecond());
         Date::setTestNow(Carbon::now());
-        $this->service = $this->app->make(NetworkDataService::class);
+        $this->service = $this->app->make(NetworkAircraftService::class);
     }
 
     private function fakeNetworkDataReturn(): void
     {
         Http::fake(
             [
-                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode($this->networkData))
+                NetworkAircraftService::NETWORK_DATA_URL => Http::response(json_encode($this->networkData))
             ]
         );
     }
@@ -64,7 +64,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->doesntExpectEvents(NetworkDataUpdatedEvent::class);
         Http::fake(
             [
-                NetworkDataService::NETWORK_DATA_URL => Http::response('', 500)
+                NetworkAircraftService::NETWORK_DATA_URL => Http::response('', 500)
             ]
         );
         $this->service->updateNetworkData();
@@ -98,7 +98,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->expectsEvents(NetworkDataUpdatedEvent::class);
         Http::fake(
             [
-                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode(['not_clients' => '']), 200)
+                NetworkAircraftService::NETWORK_DATA_URL => Http::response(json_encode(['not_clients' => '']), 200)
             ]
         );
         $this->service->updateNetworkData();
@@ -277,7 +277,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     public function testItCreatesNetworkAircraft()
     {
         $expectedData = $this->getTransformedPilotData('AAL123');
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123', $expectedData);
+        $actual = NetworkAircraftService::createOrUpdateNetworkAircraft('AAL123', $expectedData);
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
@@ -292,7 +292,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesNetworkAircraftCallsignOnly()
     {
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
+        $actual = NetworkAircraftService::createOrUpdateNetworkAircraft('AAL123');
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
@@ -308,7 +308,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         $expectedData = $this->getTransformedPilotData('AAL123');
         NetworkAircraft::create($expectedData);
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft(
+        $actual = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'AAL123',
             ['groundspeed' => '456789']
         );
@@ -332,7 +332,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         $expectedData = $this->getTransformedPilotData('AAL123');
         NetworkAircraft::create($expectedData);
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
+        $actual = NetworkAircraftService::createOrUpdateNetworkAircraft('AAL123');
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
 
@@ -350,7 +350,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesPlaceholderAircraft()
     {
-        $actual = NetworkDataService::createPlaceholderAircraft('AAL123');
+        $actual = NetworkAircraftService::createPlaceholderAircraft('AAL123');
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
@@ -374,7 +374,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $expected->refresh();
         $this->assertEquals(
             $expected->toArray(),
-            NetworkDataService::createPlaceholderAircraft('AAL123')->toArray()
+            NetworkAircraftService::createPlaceholderAircraft('AAL123')->toArray()
         );
 
         $this->assertDatabaseHas(

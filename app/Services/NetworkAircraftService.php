@@ -2,23 +2,19 @@
 
 namespace App\Services;
 
-use App\Events\NetworkAircraftDisconnectedEvent;
-use App\Events\NetworkAircraftUpdatedEvent;
 use App\Events\NetworkDataUpdatedEvent;
 use App\Jobs\Network\AircraftDisconnected;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
-class NetworkDataService
+class NetworkAircraftService
 {
     const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
     const MAX_PROCESSING_DISTANCE = 700;

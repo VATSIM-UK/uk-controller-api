@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\NetworkDataService;
+use App\Services\NetworkAircraftService;
 use Illuminate\Console\Command;
 
 class UpdateVatsimNetworkData extends Command
@@ -24,10 +24,10 @@ class UpdateVatsimNetworkData extends Command
     /**
      * Execute the console command.
      *
-     * @param NetworkDataService $dataService
+     * @param NetworkAircraftService $dataService
      * @return mixed
      */
-    public function handle(NetworkDataService $dataService)
+    public function handle(NetworkAircraftService $dataService)
     {
         $this->info('Starting network data update');
         $dataService->updateNetworkData();

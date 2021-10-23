@@ -4,7 +4,7 @@ namespace App\Allocator\Squawk;
 
 use App\Models\Squawk\AbstractSquawkRange;
 use App\Models\Squawk\SquawkAssignment;
-use App\Services\NetworkDataService;
+use App\Services\NetworkAircraftService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
@@ -18,7 +18,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
             return null;
         }
 
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
 
         // Loop the possible squawk ranges and possible codes and try to assign one
         foreach ($this->getPossibleSquawkRanges($details) as $range) {
