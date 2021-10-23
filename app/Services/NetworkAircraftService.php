@@ -6,28 +6,25 @@ use App\Events\NetworkDataUpdatedEvent;
 use App\Jobs\Network\AircraftDisconnected;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
-use Exception;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
 class NetworkAircraftService
 {
-    const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
     const MAX_PROCESSING_DISTANCE = 700;
-    private Collection $allAircraftBeforeUpdate;
 
     /**
      * @var Coordinate[]
      */
     private Collection $measuringPoints;
+    private NetworkDataService $dataService;
+    private Collection $allAircraftBeforeUpdate;
 
-    public function __construct(Collection $measuringPoints)
+    public function __construct(NetworkDataService $dataService, Collection $measuringPoints)
     {
         $this->measuringPoints = $measuringPoints;
+        $this->dataService = $dataService;
     }
 
     public function updateNetworkData(): void
@@ -36,30 +33,15 @@ class NetworkAircraftService
             return [$aircraft->callsign => $aircraft];
         });
 
-        // Download the network data and check that it was successful
-        $networkResponse = null;
-        try {
-            $networkResponse = Http::timeout(10)->get(self::NETWORK_DATA_URL);
-        } catch (Exception $exception) {
-            Log::warning('Failed to download network data, exception was ' . $exception->getMessage());
-            return;
-        }
-
-        if (!$networkResponse->successful()) {
-            Log::warning('Failed to download network data, response was ' . $networkResponse->status());
-            return;
-        }
-
-        // Process clients
-        $concernedPilots = $this->formatPilotData($networkResponse);
+        $concernedPilots = $this->formatPilotData($this->dataService->getNetworkAircraftData());
         $this->processPilots($concernedPilots);
         $this->handleTimeouts();
         event(new NetworkDataUpdatedEvent());
     }
 
-    private function formatPilotData(Response $response): Collection
+    private function formatPilotData(Collection $pilots): Collection
     {
-        return $this->mapPilotData($this->filterPilotData(new Collection($response->json('pilots', []))));
+        return $this->mapPilotData($this->filterPilotData($pilots));
     }
 
     private function mapPilotData(Collection $pilotData): Collection

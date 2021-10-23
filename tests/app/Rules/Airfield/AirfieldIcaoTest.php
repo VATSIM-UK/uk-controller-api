@@ -24,6 +24,7 @@ class AirfieldIcaoTest extends BaseUnitTestCase
             ['LPPT'],
             ['KJFK'],
             ['EDDF'],
+            ['EG12'],
         ];
     }
 
@@ -42,7 +43,6 @@ class AirfieldIcaoTest extends BaseUnitTestCase
             'Is null' => [null],
             'Too long' => ['EGCCC'],
             'Wrong type' => [123],
-            'Contains numbers' => ['EG12'],
             'Contains non-alphanumerics' => ['KJ[K'],
         ];
     }
