@@ -35,6 +35,20 @@ class NetworkDataService
         });
     }
 
+    public function getNetworkControllerData(): Collection
+    {
+        $fieldValidator = $this->getFieldValidator('controllers');
+        if ($fieldValidator->fails()) {
+            Log::warning('Invalid network controller data, controllers field missing');
+            return collect();
+        }
+
+        $validatedData = collect($fieldValidator->validated()['controllers']);
+        return $validatedData->reject(function (array $data) {
+            return $this->getControllerValidator($data)->fails();
+        });
+    }
+
     private function getFieldValidator(string $field): ValidatorContract
     {
         return Validator::make(
@@ -77,8 +91,23 @@ class NetworkDataService
                     'nullable',
                     new AirfieldIcao(),
                 ],
-                'flight_plan.altitude' => 'string|nullable',
+                'flight_plan.altitude' => 'nullable|string',
                 'flight_plan.flight_rules' => 'nullable|string',
+            ]
+        );
+    }
+
+    private function getControllerValidator(array $data): ValidatorContract
+    {
+        return Validator::make(
+            $data,
+            [
+                'callsign' => [
+                    'required',
+                    new VatsimCallsign(),
+                ],
+                'frequency' => 'required|numeric|min:100|max:200',
+                'cid' => 'integer|required',
             ]
         );
     }

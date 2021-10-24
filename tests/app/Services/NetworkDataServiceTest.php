@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use Exception;
-use Illuminate\Support\Collection;
 use Mockery;
 
 class NetworkDataServiceTest extends BaseFunctionalTestCase
@@ -24,47 +23,45 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
     {
         $expected = collect(
             [
-                'pilots' => [
-                    [
-                        'callsign' => 'BAW123',
-                        'latitude' => 34,
-                        'longitude' => 45,
-                        'altitude' => 3000,
-                        'groundspeed' => 300,
-                        'transponder' => '1234',
-                        'flight_plan' => [
-                            'aircraft' => 'B738',
-                            'departure' => 'EGLL',
-                            'arrival' => 'EGSS',
-                            'altitude' => 6000,
-                            'flight_rules' => 'I',
-                            'route' => 'DCT BKY',
-                        ],
+                [
+                    'callsign' => 'BAW123',
+                    'latitude' => 34,
+                    'longitude' => 45,
+                    'altitude' => 3000,
+                    'groundspeed' => 300,
+                    'transponder' => '1234',
+                    'flight_plan' => [
+                        'aircraft' => 'B738',
+                        'departure' => 'EGLL',
+                        'arrival' => 'EGSS',
+                        'altitude' => '6000',
+                        'flight_rules' => 'I',
+                        'route' => 'DCT BKY',
                     ],
-                    [
-                        'callsign' => 'BAW123',
-                        'latitude' => 34,
-                        'longitude' => 45,
-                        'altitude' => 3000,
-                        'groundspeed' => 300,
-                        'transponder' => '1234',
-                        'flight_plan' => null,
-                    ],
+                ],
+                [
+                    'callsign' => 'BAW123',
+                    'latitude' => 34,
+                    'longitude' => 45,
+                    'altitude' => 3000,
+                    'groundspeed' => 300,
+                    'transponder' => '1234',
+                    'flight_plan' => null,
                 ],
             ]
         );
 
         $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
             collect([
-                'pilots' => $expected->toArray()
-            ])
+                        'pilots' => $expected->toArray()
+                    ])
         );
 
         $this->assertEquals($expected, $this->service->getNetworkAircraftData());
     }
 
     /**
-     * @dataProvider badDataProvider
+     * @dataProvider badAircraftProvider
      */
     public function testItDoesntReturnInvalidAircraft(array $data)
     {
@@ -75,7 +72,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->assertTrue($this->service->getNetworkAircraftData()->isEmpty());
     }
 
-    public function badDataProvider(): array
+    public function badAircraftProvider(): array
     {
         return [
             'No pilots' => [
@@ -477,6 +474,144 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
                         ]
                     ]
                 ]
+            ],
+        ];
+    }
+
+    public function testItReturnsNetworkControllers()
+    {
+        $expected = collect(
+            [
+                [
+                    'cid' => 1,
+                    'callsign' => 'LON_S_CTR',
+                    'frequency' => 118.400,
+                ],
+                [
+                    'cid' => 2,
+                    'callsign' => 'LON_C_CTR',
+                    'frequency' => 199.998,
+                ],
+            ]
+        );
+
+        $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
+            collect([
+                        'controllers' => $expected->toArray()
+                    ])
+        );
+
+        $this->assertEquals($expected, $this->service->getNetworkControllerData());
+    }
+
+    /**
+     * @dataProvider badControllerProvider
+     */
+    public function testItDoesntReturnInvalidControllers(array $data)
+    {
+        $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
+            collect($data)
+        );
+
+        $this->assertTrue($this->service->GetNetworkControllerData()->isEmpty());
+    }
+
+    public function badControllerProvider(): array
+    {
+        return [
+            'Cid missing' => [
+                [
+                    'controllers' => [
+                        [
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Cid not integer' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 'abc',
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Callsign missing' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Callsign invalid' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => '[123',
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency missing' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency invalid' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 'abc',
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency too big' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 200.001,
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency too small' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 99.99,
+                        ]
+                    ],
+                ],
+            ],
+            'Controllers not array' => [
+                [
+                    'controllers' => ''
+                ],
+            ],
+            'Controllers missing' => [
+                [
+                ],
             ],
         ];
     }
