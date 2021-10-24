@@ -18,8 +18,7 @@ class NetworkControllerService
         NetworkDataService $dataService,
         ControllerService $controllerService,
         ControllerPositionParser $positionParser
-    )
-    {
+    ) {
         $this->dataService = $dataService;
         $this->controllerService = $controllerService;
         $this->positionParser = $positionParser;

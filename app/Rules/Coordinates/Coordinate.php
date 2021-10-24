@@ -29,5 +29,5 @@ abstract class Coordinate implements Rule
     /**
      * Gets the type to display in the message
      */
-    public abstract function getTypeForMessage(): string;
+    abstract public function getTypeForMessage(): string;
 }

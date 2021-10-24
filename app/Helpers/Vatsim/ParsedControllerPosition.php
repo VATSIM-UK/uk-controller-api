@@ -3,7 +3,6 @@
 
 namespace App\Helpers\Vatsim;
 
-
 class ParsedControllerPosition
 {
     private string $facility;
