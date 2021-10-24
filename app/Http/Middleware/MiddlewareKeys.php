@@ -16,6 +16,7 @@ class MiddlewareKeys
     const SCOPES = 'scopes';
     const SCOPE = 'scope';
     const VATSIM_CID = 'vatsim.cid';
+    const CONTROLLING_LIVE = 'network.controlling';
 
     private function __construct()
     {

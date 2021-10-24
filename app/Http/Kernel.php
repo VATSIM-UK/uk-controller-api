@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\ControllingOnLiveNetwork;
 use App\Http\Middleware\GithubAuth;
 use App\Http\Middleware\LogAdminAction;
 use App\Http\Middleware\MiddlewareKeys;
@@ -34,6 +35,7 @@ class Kernel extends HttpKernel
         MiddlewareKeys::SCOPES => CheckScopes::class,
         MiddlewareKeys::SCOPE => CheckForAnyScope::class,
         MiddlewareKeys::VATSIM_CID => VatsimCid::class,
+        MiddlewareKeys::CONTROLLING_LIVE => ControllingOnLiveNetwork::class,
     ];
 
     protected $middlewareGroups = [
