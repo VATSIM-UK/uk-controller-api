@@ -2,13 +2,15 @@
 
 namespace App\Models\Controller;
 
+use App\Helpers\Vatsim\ControllerPositionInterface;
 use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ControllerPosition extends Model
+class ControllerPosition extends Model implements ControllerPositionInterface
 {
     use HasFactory;
 
@@ -45,6 +47,11 @@ class ControllerPosition extends Model
         );
     }
 
+    public function alternativeCallsigns(): HasMany
+    {
+        return $this->hasMany(ControllerPositionAlternativeCallsign::class);
+    }
+
     public function scopeCanRequestDepartureReleases(Builder $query): Builder
     {
         return $query->where('requests_departure_releases', true);
@@ -63,5 +70,15 @@ class ControllerPosition extends Model
     public function scopeCanReceivePrenotes(Builder $query): Builder
     {
         return $query->where('receives_prenotes', true);
+    }
+
+    public function getCallsign(): string
+    {
+        return $this->callsign;
+    }
+
+    public function getFrequency(): float
+    {
+        return $this->frequency;
     }
 }

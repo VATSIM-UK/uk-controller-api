@@ -127,6 +127,7 @@ class DatabaseSeeder extends Seeder
     const OTHER_TABLES_TO_TRUNCATE = [
         'missed_approach_notifications',
         'network_controller_positions',
+        'controller_position_alternative_callsigns',
     ];
 
 

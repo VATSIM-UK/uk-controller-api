@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Events\NetworkControllersUpdatedEvent;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Vatsim\NetworkControllerPosition;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -23,6 +25,7 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesNoControllersOnNetwork()
     {
+        $this->withoutEvents();
         $this->dataService->shouldReceive('getNetworkControllerData')->once()->andReturn(new Collection());
         $this->service->updateNetworkData();
         $this->assertNull(NetworkControllerPosition::max('id'));
@@ -30,6 +33,7 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesControllersFromNetworkData()
     {
+        $this->withoutEvents();
         $position = NetworkControllerPosition::create(
             ['callsign' => 'EGLL_S_TWR', 'cid' => self::ACTIVE_USER_CID, 'frequency' => 118.5]
         );
@@ -76,6 +80,7 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItTimesOutStaleControllers()
     {
+        $this->withoutEvents();
         // Has "timed out" but is now in the data, so keep
         $positionToKeep = NetworkControllerPosition::create(
             ['callsign' => 'EGLL_S_TWR', 'cid' => self::ACTIVE_USER_CID, 'frequency' => 118.5]
@@ -126,6 +131,98 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
             'network_controller_positions',
             [
                 'id' => $positionToLose->id,
+            ]
+        );
+    }
+
+    public function testItFiresEventOnUpdate()
+    {
+        $this->expectsEvents(NetworkControllersUpdatedEvent::class);
+        $this->dataService->shouldReceive('getNetworkControllerData')->once()->andReturn(new Collection());
+        $this->service->updateNetworkData();
+    }
+
+    public function testItMatchesControllerPositions()
+    {
+        ControllerPosition::create(['callsign' => 'FOO_TWR', 'frequency' => 123.456]);
+
+        // Should be unmapped, we don't know who this is
+        $pos1 = NetworkControllerPosition::create(
+            ['cid' => 1, 'callsign' => 'FOO_CTR', 'frequency' => 111.111, 'controller_position_id' => 1]
+        );
+
+        // Should not be mapped
+        $pos2 = NetworkControllerPosition::create(
+            ['cid' => 2, 'callsign' => 'BAR_CTR', 'frequency' => 222.222]
+        );
+
+        // Should be unmapped, it's completely invalid
+        $pos3 = NetworkControllerPosition::create(
+            ['cid' => 3, 'callsign' => 'FOOOO', 'frequency' => 333.333, 'controller_position_id' => 2]
+        );
+
+        // Should be mapped
+        $pos4 = NetworkControllerPosition::create(
+            ['cid' => 4, 'callsign' => 'EGLL_S_TWR', 'frequency' => 118.500]
+        );
+
+        // Should not be mapped, wrong frequency for type of unit
+        $pos5 = NetworkControllerPosition::create(
+            ['cid' => 5, 'callsign' => 'EGLL_S_TWR', 'frequency' => 119.720]
+        );
+
+        // Should not be mapped, matches wrong unit
+        $pos6 = NetworkControllerPosition::create(
+            ['cid' => 6, 'callsign' => 'EGLL_S_TWR', 'frequency' => 123.456]
+        );
+
+        $this->service->updatedMatchedControllerPositions();
+
+        $this->assertDatabaseHas(
+            'network_controller_positions',
+            [
+                'id' => $pos1->id,
+                'controller_position_id' => null,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'network_controller_positions',
+            [
+                'id' => $pos2->id,
+                'controller_position_id' => null,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'network_controller_positions',
+            [
+                'id' => $pos3->id,
+                'controller_position_id' => null,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'network_controller_positions',
+            [
+                'id' => $pos4->id,
+                'controller_position_id' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'network_controller_positions',
+            [
+                'id' => $pos5->id,
+                'controller_position_id' => null,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'network_controller_positions',
+            [
+                'id' => $pos6->id,
+                'controller_position_id' => null,
             ]
         );
     }
