@@ -10,7 +10,7 @@ use Mockery;
 
 class NetworkControllersUpdatedTest extends BaseUnitTestCase
 {
-    private NetworkDataUpdated $handler;
+    private NetworkControllersUpdated $handler;
 
     public function setUp(): void
     {
