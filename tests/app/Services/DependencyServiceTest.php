@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\Database\DatabaseTable;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
@@ -188,6 +189,42 @@ class DependencyServiceTest extends BaseFunctionalTestCase
                 DatabaseTable::where('name', 'controller_positions')->first()->id
             ],
             $dependency->databaseTables->pluck('id')->toArray()
+        );
+    }
+
+    public function testItThrowsExceptionIfConcernedTablesIfTableDoNotExist()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Database table foo does not exist for dependency');
+        DependencyService::setConcernedTablesForDependency(
+            'DEPENDENCY_ONE',
+            ['stands', 'foo']
+        );
+    }
+
+    public function testItThrowsExceptionIfModelNotFoundForConcernedTables()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        DependencyService::setConcernedTablesForDependency(
+            'DEPENDENCY_NAH',
+            ['stands', 'controller_positions']
+        );
+    }
+
+    public function testItUpdatesConcernedTables()
+    {
+        Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables()->sync([1]);
+        DependencyService::setConcernedTablesForDependency(
+            'DEPENDENCY_ONE',
+            ['stands', 'controller_positions']
+        );
+
+        $this->assertEquals(
+            [
+                DatabaseTable::where('name', 'stands')->first()->id,
+                DatabaseTable::where('name', 'controller_positions')->first()->id
+            ],
+            Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables->pluck('id')->toArray()
         );
     }
 }
