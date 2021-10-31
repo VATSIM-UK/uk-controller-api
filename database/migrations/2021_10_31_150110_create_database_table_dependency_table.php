@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDatabaseModelDependencyTable extends Migration
+class CreateDatabaseTableDependencyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,23 @@ class CreateDatabaseModelDependencyTable extends Migration
      */
     public function up()
     {
-        Schema::create('database_model_dependency', function (Blueprint $table) {
+        Schema::create('database_table_dependency', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('database_model_id')->comment('The model');
+            $table->unsignedBigInteger('database_table_id')->comment('The database table');
             $table->unsignedMediumInteger('dependency_id')->comment('The dependency');
             $table->timestamps();
 
-            $table->foreign('database_model_id', 'database_model_dependency_model')
+            $table->foreign('database_table_id', 'database_table_dependency_database')
                 ->references('id')
-                ->on('database_models')
+                ->on('database_tables')
                 ->cascadeOnDelete();
 
-            $table->foreign('dependency_id', 'database_model_dependency_dependency')
+            $table->foreign('dependency_id', 'database_table_dependency_dependency')
                 ->references('id')
                 ->on('dependencies')
                 ->cascadeOnDelete();
+
+            $table->unique(['database_table_id', 'dependency_id'], 'database_table_dependency_unique');
         });
     }
 
@@ -38,6 +40,6 @@ class CreateDatabaseModelDependencyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('database_model_dependency');
+        Schema::dropIfExists('database_table_dependency');
     }
 }

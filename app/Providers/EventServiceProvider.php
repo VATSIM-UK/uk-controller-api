@@ -10,6 +10,7 @@ use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Listeners\Database\MigrationsFinished;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Metar\MetarsUpdated;
@@ -22,6 +23,7 @@ use App\Models\Hold\Hold;
 use App\Models\Stand\Stand;
 use App\Observers\HoldObserver;
 use App\Observers\StandObserver;
+use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
@@ -54,6 +56,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         MetarsUpdatedEvent::class => [
             MetarsUpdated::class,
+        ],
+        MigrationsEnded::class => [
+            MigrationsFinished::class,
         ],
     ];
 

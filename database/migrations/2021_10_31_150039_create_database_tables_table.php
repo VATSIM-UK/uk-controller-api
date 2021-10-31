@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDatabaseModelsTable extends Migration
+class CreateDatabaseTablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateDatabaseModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('database_models', function (Blueprint $table) {
+        Schema::create('database_tables', function (Blueprint $table) {
             $table->id();
-            $table->string('model_class')->comment('The model class');
+            $table->string('name')->index()->unique();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateDatabaseModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('database_models');
+        Schema::dropIfExists('database_tables');
     }
 }

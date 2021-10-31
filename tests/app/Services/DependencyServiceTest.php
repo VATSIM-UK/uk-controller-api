@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Database\DatabaseTable;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
 use Illuminate\Support\Carbon;
@@ -164,6 +165,29 @@ class DependencyServiceTest extends BaseFunctionalTestCase
             [
                 'key' => self::GLOBAL_DEPENDENCY,
             ]
+        );
+    }
+
+    public function testItCreatesADependency()
+    {
+        DependencyService::createDependency(
+            'NEW_DEPENDENCY_TEST',
+            'foo@bar',
+            true,
+            'new-dependency.json',
+            ['stands', 'controller_positions']
+        );
+
+        $dependency = Dependency::where('key', 'NEW_DEPENDENCY_TEST')->firstOrFail();
+        $this->assertEquals('foo@bar', $dependency->action);
+        $this->assertEquals('new-dependency.json', $dependency->local_file);
+        $this->assertTrue($dependency->per_user);
+        $this->assertEquals(
+            [
+                DatabaseTable::where('name', 'stands')->first()->id,
+                DatabaseTable::where('name', 'controller_positions')->first()->id
+            ],
+            $dependency->databaseTables->pluck('id')->toArray()
         );
     }
 }
