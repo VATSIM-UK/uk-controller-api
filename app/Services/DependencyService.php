@@ -112,8 +112,7 @@ class DependencyService
         bool   $perUser,
         string $filename,
         array  $concernedTables
-    ): void
-    {
+    ): void {
         DB::transaction(function () use ($key, $action, $perUser, $filename, $concernedTables) {
             Dependency::create(
                 [
@@ -143,7 +142,8 @@ class DependencyService
             $allTables->filter(function (DatabaseTable $table) use ($concernedTables) {
                 return array_search($table->name, $concernedTables) !== false;
             })
-                ->pluck('id'));
+                ->pluck('id')
+        );
     }
 
     /**
@@ -171,8 +171,7 @@ class DependencyService
     private static function tableRequiresDependencyUpdate(
         DatabaseTable $table,
         Collection    $liveStats
-    ): bool
-    {
+    ): bool {
         return $table->updated_at === null ||
             (
                 $liveStats->get($table->name) !== null &&

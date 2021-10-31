@@ -70,7 +70,9 @@ class AddDependencyConcernedTables extends Migration
     {
         foreach (self::DEPENDENCY_MAP as $dependency => $tables) {
             DB::table('database_tables')->upsert(
-                array_map(function (string $table) {return ['name' => $table, 'created_at' => Carbon::now()];}, $tables),
+                array_map(function (string $table) {
+                    return ['name' => $table, 'created_at' => Carbon::now()];
+                }, $tables),
                 ['name']
             );
             DependencyService::setConcernedTablesForDependency(
