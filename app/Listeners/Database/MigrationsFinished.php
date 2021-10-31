@@ -7,7 +7,7 @@ use Illuminate\Database\Events\MigrationsEnded;
 
 class MigrationsFinished
 {
-    public function handle(MigrationsEnded $ended)
+    public function handle()
     {
         DependencyService::checkForDependencyUpdates();
     }
