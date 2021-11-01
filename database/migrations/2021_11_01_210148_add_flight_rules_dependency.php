@@ -17,7 +17,7 @@ class AddFlightRulesDependency extends Migration
             'FlightRulesController@getFlightRulesDependency',
             false,
             'flight-rules.json',
-            ['flight-rules']
+            ['flight_rules']
         );
     }
 
