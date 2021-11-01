@@ -24,7 +24,7 @@ class PrenoteService
                 'description' => $prenote->description,
                 'controller_positions' => $prenote->controllers()
                     ->orderBy('order')
-                    ->pluck('id')
+                    ->pluck('controller_positions.id')
                     ->toArray(),
             ];
         })->toArray();
