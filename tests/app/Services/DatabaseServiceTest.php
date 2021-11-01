@@ -25,7 +25,7 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
     public static function tearDownAfterClass(): void
     {
         // We have to re-seed the database as this test involves committing many things
-        shell_exec('php artisan db:seed --class DatabaseTableSeeder');
+        shell_exec('php artisan db:seed');
         parent::tearDownAfterClass();
     }
 

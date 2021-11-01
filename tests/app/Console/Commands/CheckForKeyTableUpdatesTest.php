@@ -13,6 +13,7 @@ class CheckForKeyTableUpdatesTest extends BaseFunctionalTestCase
     {
         $serviceMock = Mockery::mock(DatabaseService::class);
         $serviceMock->shouldReceive('updateTableStatus')->withNoArgs()->once();
+        $this->app->instance(DatabaseService::class, $serviceMock);
         Artisan::call('database:check-table-updates');
     }
 }
