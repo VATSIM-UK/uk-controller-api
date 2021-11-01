@@ -6,6 +6,7 @@ use App\Models\Database\DatabaseTable;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,13 @@ class DependencyService
     {
         $dependency->touch();
         self::removeDependencyFromCache($dependency);
+        Log::info(
+            sprintf(
+                'Dependency %s has been updated to a new version %s',
+                $dependency->key,
+                $dependency->updated_at->toDateTimeString()
+            )
+        );
     }
 
     public static function touchUserDependency(Dependency $dependency): void
@@ -109,9 +117,9 @@ class DependencyService
     public static function createDependency(
         string $key,
         string $action,
-        bool   $perUser,
+        bool $perUser,
         string $filename,
-        array  $concernedTables
+        array $concernedTables
     ): void {
         DB::transaction(function () use ($key, $action, $perUser, $filename, $concernedTables) {
             Dependency::create(
@@ -151,10 +159,10 @@ class DependencyService
      */
     public function updateDependenciesFromDatabaseTables(Collection $updatedTables): void
     {
-        $updatedTables->each(function (DatabaseTable $table) {
-            $table->dependencies->each(function (Dependency $dependency) {
-                self::touchGlobalDependency($dependency);
-            });
+        Dependency::whereHas('databaseTables', function (Builder $query) use ($updatedTables) {
+            $query->whereIn('database_tables.id', $updatedTables->pluck('id'));
+        })->get()->each(function (Dependency $dependency) {
+            self::touchGlobalDependency($dependency);
         });
     }
 }

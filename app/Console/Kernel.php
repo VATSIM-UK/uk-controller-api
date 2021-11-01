@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
+use App\Console\Commands\CheckForKeyTableUpdates;
 use App\Console\Commands\CleanDepartureReleaseRequestHistory;
 use App\Console\Commands\CleanMissedApproachNotifications;
 use App\Console\Commands\CleanPluginEvents;
@@ -58,6 +59,7 @@ class Kernel extends ConsoleKernel
         CleanDepartureReleaseRequestHistory::class,
         CleanPrenoteMessageHistory::class,
         CleanMissedApproachNotifications::class,
+        CheckForKeyTableUpdates::class,
     ];
 
     /**
@@ -90,5 +92,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('plugin-events:clean')->everyTenMinutes();
         $schedule->command('metars:update')->everyFiveMinutes();
+        $schedule->command('database:check-table-updates')->everyMinute();
     }
 }
