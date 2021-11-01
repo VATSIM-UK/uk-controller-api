@@ -28,14 +28,6 @@ class SidController extends BaseController
         $this->handoffService = $handoffService;
     }
 
-    /**
-     * @deprecated
-     */
-    public function getSidHandoffsDependency(): JsonResponse
-    {
-        return response()->json($this->handoffService->mapSidsToHandoffs());
-    }
-
     public function getSid(int $id): JsonResponse
     {
         $sid = $this->sidService->getSid($id);

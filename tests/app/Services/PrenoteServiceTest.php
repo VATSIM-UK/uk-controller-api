@@ -21,60 +21,6 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(PrenoteService::class);
     }
 
-    private function getExpectedPairing(bool $withFlightRules): array
-    {
-        return [
-            'origin' => 'EGLL',
-            'destination' => 'EGBB',
-            'type' => 'airfieldPairing',
-            'flight_rules' => $withFlightRules ? 'I' : null,
-            'recipient' => [
-                'EGLL_S_TWR',
-                'EGLL_N_APP',
-            ],
-        ];
-    }
-
-    private function getExpectedSid(): array
-    {
-        return [
-            'airfield' => 'EGLL',
-            'departure' => 'TEST1X',
-            'type' => 'sid',
-            'recipient' => [
-                'EGLL_S_TWR',
-                'EGLL_N_APP',
-            ],
-        ];
-    }
-
-    public function testItFormatsSidPrenotes()
-    {
-        $this->assertEquals([$this->getExpectedSid()], $this->service->getAllSidPrenotes());
-    }
-
-    public function testItFormatsAirfieldPairingPrenotes()
-    {
-        Airfield::find(1)->prenotePairings()->updateExistingPivot(2, ['flight_rule_id' => null]);
-        $this->assertEquals([$this->getExpectedPairing(false)], $this->service->getAllAirfieldPrenotes());
-    }
-
-    public function testItFormatsAirfieldPairingPrenotesWithFlightRules()
-    {
-        Airfield::find(1)->prenotePairings()->updateExistingPivot(2, ['flight_rule_id' => 2]);
-        $this->assertEquals([$this->getExpectedPairing(true)], $this->service->getAllAirfieldPrenotes());
-    }
-
-    public function testItFormatsAllPrenotes()
-    {
-        Airfield::find(1)->prenotePairings()->updateExistingPivot(2, ['flight_rule_id' => 2]);
-        $expected = [
-            $this->getExpectedSid(),
-            $this->getExpectedPairing(true),
-        ];
-        $this->assertEquals($expected, $this->service->getAllPrenotesWithControllers());
-    }
-
     public function testItInsertsIntoPrenoteOrderBefore()
     {
         PrenoteService::insertIntoOrderBefore('PRENOTE_ONE', 'LON_C_CTR', 'EGLL_S_TWR');

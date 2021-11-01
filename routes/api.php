@@ -276,7 +276,6 @@ Route::middleware('api')->group(
                 Route::get('sid', 'SidController@getAllSids');
                 Route::get('sid/{id}', 'SidController@getSid')
                     ->where('id', '[0-9]+');
-                Route::get('handoffs', 'SidController@getSidHandoffsDependency');
 
                 // Controller positions
                 Route::get('controller', 'ControllerPositionController@getAllControllers');
@@ -285,7 +284,6 @@ Route::middleware('api')->group(
                 // Airfields
                 Route::get('airfield', 'AirfieldController@getAllAirfields');
                 Route::get('airfield/dependency', 'AirfieldController@getAirfieldDependency');
-                Route::get('airfield-ownership', 'AirfieldController@getAirfieldOwnershipDependency');
 
                 // Departures
                 Route::get(
@@ -301,11 +299,9 @@ Route::middleware('api')->group(
                 Route::get('hold/assigned', 'HoldController@getAssignedHolds');
 
                 // Handoffs
-                Route::get('handoff', 'HandoffController@getAllHandoffs');
                 Route::get('handoffs/dependency', 'HandoffController@getHandoffsV2Dependency');
 
                 // Prenotes
-                Route::get('prenote', 'PrenoteController@getAllPrenotes');
                 Route::get('prenotes/dependency', 'PrenoteController@getPrenotesV2Dependency');
 
                 // Regional Pressure

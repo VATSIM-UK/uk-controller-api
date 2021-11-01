@@ -22,21 +22,6 @@ class SidControllerTest extends BaseApiTestCase
         $this->assertInstanceOf(SidController::class, $this->app->make(SidController::class));
     }
 
-    public function testItReturnsHandoffData()
-    {
-        $expected = [
-            'EGLL' => [
-                'TEST1X' => 'HANDOFF_ORDER_1',
-                'TEST1Y' => 'HANDOFF_ORDER_1',
-            ],
-            'EGBB' => [
-                'TEST1A' => 'HANDOFF_ORDER_2',
-            ],
-        ];
-
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'handoffs')->assertJson($expected);
-    }
-
     public function testItReturnsASid()
     {
         $expected = [

@@ -19,40 +19,6 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(HandoffService::class);
     }
 
-    public function testItReturnsHandoffsWithControllers()
-    {
-        $expected = [
-            'HANDOFF_ORDER_1' => [
-                'EGLL_S_TWR',
-                'EGLL_N_APP',
-            ],
-            'HANDOFF_ORDER_2' => [
-                'EGLL_N_APP',
-                'LON_S_CTR',
-            ],
-        ];
-
-        $actual = $this->service->getAllHandoffsWithControllers();
-        $this->assertSame($expected, $actual);
-    }
-
-
-    public function testItMapsSidsToHandoffs()
-    {
-        $expected = [
-            'EGLL' => [
-                'TEST1X' => 'HANDOFF_ORDER_1',
-                'TEST1Y' => 'HANDOFF_ORDER_1',
-            ],
-            'EGBB' => [
-                'TEST1A' => 'HANDOFF_ORDER_2',
-            ],
-        ];
-
-        $actual = $this->service->mapSidsToHandoffs();
-        $this->assertSame($expected, $actual);
-    }
-
     public function testItReturnsHandoffV2Dependency()
     {
         DB::table('handoff_orders')->insert(

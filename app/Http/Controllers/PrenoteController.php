@@ -8,26 +8,11 @@ use Illuminate\Http\JsonResponse;
 
 class PrenoteController extends Prenote
 {
-    /**
-     * @var PrenoteService
-     */
-    private $prenoteService;
+    private PrenoteService $prenoteService;
 
-    /**
-     * PrenoteController constructor.
-     * @param PrenoteService $prenoteService
-     */
     public function __construct(PrenoteService $prenoteService)
     {
         $this->prenoteService = $prenoteService;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getAllPrenotes() : JsonResponse
-    {
-        return response()->json($this->prenoteService->getAllPrenotesWithControllers());
     }
 
     public function getPrenotesV2Dependency(): JsonResponse
