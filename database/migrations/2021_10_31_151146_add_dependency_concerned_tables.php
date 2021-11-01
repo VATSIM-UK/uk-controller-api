@@ -36,6 +36,7 @@ class AddDependencyConcernedTables extends Migration
             'wake_categories',
         ],
         'DEPENDENCY_AIRFIELD' => [
+            'airfield',
             'top_downs',
             'speed_groups',
             'speed_group_speed_group',

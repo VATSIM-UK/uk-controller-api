@@ -2,13 +2,19 @@
 
 namespace App\Listeners\Database;
 
-use App\Services\DependencyService;
-use Illuminate\Database\Events\MigrationsEnded;
+use App\Services\DatabaseService;
 
 class MigrationsFinished
 {
+    private DatabaseService $databaseService;
+
+    public function __construct(DatabaseService $databaseService)
+    {
+        $this->databaseService = $databaseService;
+    }
+
     public function handle()
     {
-        DependencyService::checkForDependencyUpdates();
+        $this->databaseService->updateTableStatus();
     }
 }

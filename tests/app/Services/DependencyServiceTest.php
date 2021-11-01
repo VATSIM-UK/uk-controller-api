@@ -18,6 +18,14 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     private const GLOBAL_DEPENDENCY = 'DEPENDENCY_ONE';
     private const USER_DEPENDENCY = 'USER_DEPENDENCY_ONE';
 
+    private DependencyService $service;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->service = $this->app->make(DependencyService::class);
+    }
+
     /**
      * This method has been defined so that it can be called in place of a controller
      * by one of the tests. We need this as we can't mockery up an object from scratch.
@@ -225,6 +233,52 @@ class DependencyServiceTest extends BaseFunctionalTestCase
                 DatabaseTable::where('name', 'controller_positions')->first()->id
             ],
             Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables->pluck('id')->toArray()
+        );
+    }
+
+    public function testItUpdatesDependencyDateBasedOnDatabaseTables()
+    {
+        Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables()->sync(
+            [
+                DatabaseTable::where('name', 'stands')->first()->id,
+                DatabaseTable::where('name', 'controller_positions')->first()->id
+            ]
+        );
+
+        Dependency::where('key', 'DEPENDENCY_TWO')->first()->databaseTables()->sync(
+            [
+                DatabaseTable::where('name', 'airfield')->first()->id,
+            ]
+        );
+
+        Dependency::where('key', 'DEPENDENCY_THREE')->first()->databaseTables()->sync(
+            [
+                DatabaseTable::where('name', 'navaids')->first()->id,
+            ]
+        );
+
+        $this->service->updateDependenciesFromDatabaseTables(
+            collect(
+                [
+                    DatabaseTable::where('name', 'stands')->first(),
+                    DatabaseTable::where('name', 'navaids')->first(),
+                ]
+            )
+        );
+
+        $this->assertGreaterThan(
+            Carbon::parse('2020-04-02 21:00:00'),
+            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at
+        );
+
+        $this->assertEquals(
+            Carbon::parse('2020-04-03 21:00:00'),
+            Dependency::where('key', 'DEPENDENCY_TWO')->first()->updated_at
+        );
+
+        $this->assertGreaterThan(
+            Carbon::now()->subMinute(),
+            Dependency::where('key', 'DEPENDENCY_THREE')->first()->updated_at
         );
     }
 }

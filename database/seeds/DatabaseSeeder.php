@@ -50,6 +50,7 @@ class DatabaseSeeder extends Seeder
         DependencyTableSeeder::class => [
             'dependency_user',
             'dependencies',
+            'database_table_dependency',
         ],
         AircraftTableSeeder::class => [
             'aircraft',
@@ -121,7 +122,10 @@ class DatabaseSeeder extends Seeder
         ],
         DepartureReleaseTableSeeder::class => [
             'departure_release_requests',
-        ]
+        ],
+        DatabaseTableSeeder::class => [
+            'database_tables',
+        ],
     ];
 
     const OTHER_TABLES_TO_TRUNCATE = [

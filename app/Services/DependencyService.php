@@ -147,61 +147,14 @@ class DependencyService
     }
 
     /**
-     * Check which tables have been recently updated and touch
-     * their related dependencies.
+     * Use recently updated database tables to check for dependency updates.
      */
-    public static function checkForDependencyUpdates(): void
+    public function updateDependenciesFromDatabaseTables(Collection $updatedTables): void
     {
-        $currentTables = self::getCurrentTableStatistics();
-        $liveStats = self::getLiveTableStatistics($currentTables);
-
-        foreach ($currentTables as $table) {
-            if (self::tableRequiresDependencyUpdate($table, $liveStats)) {
-                $table->dependencies->each(function (Dependency $dependency) {
-                    self::touchGlobalDependency($dependency);
-                });
-
-                $liveTime = $liveStats->get($table->name);
-                $table->updated_at = $liveTime === null ? Carbon::now() : $liveTime;
-                $table->save();
-            }
-        }
-    }
-
-    private static function tableRequiresDependencyUpdate(
-        DatabaseTable $table,
-        Collection    $liveStats
-    ): bool {
-        return $table->updated_at === null ||
-            (
-                $liveStats->get($table->name) !== null &&
-                $table->updated_at < $liveStats->get($table->name)
-            );
-    }
-
-    private static function getCurrentTableStatistics(): Collection
-    {
-        return DatabaseTable::with('dependencies')
-            ->whereHas('dependencies')
-            ->get()
-            ->mapWithKeys(function (DatabaseTable $table) {
-                return [
-                    $table->name => $table,
-                ];
+        $updatedTables->each(function (DatabaseTable $table) {
+            $table->dependencies->each(function (Dependency $dependency) {
+                self::touchGlobalDependency($dependency);
             });
-    }
-
-    private static function getLiveTableStatistics(Collection $tables): Collection
-    {
-        DB::statement('ANALYZE TABLE ' . $tables->implode('name', ','));
-        return DB::table('information_schema.TABLES')
-            ->where('TABLE_SCHEMA', DB::connection()->getDatabaseName())
-            ->whereIn('TABLE_NAME', $tables->pluck('name')->unique()->toArray())
-            ->get()
-            ->mapWithKeys(function (object $table) {
-                return [
-                    $table->TABLE_NAME => $table->UPDATE_TIME ? Carbon::parse($table->UPDATE_TIME) : null,
-                ];
-            });
+        });
     }
 }

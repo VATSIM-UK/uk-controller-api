@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\Database\DatabaseTablesUpdated;
 use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Events\MetarsUpdatedEvent;
@@ -11,6 +12,7 @@ use App\Events\SquawkUnassignedEvent;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Listeners\Database\MigrationsFinished;
+use App\Listeners\Dependency\UpdateDependencies;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Metar\MetarsUpdated;
@@ -59,6 +61,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         MigrationsEnded::class => [
             MigrationsFinished::class,
+        ],
+        DatabaseTablesUpdated::class => [
+            UpdateDependencies::class,
         ],
     ];
 
