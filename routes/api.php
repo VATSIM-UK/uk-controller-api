@@ -293,6 +293,9 @@ Route::middleware('api')->group(
                     'DepartureController@getDepartureSidIntervalGroupsDependency'
                 );
 
+                // Flight rules
+                Route::get('flight-rules/dependency', 'FlightRulesController@getFlightRulesDependency');
+
                 // Holds
                 Route::get('hold', 'HoldController@getAllHolds');
                 Route::get('hold/assigned', 'HoldController@getAssignedHolds');
