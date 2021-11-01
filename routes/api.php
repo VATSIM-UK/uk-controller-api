@@ -307,6 +307,7 @@ Route::middleware('api')->group(
 
                 // Handoffs
                 Route::get('handoff', 'HandoffController@getAllHandoffs');
+                Route::get('handoffs/dependency', 'HandoffController@getHandoffsV2Dependency');
 
                 // Prenotes
                 Route::get('prenote', 'PrenoteController@getAllPrenotes');
