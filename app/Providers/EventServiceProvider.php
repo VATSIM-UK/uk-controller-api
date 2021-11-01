@@ -66,10 +66,4 @@ class EventServiceProvider extends ServiceProvider
             UpdateDependencies::class,
         ],
     ];
-
-    public function boot()
-    {
-        Stand::observe(StandObserver::class);
-        Hold::observe(HoldObserver::class);
-    }
 }
