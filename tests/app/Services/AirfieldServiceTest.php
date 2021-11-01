@@ -502,10 +502,10 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                         ],
                     ],
                 ],
-                'top_down_order' => [
-                    'EGLL_S_TWR',
-                    'EGLL_N_APP',
-                    'LON_S_CTR',
+                'top_down_controller_positions' => [
+                    1,
+                    2,
+                    3,
                 ],
             ],
             [
@@ -513,8 +513,8 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'identifier' => 'EGBB',
                 'wake_scheme' => 2,
                 'departure_speed_groups' => [],
-                'top_down_order' => [
-                    'LON_C_CTR',
+                'top_down_controller_positions' => [
+                    4,
                 ],
             ],
             [
@@ -522,7 +522,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'identifier' => 'EGKR',
                 'wake_scheme' => 1,
                 'departure_speed_groups' => [],
-                'top_down_order' => [],
+                'top_down_controller_positions' => [],
             ],
         ];
 

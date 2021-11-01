@@ -28,7 +28,9 @@ class AirfieldService
                         'identifier' => $airfield->code,
                         'wake_scheme' => $airfield->wake_category_scheme_id,
                         'departure_speed_groups' => $this->getSpeedGroupsForAirfield($airfield),
-                        'top_down_order' => $airfield->controllers()->orderBy('order')->pluck('callsign')->toArray(),
+                        'top_down_controller_positions' =>
+                            $airfield->controllers()->orderBy('order')->pluck('id')
+                                ->toArray(),
                     ];
                 }
             )->toArray();
