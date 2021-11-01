@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Flightplan\FlightRules;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
@@ -29,8 +30,15 @@ class AirfieldService
                         'wake_scheme' => $airfield->wake_category_scheme_id,
                         'departure_speed_groups' => $this->getSpeedGroupsForAirfield($airfield),
                         'top_down_controller_positions' =>
-                            $airfield->controllers()->orderBy('order')->pluck('id')
+                            $airfield->controllers()->orderBy('order')->pluck('controller_positions.id')
                                 ->toArray(),
+                        'pairing_prenotes' => $airfield->prenotePairings->map(function (Airfield $destination) {
+                            return [
+                                'airfield_id' => $destination->id,
+                                'flight_rule_id' => $destination->pivot->flight_rule_id,
+                                'prenote_id' => $destination->pivot->prenote_id
+                            ];
+                        })->toArray(),
                     ];
                 }
             )->toArray();

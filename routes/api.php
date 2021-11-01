@@ -303,6 +303,7 @@ Route::middleware('api')->group(
 
                 // Prenotes
                 Route::get('prenote', 'PrenoteController@getAllPrenotes');
+                Route::get('prenotes/dependency', 'PrenoteController@getPrenotesV2Dependency');
 
                 // Regional Pressure
                 Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');

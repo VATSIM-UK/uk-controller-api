@@ -22,8 +22,16 @@ class PrenoteController extends Prenote
         $this->prenoteService = $prenoteService;
     }
 
+    /**
+     * @deprecated
+     */
     public function getAllPrenotes() : JsonResponse
     {
         return response()->json($this->prenoteService->getAllPrenotesWithControllers());
+    }
+
+    public function getPrenotesV2Dependency(): JsonResponse
+    {
+        return response()->json($this->prenoteService->getPrenotesV2Dependency());
     }
 }

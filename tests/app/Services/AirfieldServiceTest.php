@@ -507,6 +507,13 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                     2,
                     3,
                 ],
+                'pairing_prenotes' => [
+                    [
+                        'airfield_id' => 2,
+                        'flight_rule_id' => 1,
+                        'prenote_id' => 1,
+                    ]
+                ],
             ],
             [
                 'id' => 2,
@@ -516,6 +523,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'top_down_controller_positions' => [
                     4,
                 ],
+                'pairing_prenotes' => [],
             ],
             [
                 'id' => 3,
@@ -523,6 +531,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'wake_scheme' => 1,
                 'departure_speed_groups' => [],
                 'top_down_controller_positions' => [],
+                'pairing_prenotes' => [],
             ],
         ];
 

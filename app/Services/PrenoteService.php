@@ -15,11 +15,32 @@ use OutOfRangeException;
 
 class PrenoteService
 {
+    public function getPrenotesV2Dependency(): array
+    {
+        return Prenote::all()->map(function (Prenote $prenote) {
+            return [
+                'id' => $prenote->id,
+                'key' => $prenote->key,
+                'description' => $prenote->description,
+                'controller_positions' => $prenote->controllers()
+                    ->orderBy('order')
+                    ->pluck('id')
+                    ->toArray(),
+            ];
+        })->toArray();
+    }
+
+    /**
+     * @deprecated
+     */
     public function getAllPrenotesWithControllers(): array
     {
         return array_merge($this->getAllSidPrenotes(), $this->getAllAirfieldPrenotes());
     }
 
+    /**
+     * @deprecated
+     */
     public function getAllSidPrenotes(): array
     {
         $prenotes = [];
@@ -36,6 +57,9 @@ class PrenoteService
         return $prenotes;
     }
 
+    /**
+     * @deprecated
+     */
     public function getAllAirfieldPrenotes(): array
     {
         $flightRules = FlightRules::all()->mapWithKeys(function (FlightRules $flightRules) {

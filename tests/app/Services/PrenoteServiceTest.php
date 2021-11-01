@@ -371,4 +371,30 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItReturnsPrenotesV2Dependency()
+    {
+        $expected = [
+            [
+                'id' => 1,
+                'key' => 'PRENOTE_ONE',
+                'description' => 'Prenote One',
+                'controller_positions' => [
+                    1,
+                    2,
+                ]
+            ],
+            [
+                'id' => 2,
+                'key' => 'PRENOTE_TWO',
+                'description' => 'Prenote Two',
+                'controller_positions' => [
+                    1,
+                    2,
+                ]
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getPrenotesV2Dependency());
+    }
 }

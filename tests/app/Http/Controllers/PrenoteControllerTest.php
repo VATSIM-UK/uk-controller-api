@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Services\PrenoteService;
 
 class PrenoteControllerTest extends BaseApiTestCase
 {
@@ -33,5 +34,12 @@ class PrenoteControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'prenote')
             ->assertStatus(200)
             ->assertExactJson($expected);
+    }
+
+    public function testItReturnsPrenotesV2Dependency()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'prenote')
+            ->assertStatus(200)
+            ->assertExactJson($this->app->make(PrenoteService::class)->getPrenotesV2Dependency());
     }
 }

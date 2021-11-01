@@ -47,6 +47,6 @@ class AirfieldTableSeeder extends Seeder
         );
 
         Airfield::findOrFail(1)->prenotePairings()
-            ->attach(1, ['destination_airfield_id' => 2, 'prenote_id' => 1]);
+            ->attach(1, ['destination_airfield_id' => 2, 'prenote_id' => 1, 'flight_rule_id' => 1,]);
     }
 }
