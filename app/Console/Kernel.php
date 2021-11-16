@@ -80,6 +80,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('departure-releases:clean-history')->daily();
         $schedule->command('prenote-messages:clean-history')->daily();
         $schedule->command('missed-approaches:clean-history')->daily();
+        $schedule->command('queue:prune-failed --hours=168')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('networkdata:update')->everyMinute()
             ->graceTimeInMinutes(3)
