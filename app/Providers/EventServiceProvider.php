@@ -6,6 +6,7 @@ use App\Events\Database\DatabaseTablesUpdated;
 use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Events\MetarsUpdatedEvent;
+use App\Events\NetworkControllersUpdatedEvent;
 use App\Events\NetworkDataUpdatedEvent;
 use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
@@ -16,6 +17,7 @@ use App\Listeners\Dependency\UpdateDependencies;
 use App\Listeners\Hold\RecordHoldAssignment;
 use App\Listeners\Hold\RecordHoldUnassignment;
 use App\Listeners\Metar\MetarsUpdated;
+use App\Listeners\Network\NetworkControllersUpdated;
 use App\Listeners\Network\NetworkDataUpdated;
 use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
@@ -64,6 +66,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         DatabaseTablesUpdated::class => [
             UpdateDependencies::class,
+        ],
+        NetworkControllersUpdatedEvent::class => [
+            NetworkControllersUpdated::class,
         ],
     ];
 }

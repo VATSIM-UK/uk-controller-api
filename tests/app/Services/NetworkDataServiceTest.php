@@ -3,449 +3,616 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
-use App\Events\NetworkDataUpdatedEvent;
-use App\Jobs\Network\AircraftDisconnected;
-use App\Models\Vatsim\NetworkAircraft;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Str;
 use Mockery;
-use PDOException;
 
 class NetworkDataServiceTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var array[]
-     */
-    private $networkData;
+    private NetworkDataDownloadService $dataDownloadService;
+    private NetworkDataService $service;
 
-    /**
-     * @var NetworkDataService
-     */
-    private $service;
-
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
-        $this->networkData = [
-            'pilots' => [
-                $this->getPilotData('VIR25A', true),
-                $this->getPilotData('BAW123', false, null, null, '1234'),
-                $this->getPilotData('RYR824', true),
-                $this->getPilotData('LOT551', true, 44.372, 26.040),
-                $this->getPilotData('BMI221', true, null, null, '777'),
-                $this->getPilotData('BMI222', true, null, null, '12a4'),
-                $this->getPilotData('BMI223', true, null, null, '7778'),
-            ]
-        ];
-
-        Queue::fake();
-        Carbon::setTestNow(Carbon::now()->startOfSecond());
-        Date::setTestNow(Carbon::now());
+        $this->dataDownloadService = Mockery::mock(NetworkDataDownloadService::class);
+        $this->app->instance(NetworkDataDownloadService::class, $this->dataDownloadService);
         $this->service = $this->app->make(NetworkDataService::class);
     }
 
-    private function fakeNetworkDataReturn(): void
+    public function testItReturnsNetworkAircraft()
     {
-        Http::fake(
+        $expected = collect(
             [
-                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode($this->networkData))
-            ]
-        );
-    }
-
-    public function testItHandlesErrorCodesFromNetworkDataFeed()
-    {
-        $this->doesntExpectEvents(NetworkDataUpdatedEvent::class);
-        Http::fake(
-            [
-                NetworkDataService::NETWORK_DATA_URL => Http::response('', 500)
-            ]
-        );
-        $this->service->updateNetworkData();
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'VIR25A',
-            ]
-        );
-    }
-
-    public function testItHandlesExceptionsFromNetworkDataFeed()
-    {
-        $this->doesntExpectEvents(NetworkDataUpdatedEvent::class);
-        Http::fake(
-            function () {
-                throw new Exception('LOL');
-            }
-        );
-        $this->service->updateNetworkData();
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'VIR25A',
-            ]
-        );
-    }
-
-    public function testItHandlesMissingClientData()
-    {
-        $this->expectsEvents(NetworkDataUpdatedEvent::class);
-        Http::fake(
-            [
-                NetworkDataService::NETWORK_DATA_URL => Http::response(json_encode(['not_clients' => '']), 200)
-            ]
-        );
-        $this->service->updateNetworkData();
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'VIR25A',
-            ]
-        );
-    }
-
-    public function testItAddsNewAircraftFromDataFeed()
-    {
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $this->getTransformedPilotData('VIR25A'),
                 [
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                    'transponder_last_updated_at' => Carbon::now()
-                ]
-            ),
-        );
-    }
-
-    public function testItUpdatesExistingAircraftFromDataFeed()
-    {
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $this->getTransformedPilotData('BAW123', false, '1234'),
+                    'callsign' => 'BAW123',
+                    'latitude' => 34,
+                    'longitude' => 45,
+                    'altitude' => 3000,
+                    'groundspeed' => 300,
+                    'transponder' => '1234',
+                    'flight_plan' => [
+                        'aircraft' => 'B738',
+                        'departure' => 'EGLL',
+                        'arrival' => 'EGSS',
+                        'altitude' => '6000',
+                        'flight_rules' => 'I',
+                        'route' => 'DCT BKY',
+                    ],
+                ],
                 [
-                    'created_at' => '2020-05-30 17:30:00',
-                    'updated_at' => Carbon::now()
-                ]
-            ),
-        );
-    }
-
-    public function testItUpdatesExistingAircraftTransponderChangedAtFromDataFeed()
-    {
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $this->getTransformedPilotData('RYR824', false),
-                [
-                    'created_at' => '2020-05-30 17:30:00',
-                    'updated_at' => Carbon::now(),
-                    'transponder_last_updated_at' => Carbon::now(),
-                ]
-            ),
-        );
-    }
-
-    public function testItDoesntUpdateExistingAircraftTransponderChangedAtFromDataFeedIfSame()
-    {
-        // Update the transponder 15 minutes ago
-        $transponderUpdatedAt = Carbon::now()->subMinutes(15);
-        DB::table('network_aircraft')->where('callsign', 'BAW123')->update(
-            ['transponder_last_updated_at' => $transponderUpdatedAt]
-        );
-
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $this->getTransformedPilotData('BAW123', false, '1234'),
-                [
-                    'created_at' => '2020-05-30 17:30:00',
-                    'updated_at' => Carbon::now(),
-                    'transponder_last_updated_at' => $transponderUpdatedAt,
-                ]
-            ),
-        );
-    }
-
-    public function testItUpdatesExistingAircraftOnTheGroundFromDataFeed()
-    {
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $this->getTransformedPilotData('RYR824'),
-                ['created_at' => '2020-05-30 17:30:00', 'updated_at' => Carbon::now()]
-            ),
-        );
-    }
-
-    public function testItDoesntAddAtcFromDataFeed()
-    {
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'LON_S_CTR'
+                    'callsign' => 'BAW123',
+                    'latitude' => 34,
+                    'longitude' => 45,
+                    'altitude' => 3000,
+                    'groundspeed' => 300,
+                    'transponder' => '1234',
+                    'flight_plan' => null,
+                ],
             ]
         );
+
+        $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
+            collect([
+                        'pilots' => $expected->toArray()
+                    ])
+        );
+
+        $this->assertEquals($expected, $this->service->getNetworkAircraftData());
     }
 
-    public function testItDoesntUpdateAircraftOutOfRangeFromTheDataFeed()
+    /**
+     * @dataProvider badAircraftProvider
+     */
+    public function testItDoesntReturnInvalidAircraft(array $data)
     {
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'LOT551',
-            ],
+        $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
+            collect($data)
         );
+
+        $this->assertTrue($this->service->getNetworkAircraftData()->isEmpty());
     }
 
-    public function testItDoesntUpdateAircraftWithInvalidTransponderFromDataFeed()
+    public function badAircraftProvider(): array
     {
-        $this->withoutEvents();
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'BMI221',
-            ],
-        );
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'BMI222',
-            ],
-        );
-        $this->assertDatabaseMissing(
-            'network_aircraft',
-            [
-                'callsign' => 'BMI223',
-            ],
-        );
-    }
-
-    public function testItTimesOutAircraftFromDataFeed()
-    {
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-        Queue::assertNotPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
-            return $job->aircraft->callsign === 'BAW123';
-        });
-        Queue::assertNotPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
-            return $job->aircraft->callsign === 'BAW456 ';
-        });
-        Queue::assertPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
-            return $job->aircraft->callsign === 'BAW789';
-        });
-    }
-
-    public function testItFiresUpdatedEventsOnDataFeed()
-    {
-        $this->expectsEvents(NetworkDataUpdatedEvent::class);
-        $this->fakeNetworkDataReturn();
-        $this->service->updateNetworkData();
-    }
-
-    public function testItCreatesNetworkAircraft()
-    {
-        $expectedData = $this->getTransformedPilotData('AAL123');
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123', $expectedData);
-        $actual->refresh();
-        $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($expected->toArray(), $actual->toArray());
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $expectedData,
-                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
-            ),
-        );
-    }
-
-    public function testItCreatesNetworkAircraftCallsignOnly()
-    {
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
-        $actual->refresh();
-        $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($expected->toArray(), $actual->toArray());
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            [
-                'callsign' => 'AAL123',
-            ]
-        );
-    }
-
-    public function testItUpdatesNetworkAircraft()
-    {
-        $expectedData = $this->getTransformedPilotData('AAL123');
-        NetworkAircraft::create($expectedData);
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft(
-            'AAL123',
-            ['groundspeed' => '456789']
-        );
-        $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($expected->toArray(), $actual->toArray());
-
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $expectedData,
-                [
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                    'groundspeed' => '456789'
-                ]
-            ),
-        );
-    }
-
-    public function testItUpdatesNetworkAircraftCallsignOnly()
-    {
-        $expectedData = $this->getTransformedPilotData('AAL123');
-        NetworkAircraft::create($expectedData);
-        $actual = NetworkDataService::createOrUpdateNetworkAircraft('AAL123');
-        $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($expected->toArray(), $actual->toArray());
-
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $expectedData,
-                [
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ]
-            ),
-        );
-    }
-
-    public function testItCreatesPlaceholderAircraft()
-    {
-        $actual = NetworkDataService::createPlaceholderAircraft('AAL123');
-        $actual->refresh();
-        $expected = NetworkAircraft::find('AAL123');
-        $this->assertEquals($expected->toArray(), $actual->toArray());
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                ['callsign' => 'AAL123'],
-                ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
-            ),
-        );
-    }
-
-    public function testItFindsNetworkAircraftInCreatePlaceholder()
-    {
-        Carbon::setTestNow(Carbon::now());
-        $expectedData = $this->getTransformedPilotData('AAL123');
-        $expected = NetworkAircraft::create($expectedData);
-        $expected->created_at = Carbon::now()->subHours(2);
-        $expected->updated_at = Carbon::now()->subMinutes(5);
-        $expected->save();
-        $expected->refresh();
-        $this->assertEquals(
-            $expected->toArray(),
-            NetworkDataService::createPlaceholderAircraft('AAL123')->toArray()
-        );
-
-        $this->assertDatabaseHas(
-            'network_aircraft',
-            array_merge(
-                $expectedData,
-                [
-                    'created_at' => Carbon::now()->subHours(2)->toDateTimeString(),
-                    'updated_at' => Carbon::now()->subMinutes(5)->toDateTimeString(),
-                ]
-            ),
-        );
-    }
-
-    private function getPilotData(
-        string $callsign,
-        bool $hasFlightplan,
-        float $latitude = null,
-        float $longitude = null,
-        string $transponder = null
-    ): array {
         return [
-            'callsign' => $callsign,
-            'latitude' => $latitude ?? 54.66,
-            'longitude' => $longitude ?? -6.21,
-            'altitude' => 35123,
-            'groundspeed' => 123,
-            'transponder' => $transponder ?? '0457',
-            'flight_plan' => $hasFlightplan
-                ? [
-                    'aircraft' => 'B738',
-                    'departure' => 'EGKK',
-                    'arrival' => 'EGPH',
-                    'altitude' => '15001',
-                    'flight_rules' => 'I',
-                    'route' => 'DIRECT',
+            'No pilots' => [
+                [
+                    'notpilots' => [],
                 ]
-                : null,
+            ],
+            'Pilots not array' => [
+                [
+                    'pilots' => ''
+                ]
+            ],
+            'Callsign invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 123,
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Callsign missing' => [
+                [
+                    'pilots' => [
+                        [
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Latitude invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 999,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Latitude missing' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Longitude invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 999,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Longitude missing' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Altitude invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 'abc',
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Altitude missing' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Groundspeed invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 'abc',
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Groundspeed missing' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Transponder invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => 'abc',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Transponder missing' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Flightplan aircraft invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => '1234',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Flightplan departure invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => '1234',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Flightplan arrival invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 123,
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Flightplan altitude invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => new Exception(),
+                                'flight_rules' => 'I',
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Flightplan flight rules invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 123,
+                                'route' => 'DCT BKY',
+                            ],
+                        ]
+                    ]
+                ]
+            ],
+            'Flightplan route invalid' => [
+                [
+                    'pilots' => [
+                        [
+                            'callsign' => 'BAW123',
+                            'latitude' => 34,
+                            'longitude' => 45,
+                            'altitude' => 3000,
+                            'groundspeed' => 300,
+                            'transponder' => '1234',
+                            'flight_plan' => [
+                                'aircraft' => 'B738',
+                                'departure' => 'EGLL',
+                                'arrival' => 'EGSS',
+                                'altitude' => 6000,
+                                'flight_rules' => 'I',
+                                'route' => 123,
+                            ],
+                        ]
+                    ]
+                ]
+            ],
         ];
     }
 
-    private function getTransformedPilotData(
-        string $callsign,
-        bool $hasFlightplan = true,
-        string $transponder = null
-    ): array
+    public function testItReturnsNetworkControllers()
     {
-        $pilot = $this->getPilotData($callsign, $hasFlightplan, null, null, $transponder);
-        $baseData = [
-            'callsign' => $pilot['callsign'],
-            'latitude' => $pilot['latitude'],
-            'longitude' => $pilot['longitude'],
-            'altitude' => $pilot['altitude'],
-            'groundspeed' => $pilot['groundspeed'],
-            'transponder' => Str::padLeft($pilot['transponder'], '0', 4),
-        ];
-
-        if ($hasFlightplan) {
-            $baseData = array_merge(
-                $baseData,
+        $expected = collect(
+            [
                 [
-                    'planned_aircraft' => $pilot['flight_plan']['aircraft'],
-                    'planned_depairport' => $pilot['flight_plan']['departure'],
-                    'planned_destairport' => $pilot['flight_plan']['arrival'],
-                    'planned_altitude' => $pilot['flight_plan']['altitude'],
-                    'planned_flighttype' => $pilot['flight_plan']['flight_rules'],
-                    'planned_route' => $pilot['flight_plan']['route'],
-                ]
-            );
-        }
+                    'cid' => 1,
+                    'callsign' => 'LON_S_CTR',
+                    'frequency' => 118.400,
+                ],
+                [
+                    'cid' => 2,
+                    'callsign' => 'LON_C_CTR',
+                    'frequency' => 199.998,
+                ],
+            ]
+        );
 
-        return $baseData;
+        $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
+            collect([
+                        'controllers' => $expected->toArray()
+                    ])
+        );
+
+        $this->assertEquals($expected, $this->service->getNetworkControllerData());
+    }
+
+    /**
+     * @dataProvider badControllerProvider
+     */
+    public function testItDoesntReturnInvalidControllers(array $data)
+    {
+        $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
+            collect($data)
+        );
+
+        $this->assertTrue($this->service->GetNetworkControllerData()->isEmpty());
+    }
+
+    public function badControllerProvider(): array
+    {
+        return [
+            'Cid missing' => [
+                [
+                    'controllers' => [
+                        [
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Cid not integer' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 'abc',
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Callsign missing' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Callsign invalid' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => '[123',
+                            'frequency' => 129.420,
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency missing' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency invalid' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 'abc',
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency too big' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 200.001,
+                        ]
+                    ],
+                ],
+            ],
+            'Frequency too small' => [
+                [
+                    'controllers' => [
+                        [
+                            'cid' => 1,
+                            'callsign' => 'LON_S_CTR',
+                            'frequency' => 99.99,
+                        ]
+                    ],
+                ],
+            ],
+            'Controllers not array' => [
+                [
+                    'controllers' => ''
+                ],
+            ],
+            'Controllers missing' => [
+                [
+                ],
+            ],
+        ];
     }
 }

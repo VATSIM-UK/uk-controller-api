@@ -6,7 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\NetworkDataService;
+use App\Services\NetworkAircraftService;
 
 class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
 {
@@ -42,7 +42,7 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
         return StandAssignment::create(
             [
                 'callsign' => $callsign,

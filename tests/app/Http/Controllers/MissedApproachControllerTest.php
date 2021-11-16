@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\MissedApproach\MissedApproachNotification;
 use Carbon\Carbon;
+use util\Traits\WithNetworkController;
 
 class MissedApproachControllerTest extends BaseApiTestCase
 {
+    use WithNetworkController;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->withoutEvents();
+        $this->setNetworkController(self::ACTIVE_USER_CID);
     }
 
     public function testItCreatesAMissedApproach()
@@ -41,12 +45,22 @@ class MissedApproachControllerTest extends BaseApiTestCase
 
     public function testItWontAllowUnauthenticatedUsersToCreateAMissedApproach()
     {
-        MissedApproachNotification::create(
-            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
-        );
-
         $this->makeUnauthenticatedApiRequest(self::METHOD_POST, 'missed-approaches', ['callsign' => 'BAW123'])
             ->assertUnauthorized();
+    }
+
+    public function testItWontAllowUsersNotControllingToTrigger()
+    {
+        $this->setNetworkControllerUnrecognisedPosition(self::ACTIVE_USER_CID);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'missed-approaches', ['callsign' => 'BAW123'])
+            ->assertForbidden();
+    }
+
+    public function testItWontAllowUsersNotLoggedInToTrigger()
+    {
+        $this->logoutNetworkController(self::ACTIVE_USER_CID);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'missed-approaches', ['callsign' => 'BAW123'])
+            ->assertForbidden();
     }
 
     /**

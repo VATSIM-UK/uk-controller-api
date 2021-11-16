@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Helpers\Vatsim\ParsedControllerPosition;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\ControllerPositionAlternativeCallsign;
 
 class ControllerServiceTest extends BaseFunctionalTestCase
 {
@@ -154,5 +156,34 @@ class ControllerServiceTest extends BaseFunctionalTestCase
 
         $actual = $this->service->getControllerPositionsDependency()->toArray();
         $this->assertSame($expected, $actual);
+    }
+
+    public function testItReturnsParsedControllerPositions()
+    {
+        // Add an "alternative callsign for LON_C_CTR, which should show up
+        ControllerPositionAlternativeCallsign::create(['controller_position_id' => 4, 'callsign' => 'LCC_CTR']);
+
+        // Add a bogus callsign to test
+        ControllerPosition::create(['callsign' => 'FOO', 'frequency' => 199.998]);
+
+        $expected = collect([]);
+        $expected->put(
+            1,
+            collect([new ParsedControllerPosition('EGLL', 'TWR', 118.5)])
+        );
+        $expected->put(
+            2,
+            collect([new ParsedControllerPosition('EGLL', 'APP', 119.72)])
+        );
+        $expected->put(
+            3,
+            collect([new ParsedControllerPosition('LON', 'CTR', 129.42)])
+        );
+        $expected->put(
+            4,
+            collect([new ParsedControllerPosition('LON', 'CTR', 127.1), new ParsedControllerPosition('LCC', 'CTR', 127.1)])
+        );
+
+        $this->assertEquals($expected, $this->service->getParsedControllerPositionsWithAlternatives());
     }
 }
