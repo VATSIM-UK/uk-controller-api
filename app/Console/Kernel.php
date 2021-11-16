@@ -16,6 +16,7 @@ use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
 use App\Console\Commands\UpdateMetars;
 use App\Console\Commands\UpdateSrd;
+use App\Console\Commands\UpdateVatsimControllerData;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
@@ -44,6 +45,7 @@ class Kernel extends ConsoleKernel
         UserCreate::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
+        UpdateVatsimControllerData::class,
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
         CleanStandAssignmentsHistory::class,
@@ -78,6 +80,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('missed-approaches:clean-history')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('networkdata:update')->everyMinute()
+            ->graceTimeInMinutes(3)
+            ->withoutOverlapping(5);
+        $schedule->command('networkdata:update-controllers')->everyMinute()
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();

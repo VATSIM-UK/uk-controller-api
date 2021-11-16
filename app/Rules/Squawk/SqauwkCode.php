@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Rules\Airfield;
+namespace App\Rules\Squawk;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class AirfieldIcao implements Rule
+class SqauwkCode implements Rule
 {
-    const AIRFIELD_REGEX = '/^[0-9A-Z]{4}$/';
+    const SQUAWK_REGEX = '/^[0-7]{4}$/';
     const REGEX_MATCHED = 1;
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return bool
      */
     public function passes($attribute, $value)
     {
-        return is_string($value) && preg_match(self::AIRFIELD_REGEX, $value) === self::REGEX_MATCHED;
+        return is_string($value) && preg_match(self::SQUAWK_REGEX, $value) === self::REGEX_MATCHED;
     }
 
     /**
@@ -28,6 +28,6 @@ class AirfieldIcao implements Rule
      */
     public function message()
     {
-        return 'Invalid airfield';
+        return 'Invalid squawk code';
     }
 }
