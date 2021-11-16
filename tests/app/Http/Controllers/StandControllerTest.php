@@ -6,7 +6,7 @@ use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
-use App\Services\NetworkDataService;
+use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -243,7 +243,7 @@ class StandControllerTest extends BaseApiTestCase
 
     private function addStandAssignment(string $callsign, int $standId)
     {
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
         StandAssignment::create(
             [
                 'callsign' => $callsign,

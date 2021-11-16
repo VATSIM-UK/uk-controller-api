@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class VatsimCallsign implements Rule
 {
-    const CALLSIGN_REGEX = '^[A-Za-z0-9\-_]{1,10}$';
+    const CALLSIGN_REGEX = '^[A-Za-z0-9\-_]{1,20}$';
     const REGEX_MATCHED = 1;
     const DELIMITER = '/';
 
