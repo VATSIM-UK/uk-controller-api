@@ -49,7 +49,7 @@ class VatsimCallsignTest extends BaseUnitTestCase
 
     public function testItPassesUpperBoundary()
     {
-        $this->assertTrue($this->rule->passes(null, '0123456789'));
+        $this->assertTrue($this->rule->passes(null, '01234567890123456789'));
     }
 
     public function testItFailsOnEmpty()
@@ -64,7 +64,7 @@ class VatsimCallsignTest extends BaseUnitTestCase
 
     public function testItFailsOnTooLong()
     {
-        $this->assertFalse($this->rule->passes(null, '12345678910'));
+        $this->assertFalse($this->rule->passes(null, '123456789101234567890'));
     }
 
     public function testItFailsOnBadCharacter()

@@ -290,7 +290,7 @@ class SquawkControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(
             self::METHOD_DELETE,
-            'squawk-assignment/01234567890'
+            'squawk-assignment/0123456789012345678901'
         )->assertStatus(404);
     }
 

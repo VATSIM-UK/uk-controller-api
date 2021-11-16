@@ -1,5 +1,33 @@
 # UK Controller Plugin API Changelog
 
+## [4.11.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.10.0...4.11.0) (2021-11-16)
+
+
+### Features
+
+* **dependency:** Automatic updates of dependencies ([#696](https://github.com/VATSIM-UK/uk-controller-api/issues/696)) ([01fcd67](https://github.com/VATSIM-UK/uk-controller-api/commit/01fcd67086c4c1c96393e694bcf3729ac70df1d4))
+
+## [4.10.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.4...4.10.0) (2021-11-16)
+
+
+### Features
+
+* **controllers:** Track who's controlling on the network ([#693](https://github.com/VATSIM-UK/uk-controller-api/issues/693)) ([2a4a879](https://github.com/VATSIM-UK/uk-controller-api/commit/2a4a8790e21604fceb8163cf09b95bb0a68b073d))
+
+### [4.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.3...4.9.4) (2021-11-13)
+
+
+### Bug Fixes
+
+* **callsigns:** Increase length of VATSIM callsigns to new network limit ([#707](https://github.com/VATSIM-UK/uk-controller-api/issues/707)) ([c8cd474](https://github.com/VATSIM-UK/uk-controller-api/commit/c8cd474544215d6dce0475691bb273add54b49ae))
+
+### [4.9.3](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.2...4.9.3) (2021-11-07)
+
+
+### Data Updates
+
+* **military:** leeming and culdrose squawk ranges ([#701](https://github.com/VATSIM-UK/uk-controller-api/issues/701)) ([84e2410](https://github.com/VATSIM-UK/uk-controller-api/commit/84e2410ef914bd2e4394deafded29ba3c1a98097))
+
 ### [4.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.1...4.9.2) (2021-10-14)
 
 

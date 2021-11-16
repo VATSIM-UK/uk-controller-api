@@ -26,6 +26,7 @@ class OptimiseTables extends Command
         'departure_release_requests',
         'prenote_messages',
         'missed_approach_notifications',
+        'network_controller_positions',
     ];
 
     protected $signature = 'tables:optimise';

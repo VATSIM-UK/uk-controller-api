@@ -17,7 +17,7 @@ class AddMissingStands extends Migration
      */
     public function up()
     {
-        $stands = fopen(self:: MISSING_STANDS_FILE, 'r');
+        $stands = fopen(self::MISSING_STANDS_FILE, 'r');
         while ($line = fgetcsv($stands)) {
             Stand::create(
                 [
