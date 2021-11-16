@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.11.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.0...4.11.1) (2021-11-16)
+
+
+### Bug Fixes
+
+* **database:** prune failed jobs daily ([#709](https://github.com/VATSIM-UK/uk-controller-api/issues/709)) ([b958c95](https://github.com/VATSIM-UK/uk-controller-api/commit/b958c95d3002736b9375aaa9417f79afefbe14d4))
+
 ## [4.11.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.10.0...4.11.0) (2021-11-16)
 
 
