@@ -2,14 +2,18 @@
 
 namespace App\Services;
 
+use App\Models\Database\DatabaseTable;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use InvalidArgumentException;
 use LogicException;
 
@@ -79,6 +83,13 @@ class DependencyService
     {
         $dependency->touch();
         self::removeDependencyFromCache($dependency);
+        Log::info(
+            sprintf(
+                'Dependency %s has been updated to a new version %s',
+                $dependency->key,
+                $dependency->updated_at->toDateTimeString()
+            )
+        );
     }
 
     public static function touchUserDependency(Dependency $dependency): void
@@ -101,5 +112,57 @@ class DependencyService
             ->where('key', $key)
             ->delete();
         Cache::forget($key);
+    }
+
+    public static function createDependency(
+        string $key,
+        string $action,
+        bool $perUser,
+        string $filename,
+        array $concernedTables
+    ): void {
+        DB::transaction(function () use ($key, $action, $perUser, $filename, $concernedTables) {
+            Dependency::create(
+                [
+                    'key' => $key,
+                    'action' => $action,
+                    'local_file' => $filename,
+                    'per_user' => $perUser,
+                ]
+            );
+
+            self::setConcernedTablesForDependency($key, $concernedTables);
+        });
+    }
+
+    public static function setConcernedTablesForDependency(string $dependencyKey, array $concernedTables): void
+    {
+        foreach ($concernedTables as $concernedTable) {
+            if (!Schema::hasTable($concernedTable)) {
+                throw new InvalidArgumentException(
+                    sprintf('Database table %s does not exist for dependency', $concernedTable)
+                );
+            }
+        }
+
+        $allTables = DatabaseTable::all();
+        Dependency::where('key', $dependencyKey)->firstOrFail()->databaseTables()->sync(
+            $allTables->filter(function (DatabaseTable $table) use ($concernedTables) {
+                return array_search($table->name, $concernedTables) !== false;
+            })
+                ->pluck('id')
+        );
+    }
+
+    /**
+     * Use recently updated database tables to check for dependency updates.
+     */
+    public function updateDependenciesFromDatabaseTables(Collection $updatedTables): void
+    {
+        Dependency::whereHas('databaseTables', function (Builder $query) use ($updatedTables) {
+            $query->whereIn('database_tables.id', $updatedTables->pluck('id'));
+        })->get()->each(function (Dependency $dependency) {
+            self::touchGlobalDependency($dependency);
+        });
     }
 }

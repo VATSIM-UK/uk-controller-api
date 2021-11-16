@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Database\DatabaseTable;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
@@ -15,6 +17,14 @@ class DependencyServiceTest extends BaseFunctionalTestCase
 {
     private const GLOBAL_DEPENDENCY = 'DEPENDENCY_ONE';
     private const USER_DEPENDENCY = 'USER_DEPENDENCY_ONE';
+
+    private DependencyService $service;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->service = $this->app->make(DependencyService::class);
+    }
 
     /**
      * This method has been defined so that it can be called in place of a controller
@@ -164,6 +174,111 @@ class DependencyServiceTest extends BaseFunctionalTestCase
             [
                 'key' => self::GLOBAL_DEPENDENCY,
             ]
+        );
+    }
+
+    public function testItCreatesADependency()
+    {
+        DependencyService::createDependency(
+            'NEW_DEPENDENCY_TEST',
+            'foo@bar',
+            true,
+            'new-dependency.json',
+            ['stands', 'controller_positions']
+        );
+
+        $dependency = Dependency::where('key', 'NEW_DEPENDENCY_TEST')->firstOrFail();
+        $this->assertEquals('foo@bar', $dependency->action);
+        $this->assertEquals('new-dependency.json', $dependency->local_file);
+        $this->assertTrue($dependency->per_user);
+        $this->assertEquals(
+            [
+                DatabaseTable::where('name', 'stands')->first()->id,
+                DatabaseTable::where('name', 'controller_positions')->first()->id
+            ],
+            $dependency->databaseTables->pluck('id')->toArray()
+        );
+    }
+
+    public function testItThrowsExceptionIfConcernedTablesIfTableDoNotExist()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Database table foo does not exist for dependency');
+        DependencyService::setConcernedTablesForDependency(
+            'DEPENDENCY_ONE',
+            ['stands', 'foo']
+        );
+    }
+
+    public function testItThrowsExceptionIfModelNotFoundForConcernedTables()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        DependencyService::setConcernedTablesForDependency(
+            'DEPENDENCY_NAH',
+            ['stands', 'controller_positions']
+        );
+    }
+
+    public function testItUpdatesConcernedTables()
+    {
+        Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables()->sync([1]);
+        DependencyService::setConcernedTablesForDependency(
+            'DEPENDENCY_ONE',
+            ['stands', 'controller_positions']
+        );
+
+        $this->assertEquals(
+            [
+                DatabaseTable::where('name', 'stands')->first()->id,
+                DatabaseTable::where('name', 'controller_positions')->first()->id
+            ],
+            Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables->pluck('id')->toArray()
+        );
+    }
+
+    public function testItUpdatesDependencyDateBasedOnDatabaseTables()
+    {
+        Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables()->sync(
+            [
+                DatabaseTable::where('name', 'stands')->first()->id,
+                DatabaseTable::where('name', 'controller_positions')->first()->id
+            ]
+        );
+
+        Dependency::where('key', 'DEPENDENCY_TWO')->first()->databaseTables()->sync(
+            [
+                DatabaseTable::where('name', 'airfield')->first()->id,
+            ]
+        );
+
+        Dependency::where('key', 'DEPENDENCY_THREE')->first()->databaseTables()->sync(
+            [
+                DatabaseTable::where('name', 'navaids')->first()->id,
+            ]
+        );
+
+        $this->service->updateDependenciesFromDatabaseTables(
+            collect(
+                [
+                    DatabaseTable::where('name', 'stands')->first(),
+                    DatabaseTable::where('name', 'navaids')->first(),
+                ]
+            )
+        );
+
+        $this->assertGreaterThan(
+            Carbon::parse('2020-04-02 21:00:00'),
+            Dependency::where('key', 'DEPENDENCY_ONE')->first()->updated_at
+        );
+
+        $this->assertEquals(
+            Carbon::parse('2020-04-03 21:00:00'),
+            Dependency::where('key', 'DEPENDENCY_TWO')->first()->updated_at
+        );
+
+        $this->assertGreaterThan(
+            Carbon::now()->subMinute(),
+            Dependency::where('key', 'DEPENDENCY_THREE')->first()->updated_at
         );
     }
 }

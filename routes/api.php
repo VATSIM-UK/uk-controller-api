@@ -179,19 +179,11 @@ Route::middleware('api')->group(
         // Routes for dependency administration
         Route::middleware('admin.dependency')->group(
             function () {
-                // Initial altitudes and sids
-                Route::middleware(
-                    'dependency.update:DEPENDENCY_PRENOTE,DEPENDENCY_INITIAL_ALTITUDES,DEPENDENCY_SID_HANDOFF'
-                )
-                    ->group(
-                        function () {
-                            Route::delete('sid/{id}', 'SidController@deleteSid')
-                                ->where('sid', 'd+');
-                            Route::put('sid', 'SidController@createSid');
-                            Route::put('sid/{id}', 'SidController@updateSid')
-                                ->where('sid', 'd+');
-                        }
-                    );
+                Route::delete('sid/{id}', 'SidController@deleteSid')
+                    ->where('sid', 'd+');
+                Route::put('sid', 'SidController@createSid');
+                Route::put('sid/{id}', 'SidController@updateSid')
+                    ->where('sid', 'd+');
             }
         );
 

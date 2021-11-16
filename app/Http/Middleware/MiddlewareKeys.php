@@ -8,7 +8,6 @@ class MiddlewareKeys
     const ADMIN_WEB = 'auth.web_admin';
     const GITHUB_AUTH = 'auth.github';
     const ADMIN_LOG = 'admin.log';
-    const UPDATE_DEPENDENCY = 'dependency.update';
     const GUEST = 'guest';
     const USER_BANNED = 'user.banned';
     const USER_DISABLED = 'user.disabled';
