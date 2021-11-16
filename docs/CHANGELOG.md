@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [4.10.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.4...4.10.0) (2021-11-16)
+
+
+### Features
+
+* **controllers:** Track who's controlling on the network ([#693](https://github.com/VATSIM-UK/uk-controller-api/issues/693)) ([2a4a879](https://github.com/VATSIM-UK/uk-controller-api/commit/2a4a8790e21604fceb8163cf09b95bb0a68b073d))
+
 ### [4.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/4.9.3...4.9.4) (2021-11-13)
 
 
