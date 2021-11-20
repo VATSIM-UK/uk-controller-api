@@ -106,7 +106,7 @@ class NetworkAircraft extends Model
             'aircraft_stand',
             'callsign',
             'stand_id'
-        )->withPivot('latitude', 'longitude', 'updated_at');
+        )->withPivot('aircraft_stand.id', 'latitude', 'longitude', 'updated_at');
     }
 
     public function assignedStand(): HasOne
