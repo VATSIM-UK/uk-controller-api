@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class ControllerPosition extends Model implements ControllerPositionInterface
 {
@@ -80,5 +81,15 @@ class ControllerPosition extends Model implements ControllerPositionInterface
     public function getFrequency(): float
     {
         return $this->frequency;
+    }
+
+    public function isApproach(): bool
+    {
+        return Str::contains($this->callsign, '_APP');
+    }
+
+    public function isEnroute(): bool
+    {
+        return Str::contains($this->callsign, '_CTR');
     }
 }

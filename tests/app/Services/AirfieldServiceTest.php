@@ -528,4 +528,14 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
 
         $this->assertEquals($expected, $this->service->getAirfieldsDependency());
     }
+
+    public function testItReturnsThatAControllerIsInTopDownOrder()
+    {
+        $this->assertTrue($this->service::controllerIsInTopDownOrder(ControllerPosition::find(3), 'EGLL'));
+    }
+
+    public function testItReturnsThatAControllerIsNotInTopDownOrder()
+    {
+        $this->assertFalse($this->service::controllerIsInTopDownOrder(ControllerPosition::find(4), 'EGLL'));
+    }
 }
