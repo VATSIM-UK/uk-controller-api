@@ -56,10 +56,6 @@ class AddDependencyConcernedTables extends Migration
             'controller_positions',
             'top_downs',
         ],
-        'DEPENDENCY_DEPARTURE_WAKE_UK' => [
-            'controller_positions',
-            'top_downs',
-        ],
     ];
 
     /**
