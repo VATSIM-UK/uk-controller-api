@@ -7,6 +7,7 @@ use App\Events\Database\DatabaseTablesUpdated;
 use App\Models\Database\DatabaseTable;
 use App\Models\Stand\Stand;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
 class DatabaseServiceTest extends BaseFunctionalTestCase
@@ -20,6 +21,8 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now()->startOfSecond());
         $this->service = $this->app->make(DatabaseService::class);
         DatabaseTable::whereNotIn('name', ['stands', 'controller_positions'])->delete();
+        DB::statement('SET @@information_schema_stats_expiry = ' . 100);
+        DB::connection('mysql_analyze')->statement('ANALYZE TABLE stands, controller_positions');
     }
 
     public static function tearDownAfterClass(): void
@@ -86,5 +89,18 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         $this->service->updateTableStatus();
         $table->refresh();
         $this->assertEquals(Carbon::now()->addMinutes(5), $table->updated_at);
+    }
+
+    public function testItRunsInTransactions()
+    {
+        $table = DatabaseTable::where('name', 'stands')->firstOrFail();
+        $table->updated_at = null;
+        $table->save();
+
+        DB::transaction(function () {
+            $this->service->updateTableStatus();
+        });
+        $table->refresh();
+        $this->assertNotNull($table->updated_at);
     }
 }

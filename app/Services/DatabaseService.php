@@ -19,7 +19,6 @@ class DatabaseService
         DB::transaction(function () {
             $cachedTableStatistics = $this->getCachedTableStatistics();
             $liveTableStatistics = $this->getLiveTableStatistics($cachedTableStatistics->pluck('name'));
-
             $updatedTables = $this->getUpdatedTables($cachedTableStatistics, $liveTableStatistics);
             if ($updatedTables->isEmpty()) {
                 return;
@@ -55,8 +54,8 @@ class DatabaseService
      */
     public function getLiveTableStatistics(Collection $tables): Collection
     {
-        DB::statement('ANALYZE TABLE ' . $tables->implode(','));
-        return DB::table('information_schema.TABLES')
+        DB::connection('mysql_analyze')->statement('ANALYZE TABLE ' . $tables->implode(','));
+        return DB::connection('information_schema')->table('TABLES')
             ->where('TABLE_SCHEMA', DB::connection()->getDatabaseName())
             ->whereIn('TABLE_NAME', $tables->toArray())
             ->get()
