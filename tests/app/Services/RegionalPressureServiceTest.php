@@ -92,6 +92,41 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItHandlesPressuresOfZero()
+    {
+        $metars = collect(
+            [
+                new Metar(['airfield_id' => 1, 'parsed' => ['qnh' => 1015]]),
+                new Metar(['airfield_id' => 2, 'parsed' => ['qnh' => 0]]),
+                new Metar(['airfield_id' => 3, 'parsed' => ['qnh' => 1013]]),
+            ]
+        );
+        $this->service->updateRegionalPressuresFromMetars($metars);
+
+        $this->assertDatabaseCount('regional_pressure_settings', 2);
+        $this->assertDatabaseHas(
+            'regional_pressure_settings',
+            [
+                'altimeter_setting_region_id' => 1,
+                'value' => 1012,
+            ],
+        );
+        $this->assertDatabaseHas(
+            'regional_pressure_settings',
+            [
+                'altimeter_setting_region_id' => 2,
+                'value' => 0,
+            ],
+        );
+
+        Event::assertDispatched(
+            RegionalPressuresUpdatedEvent::class,
+            function ($event) {
+                return $event->pressures === ['ASR_BOBBINGTON' => 1012, 'ASR_TOPPINGTON' => 0];
+            }
+        );
+    }
+
     public function testItHandlesNoRelevantMetars()
     {
         $metars = collect(
