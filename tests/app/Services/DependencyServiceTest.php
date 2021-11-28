@@ -247,7 +247,8 @@ class DependencyServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(
             [
                 DatabaseTable::where('name', 'stands')->first()->id,
-                DatabaseTable::where('name', 'controller_positions')->first()->id
+                DatabaseTable::where('name', 'controller_positions')->first()->id,
+                DatabaseTable::where('name', 'altimeter_setting_regions')->first()->id,
             ],
             Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables->pluck('id')->toArray()
         );
