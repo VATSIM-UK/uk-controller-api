@@ -99,7 +99,7 @@ class NetworkMetadataServiceTest extends BaseFunctionalTestCase
     /**
      * @dataProvider badMetadataProvider
      */
-    public function testItHandlesBadMetadataResponse(array $metadata)
+    public function testItHandlesBadMetadataResponse($metadata)
     {
         $this->fakeMetadataRequest(
             $metadata
@@ -166,10 +166,13 @@ class NetworkMetadataServiceTest extends BaseFunctionalTestCase
                     456,
                 ],
             ],
+            'JSON is invalid' => [
+                null,
+            ],
         ];
     }
 
-    private function fakeMetadataRequest(array $data, int $responseCode = 200)
+    private function fakeMetadataRequest($data, int $responseCode = 200)
     {
         Http::fake(
             [
