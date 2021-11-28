@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class AddMissingDatabaseDependencyTables extends Migration
 {
-
     const DEPENDENCIES = [
         'DEPENDENCY_HANDOFFS_V2' => [
             'handoffs',
