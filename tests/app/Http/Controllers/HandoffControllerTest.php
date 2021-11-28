@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Services\HandoffService;
 
 class HandoffControllerTest extends BaseApiTestCase
 {
@@ -21,5 +22,11 @@ class HandoffControllerTest extends BaseApiTestCase
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'handoff')
             ->assertJson($expected);
+    }
+
+    public function testItGetsHandoffV2Dependency()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'handoffs/dependency')
+            ->assertJson($this->app->make(HandoffService::class)->getHandoffsV2Dependency());
     }
 }

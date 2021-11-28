@@ -294,15 +294,20 @@ Route::middleware('api')->group(
                     'DepartureController@getDepartureSidIntervalGroupsDependency'
                 );
 
+                // Flight rules
+                Route::get('flight-rules/dependency', 'FlightRulesController@getFlightRulesDependency');
+
                 // Holds
                 Route::get('hold', 'HoldController@getAllHolds');
                 Route::get('hold/assigned', 'HoldController@getAssignedHolds');
 
                 // Handoffs
                 Route::get('handoff', 'HandoffController@getAllHandoffs');
+                Route::get('handoffs/dependency', 'HandoffController@getHandoffsV2Dependency');
 
                 // Prenotes
                 Route::get('prenote', 'PrenoteController@getAllPrenotes');
+                Route::get('prenotes/dependency', 'PrenoteController@getPrenotesV2Dependency');
 
                 // Regional Pressure
                 Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');

@@ -55,6 +55,7 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
 
     public function testItFormatsAirfieldPairingPrenotes()
     {
+        Airfield::find(1)->prenotePairings()->updateExistingPivot(2, ['flight_rule_id' => null]);
         $this->assertEquals([$this->getExpectedPairing(false)], $this->service->getAllAirfieldPrenotes());
     }
 
@@ -370,5 +371,31 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
                 'destination_airfield_id' => 2,
             ]
         );
+    }
+
+    public function testItReturnsPrenotesV2Dependency()
+    {
+        $expected = [
+            [
+                'id' => 1,
+                'key' => 'PRENOTE_ONE',
+                'description' => 'Prenote One',
+                'controller_positions' => [
+                    1,
+                    2,
+                ]
+            ],
+            [
+                'id' => 2,
+                'key' => 'PRENOTE_TWO',
+                'description' => 'Prenote Two',
+                'controller_positions' => [
+                    2,
+                    3,
+                ]
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getPrenotesV2Dependency());
     }
 }

@@ -3,8 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
-use App\Models\Controller\Handoff;
-use DB;
+use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
 class HandoffServiceTest extends BaseFunctionalTestCase
@@ -37,6 +36,7 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $this->assertSame($expected, $actual);
     }
 
+
     public function testItMapsSidsToHandoffs()
     {
         $expected = [
@@ -51,6 +51,38 @@ class HandoffServiceTest extends BaseFunctionalTestCase
 
         $actual = $this->service->mapSidsToHandoffs();
         $this->assertSame($expected, $actual);
+    }
+
+    public function testItReturnsHandoffV2Dependency()
+    {
+        DB::table('handoff_orders')->insert(
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 0,
+            ]
+        );
+        $expected = [
+            [
+                'id' => 1,
+                'key' => 'HANDOFF_ORDER_1',
+                'controller_positions' => [
+                    4,
+                    1,
+                    2,
+                ],
+            ],
+            [
+                'id' => 2,
+                'key' => 'HANDOFF_ORDER_2',
+                'controller_positions' => [
+                    2,
+                    3,
+                ],
+            ],
+        ];
+
+        $this->assertSame($expected, $this->service->getHandoffsV2Dependency());
     }
 
     public function testItSetsControllerPositionsForHandoffOrder()
