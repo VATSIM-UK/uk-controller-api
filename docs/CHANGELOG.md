@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [4.12.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.3...4.12.0) (2021-11-28)
+
+
+### Features
+
+* **dependency:** Consolidate dependencies ([#697](https://github.com/VATSIM-UK/uk-controller-api/issues/697)) ([8682627](https://github.com/VATSIM-UK/uk-controller-api/commit/8682627d5b33079fe533695211074258fcfa389d))
+
 ### [4.11.3](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.2...4.11.3) (2021-11-28)
 
 
