@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.12.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.0...4.12.1) (2021-11-28)
+
+
+### Bug Fixes
+
+* **dependencies:** Automatically add missing dependency tables ([#724](https://github.com/VATSIM-UK/uk-controller-api/issues/724)) ([dab8a17](https://github.com/VATSIM-UK/uk-controller-api/commit/dab8a174d3a0f334a0e04f7203759fefef7da16a))
+
 ## [4.12.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.3...4.12.0) (2021-11-28)
 
 
