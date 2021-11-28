@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+### [4.11.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.1...4.11.2) (2021-11-28)
+
+
+### Bug Fixes
+
+* **database:** allow dependency updates to run in transaction ([#717](https://github.com/VATSIM-UK/uk-controller-api/issues/717)) ([d11debe](https://github.com/VATSIM-UK/uk-controller-api/commit/d11debebb1f2f506d853e632b0c39229e41ee339)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716)
+* **network:** invalid json from network metadata ([#715](https://github.com/VATSIM-UK/uk-controller-api/issues/715)) ([534612a](https://github.com/VATSIM-UK/uk-controller-api/commit/534612afc33c152c20c473759f07aca076c4eadd))
+* **regionalpressures:** default negative regional pressures to zero ([#718](https://github.com/VATSIM-UK/uk-controller-api/issues/718)) ([c05a9c6](https://github.com/VATSIM-UK/uk-controller-api/commit/c05a9c69492f04b3c26b39b436a95415414bcb66)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716) [#712](https://github.com/VATSIM-UK/uk-controller-api/issues/712)
+
 ### [4.11.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.0...4.11.1) (2021-11-16)
 
 
