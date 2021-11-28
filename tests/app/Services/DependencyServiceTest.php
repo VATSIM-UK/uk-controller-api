@@ -236,6 +236,25 @@ class DependencyServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItAddsMissingTablesWhereRequired()
+    {
+        Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables()->sync([1]);
+        DependencyService::setConcernedTablesForDependency(
+            'DEPENDENCY_ONE',
+            ['stands', 'controller_positions', 'altimeter_setting_region']
+        );
+
+        $this->assertEquals(
+            [
+                DatabaseTable::where('name', 'stands')->first()->id,
+                DatabaseTable::where('name', 'controller_positions')->first()->id,
+                DatabaseTable::where('name', 'altimeter_setting_region')->first()->id,
+            ],
+            Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables->pluck('id')->toArray()
+        );
+        $this->assertTrue(DatabaseTable::where('name', 'altimeter_setting_region')->exists());
+    }
+
     public function testItUpdatesDependencyDateBasedOnDatabaseTables()
     {
         Dependency::where('key', 'DEPENDENCY_ONE')->first()->databaseTables()->sync(

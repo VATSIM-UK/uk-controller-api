@@ -143,6 +143,15 @@ class DependencyService
                     sprintf('Database table %s does not exist for dependency', $concernedTable)
                 );
             }
+
+            // Add to the tables list, if it's not there
+            if (!DatabaseTable::where('name', $concernedTable)->exists()) {
+                DatabaseTable::create(
+                    [
+                        'name' => $concernedTable,
+                    ]
+                );
+            }
         }
 
         $allTables = DatabaseTable::all();
