@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.11.3](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.2...4.11.3) (2021-11-28)
+
+
+### Bug Fixes
+
+* **dependencies:** Remove part of migration that is blocking on live ([#723](https://github.com/VATSIM-UK/uk-controller-api/issues/723)) ([84f57c8](https://github.com/VATSIM-UK/uk-controller-api/commit/84f57c892132ceee2e4fa7e64e4c532c735854ee))
+
 ### [4.11.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.1...4.11.2) (2021-11-28)
 
 
