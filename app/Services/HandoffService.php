@@ -7,17 +7,35 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Sid;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
 class HandoffService
 {
+    /**
+     * @deprecated
+     */
     public function getAllHandoffsWithControllers(): array
     {
         return Handoff::all()->mapWithKeys(function (Handoff $handoff) {
             return [
                 $handoff->key => $handoff->controllers()->orderBy('order', 'asc')->pluck('callsign')->toArray(),
+            ];
+        })->toArray();
+    }
+
+    public function getHandoffsV2Dependency(): array
+    {
+        return Handoff::with(['controllers' => function (BelongsToMany $query) {
+            $query->orderBy('order');
+        }])->get()->map(function (Handoff $handoff) {
+            return [
+                'id' => $handoff->id,
+                'key' => $handoff->key,
+                'controller_positions' => $handoff->controllers->pluck('id')->toArray(),
             ];
         })->toArray();
     }

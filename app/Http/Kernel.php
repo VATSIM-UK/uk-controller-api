@@ -3,11 +3,11 @@
 namespace App\Http;
 
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\ControllingOnLiveNetwork;
 use App\Http\Middleware\GithubAuth;
 use App\Http\Middleware\LogAdminAction;
 use App\Http\Middleware\MiddlewareKeys;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\UpdateDependency;
 use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
 use App\Http\Middleware\UserLastLogin;
@@ -27,13 +27,13 @@ class Kernel extends HttpKernel
         MiddlewareKeys::GITHUB_AUTH => GithubAuth::class,
         MiddlewareKeys::GUEST => RedirectIfAuthenticated::class,
         MiddlewareKeys::ADMIN_LOG => LogAdminAction::class,
-        MiddlewareKeys::UPDATE_DEPENDENCY => UpdateDependency::class,
         MiddlewareKeys::USER_BANNED => UserIsBanned::class,
         MiddlewareKeys::USER_DISABLED => UserIsDisabled::class,
         MiddlewareKeys::USER_LASTLOGIN => UserLastLogin::class,
         MiddlewareKeys::SCOPES => CheckScopes::class,
         MiddlewareKeys::SCOPE => CheckForAnyScope::class,
         MiddlewareKeys::VATSIM_CID => VatsimCid::class,
+        MiddlewareKeys::CONTROLLING_LIVE => ControllingOnLiveNetwork::class,
     ];
 
     protected $middlewareGroups = [

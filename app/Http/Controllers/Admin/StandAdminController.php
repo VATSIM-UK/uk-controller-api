@@ -150,6 +150,42 @@ class StandAdminController extends BaseController
     }
 
     /**
+     * Close a stand which is contained within a given airfield.
+     *
+     * @param Airfield $airfield
+     * @param Stand $stand
+     * @return JsonResponse
+     */
+    public function closeStand(Airfield $airfield, Stand $stand) : JsonResponse
+    {
+        if ($stand->airfield_id != $airfield->id) {
+            return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
+        }
+
+        $stand->close();
+
+        return response()->json([], 204);
+    }
+
+    /**
+     * Open a stand which is contained within a given airfield.
+     *
+     * @param Airfield $airfield
+     * @param Stand $stand
+     * @return JsonResponse
+     */
+    public function openStand(Airfield $airfield, Stand $stand) : JsonResponse
+    {
+        if ($stand->airfield_id != $airfield->id) {
+            return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
+        }
+
+        $stand->open();
+
+        return response()->json([], 204);
+    }
+
+    /**
      * Get a list of terminals for an Airfield if configured.
      *
      * @param Airfield $airfield

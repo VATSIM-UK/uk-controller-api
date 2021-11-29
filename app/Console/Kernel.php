@@ -3,7 +3,9 @@
 namespace App\Console;
 
 use App\Console\Commands\AllocateStandForArrival;
+use App\Console\Commands\CheckForKeyTableUpdates;
 use App\Console\Commands\CleanDepartureReleaseRequestHistory;
+use App\Console\Commands\CleanMissedApproachNotifications;
 use App\Console\Commands\CleanPluginEvents;
 use App\Console\Commands\CleanPrenoteMessageHistory;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
@@ -15,6 +17,7 @@ use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
 use App\Console\Commands\UpdateMetars;
 use App\Console\Commands\UpdateSrd;
+use App\Console\Commands\UpdateVatsimControllerData;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
@@ -43,6 +46,7 @@ class Kernel extends ConsoleKernel
         UserCreate::class,
         SrdImport::class,
         UpdateVatsimNetworkData::class,
+        UpdateVatsimControllerData::class,
         ClearAssignedHoldsHistory::class,
         OptimiseTables::class,
         CleanStandAssignmentsHistory::class,
@@ -56,6 +60,8 @@ class Kernel extends ConsoleKernel
         CleanPluginEvents::class,
         CleanDepartureReleaseRequestHistory::class,
         CleanPrenoteMessageHistory::class,
+        CleanMissedApproachNotifications::class,
+        CheckForKeyTableUpdates::class,
     ];
 
     /**
@@ -73,8 +79,13 @@ class Kernel extends ConsoleKernel
         $schedule->command('holds:clean-history')->daily();
         $schedule->command('departure-releases:clean-history')->daily();
         $schedule->command('prenote-messages:clean-history')->daily();
+        $schedule->command('missed-approaches:clean-history')->daily();
+        $schedule->command('queue:prune-failed --hours=168')->daily();
         $schedule->command('tables:optimise')->daily();
         $schedule->command('networkdata:update')->everyMinute()
+            ->graceTimeInMinutes(3)
+            ->withoutOverlapping(5);
+        $schedule->command('networkdata:update-controllers')->everyMinute()
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
@@ -87,5 +98,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('plugin-events:clean')->everyTenMinutes();
         $schedule->command('metars:update')->everyFiveMinutes();
+        $schedule->command('database:check-table-updates')->everyMinute();
     }
 }

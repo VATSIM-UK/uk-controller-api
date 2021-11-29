@@ -8,7 +8,6 @@ class MiddlewareKeys
     const ADMIN_WEB = 'auth.web_admin';
     const GITHUB_AUTH = 'auth.github';
     const ADMIN_LOG = 'admin.log';
-    const UPDATE_DEPENDENCY = 'dependency.update';
     const GUEST = 'guest';
     const USER_BANNED = 'user.banned';
     const USER_DISABLED = 'user.disabled';
@@ -16,6 +15,7 @@ class MiddlewareKeys
     const SCOPES = 'scopes';
     const SCOPE = 'scope';
     const VATSIM_CID = 'vatsim.cid';
+    const CONTROLLING_LIVE = 'network.controlling';
 
     private function __construct()
     {

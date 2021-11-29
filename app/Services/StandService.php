@@ -129,6 +129,7 @@ class StandService
         )
             ->airfield($airfield)
             ->get();
+
         $stands->sortBy('identifier', SORT_NATURAL);
 
         $standStatuses = [];
@@ -155,7 +156,10 @@ class StandService
             'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code: null,
             'max_aircraft_type' => $stand->maxAircraft ? $stand->maxAircraft->code : null,
         ];
-        if ($stand->occupier->first()) {
+
+        if ($stand->isClosed()) {
+            $standData['status'] = 'closed';
+        } elseif ($stand->occupier->first()) {
             $standData['status'] = 'occupied';
             $standData['callsign'] = $stand->occupier->first()->callsign;
         } elseif ($stand->assignment) {
@@ -198,7 +202,7 @@ class StandService
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
         $currentAssignment = StandAssignment::where('stand_id', $standId)->first();
 
         if ($currentAssignment && $currentAssignment->callsign !== $callsign) {
@@ -223,8 +227,9 @@ class StandService
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
         $currentAssignment = StandAssignment::with('aircraft', 'stand.pairedStands.assignment')
+            ->whereHas('aircraft')
             ->where('stand_id', $standId)
             ->first();
 

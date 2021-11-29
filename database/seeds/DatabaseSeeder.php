@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -49,6 +50,7 @@ class DatabaseSeeder extends Seeder
         DependencyTableSeeder::class => [
             'dependency_user',
             'dependencies',
+            'database_table_dependency',
         ],
         AircraftTableSeeder::class => [
             'aircraft',
@@ -120,7 +122,16 @@ class DatabaseSeeder extends Seeder
         ],
         DepartureReleaseTableSeeder::class => [
             'departure_release_requests',
-        ]
+        ],
+        DatabaseTableSeeder::class => [
+            'database_tables',
+        ],
+    ];
+
+    const OTHER_TABLES_TO_TRUNCATE = [
+        'missed_approach_notifications',
+        'network_controller_positions',
+        'controller_position_alternative_callsigns',
     ];
 
 
@@ -131,15 +142,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Truncate all tables
         DB::statement("SET foreign_key_checks=0");
-        foreach (self::SEEDERS as $seeder => $tables) {
+        // Truncate all tables
+        foreach (self::SEEDERS as $tables) {
             foreach ($tables as $table) {
                 DB::table($table)->truncate();
             }
         }
 
-        // Seed
+        foreach (self::OTHER_TABLES_TO_TRUNCATE as $table) {
+            DB::table($table)->truncate();
+        }
+
+        // Seed tables
         foreach (self::SEEDERS as $seeder => $tables) {
             $this->call($seeder);
         }

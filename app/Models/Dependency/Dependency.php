@@ -2,6 +2,7 @@
 
 namespace App\Models\Dependency;
 
+use App\Models\Database\DatabaseTable;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -28,5 +29,10 @@ class Dependency extends Model
     public function user(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function databaseTables(): BelongsToMany
+    {
+        return $this->belongsToMany(DatabaseTable::class)->withTimestamps();
     }
 }

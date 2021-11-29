@@ -51,6 +51,8 @@ components:
           type: string
         updated_at:
           type: string
+        closed_at:
+          type: string
         airlines_count:
           type: integer
         'type':
@@ -389,6 +391,28 @@ paths:
           $ref: '#/components/responses/DuplicateStandIdentifier'
     delete:
       description: Delete stand
+      tags:
+        - "stands"
+      responses:
+        '204':
+          description: 'No content (successful operation)'
+        '404':
+          $ref: '#/components/responses/StandNotInAirfield'
+
+  /airfields/{icao}/stands/{stand_id}/close:
+    patch:
+      description: Close a given stand so that it will not be assigned be the arrival asigner
+      tags:
+        - "stands"
+      responses:
+        '204':
+          description: 'No content (successful operation)'
+        '404':
+          $ref: '#/components/responses/StandNotInAirfield'
+
+  /airfields/{icao}/stands/{stand_id}/open:
+    patch:
+      description: Open a given stand so that it will be considered by the arrival asigner
       tags:
         - "stands"
       responses:

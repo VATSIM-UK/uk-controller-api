@@ -10,7 +10,10 @@ use App\Jobs\Release\Departure\CancelOutstandingDepartureReleaseRequests;
 use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Jobs\Stand\TriggerUnassignmentOnDisconnect;
 use App\Models\FlightInformationRegion\FlightInformationRegion;
+use App\Services\NetworkAircraftService;
+use App\Services\NetworkDataDownloadService;
 use App\Services\NetworkDataService;
+use App\Services\NetworkMetadataService;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -22,8 +25,11 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function register()
     {
-        $this->app->singleton(NetworkDataService::class, function () {
-            return new NetworkDataService(
+        $this->app->singleton(NetworkDataDownloadService::class);
+        $this->app->singleton(NetworkMetadataService::class);
+        $this->app->singleton(NetworkAircraftService::class, function (Application $application) {
+            return new NetworkAircraftService(
+                $application->make(NetworkDataService::class),
                 FlightInformationRegion::with('proximityMeasuringPoints')
                     ->get()
                     ->pluck('proximityMeasuringPoints')
@@ -36,13 +42,13 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
             function (AircraftDisconnected $job, Application $application) {
                 $job->handle(
                     collect([
-                        $application->make(UnassignHoldOnDisconnect::class),
-                        $application->make(MarkAssignmentDeletedOnDisconnect::class),
-                        $application->make(TriggerUnassignmentOnDisconnect::class),
-                        $application->make(CancelOutstandingDepartureReleaseRequests::class),
-                        $application->make(CancelOutstandingPrenoteMessages::class),
-                        $application->make(DeleteNetworkAircraft::class),
-                    ])
+                                $application->make(UnassignHoldOnDisconnect::class),
+                                $application->make(MarkAssignmentDeletedOnDisconnect::class),
+                                $application->make(TriggerUnassignmentOnDisconnect::class),
+                                $application->make(CancelOutstandingDepartureReleaseRequests::class),
+                                $application->make(CancelOutstandingPrenoteMessages::class),
+                                $application->make(DeleteNetworkAircraft::class),
+                            ])
                 );
             }
         );
@@ -50,6 +56,6 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
 
     public function provides()
     {
-        return [NetworkDataService::class];
+        return [NetworkAircraftService::class];
     }
 }

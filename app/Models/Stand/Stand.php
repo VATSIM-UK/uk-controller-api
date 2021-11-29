@@ -35,6 +35,7 @@ class Stand extends Model
         'max_aircraft_id',
         'is_cargo',
         'assignment_priority',
+        'closed_at',
     ];
 
     protected $casts = [
@@ -42,6 +43,12 @@ class Stand extends Model
         'latitude' => 'double',
         'longitude' => 'double',
         'assignment_priority' => 'integer',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'closed_at',
     ];
 
     public function assignment(): HasOne
@@ -104,7 +111,7 @@ class Stand extends Model
 
     public function scopeAvailable(Builder $builder): Builder
     {
-        return $this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder)));
+        return $this->scopeNotClosed($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
     }
 
     public function scopeAirline(Builder $builder, Airline $airline): Builder
@@ -250,5 +257,27 @@ class Stand extends Model
     public function reservationsInNextHour(): HasMany
     {
         return $this->hasMany(StandReservation::class)->upcoming(Carbon::now()->addHour());
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closed_at !== null;
+    }
+
+    public function close(): Stand
+    {
+        $this->update(['closed_at' => Carbon::now()]);
+        return $this;
+    }
+
+    public function open(): Stand
+    {
+        $this->update(['closed_at' => null]);
+        return $this;
+    }
+
+    public function scopeNotClosed(Builder $query): Builder
+    {
+        return $query->whereNull('closed_at');
     }
 }

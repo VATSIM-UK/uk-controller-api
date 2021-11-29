@@ -89,7 +89,8 @@ class RegionalPressureService
      */
     private function calculateRegionalPressure(Collection $relevantMetars): int
     {
-        return $relevantMetars->pluck('qnh')->min() - 1;
+        $rps = $relevantMetars->pluck('qnh')->min() - 1;
+        return $rps < 0 ? 0 : $rps;
     }
 
     public function getRegionalPressureArray(): array

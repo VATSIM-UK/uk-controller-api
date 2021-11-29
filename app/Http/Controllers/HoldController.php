@@ -8,7 +8,7 @@ use App\Models\Hold\AssignedHold;
 use App\Models\Navigation\Navaid;
 use App\Rules\VatsimCallsign;
 use App\Services\HoldService;
-use App\Services\NetworkDataService;
+use App\Services\NetworkAircraftService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -71,7 +71,7 @@ class HoldController extends BaseController
         }
 
         $callsign = $request->json('callsign');
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
         $assignedHold = AssignedHold::updateOrCreate(
             ['callsign' => $callsign],
             [

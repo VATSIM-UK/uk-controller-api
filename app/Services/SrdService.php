@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Storage;
 
 class SrdService
 {
-    private const SRD_URL_FORMAT = 'https://nats-uk.ead-it.com/cms-nats/export/sites/default/en/Publications/' .
-        'digital-datasets/srd/FAB-UK-and-Ireland-SRD-%s_EXCEL-and-NOTES.xls';
+    private const SRD_URL = 'https://nats-uk.ead-it.com/cms-nats/export/sites/default/en/' .
+    'Publications/digital-datasets/srd/SRD_Spreadsheet.xls';
     private const SRD_DOWNLOAD_FILE = 'downloaded-srd.xls';
     private const SRD_CURRENT_FILE = 'current-srd.xls';
     private const SRD_UPDATED_AT_CACHE_KEY = 'SRD_UPDATED_AT';
@@ -44,9 +44,7 @@ class SrdService
 
     private function downloadSrd()
     {
-        $srdContent = Http::get(
-            sprintf(self::SRD_URL_FORMAT, AiracService::getPreviousAiracDay()->format('d-F-Y'))
-        );
+        $srdContent = Http::get(self::SRD_URL);
 
         if (!$srdContent->ok()) {
             Log::critical(

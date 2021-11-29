@@ -422,7 +422,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntOccupyStandsIfAircraftTooHigh()
     {
-        NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -443,7 +443,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesOccupiedStandIfAircraftTooHigh()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -465,7 +465,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntOccupyStandsIfAircraftTooFast()
     {
-        NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -486,7 +486,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesOccupiedStandIfAircraftTooFast()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -508,7 +508,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItOccupiesAFreshStand()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -524,7 +524,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesCurrentStandIfStillOccupied()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -541,7 +541,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntChangeOccupiedStandIfTheAircraftHasMovedLatitudeSinceOccupancy()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -559,7 +559,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItChangesOccupiedStandIfTheAircraftHasMovedLatitudeSinceOccupancy()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -577,7 +577,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItChangesOccupiedStandIfTheAircraftHasMovedLongitudeSinceOccupancy()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -595,7 +595,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesOccupiedStandIfTheAircraftChangesLatitudeAndIsNoLongerOnStand()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 53.65883639,
@@ -613,7 +613,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesOccupiedStandIfTheAircraftChangesLongitudeAndIsNoLongerOnStand()
     {
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -632,7 +632,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItUsurpsAssignedStands()
     {
         $this->expectsEvents(StandUnassignedEvent::class);
-        NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -660,7 +660,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47437111,
@@ -697,7 +697,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->addStandAssignment('BMI221', 3);
         $this->expectsEvents(StandUnassignedEvent::class);
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -718,7 +718,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->addStandAssignment('BMI221', 1);
         $this->doesntExpectEvents(StandUnassignedEvent::class);
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -739,7 +739,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->addStandAssignment('BMI221', 3);
         $this->doesntExpectEvents(StandUnassignedEvent::class);
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -759,7 +759,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntDeallocateStandIfNoStandToDeallocate()
     {
         $this->doesntExpectEvents(StandUnassignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -786,7 +786,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -806,7 +806,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntAllocateStandIfPerformingCircuits()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -826,7 +826,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntPerformAllocationIfStandTooFarFromAirfield()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -845,7 +845,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntPerformAllocationIfAircraftHasNoGroundspeed()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -869,7 +869,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         });
 
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -888,7 +888,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntPerformAllocationIfStandAlreadyAssigned()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -913,7 +913,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntReturnAllocationIfAirfieldNotFound()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -932,7 +932,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntPerformAllocationIfUnknownAircraftType()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B736',
@@ -953,7 +953,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
 
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
@@ -1067,7 +1067,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'longitude' =>  -6.222070,
             ]
         );
-        $occupier = NetworkDataService::createPlaceholderAircraft('OCCUPIED');
+        $occupier = NetworkAircraftService::createPlaceholderAircraft('OCCUPIED');
         $occupier->occupiedStand()->sync($stand4);
 
         // Stand 5 is paired with stand 2 which is assigned
@@ -1135,6 +1135,17 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'end' => Carbon::now()->addHours(2),
             ]
         );
+
+        // Stand 10 is closed
+        $stand10 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST10',
+                'latitude' => 54.658828,
+                'longitude' =>  -6.222070,
+            ]
+        );
+        $stand10->close();
 
         $this->assertEquals(
             [
@@ -1217,6 +1228,14 @@ class StandServiceTest extends BaseFunctionalTestCase
                     'max_wake_category' => 'LM',
                     'max_aircraft_type' => null,
                 ],
+                [
+                    'identifier' => 'TEST10',
+                    'type' => null,
+                    'status' => 'closed',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
             ],
             $this->service->getAirfieldStandStatus('EGLL')
         );
@@ -1238,7 +1257,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItAssignsOccupiedStandsAtDepartureAirfields()
     {
         $this->expectsEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -1257,7 +1276,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItUpdatesAssignedOccupiedStandsAtDepartureAirfields()
     {
         $this->expectsEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -1279,7 +1298,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntAssignStandsAtNonDepartureAirfields()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
-        $aircraft = NetworkDataService::createOrUpdateNetworkAircraft(
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -1298,7 +1317,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItRemovesAssignmentsAtDepartureAirfieldIfStandUnoccupied()
     {
         $this->expectsEvents(StandUnassignedEvent::class);
-        NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -1317,7 +1336,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     public function testItDoesntRemoveStandAssignmentsIfNoStandOccupiedButAssignmentNotAtDepartureAirfield()
     {
         $this->doesntExpectEvents(StandUnassignedEvent::class);
-        NetworkDataService::createOrUpdateNetworkAircraft(
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
                 'latitude' => 51.47187222,
@@ -1335,7 +1354,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
         return StandAssignment::create(
             [
                 'callsign' => $callsign,
@@ -1346,7 +1365,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     private function addStandReservation(string $callsign, int $standId, bool $active): StandReservation
     {
-        NetworkDataService::createPlaceholderAircraft($callsign);
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
         return StandReservation::create(
             [
                 'callsign' => $callsign,

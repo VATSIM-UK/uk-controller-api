@@ -2,190 +2,113 @@
 
 namespace App\Services;
 
-use App\Events\NetworkAircraftDisconnectedEvent;
-use App\Events\NetworkAircraftUpdatedEvent;
-use App\Events\NetworkDataUpdatedEvent;
-use App\Jobs\Network\AircraftDisconnected;
-use App\Models\Vatsim\NetworkAircraft;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\Client\Response;
+use App\Rules\Airfield\AirfieldIcao;
+use App\Rules\Coordinates\Latitude;
+use App\Rules\Coordinates\Longitude;
+use App\Rules\Squawk\SqauwkCode;
+use App\Rules\VatsimCallsign;
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Location\Coordinate;
-use Location\Distance\Haversine;
+use Illuminate\Support\Facades\Validator;
 
 class NetworkDataService
 {
-    const NETWORK_DATA_URL = "https://data.vatsim.net/v3/vatsim-data.json";
-    const MAX_PROCESSING_DISTANCE = 700;
-    private Collection $allAircraftBeforeUpdate;
+    private NetworkDataDownloadService $downloadService;
 
-    /**
-     * @var Coordinate[]
-     */
-    private Collection $measuringPoints;
-
-    public function __construct(Collection $measuringPoints)
+    public function __construct(NetworkDataDownloadService $downloadService)
     {
-        $this->measuringPoints = $measuringPoints;
+        $this->downloadService = $downloadService;
     }
 
-    public function updateNetworkData(): void
+    public function getNetworkAircraftData(): Collection
     {
-        $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft) {
-            return [$aircraft->callsign => $aircraft];
-        });
-
-        // Download the network data and check that it was successful
-        $networkResponse = null;
-        try {
-            $networkResponse = Http::timeout(10)->get(self::NETWORK_DATA_URL);
-        } catch (Exception $exception) {
-            Log::warning('Failed to download network data, exception was ' . $exception->getMessage());
-            return;
+        $fieldValidator = $this->getFieldValidator('pilots');
+        if ($fieldValidator->fails()) {
+            Log::warning('Invalid network aircraft data, pilots field missing');
+            return collect();
         }
 
-        if (!$networkResponse->successful()) {
-            Log::warning('Failed to download network data, response was ' . $networkResponse->status());
-            return;
+        $validatedData = collect($fieldValidator->validated()['pilots']);
+        return $validatedData->reject(function (array $data) {
+            return $this->getAircraftValidator($data)->fails();
+        });
+    }
+
+    public function getNetworkControllerData(): Collection
+    {
+        $fieldValidator = $this->getFieldValidator('controllers');
+        if ($fieldValidator->fails()) {
+            Log::warning('Invalid network controller data, controllers field missing');
+            return collect();
         }
 
-        // Process clients
-        $concernedPilots = $this->formatPilotData($networkResponse);
-        $this->processPilots($concernedPilots);
-        $this->handleTimeouts();
-        event(new NetworkDataUpdatedEvent());
-    }
-
-    private function formatPilotData(Response $response): Collection
-    {
-        return $this->mapPilotData($this->filterPilotData(new Collection($response->json('pilots', []))));
-    }
-
-    private function mapPilotData(Collection $pilotData): Collection
-    {
-        return $pilotData->map(function (array $pilot) {
-            return $this->formatPilot($pilot);
+        $validatedData = collect($fieldValidator->validated()['controllers']);
+        return $validatedData->reject(function (array $data) {
+            return $this->getControllerValidator($data)->fails();
         });
     }
 
-    private function filterPilotData(Collection $pilotData): Collection
+    private function getFieldValidator(string $field): ValidatorContract
     {
-        return $pilotData->filter(function (array $pilot) {
-            return $this->shouldProcessPilot($pilot) &&
-                $this->pilotValid($pilot);
-        });
-    }
-
-    /**
-     * Loop through each client in the clients array from the network data
-     */
-    private function processPilots(Collection $pilots): void
-    {
-        NetworkAircraft::upsert(
-            $pilots->toArray(),
-            ['callsign']
+        return Validator::make(
+            $this->downloadService->getNetworkData()->toArray(),
+            [
+                $field => 'array|required'
+            ]
         );
     }
 
-    private function shouldProcessPilot(array $pilot): bool
+    private function getAircraftValidator(array $data): ValidatorContract
     {
-        return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
-            return LocationService::metersToNauticalMiles(
-                $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
-            ) < self::MAX_PROCESSING_DISTANCE;
-        });
-    }
-
-    /**
-     * Formats a pilot from the V3 datafeed.
-     */
-    private function formatPilot(array $pilot): array
-    {
-        return [
-            'callsign' => $pilot['callsign'],
-            'latitude' => $pilot['latitude'],
-            'longitude' => $pilot['longitude'],
-            'altitude' => $pilot['altitude'],
-            'groundspeed' => $pilot['groundspeed'],
-            'transponder' => $pilot['transponder'],
-            'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
-            'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
-            'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),
-            'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),
-            'planned_flighttype' => $this->getFlightplanDataElement($pilot, 'flight_rules'),
-            'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
-            'transponder_last_updated_at' => $this->getTransponderUpdatedAtTime($pilot),
-        ];
-    }
-
-    /**
-     * Set the transponder updated at time based on whether the transponder has been changed
-     * since the last time we polled.
-     */
-    private function getTransponderUpdatedAtTime(array $pilot): Carbon
-    {
-        return $this->allAircraftBeforeUpdate->has($pilot['callsign']) &&
-        $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder === $pilot['transponder']
-            ? $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder_last_updated_at
-            : Carbon::now();
-    }
-
-    /**
-     * Returns a data element from a V3 flightplan if one exists.
-     */
-    private function getFlightplanDataElement(array $pilot, string $element): ?string
-    {
-        return $pilot['flight_plan'][$element] ?? null;
-    }
-
-    /**
-     * If any aircraft has passed the timeout window, trigger the timeout event to have it removed.
-     */
-    private function handleTimeouts(): void
-    {
-        NetworkAircraft::withoutGlobalScope('active')
-            ->timedOut()
-            ->get()
-            ->each(
-                function (NetworkAircraft $aircraft) {
-                    $aircraft->getConnection()->transaction(
-                        function () use ($aircraft) {
-                            AircraftDisconnected::dispatch($aircraft);
-                        }
-                    );
-                }
-            );
-    }
-
-    public static function createOrUpdateNetworkAircraft(
-        string $callsign,
-        array $details = []
-    ): NetworkAircraft {
-        NetworkAircraft::upsert(
-            array_merge(
-                [
-                    'callsign' => $callsign,
+        return Validator::make(
+            $data,
+            [
+                'callsign' => [
+                    'required',
+                    new VatsimCallsign(),
                 ],
-                $details
-            ),
-            ['callsign'],
-            array_merge(['callsign'], array_keys($details)),
+                'latitude' => [
+                    'required',
+                    new Latitude(),
+                ],
+                'longitude' => [
+                    'required',
+                    new Longitude(),
+                ],
+                'altitude' => 'required|integer',
+                'groundspeed' => 'required|integer',
+                'transponder' => [
+                    'required',
+                    new SqauwkCode(),
+                ],
+                'flight_plan.aircraft' => 'nullable|string',
+                'flight_plan.departure' => [
+                    'nullable',
+                    new AirfieldIcao(),
+                ],
+                'flight_plan.arrival' => [
+                    'nullable',
+                    new AirfieldIcao(),
+                ],
+                'flight_plan.altitude' => 'nullable|string',
+                'flight_plan.flight_rules' => 'nullable|string',
+            ]
         );
-        return NetworkAircraft::find($callsign);
     }
 
-    public static function createPlaceholderAircraft(string $callsign): NetworkAircraft
+    private function getControllerValidator(array $data): ValidatorContract
     {
-        return NetworkAircraft::find($callsign) ?? self::createOrUpdateNetworkAircraft($callsign);
-    }
-
-    private function pilotValid(array $pilot): bool
-    {
-        return preg_match('/^[0-7]{4}$/', $pilot['transponder']);
+        return Validator::make(
+            $data,
+            [
+                'callsign' => [
+                    'required',
+                    new VatsimCallsign(),
+                ],
+                'frequency' => 'required|numeric|min:100|max:200',
+                'cid' => 'integer|required',
+            ]
+        );
     }
 }
