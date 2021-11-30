@@ -21,13 +21,13 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(PrenoteService::class);
     }
 
-    private function getExpectedPairing(bool $withFlightRules): array
+    private function getExpectedPairing(): array
     {
         return [
             'origin' => 'EGLL',
             'destination' => 'EGBB',
             'type' => 'airfieldPairing',
-            'flight_rules' => $withFlightRules ? 'I' : null,
+            'flight_rules' => 'I',
             'recipient' => [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -55,14 +55,8 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
 
     public function testItFormatsAirfieldPairingPrenotes()
     {
-        Airfield::find(1)->prenotePairings()->updateExistingPivot(2, ['flight_rule_id' => null]);
-        $this->assertEquals([$this->getExpectedPairing(false)], $this->service->getAllAirfieldPrenotes());
-    }
-
-    public function testItFormatsAirfieldPairingPrenotesWithFlightRules()
-    {
         Airfield::find(1)->prenotePairings()->updateExistingPivot(2, ['flight_rule_id' => 2]);
-        $this->assertEquals([$this->getExpectedPairing(true)], $this->service->getAllAirfieldPrenotes());
+        $this->assertEquals([$this->getExpectedPairing()], $this->service->getAllAirfieldPrenotes());
     }
 
     public function testItFormatsAllPrenotes()
@@ -70,7 +64,7 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
         Airfield::find(1)->prenotePairings()->updateExistingPivot(2, ['flight_rule_id' => 2]);
         $expected = [
             $this->getExpectedSid(),
-            $this->getExpectedPairing(true),
+            $this->getExpectedPairing(),
         ];
         $this->assertEquals($expected, $this->service->getAllPrenotesWithControllers());
     }
