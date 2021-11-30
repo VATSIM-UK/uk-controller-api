@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Airfield\Airfield;
-use App\Models\Controller\Prenote;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
 
