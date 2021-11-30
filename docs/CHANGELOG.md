@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.12.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.1...4.12.2) (2021-11-30)
+
+
+### Data Updates
+
+* **prenotes:** Add missing flight rule to prenote ([#728](https://github.com/VATSIM-UK/uk-controller-api/issues/728)) ([b76e7c1](https://github.com/VATSIM-UK/uk-controller-api/commit/b76e7c17364982ae3ab8e9b440a1a71ebdb7b52e))
+
 ### [4.12.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.0...4.12.1) (2021-11-28)
 
 
