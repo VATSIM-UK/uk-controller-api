@@ -235,16 +235,18 @@ class PrenoteService
     public static function createNewAirfieldPairingFromPrenote(
         string $departureAirfield,
         string $arrivalAirfield,
-        string $prenoteKey
+        string $prenoteKey,
+        int $flightRuleId
     ): void {
         DB::transaction(
-            function () use ($departureAirfield, $arrivalAirfield, $prenoteKey) {
+            function () use ($departureAirfield, $arrivalAirfield, $prenoteKey, $flightRuleId) {
                 DB::table('airfield_pairing_prenotes')
                     ->insert(
                         [
                             'origin_airfield_id' => Airfield::where('code', $departureAirfield)->firstOrFail()->id,
                             'destination_airfield_id' => Airfield::where('code', $arrivalAirfield)->firstOrFail()->id,
                             'prenote_id' => Prenote::where('key', $prenoteKey)->firstOrFail()->id,
+                            'flight_rule_id' => $flightRuleId,
                             'created_at' => Carbon::now(),
                         ]
                     );
