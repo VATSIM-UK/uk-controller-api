@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Metar;
 
 use App\Events\MetarsUpdatedEvent;
 use App\Models\Airfield\Airfield;

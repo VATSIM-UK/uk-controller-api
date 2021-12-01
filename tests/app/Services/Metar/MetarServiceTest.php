@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\Metar;
 
 use App\BaseFunctionalTestCase;
 use App\Events\MetarsUpdatedEvent;
