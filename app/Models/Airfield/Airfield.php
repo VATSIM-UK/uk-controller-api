@@ -30,6 +30,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'code',
         'latitude',
         'longitude',
+        'elevation',
         'transition_altitude',
         'standard_high',
         'wake_category_scheme_id',
@@ -44,9 +45,9 @@ class Airfield extends Model implements MinStackDataProviderInterface
     ];
 
     protected $casts = [
-        'groundspeed' => 'integer',
         'latitude' => 'float',
         'longitude' => 'float',
+        'elevation' => 'integer',
     ];
 
     /**
