@@ -179,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\MetarServiceProvider::class,
         App\Providers\SquawkServiceProvider::class,
         App\Providers\StandServiceProvider::class,
         App\Providers\NetworkServiceProvider::class,

@@ -51,9 +51,9 @@ class MetarRetrievalServiceTest extends BaseUnitTestCase
         $metars = $this->service->retrieveMetars(collect(['EGLL', 'EGBB', 'EGKR']));
         $this->assertCount(3, $metars);
 
-        $this->assertEquals($dataResponse[0], $metars['EGLL']);
-        $this->assertEquals($dataResponse[1], $metars['EGBB']);
-        $this->assertEquals($dataResponse[2], $metars['EGKR']);
+        $this->assertEquals(explode(' ', $dataResponse[0]), $metars['EGLL']->toArray());
+        $this->assertEquals(explode(' ', $dataResponse[1]), $metars['EGBB']->toArray());
+        $this->assertEquals(explode(' ', $dataResponse[2]), $metars['EGKR']->toArray());
         $this->assertRequestSent();
     }
 

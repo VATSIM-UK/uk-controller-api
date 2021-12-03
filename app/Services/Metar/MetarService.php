@@ -5,105 +5,62 @@ namespace App\Services\Metar;
 use App\Events\MetarsUpdatedEvent;
 use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
+use App\Services\Metar\Parser\MetarParser;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
-/**
- * Service for parsing data in relation to METARs.
- *
- * Class MetarService
- * @package App\Services
- */
 class MetarService
 {
-    private function getMetarQueryString(Collection $airfields): string
+    private MetarRetrievalService $retrievalService;
+
+    /**
+     * @var MetarParser[]
+     */
+    private Collection $parsers;
+
+    public function __construct(MetarRetrievalService $retrievalService, Collection $parsers)
     {
-        return $airfields->implode('code', ',');
+        $this->retrievalService = $retrievalService;
+        $this->parsers = $parsers;
     }
 
     public function updateAllMetars(): void
     {
         $metarAirfields = Airfield::all();
-        $metarResponse = Http::get(config('metar.vatsim_url'), ['id' => $this->getMetarQueryString($metarAirfields)]);
-        if (!$metarResponse->ok()) {
-            Log::error(
-                sprintf(
-                    'Metar download failed, endpoint returned %d: %s',
-                    $metarResponse->status(),
-                    $metarResponse->body()
-                )
-            );
+        $metarData = $this->retrievalService->retrieveMetars($metarAirfields->pluck('code'));
+        if ($metarData->isEmpty()) {
             return;
         }
 
-        $metarsToUpdate = [];
-        foreach (explode("\n", $metarResponse->body()) as $metar) {
-            $metarsToUpdate[] = $this->processMetar($metar, $metarAirfields);
-        }
-
         Metar::upsert(
-            $metarsToUpdate,
+            $this->getUpsertMetarData($metarAirfields, $metarData),
             ['airfield_id']
         );
 
         event(new MetarsUpdatedEvent(Metar::with('airfield')->get()));
     }
 
-    /**
-     * Process a given METAR and make it ready for inserting.
-     */
-    private function processMetar(string $metar, Collection $metarAirfields): array
+    private function getUpsertMetarData(Collection $airfields, Collection $metars): array
     {
-        return [
-            'airfield_id' => $metarAirfields->where('code', $this->getMetarAirfield($metar))->first()->id,
-            'raw' => trim($metar),
-            'parsed' => json_encode([
-                'qnh' => $this->getQnhFromMetar($metar)
-            ]),
-        ];
+        return $airfields->filter(function (Airfield $airfield) use ($metars) {
+            return $metars->has($airfield->code);
+        })
+            ->map(function (Airfield $airfield) use ($metars) {
+                $metar = $metars[$airfield->code];
+
+                return [
+                    'airfield_id' => $airfield->id,
+                    'raw' => $metar->implode(' '),
+                    'parsed' => $this->parsers->reduce(function (Collection $parsed, MetarParser $parser) use ($metar) {
+                        $parser->parse($metar, $parsed);
+                        return $parsed;
+                    }, collect()),
+                ];
+            })
+            ->toArray();
     }
 
-    /**
-     * Try to get the QNH out of the METAR, if it's not there, parse it from the altimeter.
-     */
-    private function getQnhFromMetar(string $metar): ?int
+    public function getParsers(): Collection
     {
-        return $this->parseQnhFromMetar($metar) ?? $this->parseAltimeterAsQnhFromMetar($metar);
-    }
-
-    /**
-     * Parse the QNH string from the METAR
-     */
-    private function parseQnhFromMetar(string $metar): ?int
-    {
-        $matches = [];
-        preg_match('/Q(\d{4})/', $metar, $matches);
-        return empty($matches) ? null : $this->convertQnhToInteger($matches[1]);
-    }
-
-    /**
-     * Parse the altimeter out of the METAR as its QNH.
-     */
-    private function parseAltimeterAsQnhFromMetar(string $metar): ?int
-    {
-        $matches = [];
-        preg_match('/A(\d{4})/', $metar, $matches);
-        return empty($matches) ? null : $this->convertAltimeterToQnh($matches[1]);
-    }
-
-    private function convertAltimeterToQnh(string $altimeter): int
-    {
-        return ((float) sprintf('%s.%s', substr($altimeter, 0, 2), substr($altimeter, 2))) * 33.8639;
-    }
-
-    private function convertQnhToInteger(string $qnh): int
-    {
-        return (int) ($qnh[0] === '0') ? substr($qnh, 1) : $qnh;
-    }
-
-    private function getMetarAirfield(string $metar): string
-    {
-        return substr($metar, 0, 4);
+        return $this->parsers;
     }
 }

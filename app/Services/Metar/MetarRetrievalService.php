@@ -9,6 +9,13 @@ use Illuminate\Support\Str;
 
 class MetarRetrievalService
 {
+    private MetarTokeniser $tokeniser;
+
+    public function __construct(MetarTokeniser $tokeniser)
+    {
+        $this->tokeniser = $tokeniser;
+    }
+
     public function retrieveMetars(Collection $airfields): Collection
     {
         $metarResponse = Http::get(config('metar.vatsim_url'), ['id' => $this->getMetarQueryString($airfields)]);
@@ -26,8 +33,9 @@ class MetarRetrievalService
 
         return collect(explode("\n", $metarResponse->body()))
             ->mapWithKeys(function (string $metar) {
+                $tokens = $this->tokeniser->tokenise($metar);
                 return [
-                    $this->getAirfieldForMetar($metar) => $metar
+                    $tokens->first() => $tokens
                 ];
             });
     }
@@ -35,10 +43,5 @@ class MetarRetrievalService
     private function getMetarQueryString(Collection $airfields): string
     {
         return $airfields->implode(',');
-    }
-
-    private function getAirfieldForMetar(string $metar): string
-    {
-        return Str::substr($metar, 0, 4);
     }
 }

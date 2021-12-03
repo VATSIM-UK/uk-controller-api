@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Services\Metar;
 
 use App\BaseFunctionalTestCase;
 use App\Events\MetarsUpdatedEvent;
 use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
+use App\Services\Metar\Parser\MetarParser;
+use App\Services\Metar\Parser\PressureParser;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -111,31 +114,26 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $this->service->updateAllMetars();
 
         // Check the request
-        // Check the request
         Http::assertSent(function (Request $request) {
             return $request->method() === 'GET' &&
                 Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
                 $request['id'] === 'EGLL,EGBB,EGKR';
         });
 
-        // Check the metars aren't there
-        $this->assertDatabaseMissing(
+        $this->assertDatabaseCount(
             'metars',
-            [
-                'airfield_id' => 1,
-            ]
+            0
         );
-        $this->assertDatabaseMissing(
-            'metars',
-            [
-                'airfield_id' => 2,
-            ]
-        );
-        $this->assertDatabaseMissing(
-            'metars',
-            [
-                'airfield_id' => 3,
-            ]
-        );
+    }
+
+    public function testItHasParsers()
+    {
+        $expected = [
+            PressureParser::class,
+        ];
+
+        $this->assertEquals($expected, $this->service->getParsers()->map(function (MetarParser $parser) {
+            return get_class($parser);
+        })->toArray());
     }
 }

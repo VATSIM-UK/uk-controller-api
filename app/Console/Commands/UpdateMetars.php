@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\MetarService;
+use App\Services\Metar\MetarService;
 use Illuminate\Console\Command;
 
 class UpdateMetars extends Command
