@@ -21,17 +21,7 @@ class Metar extends Model
         'airfield_id' => 'integer',
         'parsed' => 'array',
     ];
-
-    public static function boot()
-    {
-        parent::boot();
-        parent::creating(function (Metar $metar) {
-            if (!$metar->parsed) {
-                $metar->parsed = [];
-            }
-        });
-    }
-
+    
     public function getQnhAttribute(): ?int
     {
         return $this->parsed['qnh'];
