@@ -2,6 +2,7 @@
 
 namespace App\Services\Metar\Parser;
 
+use App\Models\Airfield\Airfield;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -10,7 +11,7 @@ class PressureParser implements MetarParser
     const QNH_PATTERN = '/^Q(\d{4})$/';
     const ALTIMETER_PATTERN = '/^A(\d{4})$/';
 
-    public function parse(Collection $metarTokens, Collection $parsedData): void
+    public function parse(Airfield $airfield, Collection $metarTokens, Collection $parsedData): void
     {
         $metarTokens->each(function (string $token) use ($parsedData) {
             if ($this->tokenIsQnh($token)) {
@@ -23,6 +24,18 @@ class PressureParser implements MetarParser
 
             return true;
         });
+
+        $this->calculateQfe($airfield, $parsedData);
+    }
+
+    private function calculateQfe(Airfield $airfield, Collection $parsedData): void
+    {
+        if (!$parsedData->offsetExists('qnh')) {
+            return;
+        }
+
+        $parsedData->offsetSet('qfe', (int) ($parsedData->offsetGet('qnh') - ($airfield->elevation / 30)));
+        $parsedData->offsetSet('qfe_inhg', $this->getAltimeterFromQnh($parsedData->get('qfe')));
     }
 
     private function parsePressureFromQnh(string $qnhToken, Collection $parsedData): void

@@ -50,10 +50,13 @@ class MetarService
                 return [
                     'airfield_id' => $airfield->id,
                     'raw' => $metar->implode(' '),
-                    'parsed' => $this->parsers->reduce(function (Collection $parsed, MetarParser $parser) use ($metar) {
-                        $parser->parse($metar, $parsed);
-                        return $parsed;
-                    }, collect()),
+                    'parsed' => $this->parsers->reduce(
+                        function (Collection $parsed, MetarParser $parser) use ($airfield, $metar) {
+                            $parser->parse($airfield, $metar, $parsed);
+                            return $parsed;
+                        },
+                        collect()
+                    ),
                 ];
             })
             ->toArray();

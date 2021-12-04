@@ -3,15 +3,18 @@
 namespace App\Services\Metar\Parser;
 
 use App\BaseUnitTestCase;
+use App\Models\Airfield\Airfield;
 
 class PressureParserTest extends BaseUnitTestCase
 {
     private PressureParser $parser;
+    private Airfield $airfield;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->parser = $this->app->make(PressureParser::class);
+        $this->airfield = new Airfield(['elevation' => 300]);
     }
 
     /**
@@ -20,7 +23,7 @@ class PressureParserTest extends BaseUnitTestCase
     public function testItDoesntFindBadData(array $tokens)
     {
         $parsed = collect();
-        $this->parser->parse(collect($tokens), $parsed);
+        $this->parser->parse($this->airfield, collect($tokens), $parsed);
         $this->assertEmpty($parsed);
     }
 
@@ -69,27 +72,33 @@ class PressureParserTest extends BaseUnitTestCase
     public function testItParsesQnhFromMetarTokens()
     {
         $parsed = collect();
-        $this->parser->parse(collect(['EGKK', 'Q1013']), $parsed);
-        $this->assertCount(2, $parsed);
+        $this->parser->parse($this->airfield, collect(['EGKK', 'Q1013']), $parsed);
+        $this->assertCount(4, $parsed);
         $this->assertEquals(1013, $parsed['qnh']);
         $this->assertEquals(29.91, $parsed['altimeter']);
+        $this->assertEquals(1003, $parsed['qfe']);
+        $this->assertEquals(29.62, $parsed['qfe_inhg']);
     }
 
     public function testItParsesAltimeterFromMetarTokens()
     {
         $parsed = collect();
-        $this->parser->parse(collect(['EGKK', 'A2992']), $parsed);
-        $this->assertCount(2, $parsed);
+        $this->parser->parse($this->airfield, collect(['EGKK', 'A2992']), $parsed);
+        $this->assertCount(4, $parsed);
         $this->assertEquals(1013, $parsed['qnh']);
         $this->assertEquals(29.92, $parsed['altimeter']);
+        $this->assertEquals(1003, $parsed['qfe']);
+        $this->assertEquals(29.62, $parsed['qfe_inhg']);
     }
 
     public function testItPrefersQnhFromMetarTokens()
     {
         $parsed = collect();
-        $this->parser->parse(collect(['EGKK', 'Q1014', 'A2992']), $parsed);
-        $this->assertCount(2, $parsed);
+        $this->parser->parse($this->airfield, collect(['EGKK', 'Q1014', 'A2992']), $parsed);
+        $this->assertCount(4, $parsed);
         $this->assertEquals(1014, $parsed['qnh']);
         $this->assertEquals(29.94, $parsed['altimeter']);
+        $this->assertEquals(1004, $parsed['qfe']);
+        $this->assertEquals(29.65, $parsed['qfe_inhg']);
     }
 }
