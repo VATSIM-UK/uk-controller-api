@@ -37,13 +37,13 @@ class MetarRetrievalServiceTest extends BaseUnitTestCase
             'EGLL Q1001',
             'EGBB Q0991 A2992',
             'EGKR A2992',
+            '', // Empty, gets handled
         ];
 
         Http::fake(
             [
                 config(self::URL_CONFIG_KEY) . '?id=' . urlencode('EGLL,EGBB,EGKR') => Http::response(
-                    implode("\n", $dataResponse),
-                    200
+                    implode("\n", $dataResponse)
                 ),
             ]
         );
@@ -51,9 +51,9 @@ class MetarRetrievalServiceTest extends BaseUnitTestCase
         $metars = $this->service->retrieveMetars(collect(['EGLL', 'EGBB', 'EGKR']));
         $this->assertCount(3, $metars);
 
-        $this->assertEquals(explode(' ', $dataResponse[0]), $metars['EGLL']->toArray());
-        $this->assertEquals(explode(' ', $dataResponse[1]), $metars['EGBB']->toArray());
-        $this->assertEquals(explode(' ', $dataResponse[2]), $metars['EGKR']->toArray());
+        $this->assertEquals(new DownloadedMetar('EGLL Q1001'), $metars['EGLL']);
+        $this->assertEquals(new DownloadedMetar('EGBB Q0991 A2992'), $metars['EGBB']);
+        $this->assertEquals(new DownloadedMetar('EGKR A2992'), $metars['EGKR']);
         $this->assertRequestSent();
     }
 

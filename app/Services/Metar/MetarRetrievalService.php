@@ -5,17 +5,9 @@ namespace App\Services\Metar;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class MetarRetrievalService
 {
-    private MetarTokeniser $tokeniser;
-
-    public function __construct(MetarTokeniser $tokeniser)
-    {
-        $this->tokeniser = $tokeniser;
-    }
-
     public function retrieveMetars(Collection $airfields): Collection
     {
         $metarResponse = Http::get(config('metar.vatsim_url'), ['id' => $this->getMetarQueryString($airfields)]);
@@ -32,12 +24,14 @@ class MetarRetrievalService
         }
 
         return collect(explode("\n", $metarResponse->body()))
+            ->filter()
             ->mapWithKeys(function (string $metar) {
-                $tokens = $this->tokeniser->tokenise($metar);
+                $metarObject = new DownloadedMetar($metar);
+
                 return [
-                    $tokens->first() => $tokens
+                    $metarObject->tokenise()->first() => new DownloadedMetar($metar),
                 ];
-            });
+            })->filter();
     }
 
     private function getMetarQueryString(Collection $airfields): string
