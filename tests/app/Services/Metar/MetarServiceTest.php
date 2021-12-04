@@ -8,6 +8,8 @@ use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
 use App\Services\Metar\Parser\MetarParser;
 use App\Services\Metar\Parser\PressureParser;
+use App\Services\Metar\Parser\VisibilityParser;
+use App\Services\Metar\Parser\WindParser;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -130,6 +132,8 @@ class MetarServiceTest extends BaseFunctionalTestCase
     {
         $expected = [
             PressureParser::class,
+            WindParser::class,
+            VisibilityParser::class,
         ];
 
         $this->assertEquals($expected, $this->service->getParsers()->map(function (MetarParser $parser) {
