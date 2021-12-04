@@ -35,7 +35,7 @@ class MetarFactory extends Factory
         return [
             'airfield_id' => $airfield->id,
             'raw' => sprintf('%s %s', $airfield->code, $this->faker->randomElement(self::VALID_METARS)),
-            'parsed' => [],
+            'parsed' => $this->faker->randomElements(),
         ];
     }
 }
