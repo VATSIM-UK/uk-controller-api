@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\BaseUnitTestCase;
-use App\Services\MetarService;
+use App\Services\Metar\MetarService;
 use Mockery;
 
 class UpdateMetarsTest extends BaseUnitTestCase

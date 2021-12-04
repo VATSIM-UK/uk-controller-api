@@ -37,6 +37,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 1,
                 'code' => 'EGLL',
+                'elevation' => 1,
                 'transition_altitude' => 6000,
                 'wake_category_scheme_id' => 1,
                 'controllers' => [
@@ -53,6 +54,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 2,
                 'code' => 'EGBB',
+                'elevation' => 1,
                 'transition_altitude' => 6000,
                 'wake_category_scheme_id' => 1,
                 'controllers' => [
@@ -63,6 +65,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 3,
                 'code' => 'EGKR',
+                'elevation' => 1,
                 'transition_altitude' => 6000,
                 'wake_category_scheme_id' => 1,
                 'controllers' => [],
