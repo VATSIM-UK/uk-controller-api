@@ -7,6 +7,7 @@ use App\Services\Metar\MetarService;
 use App\Services\Metar\Parser\PressureParser;
 use App\Services\Metar\Parser\VisibilityParser;
 use App\Services\Metar\Parser\WindParser;
+use App\Services\Metar\Parser\WindVariationParser;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,7 @@ class MetarServiceProvider extends ServiceProvider
                 collect([
                     $this->app->make(PressureParser::class),
                     $this->app->make(WindParser::class),
+                    $this->app->make(WindVariationParser::class),
                     $this->app->make(VisibilityParser::class)
                 ])
             );

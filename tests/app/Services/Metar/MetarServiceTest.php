@@ -10,6 +10,7 @@ use App\Services\Metar\Parser\MetarParser;
 use App\Services\Metar\Parser\PressureParser;
 use App\Services\Metar\Parser\VisibilityParser;
 use App\Services\Metar\Parser\WindParser;
+use App\Services\Metar\Parser\WindVariationParser;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -133,6 +134,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $expected = [
             PressureParser::class,
             WindParser::class,
+            WindVariationParser::class,
             VisibilityParser::class,
         ];
 
