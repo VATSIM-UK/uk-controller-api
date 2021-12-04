@@ -55,8 +55,8 @@ class MetarService
         return $this->getMetarsForAirfields($airfields)->reject(
             function (DownloadedMetar $metar, string $airfield) use ($currentMetars) {
                 return $currentMetars->offsetExists($airfield) && $metar->raw() === $currentMetars->offsetGet(
-                        $airfield
-                    );
+                    $airfield
+                );
             }
         );
     }
