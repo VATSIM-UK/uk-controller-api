@@ -134,7 +134,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
     {
         $this->assertSame(
             $expected,
-            (string) SectorfileService::convertToSectorfileCoordinate($latitude, $longitude)
+            (string)SectorfileService::convertToSectorfileCoordinate($latitude, $longitude)
         );
     }
 
@@ -155,6 +155,114 @@ class SectorfileServiceTest extends BaseUnitTestCase
                 50.5205556,
                 -1.3333333,
                 'N050.31.14.000 W001.20.00.000'
+            ],  // This is KATHY
+        ];
+    }
+
+    /**
+     * @dataProvider badNatsLatitudeFormatProvider
+     */
+    public function testItThrowsAnExceptionOnBadNatsLatitudeFormat(string $latitude)
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid nats latitude format');
+        SectorfileService::coordinateFromNats($latitude, '0080000W');
+    }
+
+    public function badNatsLatitudeFormatProvider(): array
+    {
+        return [
+            'No direction modifier' => [
+                '525005',
+            ],
+            'Direction modifier for longitude' => [
+                '525005E',
+            ],
+            'Direction modifier invalid' => [
+                '525005X',
+            ],
+            'Too short' => [
+                '52505N',
+            ],
+            'Too long' => [
+                '1525005N',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider badNatsLongitudeFormatProvider
+     */
+    public function testItThrowsAnExceptionOnBadNatsLongitudeFormat(string $longitude)
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid nats longitude format');
+        SectorfileService::coordinateFromNats('525005N', $longitude);
+    }
+
+    public function badNatsLongitudeFormatProvider(): array
+    {
+        return [
+            'No direction modifier' => [
+                '0024613',
+            ],
+            'Direction modifier for latitude' => [
+                '0024613N',
+            ],
+            'Direction modifier invalid' => [
+                '0024613X',
+            ],
+            'Too short' => [
+                '024613W',
+            ],
+            'Too long' => [
+                '00254613W',
+            ],
+        ];
+    }
+
+    public function testItThrowsAnExceptionOnNatsCoordinateInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot have more than 60 seconds');
+        SectorfileService::coordinateFromNats('525065N', '0024613W');
+    }
+
+    /**
+     * @dataProvider validNatsFormatProvider
+     */
+    public function testItConvertsFromNatsFormat(
+        string $latitude,
+        string $longitude,
+        float $expectedLatitude,
+        float $expectedLongitude
+    ) {
+        $coordinate = SectorfileService::coordinateFromNats($latitude, $longitude);
+
+        $this->assertEqualsWithDelta($expectedLatitude, $coordinate->getLat(), 0.0001);
+        $this->assertEqualsWithDelta($expectedLongitude, $coordinate->getLng(), 0.0001);
+    }
+
+    public function validNatsFormatProvider(): array
+    {
+        return [
+            'North east' => [
+                '505644N',
+                '0001542E',
+                50.9455556,
+                0.2616667,
+            ],
+            'South west' => [
+                '505644S',
+                '0001542W',
+                -50.9455556,
+                -0.2616667,
+            ],
+            'Sixty seconds' => [
+                '503114N',
+                '0012000W',
+                50.5205556,
+                -1.3333333,
             ],  // This is KATHY
         ];
     }

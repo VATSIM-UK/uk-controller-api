@@ -11,8 +11,40 @@ class SectorfileService
 {
     const SECTORFILE_LATITUDE_REGEX = "/^([N,S])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
     const SECTORFILE_LONGITUDE_REGEX = "/^([E,W])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
+    const NATS_LATITUDE_REGEX = "/^(\\d{2})(\\d{2})(\\d{2})([N,S])$/";
+    const NATS_LONGITUDE_REGEX = "/^(\\d{3})(\\d{2})(\\d{2})([E,W])$/";
     const MULTIPLIER_NEGATIVE = -1;
     const MULTIPLIER_POSITIVE = 1;
+
+    public static function coordinateFromNats(string $latitude, string $longitude): Coordinate
+    {
+        $latitudeMatches = [];
+        if (preg_match(self::NATS_LATITUDE_REGEX, $latitude, $latitudeMatches) !== 1) {
+            throw new InvalidArgumentException('Invalid nats latitude format ' . $latitude);
+        }
+
+        $longitudeMatches = [];
+        if (preg_match(self::NATS_LONGITUDE_REGEX, $longitude, $longitudeMatches) !== 1) {
+            throw new InvalidArgumentException('Invalid nats longitude format ' . $longitude);
+        }
+
+        return self::coordinateFromSectorfile(
+            sprintf(
+                '%s0%s.%s.%s.000',
+                $latitudeMatches[4],
+                $latitudeMatches[1],
+                $latitudeMatches[2],
+                $latitudeMatches[3]
+            ),
+            sprintf(
+                '%s%s.%s.%s.000',
+                $longitudeMatches[4],
+                $longitudeMatches[1],
+                $longitudeMatches[2],
+                $longitudeMatches[3]
+            )
+        );
+    }
 
     public static function coordinateFromSectorfile(string $latitude, string $longitude): Coordinate
     {
@@ -27,15 +59,15 @@ class SectorfileService
         }
 
         // Convert and validate latitude
-        $degreesLatitude = (int) ltrim($latitudeMatches[2], '0');
-        $minutesLatitude = (int) ltrim($latitudeMatches[3], '0');
-        $secondsLatitude = (float) ltrim(sprintf('%s.%s', $latitudeMatches[4], $latitudeMatches[5]), '0');
+        $degreesLatitude = (int)ltrim($latitudeMatches[2], '0');
+        $minutesLatitude = (int)ltrim($latitudeMatches[3], '0');
+        $secondsLatitude = (float)ltrim(sprintf('%s.%s', $latitudeMatches[4], $latitudeMatches[5]), '0');
         static::validateLatitude($degreesLatitude, $minutesLatitude, $secondsLatitude);
 
         // Convert and validate longitude
-        $degreesLongitude = (int) ltrim($longitudeMatches[2], '0');
-        $minutesLongitude = (int) ltrim($longitudeMatches[3], '0');
-        $secondsLongitude = (float) ltrim(sprintf('%s.%s', $longitudeMatches[4], $longitudeMatches[5]), '0');
+        $degreesLongitude = (int)ltrim($longitudeMatches[2], '0');
+        $minutesLongitude = (int)ltrim($longitudeMatches[3], '0');
+        $secondsLongitude = (float)ltrim(sprintf('%s.%s', $longitudeMatches[4], $longitudeMatches[5]), '0');
         static::validateLongitude($degreesLongitude, $minutesLongitude, $secondsLongitude);
 
         // Work out the decimal degrees
@@ -67,7 +99,7 @@ class SectorfileService
 
     private static function validateLongitude(int $degrees, int $minutes, float $seconds): void
     {
-        if (($degrees === 180 && ($minutes !== 0 || $seconds !== 0.0)) ||$degrees > 180) {
+        if (($degrees === 180 && ($minutes !== 0 || $seconds !== 0.0)) || $degrees > 180) {
             throw new InvalidArgumentException('Cannot have more than 180 degrees of longitude');
         }
 
@@ -110,8 +142,8 @@ class SectorfileService
 
     private static function convertToSectorfileFormat(string $prefix, float $coordinate): string
     {
-        $degrees = (int) $coordinate;
-        $minutes = (int) (($coordinate - $degrees) * 60);
+        $degrees = (int)$coordinate;
+        $minutes = (int)(($coordinate - $degrees) * 60);
         $seconds = number_format(($coordinate - $degrees - ($minutes / 60)) * 3600, 3);
 
         if ($seconds === '60.000') {
