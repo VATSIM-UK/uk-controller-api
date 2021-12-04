@@ -22,8 +22,7 @@ class PressureParserTest extends BaseUnitTestCase
      */
     public function testItDoesntFindBadData(array $tokens)
     {
-        $parsed = collect();
-        $this->parser->parse($this->airfield, collect($tokens), $parsed);
+        $parsed = $this->parser->parse($this->airfield, collect($tokens));
         $this->assertEmpty($parsed);
     }
 
@@ -71,8 +70,7 @@ class PressureParserTest extends BaseUnitTestCase
 
     public function testItParsesQnhFromMetarTokens()
     {
-        $parsed = collect();
-        $this->parser->parse($this->airfield, collect(['EGKK', 'Q1013']), $parsed);
+        $parsed = $this->parser->parse($this->airfield, collect(['EGKK', 'Q1013']));
         $this->assertCount(4, $parsed);
         $this->assertEquals(1013, $parsed['qnh']);
         $this->assertEquals(29.91, $parsed['altimeter']);
@@ -82,8 +80,7 @@ class PressureParserTest extends BaseUnitTestCase
 
     public function testItParsesAltimeterFromMetarTokens()
     {
-        $parsed = collect();
-        $this->parser->parse($this->airfield, collect(['EGKK', 'A2992']), $parsed);
+        $parsed = $this->parser->parse($this->airfield, collect(['EGKK', 'A2992']));
         $this->assertCount(4, $parsed);
         $this->assertEquals(1013, $parsed['qnh']);
         $this->assertEquals(29.92, $parsed['altimeter']);
@@ -93,8 +90,7 @@ class PressureParserTest extends BaseUnitTestCase
 
     public function testItPrefersQnhFromMetarTokens()
     {
-        $parsed = collect();
-        $this->parser->parse($this->airfield, collect(['EGKK', 'Q1014', 'A2992']), $parsed);
+        $parsed = $this->parser->parse($this->airfield, collect(['EGKK', 'Q1014', 'A2992']));
         $this->assertCount(4, $parsed);
         $this->assertEquals(1014, $parsed['qnh']);
         $this->assertEquals(29.94, $parsed['altimeter']);

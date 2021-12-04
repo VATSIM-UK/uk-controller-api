@@ -52,8 +52,7 @@ class MetarService
                     'raw' => $metar->implode(' '),
                     'parsed' => $this->parsers->reduce(
                         function (Collection $parsed, MetarParser $parser) use ($airfield, $metar) {
-                            $parser->parse($airfield, $metar, $parsed);
-                            return $parsed;
+                            return $parsed->merge($parser->parse($airfield, $metar));
                         },
                         collect()
                     ),

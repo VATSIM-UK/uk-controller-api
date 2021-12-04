@@ -11,21 +11,26 @@ class PressureParser implements MetarParser
     const QNH_PATTERN = '/^Q(\d{4})$/';
     const ALTIMETER_PATTERN = '/^A(\d{4})$/';
 
-    public function parse(Airfield $airfield, Collection $metarTokens, Collection $parsedData): void
+    public function parse(Airfield $airfield, Collection $metarTokens): Collection
     {
-        $metarTokens->each(function (string $token) use ($parsedData) {
-            if ($this->tokenIsQnh($token)) {
-                $this->parsePressureFromQnh($token, $parsedData);
-                return false;
-            } elseif ($this->tokenIsAltimeter($token)) {
-                $this->parsePressureFromAltimeter($token, $parsedData);
-                return false;
+        return tap(
+            collect(),
+            function (Collection $parsedData) use ($airfield, $metarTokens) {
+                $metarTokens->each(function (string $token) use ($parsedData) {
+                    if ($this->tokenIsQnh($token)) {
+                        $this->parsePressureFromQnh($token, $parsedData);
+                        return false;
+                    } elseif ($this->tokenIsAltimeter($token)) {
+                        $this->parsePressureFromAltimeter($token, $parsedData);
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                $this->calculateQfe($airfield, $parsedData);
             }
-
-            return true;
-        });
-
-        $this->calculateQfe($airfield, $parsedData);
+        );
     }
 
     private function calculateQfe(Airfield $airfield, Collection $parsedData): void
@@ -34,14 +39,14 @@ class PressureParser implements MetarParser
             return;
         }
 
-        $parsedData->offsetSet('qfe', (int) ($parsedData->offsetGet('qnh') - ($airfield->elevation / 30)));
+        $parsedData->offsetSet('qfe', (int)($parsedData->offsetGet('qnh') - ($airfield->elevation / 30)));
         $parsedData->offsetSet('qfe_inhg', $this->getAltimeterFromQnh($parsedData->get('qfe')));
     }
 
     private function parsePressureFromQnh(string $qnhToken, Collection $parsedData): void
     {
         $qnh = Str::substr($qnhToken, 1);
-        $parsedData->offsetSet('qnh', (int) ($qnh[0] === '0' ? Str::substr($qnh, 1) : $qnh));
+        $parsedData->offsetSet('qnh', (int)($qnh[0] === '0' ? Str::substr($qnh, 1) : $qnh));
         $parsedData->offsetSet('altimeter', $this->getAltimeterFromQnh($parsedData->offsetGet('qnh')));
     }
 
@@ -66,13 +71,13 @@ class PressureParser implements MetarParser
         return (float)sprintf('%s.%s', Str::substr($altimeter, 0, 2), Str::substr($altimeter, 2));
     }
 
-    private function tokenIsQnh(string $token) : bool
+    private function tokenIsQnh(string $token): bool
     {
-        return preg_match(self::QNH_PATTERN, $token);
+        return preg_match(self::QNH_PATTERN, $token) === 1;
     }
 
-    private function tokenIsAltimeter(string $token) : bool
+    private function tokenIsAltimeter(string $token): bool
     {
-        return preg_match(self::ALTIMETER_PATTERN, $token);
+        return preg_match(self::ALTIMETER_PATTERN, $token) === 1;
     }
 }
