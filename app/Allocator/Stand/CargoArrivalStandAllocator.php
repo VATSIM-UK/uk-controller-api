@@ -5,10 +5,11 @@ namespace App\Allocator\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class CargoArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
+    use ChecksForCargoAirlines;
+
     private AirlineService $airlineService;
 
     public function __construct(AirlineService $airlineService)
@@ -18,20 +19,10 @@ class CargoArrivalStandAllocator extends AbstractArrivalStandAllocator
 
     protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
     {
-        if (
-            (($airline = $this->airlineService->getAirlineForAircraft($aircraft)) === null ||
-                !$airline->is_cargo) &&
-            !$this->hasCargoRemarks($aircraft)
-        ) {
+        if (!$this->isCargoAirline($aircraft, $this->airlineService)) {
             return null;
         }
 
         return $stands->cargo();
-    }
-
-    private function hasCargoRemarks(NetworkAircraft $aircraft): bool
-    {
-        return isset($aircraft->remarks) &&
-            Str::contains(Str::upper($aircraft->remarks), 'RMK/CARGO');
     }
 }

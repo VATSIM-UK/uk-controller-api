@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use App\Allocator\Stand\CargoAirlineArrivalStandAllocator;
 use App\Services\StandService;
 use App\Service\StandAdminService;
 use Illuminate\Foundation\Application;
@@ -10,7 +11,6 @@ use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocator;
-use App\Allocator\Stand\GeneralUseArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
@@ -26,6 +26,7 @@ class StandServiceProvider extends ServiceProvider
             return new StandService(
                 [
                     $application->make(ReservedArrivalStandAllocator::class),
+                    $application->make(CargoAirlineArrivalStandAllocator::class),
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
                     $application->make(AirlineTerminalArrivalStandAllocator::class),

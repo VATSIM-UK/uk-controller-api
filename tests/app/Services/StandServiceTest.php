@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
+use App\Allocator\Stand\CargoAirlineArrivalStandAllocator;
 use App\Allocator\Stand\CargoArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
@@ -550,7 +551,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'altitude' => 0
             ]
         );
-        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -0.48601389]]);
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' => -0.48601389]]);
 
         $this->service->setOccupiedStands();
         $aircraft->refresh();
@@ -568,7 +569,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'altitude' => 0
             ]
         );
-        $aircraft->occupiedStand()->sync([1 => ['latitude' => 53.65883639, 'longitude' =>  -0.48601389]]);
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 53.65883639, 'longitude' => -0.48601389]]);
 
         $this->service->setOccupiedStands();
         $aircraft->refresh();
@@ -586,7 +587,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'altitude' => 0
             ]
         );
-        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -5.22198972]]);
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' => -5.22198972]]);
 
         $this->service->setOccupiedStands();
         $aircraft->refresh();
@@ -604,7 +605,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'altitude' => 0
             ]
         );
-        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -0.48601389]]);
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' => -0.48601389]]);
 
         $this->service->setOccupiedStands();
         $aircraft->refresh();
@@ -622,7 +623,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'altitude' => 0
             ]
         );
-        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' =>  -0.48601389]]);
+        $aircraft->occupiedStand()->sync([1 => ['latitude' => 51.47187222, 'longitude' => -0.48601389]]);
 
         $this->service->setOccupiedStands();
         $aircraft->refresh();
@@ -681,6 +682,7 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(
             [
                 ReservedArrivalStandAllocator::class,
+                CargoAirlineArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
                 AirlineArrivalStandAllocator::class,
                 AirlineTerminalArrivalStandAllocator::class,
@@ -976,7 +978,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST1',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
 
@@ -985,7 +987,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST2',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
 
@@ -1028,7 +1030,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'type_id' => 3,
                 'identifier' => 'TEST1',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $this->addStandReservation('FUTURE-RESERVATION', $stand1->id, false);
@@ -1041,7 +1043,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST2',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
                 'max_aircraft_id' => 1,
             ]
         );
@@ -1053,7 +1055,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST3',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $this->addStandReservation('RESERVATION', $stand3->id, true);
@@ -1064,7 +1066,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST4',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $occupier = NetworkAircraftService::createPlaceholderAircraft('OCCUPIED');
@@ -1076,7 +1078,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST5',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $stand2->pairedStands()->sync($stand5);
@@ -1088,7 +1090,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST6',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $stand3->pairedStands()->sync([$stand6->id]);
@@ -1100,7 +1102,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST7',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $stand4->pairedStands()->sync([$stand7->id]);
@@ -1112,7 +1114,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST8',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $stand1->pairedStands()->sync([$stand8->id]);
@@ -1124,7 +1126,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST9',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         StandReservation::create(
@@ -1142,7 +1144,7 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'identifier' => 'TEST10',
                 'latitude' => 54.658828,
-                'longitude' =>  -6.222070,
+                'longitude' => -6.222070,
             ]
         );
         $stand10->close();

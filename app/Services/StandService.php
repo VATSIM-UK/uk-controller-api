@@ -4,9 +4,7 @@ namespace App\Services;
 
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
-use App\Events\StandOccupiedEvent;
 use App\Events\StandUnassignedEvent;
-use App\Events\StandVacatedEvent;
 use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Aircraft\Aircraft;
