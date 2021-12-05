@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [4.13.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.2...4.13.0) (2021-12-05)
+
+
+### Features
+
+* **missedapproach:** Allow missed approaches to be acknowledged ([#721](https://github.com/VATSIM-UK/uk-controller-api/issues/721)) ([2a78c05](https://github.com/VATSIM-UK/uk-controller-api/commit/2a78c05c43e9c503033d401735b790a3a0383c3a)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716)
+
 ### [4.12.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.1...4.12.2) (2021-11-30)
 
 
