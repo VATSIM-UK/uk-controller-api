@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.13.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.13.1...4.13.2) (2021-12-05)
+
+
+### Bug Fixes
+
+* **stands:** properly deduplicate stand occupancy ([#732](https://github.com/VATSIM-UK/uk-controller-api/issues/732)) ([e44045f](https://github.com/VATSIM-UK/uk-controller-api/commit/e44045f64de4b645d99f059453866ba37281eb47))
+
 ### [4.13.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.13.0...4.13.1) (2021-12-05)
 
 
