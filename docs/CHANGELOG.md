@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [4.13.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.13.0...4.13.1) (2021-12-05)
+
+
+### Bug Fixes
+
+* **stands:** only assign departure stands to one aircraft per stand  ([#719](https://github.com/VATSIM-UK/uk-controller-api/issues/719)) ([b77bccd](https://github.com/VATSIM-UK/uk-controller-api/commit/b77bccdeb876ffae1c1ee28b9908f8b3bab2d9b2)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716) [#713](https://github.com/VATSIM-UK/uk-controller-api/issues/713)
+
 ## [4.13.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.2...4.13.0) (2021-12-05)
 
 
