@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 trait ChecksForCargoAirlines
 {
-    protected function isCargoAirline(NetworkAircraft $aircraft, AirlineService $airlineService)
+    protected function isCargoAirline(NetworkAircraft $aircraft)
     {
         return (($airline = $this->airlineService->getAirlineForAircraft($aircraft)) !== null &&
                 $airline->is_cargo) ||

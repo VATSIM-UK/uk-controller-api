@@ -20,7 +20,7 @@ class CargoAirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
 
     protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
     {
-        if (!$this->isCargoAirline($aircraft, $this->airlineService)) {
+        if (!$this->isCargoAirline($aircraft)) {
             return null;
         }
 
