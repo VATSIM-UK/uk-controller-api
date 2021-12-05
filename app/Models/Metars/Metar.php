@@ -21,7 +21,7 @@ class Metar extends Model
         'airfield_id' => 'integer',
         'parsed' => 'array',
     ];
-    
+
     public function getQnhAttribute(): ?int
     {
         return $this->parsed['qnh'];
