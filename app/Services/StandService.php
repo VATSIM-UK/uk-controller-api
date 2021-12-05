@@ -587,8 +587,19 @@ class StandService
             ->get();
     }
 
+    /**
+     * If two people are on the same stand, then we pick the first one to be there... two people
+     * can't be on the same stand.
+     */
     private function getDepartureStandsToAssign(): Collection
     {
+        $aircraftOnStands = NetworkAircraft::join('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
+            ->orderBy('aircraft_stand.id')
+            ->get()
+            ->unique(function (NetworkAircraft $aircraft) {
+                return $aircraft->occupiedStand->first()->stand_id;
+            });
+
         return NetworkAircraft::join('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
             ->join('stands', 'aircraft_stand.stand_id', '=', 'stands.id')
             ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
@@ -596,6 +607,7 @@ class StandService
             ->whereRaw('aircraft_stand.stand_id <> stand_assignments.stand_id')
             ->orWhereNull('stand_assignments.stand_id')
             ->whereRaw('airfield.code = network_aircraft.planned_depairport')
+            ->whereIn('network_aircraft.callsign', $aircraftOnStands->pluck('callsign'))
             ->select(['network_aircraft.*', 'aircraft_stand.stand_id'])
             ->get();
     }
