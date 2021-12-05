@@ -41,6 +41,7 @@ class NetworkAircraft extends Model
         'transponder',
         'planned_flighttype',
         'planned_route',
+        'remarks',
     ];
 
     protected $dates = [
