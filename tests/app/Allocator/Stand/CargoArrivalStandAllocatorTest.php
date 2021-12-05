@@ -84,6 +84,28 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($this->cargoStand->id, $allocation->stand_id);
     }
 
+    public function testItAllocatesCargoStandsIfFlightplanSaysCargo()
+    {
+        // Create a non-cargo stand
+        Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '602',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'type_id' => StandType::where('key', 'DOMESTIC')->first()->id,
+            ]
+        );
+
+        $aircraft = $this->createAircraft('VIR22F', 'EGLL');
+        $aircraft->remarks = 'Some stuff RMK/CARGO Some more stuff';
+        $allocation = $this->allocator->allocate($aircraft);
+        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
+        $this->assertEquals($databaseAllocation->stand_id, $allocation->stand_id);
+        $this->assertEquals($this->cargoStand->id, $allocation->stand_id);
+    }
+
     public function testItAllocatesCargoStandsAboveItsWeight()
     {
         $this->cargoStand->update(['wake_category_id' => WakeCategory::where('code', 'J')->first()->id]);
