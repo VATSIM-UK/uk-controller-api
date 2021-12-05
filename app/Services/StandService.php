@@ -597,7 +597,7 @@ class StandService
             ->orderBy('aircraft_stand.id')
             ->get()
             ->unique(function (NetworkAircraft $aircraft) {
-                return $aircraft->occupiedStand->first()->stand_id;
+                return $aircraft->occupiedStand->first()->id;
             });
 
         return NetworkAircraft::join('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
