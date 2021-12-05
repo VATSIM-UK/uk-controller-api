@@ -68,12 +68,8 @@ class MissedApproachControllerTest extends BaseApiTestCase
      */
     public function testItReturnsBadOnBadData(array $requestData)
     {
-        MissedApproachNotification::create(
-            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
-        );
-
-        $this->makeUnauthenticatedApiRequest(self::METHOD_POST, 'missed-approaches', $requestData)
-            ->assertUnauthorized();
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'missed-approaches', $requestData)
+            ->assertStatus(422);
     }
 
     public function badDataProvider(): array
@@ -86,5 +82,118 @@ class MissedApproachControllerTest extends BaseApiTestCase
                 ['notcallsign' => 'BAW123']
             ],
         ];
+    }
+
+    public function testItAcknowledgesAMissedApproach()
+    {
+        $missed = MissedApproachNotification::create(
+            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
+        );
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PATCH,
+            'missed-approaches/' . $missed->id,
+            ['remarks' => 'Some remarks']
+        )
+            ->assertOk();
+
+        $missed->refresh();
+        $this->assertNotNull($missed->acknowledged_at);
+        $this->assertEquals('Some remarks', $missed->remarks);
+    }
+
+    public function testItReturnsForbiddenIfUserCannotPerformAction()
+    {
+        $missed = MissedApproachNotification::create(
+            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
+        );
+
+        // LON_C_CTR, can't acknowledge this
+        $this->setNetworkController(self::ACTIVE_USER_CID, 4);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PATCH,
+            'missed-approaches/' . $missed->id,
+            ['remarks' => 'Some remarks']
+        )
+            ->assertForbidden()
+            ->assertJsonStructure(['message']);
+
+        $missed->refresh();
+        $this->assertNull($missed->acknowledged_at);
+    }
+
+    /**
+     * @dataProvider badDataAcknowledgeProvider
+     */
+    public function testItReturnsBadOnBadAcknowledgementData(array $requestData)
+    {
+        $missed = MissedApproachNotification::create(
+            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
+        );
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, 'missed-approaches/' . $missed->id, $requestData)
+            ->assertUnprocessable();
+    }
+
+    public function badDataAcknowledgeProvider(): array
+    {
+        return [
+            'Remarks not a string' => [
+                ['remarks' => 123]
+            ],
+            'Remarks missing' => [
+                ['nottremarks' => 'remarks']
+            ],
+        ];
+    }
+
+    public function testItWontAllowUnauthenticatedUsersToAcknowledgeAMissedApproach()
+    {
+        $missed = MissedApproachNotification::create(
+            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
+        );
+        $this->makeUnauthenticatedApiRequest(
+            self::METHOD_PATCH,
+            'missed-approaches/' . $missed->id,
+            ['callsign' => 'BAW123']
+        )
+            ->assertUnauthorized();
+    }
+
+    public function testItWontAllowUsersNotControllingToAcknowledge()
+    {
+        $missed = MissedApproachNotification::create(
+            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
+        );
+
+        $this->setNetworkControllerUnrecognisedPosition(self::ACTIVE_USER_CID);
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PATCH,
+            'missed-approaches/' . $missed->id,
+            ['callsign' => 'BAW123']
+        )
+            ->assertForbidden();
+    }
+
+    public function testItWontAllowUsersNotLoggedInToAcknowledge()
+    {
+        $missed = MissedApproachNotification::create(
+            ['callsign' => 'BAW123', 'user_id' => self::ACTIVE_USER_CID, 'expires_at' => Carbon::now()->addMinute()]
+        );
+
+        $this->logoutNetworkController(self::ACTIVE_USER_CID);
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_PATCH,
+            'missed-approaches/' . $missed->id,
+            ['callsign' => 'BAW123']
+        )
+            ->assertForbidden();
+    }
+
+    public function testItReturnsNotFoundAcknowledgingNonExistentMissedApproach()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, 'missed-approaches/9999', ['callsign' => 'BAW123'])
+            ->assertNotFound();
     }
 }

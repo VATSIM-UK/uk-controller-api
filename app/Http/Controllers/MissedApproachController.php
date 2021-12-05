@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\MissedApproach\CannotAcknowledgeMissedApproachException;
 use App\Exceptions\MissedApproach\MissedApproachAlreadyActiveException;
+use App\Http\Requests\MissedApproach\AcknowledgeMissedApproach;
 use App\Http\Requests\MissedApproach\CreateMissedApproachNotification;
+use App\Models\MissedApproach\MissedApproachNotification;
 use App\Services\MissedApproachService;
 use Illuminate\Http\JsonResponse;
 
@@ -27,5 +30,18 @@ class MissedApproachController
         } catch (MissedApproachAlreadyActiveException $alreadyActiveException) {
             return response()->json(['message' => $alreadyActiveException->getMessage()], 409);
         }
+    }
+
+    public function acknowledge(
+        AcknowledgeMissedApproach $request,
+        MissedApproachNotification $missedApproachNotification
+    ): JsonResponse {
+        try {
+            $this->service->acknowledge($missedApproachNotification, $request->validated()['remarks']);
+        } catch (CannotAcknowledgeMissedApproachException $cannotAcknowledge) {
+            return response()->json(['message' => 'You cannot acknowledge this missed approach'])->setStatusCode(403);
+        }
+
+        return response()->json();
     }
 }

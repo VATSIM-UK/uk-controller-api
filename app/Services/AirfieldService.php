@@ -8,6 +8,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Flightplan\FlightRules;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use OutOfRangeException;
@@ -261,5 +262,14 @@ class AirfieldService
             ->distinct()
             ->select('airfield.code')
             ->pluck('airfield.code');
+    }
+
+    public static function controllerIsInTopDownOrder(ControllerPosition $controllerPosition, string $airfield): bool
+    {
+        return Airfield::where('code', $airfield)
+            ->whereHas('controllers', function (Builder $controllers) use ($controllerPosition) {
+                $controllers->where('controller_positions.id', $controllerPosition->id);
+            })
+            ->exists();
     }
 }

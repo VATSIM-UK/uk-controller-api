@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;

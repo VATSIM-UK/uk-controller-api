@@ -90,6 +90,8 @@ Route::middleware('api')->group(
                 Route::prefix('missed-approaches')->group(function () {
                     Route::post('', [MissedApproachController::class, 'create'])
                         ->middleware(MiddlewareKeys::CONTROLLING_LIVE);
+                    Route::patch('{missedApproachNotification}', [MissedApproachController::class, 'acknowledge'])
+                        ->middleware(MiddlewareKeys::CONTROLLING_LIVE);
                 });
             }
         );
