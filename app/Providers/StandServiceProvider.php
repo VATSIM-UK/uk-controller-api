@@ -27,10 +27,6 @@ class StandServiceProvider extends ServiceProvider
         $this->app->singleton(StandService::class, function (Application $application) {
             return new StandService(
                 [
-                    // Cargo FLIGHTS (airline or remarks) - assign any cargo stands for that airline
-                    // Cargo flights (via remarks) - cargo stand
-                    // Any stand for airline - perhaps the stands they have aren't just for cargo
-                    // Airline is cargo - give it any cargo
                     $application->make(ReservedArrivalStandAllocator::class),
                     $application->make(CargoFlightPreferredArrivalStandAllocator::class),
                     $application->make(CargoFlightArrivalStandAllocator::class),
