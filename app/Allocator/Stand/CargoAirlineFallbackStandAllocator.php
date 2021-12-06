@@ -6,7 +6,11 @@ use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
 
-class CargoArrivalStandAllocator extends AbstractArrivalStandAllocator
+/**
+ * A fallback allocator for cargo airlines. Will allocate any
+ * cargo stand to any airline that is type cargo.
+ */
+class CargoAirlineFallbackStandAllocator extends AbstractArrivalStandAllocator
 {
     use ChecksForCargoAirlines;
 

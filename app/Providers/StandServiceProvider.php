@@ -1,13 +1,15 @@
 <?php
+
 namespace App\Providers;
 
-use App\Allocator\Stand\CargoAirlineArrivalStandAllocator;
+use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
+use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
+use App\Services\StandAdminService;
 use App\Services\StandService;
-use App\Service\StandAdminService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use App\Imports\Stand\StandReservationsImport;
-use App\Allocator\Stand\CargoArrivalStandAllocator;
+use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocator;
@@ -25,12 +27,17 @@ class StandServiceProvider extends ServiceProvider
         $this->app->singleton(StandService::class, function (Application $application) {
             return new StandService(
                 [
+                    // Cargo FLIGHTS (airline or remarks) - assign any cargo stands for that airline
+                    // Cargo flights (via remarks) - cargo stand
+                    // Any stand for airline - perhaps the stands they have aren't just for cargo
+                    // Airline is cargo - give it any cargo
                     $application->make(ReservedArrivalStandAllocator::class),
-                    $application->make(CargoAirlineArrivalStandAllocator::class),
+                    $application->make(CargoFlightPreferredArrivalStandAllocator::class),
+                    $application->make(CargoFlightArrivalStandAllocator::class),
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
                     $application->make(AirlineTerminalArrivalStandAllocator::class),
-                    $application->make(CargoArrivalStandAllocator::class),
+                    $application->make(CargoAirlineFallbackStandAllocator::class),
                     $application->make(DomesticInternationalStandAllocator::class),
                     $application->make(FallbackArrivalStandAllocator::class),
                 ]

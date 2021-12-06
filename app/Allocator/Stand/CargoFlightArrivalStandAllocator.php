@@ -5,9 +5,12 @@ namespace App\Allocator\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
-class CargoAirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
+/**
+ * Secondary cargo stand allocator, with no airline preferences. Only concerned with FP remarks explicitly
+ * stating that the flight is cargo - which means a cargo stand should be given.
+ */
+class CargoFlightArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
     use ChecksForCargoAirlines;
 
@@ -20,16 +23,10 @@ class CargoAirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
 
     protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
     {
-        if (!$this->isCargoAirline($aircraft)) {
+        if (!$this->isCargoFlight($aircraft)) {
             return null;
         }
 
-        if (!($airline = $this->airlineService->getAirlineForAircraft($aircraft))) {
-            return null;
-        }
-
-        return $stands->cargo()
-            ->airline($airline)
-            ->orderBy('airline_stand.priority');
+        return $stands->cargo();
     }
 }

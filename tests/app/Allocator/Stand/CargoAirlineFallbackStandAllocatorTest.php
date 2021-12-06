@@ -12,18 +12,18 @@ use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
 use util\Traits\WithWakeCategories;
 
-class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
+class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
 {
     use WithWakeCategories;
 
-    private CargoArrivalStandAllocator $allocator;
+    private CargoAirlineFallbackStandAllocator $allocator;
 
     private Stand $cargoStand;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(CargoArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(CargoAirlineFallbackStandAllocator::class);
 
         // Make a small cargo stand so it can be ignored by weight considerations
         Stand::create(
@@ -73,28 +73,6 @@ class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
         Airline::where('icao_code', 'VIR')->update(['is_cargo' => true]);
 
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
-        $this->assertEquals($databaseAllocation->stand_id, $allocation->stand_id);
-        $this->assertEquals($this->cargoStand->id, $allocation->stand_id);
-    }
-
-    public function testItAllocatesCargoStandsIfFlightplanSaysCargo()
-    {
-        // Create a non-cargo stand
-        Stand::create(
-            [
-                'airfield_id' => 1,
-                'identifier' => '602',
-                'latitude' => 54.65875500,
-                'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
-                'type_id' => StandType::where('key', 'DOMESTIC')->first()->id,
-            ]
-        );
-
-        $aircraft = $this->createAircraft('VIR22F', 'EGLL');
-        $aircraft->remarks = 'Some stuff RMK/CARGO Some more stuff';
-        $allocation = $this->allocator->allocate($aircraft);
         $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
         $this->assertEquals($databaseAllocation->stand_id, $allocation->stand_id);
         $this->assertEquals($this->cargoStand->id, $allocation->stand_id);

@@ -5,8 +5,9 @@ namespace App\Services;
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
-use App\Allocator\Stand\CargoAirlineArrivalStandAllocator;
-use App\Allocator\Stand\CargoArrivalStandAllocator;
+use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
+use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
+use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\ReservedArrivalStandAllocator;
@@ -682,11 +683,12 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(
             [
                 ReservedArrivalStandAllocator::class,
-                CargoAirlineArrivalStandAllocator::class,
+                CargoFlightPreferredArrivalStandAllocator::class,
+                CargoFlightArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
                 AirlineArrivalStandAllocator::class,
                 AirlineTerminalArrivalStandAllocator::class,
-                CargoArrivalStandAllocator::class,
+                CargoAirlineFallbackStandAllocator::class,
                 DomesticInternationalStandAllocator::class,
                 FallbackArrivalStandAllocator::class,
             ],
