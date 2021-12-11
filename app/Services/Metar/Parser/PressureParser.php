@@ -48,14 +48,14 @@ class PressureParser implements MetarParser
         $qnh = Str::substr($qnhToken, 1);
         $parsedData->offsetSet('pressure_format', 'hpa');
         $parsedData->offsetSet('qnh', (int)($qnh[0] === '0' ? Str::substr($qnh, 1) : $qnh));
-        $parsedData->offsetSet('altimeter', $this->getAltimeterFromQnh($parsedData->offsetGet('qnh')));
+        $parsedData->offsetSet('qnh_inhg', $this->getAltimeterFromQnh($parsedData->offsetGet('qnh')));
     }
 
     private function parsePressureFromAltimeter(string $altimeterToken, Collection $parsedData): void
     {
         $parsedData->offsetSet('pressure_format', 'inhg');
-        $parsedData->offsetSet('altimeter', $this->altimeterStringToFloat(Str::substr($altimeterToken, 1)));
-        $parsedData->offsetSet('qnh', $this->getQnhFromAltimeter($parsedData->offsetGet('altimeter')));
+        $parsedData->offsetSet('qnh_inhg', $this->altimeterStringToFloat(Str::substr($altimeterToken, 1)));
+        $parsedData->offsetSet('qnh', $this->getQnhFromAltimeter($parsedData->offsetGet('qnh_inhg')));
     }
 
     private function getAltimeterFromQnh(int $qnh): float

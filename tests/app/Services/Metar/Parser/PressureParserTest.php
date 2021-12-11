@@ -41,16 +41,16 @@ class PressureParserTest extends BaseUnitTestCase
             'QNH has something at end' => [
                 ['Q001A']
             ],
-            'Altimeter has something at start' => [
+            'qnh_inhg has something at start' => [
                 ['BA0001']
             ],
-            'Altimeter has something at end' => [
+            'qnh_inhg has something at end' => [
                 ['A0001B']
             ],
-            'Altimeter too long' => [
+            'qnh_inhg too long' => [
                 ['A10011']
             ],
-            'Altimeter too short' => [
+            'qnh_inhg too short' => [
                 ['A100']
             ],
             'QNH too short' => [
@@ -62,7 +62,7 @@ class PressureParserTest extends BaseUnitTestCase
             'QNH not numeric' => [
                 ['Q10a1']
             ],
-            'Altimeter not numeric' => [
+            'qnh_inhg not numeric' => [
                 ['A10a1']
             ],
         ];
@@ -73,18 +73,18 @@ class PressureParserTest extends BaseUnitTestCase
         $parsed = $this->parser->parse($this->airfield, collect(['EGKK', 'Q1013']));
         $this->assertCount(5, $parsed);
         $this->assertEquals(1013, $parsed['qnh']);
-        $this->assertEquals(29.91, $parsed['altimeter']);
+        $this->assertEquals(29.91, $parsed['qnh_inhg']);
         $this->assertEquals(1003, $parsed['qfe']);
         $this->assertEquals(29.62, $parsed['qfe_inhg']);
         $this->assertEquals('hpa', $parsed['pressure_format']);
     }
 
-    public function testItParsesAltimeterFromMetarTokens()
+    public function testItParsesqnh_inhgFromMetarTokens()
     {
         $parsed = $this->parser->parse($this->airfield, collect(['EGKK', 'A2992']));
         $this->assertCount(5, $parsed);
         $this->assertEquals(1013, $parsed['qnh']);
-        $this->assertEquals(29.92, $parsed['altimeter']);
+        $this->assertEquals(29.92, $parsed['qnh_inhg']);
         $this->assertEquals(1003, $parsed['qfe']);
         $this->assertEquals(29.62, $parsed['qfe_inhg']);
         $this->assertEquals('inhg', $parsed['pressure_format']);
@@ -95,7 +95,7 @@ class PressureParserTest extends BaseUnitTestCase
         $parsed = $this->parser->parse($this->airfield, collect(['EGKK', 'Q1014', 'A2992']));
         $this->assertCount(5, $parsed);
         $this->assertEquals(1014, $parsed['qnh']);
-        $this->assertEquals(29.94, $parsed['altimeter']);
+        $this->assertEquals(29.94, $parsed['qnh_inhg']);
         $this->assertEquals(1004, $parsed['qfe']);
         $this->assertEquals(29.65, $parsed['qfe_inhg']);
         $this->assertEquals('hpa', $parsed['pressure_format']);
