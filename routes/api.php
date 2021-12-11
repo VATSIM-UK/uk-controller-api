@@ -313,6 +313,9 @@ Route::middleware('api')->group(
                 Route::get('regional-pressure', 'RegionalPressureController@getRegionalPressures');
                 Route::get('altimeter-setting-region', 'RegionalPressureController@getAltimeterSettingRegions');
 
+                // Metars
+                Route::get('metar', 'MetarController@getAllMetars');
+
                 // Minimum stack levels
                 Route::get('msl', 'MinStackController@getAllMinStackLevels');
                 Route::get('msl/airfield', 'MinStackController@getAirfieldMinStackLevels');
