@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\Metar\MetarRetrievalService;
 use App\Services\Metar\MetarService;
+use App\Services\Metar\Parser\ObservationTimeParser;
 use App\Services\Metar\Parser\PressureParser;
 use App\Services\Metar\Parser\VisibilityParser;
 use App\Services\Metar\Parser\WindParser;
@@ -20,6 +21,7 @@ class MetarServiceProvider extends ServiceProvider
             return new MetarService(
                 $application->make(MetarRetrievalService::class),
                 collect([
+                    $this->app->make(ObservationTimeParser::class),
                     $this->app->make(PressureParser::class),
                     $this->app->make(WindParser::class),
                     $this->app->make(WindVariationParser::class),

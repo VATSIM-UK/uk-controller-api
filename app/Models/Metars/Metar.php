@@ -24,7 +24,7 @@ class Metar extends Model
 
     public function getQnhAttribute(): ?int
     {
-        return $this->parsed['qnh'];
+        return $this->parsed['qnh'] ?? null;
     }
 
     public function airfield(): BelongsTo

@@ -7,6 +7,7 @@ use App\Events\MetarsUpdatedEvent;
 use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
 use App\Services\Metar\Parser\MetarParser;
+use App\Services\Metar\Parser\ObservationTimeParser;
 use App\Services\Metar\Parser\PressureParser;
 use App\Services\Metar\Parser\VisibilityParser;
 use App\Services\Metar\Parser\WindParser;
@@ -135,6 +136,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
     public function testItHasParsers()
     {
         $expected = [
+            ObservationTimeParser::class,
             PressureParser::class,
             WindParser::class,
             WindVariationParser::class,
