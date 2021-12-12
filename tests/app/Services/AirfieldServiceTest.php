@@ -49,6 +49,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                         1,
                     ],
                 ],
+                'handoff_id' => null,
             ],
             [
                 'id' => 2,
@@ -59,6 +60,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                     4,
                 ],
                 'pairing-prenotes' => [],
+                'handoff_id' => null,
             ],
             [
                 'id' => 3,
@@ -67,6 +69,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'wake_category_scheme_id' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
+                'handoff_id' => null,
             ],
         ];
 
