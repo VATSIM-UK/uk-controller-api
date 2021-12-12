@@ -446,7 +446,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
     public function testItReturnsAirfieldDependency()
     {
         DB::table('speed_groups')->delete();
-        Airfield::find(2)->update(['wake_category_scheme_id' => 2]);
+        Airfield::find(2)->update(['wake_category_scheme_id' => 2, 'handoff_id' => 1]);
         $speedGroup = SpeedGroup::create(
             [
                 'airfield_id' => 1,
@@ -514,6 +514,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                         'prenote_id' => 1,
                     ]
                 ],
+                'handoff_id' => null,
             ],
             [
                 'id' => 2,
@@ -524,6 +525,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                     4,
                 ],
                 'pairing_prenotes' => [],
+                'handoff_id' => 1,
             ],
             [
                 'id' => 3,
@@ -532,6 +534,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'departure_speed_groups' => [],
                 'top_down_controller_positions' => [],
                 'pairing_prenotes' => [],
+                'handoff_id' => null,
             ],
         ];
 
