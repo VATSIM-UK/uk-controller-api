@@ -3,7 +3,9 @@
 namespace App\Models\Vatsim;
 
 use App\Helpers\Vatsim\ControllerPositionInterface;
+use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NetworkControllerPosition extends Model implements ControllerPositionInterface
 {
@@ -15,6 +17,11 @@ class NetworkControllerPosition extends Model implements ControllerPositionInter
         'frequency',
         'controller_position_id',
     ];
+
+    public function controllerPosition(): BelongsTo
+    {
+        return $this->belongsTo(ControllerPosition::class);
+    }
 
     public function getCallsign(): string
     {

@@ -1,5 +1,70 @@
 # UK Controller Plugin API Changelog
 
+### [4.13.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.13.1...4.13.2) (2021-12-05)
+
+
+### Bug Fixes
+
+* **stands:** properly deduplicate stand occupancy ([#732](https://github.com/VATSIM-UK/uk-controller-api/issues/732)) ([e44045f](https://github.com/VATSIM-UK/uk-controller-api/commit/e44045f64de4b645d99f059453866ba37281eb47))
+
+### [4.13.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.13.0...4.13.1) (2021-12-05)
+
+
+### Bug Fixes
+
+* **stands:** only assign departure stands to one aircraft per stand  ([#719](https://github.com/VATSIM-UK/uk-controller-api/issues/719)) ([b77bccd](https://github.com/VATSIM-UK/uk-controller-api/commit/b77bccdeb876ffae1c1ee28b9908f8b3bab2d9b2)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716) [#713](https://github.com/VATSIM-UK/uk-controller-api/issues/713)
+
+## [4.13.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.2...4.13.0) (2021-12-05)
+
+
+### Features
+
+* **missedapproach:** Allow missed approaches to be acknowledged ([#721](https://github.com/VATSIM-UK/uk-controller-api/issues/721)) ([2a78c05](https://github.com/VATSIM-UK/uk-controller-api/commit/2a78c05c43e9c503033d401735b790a3a0383c3a)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716)
+
+### [4.12.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.1...4.12.2) (2021-11-30)
+
+
+### Data Updates
+
+* **prenotes:** Add missing flight rule to prenote ([#728](https://github.com/VATSIM-UK/uk-controller-api/issues/728)) ([b76e7c1](https://github.com/VATSIM-UK/uk-controller-api/commit/b76e7c17364982ae3ab8e9b440a1a71ebdb7b52e))
+
+### [4.12.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.12.0...4.12.1) (2021-11-28)
+
+
+### Bug Fixes
+
+* **dependencies:** Automatically add missing dependency tables ([#724](https://github.com/VATSIM-UK/uk-controller-api/issues/724)) ([dab8a17](https://github.com/VATSIM-UK/uk-controller-api/commit/dab8a174d3a0f334a0e04f7203759fefef7da16a))
+
+## [4.12.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.3...4.12.0) (2021-11-28)
+
+
+### Features
+
+* **dependency:** Consolidate dependencies ([#697](https://github.com/VATSIM-UK/uk-controller-api/issues/697)) ([8682627](https://github.com/VATSIM-UK/uk-controller-api/commit/8682627d5b33079fe533695211074258fcfa389d))
+
+### [4.11.3](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.2...4.11.3) (2021-11-28)
+
+
+### Bug Fixes
+
+* **dependencies:** Remove part of migration that is blocking on live ([#723](https://github.com/VATSIM-UK/uk-controller-api/issues/723)) ([84f57c8](https://github.com/VATSIM-UK/uk-controller-api/commit/84f57c892132ceee2e4fa7e64e4c532c735854ee))
+
+### [4.11.2](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.1...4.11.2) (2021-11-28)
+
+
+### Bug Fixes
+
+* **database:** allow dependency updates to run in transaction ([#717](https://github.com/VATSIM-UK/uk-controller-api/issues/717)) ([d11debe](https://github.com/VATSIM-UK/uk-controller-api/commit/d11debebb1f2f506d853e632b0c39229e41ee339)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716)
+* **network:** invalid json from network metadata ([#715](https://github.com/VATSIM-UK/uk-controller-api/issues/715)) ([534612a](https://github.com/VATSIM-UK/uk-controller-api/commit/534612afc33c152c20c473759f07aca076c4eadd))
+* **regionalpressures:** default negative regional pressures to zero ([#718](https://github.com/VATSIM-UK/uk-controller-api/issues/718)) ([c05a9c6](https://github.com/VATSIM-UK/uk-controller-api/commit/c05a9c69492f04b3c26b39b436a95415414bcb66)), closes [#716](https://github.com/VATSIM-UK/uk-controller-api/issues/716) [#712](https://github.com/VATSIM-UK/uk-controller-api/issues/712)
+
+### [4.11.1](https://github.com/VATSIM-UK/uk-controller-api/compare/4.11.0...4.11.1) (2021-11-16)
+
+
+### Bug Fixes
+
+* **database:** prune failed jobs daily ([#709](https://github.com/VATSIM-UK/uk-controller-api/issues/709)) ([b958c95](https://github.com/VATSIM-UK/uk-controller-api/commit/b958c95d3002736b9375aaa9417f79afefbe14d4))
+
 ## [4.11.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.10.0...4.11.0) (2021-11-16)
 
 

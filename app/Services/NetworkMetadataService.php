@@ -55,7 +55,7 @@ class NetworkMetadataService
     private function networkDataResponseValidator(Response $response): ValidatorContract
     {
         return Validator::make(
-            $response->json(),
+            $response->json() ?? [],
             [
                 'data' => 'required|array',
                 'data.v3' => 'required|array',

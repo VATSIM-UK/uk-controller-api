@@ -27,6 +27,7 @@ class OptimiseTables extends Command
         'prenote_messages',
         'missed_approach_notifications',
         'network_controller_positions',
+        'failed_jobs',
     ];
 
     protected $signature = 'tables:optimise';
