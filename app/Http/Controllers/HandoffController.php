@@ -18,14 +18,6 @@ class HandoffController extends BaseController
         $this->handoffService = $handoffService;
     }
 
-    /**
-     * @deprecated
-     */
-    public function getAllHandoffs(): JsonResponse
-    {
-        return response()->json($this->handoffService->getAllHandoffsWithControllers());
-    }
-
     public function getHandoffsV2Dependency(): JsonResponse
     {
         return response()->json($this->handoffService->getHandoffsV2Dependency());

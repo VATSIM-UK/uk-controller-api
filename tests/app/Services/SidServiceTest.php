@@ -18,20 +18,6 @@ class SidServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(SidService::class);
     }
 
-    public function testItGeneratesAndCachesSidDependency()
-    {
-        $expected = [
-            'EGLL' => [
-                'TEST1X' => 3000,
-                'TEST1Y' => 4000,
-            ],
-            'EGBB' => [
-                'TEST1A' => 5000,
-            ],
-        ];
-
-        $this->assertEquals($expected, $this->service->getInitialAltitudeDependency());
-    }
     public function testItGetsASid()
     {
         $expected = [

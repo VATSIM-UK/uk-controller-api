@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
-use App\Models\Flightplan\FlightRules;
-use App\Models\Sid;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
@@ -28,67 +26,6 @@ class PrenoteService
                     ->toArray(),
             ];
         })->toArray();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getAllPrenotesWithControllers(): array
-    {
-        return array_merge($this->getAllSidPrenotes(), $this->getAllAirfieldPrenotes());
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getAllSidPrenotes(): array
-    {
-        $prenotes = [];
-        Sid::whereHas('prenotes')->get()->each(function (Sid $sid) use (&$prenotes) {
-            $sid->prenotes->each(function (Prenote $prenote) use ($sid, &$prenotes) {
-                $prenotes[] = [
-                    'airfield' => $sid->airfield->code,
-                    'departure' => $sid->identifier,
-                    'type' => 'sid',
-                    'recipient' => $prenote->controllers()->orderBy('order')->pluck('callsign')->toArray(),
-                ];
-            });
-        });
-        return $prenotes;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getAllAirfieldPrenotes(): array
-    {
-        $flightRules = FlightRules::all()->mapWithKeys(function (FlightRules $flightRules) {
-            return [$flightRules->id => $flightRules->euroscope_key];
-        })->toArray();
-
-        $prenotes = [];
-        Airfield::whereHas('prenotePairings')->get()->each(
-            function (Airfield $airfield) use (&$prenotes, $flightRules) {
-                $airfield->prenotePairings->each(
-                    function (Airfield $pairedAirfield) use ($airfield, &$prenotes, $flightRules) {
-                        $prenotes[] = [
-                            'origin' => $airfield->code,
-                            'destination' => $pairedAirfield->code,
-                            'type' => 'airfieldPairing',
-                            'flight_rules' => $pairedAirfield->pivot->flight_rule_id
-                                ? $flightRules[$pairedAirfield->pivot->flight_rule_id]
-                                : null,
-                            'recipient' => Prenote::findOrFail($pairedAirfield->pivot->prenote_id)
-                                ->controllers()
-                                ->orderBy('order')
-                                ->pluck('callsign')
-                                ->toArray(),
-                        ];
-                    }
-                );
-            }
-        );
-        return $prenotes;
     }
 
     public static function insertIntoOrderBefore(

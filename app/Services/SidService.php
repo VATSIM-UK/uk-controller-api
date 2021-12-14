@@ -2,34 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Airfield\Airfield;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 
 class SidService
 {
-    /**
-     * @deprecated
-     * @return array
-     */
-    public function getInitialAltitudeDependency() : array
-    {
-        $sidGroups = Sid::all()->groupBy('airfield_id');
-
-        $altitudes = [];
-        $sidGroups->each(function (Collection $airfieldGroup) use (&$altitudes) {
-            $airfieldModel = Airfield::find($airfieldGroup->first()->airfield_id);
-
-            $airfieldGroup->each(function (Sid $sid) use (&$altitudes, $airfieldModel) {
-                $altitudes[$airfieldModel->code][$sid->identifier] = $sid->initial_altitude;
-            });
-        });
-
-        return $altitudes;
-    }
-
     public function getSidsDependency()
     {
         return Sid::with('airfield', 'prenotes')->get()->map(function (Sid $sid) {
