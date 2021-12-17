@@ -38,6 +38,6 @@ class MetarsUpdatedEvent extends HighPriorityBroadcastEvent
     
     public function broadcastAs()
     {
-        return "metars.updated"
+        return "metars.updated";
     }
 }
