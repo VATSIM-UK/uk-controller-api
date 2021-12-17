@@ -35,4 +35,9 @@ class MetarsUpdatedEvent extends HighPriorityBroadcastEvent
     {
         return [new PrivateChannel('metar_updates')];
     }
+    
+    public function broadcastAs()
+    {
+        return "metars.updated"
+    }
 }
