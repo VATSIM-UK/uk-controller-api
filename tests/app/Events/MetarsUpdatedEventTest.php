@@ -26,6 +26,11 @@ class MetarsUpdatedEventTest extends BaseFunctionalTestCase
     {
         $this->assertEquals([new PrivateChannel('metar_updates')], $this->event->broadcastOn());
     }
+    
+    public function testItBroadcastsAsEvent()
+    {
+        $this->assertEquals("metars.updated", $this->event->broadcastAs());
+    }
 
     public function testItBroadcastsMetarData()
     {
