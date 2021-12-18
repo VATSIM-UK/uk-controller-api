@@ -31,14 +31,14 @@ class MetarControllerTest extends BaseApiTestCase
 
         $expected = [
             [
-                'airfield' => 'EGBB',
+                'airfield_id' => Airfield::where('code', 'EGBB')->first()->id,
                 'raw' => 'FOOOO',
                 'parsed' => [
                     'bar' => 'baz'
                 ],
             ],
             [
-                'airfield' => 'EGLL',
+                'airfield_id' => Airfield::where('code', 'EGLL')->first()->id,
                 'raw' => 'FOOOO2',
                 'parsed' => [
                     'bar2' => 'baz2'
