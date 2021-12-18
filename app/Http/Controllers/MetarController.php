@@ -12,7 +12,7 @@ class MetarController
         return response()->json(
             Metar::with('airfield')->get()->map(function (Metar $metar) {
                 return [
-                    'airfield' => $metar->airfield->code,
+                    'airfield_id' => $metar->airfield_id,
                     'raw' => $metar->raw,
                     'parsed' => $metar->parsed,
                 ];
