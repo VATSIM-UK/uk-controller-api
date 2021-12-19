@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.2.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.1.0...5.2.0) (2021-12-19)
+
+
+### Features
+
+* **airfields:** Add a default handoff order for airfield departures ([#738](https://github.com/VATSIM-UK/uk-controller-api/issues/738)) ([4c3c5a6](https://github.com/VATSIM-UK/uk-controller-api/commit/4c3c5a675c8d124c57c4e5843456ddd61368d2b4))
+
 ## [5.1.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.0.0...5.1.0) (2021-12-19)
 
 
