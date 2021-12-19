@@ -31,7 +31,7 @@ class Hold extends Model
      * @var array
      */
     protected $fillable = [
-        'fix',
+        'navaid_id',
         'inbound_heading',
         'minimum_altitude',
         'maximum_altitude',
