@@ -3,11 +3,14 @@
 namespace App\Models\Metars;
 
 use App\Models\Airfield\Airfield;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Metar extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'airfield_id',
         'parsed',
@@ -19,19 +22,9 @@ class Metar extends Model
         'parsed' => 'array',
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-        parent::creating(function (Metar $metar) {
-            if (!$metar->parsed) {
-                $metar->parsed = [];
-            }
-        });
-    }
-
     public function getQnhAttribute(): ?int
     {
-        return $this->parsed['qnh'];
+        return $this->parsed['qnh'] ?? null;
     }
 
     public function airfield(): BelongsTo

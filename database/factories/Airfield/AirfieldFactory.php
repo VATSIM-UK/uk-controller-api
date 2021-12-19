@@ -29,6 +29,7 @@ class AirfieldFactory extends Factory
             'code' => $this->getValidAirfieldCode(),
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
+            'elevation' => $this->faker->numberBetween(0, 800),
             'transition_altitude' => 3000,
             'standard_high' => 1,
         ];
