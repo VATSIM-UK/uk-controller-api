@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.1.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.0.0...5.1.0) (2021-12-19)
+
+
+### Features
+
+* **metars:** Improve metar parsing ([#731](https://github.com/VATSIM-UK/uk-controller-api/issues/731)) ([91f22f9](https://github.com/VATSIM-UK/uk-controller-api/commit/91f22f9ad31d802dba74e0fc59b81672792632a9))
+
 ## [5.0.0](https://github.com/VATSIM-UK/uk-controller-api/compare/4.13.2...5.0.0) (2021-12-14)
 
 
