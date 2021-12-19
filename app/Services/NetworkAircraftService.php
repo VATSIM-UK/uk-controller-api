@@ -97,6 +97,7 @@ class NetworkAircraftService
             'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),
             'planned_flighttype' => $this->getFlightplanDataElement($pilot, 'flight_rules'),
             'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
+            'remarks' => $this->getFlightplanDataElement($pilot, 'remarks'),
             'transponder_last_updated_at' => $this->getTransponderUpdatedAtTime($pilot),
         ];
     }

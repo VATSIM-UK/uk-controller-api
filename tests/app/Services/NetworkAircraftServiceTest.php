@@ -350,6 +350,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
                     'altitude' => '15001',
                     'flight_rules' => 'I',
                     'route' => 'DIRECT',
+                    'remarks' => 'hi'
                 ]
                 : null,
         ];

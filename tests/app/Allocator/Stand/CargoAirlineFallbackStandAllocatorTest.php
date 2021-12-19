@@ -12,24 +12,18 @@ use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
 use util\Traits\WithWakeCategories;
 
-class CargoArrivalStandAllocatorTest extends BaseFunctionalTestCase
+class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
 {
     use WithWakeCategories;
 
-    /**
-     * @var CargoArrivalStandAllocator
-     */
-    private $allocator;
+    private CargoAirlineFallbackStandAllocator $allocator;
 
-    /**
-     * @var Stand
-     */
-    private $cargoStand;
+    private Stand $cargoStand;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(CargoArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(CargoAirlineFallbackStandAllocator::class);
 
         // Make a small cargo stand so it can be ignored by weight considerations
         Stand::create(
