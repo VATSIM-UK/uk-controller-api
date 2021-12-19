@@ -26,6 +26,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                         1,
                     ],
                 ],
+                'handoff_id' => null,
             ],
             [
                 'id' => 2,
@@ -37,6 +38,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                     4,
                 ],
                 'pairing-prenotes' => [],
+                'handoff_id' => null,
             ],
             [
                 'id' => 3,
@@ -46,6 +48,7 @@ class AirfieldControllerTest extends BaseApiTestCase
                 'wake_category_scheme_id' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
+                'handoff_id' => null,
             ],
         ];
 

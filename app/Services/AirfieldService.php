@@ -40,6 +40,7 @@ class AirfieldService
                                 'prenote_id' => $destination->pivot->prenote_id
                             ];
                         })->toArray(),
+                        'handoff_id' => $airfield->handoff_id,
                     ];
                 }
             )->toArray();

@@ -34,6 +34,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'transition_altitude',
         'standard_high',
         'wake_category_scheme_id',
+        'handoff_id',
         'created_at',
         'updated_at'
     ];
@@ -99,7 +100,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
         return $this->standard_high;
     }
 
-    public function controllers() : BelongsToMany
+    public function controllers(): BelongsToMany
     {
         return $this->belongsToMany(
             ControllerPosition::class,
@@ -110,7 +111,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
             ->withPivot('order');
     }
 
-    public function prenotePairings() : BelongsToMany
+    public function prenotePairings(): BelongsToMany
     {
         return $this->belongsToMany(
             Airfield::class,
@@ -121,7 +122,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
     }
 
 
-    public function stands() : HasMany
+    public function stands(): HasMany
     {
         return $this->hasMany(
             Stand::class,
@@ -129,7 +130,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
         );
     }
 
-    public function terminals() : HasMany
+    public function terminals(): HasMany
     {
         return $this->hasMany(Terminal::class);
     }
