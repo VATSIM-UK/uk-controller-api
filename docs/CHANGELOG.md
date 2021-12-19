@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.3.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.2.0...5.3.0) (2021-12-19)
+
+
+### Features
+
+* **stands:** Cargo airline preferences and gravity va preferred stands ([#733](https://github.com/VATSIM-UK/uk-controller-api/issues/733)) ([e093a71](https://github.com/VATSIM-UK/uk-controller-api/commit/e093a7194b298de611113044bcdd2183ccc90066))
+
 ## [5.2.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.1.0...5.2.0) (2021-12-19)
 
 
