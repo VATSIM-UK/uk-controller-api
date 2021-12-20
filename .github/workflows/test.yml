@@ -188,3 +188,16 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           event-type: release-trigger
+
+  merge-dependabot:
+    name: Dependabot Auto Merge
+    needs: test
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger auto merge workflow
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PAT }}
+          event-type: dependabot-auto-merge-trigger
+          client-payload: '{"pull_request_url": "${{github.event.pull_request.html_url}}"}'

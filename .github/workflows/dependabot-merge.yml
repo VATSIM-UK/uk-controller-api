@@ -1,0 +1,39 @@
+name: Dependabot Merge
+
+on:
+  repository_dispatch:
+    types: [dependabot-auto-merge-trigger]
+
+jobs:
+  approve-and-merge:
+    name: Approve and Merge
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ukcp-api-dependabot-auto-merge
+      cancel-in-progress: true
+    steps:
+      - name: Get dependabot metadata
+        id: dependabot
+        uses: dependabot/fetch-metadata@v1.1.1
+        with:
+          github-token: "${{ secrets.PAT }}"
+
+      - name: Check merge conditions
+        id: merge-conditions-check
+        if: contains('version-update:semver-patch,version-update:semver-minor', steps.dependabot.outputs.update-type) &&
+          contains('direct:production,indirect:production', steps.dependabot.outputs.dependency-type)
+        run: echo "Auto merge conditions satisfied"
+
+      - name: Approve dependabot pull request
+        if:  ${{ steps.merge-conditions-check.conclusion == 'success' }}
+        env:
+          PR_URL: ${{ github.event.client_payload.pull_request_url }}
+          GITHUB_TOKEN: ${{secrets.PAT}}
+        run: gh pr review --approve "$PR_URL"
+
+      - name: Merge dependabot pull request
+        if: ${{ steps.merge-conditions-check.conclusion == 'success' }}
+        env:
+          PR_URL: ${{ github.event.client_payload.pull_request_url }}
+          GITHUB_TOKEN: ${{secrets.PAT}}
+        run: gh pr merge --auto --squash "$PR_URL"
