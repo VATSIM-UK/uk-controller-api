@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.4.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.3.0...5.4.0) (2021-12-20)
+
+
+### Features
+
+* Add PHP 8.1 Support ([#575](https://github.com/VATSIM-UK/uk-controller-api/issues/575)) ([00189df](https://github.com/VATSIM-UK/uk-controller-api/commit/00189df94e6930b33e345995f9a194f784b96d19))
+
 ## [5.3.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.2.0...5.3.0) (2021-12-19)
 
 
