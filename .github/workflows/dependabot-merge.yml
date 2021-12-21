@@ -1,39 +1,34 @@
 name: Dependabot Merge
 
 on:
-  repository_dispatch:
-    types: [dependabot-auto-merge-trigger]
+  workflow_run:
+    workflows: [ "Tests" ]
+    types: [ "completed" ]
 
 jobs:
   approve-and-merge:
     name: Approve and Merge
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.event == 'pull_request'}} &&
+      ${{ github.event.workflow_run.conclusion == 'success' }}
     concurrency:
       group: ukcp-api-dependabot-auto-merge
       cancel-in-progress: true
     steps:
-      - name: Get dependabot metadata
-        id: dependabot
-        uses: dependabot/fetch-metadata@v1.1.1
+      - name: Download Pull Request Number
+        uses: actions/download-artifact@v2
         with:
-          github-token: "${{ secrets.PAT }}"
+          name: pr-number
+          path: ~/pr-number
 
-      - name: Check merge conditions
-        id: merge-conditions-check
-        if: contains('version-update:semver-patch,version-update:semver-minor', steps.dependabot.outputs.update-type) &&
-          contains('direct:production,indirect:production', steps.dependabot.outputs.dependency-type)
-        run: echo "Auto merge conditions satisfied"
+      - name: Set Pull Request Number
+        run: |
+          NUM=$(cat ~/pr-number)
+          echo "PR_NUMBER=$NUM" >> $GITHUB_ENV
 
-      - name: Approve dependabot pull request
-        if:  ${{ steps.merge-conditions-check.conclusion == 'success' }}
-        env:
-          PR_URL: ${{ github.event.client_payload.pull_request_url }}
-          GITHUB_TOKEN: ${{secrets.PAT}}
-        run: gh pr review --approve "$PR_URL"
-
-      - name: Merge dependabot pull request
-        if: ${{ steps.merge-conditions-check.conclusion == 'success' }}
-        env:
-          PR_URL: ${{ github.event.client_payload.pull_request_url }}
-          GITHUB_TOKEN: ${{secrets.PAT}}
-        run: gh pr merge --auto --squash "$PR_URL"
+      - name: Merge Dependabot
+        uses: fastify/github-action-merge-dependabot@v3.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          target: minor
+          pr-number: ${{ env.PR_NUMBER }}

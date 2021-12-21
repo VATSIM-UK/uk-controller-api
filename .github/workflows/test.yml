@@ -20,9 +20,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4']
-        composer: ['v2']
-        experimental: [false]
+        php: [ '7.4' ]
+        composer: [ 'v2' ]
+        experimental: [ false ]
     services:
       mysql:
         image: mysql:8.0
@@ -171,7 +171,7 @@ jobs:
       - name: Upload Code Coverage Report
         if: matrix.php == '7.4'
         uses: codecov/codecov-action@v2
-        with: 
+        with:
           fail_ci_if_error: true
 
   trigger-release:
@@ -189,15 +189,16 @@ jobs:
           token: ${{ secrets.PAT }}
           event-type: release-trigger
 
-  merge-dependabot:
-    name: Dependabot Auto Merge
+  pr-number:
+    name: Pull Request Number
     needs: test
-    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger auto merge workflow
-        uses: peter-evans/repository-dispatch@v1
+      - name: Save pull request number
+        run: echo ${{ github.event.number }} > ~/pr-number
+
+      - name: Upload pull request number artifact
+        uses: actions/upload-artifact@v2
         with:
-          token: ${{ secrets.PAT }}
-          event-type: dependabot-auto-merge-trigger
-          client-payload: '{"pull_request_url": "${{github.event.pull_request.html_url}}"}'
+          name: pr-number
+          path: ~/pr-number
