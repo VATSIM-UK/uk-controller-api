@@ -37,7 +37,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
      *
      * @return Collection | AbstractSquawkRange[]
      */
-    final private function getPossibleSquawkRanges(array $details): Collection
+    private function getPossibleSquawkRanges(array $details): Collection
     {
         return $this->filterRanges(
             $this->getOrderedSquawkRangesQuery($details)
@@ -47,7 +47,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
         );
     }
 
-    final private function tryAssignSquawk($callsign, $code): ?SquawkAssignmentInterface
+    private function tryAssignSquawk($callsign, $code): ?SquawkAssignmentInterface
     {
         try {
             return SquawkAssignment::updateOrCreate(
