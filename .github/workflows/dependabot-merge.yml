@@ -13,7 +13,6 @@ jobs:
       ${{ github.event.workflow_run.conclusion == 'success' }}
     concurrency:
       group: ukcp-api-dependabot-auto-merge
-      cancel-in-progress: true
     steps:
       - name: Download Pull Request Number
         uses: actions/download-artifact@v2
