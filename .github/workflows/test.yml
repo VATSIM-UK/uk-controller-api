@@ -191,6 +191,7 @@ jobs:
   pr-number:
     name: Pull Request Number
     needs: test
+    if: ${{ github.event.workflow_run.event == 'pull_request'}}
     runs-on: ubuntu-latest
     steps:
       - name: Save pull request number
