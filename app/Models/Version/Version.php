@@ -3,6 +3,7 @@
 namespace App\Models\Version;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -55,5 +56,10 @@ class Version extends Model
         return $value === 'latest'
             ? Version::orderByDesc('id')->firstOrFail()
             : Version::where('version', $value)->withTrashed()->firstOrFail();
+    }
+
+    public function pluginReleaseChannel(): BelongsTo
+    {
+        return $this->belongsTo(PluginReleaseChannel::class);
     }
 }
