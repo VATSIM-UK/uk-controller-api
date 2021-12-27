@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +14,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 */
 
 $app = new \Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
+    realpath(__DIR__ . '/../')
 );
 
 /*
@@ -41,13 +41,6 @@ $app->singleton(
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class
-);
-
-$app->bind(
-    \App\Services\VersionService::class,
-    function ($app) {
-        return new \App\Services\VersionService($app);
-    }
 );
 
 return $app;

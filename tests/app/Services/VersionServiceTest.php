@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Services;
 
+use App\Exceptions\Version\ReleaseChannelNotFoundException;
 use App\Exceptions\Version\VersionAlreadyExistsException;
 use App\Exceptions\Version\VersionNotFoundException;
+use App\Models\Version\PluginReleaseChannel;
 use Carbon\Carbon;
 use App\BaseFunctionalTestCase;
 use App\Models\Version\Version;
@@ -18,7 +21,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
      */
     private $service;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = $this->app->make(VersionService::class);
@@ -53,36 +56,6 @@ class VersionServiceTest extends BaseFunctionalTestCase
         }
     }
 
-    public function testCreateVersionCreatesAVersion()
-    {
-        Carbon::setTestNow(Carbon::now());
-        $this->assertTrue($this->service->createOrUpdateVersion('3.0.0', true));
-        $this->assertDatabaseHas(
-            'version',
-            [
-                'version' => '3.0.0',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'deleted_at' => null,
-            ]
-        );
-    }
-
-    public function testUpdateVersionUpdatesVersion()
-    {
-        Carbon::setTestNow(Carbon::now());
-        $this->assertFalse($this->service->createOrUpdateVersion(self::ALLOWED_OLD_VERSION, false));
-        $this->assertDatabaseHas(
-            'version',
-            [
-                'version' => self::ALLOWED_OLD_VERSION,
-                'created_at' => '2017-12-03 00:00:00',
-                'updated_at' => Carbon::now()->toDateTimeString(),
-                'deleted_at' => Carbon::now()->toDateTimeString(),
-            ]
-        );
-    }
-
     public function testToggleVersionAllowedThrowsExceptionOnUnknownVersion()
     {
         $this->expectException(VersionNotFoundException::class);
@@ -105,6 +78,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
             'version',
             [
                 'version' => '3.0.0',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'stable')->first()->id,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'deleted_at' => null,
@@ -112,11 +86,53 @@ class VersionServiceTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItPublishesANewGithubBetaVersion()
+    {
+        $this->service->publishNewVersionFromGithub('3.0.0-beta.1');
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '3.0.0-beta.1',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'deleted_at' => null,
+            ]
+        );
+    }
+
+    public function testItThrowsAnExceptionOnBadReleaseChannel()
+    {
+        $this->expectException(ReleaseChannelNotFoundException::class);
+        $this->service->publishNewVersionFromGithub('3.0.0-abcd.1');
+    }
+
+    public function testItThrowsAnExceptionOnInvalidReleaseChannel()
+    {
+        $this->expectException(ReleaseChannelNotFoundException::class);
+        $this->service->publishNewVersionFromGithub('3.0.0-alpha.1');
+    }
+
     public function testItRetiresOldVersions()
     {
-        $this->service->createOrUpdateVersion('2.0.2', true);
-        $this->service->createOrUpdateVersion('2.0.3', true);
-        $this->service->createOrUpdateVersion('2.0.4', true);
+        Version::create(
+            [
+                'version' => '2.0.2',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'stable')->first()->id,
+            ]
+        );
+        Version::create(
+            [
+                'version' => '2.0.3',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'stable')->first()->id,
+            ]
+        );
+        Version::create(
+            [
+                'version' => '2.0.4',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'stable')->first()->id,
+            ]
+        );
         $this->service->publishNewVersionFromGithub('3.0.0');
 
         $this->assertDatabaseHas(

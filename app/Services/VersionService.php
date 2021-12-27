@@ -1,32 +1,33 @@
 <?php
+
 namespace App\Services;
 
+use App\Exceptions\Version\ReleaseChannelNotFoundException;
 use App\Exceptions\Version\VersionAlreadyExistsException;
 use App\Exceptions\Version\VersionNotFoundException;
+use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
-use Carbon\Carbon;
+use Composer\Semver\VersionParser;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\ServiceProvider;
+use UnexpectedValueException;
 
-/**
- * Service for converting versions into data arrays that can be returned as
- * a response.
- *
- * Class VersionServiceProvider
- *
- * @package App\Providers
- */
-class VersionService extends ServiceProvider
+class VersionService
 {
+    private readonly VersionParser $versionParser;
+
+    public function __construct(VersionParser $versionParser)
+    {
+        $this->versionParser = $versionParser;
+    }
+
     /**
      * Return a version model based on the version string
      *
      * @param string $versionString The version string
-     * @throws VersionNotFoundException
      * @return Version
+     * @throws VersionNotFoundException
      */
-    public function getVersion(string $versionString) : Version
+    public function getVersion(string $versionString): Version
     {
         $version = Version::where('version', '=', $versionString)->withTrashed()->first();
 
@@ -42,36 +43,16 @@ class VersionService extends ServiceProvider
      *
      * @return Collection
      */
-    public function getAllVersions() : Collection
+    public function getAllVersions(): Collection
     {
         return Version::withTrashed()->get();
     }
 
     /**
-     * Create a version based on the versions string
-     *
-     * @param string $versionString The version string to use
-     * @return bool True if the version is new, false otherwise
-     */
-    public function createOrUpdateVersion(string $versionString, bool $allowed) : bool
-    {
-        $version = Version::updateOrCreate(
-            [
-                'version' => $versionString,
-            ],
-            [
-                'deleted_at' => $allowed ? null : Carbon::now(),
-            ]
-        );
-
-        return $version->wasRecentlyCreated ? true : false;
-    }
-
-    /**
      * Toggles whether or not a version is allowed to be used in production.
      *
-     * @throws VersionNotFoundException
      * @return void
+     * @throws VersionNotFoundException
      */
     public function toggleVersionAllowed(string $versionString)
     {
@@ -90,10 +71,24 @@ class VersionService extends ServiceProvider
             throw new VersionAlreadyExistsException();
         }
 
+        try {
+            $normalisedVersion = $this->versionParser->normalize($tag);
+        } catch (UnexpectedValueException) {
+            throw new ReleaseChannelNotFoundException('Invalid release channel');
+        }
+
+        $releaseChannel = PluginReleaseChannel::where('name', VersionParser::parseStability($normalisedVersion))
+            ->first();
+
+        if (!$releaseChannel) {
+            throw new ReleaseChannelNotFoundException(sprintf('Release channel %s not found', $releaseChannel));
+        }
+
         // Create the version
         $newVersion = Version::create(
             [
-                'version' => $tag
+                'version' => $tag,
+                'plugin_release_channel_id' => $releaseChannel->id,
             ]
         );
 

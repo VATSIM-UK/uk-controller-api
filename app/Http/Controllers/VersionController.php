@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Exceptions\Version\ReleaseChannelNotFoundException;
 use App\Exceptions\Version\VersionAlreadyExistsException;
 use App\Models\Version\Version;
 use App\Services\VersionService;
@@ -39,7 +41,7 @@ class VersionController extends BaseController
      *
      * @return JsonResponse
      */
-    public function getAllVersions() : JsonResponse
+    public function getAllVersions(): JsonResponse
     {
         return response()
             ->json($this->versionService->getAllVersions())
@@ -67,7 +69,7 @@ class VersionController extends BaseController
 
         try {
             $this->versionService->publishNewVersionFromGithub($request->json('release.tag_name'));
-        } catch (VersionAlreadyExistsException $alreadyExistsException) {
+        } catch (VersionAlreadyExistsException|ReleaseChannelNotFoundException) {
             return response()->json();
         }
 

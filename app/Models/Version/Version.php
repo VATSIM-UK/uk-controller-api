@@ -32,6 +32,7 @@ class Version extends Model
 
     protected $fillable = [
         'version',
+        'plugin_release_channel_id',
         'deleted_at',
     ];
 
@@ -40,7 +41,7 @@ class Version extends Model
      *
      * @return this
      */
-    public function toggleAllowed() : Version
+    public function toggleAllowed(): Version
     {
         if ($this->trashed()) {
             $this->restore();

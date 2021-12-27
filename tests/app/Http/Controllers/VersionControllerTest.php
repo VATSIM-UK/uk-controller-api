@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
@@ -136,6 +137,18 @@ class VersionControllerTest extends BaseApiTestCase
             'action' => 'published',
             'release' => [
                 'tag_name' => '2.0.0',
+            ],
+        ];
+        $this->makeAuthenticatedApiGithubRequest('version', $data)
+            ->assertOk();
+    }
+
+    public function testItHandlesBadReleaseChannel()
+    {
+        $data = [
+            'action' => 'published',
+            'release' => [
+                'tag_name' => '2.0.0-abcd.1',
             ],
         ];
         $this->makeAuthenticatedApiGithubRequest('version', $data)
