@@ -9,6 +9,7 @@ use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
 use Composer\Semver\VersionParser;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use UnexpectedValueException;
 
 class VersionService
@@ -74,14 +75,16 @@ class VersionService
         try {
             $normalisedVersion = $this->versionParser->normalize($tag);
         } catch (UnexpectedValueException) {
-            throw new ReleaseChannelNotFoundException('Invalid release channel');
+            Log::error(sprintf('Invalid release channel %s', $tag));
+            throw new ReleaseChannelNotFoundException();
         }
 
         $releaseChannel = PluginReleaseChannel::where('name', VersionParser::parseStability($normalisedVersion))
             ->first();
 
         if (!$releaseChannel) {
-            throw new ReleaseChannelNotFoundException(sprintf('Release channel %s not found', $releaseChannel));
+            Log::error(sprintf('Invalid release channel %s', $tag));
+            throw new ReleaseChannelNotFoundException();
         }
 
         // Create the version
