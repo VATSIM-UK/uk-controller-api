@@ -96,9 +96,9 @@ class VersionControllerTest extends BaseApiTestCase
             )->assertStatus(200);
     }
 
-    public function testItReturnsNotFoundIfReleaseChannelInvalid()
+    public function testItReturnsNotFoundIfReleaseChannelInvalidForLatestVersion()
     {
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/3.0.0?channel=zeta')->assertStatus(404);
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/latest?channel=zeta')->assertStatus(404);
     }
 
     public function testItReturnsNotFoundIfVersionNotFound()
