@@ -7,7 +7,10 @@ use App\Exceptions\Version\VersionAlreadyExistsException;
 use App\Exceptions\Version\VersionNotFoundException;
 use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
+use Composer\Semver\Comparator;
 use Composer\Semver\VersionParser;
+use Http\Client\Common\Plugin;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use UnexpectedValueException;
@@ -96,7 +99,44 @@ class VersionService
         );
 
         // Retire old versions
-        Version::where('id', '<>', $newVersion->id)->delete();
+        Version::where('id', '<>', $newVersion->id)
+            ->get()
+            ->reject(function (Version $version) use ($newVersion) {
+                return Comparator::greaterThan(
+                    $version->version,
+                    $newVersion->version
+                );
+            })
+            ->each(function (Version $version) {
+                $version->delete();
+            });
+    }
+
+    /**
+     * The "latest version" on any release channel is the most recent version (in semver terms)
+     * on any channel that is, or more stable than, the requested channel.
+     */
+    public function getLatestVersionForReleaseChannel(string $channel): Version
+    {
+        $relevantVersions = $this->getRelevantVersions(PluginReleaseChannel::where('name', $channel)->firstOrFail());
+        if ($relevantVersions->isEmpty()) {
+            throw new VersionNotFoundException();
+        }
+
+        return $relevantVersions->reduce(function (?Version $selectedVersion, Version $version) {
+            return is_null($selectedVersion) || Comparator::greaterThan(
+                $version->version,
+                $selectedVersion->version
+            ) ? $version : $selectedVersion;
+        });
+    }
+
+    private function getRelevantVersions(PluginReleaseChannel $requestedChannel): Collection
+    {
+        return Version::whereHas('pluginReleaseChannel', function (Builder $releaseChannel) use ($requestedChannel) {
+            return $releaseChannel->where('relative_stability', '<=', $requestedChannel->relative_stability);
+        })
+            ->get();
     }
 
     public function getFullVersionDetails(Version $version): array

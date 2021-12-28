@@ -9,6 +9,7 @@ use App\Models\Version\PluginReleaseChannel;
 use Carbon\Carbon;
 use App\BaseFunctionalTestCase;
 use App\Models\Version\Version;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class VersionServiceTest extends BaseFunctionalTestCase
 {
@@ -44,6 +45,55 @@ class VersionServiceTest extends BaseFunctionalTestCase
         ];
 
         $this->assertEquals($expected, $this->service->getFullVersionDetails(Version::find(3)));
+    }
+
+    public function testItFindsTheMostRecentVersionOnTheStableChannel()
+    {
+        $this->assertEquals(Version::find(3), $this->service->getLatestVersionForReleaseChannel('stable'));
+    }
+
+    public function testItFindsTheMostRecentMostStableVersion()
+    {
+        Version::find(2)->update(
+            ['plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id]
+        );
+        $this->assertEquals(Version::find(3), $this->service->getLatestVersionForReleaseChannel('stable'));
+    }
+
+    public function testItFindsTheMostRecentMostRecentVersionOnChannelIfMoreRecentThanStable()
+    {
+        $expected = Version::create(
+            [
+                'version' => '3.2.0-beta.1',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id
+            ]
+        );
+        $this->assertEquals($expected->id, $this->service->getLatestVersionForReleaseChannel('beta')->id);
+    }
+
+    public function testItFindsTheMostRecentMostStableVersionIfMoreRecentThanRequestedChannel()
+    {
+        Version::find(2)->update(
+            ['plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id]
+        );
+        $this->assertEquals(Version::find(3), $this->service->getLatestVersionForReleaseChannel('beta'));
+    }
+
+
+    public function testItThrowsExceptionIfNoVersionsAvailableOnChannel()
+    {
+        Version::all()->each(function (Version $version) {
+            $version->delete();
+        });
+
+        $this->expectException(VersionNotFoundException::class);
+        $this->service->getLatestVersionForReleaseChannel('stable');
+    }
+
+    public function testItThrowsExceptionIfChannelNotFound()
+    {
+        $this->expectException(ModelNotFoundException::class);
+        $this->service->getLatestVersionForReleaseChannel('bla');
     }
 
     public function testGetAllVersionsReturnsAllVersions()
@@ -115,22 +165,42 @@ class VersionServiceTest extends BaseFunctionalTestCase
 
     public function testItRetiresOldVersions()
     {
+        // Should be deleted
         Version::create(
             [
                 'version' => '2.0.2',
                 'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'stable')->first()->id,
             ]
         );
+        // Should be deleted - less stable channel and older
         Version::create(
             [
-                'version' => '2.0.3',
-                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'stable')->first()->id,
+                'version' => '2.0.3-beta.1',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id,
             ]
         );
+
+        // Should be deleted - less stable channel and older
+        Version::create(
+            [
+                'version' => '3.0.0-beta.24',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id,
+            ]
+        );
+
+        // Should be deleted
         Version::create(
             [
                 'version' => '2.0.4',
                 'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'stable')->first()->id,
+            ]
+        );
+
+        // Should not be deleted - on the beta channel and more recent
+        Version::create(
+            [
+                'version' => '3.0.1-beta.1',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id,
             ]
         );
         $this->service->publishNewVersionFromGithub('3.0.0');
@@ -159,7 +229,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'version',
             [
-                'version' => '2.0.3',
+                'version' => '2.0.3-beta.1',
                 'deleted_at' => Carbon::now(),
             ]
         );
@@ -173,7 +243,21 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'version',
             [
+                'version' => '3.0.0-beta.24',
+                'deleted_at' => Carbon::now(),
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
                 'version' => '3.0.0',
+                'deleted_at' => null,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'version',
+            [
+                'version' => '3.0.1-beta.1',
                 'deleted_at' => null,
             ]
         );

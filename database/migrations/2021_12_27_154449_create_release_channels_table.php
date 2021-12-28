@@ -17,18 +17,23 @@ class CreateReleaseChannelsTable extends Migration
         Schema::create('plugin_release_channels', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique()->comment('The channel name');
+            $table->unsignedTinyInteger('relative_stability')
+                ->unique()
+                ->comment('The relative stability of the channel compared to others');
             $table->timestamps();
         });
 
         PluginReleaseChannel::create(
             [
                 'name' => 'stable',
+                'relative_stability' => 1,
             ]
         );
 
         PluginReleaseChannel::create(
             [
                 'name' => 'beta',
+                'relative_stability' => 2,
             ]
         );
     }

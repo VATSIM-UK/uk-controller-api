@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
 use App\Providers\AuthServiceProvider;
 use App\Services\VersionService;
@@ -72,12 +73,32 @@ class VersionControllerTest extends BaseApiTestCase
             )->assertStatus(200);
     }
 
-    public function testItFindsLatestVersion()
+    public function testItFindsLatestStableVersion()
     {
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/latest')
             ->assertJson(
                 $this->app->make(VersionService::class)->getFullVersionDetails(Version::find(3))
             )->assertStatus(200);
+    }
+
+    public function testItFindsLatestVersionOnReleaseChannel()
+    {
+        $version = Version::create(
+            [
+                'version' => '5.0.0',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id
+            ]
+        );
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/latest?channel=beta')
+            ->assertJson(
+                $this->app->make(VersionService::class)->getFullVersionDetails($version)
+            )->assertStatus(200);
+    }
+
+    public function testItReturnsNotFoundIfReleaseChannelInvalid()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/3.0.0?channel=zeta')->assertStatus(404);
     }
 
     public function testItReturnsNotFoundIfVersionNotFound()

@@ -2,6 +2,7 @@
 
 namespace App\Models\Version;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,13 +51,6 @@ class Version extends Model
         }
 
         return $this;
-    }
-
-    public function resolveRouteBinding($value, $field = null)
-    {
-        return $value === 'latest'
-            ? Version::orderByDesc('id')->firstOrFail()
-            : Version::where('version', $value)->withTrashed()->firstOrFail();
     }
 
     public function pluginReleaseChannel(): BelongsTo
