@@ -165,4 +165,3 @@ class AberdeenStandUpdates extends Migration
             ->delete();
     }
 }
-
