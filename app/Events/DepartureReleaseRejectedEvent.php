@@ -18,6 +18,7 @@ class DepartureReleaseRejectedEvent extends HighPriorityBroadcastEvent
     {
         return [
             'id' => $this->rejection->id,
+            'remarks' => $this->rejection->remarks,
         ];
     }
 

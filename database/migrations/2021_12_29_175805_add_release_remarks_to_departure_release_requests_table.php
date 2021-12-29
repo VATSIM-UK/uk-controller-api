@@ -14,9 +14,9 @@ class AddReleaseRemarksToDepartureReleaseRequestsTable extends Migration
     public function up()
     {
         Schema::table('departure_release_requests', function (Blueprint $table) {
-            $table->string('release_remarks')
+            $table->string('remarks')
                 ->nullable()
-                ->after('release_expires_at')
+                ->after('rejected_at')
                 ->comment('Any remarks or other instructions to go with the release');
         });
     }
@@ -29,7 +29,7 @@ class AddReleaseRemarksToDepartureReleaseRequestsTable extends Migration
     public function down()
     {
         Schema::table('departure_release_requests', function (Blueprint $table) {
-            $table->dropColumn('release_remarks');
+            $table->dropColumn('remarks');
         });
     }
 }

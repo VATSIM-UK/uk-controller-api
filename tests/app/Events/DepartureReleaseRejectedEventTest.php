@@ -19,7 +19,8 @@ class DepartureReleaseRejectedEventTest extends BaseUnitTestCase
         $this->request = new DepartureReleaseRequest(
             [
                 'controller_position_id' => 2,
-                'release_expires_at' => Carbon::now()->addMinutes(2)
+                'release_expires_at' => Carbon::now()->addMinutes(2),
+                'remarks' => 'Remarks',
             ]
         );
         $this->request->id = 1;
@@ -40,6 +41,7 @@ class DepartureReleaseRejectedEventTest extends BaseUnitTestCase
     {
         $expected = [
             'id' => 1,
+            'remarks' => 'Remarks',
         ];
 
         $this->assertEquals($expected, $this->event->broadcastWith());
