@@ -17,7 +17,7 @@ use UnexpectedValueException;
 
 class VersionService
 {
-    private readonly VersionParser $versionParser;
+    private VersionParser $versionParser;
 
     public function __construct(VersionParser $versionParser)
     {
