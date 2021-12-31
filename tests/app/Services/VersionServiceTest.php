@@ -160,7 +160,7 @@ class VersionServiceTest extends BaseFunctionalTestCase
     public function testItThrowsAnExceptionOnInvalidReleaseChannel()
     {
         $this->expectException(ReleaseChannelNotFoundException::class);
-        $this->service->publishNewVersionFromGithub('3.0.0-alpha.1');
+        $this->service->publishNewVersionFromGithub('3.0.0-zeta.1');
     }
 
     public function testItRetiresOldVersions()
