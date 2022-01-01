@@ -14,8 +14,14 @@ class AddFieldsToStandReservationsTable extends Migration
     public function up()
     {
         Schema::table('stand_reservations', function (Blueprint $table) {
-            $table->string('origin', 4)->after('callsign')->comment('The origin airfield');
-            $table->string('destination', 4)->after('origin')->comment('The destination airfield');
+            $table->string('origin', 4)
+                ->nullable()
+                ->after('callsign')
+                ->comment('The origin airfield');
+            $table->string('destination', 4)
+                ->nullable()
+                ->after('origin')
+                ->comment('The destination airfield');
 
             $table->index('origin');
             $table->index('destination');

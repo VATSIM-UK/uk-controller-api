@@ -14,6 +14,8 @@ class StandReservation extends Model
         'callsign',
         'start',
         'end',
+        'origin',
+        'destination'
     ];
 
     protected $dates = [
@@ -40,5 +42,15 @@ class StandReservation extends Model
     {
         return $builder->where('start', '>', Carbon::now())
             ->where('start', '<=', $before);
+    }
+
+    public function scopeStandId(Builder $builder, int $standId): Builder
+    {
+        return $builder->where('stand_id', $standId);
+    }
+
+    public function scopeCallsign(Builder $builder, string $callsign): Builder
+    {
+        return $builder->where('callsign', $callsign);
     }
 }

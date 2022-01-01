@@ -22,8 +22,8 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class StandServiceTest extends BaseFunctionalTestCase
 {
