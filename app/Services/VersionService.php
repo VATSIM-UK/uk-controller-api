@@ -104,7 +104,7 @@ class VersionService
         // Retire old versions
         Version::where('id', '<>', $newVersion->id)
             ->get()
-            ->reject(fn(Version $version) => Comparator::greaterThan(
+            ->reject(fn (Version $version) => Comparator::greaterThan(
                 $version->version,
                 $newVersion->version
             ))
