@@ -55,10 +55,9 @@ class VersionService
     /**
      * Toggles whether or not a version is allowed to be used in production.
      *
-     * @return void
      * @throws VersionNotFoundException
      */
-    public function toggleVersionAllowed(string $versionString)
+    public function toggleVersionAllowed(string $versionString): void
     {
         $version = Version::withTrashed()->where('version', '=', $versionString)->first();
 
@@ -69,7 +68,11 @@ class VersionService
         $version->toggleAllowed();
     }
 
-    public function publishNewVersionFromGithub(string $tag)
+    /**
+     * @throws VersionAlreadyExistsException
+     * @throws ReleaseChannelNotFoundException
+     */
+    public function publishNewVersionFromGithub(string $tag): void
     {
         if (Version::withTrashed()->where('version', $tag)->exists()) {
             throw new VersionAlreadyExistsException();
@@ -101,12 +104,10 @@ class VersionService
         // Retire old versions
         Version::where('id', '<>', $newVersion->id)
             ->get()
-            ->reject(function (Version $version) use ($newVersion) {
-                return Comparator::greaterThan(
-                    $version->version,
-                    $newVersion->version
-                );
-            })
+            ->reject(fn(Version $version) => Comparator::greaterThan(
+                $version->version,
+                $newVersion->version
+            ))
             ->each(function (Version $version) {
                 $version->delete();
             });
@@ -115,6 +116,10 @@ class VersionService
     /**
      * The "latest version" on any release channel is the most recent version (in semver terms)
      * on any channel that is, or more stable than, the requested channel.
+     *
+     * @param string $channel
+     * @return Version
+     * @throws VersionNotFoundException
      */
     public function getLatestVersionForReleaseChannel(string $channel): Version
     {
@@ -135,8 +140,7 @@ class VersionService
     {
         return Version::whereHas('pluginReleaseChannel', function (Builder $releaseChannel) use ($requestedChannel) {
             return $releaseChannel->where('relative_stability', '<=', $requestedChannel->relative_stability);
-        })
-            ->get();
+        })->get();
     }
 
     public function getFullVersionDetails(Version $version): array
