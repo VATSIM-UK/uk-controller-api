@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Airfield\Airfield;
 use App\Rules\VatsimCallsign;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

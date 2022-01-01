@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use Illuminate\Http\JsonResponse;
-use App\Services\StandAdminService;
+use App\Services\Stand\StandAdminService;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\StandRequest;
 
@@ -54,7 +54,7 @@ class StandAdminController extends BaseController
      * @param Airfield $airfield
      * @return JsonResponse
      */
-    public function getStandsForAirfield(Airfield $airfield) : JsonResponse
+    public function getStandsForAirfield(Airfield $airfield): JsonResponse
     {
         return response()->json(['stands' => $this->service->getStandsByAirfield($airfield)]);
     }
@@ -109,7 +109,7 @@ class StandAdminController extends BaseController
      * @param StandRequest $request
      * @return JsonResponse
      */
-    public function modifyStand(Airfield $airfield, Stand $stand, StandRequest $request) : JsonResponse //NOSONAR
+    public function modifyStand(Airfield $airfield, Stand $stand, StandRequest $request): JsonResponse //NOSONAR
     {
         if ($stand->airfield_id != $airfield->id) {
             return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
@@ -138,7 +138,7 @@ class StandAdminController extends BaseController
      * @param Stand $stand
      * @return JsonResponse
      */
-    public function deleteStand(Airfield $airfield, Stand $stand) : JsonResponse
+    public function deleteStand(Airfield $airfield, Stand $stand): JsonResponse
     {
         if ($stand->airfield_id != $airfield->id) {
             return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
@@ -156,7 +156,7 @@ class StandAdminController extends BaseController
      * @param Stand $stand
      * @return JsonResponse
      */
-    public function closeStand(Airfield $airfield, Stand $stand) : JsonResponse
+    public function closeStand(Airfield $airfield, Stand $stand): JsonResponse
     {
         if ($stand->airfield_id != $airfield->id) {
             return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
@@ -174,7 +174,7 @@ class StandAdminController extends BaseController
      * @param Stand $stand
      * @return JsonResponse
      */
-    public function openStand(Airfield $airfield, Stand $stand) : JsonResponse
+    public function openStand(Airfield $airfield, Stand $stand): JsonResponse
     {
         if ($stand->airfield_id != $airfield->id) {
             return response()->json(self::STAND_NOT_IN_AIRFIELD_ERROR, 404);
@@ -191,7 +191,7 @@ class StandAdminController extends BaseController
      * @param Airfield $airfield
      * @return JsonResponse
      */
-    public function getTerminals(Airfield $airfield) : JsonResponse
+    public function getTerminals(Airfield $airfield): JsonResponse
     {
         $terminals = $airfield->load('terminals')->terminals;
 
@@ -209,10 +209,10 @@ class StandAdminController extends BaseController
      * @param Terminal $terminal
      * @return JsonResponse
      */
-    public function getStandsByTerminal(Airfield $airfield, Terminal $terminal) : JsonResponse
+    public function getStandsByTerminal(Airfield $airfield, Terminal $terminal): JsonResponse
     {
         $stands = $terminal->load('stands')->stands;
-        
+
         return response()->json(['stands' => $stands->load(['type', 'wakeCategory'])]);
     }
 
@@ -224,7 +224,7 @@ class StandAdminController extends BaseController
      * @param integer $airfield_id
      * @return array
      */
-    private function formatObjectForStandFromRequest(StandRequest $request, int $airfield_id) : array
+    private function formatObjectForStandFromRequest(StandRequest $request, int $airfield_id): array
     {
         $standDefaultAssignmentPriority = 100;
 
@@ -240,7 +240,7 @@ class StandAdminController extends BaseController
             'assignment_priority' => $request->get('assignment_priority', $standDefaultAssignmentPriority)
         ];
     }
-    
+
     /**
      * Check that a terminal is attached to a given airfield.
      *

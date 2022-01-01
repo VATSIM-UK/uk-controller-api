@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Stand;
 
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;

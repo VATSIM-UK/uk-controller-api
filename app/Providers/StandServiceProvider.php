@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Services\StandAdminService;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use App\Imports\Stand\StandReservationsImport;

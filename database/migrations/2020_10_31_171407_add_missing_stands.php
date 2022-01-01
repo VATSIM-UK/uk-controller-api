@@ -3,7 +3,7 @@
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Services\DependencyService;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Illuminate\Database\Migrations\Migration;
 
 class AddMissingStands extends Migration

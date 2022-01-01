@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Stand;
 
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
