@@ -4,6 +4,7 @@ use App\Models\Stand\Stand;
 use App\Services\Stand\StandReservationService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddHeathrowRealopsDepartureStandReservations extends Migration
 {
@@ -17,7 +18,6 @@ class AddHeathrowRealopsDepartureStandReservations extends Migration
         $reservationFile = fopen(__DIR__ . '/../data/stands/heathrow-realops-2022/realops-departures.csv', 'r+');
         DB::transaction(function () use ($reservationFile) {
             while ($reservation = fgetcsv($reservationFile)) {
-                dump($reservation[0], $reservation[6]);
                 StandReservationService::createStandReservation(
                     $reservation[0],
                     Stand::where('identifier', $reservation[6])->airfield('EGLL')->firstOrFail()->id,
