@@ -153,12 +153,21 @@ class DependencyServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItThrowsExceptionIfFetchedDependencyIsNotJsonResponse()
+    public function testItFetchesAndCachesArrayDependencies()
+    {
+        Cache::forget('DEPENDENCY_6_CACHE');
+        $this->assertEquals(
+            DependencyService::fetchDependencyDataById(6),
+            Cache::get('DEPENDENCY_6_CACHE')
+        );
+    }
+
+    public function testItThrowsExceptionIfFetchedDependencyIsNotAllowedType()
     {
         $this->app->instance('App\\Http\\Controllers\\FooController', $this);
         $this->expectException(InvalidArgumentException::class);
         Cache::forget('DEPENDENCY_1_CACHE');
-        Dependency::find(1)->update(['action' => 'FooController@foo']);
+        Dependency::find(1)->update(['action' => 'App\\Http\\Controllers\\FooController@foo']);
         DependencyService::fetchDependencyDataById(1);
     }
 
