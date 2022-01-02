@@ -8,6 +8,6 @@ class StandReservationMissingMetadataException extends InvalidArgumentException
 {
     public function __construct()
     {
-        parent::__construct('Stand reservations require either a CID or Origin/Destination pair');
+        parent::__construct('Stand reservations with a CID require an origin/destination pair');
     }
 }

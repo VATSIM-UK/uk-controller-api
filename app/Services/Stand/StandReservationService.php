@@ -32,7 +32,7 @@ class StandReservationService
             throw StandReservationCallsignNotValidException::forCallsign($callsign);
         }
 
-        if (!self::metadataSet($vatsimCid, $origin, $destination)) {
+        if (self::dataInvalidForCidReservation($vatsimCid, $origin, $destination)) {
             throw new StandReservationMissingMetadataException();
         }
 
@@ -122,8 +122,8 @@ class StandReservationService
         return is_null($cid) || (new VatsimCidValidator())->isValid($cid);
     }
 
-    private static function metadataSet(?int $cid, ?string $origin, ?string $destination): bool
+    private static function dataInvalidForCidReservation(?int $cid, ?string $origin, ?string $destination): bool
     {
-        return isset($cid) || isset($origin, $destination);
+        return !is_null($cid) && !($origin && $destination);
     }
 }
