@@ -787,6 +787,8 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addMinute(),
+                'destination' => 'EGLL',
+                'origin' => 'EGSS',
             ]
         );
 
@@ -795,6 +797,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'EGSS',
                 'groundspeed' => 150,
                 // London
                 'latitude' => 51.487202,
@@ -1376,6 +1379,8 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'stand_id' => $standId,
                 'start' => $active ? Carbon::now() : Carbon::now()->addHours(2),
                 'end' => Carbon::now()->addHours(2)->addMinutes(10),
+                'origin' => 'EGLL',
+                'destination' => 'EGSS',
             ]
         );
     }
