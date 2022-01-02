@@ -74,8 +74,8 @@ class NetworkAircraftService
     {
         return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
             return LocationService::metersToNauticalMiles(
-                    $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
-                ) < self::MAX_PROCESSING_DISTANCE;
+                $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
+            ) < self::MAX_PROCESSING_DISTANCE;
         });
     }
 
