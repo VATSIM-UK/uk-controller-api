@@ -10,7 +10,7 @@ use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
-use App\Allocator\Stand\ReservedArrivalStandAllocator;
+use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
@@ -682,7 +682,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     {
         $this->assertEquals(
             [
-                ReservedArrivalStandAllocator::class,
+                CallsignFlightplanReservedArrivalStandAllocator::class,
                 CargoFlightPreferredArrivalStandAllocator::class,
                 CargoFlightArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,

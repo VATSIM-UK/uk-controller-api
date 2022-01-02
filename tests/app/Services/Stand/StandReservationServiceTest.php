@@ -4,7 +4,6 @@ namespace App\Services\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Exceptions\Stand\CallsignHasClashingReservationException;
-use App\Exceptions\Stand\StandAlreadyReservedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Exceptions\Stand\StandReservationAirfieldsInvalidException;
 use App\Exceptions\Stand\StandReservationCallsignNotValidException;
@@ -258,36 +257,6 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 'EGLLS',
                 StandReservationAirfieldsInvalidException::class,
                 'Stand reservation destination airfield EGLLS is invalid'
-            ],
-            'Stand already reserved, start time clash' => [
-                'BAW123',
-                1,
-                Carbon::parse('2022-01-01 19:00:00'),
-                Carbon::parse('2022-01-01 20:30:00'),
-                'EGKK',
-                'EGLL',
-                StandAlreadyReservedException::class,
-                'Stand id 1 is already reserved at the given times'
-            ],
-            'Stand already reserved, end time clash' => [
-                'BAW123',
-                1,
-                Carbon::parse('2022-01-01 18:00:00'),
-                Carbon::parse('2022-01-01 19:30:00'),
-                'EGKK',
-                'EGLL',
-                StandAlreadyReservedException::class,
-                'Stand id 1 is already reserved at the given times'
-            ],
-            'Stand already reserved, covers period' => [
-                'BAW123',
-                1,
-                Carbon::parse('2022-01-01 18:00:00'),
-                Carbon::parse('2022-01-01 20:30:00'),
-                'EGKK',
-                'EGLL',
-                StandAlreadyReservedException::class,
-                'Stand id 1 is already reserved at the given times'
             ],
         ];
     }

@@ -3,7 +3,6 @@
 namespace App\Services\Stand;
 
 use App\Exceptions\Stand\CallsignHasClashingReservationException;
-use App\Exceptions\Stand\StandAlreadyReservedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Exceptions\Stand\StandReservationAirfieldsInvalidException;
 use App\Exceptions\Stand\StandReservationCallsignNotValidException;
@@ -53,10 +52,6 @@ class StandReservationService
             throw StandReservationAirfieldsInvalidException::forDestination($destination);
         }
 
-        if (self::standAlreadyReserved($standId, $startTime, $endTime)) {
-            throw StandAlreadyReservedException::forId($standId);
-        }
-
         StandReservation::create(
             [
                 'stand_id' => $standId,
@@ -82,14 +77,6 @@ class StandReservationService
     private static function callsignValid(string $callsign): bool
     {
         return (new VatsimCallsign())->passes('', $callsign);
-    }
-
-    private static function standAlreadyReserved(
-        int $standId,
-        CarbonInterface $startTime,
-        CarbonInterface $endTime
-    ): bool {
-        return self::applyTimePeriodToQuery(StandReservation::standId($standId), $startTime, $endTime)->exists();
     }
 
     private static function applyTimePeriodToQuery(

@@ -8,17 +8,18 @@ use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 
-class ReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
+class CallsignFlightplanReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
     /**
-     * @var ReservedArrivalStandAllocator
+     * @var CallsignFlightplanReservedArrivalStandAllocator
      */
     private $allocator;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(ReservedArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(CallsignFlightplanReservedArrivalStandAllocator::class);
+        NetworkAircraft::find('BAW123')->update(['planned_depairport' => 'EGSS', 'planned_destairport' => 'EGLL']);
     }
 
     public function testItAllocatesReservedStandIfActive()
@@ -29,6 +30,8 @@ class ReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addHour(),
+                'origin' => 'EGSS',
+                'destination' => 'EGLL',
             ]
         );
 
@@ -47,6 +50,8 @@ class ReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'start' => Carbon::now()->addMinute(),
                 'end' => Carbon::now()->addHour(),
+                'origin' => 'EGSS',
+                'destination' => 'EGLL',
             ]
         );
 
@@ -61,6 +66,40 @@ class ReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addHour(),
+                'origin' => 'EGSS',
+                'destination' => 'EGLL',
+            ]
+        );
+
+        $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
+    }
+
+    public function testItDoesntAllocateReservedStandIfIncorrectOrigin()
+    {
+        StandReservation::create(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addHour(),
+                'origin' => 'EGBB',
+                'destination' => 'EGLL',
+            ]
+        );
+
+        $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
+    }
+
+    public function testItDoesntAllocateReservedStandIfIncorrectDestination()
+    {
+        StandReservation::create(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addHour(),
+                'origin' => 'EGSS',
+                'destination' => 'EGKK',
             ]
         );
 
@@ -82,6 +121,8 @@ class ReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addHour(),
+                'origin' => 'EGSS',
+                'destination' => 'EGLL',
             ]
         );
 
