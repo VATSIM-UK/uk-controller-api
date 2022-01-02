@@ -190,14 +190,14 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     {
         DependencyService::createDependency(
             'NEW_DEPENDENCY_TEST',
-            'foo@bar',
+            sprintf('%s@%s', AirfieldService::class, 'getAirfieldsDependency'),
             true,
             'new-dependency.json',
             ['stands', 'controller_positions']
         );
 
         $dependency = Dependency::where('key', 'NEW_DEPENDENCY_TEST')->firstOrFail();
-        $this->assertEquals('foo@bar', $dependency->action);
+        $this->assertEquals('App\\Services\\AirfieldService@getAirfieldsDependency', $dependency->action);
         $this->assertEquals('new-dependency.json', $dependency->local_file);
         $this->assertTrue($dependency->per_user);
         $this->assertEquals(
@@ -206,6 +206,19 @@ class DependencyServiceTest extends BaseFunctionalTestCase
                 DatabaseTable::where('name', 'controller_positions')->first()->id
             ],
             $dependency->databaseTables->pluck('id')->toArray()
+        );
+    }
+
+    public function testItThrowsAnExceptionIfDependencyActionNotValid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Dependency action foo@bar is not valid');
+        DependencyService::createDependency(
+            'NEW_DEPENDENCY_TEST',
+            'foo@bar',
+            true,
+            'new-dependency.json',
+            ['stands', 'controller_positions']
         );
     }
 

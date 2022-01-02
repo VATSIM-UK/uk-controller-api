@@ -6,6 +6,7 @@ use App\Models\Database\DatabaseTable;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\Eloquent\Builder;
@@ -129,6 +130,12 @@ class DependencyService
         array $concernedTables
     ): void {
         DB::transaction(function () use ($key, $action, $perUser, $filename, $concernedTables) {
+            try {
+                app()->call($action);
+            } catch (Exception $exception) {
+                throw new InvalidArgumentException(sprintf('Dependency action %s is not valid', $action));
+            }
+
             Dependency::create(
                 [
                     'key' => $key,
