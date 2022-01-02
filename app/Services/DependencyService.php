@@ -130,12 +130,6 @@ class DependencyService
         array $concernedTables
     ): void {
         DB::transaction(function () use ($key, $action, $perUser, $filename, $concernedTables) {
-            try {
-                app()->call($action);
-            } catch (Exception $exception) {
-                throw new InvalidArgumentException(sprintf('Dependency action %s is not valid', $action));
-            }
-
             Dependency::create(
                 [
                     'key' => $key,

@@ -14,6 +14,14 @@ use Exception;
 
 class RunwayServiceTest extends BaseFunctionalTestCase
 {
+    private RunwayService $service;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->service = $this->app->make(RunwayService::class);
+    }
+
     /**
      * @dataProvider goodDataProvider
      */
@@ -26,7 +34,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         int $secondHeading,
         Coordinate $secondThreshold
     ) {
-        RunwayService::addRunwayPair(
+        $this->service::addRunwayPair(
             $airfield,
             $firstIdentifier,
             $firstHeading,
@@ -123,7 +131,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         string $expectedExceptionMessage
     ) {
         try {
-            RunwayService::addRunwayPair(
+            $this->service::addRunwayPair(
                 $airfield,
                 $firstIdentifier,
                 $firstHeading,
@@ -236,5 +244,52 @@ class RunwayServiceTest extends BaseFunctionalTestCase
                 'Runway headings 257 and 76 are not inverse',
             ],
         ];
+    }
+
+    public function testItReturnsRunwaysDependency()
+    {
+        $first = Runway::create(
+            [
+                'airfield_id' => 1,
+                'heading' => 2,
+                'identifier' => '27L',
+                'threshold_latitude' => 3,
+                'threshold_longitude' => 4,
+            ]
+        );
+        $second = Runway::create(
+            [
+                'airfield_id' => 1,
+                'heading' => 5,
+                'identifier' => '09R',
+                'threshold_latitude' => 6,
+                'threshold_longitude' => 7,
+            ]
+        );
+        $first->inverses()->sync($second->id);
+        $second->inverses()->sync($first->id);
+
+        $expected = [
+            [
+                'id' => $first->id,
+                'airfield_id' => 1,
+                'heading' => 2,
+                'identifier' => '27L',
+                'threshold_latitude' => 3,
+                'threshold_longitude' => 4,
+                'inverse_runway_id' => $second->id,
+            ],
+            [
+                'id' => $second->id,
+                'airfield_id' => 1,
+                'heading' => 5,
+                'identifier' => '09R',
+                'threshold_latitude' => 6,
+                'threshold_longitude' => 7,
+                'inverse_runway_id' => $first->id,
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->service->getRunwaysDependency());
     }
 }

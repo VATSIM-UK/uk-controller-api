@@ -112,4 +112,17 @@ class RunwayService
             ]
         );
     }
+
+    public function getRunwaysDependency(): array
+    {
+        return Runway::with('inverses')->get()->map(fn(Runway $runway) => [
+            'id' => $runway->id,
+            'airfield_id' => $runway->airfield_id,
+            'identifier' => $runway->identifier,
+            'heading' => $runway->heading,
+            'threshold_latitude' => $runway->threshold_latitude,
+            'threshold_longitude' => $runway->threshold_longitude,
+            'inverse_runway_id' => $runway->inverses()->first()->id,
+        ])->toArray();
+    }
 }

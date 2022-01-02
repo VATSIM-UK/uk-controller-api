@@ -209,19 +209,6 @@ class DependencyServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItThrowsAnExceptionIfDependencyActionNotValid()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Dependency action foo@bar is not valid');
-        DependencyService::createDependency(
-            'NEW_DEPENDENCY_TEST',
-            'foo@bar',
-            true,
-            'new-dependency.json',
-            ['stands', 'controller_positions']
-        );
-    }
-
     public function testItThrowsExceptionIfConcernedTablesIfTableDoNotExist()
     {
         $this->expectException(InvalidArgumentException::class);
