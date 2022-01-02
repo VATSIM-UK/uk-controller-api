@@ -146,23 +146,23 @@ class AddMissingSidData extends Migration
 
         $airfields = Airfield::whereIn('code', array_keys(self::DATA))
             ->get()
-            ->mapWithKeys(fn(Airfield $airfield) => [$airfield->code => $airfield->id])
+            ->mapWithKeys(fn (Airfield $airfield) => [$airfield->code => $airfield->id])
             ->toArray();
 
         $runways = Runway::whereIn('airfield_id', array_values($airfields))
             ->get()
             ->mapWithKeys(
-                fn(Runway $runway) => [$this->getRunwayKey($runway->airfield_id, $runway->identifier) => $runway->id]
+                fn (Runway $runway) => [$this->getRunwayKey($runway->airfield_id, $runway->identifier) => $runway->id]
             )
             ->toArray();
 
-        $handoffs = Handoff::all()->mapWithKeys(fn(Handoff $handoff) => [$handoff->key => $handoff->id])->toArray();
+        $handoffs = Handoff::all()->mapWithKeys(fn (Handoff $handoff) => [$handoff->key => $handoff->id])->toArray();
 
         $insertData = [];
         foreach (self::DATA as $airfield => $sids) {
             $insertData = array_merge(
                 $insertData,
-                array_map(fn(array $sidData) => [
+                array_map(fn (array $sidData) => [
                     'airfield_id' => $airfields[$airfield],
                     'runway_id' => $runways[$this->getRunwayKey($airfields[$airfield], $sidData[1])],
                     'identifier' => $sidData[0],
