@@ -30,6 +30,7 @@ class NetworkAircraft extends Model
 
     protected $fillable = [
         'callsign',
+        'cid',
         'latitude',
         'longitude',
         'altitude',
@@ -49,6 +50,7 @@ class NetworkAircraft extends Model
     ];
 
     protected $casts = [
+        'cid' => 'integer',
         'latitude' => 'float',
         'longitude' => 'float',
     ];
