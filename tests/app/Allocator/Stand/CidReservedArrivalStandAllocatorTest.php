@@ -16,7 +16,7 @@ class CidReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->allocator = $this->app->make(CidReservedArrivalStandAllocator::class);
-        NetworkAircraft::find('BAW123')->update(['cid' => self::ACTIVE_USER_CID]);
+        NetworkAircraft::find('BAW123')->update(['cid' => self::ACTIVE_USER_CID, 'planned_destairport' => 'EGLL']);
     }
 
     public function testItAllocatesReservedStandIfActive()
@@ -89,6 +89,23 @@ class CidReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'end' => Carbon::now()->addHour(),
                 'origin' => 'EGSS',
                 'destination' => 'EGLL',
+            ]
+        );
+
+        $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
+    }
+
+    public function testItDoesntAllocateReservedStandIfNotRightDestination()
+    {
+        StandReservation::create(
+            [
+                'callsign' => 'BAW123',
+                'cid' => self::ACTIVE_USER_CID,
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addHour(),
+                'origin' => 'EGSS',
+                'destination' => 'EGKK',
             ]
         );
 

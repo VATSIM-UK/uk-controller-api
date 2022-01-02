@@ -19,6 +19,7 @@ class CidReservedArrivalStandAllocator extends AbstractArrivalStandAllocator
                 $standQuery->unoccupied()->unassigned();
             })
             ->where('cid', $aircraft->cid)
+            ->where('destination', $aircraft->planned_destairport)
             ->active()
             ->first();
 
