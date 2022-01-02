@@ -14,6 +14,7 @@ class SidService
             return [
                 'id' => $sid->id,
                 'airfield' => $sid->runway->airfield->code,
+                'runway_id' => $sid->runway_id,
                 'identifier' => $sid->identifier,
                 'departure_interval_group' => $sid->sid_departure_interval_group_id,
                 'initial_altitude' => $sid->initial_altitude,
