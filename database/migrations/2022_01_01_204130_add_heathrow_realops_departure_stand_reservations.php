@@ -21,7 +21,7 @@ class AddHeathrowRealopsDepartureStandReservations extends Migration
                 StandReservationService::createStandReservation(
                     $reservation[0],
                     Stand::where('identifier', $reservation[6])->airfield('EGLL')->firstOrFail()->id,
-                    Carbon::parse(sprintf('2022-01-09 %s:00', $reservation[4]))->subMinutes(35),
+                    Carbon::parse(sprintf('2022-01-09 %s:00', $reservation[4]))->subMinutes(30),
                     Carbon::parse(sprintf('2022-01-09 %s:00', $reservation[4])),
                     $reservation[1],
                     $reservation[2]

@@ -1379,8 +1379,8 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'stand_id' => $standId,
                 'start' => $active ? Carbon::now() : Carbon::now()->addHours(2),
                 'end' => Carbon::now()->addHours(2)->addMinutes(10),
-                'origin' => 'EGLL',
-                'destination' => 'EGSS',
+                'destination' => 'EGLL',
+                'origin' => 'EGSS',
             ]
         );
     }
