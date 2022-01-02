@@ -19,6 +19,7 @@ class Sid extends Model
 
     protected $fillable = [
         'airfield_id',
+        'runway_id',
         'identifier',
         'initial_altitude',
         'initial_heading',
