@@ -12,6 +12,7 @@ class StandReservation extends Model
     protected $fillable = [
         'stand_id',
         'callsign',
+        'cid',
         'start',
         'end',
         'origin',

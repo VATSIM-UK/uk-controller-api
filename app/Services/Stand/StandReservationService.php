@@ -6,7 +6,10 @@ use App\Exceptions\Stand\CallsignHasClashingReservationException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Exceptions\Stand\StandReservationAirfieldsInvalidException;
 use App\Exceptions\Stand\StandReservationCallsignNotValidException;
+use App\Exceptions\Stand\StandReservationCidNotValidException;
+use App\Exceptions\Stand\StandReservationMissingMetadataException;
 use App\Exceptions\Stand\StandReservationTimeInvalidException;
+use App\Helpers\Vatsim\VatsimCidValidator;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandReservation;
 use App\Rules\Airfield\AirfieldIcao;
@@ -22,10 +25,19 @@ class StandReservationService
         CarbonInterface $startTime,
         CarbonInterface $endTime,
         ?string $origin,
-        ?string $destination
+        ?string $destination,
+        ?int $vatsimCid
     ): void {
         if (!self::callsignValid($callsign)) {
             throw StandReservationCallsignNotValidException::forCallsign($callsign);
+        }
+
+        if (!self::metadataSet($vatsimCid, $origin, $destination)) {
+            throw new StandReservationMissingMetadataException();
+        }
+
+        if (!self::cidValid($vatsimCid)) {
+            throw StandReservationCidNotValidException::forCid($vatsimCid);
         }
 
         if (!Stand::where('id', $standId)->exists()) {
@@ -56,6 +68,7 @@ class StandReservationService
             [
                 'stand_id' => $standId,
                 'callsign' => $callsign,
+                'cid' => $vatsimCid,
                 'origin' => $origin,
                 'destination' => $destination,
                 'start' => $startTime,
@@ -102,5 +115,15 @@ class StandReservationService
         CarbonInterface $endTime
     ): bool {
         return self::applyTimePeriodToQuery(StandReservation::callsign($callsign), $startTime, $endTime)->exists();
+    }
+
+    private static function cidValid(?int $cid): bool
+    {
+        return is_null($cid) || (new VatsimCidValidator())->isValid($cid);
+    }
+
+    private static function metadataSet(?int $cid, ?string $origin, ?string $destination): bool
+    {
+        return isset($cid) || isset($origin, $destination);
     }
 }

@@ -7,6 +7,8 @@ use App\Exceptions\Stand\CallsignHasClashingReservationException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Exceptions\Stand\StandReservationAirfieldsInvalidException;
 use App\Exceptions\Stand\StandReservationCallsignNotValidException;
+use App\Exceptions\Stand\StandReservationCidNotValidException;
+use App\Exceptions\Stand\StandReservationMissingMetadataException;
 use App\Exceptions\Stand\StandReservationTimeInvalidException;
 use App\Models\Stand\StandReservation;
 use Carbon\Carbon;
@@ -44,7 +46,8 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         CarbonInterface $startTime,
         CarbonInterface $endTime,
         ?string $origin,
-        ?string $destination
+        ?string $destination,
+        ?int $cid
     ) {
         StandReservationService::createStandReservation(
             $callsign,
@@ -52,7 +55,8 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
             $startTime,
             $endTime,
             $origin,
-            $destination
+            $destination,
+            $cid
         );
 
 
@@ -64,7 +68,8 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 'start' => $startTime->toDateTimeString(),
                 'end' => $endTime->toDateTimeString(),
                 'origin' => $origin,
-                'destination' => $destination
+                'destination' => $destination,
+                'cid' => $cid
             ]
         );
     }
@@ -78,6 +83,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:45:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
             ],
             'Starts before existing, ends at existing start' => [
                 'BAW123',
@@ -85,6 +91,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 19:00:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
             ],
             'Starts when existing ends, ends after existing' => [
                 'BAW123',
@@ -92,6 +99,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 20:45:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
             ],
             'Starts after existing, ends after existing' => [
                 'BAW123',
@@ -99,12 +107,22 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 20:45:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
             ],
             'No origin or destination' => [
                 'BAW123',
                 Carbon::parse('2022-01-01 18:00:00'),
                 Carbon::parse('2022-01-01 18:45:00'),
                 null,
+                null,
+                self::ACTIVE_USER_CID,
+            ],
+            'No Cid' => [
+                'BAW123',
+                Carbon::parse('2022-01-01 18:00:00'),
+                Carbon::parse('2022-01-01 18:45:00'),
+                'EGKK',
+                'EGSS',
                 null,
             ],
         ];
@@ -120,6 +138,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         CarbonInterface $endTime,
         ?string $origin,
         ?string $destination,
+        ?int $cid,
         string $expectedExceptionType,
         string $expectedExceptionMessage
     ) {
@@ -130,7 +149,8 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 $startTime,
                 $endTime,
                 $origin,
-                $destination
+                $destination,
+                $cid
             );
         } catch (Exception $exception) {
             $this->assertEquals($expectedExceptionType, get_class($exception));
@@ -155,6 +175,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:45:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 StandReservationCallsignNotValidException::class,
                 'Callsign ### is not valid for stand reservation'
             ],
@@ -165,6 +186,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:45:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 StandNotFoundException::class,
                 'Stand with id 5 not found'
             ],
@@ -175,6 +197,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:00:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 StandReservationTimeInvalidException::class,
                 'Invalid stand reservation time'
             ],
@@ -185,6 +208,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:45:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 StandReservationTimeInvalidException::class,
                 'Invalid stand reservation time'
             ],
@@ -195,6 +219,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-02 20:05:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 CallsignHasClashingReservationException::class,
                 'Callsign BAW123 has a clashing stand reservation'
             ],
@@ -205,6 +230,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-02 19:05:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 CallsignHasClashingReservationException::class,
                 'Callsign BAW123 has a clashing stand reservation'
             ],
@@ -215,6 +241,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-02 20:05:00'),
                 'EGKK',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 CallsignHasClashingReservationException::class,
                 'Callsign BAW123 has a clashing stand reservation'
             ],
@@ -225,6 +252,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:30:00'),
                 'EGKK',
                 null,
+                self::ACTIVE_USER_CID,
                 StandReservationAirfieldsInvalidException::class,
                 'Stand reservations require both or neither airfield to be set'
             ],
@@ -235,6 +263,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:30:00'),
                 null,
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 StandReservationAirfieldsInvalidException::class,
                 'Stand reservations require both or neither airfield to be set'
             ],
@@ -245,6 +274,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:30:00'),
                 'EGKKS',
                 'EGLL',
+                self::ACTIVE_USER_CID,
                 StandReservationAirfieldsInvalidException::class,
                 'Stand reservation origin airfield EGKKS is invalid'
             ],
@@ -255,8 +285,31 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 Carbon::parse('2022-01-01 18:30:00'),
                 'EGKK',
                 'EGLLS',
+                self::ACTIVE_USER_CID,
                 StandReservationAirfieldsInvalidException::class,
                 'Stand reservation destination airfield EGLLS is invalid'
+            ],
+            'Cid not valid' => [
+                'BAW123',
+                1,
+                Carbon::parse('2022-01-01 18:00:00'),
+                Carbon::parse('2022-01-01 18:30:00'),
+                'EGKK',
+                'EGLL',
+                1,
+                StandReservationCidNotValidException::class,
+                'Vatsim CID 1 is not valid for stand reservation'
+            ],
+            'No Metadata' => [
+                'BAW123',
+                1,
+                Carbon::parse('2022-01-01 18:00:00'),
+                Carbon::parse('2022-01-01 18:30:00'),
+                null,
+                null,
+                null,
+                StandReservationMissingMetadataException::class,
+                'Stand reservations require either a CID or Origin/Destination pair'
             ],
         ];
     }

@@ -24,7 +24,8 @@ class AddHeathrowRealopsStandReservations extends Migration
                     Carbon::parse(sprintf('2022-01-09 %s:00', $reservation[5]))->subMinutes(30),
                     Carbon::parse(sprintf('2022-01-09 %s:00', $reservation[5])),
                     $reservation[1],
-                    $reservation[2]
+                    $reservation[2],
+                    null
                 );
             }
         });
