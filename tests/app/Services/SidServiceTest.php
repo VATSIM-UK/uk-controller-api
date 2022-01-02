@@ -23,7 +23,7 @@ class SidServiceTest extends BaseFunctionalTestCase
         $expected = [
             'id' => 1,
             'identifier' => 'TEST1X',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'handoff_id' => 1,
             'initial_altitude' => 3000,
             'initial_heading' => null,
@@ -44,7 +44,7 @@ class SidServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 1,
                 'identifier' => 'TEST1X',
-                'airfield_id' => 1,
+                'runway_id' => 1,
                 'handoff_id' => 1,
                 'initial_altitude' => 3000,
                 'initial_heading' => null,
@@ -56,7 +56,7 @@ class SidServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 2,
                 'identifier' => 'TEST1Y',
-                'airfield_id' => 1,
+                'runway_id' => 2,
                 'handoff_id' => 1,
                 'initial_altitude' => 4000,
                 'initial_heading' => 255,
@@ -66,7 +66,7 @@ class SidServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 3,
                 'identifier' => 'TEST1A',
-                'airfield_id' => 2,
+                'runway_id' => 3,
                 'handoff_id' => 2,
                 'initial_altitude' => 5000,
                 'initial_heading' => null,
@@ -79,7 +79,7 @@ class SidServiceTest extends BaseFunctionalTestCase
     }
 
 
-public function testItDeletesSids()
+    public function testItDeletesSids()
     {
         $this->assertDatabaseHas('sid', ['id' => 1]);
         $this->service->deleteSid(1);
@@ -99,7 +99,7 @@ public function testItDeletesSids()
     public function testItAddsNewSids()
     {
         $this->service->createSid(1, 'TEST1M', 3000);
-        $this->assertDatabaseHas('sid', ['identifier' => 'TEST1M', 'initial_altitude' => 3000, 'airfield_id' => 1]);
+        $this->assertDatabaseHas('sid', ['identifier' => 'TEST1M', 'initial_altitude' => 3000, 'runway_id' => 1]);
     }
 
     public function testItUpdatesSids()
@@ -111,7 +111,7 @@ public function testItDeletesSids()
                 'id' => 1,
                 'identifier' => 'TEST1M',
                 'initial_altitude' => 55000,
-                'airfield_id' => 2,
+                'runway_id' => 2,
                 'sid_departure_interval_group_id' => null,
             ]
         );

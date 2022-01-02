@@ -11,6 +11,7 @@ use App\Helpers\Sectorfile\Coordinate;
 use App\Models\Airfield\Airfield;
 use App\Models\Runway\Runway;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class RunwayServiceTest extends BaseFunctionalTestCase
 {
@@ -34,6 +35,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         int $secondHeading,
         Coordinate $secondThreshold
     ) {
+        $initialCount = DB::table('runways')->count();
+        $initialCountPairs = DB::table('runway_runway')->count();
         $this->service::addRunwayPair(
             $airfield,
             $firstIdentifier,
@@ -44,7 +47,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
             $secondThreshold
         );
 
-        $this->assertDatabaseCount('runways', 2);
+        $this->assertDatabaseCount('runways', $initialCount + 2);
+        $this->assertDatabaseCount('runway_runway', $initialCountPairs + 2);
         $firstCoordinate = SectorfileService::coordinateFromSectorfile(
             $firstThreshold->getLatitude(),
             $firstThreshold->getLongitude()
@@ -130,6 +134,9 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         string $expectedException,
         string $expectedExceptionMessage
     ) {
+        $initialCount = DB::table('runways')->count();
+        $initialCountPairs = DB::table('runway_runway')->count();
+
         try {
             $this->service::addRunwayPair(
                 $airfield,
@@ -141,8 +148,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
                 $secondThreshold
             );
         } catch (Exception $exception) {
-            $this->assertDatabaseCount('runways', 0);
-            $this->assertDatabaseCount('runway_runway', 0);
+            $this->assertDatabaseCount('runways', $initialCount);
+            $this->assertDatabaseCount('runway_runway', $initialCountPairs);
             $this->assertEquals($expectedException, get_class($exception));
             $this->assertEquals($expectedExceptionMessage, $exception->getMessage());
             return;
@@ -248,45 +255,33 @@ class RunwayServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsRunwaysDependency()
     {
-        $first = Runway::create(
-            [
-                'airfield_id' => 1,
-                'heading' => 2,
-                'identifier' => '27L',
-                'threshold_latitude' => 3,
-                'threshold_longitude' => 4,
-            ]
-        );
-        $second = Runway::create(
-            [
-                'airfield_id' => 1,
-                'heading' => 5,
-                'identifier' => '09R',
-                'threshold_latitude' => 6,
-                'threshold_longitude' => 7,
-            ]
-        );
-        $first->inverses()->sync($second->id);
-        $second->inverses()->sync($first->id);
-
         $expected = [
             [
-                'id' => $first->id,
+                'id' => 1,
                 'airfield_id' => 1,
-                'heading' => 2,
+                'heading' => 270,
                 'identifier' => '27L',
-                'threshold_latitude' => 3,
-                'threshold_longitude' => 4,
-                'inverse_runway_id' => $second->id,
+                'threshold_latitude' => 1,
+                'threshold_longitude' => 2,
+                'inverse_runway_id' => 2,
             ],
             [
-                'id' => $second->id,
+                'id' => 2,
                 'airfield_id' => 1,
-                'heading' => 5,
+                'heading' => 90,
                 'identifier' => '09R',
-                'threshold_latitude' => 6,
-                'threshold_longitude' => 7,
-                'inverse_runway_id' => $first->id,
+                'threshold_latitude' => 3,
+                'threshold_longitude' => 4,
+                'inverse_runway_id' => 1,
+            ],
+            [
+                'id' => 3,
+                'airfield_id' => 2,
+                'heading' => 330,
+                'identifier' => '33',
+                'threshold_latitude' => 5,
+                'threshold_longitude' => 6,
+                'inverse_runway_id' => null,
             ],
         ];
 

@@ -126,6 +126,10 @@ class DatabaseSeeder extends Seeder
         DatabaseTableSeeder::class => [
             'database_tables',
         ],
+        RunwayTableSeeder::class => [
+            'runways',
+            'runway_runway',
+        ],
     ];
 
     const OTHER_TABLES_TO_TRUNCATE = [
@@ -133,8 +137,6 @@ class DatabaseSeeder extends Seeder
         'missed_approach_notifications',
         'network_controller_positions',
         'controller_position_alternative_callsigns',
-        'runways',
-        'runway_runway',
     ];
 
 

@@ -2,7 +2,9 @@
 
 namespace App\Models\Runway;
 
+use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Runway extends Model
@@ -26,6 +28,11 @@ class Runway extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function airfield(): BelongsTo
+    {
+        return $this->belongsTo(Airfield::class);
+    }
 
     public function inverses(): BelongsToMany
     {
