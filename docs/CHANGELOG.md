@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+### [5.4.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.4.0...5.4.1) (2022-01-03)
+
+
+### Data Updates
+
+* **edinburgh:** close edinburgh stands 9A, 10A, 209 for allocation ([#748](https://github.com/VATSIM-UK/uk-controller-api/issues/748)) ([ddd13cb](https://github.com/VATSIM-UK/uk-controller-api/commit/ddd13cb4c5023ea0ee83c83429d1646cefa5cf54)), closes [#746](https://github.com/VATSIM-UK/uk-controller-api/issues/746)
+* **holds:** update cardiff hold inbound heading ([#747](https://github.com/VATSIM-UK/uk-controller-api/issues/747)) ([bc822f7](https://github.com/VATSIM-UK/uk-controller-api/commit/bc822f7baea2cb5a7ed715f853cc96eeb5760ad9)), closes [#745](https://github.com/VATSIM-UK/uk-controller-api/issues/745)
+
 ## [5.4.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.3.0...5.4.0) (2021-12-20)
 
 
