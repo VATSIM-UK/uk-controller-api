@@ -11,8 +11,8 @@ class SectorfileService
 {
     const SECTORFILE_LATITUDE_REGEX = "/^([N,S])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
     const SECTORFILE_LONGITUDE_REGEX = "/^([E,W])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
-    const NATS_LATITUDE_REGEX = "/^(\\d{2})(\\d{2})(\\d{2})([N,S])$/";
-    const NATS_LONGITUDE_REGEX = "/^(\\d{3})(\\d{2})(\\d{2})([E,W])$/";
+    const NATS_LATITUDE_REGEX = "/^(\\d{2})(\\d{2})(\\d{2})(\.\\d{2})?([N,S])$/";
+    const NATS_LONGITUDE_REGEX = "/^(\\d{3})(\\d{2})(\\d{2})(\.\\d{2})?([E,W])$/";
     const MULTIPLIER_NEGATIVE = -1;
     const MULTIPLIER_POSITIVE = 1;
 
@@ -30,18 +30,20 @@ class SectorfileService
 
         return self::coordinateFromSectorfile(
             sprintf(
-                '%s0%s.%s.%s.000',
-                $latitudeMatches[4],
+                '%s0%s.%s.%s.%s',
+                $latitudeMatches[5],
                 $latitudeMatches[1],
                 $latitudeMatches[2],
-                $latitudeMatches[3]
+                $latitudeMatches[3],
+                Str::padRight(Str::substr($latitudeMatches[4], 1), 3, '0')
             ),
             sprintf(
-                '%s%s.%s.%s.000',
-                $longitudeMatches[4],
+                '%s%s.%s.%s.%s',
+                $longitudeMatches[5],
                 $longitudeMatches[1],
                 $longitudeMatches[2],
-                $longitudeMatches[3]
+                $longitudeMatches[3],
+                Str::padRight(Str::substr($longitudeMatches[4], 1), 3, '0')
             )
         );
     }

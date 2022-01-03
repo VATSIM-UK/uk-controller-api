@@ -49,6 +49,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'released_by' => null,
                 'released_at' => null,
                 'release_expires_at' => null,
+                'remarks' => null,
                 'rejected_at' => null,
                 'acknowledged_by' => null,
                 'acknowledged_at' => null,
@@ -70,7 +71,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->approveReleaseRequest($request, 55, self::ACTIVE_USER_CID, 125, CarbonImmutable::now());
+        $this->service->approveReleaseRequest($request, 55, self::ACTIVE_USER_CID, 125, CarbonImmutable::now(), '');
     }
 
     public function testItApprovesADepartureRelease()
@@ -86,7 +87,14 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, 125, CarbonImmutable::now()->addMinutes(3));
+        $this->service->approveReleaseRequest(
+            $request,
+            2,
+            self::ACTIVE_USER_CID,
+            125,
+            CarbonImmutable::now()->addMinutes(3),
+            'Some remarks'
+        );
 
         $this->assertDatabaseHas(
             'departure_release_requests',
@@ -101,6 +109,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'acknowledged_at' => null,
                 'acknowledged_by' => null,
                 'release_valid_from' => Carbon::now()->addMinutes(3)->toDateTimeString(),
+                'remarks' => 'Some remarks',
             ]
         );
     }
@@ -118,7 +127,14 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, null, CarbonImmutable::now()->addMinutes(3));
+        $this->service->approveReleaseRequest(
+            $request,
+            2,
+            self::ACTIVE_USER_CID,
+            null,
+            CarbonImmutable::now()->addMinutes(3),
+            'Some remarks'
+        );
 
         $this->assertDatabaseHas(
             'departure_release_requests',
@@ -133,6 +149,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'acknowledged_at' => null,
                 'acknowledged_by' => null,
                 'release_valid_from' => Carbon::now()->addMinutes(3)->toDateTimeString(),
+                'remarks' => 'Some remarks',
             ]
         );
     }
@@ -151,7 +168,14 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
         $request->approve(self::ACTIVE_USER_CID, 25, CarbonImmutable::now());
-        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, 125, CarbonImmutable::now()->addMinutes(3));
+        $this->service->approveReleaseRequest(
+            $request,
+            2,
+            self::ACTIVE_USER_CID,
+            125,
+            CarbonImmutable::now()->addMinutes(3),
+            ''
+        );
     }
 
     public function testReleasesCannotBeApprovedIfAlreadyRejected()
@@ -168,7 +192,14 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
         $request->reject(self::ACTIVE_USER_CID);
-        $this->service->approveReleaseRequest($request, 2, self::ACTIVE_USER_CID, 125, CarbonImmutable::now()->addMinutes(3));
+        $this->service->approveReleaseRequest(
+            $request,
+            2,
+            self::ACTIVE_USER_CID,
+            125,
+            CarbonImmutable::now()->addMinutes(3),
+            ''
+        );
     }
 
     public function testItThrowsExceptionIfControllerCannotRejectRequest()
@@ -184,7 +215,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->rejectReleaseRequest($request, 55, self::ACTIVE_USER_CID);
+        $this->service->rejectReleaseRequest($request, 55, self::ACTIVE_USER_CID, '');
     }
 
     public function testItRejectsADepartureRelease()
@@ -200,7 +231,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID, 'Some remarks');
 
         $this->assertDatabaseHas(
             'departure_release_requests',
@@ -216,6 +247,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'acknowledged_at' => null,
                 'acknowledged_by' => null,
                 'release_valid_from' => null,
+                'remarks' => 'Some remarks',
             ]
         );
     }
@@ -234,7 +266,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
         $request->approve(self::ACTIVE_USER_CID, 25, CarbonImmutable::now());
-        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID, '');
     }
 
     public function testReleasesCannotBeRejectedIfAlreadyRejected()
@@ -251,7 +283,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
         $request->reject(self::ACTIVE_USER_CID);
-        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+        $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID, '');
     }
 
     public function testItThrowsExceptionIfControllerCannotAcknowledgeRequest()
@@ -299,6 +331,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'acknowledged_at' => Carbon::now()->toDateTimeString(),
                 'acknowledged_by' => self::ACTIVE_USER_CID,
                 'release_valid_from' => null,
+                'remarks' => null,
             ]
         );
     }

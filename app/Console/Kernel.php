@@ -89,8 +89,6 @@ class Kernel extends ConsoleKernel
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
         $schedule->command('stands:assign-arrival')->everyTwoMinutes();
-        $schedule->command('schedule-monitor:sync')
-            ->dailyAt('07:01');
         $schedule->command('schedule-monitor:clean')
             ->dailyAt('08:01');
         $schedule->command('srd:update')
