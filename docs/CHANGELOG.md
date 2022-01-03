@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.5.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.5.0...5.5.1) (2022-01-03)
+
+
+### Data Updates
+
+* **stands:** Update aberdeen stand allocations ([#757](https://github.com/VATSIM-UK/uk-controller-api/issues/757)) ([b86bbbe](https://github.com/VATSIM-UK/uk-controller-api/commit/b86bbbec2b82d8c5902bb9c6e2c31711c394da71))
+
 ## [5.5.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.4.2...5.5.0) (2022-01-03)
 
 
