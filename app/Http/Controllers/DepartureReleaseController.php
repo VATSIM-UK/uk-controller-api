@@ -53,7 +53,8 @@ class DepartureReleaseController
                     $request->validated()['expires_in_seconds'],
                     $request->validated()['released_at'] === null
                         ? CarbonImmutable::now()
-                        : CarbonImmutable::parse($request->validated()['released_at'])
+                        : CarbonImmutable::parse($request->validated()['released_at']),
+                    $request->validated()['remarks'] ?? ''
                 );
             }
         );
@@ -70,7 +71,8 @@ class DepartureReleaseController
                 $this->departureReleaseService->rejectReleaseRequest(
                     $departureReleaseRequest,
                     $request->validated()['controller_position_id'],
-                    Auth::id()
+                    Auth::id(),
+                    $request->validated()['remarks'] ?? ''
                 );
             }
         );

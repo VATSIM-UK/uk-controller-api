@@ -6,6 +6,7 @@ use App\BaseApiTestCase;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Str;
 
 class DepartureReleaseControllerTest extends BaseApiTestCase
 {
@@ -236,6 +237,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'controller_position_id' => 2,
             'expires_in_seconds' => 10,
             'released_at' => null,
+            'remarks' => 'Some remarks',
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
@@ -248,11 +250,47 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'released_by' => self::ACTIVE_USER_CID,
                 'release_expires_at' => Carbon::now()->addSeconds(10)->toDateTimeString(),
                 'release_valid_from' => Carbon::now()->toDateTimeString(),
+                'remarks' => 'Some remarks',
             ]
         );
     }
 
     public function testItApprovesAReleaseWithNoExpiryTime()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d/approve', $request->id);
+
+        $approvalData = [
+            'controller_position_id' => 2,
+            'expires_in_seconds' => null,
+            'released_at' => null,
+            'remarks' => 'Some remarks',
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $approvalData)
+            ->assertOk();
+
+        $this->assertDatabaseHas(
+            'departure_release_requests',
+            [
+                'id' => $request->id,
+                'released_by' => self::ACTIVE_USER_CID,
+                'release_expires_at' => null,
+                'release_valid_from' => Carbon::now()->toDateTimeString(),
+                'remarks' => 'Some remarks',
+            ]
+        );
+    }
+
+    public function testItApprovesAReleaseWithNoRemarks()
     {
         $request = DepartureReleaseRequest::create(
             [
@@ -281,6 +319,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                 'released_by' => self::ACTIVE_USER_CID,
                 'release_expires_at' => null,
                 'release_valid_from' => Carbon::now()->toDateTimeString(),
+                'remarks' => '',
             ]
         );
     }
@@ -380,6 +419,22 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
                     'controller_position_id' => 2,
                     'expires_in_seconds' => 10,
                     'released_at' => Carbon::now()->addMinutes(5)->toDateTimeString('minute'),
+                ]
+            ],
+            'Remarks not string' => [
+                [
+                    'controller_position_id' => 2,
+                    'expires_in_seconds' => 10,
+                    'released_at' => null,
+                    'remarks' => 123,
+                ]
+            ],
+            'Remarks too long' => [
+                [
+                    'controller_position_id' => 2,
+                    'expires_in_seconds' => 10,
+                    'released_at' => null,
+                    'remarks' => Str::padRight('', 256, 'a'),
                 ]
             ],
         ];
@@ -485,6 +540,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
 
         $rejectionData = [
             'controller_position_id' => 2,
+            'remarks' => 'Some remarks',
         ];
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $rejectionData)
@@ -495,7 +551,39 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             [
                 'id' => $request->id,
                 'rejected_by' => self::ACTIVE_USER_CID,
-                'rejected_at' => Carbon::now()->toDateTimeString()
+                'rejected_at' => Carbon::now()->toDateTimeString(),
+                'remarks' => 'Some remarks',
+            ]
+        );
+    }
+
+    public function testItRejectsAReleaseWithNoRemarks()
+    {
+        $request = DepartureReleaseRequest::create(
+            [
+                'callsign' => 'BAW123',
+                'user_id' => self::ACTIVE_USER_CID,
+                'controller_position_id' => 1,
+                'target_controller_position_id' => 2,
+                'expires_at' => Carbon::now()->addMinutes(2),
+            ]
+        );
+        $route = sprintf('departure/release/request/%d/reject', $request->id);
+
+        $rejectionData = [
+            'controller_position_id' => 2,
+        ];
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, $route, $rejectionData)
+            ->assertOk();
+
+        $this->assertDatabaseHas(
+            'departure_release_requests',
+            [
+                'id' => $request->id,
+                'rejected_by' => self::ACTIVE_USER_CID,
+                'rejected_at' => Carbon::now()->toDateTimeString(),
+                'remarks' => '',
             ]
         );
     }
@@ -515,6 +603,18 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
             'Controller position invalid' => [
                 [
                     'controller_position_id' => 55,
+                ]
+            ],
+            'Remarks not string' => [
+                [
+                    'controller_position_id' => 2,
+                    'remarks' => 123,
+                ]
+            ],
+            'Remarks too long' => [
+                [
+                    'controller_position_id' => 2,
+                    'remarks' => Str::padRight('', 256, 'a'),
                 ]
             ],
         ];

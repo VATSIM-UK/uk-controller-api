@@ -22,6 +22,7 @@ class DepartureReleaseApprovedEventTest extends BaseUnitTestCase
                 'controller_position_id' => 2,
                 'release_expires_at' => Carbon::now()->addMinutes(2),
                 'release_valid_from' => Carbon::now()->addMinute(),
+                'remarks' => 'Remarks',
             ]
         );
         $this->request->id = 1;
@@ -44,6 +45,7 @@ class DepartureReleaseApprovedEventTest extends BaseUnitTestCase
             'id' => 1,
             'expires_at' => Carbon::now()->addMinutes(2)->toDateTimeString(),
             'released_at' => Carbon::now()->addMinute()->toDateTimeString(),
+            'remarks' => 'Remarks',
         ];
 
         $this->assertEquals($expected, $this->event->broadcastWith());
@@ -56,6 +58,7 @@ class DepartureReleaseApprovedEventTest extends BaseUnitTestCase
             'id' => 1,
             'expires_at' => null,
             'released_at' => Carbon::now()->addMinute()->toDateTimeString(),
+            'remarks' => 'Remarks',
         ];
 
         $this->assertEquals($expected, $this->event->broadcastWith());

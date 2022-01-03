@@ -17,6 +17,10 @@ class ApproveDepartureRelease extends FormRequest
                 'integer',
                 new ControllerPositionValid(),
             ],
+            'remarks' => [
+                'string',
+                'max:255',
+            ],
         ];
     }
 }
