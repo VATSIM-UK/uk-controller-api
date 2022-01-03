@@ -20,11 +20,10 @@ jobs:
           workflow: test.yml
           run_id: ${{ github.event.workflow_run.id }}
           name: pr-number
-          path: ~/pr-number
 
       - name: Set Pull Request Number
         run: |
-          NUM=$(cat ~/pr-number/pr-number)
+          NUM=$(cat ./pr-number/pr-number)
           echo "PR_NUMBER=$NUM" >> $GITHUB_ENV
 
       - name: Merge Dependabot
