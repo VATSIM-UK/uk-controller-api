@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.4.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.4.1...5.4.2) (2022-01-03)
+
+
+### Bug Fixes
+
+* **kernel:** Remove schedule monitor sync ([#753](https://github.com/VATSIM-UK/uk-controller-api/issues/753)) ([543c26f](https://github.com/VATSIM-UK/uk-controller-api/commit/543c26f2b40717b762e8a8dc8f9a38747721eaad))
+
 ### [5.4.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.4.0...5.4.1) (2022-01-03)
 
 
