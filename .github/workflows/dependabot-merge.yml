@@ -9,8 +9,7 @@ jobs:
   approve-and-merge:
     name: Approve and Merge
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.event == 'pull_request'}} &&
-      ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     concurrency:
       group: ukcp-api-dependabot-auto-merge
     steps:
