@@ -23,6 +23,7 @@ jobs:
 
       - name: Set Pull Request Number
         run: |
+          ls -la
           NUM=$(cat ./pr-number.txt)
           echo "PR_NUMBER=$NUM" >> $GITHUB_ENV
 
