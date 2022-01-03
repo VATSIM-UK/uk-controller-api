@@ -24,7 +24,7 @@ jobs:
 
       - name: Set Pull Request Number
         run: |
-          NUM=$(cat ~/pr-number)
+          NUM=$(cat ~/pr-number/pr-number)
           echo "PR_NUMBER=$NUM" >> $GITHUB_ENV
 
       - name: Merge Dependabot
