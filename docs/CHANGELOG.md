@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.6.3](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.2...5.6.3) (2022-01-04)
+
+
+### Bug Fixes
+
+* **releases:** Remove PHP 8 syntax to work in 7.4 for now ([#769](https://github.com/VATSIM-UK/uk-controller-api/issues/769)) ([b2e365a](https://github.com/VATSIM-UK/uk-controller-api/commit/b2e365abf7af2d4eb721fd5633e14f96b1ab2f93))
+
 ### [5.6.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.1...5.6.2) (2022-01-04)
 
 
