@@ -82,9 +82,7 @@ class VersionController extends BaseController
 
         try {
             $this->versionService->publishNewVersionFromGithub($request->json('release.tag_name'));
-        } catch (VersionAlreadyExistsException) {
-            return response()->json();
-        } catch (ReleaseChannelNotFoundException) {
+        } catch (VersionAlreadyExistsException|ReleaseChannelNotFoundException $exception) {
             return response()->json();
         }
 
