@@ -32,5 +32,6 @@ class AddReleaseChannelsToCurrent extends Migration
      */
     public function down()
     {
+        $table->dropForeign('version_plugin_release_channel_id_foreign');
     }
 }
