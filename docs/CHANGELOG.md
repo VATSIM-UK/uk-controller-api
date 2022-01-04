@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.6.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.5.1...5.6.0) (2022-01-04)
+
+
+### Features
+
+* **plugin:** Allow pre-release versions of the plugin ([#758](https://github.com/VATSIM-UK/uk-controller-api/issues/758)) ([69a2d16](https://github.com/VATSIM-UK/uk-controller-api/commit/69a2d16752067df39569e2f4a284ccebfa235b6d))
+
 ### [5.5.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.5.0...5.5.1) (2022-01-03)
 
 
