@@ -16,6 +16,7 @@ class VersionTableSeeder extends Seeder
             [
                 'id' => 1,
                 'version' => '1.0.0',
+                'plugin_release_channel_id' => 1,
                 'created_at' => '2017-12-02',
                 'updated_at' => '2017-12-03',
                 'deleted_at' => '2017-12-04',
@@ -26,6 +27,7 @@ class VersionTableSeeder extends Seeder
             [
                 'id' => 2,
                 'version' => '2.0.0',
+                'plugin_release_channel_id' => 1,
                 'created_at' => '2017-12-03',
                 'updated_at' => null,
                 'deleted_at' => null,
@@ -36,6 +38,7 @@ class VersionTableSeeder extends Seeder
             [
                 'id' => 3,
                 'version' => '2.0.1',
+                'plugin_release_channel_id' => 1,
                 'created_at' => '2017-12-04',
                 'updated_at' => null,
                 'deleted_at' => null,

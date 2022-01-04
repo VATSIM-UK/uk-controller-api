@@ -201,7 +201,10 @@ Route::middleware('api')->group(
                             Route::prefix('{airfield:code}')->group(function () {
                                 Route::prefix('terminals')->group(function () {
                                     Route::get('', 'Admin\\StandAdminController@getTerminals');
-                                    Route::get('{terminal:key}/stands', 'Admin\\StandAdminController@getStandsByTerminal');
+                                    Route::get(
+                                        '{terminal:key}/stands',
+                                        'Admin\\StandAdminController@getStandsByTerminal'
+                                    );
                                 });
                                 Route::prefix('stands')->group(function () {
                                     Route::post('', 'Admin\\StandAdminController@createNewStand');
@@ -353,7 +356,10 @@ Route::middleware('api')->group(
                 );
 
                 // Getting version
-                Route::get('version/{version}', 'VersionController@getVersion');
+                Route::prefix('version')->group(function () {
+                    Route::get('latest', 'VersionController@getLatestVersion');
+                    Route::get('{version:version}', 'VersionController@getVersion');
+                });
             }
         );
     }

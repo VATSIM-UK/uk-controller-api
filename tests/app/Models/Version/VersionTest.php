@@ -18,6 +18,7 @@ class VersionTest extends BaseFunctionalTestCase
         $expected = [
             'id' => 1,
             'version' => '1.0.0',
+            'plugin_release_channel_id' => 1,
             'created_at' => '2017-12-02T00:00:00.000000Z',
             'updated_at' => '2017-12-03T00:00:00.000000Z',
             'deleted_at' => '2017-12-04T00:00:00.000000Z',
