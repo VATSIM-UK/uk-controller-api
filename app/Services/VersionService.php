@@ -80,7 +80,7 @@ class VersionService
 
         try {
             $normalisedVersion = $this->versionParser->normalize($tag);
-        } catch (UnexpectedValueException) {
+        } catch (UnexpectedValueException $exception) {
             Log::error(sprintf('Invalid release channel %s', $tag));
             throw new ReleaseChannelNotFoundException();
         }
