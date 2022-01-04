@@ -19,16 +19,6 @@ class AddReleaseChannelIdToVersionTable extends Migration
             $table->unsignedBigInteger('plugin_release_channel_id')
                 ->after('version');
         });
-
-
-        $stableChannel = PluginReleaseChannel::where('name', 'stable')->firstOrFail();
-        Version::all()->each(function (Version $version) use ($stableChannel) {
-            $version->pluginReleaseChannel()->associate($stableChannel)->save();
-        });
-
-        Schema::table('version', function (Blueprint $table) {
-            $table->foreign('plugin_release_channel_id')->references('id')->on('plugin_release_channels');
-        });
     }
 
     /**
@@ -39,7 +29,6 @@ class AddReleaseChannelIdToVersionTable extends Migration
     public function down()
     {
         Schema::table('version', function (Blueprint $table) {
-            $table->dropForeign('version_plugin_release_channel_id_foreign');
             $table->dropColumn('plugin_release_channel_id');
         });
     }
