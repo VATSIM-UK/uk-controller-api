@@ -60,6 +60,6 @@ class Version extends Model
 
     public function scopeReleaseChannel(Builder $builder, PluginReleaseChannel $channel): Builder
     {
-        return $builder->where('release_channel_id', $channel->id);
+        return $builder->where('plugin_release_channel_id', $channel->id);
     }
 }
