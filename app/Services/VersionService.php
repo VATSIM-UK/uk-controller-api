@@ -11,7 +11,7 @@ use Composer\Semver\Comparator;
 use Composer\Semver\VersionParser;
 use Http\Client\Common\Plugin;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use UnexpectedValueException;
 
@@ -94,23 +94,12 @@ class VersionService
         }
 
         // Create the version
-        $newVersion = Version::create(
+        Version::create(
             [
                 'version' => $tag,
                 'plugin_release_channel_id' => $releaseChannel->id,
             ]
         );
-
-        // Retire old versions
-        Version::where('id', '<>', $newVersion->id)
-            ->get()
-            ->reject(fn (Version $version) => Comparator::greaterThan(
-                $version->version,
-                $newVersion->version
-            ))
-            ->each(function (Version $version) {
-                $version->delete();
-            });
     }
 
     /**
@@ -138,9 +127,10 @@ class VersionService
 
     private function getRelevantVersions(PluginReleaseChannel $requestedChannel): Collection
     {
-        return Version::whereHas('pluginReleaseChannel', function (Builder $releaseChannel) use ($requestedChannel) {
-            return $releaseChannel->where('relative_stability', '<=', $requestedChannel->relative_stability);
-        })->get();
+        return PluginReleaseChannel::where('relative_stability', '<=', $requestedChannel->relative_stability)
+            ->get()
+            ->map(fn (PluginReleaseChannel $channel) => Version::orderByDesc('id')->releaseChannel($channel)->first())
+            ->filter();
     }
 
     public function getFullVersionDetails(Version $version): array
