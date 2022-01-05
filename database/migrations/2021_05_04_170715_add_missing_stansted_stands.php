@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Services\DependencyService;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 
 class AddMissingStanstedStands extends Migration
 {

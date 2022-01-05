@@ -3,7 +3,7 @@
 namespace App\Jobs\Stand;
 
 use App\BaseUnitTestCase;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Mockery;
 
 class OccupyStandsTest extends BaseUnitTestCase

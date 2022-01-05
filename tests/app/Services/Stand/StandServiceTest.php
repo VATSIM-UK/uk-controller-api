@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Stand;
 
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
@@ -10,7 +10,7 @@ use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
-use App\Allocator\Stand\ReservedArrivalStandAllocator;
+use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
@@ -22,8 +22,8 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class StandServiceTest extends BaseFunctionalTestCase
 {
@@ -682,7 +682,7 @@ class StandServiceTest extends BaseFunctionalTestCase
     {
         $this->assertEquals(
             [
-                ReservedArrivalStandAllocator::class,
+                CallsignFlightplanReservedArrivalStandAllocator::class,
                 CargoFlightPreferredArrivalStandAllocator::class,
                 CargoFlightArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
@@ -787,6 +787,8 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addMinute(),
+                'destination' => 'EGLL',
+                'origin' => 'EGSS',
             ]
         );
 
@@ -795,6 +797,7 @@ class StandServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'EGSS',
                 'groundspeed' => 150,
                 // London
                 'latitude' => 51.487202,
@@ -1376,6 +1379,8 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'stand_id' => $standId,
                 'start' => $active ? Carbon::now() : Carbon::now()->addHours(2),
                 'end' => Carbon::now()->addHours(2)->addMinutes(10),
+                'destination' => 'EGLL',
+                'origin' => 'EGSS',
             ]
         );
     }

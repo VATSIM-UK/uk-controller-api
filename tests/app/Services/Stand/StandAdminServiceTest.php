@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Stand\StandType;
-use App\Services\StandAdminService;
+use App\Services\Stand\StandAdminService;
 
 class StandAdminServiceTest extends BaseFunctionalTestCase
 {

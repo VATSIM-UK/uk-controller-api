@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;

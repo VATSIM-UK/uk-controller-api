@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Illuminate\Console\Command;
 
 class AllocateStandForArrival extends Command

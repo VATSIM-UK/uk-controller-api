@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Stand;
 
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

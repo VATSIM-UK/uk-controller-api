@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Stand;
 
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandType;

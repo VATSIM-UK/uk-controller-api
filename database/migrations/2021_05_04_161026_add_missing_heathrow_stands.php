@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use App\Services\DependencyService;
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 
 class AddMissingHeathrowStands extends Migration
 {

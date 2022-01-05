@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\StandService;
+use App\Services\Stand\StandService;
 use Illuminate\Database\Migrations\Migration;
 
 class StandTidyUp extends Migration
