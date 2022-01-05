@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.6.4](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.3...5.6.4) (2022-01-05)
+
+
+### Data Updates
+
+* **events:** Add Heathrow realops arrival stand allocations ([#762](https://github.com/VATSIM-UK/uk-controller-api/issues/762)) ([92f98d7](https://github.com/VATSIM-UK/uk-controller-api/commit/92f98d7eb5c265302a53285cccbcfc37dd32b56d))
+
 ### [5.6.3](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.2...5.6.3) (2022-01-04)
 
 
