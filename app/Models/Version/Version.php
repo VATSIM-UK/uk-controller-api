@@ -57,4 +57,9 @@ class Version extends Model
     {
         return $this->belongsTo(PluginReleaseChannel::class);
     }
+
+    public function scopeReleaseChannel(Builder $builder, PluginReleaseChannel $channel): Builder
+    {
+        return $builder->where('release_channel_id', $channel->id);
+    }
 }

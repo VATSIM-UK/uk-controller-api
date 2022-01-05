@@ -127,9 +127,9 @@ class VersionService
 
     private function getRelevantVersions(PluginReleaseChannel $requestedChannel): Collection
     {
-        return Version::whereHas('pluginReleaseChannel', function (Builder $releaseChannel) use ($requestedChannel) {
-            return $releaseChannel->where('relative_stability', '<=', $requestedChannel->relative_stability);
-        })->get();
+        return PluginReleaseChannel::where('relative_stability', '<=', $requestedChannel->relative_stability)
+            ->get()
+            ->map(fn(PluginReleaseChannel $channel) => Version::orderByDesc('id')->releaseChannel($channel)->first());
     }
 
     public function getFullVersionDetails(Version $version): array
