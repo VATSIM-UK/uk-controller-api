@@ -13,16 +13,13 @@ class VatsimCallsign implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed $value
      * @return bool
      */
     public function passes($attribute, $value)
     {
-        return preg_match(
-            sprintf('%s%s%s', self::DELIMITER, self::CALLSIGN_REGEX, self::DELIMITER),
-            $value
-        ) === self::REGEX_MATCHED;
+        return is_string($value) && self::callsignValid($value);
     }
 
     /**
@@ -33,5 +30,13 @@ class VatsimCallsign implements Rule
     public function message()
     {
         return 'Invalid VATSIM callsign';
+    }
+
+    public static function callsignValid(string $callsign): bool
+    {
+        return preg_match(
+                sprintf('%s%s%s', self::DELIMITER, self::CALLSIGN_REGEX, self::DELIMITER),
+                $callsign
+            ) === self::REGEX_MATCHED;
     }
 }

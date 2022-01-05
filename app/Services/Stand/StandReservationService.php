@@ -24,7 +24,7 @@ class StandReservationService
         ?string $origin,
         ?string $destination
     ): void {
-        if (!self::callsignValid($callsign)) {
+        if (!VatsimCallsign::callsignValid($callsign)) {
             throw StandReservationCallsignNotValidException::forCallsign($callsign);
         }
 
@@ -72,11 +72,6 @@ class StandReservationService
     private static function airfieldValid(?string $airfield): bool
     {
         return is_null($airfield) || (new AirfieldIcao())->passes('', $airfield);
-    }
-
-    private static function callsignValid(string $callsign): bool
-    {
-        return (new VatsimCallsign())->passes('', $callsign);
     }
 
     private static function applyTimePeriodToQuery(
