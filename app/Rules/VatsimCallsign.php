@@ -35,8 +35,8 @@ class VatsimCallsign implements Rule
     public static function callsignValid(string $callsign): bool
     {
         return preg_match(
-                sprintf('%s%s%s', self::DELIMITER, self::CALLSIGN_REGEX, self::DELIMITER),
-                $callsign
-            ) === self::REGEX_MATCHED;
+            sprintf('%s%s%s', self::DELIMITER, self::CALLSIGN_REGEX, self::DELIMITER),
+            $callsign
+        ) === self::REGEX_MATCHED;
     }
 }
