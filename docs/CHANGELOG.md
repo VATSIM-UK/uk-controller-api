@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.7.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.4...5.7.0) (2022-01-05)
+
+
+### Features
+
+* **versions:** Don't delete old versions on new release ([#772](https://github.com/VATSIM-UK/uk-controller-api/issues/772)) ([bfade2f](https://github.com/VATSIM-UK/uk-controller-api/commit/bfade2f3e1cfaf9175c1b20db8a31fcdd9ed7915))
+
 ### [5.6.4](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.3...5.6.4) (2022-01-05)
 
 
