@@ -129,7 +129,7 @@ class VersionService
     {
         return PluginReleaseChannel::where('relative_stability', '<=', $requestedChannel->relative_stability)
             ->get()
-            ->map(fn(PluginReleaseChannel $channel) => Version::orderByDesc('id')->releaseChannel($channel)->first());
+            ->map(fn (PluginReleaseChannel $channel) => Version::orderByDesc('id')->releaseChannel($channel)->first());
     }
 
     public function getFullVersionDetails(Version $version): array
