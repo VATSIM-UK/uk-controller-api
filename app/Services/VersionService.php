@@ -94,23 +94,12 @@ class VersionService
         }
 
         // Create the version
-        $newVersion = Version::create(
+        Version::create(
             [
                 'version' => $tag,
                 'plugin_release_channel_id' => $releaseChannel->id,
             ]
         );
-
-        // Retire old versions
-        Version::where('id', '<>', $newVersion->id)
-            ->get()
-            ->reject(fn (Version $version) => Comparator::greaterThan(
-                $version->version,
-                $newVersion->version
-            ))
-            ->each(function (Version $version) {
-                $version->delete();
-            });
     }
 
     /**
