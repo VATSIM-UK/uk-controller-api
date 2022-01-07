@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.8.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.7.0...5.8.0) (2022-01-07)
+
+
+### Features
+
+* **runways:** Add runway data ([#765](https://github.com/VATSIM-UK/uk-controller-api/issues/765)) ([f590e08](https://github.com/VATSIM-UK/uk-controller-api/commit/f590e08c7425a296e2f8c54aafdd1857c57e0260))
+
 ## [5.7.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.4...5.7.0) (2022-01-05)
 
 
