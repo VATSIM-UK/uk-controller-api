@@ -153,12 +153,21 @@ class DependencyServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function testItThrowsExceptionIfFetchedDependencyIsNotJsonResponse()
+    public function testItFetchesAndCachesArrayDependencies()
+    {
+        Cache::forget('DEPENDENCY_6_CACHE');
+        $this->assertEquals(
+            DependencyService::fetchDependencyDataById(6),
+            Cache::get('DEPENDENCY_6_CACHE')
+        );
+    }
+
+    public function testItThrowsExceptionIfFetchedDependencyIsNotAllowedType()
     {
         $this->app->instance('App\\Http\\Controllers\\FooController', $this);
         $this->expectException(InvalidArgumentException::class);
         Cache::forget('DEPENDENCY_1_CACHE');
-        Dependency::find(1)->update(['action' => 'FooController@foo']);
+        Dependency::find(1)->update(['action' => 'App\\Http\\Controllers\\FooController@foo']);
         DependencyService::fetchDependencyDataById(1);
     }
 
@@ -181,14 +190,14 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     {
         DependencyService::createDependency(
             'NEW_DEPENDENCY_TEST',
-            'foo@bar',
+            sprintf('%s@%s', AirfieldService::class, 'getAirfieldsDependency'),
             true,
             'new-dependency.json',
             ['stands', 'controller_positions']
         );
 
         $dependency = Dependency::where('key', 'NEW_DEPENDENCY_TEST')->firstOrFail();
-        $this->assertEquals('foo@bar', $dependency->action);
+        $this->assertEquals('App\\Services\\AirfieldService@getAirfieldsDependency', $dependency->action);
         $this->assertEquals('new-dependency.json', $dependency->local_file);
         $this->assertTrue($dependency->per_user);
         $this->assertEquals(

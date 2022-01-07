@@ -27,7 +27,7 @@ class SidControllerTest extends BaseApiTestCase
         $expected = [
             'id' => 1,
             'identifier' => 'TEST1X',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'initial_altitude' => 3000,
             'handoff_id' => 1,
         ];
@@ -69,7 +69,7 @@ class SidControllerTest extends BaseApiTestCase
     {
         $data = [
             'identifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data);
@@ -80,7 +80,7 @@ class SidControllerTest extends BaseApiTestCase
     {
         $data = [
             'identifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(201);
@@ -90,27 +90,27 @@ class SidControllerTest extends BaseApiTestCase
     {
         $data = [
             'notidentifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
     }
 
-    public function testItFailsSidCreationMissingAirfield()
+    public function testItFailsSidCreationMissingRunway()
     {
         $data = [
             'identifier' => 'TEST1U',
-            'notairfield_id' => 1,
+            'not_runway_id' => 1,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
     }
 
-    public function testItFailsSidCreationAirfieldIdNotInteger()
+    public function testItFailsSidCreationRunwayIdNotInteger()
     {
         $data = [
             'identifier' => 'TEST1U',
-            'airfield_id' => 'test',
+            'runway_id' => 'test',
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'sid', $data)->assertStatus(400);
@@ -141,7 +141,7 @@ class SidControllerTest extends BaseApiTestCase
         $data = [
             'id' => 1,
             'identifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 2,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data);
@@ -152,7 +152,7 @@ class SidControllerTest extends BaseApiTestCase
     {
         $data = [
             'identifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 2,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(200);
@@ -162,27 +162,27 @@ class SidControllerTest extends BaseApiTestCase
     {
         $data = [
             'notidentifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
     }
 
-    public function testItFailsSidUpdateMissingAirfield()
+    public function testItFailsSidUpdateMissingRunway()
     {
         $data = [
             'identifier' => 'TEST1U',
-            'notairfield_id' => 1,
+            'not_runway_id' => 1,
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
     }
 
-    public function testItFailsSidUpdateAirfieldIdNotInteger()
+    public function testItFailsSidUpdateRunwayIdNotInteger()
     {
         $data = [
             'identifier' => 'TEST1U',
-            'airfield_id' => 'test',
+            'runway_id' => 'test',
             'initial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
@@ -192,7 +192,7 @@ class SidControllerTest extends BaseApiTestCase
     {
         $data = [
             'identifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'notinitial_altitude' => 10000,
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);
@@ -202,7 +202,7 @@ class SidControllerTest extends BaseApiTestCase
     {
         $data = [
             'identifier' => 'TEST1U',
-            'airfield_id' => 1,
+            'runway_id' => 1,
             'initial_altitude' => 'test',
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::SID_URI_1, $data)->assertStatus(400);

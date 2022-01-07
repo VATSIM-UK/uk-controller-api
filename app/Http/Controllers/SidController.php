@@ -48,7 +48,7 @@ class SidController extends BaseController
     public function createSid(Request $request): JsonResponse
     {
         $expectedData = [
-            'airfield_id' => 'integer|required',
+            'runway_id' => 'integer|required',
             'identifier' => 'string|required',
             'initial_altitude' => 'integer|required',
         ];
@@ -59,7 +59,7 @@ class SidController extends BaseController
         }
 
         $this->sidService->createSid(
-            $request->json('airfield_id'),
+            $request->json('runway_id'),
             $request->json('identifier'),
             $request->json('initial_altitude')
         );
@@ -70,7 +70,7 @@ class SidController extends BaseController
     public function updateSid(int $id, Request $request): JsonResponse
     {
         $expectedData = [
-            'airfield_id' => 'integer|required',
+            'runway_id' => 'integer|required',
             'identifier' => 'string|required',
             'initial_altitude' => 'integer|required',
         ];
@@ -82,7 +82,7 @@ class SidController extends BaseController
 
         $this->sidService->updateSid(
             $id,
-            $request->json('airfield_id'),
+            $request->json('runway_id'),
             $request->json('identifier'),
             $request->json('initial_altitude')
         );

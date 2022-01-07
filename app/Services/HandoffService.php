@@ -7,6 +7,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Sid;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -199,7 +200,9 @@ class HandoffService
 
     public static function setHandoffForSid(string $airfield, string $identifier, string $handoff)
     {
-        Sid::where('airfield_id', Airfield::where('code', $airfield)->firstOrFail()->id)
+        Sid::whereHas('runway.airfield', function (Builder $airfieldQuery) use ($airfield) {
+            return $airfieldQuery->where('code', $airfield);
+        })
             ->where('identifier', $identifier)
             ->update(['handoff_id' => Handoff::where('key', $handoff)->firstOrFail()->id]);
     }

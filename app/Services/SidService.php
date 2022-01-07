@@ -10,10 +10,11 @@ class SidService
 {
     public function getSidsDependency()
     {
-        return Sid::with('airfield', 'prenotes')->get()->map(function (Sid $sid) {
+        return Sid::with('runway', 'runway.airfield', 'prenotes')->get()->map(function (Sid $sid) {
             return [
                 'id' => $sid->id,
-                'airfield' => $sid->airfield->code,
+                'airfield' => $sid->runway->airfield->code,
+                'runway_id' => $sid->runway_id,
                 'identifier' => $sid->identifier,
                 'departure_interval_group' => $sid->sid_departure_interval_group_id,
                 'initial_altitude' => $sid->initial_altitude,
@@ -69,11 +70,11 @@ class SidService
      * @param string $identifier
      * @param int $initialAltitude
      */
-    public function createSid(int $airfieldId, string $identifier, int $initialAltitude) : void
+    public function createSid(int $runwayId, string $identifier, int $initialAltitude) : void
     {
         Sid::create(
             [
-                'airfield_id' => $airfieldId,
+                'runway_id' => $runwayId,
                 'identifier' => $identifier,
                 'initial_altitude' => $initialAltitude,
                 'created_at' => Carbon::now(),
@@ -87,10 +88,10 @@ class SidService
      * @param string $identifier
      * @param int $initialAltitude
      */
-    public function updateSid(int $id, int $airfieldId, string $identifier, int $initialAltitude) : void
+    public function updateSid(int $id, int $runwayId, string $identifier, int $initialAltitude) : void
     {
         $sid = Sid::find($id);
-        $sid->airfield_id = $airfieldId;
+        $sid->runway_id = $runwayId;
         $sid->identifier = $identifier;
         $sid->initial_altitude = $initialAltitude;
         $sid->save();

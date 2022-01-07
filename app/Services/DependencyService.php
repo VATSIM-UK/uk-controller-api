@@ -6,6 +6,9 @@ use App\Models\Database\DatabaseTable;
 use App\Models\Dependency\Dependency;
 use App\Models\User\User;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -32,12 +35,17 @@ class DependencyService
         return Cache::rememberForever(
             self::getDependencyCacheKey($dependency),
             function () use ($dependency) {
-                $response = app()->call("App\\Http\\Controllers\\{$dependency->action}");
-                if (!$response instanceof JsonResponse) {
-                    throw new InvalidArgumentException('Returned dependency was not JSON');
+                $response = app()->call($dependency->action);
+
+                if ($response instanceof JsonResponse) {
+                    return $response->getData(true);
                 }
 
-                return $response->getData(true);
+                if (is_array($response)) {
+                    return $response;
+                }
+
+                throw new InvalidArgumentException('Invalid dependency data type');
             }
         );
     }

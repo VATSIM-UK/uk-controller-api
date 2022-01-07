@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Airfield\Airfield;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
 use App\Models\Departure\SidDepartureIntervalGroup;
+use App\Models\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,6 +19,7 @@ class Sid extends Model
 
     protected $fillable = [
         'airfield_id',
+        'runway_id',
         'identifier',
         'initial_altitude',
         'initial_heading',
@@ -33,12 +34,9 @@ class Sid extends Model
         'updated_at',
     ];
 
-    /**
-     * @return HasOne
-     */
-    public function airfield() : HasOne
+    public function runway() : BelongsTo
     {
-        return $this->hasOne(Airfield::class, 'id', 'airfield_id');
+        return $this->belongsTo(Runway::class);
     }
 
     public function handoff() : HasOne
