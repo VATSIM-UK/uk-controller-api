@@ -2,7 +2,9 @@
 
 namespace App\Models\Version;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -31,6 +33,7 @@ class Version extends Model
 
     protected $fillable = [
         'version',
+        'plugin_release_channel_id',
         'deleted_at',
     ];
 
@@ -39,7 +42,7 @@ class Version extends Model
      *
      * @return this
      */
-    public function toggleAllowed() : Version
+    public function toggleAllowed(): Version
     {
         if ($this->trashed()) {
             $this->restore();
@@ -50,10 +53,13 @@ class Version extends Model
         return $this;
     }
 
-    public function resolveRouteBinding($value, $field = null)
+    public function pluginReleaseChannel(): BelongsTo
     {
-        return $value === 'latest'
-            ? Version::orderByDesc('id')->firstOrFail()
-            : Version::where('version', $value)->withTrashed()->firstOrFail();
+        return $this->belongsTo(PluginReleaseChannel::class);
+    }
+
+    public function scopeReleaseChannel(Builder $builder, PluginReleaseChannel $channel): Builder
+    {
+        return $builder->where('plugin_release_channel_id', $channel->id);
     }
 }

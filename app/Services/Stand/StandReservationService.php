@@ -28,7 +28,7 @@ class StandReservationService
         ?string $destination,
         ?int $vatsimCid
     ): void {
-        if (!self::callsignValid($callsign)) {
+        if (!VatsimCallsign::callsignValid($callsign)) {
             throw StandReservationCallsignNotValidException::forCallsign($callsign);
         }
 
@@ -39,7 +39,7 @@ class StandReservationService
         if (!self::cidValid($vatsimCid)) {
             throw StandReservationCidNotValidException::forCid($vatsimCid);
         }
-
+      
         if (!Stand::where('id', $standId)->exists()) {
             throw StandNotFoundException::forId($standId);
         }

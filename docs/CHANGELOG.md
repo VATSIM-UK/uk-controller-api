@@ -1,5 +1,76 @@
 # UK Controller Plugin API Changelog
 
+## [5.7.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.4...5.7.0) (2022-01-05)
+
+
+### Features
+
+* **versions:** Don't delete old versions on new release ([#772](https://github.com/VATSIM-UK/uk-controller-api/issues/772)) ([bfade2f](https://github.com/VATSIM-UK/uk-controller-api/commit/bfade2f3e1cfaf9175c1b20db8a31fcdd9ed7915))
+
+### [5.6.4](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.3...5.6.4) (2022-01-05)
+
+
+### Data Updates
+
+* **events:** Add Heathrow realops arrival stand allocations ([#762](https://github.com/VATSIM-UK/uk-controller-api/issues/762)) ([92f98d7](https://github.com/VATSIM-UK/uk-controller-api/commit/92f98d7eb5c265302a53285cccbcfc37dd32b56d))
+
+### [5.6.3](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.2...5.6.3) (2022-01-04)
+
+
+### Bug Fixes
+
+* **releases:** Remove PHP 8 syntax to work in 7.4 for now ([#769](https://github.com/VATSIM-UK/uk-controller-api/issues/769)) ([b2e365a](https://github.com/VATSIM-UK/uk-controller-api/commit/b2e365abf7af2d4eb721fd5633e14f96b1ab2f93))
+
+### [5.6.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.1...5.6.2) (2022-01-04)
+
+
+### Bug Fixes
+
+* **versions:** Remove a PHP8-ism ([3abb756](https://github.com/VATSIM-UK/uk-controller-api/commit/3abb756854847bb74b3573d7ff494d69f805d9c2))
+
+### [5.6.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.6.0...5.6.1) (2022-01-04)
+
+
+### Bug Fixes
+
+* **versions:** Fix patch to work with deleted versions on production ([#768](https://github.com/VATSIM-UK/uk-controller-api/issues/768)) ([3596881](https://github.com/VATSIM-UK/uk-controller-api/commit/3596881f75c606ee1d2eb07dfe96fae9e93716d9))
+
+## [5.6.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.5.1...5.6.0) (2022-01-04)
+
+
+### Features
+
+* **plugin:** Allow pre-release versions of the plugin ([#758](https://github.com/VATSIM-UK/uk-controller-api/issues/758)) ([69a2d16](https://github.com/VATSIM-UK/uk-controller-api/commit/69a2d16752067df39569e2f4a284ccebfa235b6d))
+
+### [5.5.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.5.0...5.5.1) (2022-01-03)
+
+
+### Data Updates
+
+* **stands:** Update aberdeen stand allocations ([#757](https://github.com/VATSIM-UK/uk-controller-api/issues/757)) ([b86bbbe](https://github.com/VATSIM-UK/uk-controller-api/commit/b86bbbec2b82d8c5902bb9c6e2c31711c394da71))
+
+## [5.5.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.4.2...5.5.0) (2022-01-03)
+
+
+### Features
+
+* **release:** Allow remarks when rejecting or accepting a release ([#760](https://github.com/VATSIM-UK/uk-controller-api/issues/760)) ([87b4209](https://github.com/VATSIM-UK/uk-controller-api/commit/87b420970842b6c9bcb5b4e0945514b52ff1fc20))
+
+### [5.4.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.4.1...5.4.2) (2022-01-03)
+
+
+### Bug Fixes
+
+* **kernel:** Remove schedule monitor sync ([#753](https://github.com/VATSIM-UK/uk-controller-api/issues/753)) ([543c26f](https://github.com/VATSIM-UK/uk-controller-api/commit/543c26f2b40717b762e8a8dc8f9a38747721eaad))
+
+### [5.4.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.4.0...5.4.1) (2022-01-03)
+
+
+### Data Updates
+
+* **edinburgh:** close edinburgh stands 9A, 10A, 209 for allocation ([#748](https://github.com/VATSIM-UK/uk-controller-api/issues/748)) ([ddd13cb](https://github.com/VATSIM-UK/uk-controller-api/commit/ddd13cb4c5023ea0ee83c83429d1646cefa5cf54)), closes [#746](https://github.com/VATSIM-UK/uk-controller-api/issues/746)
+* **holds:** update cardiff hold inbound heading ([#747](https://github.com/VATSIM-UK/uk-controller-api/issues/747)) ([bc822f7](https://github.com/VATSIM-UK/uk-controller-api/commit/bc822f7baea2cb5a7ed715f853cc96eeb5760ad9)), closes [#745](https://github.com/VATSIM-UK/uk-controller-api/issues/745)
+
 ## [5.4.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.3.0...5.4.0) (2021-12-20)
 
 

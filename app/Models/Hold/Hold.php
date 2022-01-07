@@ -1,11 +1,8 @@
 <?php
 namespace App\Models\Hold;
 
-use App\Models\Hold\Hold;
 use App\Models\Navigation\Navaid;
-use App\Models\Hold\HoldRestriction;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -31,7 +28,7 @@ class Hold extends Model
      * @var array
      */
     protected $fillable = [
-        'fix',
+        'navaid_id',
         'inbound_heading',
         'minimum_altitude',
         'maximum_altitude',

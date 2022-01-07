@@ -32,6 +32,7 @@ class DepartureReleaseRequest extends Model
         'rejected_by',
         'acknowledged_at',
         'acknowledged_by',
+        'remarks',
     ];
 
     protected $casts = [
@@ -51,14 +52,19 @@ class DepartureReleaseRequest extends Model
     /**
      * Approve the departure release for a given amount of time.
      */
-    public function approve(int $userId, ?int $expiresInSeconds, CarbonImmutable $releaseValidFrom): void
-    {
+    public function approve(
+        int $userId,
+        ?int $expiresInSeconds,
+        CarbonImmutable $releaseValidFrom,
+        string $remarks = ''
+    ): void {
         $this->update(
             [
                 'release_valid_from' => $releaseValidFrom,
                 'released_by' => $userId,
                 'released_at' => Carbon::now(),
                 'release_expires_at' => $expiresInSeconds ? $releaseValidFrom->addSeconds($expiresInSeconds) : null,
+                'remarks' => $remarks,
             ]
         );
     }
@@ -66,12 +72,13 @@ class DepartureReleaseRequest extends Model
     /**
      * Reject the departure release
      */
-    public function reject(int $userId): void
+    public function reject(int $userId, string $remarks = ''): void
     {
         $this->update(
             [
                 'rejected_by' => $userId,
                 'rejected_at' => Carbon::now(),
+                'remarks' => $remarks,
             ]
         );
     }

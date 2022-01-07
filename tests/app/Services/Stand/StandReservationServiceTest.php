@@ -67,9 +67,8 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'start' => $startTime->toDateTimeString(),
                 'end' => $endTime->toDateTimeString(),
-                'origin' => $origin,
                 'destination' => $destination,
-                'cid' => $cid
+                'cid' => $cid,
             ]
         );
     }
@@ -116,6 +115,14 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
                 'EGKK',
                 'EGSS',
                 null,
+            ],
+            'No origin or destination' => [
+                'BAW123',
+                Carbon::parse('2022-01-01 18:00:00'),
+                Carbon::parse('2022-01-01 18:45:00'),
+                null,
+                null,
+                self::ACTIVE_USER_CID,
             ],
         ];
     }

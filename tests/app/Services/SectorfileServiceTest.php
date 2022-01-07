@@ -218,6 +218,9 @@ class SectorfileServiceTest extends BaseUnitTestCase
             'Too long' => [
                 '00254613W',
             ],
+            'Too many decimal places' => [
+                '0024613.000N',
+            ],
         ];
     }
 
@@ -264,6 +267,12 @@ class SectorfileServiceTest extends BaseUnitTestCase
                 50.5205556,
                 -1.3333333,
             ],  // This is KATHY
+            'North east with decimals' => [
+                '505644.00N',
+                '0001542.00E',
+                50.9455556,
+                0.2616667,
+            ],
         ];
     }
 }

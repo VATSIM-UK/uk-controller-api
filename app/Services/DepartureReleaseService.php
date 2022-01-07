@@ -48,11 +48,12 @@ class DepartureReleaseService
         int $approvingControllerId,
         int $approvingUserId,
         ?int $approvalExpiresInSeconds,
-        CarbonImmutable $releaseValidFrom
+        CarbonImmutable $releaseValidFrom,
+        string $remarks
     ): void {
         $this->checkDecisionAllowed($request, $approvingControllerId, 'approve');
 
-        $request->approve($approvingUserId, $approvalExpiresInSeconds, $releaseValidFrom);
+        $request->approve($approvingUserId, $approvalExpiresInSeconds, $releaseValidFrom, $remarks);
         event(new DepartureReleaseApprovedEvent($request));
     }
 
@@ -63,11 +64,12 @@ class DepartureReleaseService
     public function rejectReleaseRequest(
         DepartureReleaseRequest $request,
         int $rejectingControllerId,
-        int $rejectingUserId
+        int $rejectingUserId,
+        string $remarks
     ): void {
         $this->checkDecisionAllowed($request, $rejectingControllerId, 'reject');
 
-        $request->reject($rejectingUserId);
+        $request->reject($rejectingUserId, $remarks);
         event(new DepartureReleaseRejectedEvent($request));
     }
 

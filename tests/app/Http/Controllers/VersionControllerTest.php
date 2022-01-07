@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
 use App\Providers\AuthServiceProvider;
 use App\Services\VersionService;
@@ -71,12 +73,32 @@ class VersionControllerTest extends BaseApiTestCase
             )->assertStatus(200);
     }
 
-    public function testItFindsLatestVersion()
+    public function testItFindsLatestStableVersion()
     {
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/latest')
             ->assertJson(
                 $this->app->make(VersionService::class)->getFullVersionDetails(Version::find(3))
             )->assertStatus(200);
+    }
+
+    public function testItFindsLatestVersionOnReleaseChannel()
+    {
+        $version = Version::create(
+            [
+                'version' => '5.0.0',
+                'plugin_release_channel_id' => PluginReleaseChannel::where('name', 'beta')->first()->id
+            ]
+        );
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/latest?channel=beta')
+            ->assertJson(
+                $this->app->make(VersionService::class)->getFullVersionDetails($version)
+            )->assertStatus(200);
+    }
+
+    public function testItReturnsNotFoundIfReleaseChannelInvalidForLatestVersion()
+    {
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'version/latest?channel=zeta')->assertStatus(404);
     }
 
     public function testItReturnsNotFoundIfVersionNotFound()
@@ -136,6 +158,18 @@ class VersionControllerTest extends BaseApiTestCase
             'action' => 'published',
             'release' => [
                 'tag_name' => '2.0.0',
+            ],
+        ];
+        $this->makeAuthenticatedApiGithubRequest('version', $data)
+            ->assertOk();
+    }
+
+    public function testItHandlesBadReleaseChannel()
+    {
+        $data = [
+            'action' => 'published',
+            'release' => [
+                'tag_name' => '2.0.0-abcd.1',
             ],
         ];
         $this->makeAuthenticatedApiGithubRequest('version', $data)
