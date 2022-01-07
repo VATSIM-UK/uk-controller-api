@@ -145,7 +145,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         $this->fail('Expected exception but none thrown');
     }
 
-    private function badDataProvider(): array
+    public function badDataProvider(): array
     {
         return [
             'Invalid callsign' => [
