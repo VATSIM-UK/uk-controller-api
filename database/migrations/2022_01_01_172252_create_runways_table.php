@@ -22,7 +22,6 @@ class CreateRunwaysTable extends Migration
             $table->unsignedMediumInteger('heading')->comment('The runway heading');
             $table->timestamps();
 
-            $table->index('identifier');
             $table->unique(['airfield_id', 'identifier']);
             $table->foreign('airfield_id')->references('id')->on('airfield')->cascadeOnDelete();
         });
