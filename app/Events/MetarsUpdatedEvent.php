@@ -22,20 +22,23 @@ class MetarsUpdatedEvent extends HighPriorityBroadcastEvent
 
     public function broadcastWith(): array
     {
-        return $this->metars->map(function (Metar $metar) {
-            return [
-                'airfield_id' => $metar->airfield_id,
-                'raw' => $metar->raw,
-                'parsed' => $metar->parsed,
+        return
+            [
+                'metars' => $this->metars->map(function (Metar $metar) {
+                    return [
+                        'airfield_id' => $metar->airfield_id,
+                        'raw' => $metar->raw,
+                        'parsed' => $metar->parsed,
+                    ];
+                })->toArray()
             ];
-        })->toArray();
     }
 
     public function broadcastOn()
     {
         return [new PrivateChannel('metar_updates')];
     }
-    
+
     public function broadcastAs()
     {
         return "metars.updated";
