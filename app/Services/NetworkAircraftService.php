@@ -86,6 +86,7 @@ class NetworkAircraftService
     {
         return [
             'callsign' => $pilot['callsign'],
+            'cid' => $pilot['cid'],
             'latitude' => $pilot['latitude'],
             'longitude' => $pilot['longitude'],
             'altitude' => $pilot['altitude'],

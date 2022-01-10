@@ -337,6 +337,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
     ): array {
         return [
             'callsign' => $callsign,
+            'cid' => self::ACTIVE_USER_CID,
             'latitude' => $latitude ?? 54.66,
             'longitude' => $longitude ?? -6.21,
             'altitude' => 35123,
@@ -364,6 +365,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
         $pilot = $this->getPilotData($callsign, $hasFlightplan, null, null, $transponder);
         $baseData = [
             'callsign' => $pilot['callsign'],
+            'cid' => $pilot['cid'],
             'latitude' => $pilot['latitude'],
             'longitude' => $pilot['longitude'],
             'altitude' => $pilot['altitude'],

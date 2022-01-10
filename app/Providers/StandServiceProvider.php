@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
-use App\Services\StandAdminService;
+use App\Allocator\Stand\CidReservedArrivalStandAllocator;
+use App\Services\Stand\StandAdminService;
 use App\Services\Stand\StandService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,7 @@ class StandServiceProvider extends ServiceProvider
         $this->app->singleton(StandService::class, function (Application $application) {
             return new StandService(
                 [
+                    $application->make(CidReservedArrivalStandAllocator::class),
                     $application->make(CallsignFlightplanReservedArrivalStandAllocator::class),
                     $application->make(CargoFlightPreferredArrivalStandAllocator::class),
                     $application->make(CargoFlightArrivalStandAllocator::class),
