@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.8.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.8.1...5.8.2) (2022-01-11)
+
+
+### Bug Fixes
+
+* **metars:** broadcast metar data in the correct format ([#775](https://github.com/VATSIM-UK/uk-controller-api/issues/775)) ([b8d5b20](https://github.com/VATSIM-UK/uk-controller-api/commit/b8d5b204583c1771ae1ddb8fb2c240cdcc5a9a0d)), closes [#774](https://github.com/VATSIM-UK/uk-controller-api/issues/774)
+
 ### [5.8.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.8.0...5.8.1) (2022-01-07)
 
 
