@@ -9,10 +9,10 @@ class AircraftService
 {
     public function getAircraftDependency(): array
     {
-        return Aircraft::with('wakeCategories')->get()->map(fn(Aircraft $aircraft) => [
+        return Aircraft::with('wakeCategories')->get()->map(fn (Aircraft $aircraft) => [
             'id' => $aircraft->id,
             'icao_code' => $aircraft->code,
-            'wake_categories' => $aircraft->wakeCategories->map(fn(WakeCategory $category) => $category->id)->toArray(),
+            'wake_categories' => $aircraft->wakeCategories->map(fn (WakeCategory $category) => $category->id)->toArray(),
         ])->toArray();
     }
 }
