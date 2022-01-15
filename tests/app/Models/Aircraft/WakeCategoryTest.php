@@ -16,15 +16,18 @@ class WakeCategoryTest extends BaseFunctionalTestCase
                 [
                     'id' => 1,
                     'interval' => 120,
+                    'interval_unit' => 's',
                     'intermediate' => false,
                 ],
                 [
                     'id' => 1,
                     'interval' => 180,
+                    'interval_unit' => 's',
                     'intermediate' => true,
                 ]
             ],
         ];
+
         $this->assertEquals($expected, WakeCategory::where('code', 'LM')->first()->toArray());
     }
 }

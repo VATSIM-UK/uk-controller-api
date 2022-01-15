@@ -39,7 +39,8 @@ class WakeCategory extends Model
                         return [
                             'id' => $subsequent->id,
                             'interval' => $subsequent->pivot->interval,
-                            'intermediate' => (bool) $subsequent->pivot->intermediate,
+                            'interval_unit' => $subsequent->pivot->measurementUnit->unit,
+                            'intermediate' => (bool)$subsequent->pivot->intermediate,
                         ];
                     }
                 )
@@ -65,7 +66,7 @@ class WakeCategory extends Model
             'departure_wake_intervals',
             'lead_wake_category_id',
             'following_wake_category_id'
-        )->withPivot('intermediate', 'interval');
+        )->using(DepartureWakeInterval::class)->withPivot(['measurement_unit_id', 'interval', 'intermediate']);
     }
 
     public function scheme(): BelongsTo
