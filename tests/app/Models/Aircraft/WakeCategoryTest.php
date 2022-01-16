@@ -12,6 +12,7 @@ class WakeCategoryTest extends BaseFunctionalTestCase
             'id' => 3,
             'code' => 'LM',
             'description' => 'Lower Medium',
+            'relative_weighting' => 10,
             'subsequent_departure_intervals' => [
                 [
                     'id' => 1,

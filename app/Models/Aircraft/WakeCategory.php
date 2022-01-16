@@ -26,12 +26,13 @@ class WakeCategory extends Model
         'relative_weighting' => 'integer',
     ];
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
             'code' => $this->code,
             'description' => $this->description,
+            'relative_weighting' => $this->relative_weighting,
             'subsequent_departure_intervals' => $this->departureIntervals
                 ->sortBy('relative_weighting')
                 ->map(
