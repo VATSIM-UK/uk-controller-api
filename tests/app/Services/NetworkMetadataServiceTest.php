@@ -57,6 +57,7 @@ class NetworkMetadataServiceTest extends BaseFunctionalTestCase
         );
 
         $this->service->getNetworkDataUrl();
+        $this->assertMetadataRequest();
 
         $this->fakeMetadataRequest(
             [
@@ -69,7 +70,7 @@ class NetworkMetadataServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals('https://vatsim.net', $this->service->getNetworkDataUrl());
-        $this->assertMetadataRequest();
+        Http::assertSentCount(0);
     }
 
     public function testItHandlesInvalidHttpResponse()

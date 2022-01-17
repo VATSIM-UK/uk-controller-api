@@ -5,7 +5,6 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use Exception;
 use Illuminate\Http\Client\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Mockery;
 
@@ -45,6 +44,7 @@ class NetworkDataDownloadServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals(collect(['foo' => 'bar']), $this->service->getNetworkData());
+        $this->assertDataRequestSent();
 
         $this->fakeDataRequest(
             [
@@ -53,7 +53,7 @@ class NetworkDataDownloadServiceTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals(collect(['foo' => 'bar']), $this->service->getNetworkData());
-        $this->assertDataRequestSent();
+        Http::assertSentCount(0);
     }
 
     public function testItHandlesUnsuccessfulResponseFromNetworkData()
