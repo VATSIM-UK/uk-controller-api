@@ -95,7 +95,7 @@ class Kernel extends ConsoleKernel
             ->cron('0 1-7 * * *');
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('plugin-events:clean')->everyTenMinutes();
-        $schedule->command('metars:update')->everyFiveMinutes();
+        $schedule->command('metars:update')->everyMinute();
         $schedule->command('database:check-table-updates')->everyMinute();
     }
 }
