@@ -2,6 +2,7 @@
 
 namespace App\Services\Metar;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -36,6 +37,6 @@ class MetarRetrievalService
 
     private function getMetarQueryString(Collection $airfields): string
     {
-        return $airfields->implode(',');
+        return $airfields->concat([Carbon::now()->timestamp])->implode(',');
     }
 }
