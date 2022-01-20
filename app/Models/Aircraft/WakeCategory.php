@@ -26,12 +26,13 @@ class WakeCategory extends Model
         'relative_weighting' => 'integer',
     ];
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
             'code' => $this->code,
             'description' => $this->description,
+            'relative_weighting' => $this->relative_weighting,
             'subsequent_departure_intervals' => $this->departureIntervals
                 ->sortBy('relative_weighting')
                 ->map(
@@ -39,7 +40,8 @@ class WakeCategory extends Model
                         return [
                             'id' => $subsequent->id,
                             'interval' => $subsequent->pivot->interval,
-                            'intermediate' => (bool) $subsequent->pivot->intermediate,
+                            'interval_unit' => $subsequent->pivot->measurementUnit->unit,
+                            'intermediate' => (bool)$subsequent->pivot->intermediate,
                         ];
                     }
                 )
@@ -65,7 +67,7 @@ class WakeCategory extends Model
             'departure_wake_intervals',
             'lead_wake_category_id',
             'following_wake_category_id'
-        )->withPivot('intermediate', 'interval');
+        )->using(DepartureWakeInterval::class)->withPivot(['measurement_unit_id', 'interval', 'intermediate']);
     }
 
     public function scheme(): BelongsTo

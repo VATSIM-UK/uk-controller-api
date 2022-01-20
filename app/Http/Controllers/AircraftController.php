@@ -19,16 +19,25 @@ class AircraftController extends BaseController
         return response()->json(WakeCategory::all());
     }
 
+    /**
+     * @deprecated
+     */
     public function getWakeCategoriesDependency(): JsonResponse
     {
         return response()->json($this->getWakeDependency('uk'));
     }
 
+    /**
+     * @deprecated
+     */
     public function getRecatCategoriesDependency(): JsonResponse
     {
         return response()->json($this->getWakeDependency('recat'));
     }
 
+    /**
+     * @deprecated
+     */
     private function getWakeDependency(string $schemeName): array
     {
         return Aircraft::with('wakeCategories', 'wakeCategories.scheme')->whereHas(
