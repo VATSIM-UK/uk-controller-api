@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.9.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.0...5.9.1) (2022-01-20)
+
+
+### Data Updates
+
+* **stands:** EGNX cargo stand priority ([#792](https://github.com/VATSIM-UK/uk-controller-api/issues/792)) ([cb54d27](https://github.com/VATSIM-UK/uk-controller-api/commit/cb54d2763ade4d0f69ed2348fc98006cb879a640))
+
 ## [5.9.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.8.2...5.9.0) (2022-01-20)
 
 
