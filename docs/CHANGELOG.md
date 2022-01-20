@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.1...5.9.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* **metars:** Fix metar caching ([#791](https://github.com/VATSIM-UK/uk-controller-api/issues/791)) ([9ae2940](https://github.com/VATSIM-UK/uk-controller-api/commit/9ae294020c14af14f3531e1d92492f9fa408a2d1)), closes [#790](https://github.com/VATSIM-UK/uk-controller-api/issues/790)
+
 ### [5.9.1](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.0...5.9.1) (2022-01-20)
 
 
