@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [5.9.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.8.2...5.9.0) (2022-01-20)
+
+
+### Features
+
+* **wake:** Wake tidy up ([#781](https://github.com/VATSIM-UK/uk-controller-api/issues/781)) ([9f1f2e9](https://github.com/VATSIM-UK/uk-controller-api/commit/9f1f2e96cce1b11fbb0e93145e1c51db8046d2a4))
+
 ### [5.8.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.8.1...5.8.2) (2022-01-11)
 
 
