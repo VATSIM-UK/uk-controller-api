@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.9.3](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.2...5.9.3) (2022-01-23)
+
+
+### Data Updates
+
+* **prenotes:** Allow prenotes to certain tower positions ([#793](https://github.com/VATSIM-UK/uk-controller-api/issues/793)) ([f337c6a](https://github.com/VATSIM-UK/uk-controller-api/commit/f337c6ae4f46e739f7a7941f7305eee22746a200))
+
 ### [5.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.1...5.9.2) (2022-01-20)
 
 
