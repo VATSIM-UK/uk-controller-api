@@ -21,7 +21,7 @@
     "lodash": "^4.17.21",
     "postcss": "^8.4.5",
     "postcss-import": "^14.0.2",
-    "semantic-release": "18",
+    "semantic-release": "19",
     "tailwindcss": "^2.2.19"
   },
   "scripts": {
