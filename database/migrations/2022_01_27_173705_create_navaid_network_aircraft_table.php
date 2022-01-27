@@ -17,7 +17,7 @@ class CreateNavaidNetworkAircraftTable extends Migration
             $table->id();
             $table->string('callsign')->comment('The aircraft');
             $table->unsignedBigInteger('navaid_id')->comment('The navaid the network aircraft is close to');
-            $table->dateTime('entered_at')->comment('The time the aircraft entered the hold');
+            $table->dateTime('entered_at')->comment('The time the aircraft entered the hold, in Z');
 
             $table->unique(['callsign', 'navaid_id'], 'navaid_aircraft_callsign');
             $table->foreign('callsign')->references('callsign')->on('network_aircraft')->cascadeOnDelete();
