@@ -6,6 +6,7 @@ use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Navigation\Navaid;
+use App\Models\Vatsim\NetworkAircraft;
 use App\Rules\VatsimCallsign;
 use App\Services\HoldService;
 use App\Services\NetworkAircraftService;
@@ -32,7 +33,7 @@ class HoldController extends BaseController
      *
      * @return JsonResponse
      */
-    public function getAllHolds() : JsonResponse
+    public function getAllHolds(): JsonResponse
     {
         return response()->json($this->holdService->getHolds())->setStatusCode(200);
     }
@@ -56,7 +57,7 @@ class HoldController extends BaseController
         $invalidRequest = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['string' , 'required', new VatsimCallsign],
+                'callsign' => ['string', 'required', new VatsimCallsign],
                 'navaid' => 'alpha|required',
             ]
         );
@@ -93,5 +94,20 @@ class HoldController extends BaseController
         }
 
         return response()->json([], 204);
+    }
+
+    public function getProximityHolds(): JsonResponse
+    {
+        return response()->json(
+            NetworkAircraft::with('proximityNavaids')
+                ->whereHas('proximityNavaids')
+                ->get()
+                ->map(fn(NetworkAircraft $aircraft) => $aircraft->proximityNavaids->map(fn(Navaid $navaid) => [
+                    'callsign' => $aircraft->callsign,
+                    'navaid_id' => $navaid->id,
+                    'entered_at' => $navaid->pivot->entered_at,
+                ])
+                )->flatten(1)
+        );
     }
 }

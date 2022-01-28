@@ -207,7 +207,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
             ]
         );
         DB::table('navaid_network_aircraft')->insert(
-            ['navaid_id' => 1, 'callsign' => 'BAW123', 'entered_at' => Carbon::now()->toDateTimeString()]
+            ['navaid_id' => 1, 'callsign' => 'BAW123', 'entered_at' => Carbon::now()->subHour()->toDateTimeString()]
         );
 
         $this->holdService->checkAircraftHoldProximity();
@@ -221,6 +221,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => 'BAW123',
                 'navaid_id' => 1,
+                'entered_at' => Carbon::now()->subHour()->toDateTimeString()
             ]
         );
 

@@ -6,6 +6,7 @@ use App\BaseApiTestCase;
 use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Services\HoldService;
+use Illuminate\Support\Facades\DB;
 
 class HoldControllerTest extends BaseApiTestCase
 {
@@ -197,5 +198,51 @@ class HoldControllerTest extends BaseApiTestCase
 
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(400);
+    }
+
+    public function testItReturnsAircraftCurrentlyInProximityToHolds()
+    {
+        DB::table('navaid_network_aircraft')
+            ->insert(
+                [
+                    [
+                        'callsign' => 'BAW123',
+                        'navaid_id' => 1,
+                        'entered_at' => '2022-01-28 17:59:52',
+                    ],
+                    [
+                        'callsign' => 'BAW123',
+                        'navaid_id' => 2,
+                        'entered_at' => '2022-01-28 17:59:53',
+                    ],
+                    [
+                        'callsign' => 'BAW456',
+                        'navaid_id' => 2,
+                        'entered_at' => '2022-01-28 17:59:54',
+                    ],
+                ]
+            );
+
+        $expected = [
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 1,
+                'entered_at' => '2022-01-28T17:59:52.000000Z',
+            ],
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 2,
+                'entered_at' => '2022-01-28T17:59:53.000000Z',
+            ],
+            [
+                'callsign' => 'BAW456',
+                'navaid_id' => 2,
+                'entered_at' => '2022-01-28T17:59:54.000000Z',
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'hold/proximity')
+            ->assertOk()
+            ->assertExactJson($expected);
     }
 }
