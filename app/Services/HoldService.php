@@ -86,7 +86,7 @@ class HoldService
                     fn (Navaid $navaid) => $navaid->coordinate->getDistance(
                         $aircraft->latLong,
                         $distanceCalculator
-                    ) > 18520
+                    ) > 22224
                 )->mapWithKeys(
                     function (Navaid $navaid) use ($aircraft) {
                         $existingNavaid = $aircraft->proximityNavaids->firstWhere('id', $navaid->id);
