@@ -8,6 +8,7 @@ use App\Events\Hold\AircraftExitedHoldingArea;
 use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Hold\Hold;
+use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
         $this->holdService = $this->app->make(HoldService::class);
         Event::fake();
         AssignedHold::where('callsign', '<>', 'BAW123')->delete();
+        NetworkAircraft::where('callsign', '<>', 'BAW123')->delete();
         Carbon::setTestNow(Carbon::now()->startOfSecond());
     }
 
@@ -141,6 +143,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesNotAddProximityNavaidsIfOutOfRange()
     {
+        Navaid::where('id', '<>', 1)->delete();
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 123,
@@ -161,6 +164,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItAddsAircraftToProximityNavaids()
     {
+        Navaid::where('id', '<>', 1)->delete();
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 335,
@@ -198,6 +202,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntRemoveAircraftStillInProximity()
     {
+        Navaid::where('id', '<>', 1)->delete();
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 335,
@@ -231,6 +236,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesAircraftFromProximityThatIfNoLongerClose()
     {
+        Navaid::where('id', '<>', 1)->delete();
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 123,
