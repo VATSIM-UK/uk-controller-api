@@ -102,7 +102,8 @@ class HoldController extends BaseController
             NetworkAircraft::with('proximityNavaids')
                 ->whereHas('proximityNavaids')
                 ->get()
-                ->map(fn(NetworkAircraft $aircraft) => $aircraft->proximityNavaids->map(fn(Navaid $navaid) => [
+                ->map(
+                    fn (NetworkAircraft $aircraft) => $aircraft->proximityNavaids->map(fn (Navaid $navaid) => [
                     'callsign' => $aircraft->callsign,
                     'navaid_id' => $navaid->id,
                     'entered_at' => $navaid->pivot->entered_at,

@@ -83,10 +83,10 @@ class HoldService
 
             $changes = $aircraft->proximityNavaids()->sync(
                 $navaids->reject(
-                    fn(Navaid $navaid) => $navaid->coordinate->getDistance(
-                            $aircraft->latLong,
-                            $distanceCalculator
-                        ) > 18520
+                    fn (Navaid $navaid) => $navaid->coordinate->getDistance(
+                        $aircraft->latLong,
+                        $distanceCalculator
+                    ) > 18520
                 )->mapWithKeys(
                     function (Navaid $navaid) use ($aircraft) {
                         $existingNavaid = $aircraft->proximityNavaids->firstWhere('id', $navaid->id);
@@ -109,7 +109,7 @@ class HoldService
 
             if (count($changes['detached']) > 0) {
                 $proximityNavaidsBefore->reject(
-                    fn(Navaid $navaid) => $aircraft->proximityNavaids->firstWhere('id', $navaid->id)
+                    fn (Navaid $navaid) => $aircraft->proximityNavaids->firstWhere('id', $navaid->id)
                 )
                     ->each(function (Navaid $navaid) use ($aircraft) {
                         event(new AircraftExitedHoldingArea($aircraft, $navaid));
