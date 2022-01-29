@@ -200,6 +200,50 @@ class HoldServiceTest extends BaseFunctionalTestCase
         Event::assertNotDispatched(AircraftExitedHoldingArea::class);
     }
 
+    public function testItDoesntAddAircraftToProximityTooLow()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 335,
+                'altitude' => 800,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
+    public function testItDoesntAddAircraftToProximityTooSlow()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 30,
+                'altitude' => 7241,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
     public function testItDoesntRemoveAircraftStillInProximity()
     {
         Navaid::where('id', '<>', 1)->delete();
@@ -247,6 +291,38 @@ class HoldServiceTest extends BaseFunctionalTestCase
         );
         DB::table('navaid_network_aircraft')->insert(
             ['navaid_id' => 1, 'callsign' => 'BAW123', 'entered_at' => Carbon::now()->toDateTimeString()]
+        );
+
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertDispatched(
+            AircraftExitedHoldingArea::class,
+            fn(AircraftExitedHoldingArea $event) => $event->broadcastWith() == [
+                    'navaid_id' => 1,
+                    'callsign' => 'BAW123',
+                ]
+        );
+    }
+
+    public function testItRemovesAircraftThatAreTooLowAndSlow()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 30,
+                'altitude' => 300,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        DB::table('navaid_network_aircraft')->insert(
+            ['navaid_id' => 1, 'callsign' => 'BAW123', 'entered_at' => Carbon::now()->subHour()->toDateTimeString()]
         );
 
         $this->holdService->checkAircraftHoldProximity();
