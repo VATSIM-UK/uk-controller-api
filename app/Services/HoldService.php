@@ -18,6 +18,9 @@ use Location\Distance\Haversine;
 
 class HoldService
 {
+    // Holding area radius in meters. Equivalent to 12nm.
+    private const HOLDING_AREA_RADIUS = 22224;
+    
     /**
      * Returns the current holds in a format
      * that may be converted to a JSON array.
@@ -95,7 +98,7 @@ class HoldService
                         fn (Navaid $navaid) => $navaid->coordinate->getDistance(
                             $aircraft->latLong,
                             $distanceCalculator
-                        ) > 22224
+                        ) > self::HOLDING_AREA_RADIUS
                     )->mapWithKeys(
                         function (Navaid $navaid) use ($aircraft) {
                             $existingNavaid = $aircraft->proximityNavaids->firstWhere('id', $navaid->id);
