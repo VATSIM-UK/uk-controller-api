@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+### [5.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.3...5.9.4) (2022-02-03)
+
+
+### Data Updates
+
+* **holds:** 2201 hold updates ([#809](https://github.com/VATSIM-UK/uk-controller-api/issues/809)) ([6fbb115](https://github.com/VATSIM-UK/uk-controller-api/commit/6fbb1154c47d5c4905f636d54325260a148e6545)), closes [#808](https://github.com/VATSIM-UK/uk-controller-api/issues/808)
+* **sids:** make gatwick biggin departures non runway specific ([#805](https://github.com/VATSIM-UK/uk-controller-api/issues/805)) ([17805dd](https://github.com/VATSIM-UK/uk-controller-api/commit/17805dd77cf827f9a9104b793c4e8a355a9711d0)), closes [#804](https://github.com/VATSIM-UK/uk-controller-api/issues/804)
+* **stands:** Stansted A380 stands ([#812](https://github.com/VATSIM-UK/uk-controller-api/issues/812)) ([e23e63c](https://github.com/VATSIM-UK/uk-controller-api/commit/e23e63c3054dd1acda8e8f3f16cd3cce220a0aea)), closes [#881](https://github.com/VATSIM-UK/uk-controller-api/issues/881)
+
 ### [5.9.3](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.2...5.9.3) (2022-01-23)
 
 
