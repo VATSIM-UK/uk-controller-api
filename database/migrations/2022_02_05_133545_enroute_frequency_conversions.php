@@ -7,7 +7,7 @@ class EnrouteFrequencyConversions extends Migration
 {
     const FREQUENCY_CHANGES = [
         // LON AC
-        'LON_CTR' => 127.820,
+        'LON_CTR' => 127.825,
         'LON_W_CTR' => 126.075,
         'LON_M_CTR' => 120.025,
         'LON_E_CTR' => 118.475,
