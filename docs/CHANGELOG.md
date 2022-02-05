@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.9.5](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.4...5.9.5) (2022-02-05)
+
+
+### Data Updates
+
+* **wake:** Add intermediate recat intervals ([#807](https://github.com/VATSIM-UK/uk-controller-api/issues/807)) ([e5ecd3c](https://github.com/VATSIM-UK/uk-controller-api/commit/e5ecd3c1b2d47908b1651d30e4c2ebc76a4d00bd)), closes [#806](https://github.com/VATSIM-UK/uk-controller-api/issues/806)
+
 ### [5.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.3...5.9.4) (2022-02-03)
 
 
