@@ -41,6 +41,28 @@ class EnrouteFrequencyConversions extends Migration
         // Military
         'EGVV_N_CTR' => 136.375,
         'EGVV_E_CTR' => 133.325,
+
+        // Event AC
+        'LON_NU_CTR' => 132.875,
+        'LON_NW_CTR' => 135.575,
+        'LON_NE_CTR' => 128.125,
+        'LON_WT_CTR' => 129.375,
+        'LON_WP_CTR' => 133.225,
+        'LON_WX_CTR' => 128.825,
+        'LON_CE_CTR' => 127.875,
+        'LON_CL_CTR' => 133.975,
+        'LON_EN_CTR' => 133.925,
+        'SCO_C_CTR' => 127.275,
+
+        // Event TC
+        'LTC_M_CTR' => 121.025,
+        'LTC_MW_CTR' => 130.925,
+        'LTC_MC_CTR' => 133.075,
+        'LTC_EJ_CTR' => 135.425,
+        'LTC_ER_CTR' => 133.525,
+        'LTC_ED_CTR' => 124.920,
+        'MAN_WP_CTR' => 126.875,
+        'MAN_WU_CTR' => 118.775,
     ];
 
     /**
@@ -51,6 +73,12 @@ class EnrouteFrequencyConversions extends Migration
     public function up()
     {
         foreach (self::FREQUENCY_CHANGES as $callsign => $frequency) {
+            $position = ControllerPosition::where('callsign', $callsign)->first();
+            if (!$position) {
+                dump($callsign);
+                continue;
+            }
+
             ControllerPosition::where('callsign', $callsign)->firstOrFail()->update(['frequency' => $frequency]);
         }
     }
