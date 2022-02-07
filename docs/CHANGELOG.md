@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [6.0.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.0.0...6.0.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* **stands:** Fix Jet2 Glasgow Allocations ([#837](https://github.com/VATSIM-UK/uk-controller-api/issues/837)) ([41671b5](https://github.com/VATSIM-UK/uk-controller-api/commit/41671b558cf250f2941b3620cb86a45735627a1e)), closes [#830](https://github.com/VATSIM-UK/uk-controller-api/issues/830)
+
 ## [6.0.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.6...6.0.0) (2022-02-07)
 
 
