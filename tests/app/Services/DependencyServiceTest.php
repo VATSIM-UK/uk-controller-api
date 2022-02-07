@@ -174,7 +174,7 @@ class DependencyServiceTest extends BaseFunctionalTestCase
     public function testItDeletesADependency()
     {
         Cache::shouldReceive('forget')
-            ->with(self::GLOBAL_DEPENDENCY)
+            ->with('DEPENDENCY_1_CACHE')
             ->once();
         DependencyService::deleteDependency(self::GLOBAL_DEPENDENCY);
 
@@ -184,6 +184,16 @@ class DependencyServiceTest extends BaseFunctionalTestCase
                 'key' => self::GLOBAL_DEPENDENCY,
             ]
         );
+    }
+
+    public function testItThrowsAnExceptionWhenDeletingNonExistentDependency()
+    {
+        Dependency::where('key', self::GLOBAL_DEPENDENCY)->delete();
+
+        $this->expectException(ModelNotFoundException::class);
+        Cache::shouldReceive('forget')
+            ->never();
+        DependencyService::deleteDependency(self::GLOBAL_DEPENDENCY);
     }
 
     public function testItCreatesADependency()

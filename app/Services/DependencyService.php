@@ -116,10 +116,9 @@ class DependencyService
 
     public static function deleteDependency(string $key)
     {
-        DB::table('dependencies')
-            ->where('key', $key)
-            ->delete();
-        Cache::forget($key);
+        $dependency = Dependency::where('key', $key)->firstOrFail();
+        self::removeDependencyFromCache($dependency);
+        $dependency->delete();
     }
 
     public static function createDependency(
