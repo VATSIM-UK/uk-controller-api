@@ -19,7 +19,7 @@
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.34",
     "lodash": "^4.17.21",
-    "postcss": "^8.4.5",
+    "postcss": "^8.4.6",
     "postcss-import": "^14.0.2",
     "semantic-release": "19",
     "tailwindcss": "^2.2.19"
