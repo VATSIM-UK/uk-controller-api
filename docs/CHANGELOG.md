@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [5.9.6](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.5...5.9.6) (2022-02-07)
+
+
+### Data Updates
+
+* **dependencies:** add missing tables for wake scheme dependency ([#826](https://github.com/VATSIM-UK/uk-controller-api/issues/826)) ([5438466](https://github.com/VATSIM-UK/uk-controller-api/commit/5438466586bdc8927ce306003d575ea007c52815)), closes [#821](https://github.com/VATSIM-UK/uk-controller-api/issues/821)
+
 ### [5.9.5](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.4...5.9.5) (2022-02-05)
 
 
