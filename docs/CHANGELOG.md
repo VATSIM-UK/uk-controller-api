@@ -1,5 +1,16 @@
 # UK Controller Plugin API Changelog
 
+## [6.0.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.6...6.0.0) (2022-02-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **wake:** Old dependencies no longer available
+
+### Features
+
+* **wake:** remove old wake category dependencies ([#827](https://github.com/VATSIM-UK/uk-controller-api/issues/827)) ([86bb49d](https://github.com/VATSIM-UK/uk-controller-api/commit/86bb49d9526b23c4b5a1ae1f96249fb60f50bde3)), closes [#822](https://github.com/VATSIM-UK/uk-controller-api/issues/822)
+
 ### [5.9.6](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.5...5.9.6) (2022-02-07)
 
 
