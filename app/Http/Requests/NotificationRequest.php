@@ -25,7 +25,7 @@ class NotificationRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'link' => 'required|active_url',
+            'link' => 'required|url',
             'body' => 'required|string',
             'valid_from' => 'required|date|before:valid_to',
             'valid_to' => 'required|date|after:valid_from',
