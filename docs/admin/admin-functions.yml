@@ -205,6 +205,58 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/HoldModel'
+    ControllerPosition:
+      properties:
+        id:
+          type: integer
+        callsign:
+          type: string
+          example: "EGLL_S_TWR"
+        frequency:
+          type: number
+    NotificationModel:
+      properties:
+        title:
+          type: string
+          example: Procedure Change A
+        body:
+          type: string
+          description: Content of notification message
+        link:
+          type: string
+          description: Link to main notification
+        valid_from:
+          type: string
+          format: date-time
+        valid_to:
+          type: string
+          format: date-time
+    NotificationRequest:
+      allOf:
+      - $ref: '#/components/schemas/NotificationModel'
+      - type: object
+        properties:
+          all_positions:
+            type: boolean
+            description: If true, notifications will be created against every position
+          positions:
+            type: array
+            items:
+              type: integer
+            description: List of position IDs to create the notification for. Is ignored if all_properties true
+    NotificationDetail:
+      allOf:
+      - $ref: '#/components/schemas/NotificationModel'
+      - type: object
+        properties:
+          active:
+            type: boolean
+          positions:
+            type: array
+            items:
+              $ref: '#/components/schemas/ControllerPosition'
+
+
 
   responses:
     AirfieldNotFound:
@@ -629,3 +681,93 @@ paths:
           $ref: '#/components/responses/ConflictOnHoldDescription'
         '204':
           description: No content
+
+  /notifications:
+    get:
+      tags:
+      - 'notifications'
+      parameters:
+        - in: query
+          name: 'include_expired'
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Request to include expired notifications in response.
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            'application/json':
+              schema:
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationModel'
+    post:
+      tags:
+        - 'notifications'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            'application/json':
+              schema:
+                properties:
+                  notification_id:
+                    type: integer
+        '422':
+          description: Validation errors
+        '400':
+          description: Invalid positions
+
+  /notifications/{notification_id}:
+    get:
+      tags:
+      - 'notifications'
+      parameters:
+        - in: path
+          name: notification_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Successful
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/NotificationDetail'
+        '404':
+          description: Not found
+    delete:
+      tags:
+      - 'notifications'
+      parameters:
+        - in: path
+          name: notification_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '204':
+          description: Successful
+        '404':
+          description: Not found
+
+  /controller-positions:
+    get:
+      responses:
+        '200':
+          description: Success
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ControllerPosition'
+            

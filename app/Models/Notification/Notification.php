@@ -5,13 +5,14 @@ namespace App\Models\Notification;
 use App\Models\Controller\ControllerPosition;
 use App\Models\User\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'title',
@@ -63,5 +64,10 @@ class Notification extends Model
             'notification_id',
             'user_id'
         );
+    }
+
+    public function getActiveAttribute() : bool
+    {
+        return $this->valid_to >= Carbon::now();
     }
 }

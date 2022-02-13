@@ -250,6 +250,12 @@ Route::middleware('api')->group(
                         Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
 
                         Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
+
+                        Route::get('/controller-positions', 'Admin\\AllPositionsController');
+                        Route::get('/notifications', 'Admin\\NotificationAdminController@getNotifications');
+                        Route::post('/notifications', 'Admin\\NotificationAdminController@createNotification');
+                        Route::get('/notifications/{notification}', 'Admin\\NotificationAdminController@getNotification');
+                        Route::delete('/notifications/{notification}', 'Admin\\NotificationAdminController@deleteNotification');
                     }
                 );
             }
