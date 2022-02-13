@@ -197,7 +197,6 @@ class NotificationAdminControllerTest extends BaseApiTestCase
 	{
 		return [
 			['not-a-url', 'link', true],
-			['https://google.com', 'link', false],
 			['', 'title', true],
 			['This is a valid title', 'title', false],
 			['', 'body', true],
