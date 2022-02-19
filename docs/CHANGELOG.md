@@ -1,5 +1,46 @@
 # UK Controller Plugin API Changelog
 
+### [6.0.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.0.0...6.0.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* **stands:** Fix Jet2 Glasgow Allocations ([#837](https://github.com/VATSIM-UK/uk-controller-api/issues/837)) ([41671b5](https://github.com/VATSIM-UK/uk-controller-api/commit/41671b558cf250f2941b3620cb86a45735627a1e)), closes [#830](https://github.com/VATSIM-UK/uk-controller-api/issues/830)
+
+## [6.0.0](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.6...6.0.0) (2022-02-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **wake:** Old dependencies no longer available
+
+### Features
+
+* **wake:** remove old wake category dependencies ([#827](https://github.com/VATSIM-UK/uk-controller-api/issues/827)) ([86bb49d](https://github.com/VATSIM-UK/uk-controller-api/commit/86bb49d9526b23c4b5a1ae1f96249fb60f50bde3)), closes [#822](https://github.com/VATSIM-UK/uk-controller-api/issues/822)
+
+### [5.9.6](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.5...5.9.6) (2022-02-07)
+
+
+### Data Updates
+
+* **dependencies:** add missing tables for wake scheme dependency ([#826](https://github.com/VATSIM-UK/uk-controller-api/issues/826)) ([5438466](https://github.com/VATSIM-UK/uk-controller-api/commit/5438466586bdc8927ce306003d575ea007c52815)), closes [#821](https://github.com/VATSIM-UK/uk-controller-api/issues/821)
+
+### [5.9.5](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.4...5.9.5) (2022-02-05)
+
+
+### Data Updates
+
+* **wake:** Add intermediate recat intervals ([#807](https://github.com/VATSIM-UK/uk-controller-api/issues/807)) ([e5ecd3c](https://github.com/VATSIM-UK/uk-controller-api/commit/e5ecd3c1b2d47908b1651d30e4c2ebc76a4d00bd)), closes [#806](https://github.com/VATSIM-UK/uk-controller-api/issues/806)
+
+### [5.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.3...5.9.4) (2022-02-03)
+
+
+### Data Updates
+
+* **holds:** 2201 hold updates ([#809](https://github.com/VATSIM-UK/uk-controller-api/issues/809)) ([6fbb115](https://github.com/VATSIM-UK/uk-controller-api/commit/6fbb1154c47d5c4905f636d54325260a148e6545)), closes [#808](https://github.com/VATSIM-UK/uk-controller-api/issues/808)
+* **sids:** make gatwick biggin departures non runway specific ([#805](https://github.com/VATSIM-UK/uk-controller-api/issues/805)) ([17805dd](https://github.com/VATSIM-UK/uk-controller-api/commit/17805dd77cf827f9a9104b793c4e8a355a9711d0)), closes [#804](https://github.com/VATSIM-UK/uk-controller-api/issues/804)
+* **stands:** Stansted A380 stands ([#812](https://github.com/VATSIM-UK/uk-controller-api/issues/812)) ([e23e63c](https://github.com/VATSIM-UK/uk-controller-api/commit/e23e63c3054dd1acda8e8f3f16cd3cce220a0aea)), closes [#881](https://github.com/VATSIM-UK/uk-controller-api/issues/881)
+
 ### [5.9.3](https://github.com/VATSIM-UK/uk-controller-api/compare/5.9.2...5.9.3) (2022-01-23)
 
 
