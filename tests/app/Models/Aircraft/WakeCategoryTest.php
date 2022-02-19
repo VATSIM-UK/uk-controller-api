@@ -27,6 +27,16 @@ class WakeCategoryTest extends BaseFunctionalTestCase
                     'intermediate' => true,
                 ]
             ],
+            'subsequent_arrival_intervals' => [
+                [
+                    'id' => 1,
+                    'interval' => 5.0,
+                ],
+                [
+                    'id' => 2,
+                    'interval' => 3.0,
+                ],
+            ]
         ];
 
         $this->assertEquals($expected, WakeCategory::where('code', 'LM')->first()->toArray());

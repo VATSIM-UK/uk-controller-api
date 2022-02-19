@@ -52,6 +52,17 @@ class WakeCategory extends Model
                     ['intermediate', 'asc'],
                 ])
                 ->toArray(),
+            'subsequent_arrival_intervals' => $this->arrivalIntervals
+                ->sortBy('relative_weighting')
+                ->map(
+                    fn(WakeCategory $subsequent) => [
+                        'id' => $subsequent->id,
+                        'interval' => $subsequent->pivot->interval
+                    ]
+                )
+                ->values()
+                ->sortBy('id')
+                ->toArray(),
         ];
     }
 
