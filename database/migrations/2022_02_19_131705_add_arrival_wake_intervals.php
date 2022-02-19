@@ -84,7 +84,7 @@ class AddArrivalWakeIntervals extends Migration
                 ->arrivalIntervals()
                 ->sync(
                     collect($intervals)->mapWithKeys(
-                        fn(float $interval, string $followingCategory) => [
+                        fn (float $interval, string $followingCategory) => [
                             $categories->firstOrFail(
                                 'code',
                                 $followingCategory

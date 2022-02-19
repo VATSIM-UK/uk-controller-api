@@ -55,7 +55,7 @@ class WakeCategory extends Model
             'subsequent_arrival_intervals' => $this->arrivalIntervals
                 ->sortBy('relative_weighting')
                 ->map(
-                    fn(WakeCategory $subsequent) => [
+                    fn (WakeCategory $subsequent) => [
                         'id' => $subsequent->id,
                         'interval' => $subsequent->pivot->interval
                     ]
