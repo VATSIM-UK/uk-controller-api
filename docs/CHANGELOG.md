@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.1.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.0.1...6.1.0) (2022-02-19)
+
+
+### Features
+
+* **hold:** Track aircraft in hold proximity ([#810](https://github.com/VATSIM-UK/uk-controller-api/issues/810)) ([90d7be6](https://github.com/VATSIM-UK/uk-controller-api/commit/90d7be606b857b1b826da22556a7499a1ce059d0))
+
 ### [6.0.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.0.0...6.0.1) (2022-02-07)
 
 
