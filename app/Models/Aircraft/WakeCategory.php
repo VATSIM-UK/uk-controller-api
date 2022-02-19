@@ -70,6 +70,16 @@ class WakeCategory extends Model
         )->using(DepartureWakeInterval::class)->withPivot(['measurement_unit_id', 'interval', 'intermediate']);
     }
 
+    public function arrivalIntervals(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            WakeCategory::class,
+            'arrival_wake_intervals',
+            'lead_wake_category_id',
+            'following_wake_category_id'
+        )->withPivot(['interval']);
+    }
+
     public function scheme(): BelongsTo
     {
         return $this->belongsTo(WakeCategoryScheme::class, 'wake_category_scheme_id');

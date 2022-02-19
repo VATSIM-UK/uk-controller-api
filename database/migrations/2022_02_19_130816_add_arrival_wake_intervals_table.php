@@ -18,6 +18,7 @@ class AddArrivalWakeIntervalsTable extends Migration
             $table->id();
             $table->unsignedTinyInteger('lead_wake_category_id')->comment('The wake category in the lead');
             $table->unsignedTinyInteger('following_wake_category_id')->comment('The wake category in the lead');
+            $table->unsignedDouble('interval')->comment('The interval in miles');
 
             $table->foreign('lead_wake_category_id')->references('id')->on('wake_categories')->cascadeOnDelete();
             $table->foreign('following_wake_category_id')->references('id')->on('wake_categories')->cascadeOnDelete();
