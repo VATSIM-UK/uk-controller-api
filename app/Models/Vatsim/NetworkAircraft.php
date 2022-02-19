@@ -2,6 +2,8 @@
 
 namespace App\Models\Vatsim;
 
+use App\Models\Hold\NavaidNetworkAircraft;
+use App\Models\Navigation\Navaid;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use Carbon\Carbon;
@@ -115,6 +117,16 @@ class NetworkAircraft extends Model
     public function assignedStand(): HasOne
     {
         return $this->hasOne(StandAssignment::class, 'callsign', 'callsign');
+    }
+
+    public function proximityNavaids(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Navaid::class,
+            'navaid_network_aircraft',
+            'callsign',
+            'navaid_id'
+        )->withPivot('entered_at')->using(NavaidNetworkAircraft::class);
     }
 
     public function getAircraftTypeAttribute(): string

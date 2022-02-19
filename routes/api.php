@@ -299,8 +299,11 @@ Route::middleware('api')->group(
                 Route::get('flight-rules/dependency', 'FlightRulesController@getFlightRulesDependency');
 
                 // Holds
-                Route::get('hold', 'HoldController@getAllHolds');
-                Route::get('hold/assigned', 'HoldController@getAssignedHolds');
+                Route::prefix('hold')->group(function () {
+                    Route::get('', 'HoldController@getAllHolds');
+                    Route::get('assigned', 'HoldController@getAssignedHolds');
+                    Route::get('proximity', 'HoldController@getProximityHolds');
+                });
 
                 // Handoffs
                 Route::get('handoffs/dependency', 'HandoffController@getHandoffsV2Dependency');

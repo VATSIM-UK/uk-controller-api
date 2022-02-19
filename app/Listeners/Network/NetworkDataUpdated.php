@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Network;
 
+use App\Jobs\Hold\DetectProximityToHolds;
 use App\Jobs\Hold\RemoveAssignmentsForAircraftLeavingHold;
 use App\Jobs\Prenote\CancelMessagesForDepartedAircraft;
 use App\Jobs\Release\Departure\CancelRequestsForDepartedAircraft;
@@ -27,6 +28,7 @@ class NetworkDataUpdated implements ShouldQueue, ShouldBeUnique
                 new RemoveAssignmentsForAircraftLeavingHold(),
                 new CancelRequestsForDepartedAircraft(),
                 new CancelMessagesForDepartedAircraft(),
+                new DetectProximityToHolds(),
             ]
         )->dispatch();
         return true;

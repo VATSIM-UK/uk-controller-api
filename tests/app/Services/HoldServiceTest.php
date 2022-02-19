@@ -3,24 +3,29 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Events\Hold\AircraftEnteredHoldingArea;
+use App\Events\Hold\AircraftExitedHoldingArea;
 use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Hold\Hold;
+use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 class HoldServiceTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var HoldService
-     */
-    private $holdService;
+    private HoldService $holdService;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->holdService = $this->app->make(HoldService::class);
+        Event::fake();
         AssignedHold::where('callsign', '<>', 'BAW123')->delete();
+        NetworkAircraft::where('callsign', '<>', 'BAW123')->delete();
+        Carbon::setTestNow(Carbon::now()->startOfSecond());
     }
 
     public function testItConstructs()
@@ -92,13 +97,13 @@ class HoldServiceTest extends BaseFunctionalTestCase
     {
         $this->expectsEvents(HoldUnassignedEvent::class);
         NetworkAircraft::where('callsign', 'BAW123')->update(
-                [
-                    'groundspeed' => 0,
-                    'altitude' => 999,
-                    'latitude' => 50.9850000,
-                    'longitude' => -0.1916667,
-                ]
-            );
+            [
+                'groundspeed' => 0,
+                'altitude' => 999,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
 
         $this->holdService->removeStaleAssignments();
         $this->assertTrue(AssignedHold::where('callsign', 'BAW123')->doesntExist());
@@ -134,5 +139,206 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         $this->holdService->removeStaleAssignments();
         $this->assertTrue(AssignedHold::where('callsign', 'BAW123')->exists());
+    }
+
+    public function testItDoesNotAddProximityNavaidsIfOutOfRange()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 123,
+                'altitude' => 1000,
+                'latitude' => 51.989700, // This is Barkway
+                'longitude' => 0.061944,
+            ]
+        );
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
+    public function testItAddsAircraftToProximityNavaids()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 335,
+                'altitude' => 7241,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            1
+        );
+        $this->assertDatabaseHas(
+            'navaid_network_aircraft',
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 1,
+                'entered_at' => Carbon::now()->utc()->toDateTimeString(),
+            ]
+        );
+
+        Event::assertDispatched(
+            AircraftEnteredHoldingArea::class,
+            fn(AircraftEnteredHoldingArea $event) => $event->broadcastWith() == [
+                    'navaid_id' => 1,
+                    'callsign' => 'BAW123',
+                    'entered_at' => Carbon::now()
+                ]
+        );
+
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
+    public function testItDoesntAddAircraftToProximityTooLow()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 335,
+                'altitude' => 800,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
+    public function testItDoesntAddAircraftToProximityTooSlow()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 30,
+                'altitude' => 7241,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
+    public function testItDoesntRemoveAircraftStillInProximity()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 335,
+                'altitude' => 7241,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        DB::table('navaid_network_aircraft')->insert(
+            ['navaid_id' => 1, 'callsign' => 'BAW123', 'entered_at' => Carbon::now()->subHour()->toDateTimeString()]
+        );
+
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            1
+        );
+        $this->assertDatabaseHas(
+            'navaid_network_aircraft',
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 1,
+                'entered_at' => Carbon::now()->subHour()->toDateTimeString()
+            ]
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
+    public function testItRemovesAircraftFromProximityThatIfNoLongerClose()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 123,
+                'altitude' => 1000,
+                'latitude' => 51.989700, // This is Barkway
+                'longitude' => 0.061944,
+            ]
+        );
+        DB::table('navaid_network_aircraft')->insert(
+            ['navaid_id' => 1, 'callsign' => 'BAW123', 'entered_at' => Carbon::now()->toDateTimeString()]
+        );
+
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertDispatched(
+            AircraftExitedHoldingArea::class,
+            fn(AircraftExitedHoldingArea $event) => $event->broadcastWith() == [
+                    'navaid_id' => 1,
+                    'callsign' => 'BAW123',
+                ]
+        );
+    }
+
+    public function testItRemovesAircraftThatAreTooLowAndSlow()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 30,
+                'altitude' => 300,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        DB::table('navaid_network_aircraft')->insert(
+            ['navaid_id' => 1, 'callsign' => 'BAW123', 'entered_at' => Carbon::now()->subHour()->toDateTimeString()]
+        );
+
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            0
+        );
+
+        Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
+        Event::assertDispatched(
+            AircraftExitedHoldingArea::class,
+            fn(AircraftExitedHoldingArea $event) => $event->broadcastWith() == [
+                    'navaid_id' => 1,
+                    'callsign' => 'BAW123',
+                ]
+        );
     }
 }

@@ -28,6 +28,7 @@ class OptimiseTables extends Command
         'missed_approach_notifications',
         'network_controller_positions',
         'failed_jobs',
+        'navaid_network_aircraft',
     ];
 
     protected $signature = 'tables:optimise';

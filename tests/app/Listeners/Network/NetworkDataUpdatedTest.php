@@ -3,6 +3,7 @@
 namespace App\Listeners\Network;
 
 use App\BaseUnitTestCase;
+use App\Jobs\Hold\DetectProximityToHolds;
 use App\Jobs\Hold\RemoveAssignmentsForAircraftLeavingHold;
 use App\Jobs\Prenote\CancelMessagesForDepartedAircraft;
 use App\Jobs\Release\Departure\CancelRequestsForDepartedAircraft;
@@ -34,6 +35,7 @@ class NetworkDataUpdatedTest extends BaseUnitTestCase
                 new RemoveAssignmentsForAircraftLeavingHold(),
                 new CancelRequestsForDepartedAircraft(),
                 new CancelMessagesForDepartedAircraft(),
+                new DetectProximityToHolds(),
             ],
         )
             ->once()

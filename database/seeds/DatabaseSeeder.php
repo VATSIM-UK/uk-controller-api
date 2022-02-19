@@ -77,6 +77,7 @@ class DatabaseSeeder extends Seeder
         ],
         NavaidTableSeeder::class => [
             'navaids',
+            'navaid_network_aircraft',
         ],
         NetworkAircraftTableSeeder::class => [
             'network_aircraft',
