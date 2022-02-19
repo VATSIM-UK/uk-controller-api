@@ -24,7 +24,7 @@ class NotificationAdminControllerTest extends BaseApiTestCase
 		// create active notifications
 		Notification::factory()->create();
 		// create expired notification which should not be included
-        Notification::factory()->expired()->create();
+		Notification::factory()->expired()->create();
 
         $response = $this->makeAuthenticatedApiRequest('GET', $this->baseEndpoint);
 
