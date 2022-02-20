@@ -27,9 +27,11 @@ class NotificationFactory extends Factory
 
     public function expired()
     {
-        return $this->state(fn () => [
-            'valid_from' => Carbon::now()->subHours(3),
-            'valid_to' => Carbon::now()->subHour()
-        ]);
+        return $this->state(function () {
+            return [
+                'valid_from' => Carbon::now()->subHours(3),
+                'valid_to' => Carbon::now()->subHour()
+            ];
+        });
     }
 }
