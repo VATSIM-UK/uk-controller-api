@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.2.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.1.0...6.2.0) (2022-02-22)
+
+
+### Features
+
+* **wake:** Add arrival wake intervals ([#845](https://github.com/VATSIM-UK/uk-controller-api/issues/845)) ([4acf2ee](https://github.com/VATSIM-UK/uk-controller-api/commit/4acf2ee51eccb7775109cb8b75207201eafa88d9))
+
 ## [6.1.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.0.1...6.1.0) (2022-02-19)
 
 
