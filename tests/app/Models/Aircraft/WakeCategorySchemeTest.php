@@ -23,6 +23,7 @@ class WakeCategorySchemeTest extends BaseFunctionalTestCase
                     'description' => 'Lower Medium',
                     'relative_weighting' => 10,
                     'subsequent_departure_intervals' => [],
+                    'subsequent_arrival_intervals' => [],
                 ],
                 [
                     'id' => 5,
@@ -53,6 +54,16 @@ class WakeCategorySchemeTest extends BaseFunctionalTestCase
                             'intermediate' => true,
                             'interval' => 4,
                             'interval_unit' => 'nm',
+                        ],
+                    ],
+                    'subsequent_arrival_intervals' => [
+                        [
+                            'id' => 3,
+                            'interval' => 5.0,
+                        ],
+                        [
+                            'id' => 5,
+                            'interval' => 4.0,
                         ],
                     ],
                 ],

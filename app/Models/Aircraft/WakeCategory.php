@@ -52,6 +52,17 @@ class WakeCategory extends Model
                     ['intermediate', 'asc'],
                 ])
                 ->toArray(),
+            'subsequent_arrival_intervals' => $this->arrivalIntervals
+                ->sortBy('relative_weighting')
+                ->map(
+                    fn (WakeCategory $subsequent) => [
+                        'id' => $subsequent->id,
+                        'interval' => $subsequent->pivot->interval
+                    ]
+                )
+                ->values()
+                ->sortBy('id')
+                ->toArray(),
         ];
     }
 
@@ -68,6 +79,16 @@ class WakeCategory extends Model
             'lead_wake_category_id',
             'following_wake_category_id'
         )->using(DepartureWakeInterval::class)->withPivot(['measurement_unit_id', 'interval', 'intermediate']);
+    }
+
+    public function arrivalIntervals(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            WakeCategory::class,
+            'arrival_wake_intervals',
+            'lead_wake_category_id',
+            'following_wake_category_id'
+        )->withPivot(['interval']);
     }
 
     public function scheme(): BelongsTo
