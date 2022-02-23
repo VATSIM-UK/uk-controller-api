@@ -18,7 +18,6 @@ class Sid extends Model
     public $table = 'sid';
 
     protected $fillable = [
-        'airfield_id',
         'runway_id',
         'identifier',
         'initial_altitude',
