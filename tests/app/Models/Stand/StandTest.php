@@ -245,6 +245,21 @@ class StandTest extends BaseFunctionalTestCase
         $this->assertEquals([1, 3], $stands);
     }
 
+    public function testAppropriateWakeCategoryAssumesA380IfNoCategoryExists()
+    {
+        $a330 = Aircraft::where('code', 'A333')->first();
+        $a330->wakeCategories()->sync([]);
+
+        Stand::find(1)->update(['wake_category_id' => 6]);
+        Stand::find(2)->update(['wake_category_id' => 4]);
+        Stand::find(3)->update(['wake_category_id' => 5]);
+
+        $stands = Stand::appropriateWakeCategory($a330)->get()->pluck('id')->toArray();
+        sort($stands);
+
+        $this->assertEquals([1], $stands);
+    }
+
     public function testSizeAppropriateOnlyReturnsStandsThatAreBigEnough()
     {
         $a330 = Aircraft::where('code', 'A333')->first();
