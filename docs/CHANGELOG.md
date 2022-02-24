@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+### [6.2.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.2.0...6.2.1) (2022-02-24)
+
+
+### Data Updates
+
+* **controllers:** Stansted positions and top down ([#824](https://github.com/VATSIM-UK/uk-controller-api/issues/824)) ([bf1ffeb](https://github.com/VATSIM-UK/uk-controller-api/commit/bf1ffeb7b8d7297a5da3d1fea5f1c916476de811))
+* **controllers:** Update controller positions to properly reflect 25khz spacing ([#836](https://github.com/VATSIM-UK/uk-controller-api/issues/836)) ([871b57a](https://github.com/VATSIM-UK/uk-controller-api/commit/871b57af78287a7bb723795649db5ef3e43d4ea8)), closes [#828](https://github.com/VATSIM-UK/uk-controller-api/issues/828) [#817](https://github.com/VATSIM-UK/uk-controller-api/issues/817)
+* **stansted:** stansted sid identifier updates ([#825](https://github.com/VATSIM-UK/uk-controller-api/issues/825)) ([f2c8ba5](https://github.com/VATSIM-UK/uk-controller-api/commit/f2c8ba529aba6ca420e8df1413ff7d28ebc1ae5b)), closes [#818](https://github.com/VATSIM-UK/uk-controller-api/issues/818)
+
 ## [6.2.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.1.0...6.2.0) (2022-02-22)
 
 
