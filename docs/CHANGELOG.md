@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [6.2.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.2.1...6.2.2) (2022-02-25)
+
+
+### Bug Fixes
+
+* **stansted:** Sid identifiers didnt update ([#856](https://github.com/VATSIM-UK/uk-controller-api/issues/856)) ([5658e59](https://github.com/VATSIM-UK/uk-controller-api/commit/5658e59402c4bf7d54c7e2377bca44930099d596))
+
 ### [6.2.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.2.0...6.2.1) (2022-02-24)
 
 
