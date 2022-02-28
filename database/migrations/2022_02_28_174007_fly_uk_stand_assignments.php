@@ -291,7 +291,7 @@ class FlyUkStandAssignments extends Migration
                 $airline,
                 $airfield,
                 $stands,
-                fn(Stand $stand) => [
+                fn (Stand $stand) => [
                     $stand->id => [
                         'airline_id' => $airline->id,
                     ]
@@ -307,7 +307,7 @@ class FlyUkStandAssignments extends Migration
                 $airline,
                 $airfield,
                 $stands,
-                fn(Stand $stand) => [
+                fn (Stand $stand) => [
                     $stand->id => [
                         'airline_id' => $airline->id,
                         'destination' => 'EG',
@@ -324,7 +324,7 @@ class FlyUkStandAssignments extends Migration
                 $airline,
                 $airfield,
                 $stands,
-                fn(Stand $stand) => [
+                fn (Stand $stand) => [
                     $stand->id => [
                         'airline_id' => $airline->id,
                         'callsign_slug' => '2',
@@ -341,7 +341,7 @@ class FlyUkStandAssignments extends Migration
                 $airline,
                 $airfield,
                 $stands,
-                fn(Stand $stand) => [
+                fn (Stand $stand) => [
                     $stand->id => [
                         'airline_id' => $airline->id,
                         'callsign_slug' => '4',
@@ -358,7 +358,7 @@ class FlyUkStandAssignments extends Migration
                 $airline,
                 $airfield,
                 $stands,
-                fn(Stand $stand) => [
+                fn (Stand $stand) => [
                     $stand->id => [
                         'airline_id' => $airline->id,
                         'callsign_slug' => '7',
