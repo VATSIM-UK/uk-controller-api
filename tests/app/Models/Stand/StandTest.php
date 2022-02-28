@@ -182,6 +182,68 @@ class StandTest extends BaseFunctionalTestCase
         $this->assertEquals([2, 3], $stands);
     }
 
+    public function testAirlineCallsignOnlyReturnsStandsForTheCorrectAirlineAndCallsigns()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'callsign_slug' => '123'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'callsign_slug' => '456'
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'callsign_slug' => '123'
+                ],
+            ]
+        );
+
+        $stands = Stand::airlineCallsign(
+            Airline::find(1),
+            ['123']
+        )->pluck('stands.id')->toArray();
+        $this->assertEquals([1], $stands);
+    }
+
+    public function testAirlineCallsignOnlyReturnsStandsWithinTheRightTime()
+    {
+        Carbon::setTestNow(Carbon::parse('2020-12-05 16:00:00'));
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'callsign_slug' => '123',
+                    'not_before' => '16:00:01',
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'callsign_slug' => '123',
+                    'not_before' => null,
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'callsign_slug' => '123',
+                    'not_before' => '16:00:00',
+                ],
+            ]
+        );
+
+        $stands = Stand::airlineCallsign(
+            Airline::find(1),
+            ['123']
+        )->pluck('stands.id')->toArray();
+        $this->assertEquals([2, 3], $stands);
+    }
+
     public function testAppropriateDimensionsOnlyReturnsStandsThatAreTheRightSize()
     {
         $a330 = Aircraft::where('code', 'A333')->first();

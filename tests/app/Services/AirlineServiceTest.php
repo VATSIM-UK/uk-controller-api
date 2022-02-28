@@ -52,4 +52,29 @@ class AirlineServiceTest extends BaseFunctionalTestCase
     {
         $this->assertNull($this->service->getAirlineForAircraft(NetworkAircraft::create(['callsign' => '***'])));
     }
+
+    /**
+     * @dataProvider slugProvider
+     */
+    public function testItReturnsCallsignSlugs(string $callsign, string $expectedSlug)
+    {
+        $this->assertEquals(
+            $expectedSlug,
+            $this->service->getCallsignSlugForAircraft(NetworkAircraft::create(['callsign' => $callsign]))
+        );
+    }
+
+    public function slugProvider(): array
+    {
+        return [
+            'Unknown airline' => [
+                'X1X123',
+                'X1X123',
+            ],
+            'Known airline' => [
+                'BAW123AF',
+                '123AF',
+            ],
+        ];
+    }
 }

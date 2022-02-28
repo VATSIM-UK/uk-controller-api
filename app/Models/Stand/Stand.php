@@ -75,7 +75,7 @@ class Stand extends Model
             'airline_stand',
             'stand_id',
             'airline_id'
-        )->withPivot('destination', 'priority', 'not_before')->withTimestamps();
+        )->withPivot('destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
     }
 
     public function getCoordinateAttribute()
@@ -131,6 +131,11 @@ class Stand extends Model
     public function scopeAirlineDestination(Builder $builder, Airline $airline, array $destinationStrings): Builder
     {
         return $this->scopeAirline($builder, $airline)->whereIn('destination', $destinationStrings);
+    }
+
+    public function scopeAirlineCallsign(Builder $builder, Airline $airline, array $slugs): Builder
+    {
+        return $this->scopeAirline($builder, $airline)->whereIn('callsign_slug', $slugs);
     }
 
     public function wakeCategory(): BelongsTo
