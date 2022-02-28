@@ -16,6 +16,7 @@ class AddCallsignSlugToAirlineStandTable extends Migration
         Schema::table('airline_stand', function (Blueprint $table) {
             $table->string('callsign_slug')
                 ->nullable()
+                ->after('destination')
                 ->index()
                 ->comment('Prefer this stand for callsigns matching the slug');
         });
