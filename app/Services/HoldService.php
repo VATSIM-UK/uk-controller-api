@@ -99,20 +99,20 @@ class HoldService
                  * already holding at.
                  */
                 $toAttach = $navaids->reject(
-                    fn(Navaid $navaid) => $navaid->coordinate->getDistance(
-                            $aircraft->latLong,
-                            $distanceCalculator
-                        ) > self::HOLD_ENTRY_RADIUS
+                    fn (Navaid $navaid) => $navaid->coordinate->getDistance(
+                        $aircraft->latLong,
+                        $distanceCalculator
+                    ) > self::HOLD_ENTRY_RADIUS
                 )->reject(
-                    fn(Navaid $navaid) => $proximityNavaidsBefore->contains(
-                        fn(Navaid $proximityNavaid) => $proximityNavaid->id === $navaid->id
+                    fn (Navaid $navaid) => $proximityNavaidsBefore->contains(
+                        fn (Navaid $proximityNavaid) => $proximityNavaid->id === $navaid->id
                     )
                 );
 
                 if ($toAttach->isNotEmpty()) {
                     $aircraft->proximityNavaids()->attach(
                         $toAttach->mapWithKeys(
-                            fn(Navaid $navaid) => [
+                            fn (Navaid $navaid) => [
                                 $navaid->id => [
                                     'entered_at' => Carbon::now()->utc(),
                                 ]
@@ -129,10 +129,10 @@ class HoldService
                 /**
                  * Any navaid that we're a long way from, assume that the hold has been left. Detach these holds.
                  */
-                $toDetach = $aircraft->proximityNavaids->filter(fn(Navaid $navaid) => $navaid->coordinate->getDistance(
-                        $aircraft->latLong,
-                        $distanceCalculator
-                    ) > self::HOLDING_AREA_RADIUS);
+                $toDetach = $aircraft->proximityNavaids->filter(fn (Navaid $navaid) => $navaid->coordinate->getDistance(
+                    $aircraft->latLong,
+                    $distanceCalculator
+                ) > self::HOLDING_AREA_RADIUS);
 
                 if ($toDetach->isNotEmpty()) {
                     $aircraft->proximityNavaids()->detach($toDetach->pluck('id'));
