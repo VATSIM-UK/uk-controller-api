@@ -16,6 +16,7 @@ class CreateVisualReferencePointsTable extends Migration
         Schema::create('visual_reference_points', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('The name of the VRP');
+            $table->string('short_name')->comment('The short name of the VRP');
             $table->double('latitude', 10, 8)
                 ->comment('The latitude of the VRP in decimal degrees');
             $table->double('longitude', 11, 8)
