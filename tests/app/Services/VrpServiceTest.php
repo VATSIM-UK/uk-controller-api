@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Airfield\VisualReferencePoint;
 
 class VrpServiceTest extends BaseFunctionalTestCase
 {
@@ -36,5 +37,10 @@ class VrpServiceTest extends BaseFunctionalTestCase
         ];
 
         $this->assertEquals($expected, $this->service->getVrpDependency());
+    }
+
+    public function testItReturnsMappingElements()
+    {
+        $this->assertEquals(VisualReferencePoint::all()->toArray(), $this->service->mappingElements());
     }
 }

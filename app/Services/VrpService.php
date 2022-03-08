@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use App\Helpers\Airfield\MappingElementProvider;
 use App\Models\Airfield\VisualReferencePoint;
 
-class VrpService
+class VrpService implements MappingElementProvider
 {
     public function getVrpDependency(): array
     {
@@ -14,5 +15,10 @@ class VrpService
                 ['airfields' => $visualReferencePoint->airfields->pluck('id')->toArray()]
             )
         )->toArray();
+    }
+
+    public function mappingElements(): array
+    {
+        return VisualReferencePoint::all()->toArray();
     }
 }
