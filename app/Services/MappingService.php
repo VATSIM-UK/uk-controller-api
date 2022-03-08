@@ -26,8 +26,8 @@ class MappingService
     {
         return collect(
             array_map(
-                fn(MappingElementProvider $provider) => $provider->mappingElements()->map(
-                    fn(MappingElement $element) => [
+                fn (MappingElementProvider $provider) => $provider->mappingElements()->map(
+                    fn (MappingElement $element) => [
                         'id' => $element->elementId(),
                         'name' => $element->elementName(),
                         'type' => $element->elementType(),
