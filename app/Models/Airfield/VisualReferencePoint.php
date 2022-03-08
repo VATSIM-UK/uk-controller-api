@@ -21,6 +21,11 @@ class VisualReferencePoint extends Model implements MappingElement
         return $this->belongsToMany(Airfield::class);
     }
 
+    public function elementId(): int
+    {
+        return $this->id;
+    }
+
     public function elementType(): string
     {
         return 'visual_reference_point';

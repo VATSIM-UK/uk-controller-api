@@ -13,6 +13,12 @@ class VisualReferencePointTest extends BaseUnitTestCase
         $this->vrp = new VisualReferencePoint(
             ['name' => 'M5 Avon Bridge', 'short_name' => 'M5AB', 'latitude' => 1, 'longitude' => 2]
         );
+        $this->vrp->id = 5;
+    }
+
+    public function testItHasAnElementId()
+    {
+        $this->assertEquals(5, $this->vrp->elementId());
     }
 
     public function testItHasAnElementType()

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\Airfield\MappingElementProvider;
 use App\Models\Airfield\VisualReferencePoint;
+use Illuminate\Support\Collection;
 
 class VrpService implements MappingElementProvider
 {
@@ -17,8 +18,8 @@ class VrpService implements MappingElementProvider
         )->toArray();
     }
 
-    public function mappingElements(): array
+    public function mappingElements(): Collection
     {
-        return VisualReferencePoint::all()->toArray();
+        return VisualReferencePoint::all();
     }
 }

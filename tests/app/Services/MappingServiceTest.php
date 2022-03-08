@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Helpers\Airfield\MappingElementProvider;
-use App\Models\Airfield\VisualReferencePoint;
 
 class MappingServiceTest extends BaseFunctionalTestCase
 {
@@ -32,7 +31,22 @@ class MappingServiceTest extends BaseFunctionalTestCase
     public function testItReturnsMappingElements()
     {
         $this->assertEquals(
-            VisualReferencePoint::all()->toArray(),
+            [
+                [
+                    'id' => 1,
+                    'type' => 'visual_reference_point',
+                    'name' => 'VRP One',
+                    'latitude' => 1,
+                    'longitude' => 2,
+                ],
+                [
+                    'id' => 2,
+                    'type' => 'visual_reference_point',
+                    'name' => 'VRP Two',
+                    'latitude' => 3,
+                    'longitude' => 4,
+                ],
+            ],
             $this->service->getMappingElementsDependency()
         );
     }

@@ -41,6 +41,6 @@ class VrpServiceTest extends BaseFunctionalTestCase
 
     public function testItReturnsMappingElements()
     {
-        $this->assertEquals(VisualReferencePoint::all()->toArray(), $this->service->mappingElements());
+        $this->assertEquals(VisualReferencePoint::all(), $this->service->mappingElements());
     }
 }

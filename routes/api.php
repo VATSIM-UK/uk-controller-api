@@ -361,6 +361,9 @@ Route::middleware('api')->group(
                     Route::get('latest', 'VersionController@getLatestVersion');
                     Route::get('{version:version}', 'VersionController@getVersion');
                 });
+
+                Route::get('dependency/{id}', 'DependencyController@getDependency')
+                    ->where('id', '[0-9]+');
             }
         );
     }
