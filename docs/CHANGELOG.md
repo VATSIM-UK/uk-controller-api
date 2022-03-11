@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.3.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.2.2...6.3.0) (2022-03-11)
+
+
+### Features
+
+* **stand:** Allocate stands based on airline callsigns, add UKV preferred ([#865](https://github.com/VATSIM-UK/uk-controller-api/issues/865)) ([d9d882d](https://github.com/VATSIM-UK/uk-controller-api/commit/d9d882d6a014073aca85570ce9652f704add08ae))
+
 ### [6.2.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.2.1...6.2.2) (2022-02-25)
 
 
