@@ -1,5 +1,22 @@
 # UK Controller Plugin API Changelog
 
+## [6.4.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.3.0...6.4.0) (2022-03-13)
+
+
+### Features
+
+* **hold:** reduce hold entry distance ([#868](https://github.com/VATSIM-UK/uk-controller-api/issues/868)) ([f09b5b9](https://github.com/VATSIM-UK/uk-controller-api/commit/f09b5b9796e6bf760f92a01578fcf9cf15db1d09))
+
+
+### Bug Fixes
+
+* **stand:** handle aircraft with no UK WTC in arrival stand allocation ([#855](https://github.com/VATSIM-UK/uk-controller-api/issues/855)) ([8d1d76b](https://github.com/VATSIM-UK/uk-controller-api/commit/8d1d76b20282a88e8edbeea9b8704a2bcfd404a0)), closes [#854](https://github.com/VATSIM-UK/uk-controller-api/issues/854)
+
+
+### Data Updates
+
+* **prenotes:** remove stansted NUGBO prenotes ([#867](https://github.com/VATSIM-UK/uk-controller-api/issues/867)) ([4da6b75](https://github.com/VATSIM-UK/uk-controller-api/commit/4da6b75a0b7b8f5c69d50281b7534695b66bf459)), closes [#866](https://github.com/VATSIM-UK/uk-controller-api/issues/866)
+
 ## [6.3.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.2.2...6.3.0) (2022-03-11)
 
 
