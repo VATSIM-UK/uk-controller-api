@@ -200,6 +200,51 @@ class HoldServiceTest extends BaseFunctionalTestCase
         Event::assertNotDispatched(AircraftExitedHoldingArea::class);
     }
 
+    public function testItDoesntReEnterAircraft()
+    {
+        Navaid::where('id', '<>', 1)->delete();
+        NetworkAircraft::where('callsign', 'BAW123')->update(
+            [
+                'groundspeed' => 335,
+                'altitude' => 7241,
+                'latitude' => 50.9850000,
+                'longitude' => -0.1916667,
+            ]
+        );
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseCount(
+            'navaid_network_aircraft',
+            1
+        );
+
+        $time = Carbon::now()->utc()->toDateTimeString();
+        $this->assertDatabaseHas(
+            'navaid_network_aircraft',
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 1,
+                'entered_at' => $time,
+            ]
+        );
+
+        $this->holdService->checkAircraftHoldProximity();
+        Carbon::setTestNow(Carbon::now()->addMinutes(2));
+        $this->holdService->checkAircraftHoldProximity();
+
+        $this->assertDatabaseHas(
+            'navaid_network_aircraft',
+            [
+                'callsign' => 'BAW123',
+                'navaid_id' => 1,
+                'entered_at' => $time,
+            ]
+        );
+
+        Event::assertDispatchedTimes(AircraftEnteredHoldingArea::class);
+        Event::assertNotDispatched(AircraftExitedHoldingArea::class);
+    }
+
     public function testItDoesntAddAircraftToProximityTooLow()
     {
         Navaid::where('id', '<>', 1)->delete();

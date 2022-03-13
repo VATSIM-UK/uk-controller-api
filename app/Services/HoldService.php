@@ -7,11 +7,9 @@ use App\Events\Hold\AircraftExitedHoldingArea;
 use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Hold\Hold;
-use App\Models\Hold\NavaidNetworkAircraft;
 use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Location\Distance\Haversine;
@@ -20,7 +18,10 @@ class HoldService
 {
     // Holding area radius in meters. Equivalent to 12nm.
     private const HOLDING_AREA_RADIUS = 22224;
-    
+
+    // Hold entry radius in meters. Equivalent to 3nm.
+    private const HOLD_ENTRY_RADIUS = 5556;
+
     /**
      * Returns the current holds in a format
      * that may be converted to a JSON array.
@@ -93,40 +94,51 @@ class HoldService
             function (NetworkAircraft $aircraft) use ($navaids, $distanceCalculator) {
                 $proximityNavaidsBefore = new Collection($aircraft->proximityNavaids->all());
 
-                $changes = $aircraft->proximityNavaids()->sync(
-                    $navaids->reject(
-                        fn (Navaid $navaid) => $navaid->coordinate->getDistance(
-                            $aircraft->latLong,
-                            $distanceCalculator
-                        ) > self::HOLDING_AREA_RADIUS
-                    )->mapWithKeys(
-                        function (Navaid $navaid) use ($aircraft) {
-                            $existingNavaid = $aircraft->proximityNavaids->firstWhere('id', $navaid->id);
-
-                            return [
-                                $navaid->id => [
-                                    'entered_at' => $existingNavaid ? $existingNavaid->pivot->entered_at : Carbon::now(
-                                    )->utc(),
-                                ]
-                            ];
-                        }
+                /**
+                 * The aircraft is now holding at any navaid that it's within 3nm of, so attach any that we aren't
+                 * already holding at.
+                 */
+                $toAttach = $navaids->reject(
+                    fn (Navaid $navaid) => $navaid->coordinate->getDistance(
+                        $aircraft->latLong,
+                        $distanceCalculator
+                    ) > self::HOLD_ENTRY_RADIUS
+                )->reject(
+                    fn (Navaid $navaid) => $proximityNavaidsBefore->contains(
+                        fn (Navaid $proximityNavaid) => $proximityNavaid->id === $navaid->id
                     )
                 );
 
-                $aircraft->load('proximityNavaids');
-                if (count($changes['attached']) > 0) {
-                    $aircraft->proximityNavaids->each(function (Navaid $navaid) use ($aircraft) {
-                        event(new AircraftEnteredHoldingArea($aircraft, $navaid));
-                    });
+                if ($toAttach->isNotEmpty()) {
+                    $aircraft->proximityNavaids()->attach(
+                        $toAttach->mapWithKeys(
+                            fn (Navaid $navaid) => [
+                                $navaid->id => [
+                                    'entered_at' => Carbon::now()->utc(),
+                                ]
+                            ]
+                        )
+                    );
+
+                    $aircraft->proximityNavaids()->whereIn('navaids.id', $toAttach->pluck('id'))
+                        ->each(function (Navaid $navaid) use ($aircraft) {
+                            event(new AircraftEnteredHoldingArea($aircraft, $navaid));
+                        });
                 }
 
-                if (count($changes['detached']) > 0) {
-                    $proximityNavaidsBefore->reject(
-                        fn (Navaid $navaid) => $aircraft->proximityNavaids->firstWhere('id', $navaid->id)
-                    )
-                        ->each(function (Navaid $navaid) use ($aircraft) {
-                            event(new AircraftExitedHoldingArea($aircraft, $navaid));
-                        });
+                /**
+                 * Any navaid that we're a long way from, assume that the hold has been left. Detach these holds.
+                 */
+                $toDetach = $aircraft->proximityNavaids->filter(fn (Navaid $navaid) => $navaid->coordinate->getDistance(
+                    $aircraft->latLong,
+                    $distanceCalculator
+                ) > self::HOLDING_AREA_RADIUS);
+
+                if ($toDetach->isNotEmpty()) {
+                    $aircraft->proximityNavaids()->detach($toDetach->pluck('id'));
+                    $toDetach->each(function (Navaid $navaid) use ($aircraft) {
+                        event(new AircraftExitedHoldingArea($aircraft, $navaid));
+                    });
                 }
             }
         );
