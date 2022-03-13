@@ -200,24 +200,30 @@ class Stand extends Model
         });
     }
 
-    public function scopeOrderByWeight(Builder $builder, string $direction = 'asc') : Builder
+    public function scopeOrderByWeight(Builder $builder, string $direction = 'asc'): Builder
     {
         return $builder->join('wake_categories', 'wake_categories.id', 'stands.wake_category_id')
             ->orderBy('wake_categories.relative_weighting', $direction);
     }
 
-    public function scopeOrderByAssignmentPriority(Builder $builder, string $direction = 'asc') : Builder
+    public function scopeOrderByAssignmentPriority(Builder $builder, string $direction = 'asc'): Builder
     {
         return $builder->orderBy('stands.assignment_priority', $direction);
     }
 
+    /**
+     * Pick a stand that has a wake category compatible with the aircraft. If the aircraft doesn't
+     * have a WTC, assume the worst.
+     */
     public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
     {
         return $builder->whereHas('wakeCategory', function (Builder $query) use ($aircraftType) {
             $query->greaterRelativeWeighting(
                 $aircraftType->wakeCategories()->whereHas('scheme', function (Builder $scheme) {
                     $scheme->uk();
-                })->first()
+                })->first() ?? WakeCategory::whereHas('scheme', function (Builder $scheme) {
+                    $scheme->uk();
+                })->where('code', 'J')->first()
             );
         });
     }
