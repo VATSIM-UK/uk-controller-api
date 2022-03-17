@@ -131,6 +131,10 @@ class DatabaseSeeder extends Seeder
             'runways',
             'runway_runway',
         ],
+        VrpTableSeeder::class => [
+            'visual_reference_points',
+            'airfield_visual_reference_point',
+        ]
     ];
 
     const OTHER_TABLES_TO_TRUNCATE = [
