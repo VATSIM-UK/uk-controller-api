@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.5.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.4.0...6.5.0) (2022-03-17)
+
+
+### Features
+
+* **mapping:** VRPs and Mapping Elements ([#874](https://github.com/VATSIM-UK/uk-controller-api/issues/874)) ([452a336](https://github.com/VATSIM-UK/uk-controller-api/commit/452a3367636f1302a8adfd5947c34041a07863c7))
+
 ## [6.4.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.3.0...6.4.0) (2022-03-13)
 
 
