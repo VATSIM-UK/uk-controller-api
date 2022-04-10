@@ -2,10 +2,10 @@
 
 namespace App\Models\Airfield;
 
-use App\BaseUnitTestCase;
+use App\BaseFunctionalTestCase;
 use Location\Coordinate;
 
-class VisualReferencePointTest extends BaseUnitTestCase
+class VisualReferencePointTest extends BaseFunctionalTestCase
 {
     public function setUp(): void
     {
@@ -14,8 +14,8 @@ class VisualReferencePointTest extends BaseUnitTestCase
             ['name' => 'M5 Avon Bridge', 'short_name' => 'M5AB', 'latitude' => 1, 'longitude' => 2]
         );
         $this->vrp->id = 5;
-        $this->vrp->airfields->add(1);
-        $this->vrp->airfields->add(3);
+        $this->vrp->save();
+        $this->vrp->airfields()->sync([1, 3]);
     }
 
     public function testItHasAnElementId()
@@ -33,6 +33,11 @@ class VisualReferencePointTest extends BaseUnitTestCase
         $this->assertEquals('M5 Avon Bridge', $this->vrp->elementName());
     }
 
+    public function testItHasACoordinate()
+    {
+        $this->assertEquals(new Coordinate(1, 2), $this->vrp->elementCoordinate());
+    }
+
     public function testItHasDisplayRules()
     {
         $expected = [
@@ -42,5 +47,11 @@ class VisualReferencePointTest extends BaseUnitTestCase
             ],
         ];
         $this->assertEquals($expected, $this->vrp->displayRules());
+    }
+
+    public function testItHasNoDisplayRules()
+    {
+        $this->vrp->airfields()->sync([]);
+        $this->assertEquals([], $this->vrp->displayRules());
     }
 }
