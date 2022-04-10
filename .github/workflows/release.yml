@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: ukcp-api-release
-      cancel-in-progress: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
