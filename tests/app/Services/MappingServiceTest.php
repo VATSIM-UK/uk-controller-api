@@ -38,6 +38,12 @@ class MappingServiceTest extends BaseFunctionalTestCase
                     'name' => 'VRP One',
                     'latitude' => 1,
                     'longitude' => 2,
+                    'display_rules' => [
+                        [
+                            'type' => 'related_airfield',
+                            'airfields' => [1, 2],
+                        ],
+                    ],
                 ],
                 [
                     'id' => 2,
@@ -45,6 +51,7 @@ class MappingServiceTest extends BaseFunctionalTestCase
                     'name' => 'VRP Two',
                     'latitude' => 3,
                     'longitude' => 4,
+                    'display_rules' => [],
                 ],
             ],
             $this->service->getMappingElementsDependency()

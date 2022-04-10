@@ -14,6 +14,8 @@ class VisualReferencePointTest extends BaseUnitTestCase
             ['name' => 'M5 Avon Bridge', 'short_name' => 'M5AB', 'latitude' => 1, 'longitude' => 2]
         );
         $this->vrp->id = 5;
+        $this->vrp->airfields->add(1);
+        $this->vrp->airfields->add(3);
     }
 
     public function testItHasAnElementId()
@@ -31,8 +33,14 @@ class VisualReferencePointTest extends BaseUnitTestCase
         $this->assertEquals('M5 Avon Bridge', $this->vrp->elementName());
     }
 
-    public function testItHasAnElementCoordinate()
+    public function testItHasDisplayRules()
     {
-        $this->assertEquals(new Coordinate(1, 2), $this->vrp->elementCoordinate());
+        $expected = [
+            [
+                'type' => 'related_airfield',
+                'airfields' => [1, 3],
+            ],
+        ];
+        $this->assertEquals($expected, $this->vrp->displayRules());
     }
 }
