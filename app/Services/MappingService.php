@@ -33,6 +33,7 @@ class MappingService
                         'type' => $element->elementType(),
                         'latitude' => $element->elementCoordinate()->getLat(),
                         'longitude' => $element->elementCoordinate()->getLng(),
+                        'display_rules' => $element->displayRules(),
                     ]
                 ),
                 $this->elementProviders,

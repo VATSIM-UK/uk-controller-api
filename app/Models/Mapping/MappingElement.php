@@ -26,4 +26,9 @@ interface MappingElement
      * The coordinate of the element.
      */
     public function elementCoordinate(): Coordinate;
+
+    /**
+     * Display rules for whether to display the element.
+     */
+    public function displayRules(): array;
 }

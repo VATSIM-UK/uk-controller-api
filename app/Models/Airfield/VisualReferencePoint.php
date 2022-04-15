@@ -40,4 +40,18 @@ class VisualReferencePoint extends Model implements MappingElement
     {
         return new Coordinate($this->latitude, $this->longitude);
     }
+
+    public function displayRules(): array
+    {
+        if ($this->airfields->isEmpty()) {
+            return [];
+        }
+
+        return [
+            [
+                'type' => 'related_airfield',
+                'airfields' => $this->airfields->pluck('id')->toArray(),
+            ],
+        ];
+    }
 }
