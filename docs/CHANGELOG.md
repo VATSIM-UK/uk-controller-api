@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.6.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.5.0...6.6.0) (2022-04-15)
+
+
+### Features
+
+* **mapping:** Add display rules to dependency ([#895](https://github.com/VATSIM-UK/uk-controller-api/issues/895)) ([0a24f5d](https://github.com/VATSIM-UK/uk-controller-api/commit/0a24f5d3800ff87990e155d98b672833ee34dc70))
+
+
+### Data Updates
+
+* **stands:** Bristol stand updates ([#894](https://github.com/VATSIM-UK/uk-controller-api/issues/894)) ([17d86c6](https://github.com/VATSIM-UK/uk-controller-api/commit/17d86c6526899db279c14b2a03e6f33a7d8635ce)), closes [#693](https://github.com/VATSIM-UK/uk-controller-api/issues/693)
+
 ## [6.5.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.4.0...6.5.0) (2022-03-17)
 
 
