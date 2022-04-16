@@ -142,6 +142,7 @@ class DatabaseSeeder extends Seeder
         'missed_approach_notifications',
         'network_controller_positions',
         'controller_position_alternative_callsigns',
+        'intention_codes',
     ];
 
 

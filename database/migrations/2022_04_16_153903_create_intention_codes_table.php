@@ -21,6 +21,8 @@ class CreateIntentionCodesTable extends Migration
                 ->index()
                 ->comment('The priority for the intention code, the smaller the number, the higher the priority');
             $table->timestamps();
+
+            $table->unique('priority');
         });
     }
 
