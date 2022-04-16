@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\IntentionCode;
 
 use App\Models\IntentionCode\IntentionCode;
 
