@@ -3,7 +3,6 @@
 
 namespace App\Rules\Heading;
 
-
 class ValidHeading
 {
     private const HEADING_REGEX = '/^\d{1,3}$/';

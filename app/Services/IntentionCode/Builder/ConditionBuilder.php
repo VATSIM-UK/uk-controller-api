@@ -175,7 +175,7 @@ class ConditionBuilder implements ConditionBuilderInterface
             throw new IntentionCodeInvalidException('Conditions are not valid for intention code');
         }
 
-        return $this->conditions->map(fn(ConditionInterface $condition) => $condition->toArray())->toArray();
+        return $this->conditions->map(fn (ConditionInterface $condition) => $condition->toArray())->toArray();
     }
 
     /**
@@ -206,7 +206,7 @@ class ConditionBuilder implements ConditionBuilderInterface
         if ($conditionData['type'] === 'any_of') {
             return array_reduce(
                 $conditionData['conditions'],
-                fn($carry, $nextCondition) => $carry && $this->conditionIsKeyCondition($nextCondition['type']),
+                fn ($carry, $nextCondition) => $carry && $this->conditionIsKeyCondition($nextCondition['type']),
                 true
             );
         }

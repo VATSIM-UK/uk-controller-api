@@ -6,5 +6,4 @@ use InvalidArgumentException;
 
 class IntentionCodeInvalidException extends InvalidArgumentException
 {
-
 }
