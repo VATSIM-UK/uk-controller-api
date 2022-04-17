@@ -15,7 +15,7 @@ class NotTest extends BaseUnitTestCase
 
         $this->not = new Not(
             tap(
-                new ConditionBuilder(),
+                ConditionBuilder::begin(),
                 function (ConditionBuilder $conditionBuilder) {
                     $conditionBuilder->maximumCruisingLevel(35000);
                     $conditionBuilder->arrivalAirfields(['EGKK']);

@@ -12,7 +12,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->builder = new ConditionBuilder();
+        $this->builder = ConditionBuilder::begin();
     }
 
     public function testItConvertsToArrayJustArrivalAirfields()
@@ -376,7 +376,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
         ];
     }
 
-    public function itAllowsCombinedPrimaryConditionsIfAllRoutesValid(callable $setCondition)
+    public function testItAllowsCombinedPrimaryConditionsIfAllRoutesValid()
     {
         $expected = [
             [
@@ -400,12 +400,36 @@ class ConditionBuilderTest extends BaseUnitTestCase
                     ],
                 ],
             ],
+            [
+                'type' => 'cruising_level_above',
+                'level' => 27000,
+            ],
+            [
+                'type' => 'not',
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'cruising_level_above',
+                                'level' => 35000,
+                            ],
+                        ],
+                    ],
+                ],
+            ]
         ];
 
         $this->builder->arrivalAirfields(['EGBB'])
             ->anyOf(function (ConditionBuilder $builder) {
                 $builder->arrivalAirfields(['EGKK', 'EGLL'])
                     ->exitPoint('ETRAT', 55, 180);
+            })
+            ->cruisingAbove(27000)
+            ->not(function (ConditionBuilder $builder) {
+                $builder->anyOf(function (ConditionBuilder $builder) {
+                    $builder->cruisingAbove(35000);
+                });
             });
 
         $this->assertEquals($expected, $this->builder->get());

@@ -14,7 +14,7 @@ class IntentionCodeBuilder
     {
         $this->codeBuilder = new CodeBuilder();
         $this->priorityBuilder = new PriorityBuilder();
-        $this->conditionBuilder = new ConditionBuilder();
+        $this->conditionBuilder = ConditionBuilder::begin();
     }
 
     public static function begin(): IntentionCodeBuilder

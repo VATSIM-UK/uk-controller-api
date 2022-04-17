@@ -15,10 +15,17 @@ use Illuminate\Support\Collection;
 class ConditionBuilder implements ConditionBuilderInterface
 {
     private Collection $conditions;
+    private bool $requiresKeyCondition;
 
-    public function __construct()
+    private function __construct(bool $requiresKeyCondition)
     {
         $this->conditions = new Collection();
+        $this->requiresKeyCondition = $requiresKeyCondition;
+    }
+
+    public static function begin(): ConditionBuilder
+    {
+        return new self(true);
     }
 
     public function anyOf(callable $callback): ConditionBuilder
@@ -26,7 +33,7 @@ class ConditionBuilder implements ConditionBuilderInterface
         $this->conditions->add(
             new AnyOf(
                 tap(
-                    new self(),
+                    new self(false),
                     function (ConditionBuilder $conditionBuilder) use ($callback) {
                         $callback($conditionBuilder);
                     }
@@ -42,7 +49,7 @@ class ConditionBuilder implements ConditionBuilderInterface
         $this->conditions->add(
             new Not(
                 tap(
-                    new self(),
+                    new self(false),
                     function (ConditionBuilder $conditionBuilder) use ($callback) {
                         $callback($conditionBuilder);
                     }
@@ -176,6 +183,10 @@ class ConditionBuilder implements ConditionBuilderInterface
      */
     private function conditionsValid(): bool
     {
+        if (!$this->requiresKeyCondition) {
+            return true;
+        }
+
         foreach ($this->conditions as $condition) {
             if ($this->checkCondition($condition)) {
                 return true;

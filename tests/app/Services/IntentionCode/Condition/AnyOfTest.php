@@ -15,7 +15,7 @@ class AnyOfTest extends BaseUnitTestCase
 
         $this->anyOf = new AnyOf(
             tap(
-                new ConditionBuilder(),
+                ConditionBuilder::begin(),
                 function (ConditionBuilder $conditionBuilder) {
                     $conditionBuilder->maximumCruisingLevel(35000);
                     $conditionBuilder->arrivalAirfields(['EGKK']);
