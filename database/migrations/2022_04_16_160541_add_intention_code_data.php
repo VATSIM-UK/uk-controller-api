@@ -542,8 +542,6 @@ class AddIntentionCodeData extends Migration
             'fix' => 'SKERY',
             'code' => 'B',
         ],
-        //TODO: Add HERN
-
         [
             'fix' => 'NEVIL',
             'code' => 'W',
