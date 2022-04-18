@@ -709,11 +709,24 @@ class AddIntentionCodeData extends Migration
 
         $this->addExitWithExtraConditions(
             'LELNA',
-            'JC',
+            'H7',
             self::SOUTH,
             self::SOUTH,
             function (ConditionBuilder $conditionBuilder) {
-                $conditionBuilder->arrivalAirfields(['LFRC']);
+                $conditionBuilder->arrivalAirfieldPattern('LFR')
+                    ->not(function (ConditionBuilder $conditionBuilder) {
+                        $conditionBuilder->arrivalAirfields(['LFRC']);
+                    });
+            }
+        );
+
+        $this->addExitWithExtraConditions(
+            'LELNA',
+            'H6',
+            self::SOUTH,
+            self::SOUTH,
+            function (ConditionBuilder $conditionBuilder) {
+                $conditionBuilder->routingVia('DOMOK');
             }
         );
 
