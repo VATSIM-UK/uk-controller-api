@@ -571,6 +571,7 @@ class AddIntentionCodeData extends Migration
         $this->addAmsterdamArrivals();
         $this->addScottishOnlyExits();
         $this->addKonanExits();
+        $this->addHernExits();
         $this->addEtratExits();
         $this->addVeuleExits();
         $this->processDirectionalExits();
@@ -692,6 +693,32 @@ class AddIntentionCodeData extends Migration
                 });
             }
         );
+    }
+
+    private function addHernExits(): void
+    {
+        $this->addExitWithExtraConditions(
+            'LELNA',
+            'JC',
+            self::SOUTH,
+            self::SOUTH,
+            function (ConditionBuilder $conditionBuilder) {
+                $conditionBuilder->arrivalAirfields(['LFRC']);
+            }
+        );
+
+        $this->addExitWithExtraConditions(
+            'LELNA',
+            'JC',
+            self::SOUTH,
+            self::SOUTH,
+            function (ConditionBuilder $conditionBuilder) {
+                $conditionBuilder->arrivalAirfields(['LFRC']);
+            }
+        );
+
+        $this->addStandardExit('LORKU', 'H9', self::SOUTH, self::SOUTH);
+        $this->addStandardExit('LELNA', 'H8', self::SOUTH, self::SOUTH);
     }
 
     private function addEtratExits(): void
