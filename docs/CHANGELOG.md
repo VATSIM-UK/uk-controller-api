@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [6.7.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.0...6.7.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* **intention:** Intention code dependency path ([#909](https://github.com/VATSIM-UK/uk-controller-api/issues/909)) ([2e2fcfc](https://github.com/VATSIM-UK/uk-controller-api/commit/2e2fcfc9dce7319abf38aa9d59499f065ee263a2)), closes [#908](https://github.com/VATSIM-UK/uk-controller-api/issues/908)
+
 ## [6.7.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.6.0...6.7.0) (2022-04-20)
 
 
