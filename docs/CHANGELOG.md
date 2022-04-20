@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.7.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.6.0...6.7.0) (2022-04-20)
+
+
+### Features
+
+* **intention:** Add intention code data ([#903](https://github.com/VATSIM-UK/uk-controller-api/issues/903)) ([312cba8](https://github.com/VATSIM-UK/uk-controller-api/commit/312cba811603ad8918c89d1ecb8fe649c69b18b1))
+
+
+### Data Updates
+
+* **stands:** Play EGSS Stands ([#902](https://github.com/VATSIM-UK/uk-controller-api/issues/902)) ([8311daa](https://github.com/VATSIM-UK/uk-controller-api/commit/8311daaf69551070b0f51325c6716971758c40b8)), closes [#900](https://github.com/VATSIM-UK/uk-controller-api/issues/900)
+
 ## [6.6.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.5.0...6.6.0) (2022-04-15)
 
 
