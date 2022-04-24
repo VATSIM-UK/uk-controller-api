@@ -42,7 +42,6 @@ class RecatEuCodeChanges extends Migration
      */
     public function down()
     {
-        $this->swapCodes(array_flip(self::CODE_CHANGES));
     }
 
     private function updateDescriptions(): void
