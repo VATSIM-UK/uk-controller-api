@@ -64,13 +64,13 @@ class RecatImporterTest extends BaseFunctionalTestCase
 
     public function testItUpdatesRecatCategories()
     {
-        $this->import->collection(collect()->push(['B738', 'F']));
+        $this->import->collection(collect()->push(['B738', 'U']));
 
         $this->assertDatabaseHas(
             'aircraft_wake_category',
             [
                 'aircraft_id' => Aircraft::where('code', 'B738')->first()->id,
-                'wake_category_id' => WakeCategory::where('code', 'F')->first()->id,
+                'wake_category_id' => WakeCategory::where('code', 'U')->first()->id,
             ]
         );
 
@@ -86,6 +86,6 @@ class RecatImporterTest extends BaseFunctionalTestCase
     public function testItHandlesUnknownAircraftTypes()
     {
         $this->expectNotToPerformAssertions();
-        $this->import->collection(collect()->push(['XXXX', 'F']));
+        $this->import->collection(collect()->push(['XXXX', 'U']));
     }
 }
