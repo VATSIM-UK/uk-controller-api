@@ -2,12 +2,21 @@
 
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
+use App\Models\Aircraft\WakeCategoryScheme;
 use Illuminate\Database\Seeder;
 
 class AircraftTableSeeder extends Seeder
 {
     public function run()
     {
+        $ukScheme = WakeCategoryScheme::where('key', 'UK')
+            ->firstOrFail()
+            ->id;
+
+        $recatScheme = WakeCategoryScheme::where('key', 'RECAT_EU')
+            ->firstOrFail()
+            ->id;
+
         $b738 = Aircraft::create(
             [
                 'code' => 'B738',
@@ -18,8 +27,8 @@ class AircraftTableSeeder extends Seeder
         );
         $b738->wakeCategories()->sync(
             [
-                WakeCategory::where('code', 'LM')->firstOrFail()->id,
-                WakeCategory::where('code', 'D')->firstOrFail()->id,
+                WakeCategory::where('code', 'LM')->where('wake_category_scheme_id', $ukScheme)->firstOrFail()->id,
+                WakeCategory::where('code', 'M')->where('wake_category_scheme_id', $recatScheme)->firstOrFail()->id,
             ]
         );
 
@@ -33,8 +42,8 @@ class AircraftTableSeeder extends Seeder
         );
         $a333->wakeCategories()->sync(
             [
-                WakeCategory::where('code', 'H')->firstOrFail()->id,
-                WakeCategory::where('code', 'B')->firstOrFail()->id,
+                WakeCategory::where('code', 'H')->where('wake_category_scheme_id', $ukScheme)->firstOrFail()->id,
+                WakeCategory::where('code', 'H')->where('wake_category_scheme_id', $recatScheme)->firstOrFail()->id,
             ]
         );
     }
