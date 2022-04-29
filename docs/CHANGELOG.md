@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [6.7.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.1...6.7.2) (2022-04-29)
+
+
+### Data Updates
+
+* **wake:** Update recat category codes ([#911](https://github.com/VATSIM-UK/uk-controller-api/issues/911)) ([046a9dd](https://github.com/VATSIM-UK/uk-controller-api/commit/046a9ddf61bc1a1db0a04e137088f4ee876bbbf3)), closes [#910](https://github.com/VATSIM-UK/uk-controller-api/issues/910)
+
 ### [6.7.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.0...6.7.1) (2022-04-20)
 
 
