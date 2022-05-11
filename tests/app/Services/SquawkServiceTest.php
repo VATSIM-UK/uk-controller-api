@@ -140,7 +140,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         DB::table('network_aircraft')->insert(
             [
                 'callsign' => 'RYR999',
-                'transponder' => '1234',
+                'transponder' => '2345',
                 'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
                 'updated_at' => Carbon::now(),
             ]
@@ -152,7 +152,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             'squawk_assignments',
             [
                 'callsign' => 'RYR999',
-                'code' => '1234',
+                'code' => '2345',
                 'assignment_type' => 'NON_UKCP',
             ]
         );
@@ -164,7 +164,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         DB::table('network_aircraft')->insert(
             [
                 'callsign' => 'RYR999',
-                'transponder' => '1234',
+                'transponder' => '2345',
                 'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
                 'updated_at' => Carbon::now(),
             ]
@@ -177,7 +177,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             'squawk_assignments',
             [
                 'callsign' => 'RYR999',
-                'code' => '1234',
+                'code' => '2345',
                 'assignment_type' => 'NON_UKCP',
             ]
         );
@@ -190,13 +190,13 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             [
                 [
                     'callsign' => 'RYR999',
-                    'transponder' => '1234',
+                    'transponder' => '2345',
                     'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
                     'updated_at' => Carbon::now(),
                 ],
                 [
                     'callsign' => 'WZZ888',
-                    'transponder' => '1234',
+                    'transponder' => '2345',
                     'transponder_last_updated_at' => Carbon::now()->subMinutes(3),
                     'updated_at' => Carbon::now(),
                 ],
@@ -209,7 +209,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             'squawk_assignments',
             [
                 'callsign' => 'RYR999',
-                'code' => '1234',
+                'code' => '2345',
                 'assignment_type' => 'NON_UKCP',
             ]
         );
