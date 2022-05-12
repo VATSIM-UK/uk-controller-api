@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+### [6.7.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.2...6.7.3) (2022-05-12)
+
+
+### Bug Fixes
+
+* **squawks:** prevent assignment of msfs default squawk ([#925](https://github.com/VATSIM-UK/uk-controller-api/issues/925)) ([deb5998](https://github.com/VATSIM-UK/uk-controller-api/commit/deb5998705694f996bba3272d1c08c6d177ae13a)), closes [#923](https://github.com/VATSIM-UK/uk-controller-api/issues/923)
+
+
+### Data Updates
+
+* **stands:** Update heathrow stand designation ([#924](https://github.com/VATSIM-UK/uk-controller-api/issues/924)) ([58e94be](https://github.com/VATSIM-UK/uk-controller-api/commit/58e94bea575d9806a91ab9bcdf92ea665ad00d44)), closes [#916](https://github.com/VATSIM-UK/uk-controller-api/issues/916)
+
 ### [6.7.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.1...6.7.2) (2022-04-29)
 
 
