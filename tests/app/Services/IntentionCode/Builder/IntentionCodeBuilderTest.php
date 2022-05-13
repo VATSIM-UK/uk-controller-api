@@ -3,6 +3,7 @@
 namespace App\Services\IntentionCode\Builder;
 
 use App\BaseFunctionalTestCase;
+use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
 use App\Models\IntentionCode\IntentionCode;
 
 class IntentionCodeBuilderTest extends BaseFunctionalTestCase
@@ -32,7 +33,7 @@ class IntentionCodeBuilderTest extends BaseFunctionalTestCase
                 [
                     'type' => 'arrival_airfields',
                     'airfields' => ['EHAM'],
-                ]
+                ],
             ],
             $code->conditions
         );
@@ -47,7 +48,7 @@ class IntentionCodeBuilderTest extends BaseFunctionalTestCase
             })
             ->withCondition(function (ConditionBuilder $conditionBuilder) {
                 $conditionBuilder->arrivalAirfields(['EHAM']);
-            })->create();
+            })->save();
 
         $expectedCode = [
             'code' => 'AM',
@@ -57,7 +58,7 @@ class IntentionCodeBuilderTest extends BaseFunctionalTestCase
             [
                 'type' => 'arrival_airfields',
                 'airfields' => ['EHAM'],
-            ]
+            ],
         ];
 
         $this->assertEquals(5, $code->priority);
@@ -75,5 +76,49 @@ class IntentionCodeBuilderTest extends BaseFunctionalTestCase
         $this->assertEquals($code->priority, $row->priority);
         $this->assertEquals($code->code, $row->code);
         $this->assertEquals($code->conditions, $row->conditions);
+    }
+
+    public function testItLoadsAndSavesAnIntentionCodeWithNewConditions()
+    {
+        $code = IntentionCode::factory()->create();
+        $conditionsBefore = $code->conditions;
+
+        IntentionCodeBuilder::from($code)
+            ->withCondition(function (ConditionBuilder $builder) {
+                $builder->routingVia('BOBBY');
+            })
+            ->save();
+
+        $expectedNewCondition = [
+            [
+                'type' => 'routing_via',
+                'point' => 'BOBBY',
+            ],
+        ];
+        
+        $this->assertEquals(
+            array_merge($conditionsBefore, $expectedNewCondition),
+            $code->refresh()->conditions
+        );
+    }
+
+    public function testItLoadsAnInIntentionCodeAndThrowsExceptionOnChangedPriority()
+    {
+        $this->expectException(IntentionCodeInvalidException::class);
+        $this->expectExceptionMessage('Priority already set for intention code');
+        IntentionCodeBuilder::from(IntentionCode::factory()->create())
+            ->withPriority(55)
+            ->save();
+    }
+
+    public function testItLoadsAnInIntentionCodeAndThrowsExceptionOnChangedCode()
+    {
+        $this->expectException(IntentionCodeInvalidException::class);
+        $this->expectExceptionMessage('Code is already set for intention code');
+        IntentionCodeBuilder::from(IntentionCode::factory()->create())
+            ->withCode(function (CodeBuilder $builder) {
+                $builder->singleCode('XX');
+            })
+            ->save();
     }
 }

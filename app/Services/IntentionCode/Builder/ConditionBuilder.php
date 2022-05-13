@@ -3,6 +3,7 @@
 namespace App\Services\IntentionCode\Builder;
 
 use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
+use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Heading\ValidHeading;
 use App\Services\IntentionCode\Condition\AnyOf;
@@ -17,15 +18,19 @@ class ConditionBuilder implements ConditionBuilderInterface
     private Collection $conditions;
     private bool $requiresKeyCondition;
 
-    private function __construct(bool $requiresKeyCondition)
+    private function __construct(bool $requiresKeyCondition, ?IntentionCode $code)
     {
-        $this->conditions = new Collection();
+        $this->conditions = collect(
+            $code && $code->conditions
+                ? array_map(fn(array $condition) => $this->makeCondition($condition), $code->conditions)
+                : []
+        );
         $this->requiresKeyCondition = $requiresKeyCondition;
     }
 
-    public static function begin(): ConditionBuilder
+    public static function begin(IntentionCode $code): ConditionBuilder
     {
-        return new self(true);
+        return new self(true, $code);
     }
 
     public function anyOf(callable $callback): ConditionBuilder
@@ -33,7 +38,7 @@ class ConditionBuilder implements ConditionBuilderInterface
         $this->conditions->add(
             new AnyOf(
                 tap(
-                    new self(false),
+                    new self(false, null),
                     function (ConditionBuilder $conditionBuilder) use ($callback) {
                         $callback($conditionBuilder);
                     }
@@ -49,7 +54,7 @@ class ConditionBuilder implements ConditionBuilderInterface
         $this->conditions->add(
             new Not(
                 tap(
-                    new self(false),
+                    new self(false, null),
                     function (ConditionBuilder $conditionBuilder) use ($callback) {
                         $callback($conditionBuilder);
                     }
@@ -162,9 +167,14 @@ class ConditionBuilder implements ConditionBuilderInterface
         ]);
     }
 
+    private function makeCondition(array $condition): Condition
+    {
+        return new Condition($condition);
+    }
+
     private function addCondition(array $condition): ConditionBuilder
     {
-        $this->conditions->add(new Condition($condition));
+        $this->conditions->add($this->makeCondition($condition));
 
         return $this;
     }
@@ -175,7 +185,7 @@ class ConditionBuilder implements ConditionBuilderInterface
             throw new IntentionCodeInvalidException('Conditions are not valid for intention code');
         }
 
-        return $this->conditions->map(fn (ConditionInterface $condition) => $condition->toArray())->toArray();
+        return $this->conditions->map(fn(ConditionInterface $condition) => $condition->toArray())->toArray();
     }
 
     /**
@@ -206,7 +216,7 @@ class ConditionBuilder implements ConditionBuilderInterface
         if ($conditionData['type'] === 'any_of') {
             return array_reduce(
                 $conditionData['conditions'],
-                fn ($carry, $nextCondition) => $carry && $this->conditionIsKeyCondition($nextCondition['type']),
+                fn($carry, $nextCondition) => $carry && $this->conditionIsKeyCondition($nextCondition['type']),
                 true
             );
         }

@@ -4,6 +4,7 @@ namespace App\Services\IntentionCode\Builder;
 
 use App\BaseUnitTestCase;
 use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
+use App\Models\IntentionCode\IntentionCode;
 
 class CodeBuilderTest extends BaseUnitTestCase
 {
@@ -12,7 +13,7 @@ class CodeBuilderTest extends BaseUnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->builder = new CodeBuilder();
+        $this->builder = new CodeBuilder(new IntentionCode());
     }
 
     public function testItConvertsToArraySingleCodeTwoCharacters()
@@ -104,5 +105,16 @@ class CodeBuilderTest extends BaseUnitTestCase
         $this->expectExceptionMessage('No code set for this intention code');
 
         $this->builder->get();
+    }
+
+    public function testItLoadsCodeFromExisting()
+    {
+        $code = IntentionCode::factory()->make();
+        $builder = new CodeBuilder($code);
+
+        $this->assertEquals(
+            $code->code,
+            $builder->get()
+        );
     }
 }

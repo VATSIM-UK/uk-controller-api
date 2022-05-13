@@ -3,11 +3,17 @@
 namespace App\Services\IntentionCode\Builder;
 
 use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
+use App\Models\IntentionCode\IntentionCode;
 use Illuminate\Support\Str;
 
 class CodeBuilder
 {
-    private array $code = [];
+    private array $code;
+
+    public function __construct(IntentionCode $code)
+    {
+        $this->code = $code->code ?? [];
+    }
 
     public function singleCode(string $code): void
     {
@@ -19,7 +25,7 @@ class CodeBuilder
         $this->checkOperation();
         $this->code = [
             'type' => 'single_code',
-            'code' => $code
+            'code' => $code,
         ];
     }
 
