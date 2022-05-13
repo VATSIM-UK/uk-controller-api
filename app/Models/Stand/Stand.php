@@ -33,7 +33,6 @@ class Stand extends Model
         'type_id',
         'wake_category_id',
         'max_aircraft_id',
-        'is_cargo',
         'assignment_priority',
         'closed_at',
     ];
