@@ -3,6 +3,7 @@
 namespace App\Services\IntentionCode\Condition;
 
 use App\BaseUnitTestCase;
+use App\Models\IntentionCode\IntentionCode;
 use App\Services\IntentionCode\Builder\ConditionBuilder;
 
 class NotTest extends BaseUnitTestCase
@@ -15,7 +16,7 @@ class NotTest extends BaseUnitTestCase
 
         $this->not = new Not(
             tap(
-                ConditionBuilder::begin(),
+                ConditionBuilder::begin(new IntentionCode()),
                 function (ConditionBuilder $conditionBuilder) {
                     $conditionBuilder->maximumCruisingLevel(35000);
                     $conditionBuilder->arrivalAirfields(['EGKK']);
