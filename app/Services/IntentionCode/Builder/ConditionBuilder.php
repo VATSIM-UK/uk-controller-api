@@ -22,7 +22,7 @@ class ConditionBuilder implements ConditionBuilderInterface
     {
         $this->conditions = collect(
             $code && $code->conditions
-                ? array_map(fn(array $condition) => $this->makeCondition($condition), $code->conditions)
+                ? array_map(fn (array $condition) => $this->makeCondition($condition), $code->conditions)
                 : []
         );
         $this->requiresKeyCondition = $requiresKeyCondition;
@@ -181,7 +181,7 @@ class ConditionBuilder implements ConditionBuilderInterface
 
     public function removeWhere(callable $callback): ConditionBuilder
     {
-        $this->conditions = $this->conditions->reject(fn(Condition $condition) => $callback($condition));
+        $this->conditions = $this->conditions->reject(fn (Condition $condition) => $callback($condition));
 
         return $this;
     }
@@ -192,7 +192,7 @@ class ConditionBuilder implements ConditionBuilderInterface
             throw new IntentionCodeInvalidException('Conditions are not valid for intention code');
         }
 
-        return $this->conditions->map(fn(ConditionInterface $condition) => $condition->toArray())->toArray();
+        return $this->conditions->map(fn (ConditionInterface $condition) => $condition->toArray())->toArray();
     }
 
     /**
@@ -223,7 +223,7 @@ class ConditionBuilder implements ConditionBuilderInterface
         if ($conditionData['type'] === 'any_of') {
             return array_reduce(
                 $conditionData['conditions'],
-                fn($carry, $nextCondition) => $carry && $this->conditionIsKeyCondition($nextCondition['type']),
+                fn ($carry, $nextCondition) => $carry && $this->conditionIsKeyCondition($nextCondition['type']),
                 true
             );
         }

@@ -18,7 +18,7 @@ class UpdateE2ExitCode extends Migration
         IntentionCodeBuilder::from(IntentionCode::findOrFail(30))
             ->withCondition(function (ConditionBuilder $condition) {
                 $condition->removeWhere(
-                    fn(Condition $condition) => $condition->toArray()['type'] === 'maximum_cruising_level'
+                    fn (Condition $condition) => $condition->toArray()['type'] === 'maximum_cruising_level'
                 )
                     ->maximumCruisingLevel(29000);
             })
