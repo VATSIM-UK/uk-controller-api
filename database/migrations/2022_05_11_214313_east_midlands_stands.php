@@ -104,7 +104,10 @@ class EastMidlandsStands extends Migration
                     'longitude' => $coordinate->getLng(),
                 ]
             );
-            $stand->pairedStands()->sync(Stand::whereIn('identifier', $details[1])->airfield('EGNX')->pluck('id'));
+
+            if (!empty($details[1])) {
+                $stand->pairedStands()->sync(Stand::whereIn('identifier', $details[1])->airfield('EGNX')->pluck('id'));
+            }
         }
 
         // Add stands 81-86
