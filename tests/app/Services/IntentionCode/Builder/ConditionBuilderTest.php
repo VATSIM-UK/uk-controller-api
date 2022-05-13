@@ -5,6 +5,7 @@ namespace App\Services\IntentionCode\Builder;
 use App\BaseUnitTestCase;
 use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
 use App\Models\IntentionCode\IntentionCode;
+use App\Services\IntentionCode\Condition\Condition;
 
 class ConditionBuilderTest extends BaseUnitTestCase
 {
@@ -440,5 +441,21 @@ class ConditionBuilderTest extends BaseUnitTestCase
     {
         $code = IntentionCode::factory()->make();
         $this->assertEquals($code->conditions, ConditionBuilder::begin($code)->get());
+    }
+
+    public function testItRemovesACondition()
+    {
+        $expected = [
+            [
+                'type' => 'arrival_airfields',
+                'airfields' => ['EGKK', 'EGLL'],
+            ],
+        ];
+
+        $this->builder->arrivalAirfields(['EGKK', 'EGLL'])
+            ->cruisingAbove(35000)
+            ->removeWhere(fn (Condition $condition) => $condition->toArray()['type'] === 'cruising_level_above');
+
+        $this->assertEquals($expected, $this->builder->get());
     }
 }

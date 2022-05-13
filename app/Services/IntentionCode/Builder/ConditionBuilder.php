@@ -179,6 +179,13 @@ class ConditionBuilder implements ConditionBuilderInterface
         return $this;
     }
 
+    public function removeWhere(callable $callback): ConditionBuilder
+    {
+        $this->conditions = $this->conditions->reject(fn(Condition $condition) => $callback($condition));
+
+        return $this;
+    }
+
     public function get(): array
     {
         if (!$this->conditionsValid()) {

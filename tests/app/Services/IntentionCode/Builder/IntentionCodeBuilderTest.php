@@ -95,7 +95,7 @@ class IntentionCodeBuilderTest extends BaseFunctionalTestCase
                 'point' => 'BOBBY',
             ],
         ];
-        
+
         $this->assertEquals(
             array_merge($conditionsBefore, $expectedNewCondition),
             $code->refresh()->conditions
