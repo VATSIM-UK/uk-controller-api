@@ -4,6 +4,7 @@ namespace App\Services\IntentionCode\Builder;
 
 use App\BaseUnitTestCase;
 use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
+use App\Models\IntentionCode\IntentionCode;
 
 class PriorityBuilderTest extends BaseUnitTestCase
 {
@@ -12,7 +13,7 @@ class PriorityBuilderTest extends BaseUnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->builder = new PriorityBuilder();
+        $this->builder = new PriorityBuilder(new IntentionCode());
     }
 
     public function testItConvertsToArray()
@@ -28,6 +29,7 @@ class PriorityBuilderTest extends BaseUnitTestCase
         $this->builder->withPriority(55);
         $this->builder->withPriority(56);
     }
+
     public function testItThrowsExceptionIfPriorityInvalid()
     {
         $this->expectException(IntentionCodeInvalidException::class);
@@ -40,5 +42,13 @@ class PriorityBuilderTest extends BaseUnitTestCase
         $this->expectException(IntentionCodeInvalidException::class);
         $this->expectExceptionMessage('Intention code priority not set');
         $this->builder->get();
+    }
+
+    public function testItLoadsBuilderFromExistingCode(): void
+    {
+        $code = IntentionCode::factory()->make();
+        $builder = new PriorityBuilder($code);
+
+        $this->assertEquals($code->priority, $builder->get());
     }
 }

@@ -27,6 +27,7 @@ class IntentionCodeFactory extends Factory
             'pattern' => 'EG',
         ],
         [
+            'type' => 'exit_point',
             'exit_point' => 'ETRAT',
             'exit_direction' => [90, 111],
         ],

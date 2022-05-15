@@ -3,10 +3,16 @@
 namespace App\Services\IntentionCode\Builder;
 
 use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
+use App\Models\IntentionCode\IntentionCode;
 
 class PriorityBuilder
 {
-    private int $priority = 0;
+    private int $priority;
+
+    public function __construct(IntentionCode $code)
+    {
+        $this->priority = $code->priority ?? 0;
+    }
 
     public function withPriority(int $priority): void
     {

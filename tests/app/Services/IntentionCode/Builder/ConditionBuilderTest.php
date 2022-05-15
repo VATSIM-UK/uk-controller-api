@@ -4,6 +4,8 @@ namespace App\Services\IntentionCode\Builder;
 
 use App\BaseUnitTestCase;
 use App\Exceptions\IntentionCode\IntentionCodeInvalidException;
+use App\Models\IntentionCode\IntentionCode;
+use App\Services\IntentionCode\Condition\Condition;
 
 class ConditionBuilderTest extends BaseUnitTestCase
 {
@@ -12,7 +14,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->builder = ConditionBuilder::begin();
+        $this->builder = ConditionBuilder::begin(new IntentionCode());
     }
 
     public function testItConvertsToArrayJustArrivalAirfields()
@@ -21,7 +23,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
             [
                 'type' => 'arrival_airfields',
                 'airfields' => ['EGKK', 'EGLL'],
-            ]
+            ],
         ];
 
         $this->builder->arrivalAirfields(['EGKK', 'EGLL']);
@@ -41,7 +43,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
             [
                 'type' => 'arrival_airfield_pattern',
                 'pattern' => 'EG',
-            ]
+            ],
         ];
 
         $this->builder->arrivalAirfieldPattern('EG');
@@ -72,7 +74,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
                     'start' => 55,
                     'end' => 180,
                 ],
-            ]
+            ],
         ];
 
         $this->builder->exitPoint('ETRAT', 55, 180);
@@ -327,43 +329,43 @@ class ConditionBuilderTest extends BaseUnitTestCase
             'Only routing via' => [
                 function (ConditionBuilder $builder) {
                     $builder->routingVia('KOK');
-                }
+                },
             ],
             'Only controller position' => [
                 function (ConditionBuilder $builder) {
                     $builder->controllerPositionStartWith('EG');
-                }
+                },
             ],
             'Only max cruise' => [
                 function (ConditionBuilder $builder) {
                     $builder->maximumCruisingLevel(5000);
-                }
+                },
             ],
             'Only cruising above' => [
                 function (ConditionBuilder $builder) {
                     $builder->cruisingAbove(5000);
-                }
+                },
             ],
             'Only arrival airfields inside negation' => [
                 function (ConditionBuilder $builder) {
                     $builder->not(function (ConditionBuilder $builder) {
                         $builder->arrivalAirfields(['EGKK']);
                     });
-                }
+                },
             ],
             'Only arrival airfield pattern inside negation' => [
                 function (ConditionBuilder $builder) {
                     $builder->not(function (ConditionBuilder $builder) {
                         $builder->arrivalAirfieldPattern('EG');
                     });
-                }
+                },
             ],
             'Only exit fix inside negation' => [
                 function (ConditionBuilder $builder) {
                     $builder->not(function (ConditionBuilder $builder) {
                         $builder->exitPoint('ETRAT', 100, 200);
                     });
-                }
+                },
             ],
             'Any of doesnt have primary guaranteed on all routes' => [
                 function (ConditionBuilder $builder) {
@@ -371,7 +373,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
                         $builder->exitPoint('ETRAT', 100, 200)
                             ->routingVia('KOK');
                     });
-                }
+                },
             ],
         ];
     }
@@ -417,7 +419,7 @@ class ConditionBuilderTest extends BaseUnitTestCase
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
 
         $this->builder->arrivalAirfields(['EGBB'])
@@ -431,6 +433,28 @@ class ConditionBuilderTest extends BaseUnitTestCase
                     $builder->cruisingAbove(35000);
                 });
             });
+
+        $this->assertEquals($expected, $this->builder->get());
+    }
+
+    public function testItLoadsFromExisting()
+    {
+        $code = IntentionCode::factory()->make();
+        $this->assertEquals($code->conditions, ConditionBuilder::begin($code)->get());
+    }
+
+    public function testItRemovesACondition()
+    {
+        $expected = [
+            [
+                'type' => 'arrival_airfields',
+                'airfields' => ['EGKK', 'EGLL'],
+            ],
+        ];
+
+        $this->builder->arrivalAirfields(['EGKK', 'EGLL'])
+            ->cruisingAbove(35000)
+            ->removeWhere(fn (Condition $condition) => $condition->toArray()['type'] === 'cruising_level_above');
 
         $this->assertEquals($expected, $this->builder->get());
     }

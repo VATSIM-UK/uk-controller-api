@@ -9,17 +9,24 @@ class IntentionCodeBuilder
     private CodeBuilder $codeBuilder;
     private PriorityBuilder $priorityBuilder;
     private ConditionBuilder $conditionBuilder;
+    private IntentionCode $code;
 
-    private function __construct()
+    private function __construct(IntentionCode $code)
     {
-        $this->codeBuilder = new CodeBuilder();
-        $this->priorityBuilder = new PriorityBuilder();
-        $this->conditionBuilder = ConditionBuilder::begin();
+        $this->codeBuilder = new CodeBuilder($code);
+        $this->priorityBuilder = new PriorityBuilder($code);
+        $this->code = $code ?? new IntentionCode();
+        $this->conditionBuilder = ConditionBuilder::begin($this->code);
     }
 
     public static function begin(): IntentionCodeBuilder
     {
-        return new self();
+        return self::from(new IntentionCode());
+    }
+
+    public static function from(IntentionCode $code): IntentionCodeBuilder
+    {
+        return new self($code);
     }
 
     public function withPriority(int $priority): IntentionCodeBuilder
@@ -43,7 +50,7 @@ class IntentionCodeBuilder
         return $this;
     }
 
-    public function create(): IntentionCode
+    public function save(): IntentionCode
     {
         return tap(
             $this->make(),
@@ -55,7 +62,7 @@ class IntentionCodeBuilder
 
     public function make(): IntentionCode
     {
-        return new IntentionCode(
+        return $this->code->fill(
             [
                 'priority' => $this->priorityBuilder->get(),
                 'code' => $this->codeBuilder->get(),

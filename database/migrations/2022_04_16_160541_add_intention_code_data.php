@@ -597,7 +597,7 @@ class AddIntentionCodeData extends Migration
             ->withCondition(function (ConditionBuilder $conditionBuilder) {
                 $conditionBuilder->arrivalAirfieldPattern('EG');
             })
-            ->create();
+            ->save();
     }
 
     private function addIrishArrivals(): void
@@ -851,7 +851,7 @@ class AddIntentionCodeData extends Migration
                     $conditions($conditionBuilder);
                 }
             )
-            ->create();
+            ->save();
     }
 
     private function addAirfieldArrivals(
@@ -879,7 +879,7 @@ class AddIntentionCodeData extends Migration
                     );
                 }
             )
-            ->create();
+            ->save();
     }
 
     private function processDirectionalExits(): void
