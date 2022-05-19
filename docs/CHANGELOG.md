@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+### [6.7.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.3...6.7.4) (2022-05-19)
+
+
+### Data Updates
+
+* **stands:** East midlands updates ([#926](https://github.com/VATSIM-UK/uk-controller-api/issues/926)) ([745dbce](https://github.com/VATSIM-UK/uk-controller-api/commit/745dbceb96d68ebc8c05745dc9001fb04e98a86c))
+
 ### [6.7.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.2...6.7.3) (2022-05-12)
 
 
