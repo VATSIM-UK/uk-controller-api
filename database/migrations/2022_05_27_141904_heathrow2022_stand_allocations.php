@@ -27,6 +27,15 @@ class Heathrow2022StandAllocations extends Migration
             ]
         );
 
+        Airline::create(
+            [
+                'icao_code' => 'SZS',
+                'name' => 'SAS Connect',
+                'callsign' => 'SPINNAKER',
+                'is_cargo' => false,
+            ]
+        );
+
         // Up-front load stands and airlines
         $airlines = Airline::query()->select(['id', 'icao_code'])
             ->get()
