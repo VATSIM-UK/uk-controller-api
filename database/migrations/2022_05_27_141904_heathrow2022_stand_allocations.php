@@ -17,6 +17,16 @@ class Heathrow2022StandAllocations extends Migration
      */
     public function up()
     {
+        // Add missing airlines
+        Airline::create(
+            [
+                'icao_code' => 'ITY',
+                'name' => 'ITA Airways',
+                'callsign' => 'ITARROW',
+                'is_cargo' => false,
+            ]
+        );
+
         // Up-front load stands and airlines
         $airlines = Airline::query()->select(['id', 'icao_code'])
             ->get()
