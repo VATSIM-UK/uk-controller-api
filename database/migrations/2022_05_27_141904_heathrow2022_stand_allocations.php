@@ -49,6 +49,13 @@ class Heathrow2022StandAllocations extends Migration
             ->mapWithKeys(fn (Stand $stand) => [$stand->identifier => $stand->id])
             ->toArray();
 
+        $heathrowStandsByPriority = Stand::query()
+            ->airfield('EGLL')
+            ->select(['identifier', 'assignment_priority'])
+            ->get()
+            ->mapWithKeys(fn (Stand $stand) => [$stand->identifier => $stand->assignment_priority])
+            ->toArray();
+
         $standsByAirline = [];
 
         // Load all the stand data from file, the first row is just header so throw it away
@@ -64,7 +71,7 @@ class Heathrow2022StandAllocations extends Migration
                 'stand_id' => $heathrowStands[$line[1]],
                 'destination' => empty($line[2]) ? null : $line[2],
                 'not_before' => empty($line[3]) ? null : $line[3],
-                'priority' => empty($line[4]) ? 100 : $line[4],
+                'priority' => empty($line[4]) ? $heathrowStandsByPriority[$line[1]] : $line[4],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ];
