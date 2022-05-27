@@ -64,6 +64,7 @@ class Heathrow2022StandAllocations extends Migration
                 'stand_id' => $heathrowStands[$line[1]],
                 'destination' => empty($line[2]) ? null : $line[2],
                 'not_before' => empty($line[3]) ? null : $line[3],
+                'priority' => empty($line[4]) ? 100 : $line[4],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ];
