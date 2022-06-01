@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.7.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.4...6.7.5) (2022-06-01)
+
+
+### Data Updates
+
+* **stands:** Heathrow stands 2022 ([6602bea](https://github.com/VATSIM-UK/uk-controller-api/commit/6602bea157d0d0b978af1a4ff86bdbf76f6ae6b8))
+
 ### [6.7.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.3...6.7.4) (2022-05-19)
 
 
