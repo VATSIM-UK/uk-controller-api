@@ -99,10 +99,6 @@ class StandServiceTest extends BaseFunctionalTestCase
                             'id' => 1,
                             'identifier' => '1L',
                         ],
-                        [
-                            'id' => 2,
-                            'identifier' => '251',
-                        ],
                     ]
                 ),
                 'EGBB' => collect(
