@@ -1,5 +1,18 @@
 # UK Controller Plugin API Changelog
 
+## [6.8.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.5...6.8.0) (2022-06-16)
+
+
+### Features
+
+* **stands:** Ignore closed stands in dependency ([#950](https://github.com/VATSIM-UK/uk-controller-api/issues/950)) ([5fc729e](https://github.com/VATSIM-UK/uk-controller-api/commit/5fc729ecae5619bedd94101fde65c157142c74aa))
+
+
+### Data Updates
+
+* **holds:** update essex holds ([#938](https://github.com/VATSIM-UK/uk-controller-api/issues/938)) ([d956718](https://github.com/VATSIM-UK/uk-controller-api/commit/d956718d3dfdb953cc9b93bfa510925b1afa6e24)), closes [#937](https://github.com/VATSIM-UK/uk-controller-api/issues/937)
+* **stands:** Manchester Pier 1 and Remote ([cd09237](https://github.com/VATSIM-UK/uk-controller-api/commit/cd09237680bd28ca8a286bff69de21a287f50942))
+
 ## [6.7.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.4...6.7.5) (2022-06-01)
 
 
