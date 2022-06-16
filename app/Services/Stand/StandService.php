@@ -73,18 +73,17 @@ class StandService
     public function getStandsDependency(): Collection
     {
         return $this->getAllStandsByAirfield()
-            ->reject(fn (Stand $stand) => $stand->closed_at !== null)
             ->mapWithKeys(
                 function (Airfield $airfield) {
-                return [
-                    $airfield->code => $airfield->stands->map(function (Stand $stand) {
-                        return [
-                            'id' => $stand->id,
-                            'identifier' => $stand->identifier
-                        ];
-                    }),
-                ];
-            }
+                    return [
+                        $airfield->code => $airfield->stands
+                            ->reject(fn(Stand $stand) => $stand->closed_at !== null)
+                            ->map(fn(Stand $stand) => [
+                                'id' => $stand->id,
+                                'identifier' => $stand->identifier,
+                            ]),
+                    ];
+                }
             )->toBase();
     }
 
