@@ -75,7 +75,7 @@ class StandService
         return $this->getAllStandsByAirfield()
             ->reject(fn (Stand $stand) => $stand->closed_at !== null)
             ->mapWithKeys(
-            function (Airfield $airfield) {
+                function (Airfield $airfield) {
                 return [
                     $airfield->code => $airfield->stands->map(function (Stand $stand) {
                         return [
@@ -85,7 +85,7 @@ class StandService
                     }),
                 ];
             }
-        )->toBase();
+            )->toBase();
     }
 
     public function getStandAssignments(): Collection
