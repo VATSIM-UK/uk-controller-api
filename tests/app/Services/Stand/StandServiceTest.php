@@ -86,7 +86,7 @@ class StandServiceTest extends BaseFunctionalTestCase
 
     public function testStandDependencyIgnoresClosedStands()
     {
-        Stand::where('identifier', '251')
+        Stand::where('identifier', '1L')
             ->airfield('EGLL')
             ->firstOrFail()
             ->close();
@@ -96,8 +96,8 @@ class StandServiceTest extends BaseFunctionalTestCase
                 'EGLL' => collect(
                     [
                         [
-                            'id' => 1,
-                            'identifier' => '1L',
+                            'id' => 2,
+                            'identifier' => '251',
                         ],
                     ]
                 ),
