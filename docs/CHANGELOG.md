@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.8.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.0...6.8.1) (2022-06-16)
+
+
+### Bug Fixes
+
+* fix stand dependency ([43d8942](https://github.com/VATSIM-UK/uk-controller-api/commit/43d8942451231ba76734a5fa3d356318b0d71b95))
+
 ## [6.8.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.7.5...6.8.0) (2022-06-16)
 
 
