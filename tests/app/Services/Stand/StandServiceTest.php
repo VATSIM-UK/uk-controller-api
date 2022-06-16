@@ -84,6 +84,37 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->service->getStandsDependency());
     }
 
+    public function testStandDependencyIgnoresClosedStands()
+    {
+        Stand::where('identifier', '251')
+            ->airfield('EGLL')
+            ->firstOrFail()
+            ->close();
+
+        $expected = collect(
+            [
+                'EGLL' => collect(
+                    [
+                        [
+                            'id' => 1,
+                            'identifier' => '1L',
+                        ],
+                    ]
+                ),
+                'EGBB' => collect(
+                    [
+                        [
+                            'id' => 3,
+                            'identifier' => '32',
+                        ]
+                    ]
+                ),
+            ]
+        );
+
+        $this->assertEquals($expected, $this->service->getStandsDependency());
+    }
+
     public function testItReturnsAllStandAssignments()
     {
         StandAssignment::insert(
