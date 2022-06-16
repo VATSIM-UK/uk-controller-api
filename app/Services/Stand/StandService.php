@@ -77,8 +77,8 @@ class StandService
                 function (Airfield $airfield) {
                     return [
                         $airfield->code => $airfield->stands
-                            ->reject(fn(Stand $stand) => $stand->closed_at !== null)
-                            ->map(fn(Stand $stand) => [
+                            ->reject(fn (Stand $stand) => $stand->closed_at !== null)
+                            ->map(fn (Stand $stand) => [
                                 'id' => $stand->id,
                                 'identifier' => $stand->identifier,
                             ]),
