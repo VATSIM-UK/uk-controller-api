@@ -21,6 +21,7 @@ use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class StandResource extends Resource
 {
@@ -29,6 +30,11 @@ class StandResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
     protected static ?string $recordTitleAttribute = 'airfieldIdentifier';
+
+    protected static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['airlines']);
+    }
 
     public static function form(Form $form): Form
     {
@@ -112,8 +118,8 @@ class StandResource extends Resource
                             ->helperText('Maximum aircraft size that can be assigned to the stand. Overrides Max WTC.')
                             ->searchable(),
                         Toggle::make('isOpen')
-                            ->label(__('Available for Allocation'))
-                            ->helperText('Stands not open for allocation will not be allocated by the automatic allocator or be available for controllers to assign.')
+                            ->label(__('Used for Allocation'))
+                            ->helperText('Stands not used for allocation will not be allocated by the automatic allocator or be available for controllers to assign.')
                             ->default(true)
                             ->required(),
                         TextInput::make('assignment_priority')
@@ -154,17 +160,21 @@ class StandResource extends Resource
                     ->label(__('Airlines'))
                     ->default(['--'])
                     ->sortable(),
+                Tables\Columns\BooleanColumn::make('isOpen')
+                    ->label(__('Used for Allocation')),
                 Tables\Columns\TextColumn::make('assignment_priority')
-                    ->label(__('Assignment priority (lower is higher)'))
+                    ->label(__('Allocation Priority'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\BooleanColumn::make('isOpen')
-                    ->label(__('Available for Allocation'))
+                Tables\Columns\TextColumn::make('assignedCallsign')
+                    ->label(__('Allocated To'))
+                    ->default('--')
             ])->defaultSort('airfield.code')
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -175,7 +185,7 @@ class StandResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\AirlinesRelationManager::class
         ];
     }
     

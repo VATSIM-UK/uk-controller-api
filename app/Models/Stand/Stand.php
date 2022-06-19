@@ -55,6 +55,11 @@ class Stand extends Model
         return $this->hasOne(StandAssignment::class);
     }
 
+    public function getAssignedCallsignAttribute(): ?string
+    {
+        return $this->assignment ? $this->assignment->callsign : null;
+    }
+
     public function airfield(): BelongsTo
     {
         return $this->belongsTo(Airfield::class);
