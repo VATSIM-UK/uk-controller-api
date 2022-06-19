@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StandResource\Pages;
 
 use App\Filament\Resources\StandResource;
+use Carbon\Carbon;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -15,5 +16,17 @@ class EditStand extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    public function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['isOpen'] = !isset($data['closed_at']);
+        return $data;
+    }
+
+    public function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['closed_at'] = $data['isOpen'] ? null : Carbon::now();
+        return $data;
     }
 }
