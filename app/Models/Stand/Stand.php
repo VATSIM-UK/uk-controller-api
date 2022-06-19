@@ -77,6 +77,16 @@ class Stand extends Model
         )->withPivot('destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
     }
 
+    public function uniqueAirlines(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Airline::class,
+            'airline_stand',
+            'stand_id',
+            'airline_id'
+        )->distinct();
+    }
+
     public function getCoordinateAttribute()
     {
         return new Coordinate($this->latitude, $this->longitude);
@@ -289,5 +299,10 @@ class Stand extends Model
     public function scopeNotClosed(Builder $query): Builder
     {
         return $query->whereNull('closed_at');
+    }
+
+    public function getIsOpenAttribute(): bool
+    {
+        return !$this->isClosed();
     }
 }
