@@ -3,6 +3,7 @@
 namespace App\Models\User;
 
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -29,5 +30,10 @@ class Admin extends Model implements \Illuminate\Contracts\Auth\Authenticatable
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::get(fn () => $this->user->id);
     }
 }
