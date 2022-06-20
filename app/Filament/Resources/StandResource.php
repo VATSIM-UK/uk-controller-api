@@ -185,7 +185,8 @@ class StandResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\AirlinesRelationManager::class
+            RelationManagers\AirlinesRelationManager::class,
+            RelationManagers\PairedStandsRelationManager::class,
         ];
     }
     
