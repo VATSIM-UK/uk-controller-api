@@ -137,6 +137,7 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
      */
     private function makeApiRequest(string $method, string $route, array $headers = [], array $data = [])
     {
+        $route = 'api/' . $route;
         $response = null;
         switch ($method) {
             case self::METHOD_GET:
