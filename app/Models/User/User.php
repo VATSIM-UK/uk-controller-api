@@ -4,10 +4,11 @@ namespace App\Models\User;
 
 use App\Models\Dependency\Dependency;
 use Carbon\Carbon;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -20,7 +21,7 @@ use Laravel\Passport\HasApiTokens;
  * Class User
  * @package App\Models
  */
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName
 {
     use HasApiTokens, Authenticatable, Authorizable;
 
@@ -36,6 +37,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
+        'first_name',
+        'last_name',
         'last_login',
     ];
 
@@ -114,5 +117,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function dependencies(): BelongsToMany
     {
         return $this->belongsToMany(Dependency::class)->withTimestamps();
+    }
+
+    public function canAccessFilament(): bool
+    {
+        return true;
+    }
+
+    public function getFilamentName(): string
+    {
+        return sprintf('%s %s', $this->first_name, $this->last_name);
     }
 }

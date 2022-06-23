@@ -87,7 +87,7 @@ return [
     */
 
     'auth' => [
-        'guard' => env('FILAMENT_AUTH_GUARD', 'web_admin'),
+        'guard' => env('FILAMENT_AUTH_GUARD', 'web'),
         'pages' => [
             'login' => \Filament\Http\Livewire\Auth\Login::class,
         ],
@@ -141,8 +141,6 @@ return [
         'namespace' => 'App\\Filament\\Widgets',
         'path' => app_path('Filament/Widgets'),
         'register' => [
-            Widgets\AccountWidget::class,
-            Widgets\FilamentInfoWidget::class,
         ],
     ],
 
@@ -171,7 +169,7 @@ return [
     |
     */
 
-    'dark_mode' => false,
+    'dark_mode' => true,
 
     /*
     |--------------------------------------------------------------------------
