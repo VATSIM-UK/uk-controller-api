@@ -27,5 +27,6 @@ Route::middleware('guest')->group(function () {
         return Socialite::driver('vatsimuk')->redirect();
     })->name('vatsimuk.redirect');
 
-    Route::get('/auth/callback', [CoreAuthController::class, 'callback']);
+    Route::get('/auth/callback', [CoreAuthController::class, 'callback'])
+        ->name('auth.login.callback');
 });
