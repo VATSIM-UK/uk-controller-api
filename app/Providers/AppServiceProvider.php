@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\SocialiteProviders\CoreProvider;
+use Filament\Facades\Filament;
+use Illuminate\Support\HtmlString;
 use Laravel\Passport\Passport;
 use Illuminate\Validation\Rule;
 use App\Services\SectorfileService;
@@ -52,5 +54,10 @@ class AppServiceProvider extends ServiceProvider
                 return $socialite->buildProvider(CoreProvider::class, $config);
             }
         );
+
+        // Filament styling
+        Filament::serving(function () {
+            Filament::registerTheme(mix('css/vatukfilament.css'));
+        });
     }
 }

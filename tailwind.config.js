@@ -1,25 +1,53 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors')
+
+const vatukLightBlue = {
+    DEFAULT: '#25ADE3',
+    '50': '#8dd8f6',
+    '100': '#78cdf1',
+    '200': '#62c3ec',
+    '300': '#006192',
+    '400': '#48b8e8',
+    '500': '#25ade3',
+    '600': '#0081b5',
+    '700': '#005888',
+    '800': '#00325e',
+    '900': '#000000'
+}
+
+const vatukDarkBlue = {
+    DEFAULT: '#17375E',
+    '50': '#3378cd',
+    '100': '#2c6ab6',
+    '200': '#265d9f',
+    '300': '#215089',
+    '400': '#1c4373',
+    '500': '#17375E',
+    '600': '#022b50',
+    '700': '#001f43',
+    '800': '#001436',
+    '900': '#000000'
+}
 
 module.exports = {
-    purge: [
-        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
+    content: [
+        './resources/**/*.blade.php',
+        './vendor/filament/**/*.blade.php',
     ],
-
+    darkMode: 'class',
     theme: {
         extend: {
-            fontFamily: {
-                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+            colors: {
+                'vatuk-darkblue': vatukDarkBlue,
+                'vatuk-lightblue': vatukLightBlue,
+                danger: colors.rose,
+                primary: vatukLightBlue,
+                success: colors.green,
+                warning: colors.amber,
             },
         },
     },
-
-    variants: {
-        extend: {
-            opacity: ['disabled'],
-        },
-    },
-
-    plugins: [require('@tailwindcss/forms')],
-};
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('@tailwindcss/typography'),
+    ],
+}
