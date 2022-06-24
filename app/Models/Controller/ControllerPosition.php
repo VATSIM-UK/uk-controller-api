@@ -31,7 +31,7 @@ class ControllerPosition extends Model implements ControllerPositionInterface
     ];
 
     protected $casts = [
-        'frequency' => 'float',
+        'frequency' => 'decimal:3',
         'requests_departure_releases' => 'boolean',
         'receives_departure_releases' => 'boolean',
         'sends_prenotes' => 'boolean',
@@ -80,7 +80,7 @@ class ControllerPosition extends Model implements ControllerPositionInterface
 
     public function getFrequency(): float
     {
-        return $this->frequency;
+        return (float) $this->frequency;
     }
 
     public function isApproach(): bool
