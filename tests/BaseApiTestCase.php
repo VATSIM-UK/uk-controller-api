@@ -137,7 +137,7 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
      */
     private function makeApiRequest(string $method, string $route, array $headers = [], array $data = [])
     {
-        $route = 'api/' . $route;
+        $route = $this->addApiPrefixToRoute($route);
         $response = null;
         switch ($method) {
             case self::METHOD_GET:
@@ -173,5 +173,16 @@ abstract class BaseApiTestCase extends BaseFunctionalTestCase
         }
 
         return $response;
+    }
+
+    private function addApiPrefixToRoute(string $route): string
+    {
+        if (str_starts_with($route, 'api/')) {
+            return $route;
+        }
+
+        return str_starts_with($route, '/')
+            ? 'api' . $route
+            : 'api/' . $route;
     }
 }

@@ -18,6 +18,6 @@ class DataAdminCreateTest extends BaseFunctionalTestCase
     {
         Artisan::call(self::ARTISAN_COMMAND);
         $token = explode(PHP_EOL, Artisan::output())[1];
-        $this->get('/dataadmin', ['Authorization' => 'Bearer ' . $token])->assertStatus(200);
+        $this->get('/api/dataadmin', ['Authorization' => 'Bearer ' . $token])->assertStatus(200);
     }
 }
