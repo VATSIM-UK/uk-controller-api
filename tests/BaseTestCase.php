@@ -8,9 +8,9 @@ use Illuminate\Foundation\Testing\TestCase;
 
 abstract class BaseTestCase extends TestCase
 {
-    const ACTIVE_USER_CID = 1203533;
-    const BANNED_USER_CID = 1203534;
-    const DISABLED_USER_CID = 1203535;
+    public const ACTIVE_USER_CID = 1203533;
+    public const BANNED_USER_CID = 1203534;
+    public const DISABLED_USER_CID = 1203535;
 
     /**
      * Creates the application.

@@ -2,14 +2,13 @@
 
 namespace App;
 
-use App\Models\User\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\User\Admin;
 
 abstract class BaseFilamentTestCase extends BaseFunctionalTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->actingAs(User::factory)
+        $this->actingAs(Admin::findOrFail(self::ACTIVE_USER_CID), 'web_admin');
     }
 }
