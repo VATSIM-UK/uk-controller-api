@@ -677,12 +677,12 @@ class StandServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        $assignment = $this->addStandAssignment('BAW123', 2);
+        $this->addStandAssignment('BAW123', 2);
 
         $this->service->setOccupiedStands();
         $this->assertDatabaseMissing(
             'stand_assignments',
-            ['id' => $assignment->id]
+            ['callsign' => 'BAW123']
         );
     }
 
