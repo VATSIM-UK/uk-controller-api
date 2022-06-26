@@ -11,6 +11,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandType;
+use Closure;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -73,11 +74,17 @@ class StandResource extends Resource
                         TextInput::make('identifier')
                             ->label(__('Identifier'))
                             ->maxLength(255)
-                            ->unique(null, null, null, function (Unique $rule, Model $record, TextInput $input) {
-                                //TODO: Messages
-                                return $rule->where('airfield_id', $record->airfield_id)
-                                    ->ignoreModel($record);
-                            })
+                            ->rule(function(Stand $record) { return function (string $attribute, $value, Closure $fail) use ($record) {
+                                $clashes = Stand::where('id', '<>', $record->id)
+                                    ->where('airfield_id', $record->airfield_id)
+                                    ->where('identifier', $value)
+                                    ->exists();
+
+                                if ($clashes) {
+                                    $fail('Stand identifier already in use for airfield.');
+                                }
+
+                            };})
                             ->required(),
                         Select::make('type_id')
                             ->label(__('Type'))
