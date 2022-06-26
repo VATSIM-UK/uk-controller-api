@@ -13,7 +13,7 @@
         "guzzlehttp/guzzle": "^7.0",
         "predis/predis": "^2.0",
         "laravel/passport": "^10.0",
-        "laravel/framework": "^8.0",
+        "laravel/framework": "^9.0",
         "knplabs/github-api": "^3.0",
         "nesbot/carbon": "^2.32",
         "maatwebsite/excel": "^3.1",
@@ -21,7 +21,7 @@
         "laravel/horizon": "^5.7",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^3.0",
-        "spatie/laravel-schedule-monitor": "^2.2",
+        "spatie/laravel-schedule-monitor": "^3.0",
         "ohdearapp/ohdear-php-sdk": "^3.1",
         "sentry/sentry-laravel": "^2.4",
         "composer/semver": "^3.2"
