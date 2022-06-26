@@ -11,6 +11,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandType;
+use App\Rules\Stand\StandIdentifierMustBeUniqueAtAirfield;
 use Closure;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
@@ -87,18 +88,7 @@ class StandResource extends Resource
                         TextInput::make('identifier')
                             ->label(__('Identifier'))
                             ->maxLength(255)
-                            ->rule(function (Closure $get) {
-                                return function (string $attribute, $value, Closure $fail) use ($get) {
-                                    $clashes = Stand::where('airfield_id', $get('airfield_id'))
-                                        ->where('identifier', $value)
-                                        ->exists();
-
-                                    if ($clashes) {
-                                        $fail('stand_unique_identifier');
-                                        //$fail('Stand identifier already in use for this airfield.')->translate();
-                                    }
-                                };
-                            })
+                            ->rule(fn (Closure $get) => new StandIdentifierMustBeUniqueAtAirfield($get))
                             ->helperText('Stand identifiers must be unique at a given airfield.')
                             ->required(),
                         Select::make('type_id')

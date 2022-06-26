@@ -277,7 +277,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
-            ->assertHasErrors(['data.identifier' => 'Illuminate\\Validation\\ClosureValidationRule']);
+            ->assertHasErrors(['data.identifier']);
     }
 
     public function testCreateFailsWithValidationErrorsIfLatitudeNonNumeric()
