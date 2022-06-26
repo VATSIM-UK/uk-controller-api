@@ -103,12 +103,12 @@ class StandResource extends Resource
                         TextInput::make('latitude')
                             ->label(__('Latitude'))
                             ->numeric('decimal')
-                            ->helperText('The decimal latitude of the stand')
+                            ->helperText('The decimal latitude of the stand.')
                             ->required(),
                         TextInput::make('longitude')
                             ->label(__('Longitude'))
                             ->numeric('decimal')
-                            ->helperText('The decimal longitude of the stand')
+                            ->helperText('The decimal longitude of the stand.')
                             ->required(),
                     ]
                 ),

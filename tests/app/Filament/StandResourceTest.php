@@ -293,7 +293,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
-            ->assertHasErrors(['data.latitude' => 'numeric']);
+            ->assertHasErrors(['data.latitude']);
     }
 
     public function testCreateFailsWithValidationErrorsIfLongitudeNonNumeric()
@@ -310,7 +310,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
-            ->assertHasErrors(['data.longitude' => 'numeric']);
+            ->assertHasErrors(['data.longitude']);
     }
 
     public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityNonNumeric()
@@ -324,10 +324,10 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.wake_category_id', 5)
             ->set('data.max_aircraft_id', 2)
-            ->set('data.assigment_priority', 'abc')
+            ->set('data.assignment_priority', 'abc')
             ->set('data.closed_at', true)
             ->call('create')
-            ->assertHasErrors(['data.assigment_priority' => 'numeric']);
+            ->assertHasErrors(['data.assignment_priority']);
     }
 
     public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityTooSmall()
@@ -341,10 +341,10 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.wake_category_id', 5)
             ->set('data.max_aircraft_id', 2)
-            ->set('data.assigment_priority', 0)
+            ->set('data.assignment_priority', 0)
             ->set('data.closed_at', true)
             ->call('create')
-            ->assertHasErrors(['data.assigment_priority' => 'numeric']);
+            ->assertHasErrors(['data.assignment_priority']);
     }
 
     public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityTooBig()
@@ -358,9 +358,9 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.wake_category_id', 5)
             ->set('data.max_aircraft_id', 2)
-            ->set('data.assigment_priority', 0)
+            ->set('data.assignment_priority', 99999)
             ->set('data.closed_at', true)
             ->call('create')
-            ->assertHasErrors(['data.assigment_priority' => 'numeric']);
+            ->assertHasErrors(['data.assignment_priority']);
     }
 }

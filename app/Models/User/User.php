@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use App\Models\Dependency\Dependency;
 use Carbon\Carbon;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -21,7 +22,7 @@ use Laravel\Passport\HasApiTokens;
  * Class User
  * @package App\Models
  */
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser
 {
     use HasApiTokens, Authenticatable, Authorizable, HasFactory;
 
@@ -116,5 +117,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function dependencies(): BelongsToMany
     {
         return $this->belongsToMany(Dependency::class)->withTimestamps();
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::get(fn() => $this->id);
+    }
+
+    public function canAccessFilament(): bool
+    {
+        return false;
     }
 }
