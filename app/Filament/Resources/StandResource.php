@@ -24,6 +24,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 
 class StandResource extends Resource
 {
@@ -53,50 +54,52 @@ class StandResource extends Resource
                                     fn(Airfield $airfield) => [$airfield->id => $airfield->code]
                                 )
                             )
+                            ->reactive()
+                            ->afterStateUpdated(function (Closure $get, Closure $set) {
+                                $terminalId = $get('terminal_id');
+                                if ($terminalId && Terminal::find($terminalId)->airfield_id === $get('airfield_id')) {
+                                    return;
+                                }
+
+                                $set('terminal_id', null);
+                            })
                             ->searchable()
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                            ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
+                            ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                            ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
                             ->label('Terminal')
-                            ->helperText(__('Required'))
                             ->hintIcon('heroicon-o-folder')
-                            ->options(
-                                fn() => Terminal::all()->mapWithKeys(
+                            ->options(fn(Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                ->get()
+                                ->mapWithKeys(
                                     fn(Terminal $terminal) => [$terminal->id => $terminal->description]
                                 )
                             )
-                            ->searchable()
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                            ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
+                            ->disabled(
+                                fn(Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
+                                    !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                            )
+                            ->dehydrated(
+                                fn(Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
+                                    !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                            ),
                         TextInput::make('identifier')
                             ->label(__('Identifier'))
                             ->maxLength(255)
-                            ->rule(function(Stand $record) { return function (string $attribute, $value, Closure $fail) use ($record) {
-                                $clashes = Stand::where('id', '<>', $record->id)
-                                    ->where('airfield_id', $record->airfield_id)
-                                    ->where('identifier', $value)
-                                    ->exists();
+                            ->rule(function (Closure $get) {
+                                return function (string $attribute, $value, Closure $fail) use ($get) {
+                                    $clashes = Stand::where('airfield_id', $get('airfield_id'))
+                                        ->where('identifier', $value)
+                                        ->exists();
 
-                                if ($clashes) {
-                                    $fail('Stand identifier already in use for airfield.');
-                                }
-
-                            };},
-                                fn(Page $livewire) => $livewire instanceof EditRecord
-                            )
-                            ->rule(function(Stand $record) { return function (string $attribute, $value, Closure $fail) use ($record) {
-                                $clashes = Stand::where('airfield_id', $record->airfield_id)
-                                    ->where('identifier', $value)
-                                    ->exists();
-
-                                if ($clashes) {
-                                    $fail('Stand identifier already in use for airfield.');
-                                }
-
-                            };},
-                                fn(Page $livewire) => $livewire instanceof CreateRecord
-                            )
+                                    if ($clashes) {
+                                        $fail('stand_unique_identifier');
+                                        //$fail('Stand identifier already in use for this airfield.')->translate();
+                                    }
+                                };
+                            })
+                            ->helperText('Stand identifiers must be unique at a given airfield.')
                             ->required(),
                         Select::make('type_id')
                             ->label(__('Type'))
@@ -130,23 +133,34 @@ class StandResource extends Resource
                                     ->firstOrFail()
                                     ->categories
                                     ->mapWithKeys(
-                                        fn(WakeCategory $category) => [$category->id => sprintf('%s (%s)', $category->description, $category->code)]
+                                        fn(WakeCategory $category) => [
+                                            $category->id => sprintf(
+                                                '%s (%s)',
+                                                $category->description,
+                                                $category->code
+                                            ),
+                                        ]
                                     )
                             )
-                            ->helperText('Maximum UK WTC that can be assigned to this stand. Used as a fallback if no specific aircraft type if specified.')
-                            ->searchable()
+                            ->helperText(
+                                'Maximum UK WTC that can be assigned to this stand. Used as a fallback if no specific aircraft type if specified.'
+                            )
                             ->required(),
                         Select::make('max_aircraft_id')
                             ->label(__('Maximum Aircraft Type'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->options(
-                                fn() => Aircraft::all()->mapWithKeys(fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code])
+                                fn() => Aircraft::all()->mapWithKeys(
+                                    fn(Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
+                                )
                             )
                             ->helperText('Maximum aircraft size that can be assigned to the stand. Overrides Max WTC.')
                             ->searchable(),
                         Toggle::make('closed_at')
                             ->label(__('Used for Allocation'))
-                            ->helperText('Stands not used for allocation will not be allocated by the automatic allocator or be available for controllers to assign.')
+                            ->helperText(
+                                'Stands not used for allocation will not be allocated by the automatic allocator or be available for controllers to assign.'
+                            )
                             ->default(true)
                             ->afterStateHydrated(static function (Toggle $component, $state): void {
                                 $component->state(is_null($state));
@@ -201,7 +215,7 @@ class StandResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('assignedCallsign')
                     ->label(__('Allocated To'))
-                    ->default('--')
+                    ->default('--'),
             ])->defaultSort('airfield.code')
             ->filters([
                 //
@@ -214,7 +228,7 @@ class StandResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
@@ -222,14 +236,14 @@ class StandResource extends Resource
             RelationManagers\PairedStandsRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListStands::route('/'),
             'create' => Pages\CreateStand::route('/create'),
             'edit' => Pages\EditStand::route('/{record}/edit'),
-            'view' => Pages\ViewStand::route('/{record}')
+            'view' => Pages\ViewStand::route('/{record}'),
         ];
     }
 }

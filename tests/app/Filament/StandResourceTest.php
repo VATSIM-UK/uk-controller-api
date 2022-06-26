@@ -132,7 +132,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.wake_category_id', 5)
-            ->call('create');
+            ->call('create')
+            ->assertHasNoErrors();
 
         $this->assertDatabaseHas(
             'stands',
@@ -160,7 +161,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.wake_category_id', 5)
-            ->call('create');
+            ->call('create')
+            ->assertHasNoErrors();
 
         $this->assertDatabaseHas(
             'stands',
@@ -192,7 +194,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
-            ->call('create');
+            ->call('create')
+            ->assertHasNoErrors();
 
         $this->assertDatabaseHas(
             'stands',
@@ -274,7 +277,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
-            ->assertHasErrors(['data.identifier' => 'Stand identifier already in use for airfield.']);
+            ->assertHasErrors(['data.identifier' => 'Illuminate\\Validation\\ClosureValidationRule']);
     }
 
     public function testCreateFailsWithValidationErrorsIfLatitudeNonNumeric()
@@ -290,7 +293,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
-            ->call('create')
             ->assertHasErrors(['data.latitude' => 'numeric']);
     }
 
