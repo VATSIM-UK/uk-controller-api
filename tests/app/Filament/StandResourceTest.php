@@ -211,7 +211,7 @@ class StandResourceTest extends BaseFilamentTestCase
         );
     }
 
-    public function testItFailsWithValidationErrorsIfAirfieldNotSet()
+    public function testCreateFailsWithValidationErrorsIfAirfieldNotSet()
     {
         Livewire::test(StandResource\Pages\CreateStand::class)
             ->set('data.terminal_id', 1)
@@ -227,7 +227,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.airfield_id' => 'required']);
     }
 
-    public function testItFailsWithValidationErrorsIfIdentifierNotSet()
+    public function testCreateFailsWithValidationErrorsIfIdentifierNotSet()
     {
         Livewire::test(StandResource\Pages\CreateStand::class)
             ->set('data.airfield_id', 2)
@@ -243,7 +243,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.identifier' => 'required']);
     }
 
-    public function testItFailsWithValidationErrorsIfIdentifierEmpty()
+    public function testCreateFailsWithValidationErrorsIfIdentifierEmpty()
     {
         Livewire::test(StandResource\Pages\CreateStand::class)
             ->set('data.airfield_id', 2)
@@ -260,7 +260,58 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.identifier' => 'required']);
     }
 
-    public function testItFailsWithValidationErrorsIfIdentifierNotUniqueForAirfield()
+    public function testCreateFailsWithValidationErrorsIfIdentifierNotUniqueForAirfield()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '32')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.wake_category_id', 5)
+            ->set('data.max_aircraft_id', 2)
+            ->set('data.assigment_priority', 99)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.identifier' => 'Stand identifier already in use for airfield.']);
+    }
+
+    public function testCreateFailsWithValidationErrorsIfLatitudeNonNumeric()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 'abc')
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.wake_category_id', 5)
+            ->set('data.max_aircraft_id', 2)
+            ->set('data.assigment_priority', 99)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.latitude' => 'numeric']);
+    }
+
+    public function testCreateFailsWithValidationErrorsIfLongitudeNonNumeric()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 'abc')
+            ->set('data.type_id', 3)
+            ->set('data.wake_category_id', 5)
+            ->set('data.max_aircraft_id', 2)
+            ->set('data.assigment_priority', 99)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.longitude' => 'numeric']);
+    }
+
+    public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityNonNumeric()
     {
         Livewire::test(StandResource\Pages\CreateStand::class)
             ->set('data.airfield_id', 2)
@@ -271,9 +322,43 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.wake_category_id', 5)
             ->set('data.max_aircraft_id', 2)
-            ->set('data.assigment_priority', 99)
+            ->set('data.assigment_priority', 'abc')
             ->set('data.closed_at', true)
             ->call('create')
-            ->assertHasErrors(['data.airfield_id' => 'required']);
+            ->assertHasErrors(['data.assigment_priority' => 'numeric']);
+    }
+
+    public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityTooSmall()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.wake_category_id', 5)
+            ->set('data.max_aircraft_id', 2)
+            ->set('data.assigment_priority', 0)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.assigment_priority' => 'numeric']);
+    }
+
+    public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityTooBig()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.wake_category_id', 5)
+            ->set('data.max_aircraft_id', 2)
+            ->set('data.assigment_priority', 0)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.assigment_priority' => 'numeric']);
     }
 }

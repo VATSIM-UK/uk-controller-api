@@ -18,14 +18,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Unique;
 
 class StandResource extends Resource
 {
@@ -84,7 +82,21 @@ class StandResource extends Resource
                                     $fail('Stand identifier already in use for airfield.');
                                 }
 
-                            };})
+                            };},
+                                fn(Page $livewire) => $livewire instanceof EditRecord
+                            )
+                            ->rule(function(Stand $record) { return function (string $attribute, $value, Closure $fail) use ($record) {
+                                $clashes = Stand::where('airfield_id', $record->airfield_id)
+                                    ->where('identifier', $value)
+                                    ->exists();
+
+                                if ($clashes) {
+                                    $fail('Stand identifier already in use for airfield.');
+                                }
+
+                            };},
+                                fn(Page $livewire) => $livewire instanceof CreateRecord
+                            )
                             ->required(),
                         Select::make('type_id')
                             ->label(__('Type'))
