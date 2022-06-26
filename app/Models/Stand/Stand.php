@@ -35,6 +35,7 @@ class Stand extends Model
         'max_aircraft_id',
         'assignment_priority',
         'closed_at',
+        'isOpen',
     ];
 
     protected $casts = [
@@ -304,11 +305,6 @@ class Stand extends Model
     public function scopeNotClosed(Builder $query): Builder
     {
         return $query->whereNull('closed_at');
-    }
-
-    public function getIsOpenAttribute(): bool
-    {
-        return !$this->isClosed();
     }
 
     public function getAirfieldIdentifierAttribute(): string

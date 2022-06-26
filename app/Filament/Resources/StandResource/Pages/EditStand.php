@@ -18,15 +18,9 @@ class EditStand extends EditRecord
         ];
     }
 
-    public function mutateFormDataBeforeFill(array $data): array
-    {
-        $data['isOpen'] = !isset($data['closed_at']);
-        return $data;
-    }
-
     public function mutateFormDataBeforeSave(array $data): array
     {
-        $data['closed_at'] = $data['isOpen'] ? null : Carbon::now();
+        $data['closed_at'] = $data['closed_at'] ? null : Carbon::now();
         return $data;
     }
 }

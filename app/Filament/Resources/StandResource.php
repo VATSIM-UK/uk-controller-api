@@ -22,6 +22,9 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 
 class StandResource extends Resource
 {
@@ -70,6 +73,11 @@ class StandResource extends Resource
                         TextInput::make('identifier')
                             ->label(__('Identifier'))
                             ->maxLength(255)
+                            ->unique(null, null, null, function (Unique $rule, Model $record, TextInput $input) {
+                                //TODO: Messages
+                                return $rule->where('airfield_id', $record->airfield_id)
+                                    ->ignoreModel($record);
+                            })
                             ->required(),
                         Select::make('type_id')
                             ->label(__('Type'))
@@ -117,10 +125,13 @@ class StandResource extends Resource
                             )
                             ->helperText('Maximum aircraft size that can be assigned to the stand. Overrides Max WTC.')
                             ->searchable(),
-                        Toggle::make('isOpen')
+                        Toggle::make('closed_at')
                             ->label(__('Used for Allocation'))
                             ->helperText('Stands not used for allocation will not be allocated by the automatic allocator or be available for controllers to assign.')
                             ->default(true)
+                            ->afterStateHydrated(static function (Toggle $component, $state): void {
+                                $component->state(is_null($state));
+                            })
                             ->required(),
                         TextInput::make('assignment_priority')
                             ->label(__('Allocation Priority'))
@@ -160,7 +171,10 @@ class StandResource extends Resource
                     ->label(__('Airlines'))
                     ->default(['--'])
                     ->sortable(),
-                Tables\Columns\BooleanColumn::make('isOpen')
+                Tables\Columns\BooleanColumn::make('closed_at')
+                    ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
+                        return $column->getRecord()->closed_at === null;
+                    })
                     ->label(__('Used for Allocation')),
                 Tables\Columns\TextColumn::make('assignment_priority')
                     ->label(__('Allocation Priority'))
