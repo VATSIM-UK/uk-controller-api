@@ -680,7 +680,10 @@ class StandServiceTest extends BaseFunctionalTestCase
         $assignment = $this->addStandAssignment('BAW123', 2);
 
         $this->service->setOccupiedStands();
-        $this->assertDeleted($assignment);
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            ['id' => $assignment->id]
+        );
     }
 
     public function testItReturnsClosestOccupiedStandIfMultipleInContention()
