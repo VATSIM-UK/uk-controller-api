@@ -2,35 +2,43 @@
 
 namespace App\Rules\Stand;
 
+use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use Closure;
 use Illuminate\Contracts\Validation\InvokableRule;
 
 class StandIdentifierMustBeUniqueAtAirfield implements InvokableRule
 {
-    private readonly Closure $get;
+    private readonly Airfield $airfield;
+    private readonly ?Stand $existingStand;
 
-    public function __construct(Closure $get)
+    public function __construct(Airfield $airfield, ?Stand $existingStand)
     {
-        $this->get = $get;
+        $this->airfield = $airfield;
+        $this->existingStand = $existingStand;
     }
 
     /**
      * Run the validation rule.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param string $attribute
+     * @param mixed $value
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
      * @return void
      */
     public function __invoke($attribute, $value, $fail)
     {
-        $clashes = Stand::where('airfield_id', ($this->get)('airfield_id'))
-            ->where('identifier', $value)
-            ->exists();
+        $clashes = Stand::where('airfield_id', $this->airfield->id)
+            ->where('identifier', $value);
 
-        if ($clashes) {
-            $fail('validation.stand_unique_identifier')->translate(['value' => $value]);
+        if ($this->existingStand) {
+            $clashes->where('id', '<>', $this->existingStand->id);
+        }
+
+        if ($clashes->exists()) {
+            $fail('validation.stands.unique_identifier')->translate(
+                ['value' => $value, 'airfield' => $this->airfield->code]
+            );
         }
     }
 }

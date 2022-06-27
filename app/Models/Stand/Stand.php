@@ -80,7 +80,7 @@ class Stand extends Model
             'airline_stand',
             'stand_id',
             'airline_id'
-        )->withPivot('destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
+        )->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
     }
 
     public function uniqueAirlines(): BelongsToMany

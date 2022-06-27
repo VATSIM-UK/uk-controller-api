@@ -20,8 +20,7 @@ class PairedStandsRelationManager extends RelationManager
 
     protected function getTableDescription(): ?string
     {
-        return 'Stands that are paired cannot be simultaneously assigned to aircraft. ' .
-            'Note, this does not prevent aircraft from spawning up on a stand!';
+        return __('table.stands.paired.description');
     }
 
     public static function table(Table $table): Table
@@ -32,15 +31,15 @@ class PairedStandsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('Id'))
+                    ->label(__('table.stands.paired.columns.id'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('airfield.code')
-                    ->label(__('Airfield'))
+                    ->label(__('table.stands.paired.columns.airfield'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('identifier')
-                    ->label(__('Identifier'))
+                    ->label(__('table.stands.paired.columns.identifier'))
                     ->sortable()
                     ->searchable(),
             ])
@@ -48,7 +47,7 @@ class PairedStandsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                $attachAction->form(fn(Tables\Actions\AttachAction $action): array => [
+                $attachAction->form(fn(): array => [
                     Select::make('recordId')
                         ->required()
                         ->options(
@@ -58,7 +57,10 @@ class PairedStandsRelationManager extends RelationManager
                                 ->where('airfield_id', $attachAction->getRelationship()->getParent()->airfield_id)
                                 ->where('id', '<>', $attachAction->getRelationship()->getParent()->id)
                                 ->whereDoesntHave('pairedStands', function (Builder $pairedStand) use ($attachAction) {
-                                    $pairedStand->where('stand_pairs.paired_stand_id', $attachAction->getRelationship()->getParent()->id);
+                                    $pairedStand->where(
+                                        'stand_pairs.paired_stand_id',
+                                        $attachAction->getRelationship()->getParent()->id
+                                    );
                                 })
                                 ->get()
                                 ->mapWithKeys(
@@ -69,9 +71,9 @@ class PairedStandsRelationManager extends RelationManager
                                 )
                         )
                         ->searchable()
-                        ->label('Stand to Pair')
+                        ->label(__('form.stands.pairs.stand.label'))
+                        ->helperText(__('form.stands.pairs.stand.helper'))
                         ->disableLabel(false)
-                        ->helperText('Only stands at the same airfield may be paired.')
                 ])
                     ->using(function (array $data) use ($attachAction) {
                         DB::transaction(function () use ($attachAction, $data) {
@@ -83,7 +85,7 @@ class PairedStandsRelationManager extends RelationManager
                             return $data;
                         });
                     })
-                    ->label('Add paired stand'),
+                    ->label(__('form.stands.pairs.add.label'))
             ])
             ->actions([
                 $detachAction->using(
@@ -94,10 +96,10 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     }
                 )
-                    ->label('Unpair'),
+                    ->label(__('form.stands.pairs.detach.label'))
             ])
             ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
+
             ]);
     }
 }
