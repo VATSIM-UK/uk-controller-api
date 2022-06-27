@@ -293,6 +293,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
+            ->call('create')
             ->assertHasErrors(['data.latitude']);
     }
 

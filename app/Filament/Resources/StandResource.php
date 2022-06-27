@@ -90,13 +90,13 @@ class StandResource extends Resource
                         TextInput::make('identifier')
                             ->label(__('form.stands.identifier.label'))
                             ->maxLength(255)
-                            ->rule(
-                                fn(Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
-                                    Airfield::findOrFail($get('airfield_id')), $record
-                                )
-                            )
                             ->helperText('Stand identifiers must be unique at a given airfield.')
-                            ->required(),
+                            ->required()
+                            ->rule(
+                                fn(Closure $get, ?Model $record) => $get('airfield_id') ? new StandIdentifierMustBeUniqueAtAirfield(
+                                    Airfield::findOrFail($get('airfield_id')), $record
+                                ) : function() {}
+                            ),
                         Select::make('type_id')
                             ->label(__('form.stands.type.label'))
                             ->helperText(__('form.stands.type.helper'))
