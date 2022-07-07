@@ -47,7 +47,7 @@ class AirlinesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                Tables\Actions\AttachAction::make('pair-airline')
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(__('form.stands.airlines.icao.label'))
@@ -82,7 +82,7 @@ class AirlinesRelationManager extends RelationManager
                     ]),
             ])
             ->actions([
-                Tables\Actions\DetachAction::make()
+                Tables\Actions\DetachAction::make('unpair-airline')
                     ->label(__('form.stands.airlines.remove.label'))
                     ->using(function (Tables\Actions\DetachAction $action) {
                         DB::table('airline_stand')

@@ -155,9 +155,6 @@ jobs:
       - name: Publish Horizon
         run: php artisan horizon:publish
 
-      - name: Optimize
-        run: php artisan optimize
-
       # Start Application
       - name: Serve Application
         run: php artisan serve -q &

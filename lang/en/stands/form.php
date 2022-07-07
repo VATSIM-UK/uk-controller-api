@@ -11,6 +11,7 @@ return [
     ],
     'identifier' => [
         'label' => 'Identifier',
+        'helper' => 'Stand identifiers must be unique at a given airfield.',
     ],
     'type' => [
         'label' => 'Type',

@@ -9,6 +9,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class PairedStandsRelationManager extends RelationManager
@@ -25,8 +26,8 @@ class PairedStandsRelationManager extends RelationManager
 
     public static function table(Table $table): Table
     {
-        $attachAction = Tables\Actions\AttachAction::make();
-        $detachAction = Tables\Actions\DetachAction::make();
+        $attachAction = Tables\Actions\AttachAction::make('pair-stand');
+        $detachAction = Tables\Actions\DetachAction::make('unpair-stand');
 
         return $table
             ->columns([
@@ -70,7 +71,7 @@ class PairedStandsRelationManager extends RelationManager
                                     ]
                                 )
                         )
-                        ->searchable()
+                        ->searchable(!App::runningUnitTests())
                         ->label(__('form.stands.pairs.stand.label'))
                         ->helperText(__('form.stands.pairs.stand.helper'))
                         ->disableLabel(false)

@@ -26,6 +26,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 
 class StandResource extends Resource
@@ -52,9 +53,9 @@ class StandResource extends Resource
                             ->helperText(__('Required'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn() => Airfield::all()->mapWithKeys(
-                                    fn(Airfield $airfield) => [$airfield->id => $airfield->code]
-                                )
+                                fn() => Airfield::all()
+                                    ->sortBy('code', SORT_NATURAL)
+                                    ->mapWithKeys(fn(Airfield $airfield) => [$airfield->id => $airfield->code])
                             )
                             ->reactive()
                             ->afterStateUpdated(function (Closure $get, Closure $set) {
@@ -65,7 +66,8 @@ class StandResource extends Resource
 
                                 $set('terminal_id', null);
                             })
-                            ->searchable()
+                            ->preload()
+                            ->searchable(!App::runningUnitTests())
                             ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
                             ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
@@ -90,7 +92,7 @@ class StandResource extends Resource
                         TextInput::make('identifier')
                             ->label(__('form.stands.identifier.label'))
                             ->maxLength(255)
-                            ->helperText('Stand identifiers must be unique at a given airfield.')
+                            ->helperText(__('form.stands.identifier.helper'))
                             ->required()
                             ->rule(
                                 fn(Closure $get, ?Model $record) => $get('airfield_id') ? new StandIdentifierMustBeUniqueAtAirfield(
@@ -103,10 +105,9 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn() => StandType::all()->mapWithKeys(
-                                    fn(StandType $type) => [$type->id => $type->key]
+                                    fn(StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
                                 )
-                            )
-                            ->searchable(),
+                            ),
                         TextInput::make('latitude')
                             ->label(__('form.stands.latitude.label'))
                             ->helperText(__('form.stands.latitude.helper'))
@@ -130,6 +131,7 @@ class StandResource extends Resource
                                     ->uk()
                                     ->firstOrFail()
                                     ->categories
+                                    ->sortBy('relative_weighting')
                                     ->mapWithKeys(
                                         fn(WakeCategory $category) => [
                                             $category->id => sprintf(
@@ -150,7 +152,7 @@ class StandResource extends Resource
                                     fn(Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
                                 )
                             )
-                            ->searchable(),
+                            ->searchable(!App::runningUnitTests()),
                         Toggle::make('closed_at')
                             ->label(__('form.stands.used_for_allocation.label'))
                             ->helperText(__('form.stands.used_for_allocation.helper'))
