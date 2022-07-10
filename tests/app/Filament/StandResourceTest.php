@@ -9,7 +9,7 @@ use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
 use Carbon\Carbon;
-use Filament\Tables\Actions\AttachAction;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 class StandResourceTest extends BaseFilamentTestCase
@@ -695,17 +695,18 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItAllowsStandUnpairing()
     {
-        Stand::findOrFail(1)->pairedStands()->sync([2]);
-        Stand::findOrFail(2)->pairedStands()->sync([1]);
+        Stand::findOrFail(1)->pairedStands()->sync([2, 3]);
+        Stand::findOrFail(2)->pairedStands()->sync([3, 1]);
+        Stand::findOrFail(3)->pairedStands()->sync([1, 2]);
         Livewire::test(
             StandResource\RelationManagers\PairedStandsRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
-            ->callTableAction('unpair-stand', Stand::findOrFail(2))
+            ->callTableAction('unpair-stand', 2)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
-        $this->assertEmpty(Stand::findOrFail(1)->pairedStands);
-        $this->assertEmpty(Stand::findOrFail(2)->pairedStands);
+        $this->assertEquals([3], Stand::findOrFail(1)->pairedStands->pluck('id')->toArray());
+        $this->assertEquals([3], Stand::findOrFail(2)->pairedStands->pluck('id')->toArray());
     }
 
     public function testItListsAirlines()
@@ -806,14 +807,96 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItAllowsAirlineUnpairing()
     {
-        Stand::findOrFail(1)->airlines()->sync([2]);
+        Stand::findOrFail(1)->airlines()->sync([3, 2, 1]);
+        $rowToUnpair = DB::table('airline_stand')
+            ->where('stand_id', 1)
+            ->where('airline_id', 3)
+            ->first()
+            ->id;
+
         Livewire::test(
             StandResource\RelationManagers\AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
-            ->callTableAction('unpair-airline', Airline::findOrFail(2))
+            ->callTableAction('unpair-airline', $rowToUnpair)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
-        $this->assertEmpty(Stand::findOrFail(1)->airlines);
+        $this->assertEquals([1, 2], Stand::findOrFail(1)->airlines->pluck('id')->toArray());
+    }
+
+    public function testItAllowsFailsAirlinePairingPriorityTooLow()
+    {
+        Livewire::test(
+            StandResource\RelationManagers\AirlinesRelationManager::class,
+            ['ownerRecord' => Stand::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                Stand::findOrFail(1),
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => -1,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['priority']);
+    }
+
+    public function testItAllowsFailsAirlinePairingPriorityTooHigh()
+    {
+        Livewire::test(
+            StandResource\RelationManagers\AirlinesRelationManager::class,
+            ['ownerRecord' => Stand::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                Stand::findOrFail(1),
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 99999,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['priority']);
+    }
+
+    public function testItAllowsFailsAirlinePairingCallsignTooLong()
+    {
+        Livewire::test(
+            StandResource\RelationManagers\AirlinesRelationManager::class,
+            ['ownerRecord' => Stand::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                Stand::findOrFail(1),
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign_slug' => '12345',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['callsign_slug']);
+    }
+
+    public function testItAllowsFailsAirlinePairingDestinationTooLong()
+    {
+        Livewire::test(
+            StandResource\RelationManagers\AirlinesRelationManager::class,
+            ['ownerRecord' => Stand::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                Stand::findOrFail(1),
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKKS',
+                    'priority' => 55,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['destination']);
     }
 }

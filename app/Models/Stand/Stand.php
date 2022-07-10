@@ -75,22 +75,13 @@ class Stand extends Model
 
     public function airlines(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Airline::class,
-            'airline_stand',
-            'stand_id',
-            'airline_id'
-        )->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
+        return $this->belongsToMany(Airline::class)
+            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
     }
 
     public function uniqueAirlines(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Airline::class,
-            'airline_stand',
-            'stand_id',
-            'airline_id'
-        )->distinct();
+        return $this->belongsToMany(Airline::class)->distinct();
     }
 
     public function getCoordinateAttribute()
@@ -198,7 +189,7 @@ class Stand extends Model
             'stand_pairs',
             'stand_id',
             'paired_stand_id',
-        );
+        )->withPivot('id');
     }
 
     public function terminal(): BelongsTo

@@ -64,6 +64,7 @@ class AirlinesRelationManager extends RelationManager
                             ->label(__('form.stands.airlines.priority.label'))
                             ->helperText(__('form.stands.airlines.priority.helper'))
                             ->default(100)
+                            ->numeric()
                             ->minValue(1)
                             ->maxValue(9999)
                             ->required(),
