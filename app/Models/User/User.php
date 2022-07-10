@@ -9,6 +9,8 @@ use Filament\Models\Contracts\HasName;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -23,7 +25,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName
 {
-    use HasApiTokens, Authenticatable, Authorizable;
+    use HasApiTokens, Authenticatable, Authorizable, HasFactory;
 
     // The table name
     protected $table = 'user';
@@ -122,11 +124,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function canAccessFilament(): bool
     {
-        return true;
+        return in_array(
+            $this->id,
+            [1203533, 1258635, 1169992, 1294298]
+        );
     }
 
     public function getFilamentName(): string
     {
         return sprintf('%s %s', $this->first_name, $this->last_name);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::get(fn () => $this->id);
     }
 }

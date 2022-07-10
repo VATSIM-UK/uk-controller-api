@@ -1,5 +1,19 @@
 # UK Controller Plugin API Changelog
 
+## [6.8.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.2...6.8.3) (2022-06-27)
+
+
+### Miscellaneous Chores
+
+* update to laravel 9 ([64dada0](https://github.com/VATSIM-UK/uk-controller-api/commit/64dada014262aecb9195ea41a44e11c756a2a400))
+
+## [6.8.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.1...6.8.2) (2022-06-26)
+
+
+### Miscellaneous Chores
+
+* **php:** drop support for PHP 7 ([abb2567](https://github.com/VATSIM-UK/uk-controller-api/commit/abb25671ab128b544af5e961689bddaab1aaaa54))
+
 ## [6.8.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.0...6.8.1) (2022-06-16)
 
 
