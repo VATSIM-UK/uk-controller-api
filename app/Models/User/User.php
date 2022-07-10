@@ -121,7 +121,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function name(): Attribute
     {
-        return Attribute::get(fn() => $this->id);
+        return Attribute::get(fn () => $this->id);
     }
 
     public function canAccessFilament(): bool

@@ -47,7 +47,7 @@ class PairedStandsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                $attachAction->form(fn(): array => [
+                $attachAction->form(fn (): array => [
                     Select::make('recordId')
                         ->required()
                         ->options(
@@ -64,7 +64,7 @@ class PairedStandsRelationManager extends RelationManager
                                 })
                                 ->get()
                                 ->mapWithKeys(
-                                    fn(Stand $stand) => [
+                                    fn (Stand $stand) => [
                                         $stand->{$attachAction->getRelationship()->getRelatedKeyName(
                                         )} => $attachAction->getRecordTitle($stand),
                                     ]

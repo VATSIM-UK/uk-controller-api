@@ -35,7 +35,7 @@ class Admin extends Model implements \Illuminate\Contracts\Auth\Authenticatable,
 
     public function name(): Attribute
     {
-        return Attribute::get(fn() => $this->user->id);
+        return Attribute::get(fn () => $this->user->id);
     }
 
     public function canAccessFilament(): bool
