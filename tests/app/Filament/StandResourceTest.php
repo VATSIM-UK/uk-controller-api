@@ -712,11 +712,16 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItListsAirlines()
     {
         Stand::findOrFail(1)->airlines()->sync([1]);
+        $rowToExpect = DB::table('airline_stand')->where('airline_id', 1)
+            ->where('stand_id', 1)
+            ->first()
+            ->id;
+
         Livewire::test(
             StandResource\RelationManagers\AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
-            ->assertCanSeeTableRecords([Airline::findOrFail(1)]);
+            ->assertCanSeeTableRecords([$rowToExpect]);
     }
 
     public function testItAllowsAirlinePairingWithMinimalData()
@@ -821,7 +826,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->callTableAction('unpair-airline', $rowToUnpair)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
-        $this->assertEquals([1, 2], Stand::findOrFail(1)->airlines->pluck('id')->toArray());
+        $this->assertEquals([2, 1], Stand::findOrFail(1)->airlines->pluck('id')->toArray());
     }
 
     public function testItAllowsFailsAirlinePairingPriorityTooLow()
