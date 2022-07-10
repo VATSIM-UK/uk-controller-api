@@ -42,7 +42,7 @@ return [
     ],
     'allocation_priority' => [
         'label' => 'Allocation Priority',
-        'helper' => 'Global priority when assigning. Lower value is higher priority.',
+        'helper' => 'Global priority when assigning. Lower value is higher priority. Minimum 1, maximum 9999.',
     ],
     'airlines' => [
         'icao' => [
@@ -59,7 +59,7 @@ return [
         'priority' => [
             'label'=> 'Allocation Priority',
             'helper' => 'Priority for allocating this stand, lower value is higher priority. ' .
-                'Considered before general allocation priority.'
+                'Considered before general allocation priority. Minimum 1, maximum 9999.'
         ],
         'not_before' => [
             'label'=> 'Do not allocate before (UTC)',
