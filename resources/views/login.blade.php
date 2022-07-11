@@ -7,10 +7,6 @@
             'p-8 space-y-8 bg-white/50 backdrop-blur-xl border border-gray-200 shadow-2xl rounded-2xl relative',
             'dark:bg-gray-900/50 dark:border-gray-700' => config('filament.dark_mode'),
         ])>
-            <div class="flex justify-center w-full">
-                <x-filament::brand/>
-            </div>
-
             <h2 class="text-2xl font-bold tracking-tight text-center">
                 {{ __('filament::login.heading') }}
             </h2>
