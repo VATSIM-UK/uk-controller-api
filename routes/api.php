@@ -10,11 +10,11 @@ use App\Http\Middleware\MiddlewareKeys;
 Route::middleware('api')
     ->name('api.')
     ->group(
-    function () {
+        function () {
         Route::middleware('plugin.user')
             ->name('plugin.')
             ->group(
-            function () {
+                function () {
                 Route::get(
                     '/authorise',
                     [
@@ -106,7 +106,7 @@ Route::middleware('api')
                         ->middleware(MiddlewareKeys::CONTROLLING_LIVE);
                 });
             }
-        );
+            );
 
 
         // Routes for user administration
@@ -278,7 +278,7 @@ Route::middleware('api')
         Route::middleware('public')
             ->name('public.')
             ->group(
-            function () {
+                function () {
                 Route::get(
                     '/',
                     function () {
@@ -376,6 +376,6 @@ Route::middleware('api')
                     Route::get('{version:version}', 'VersionController@getVersion');
                 });
             }
-        );
+            );
     }
-);
+    );
