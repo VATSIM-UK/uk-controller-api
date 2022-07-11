@@ -215,7 +215,7 @@ return [
     |
     */
 
-    'favicon' => null,
+    'favicon' => sprintf('%s/images/favicon.png', env('APP_URL')),
 
     /*
     |--------------------------------------------------------------------------
