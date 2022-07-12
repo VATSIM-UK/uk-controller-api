@@ -24,6 +24,6 @@ Route::get('dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 // Redirect to allow old plugin versions to update to the latest
-Route::get('version/latest', fn() => Redirect::to('api/version/latest'));
+Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
 
 require __DIR__ . '/auth.php';
