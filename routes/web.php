@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\CoreAuthController;
-use App\Http\Middleware\RedirectIfAuthenticated;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -30,3 +30,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth/callback', [CoreAuthController::class, 'callback'])
         ->name('auth.login.callback');
 });
+
+// Redirect to allow old plugin versions to update to the latest
+Route::get('version/latest', fn() => Redirect::to('api/version/latest'));

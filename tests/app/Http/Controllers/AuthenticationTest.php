@@ -16,13 +16,13 @@ class AuthenticationTest extends BaseApiTestCase
 
     public function testLoginScreenCanBeRendered()
     {
-        $response = $this->get('web/login');
+        $response = $this->get('/login');
         $response->assertStatus(200);
     }
 
     public function testUsersCanAuthenticateUsingTheLoginScreen()
     {
-        $response = $this->post('web/login', [
+        $response = $this->post('/login', [
             'email' => Admin::find(1203533)->email,
             'password' => 'letmein',
         ]);
@@ -33,7 +33,7 @@ class AuthenticationTest extends BaseApiTestCase
 
     public function testUsersCannotAuthenticateWithInvalidPassword()
     {
-        $this->post('web/login', [
+        $this->post('/login', [
             'email' => Admin::find(1203533)->email,
             'password' => 'wrong-password',
         ]);

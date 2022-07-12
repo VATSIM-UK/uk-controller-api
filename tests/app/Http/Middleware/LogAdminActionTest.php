@@ -45,7 +45,7 @@ class LogAdminActionTest extends BaseApiTestCase
             'admin_log',
             [
                 'user_id' => self::ACTIVE_USER_CID,
-                'request_uri' => "/admin/airfields/{$airfieldCode}/stands",
+                'request_uri' => "/api/admin/airfields/{$airfieldCode}/stands",
                 'request_body' => json_encode($standData),
             ]
         );

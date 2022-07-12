@@ -1,5 +1,26 @@
 # UK Controller Plugin API Changelog
 
+## [6.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.1...6.9.2) (2022-07-12)
+
+
+### Bug Fixes
+
+* let core do core things ([eefe991](https://github.com/VATSIM-UK/uk-controller-api/commit/eefe9919826fd5cc623c765eb57abd7688abc6a8))
+
+## [6.9.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.0...6.9.1) (2022-07-12)
+
+
+### Bug Fixes
+
+* temporary core redirects ([416e57d](https://github.com/VATSIM-UK/uk-controller-api/commit/416e57d952a6c11f2ef2db6d17b808e09bf9bd0a))
+
+## [6.9.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.3...6.9.0) (2022-07-12)
+
+
+### Features
+
+* make api the root of the api ([4d5d27f](https://github.com/VATSIM-UK/uk-controller-api/commit/4d5d27f2b6133a9010fe807c7adae66567797743))
+
 ## [6.8.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.2...6.8.3) (2022-06-27)
 
 
