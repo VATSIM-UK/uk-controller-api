@@ -826,7 +826,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->callTableAction('unpair-airline', $rowToUnpair)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
-        $this->assertEquals([1, 2], Stand::findOrFail(1)->airlines->pluck('id')->sort()->toArray());
+        $this->assertEquals([1, 2], Stand::findOrFail(1)->airlines->pluck('id')->sort()->values()->toArray());
     }
 
     public function testItAllowsFailsAirlinePairingPriorityTooLow()
