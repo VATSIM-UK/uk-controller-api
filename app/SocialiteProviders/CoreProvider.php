@@ -17,7 +17,7 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase(config('services.vatsim_uk_core.sso_base').'/oauth/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->ssoBaseUrl() . '/oauth/authorize', $state);
     }
 
     /**
@@ -27,7 +27,7 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenUrl()
     {
-        return config('services.vatsim_uk_core.sso_base').'/oauth/token';
+        return $this->ssoBaseUrl() . '/oauth/token';
     }
 
     /**
@@ -38,7 +38,7 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get(config('services.vatsim_uk_core.sso_base').'/api/user', [
+        $response = $this->getHttpClient()->get($this->ssoBaseUrl() . '/api/user', [
             'headers' => [
                 'Authorization' => 'Bearer '.$token,
             ],
@@ -77,5 +77,10 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
             'first_name' => $data['name_first'],
             'last_name' => $data['name_last'],
         ]);
+    }
+
+    private function ssoBaseUrl(): string
+    {
+        return config('services.vatsim_uk_core.sso_base');
     }
 }
