@@ -24,7 +24,7 @@ Route::get('dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 // Redirect to allow old plugin versions to update to the latest
-Route::get('version/latest', fn() => Redirect::to('api/version/latest'));
+Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
 
 // Redirects to allow Core to do Core things until updated
 Route::middleware(['admin.user', 'api'])->group(function () {
