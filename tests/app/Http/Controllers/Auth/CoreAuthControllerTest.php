@@ -6,7 +6,6 @@ use App\BaseFunctionalTestCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Laravel\Socialite\Facades\Socialite;
-use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
 use Mockery;
 
@@ -20,8 +19,8 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
 
     public function testItRedirectsToBasePage()
     {
-        $this->get('web/')
-            ->assertRedirect('web/admin/login');
+        $this->get('/')
+            ->assertRedirect('admin/login');
     }
 
     public function testItRedirectsToSocialiteLogin()
@@ -29,7 +28,7 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
         Socialite::shouldReceive('driver->redirect')
             ->andReturn(Redirect::away('https://vatsim.uk/oauth/authorize'));
 
-        $this->get('web/auth/redirect')
+        $this->get('auth/redirect')
             ->assertRedirect('https://vatsim.uk/oauth/authorize');
     }
 
@@ -42,8 +41,8 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
             ->andSet('last_name', 'User');
         Socialite::shouldReceive('driver->user')->andReturn($socialiteUser);
 
-        $this->get('web/auth/callback')
-            ->assertRedirect('web/admin');
+        $this->get('auth/callback')
+            ->assertRedirect('admin');
 
         $this->assertDatabaseHas(
             'user',
@@ -63,8 +62,8 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
             ->andSet('last_name', 'User');
         Socialite::shouldReceive('driver->user')->andReturn($socialiteUser);
 
-        $this->get('web/auth/callback')
-            ->assertRedirect('web/admin');
+        $this->get('auth/callback')
+            ->assertRedirect('admin');
 
         $this->assertDatabaseHas(
             'user',
