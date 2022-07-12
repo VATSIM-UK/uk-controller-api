@@ -20,9 +20,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/', function () {
         return redirect()->route('filament.auth.login');
     });
-});
 
-Route::middleware('guest')->group(function () {
     Route::get('/auth/redirect', function () {
         return Socialite::driver('vatsimuk')->redirect();
     })->name('vatsimuk.redirect');
