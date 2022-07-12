@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.1...6.9.2) (2022-07-12)
+
+
+### Bug Fixes
+
+* let core do core things ([eefe991](https://github.com/VATSIM-UK/uk-controller-api/commit/eefe9919826fd5cc623c765eb57abd7688abc6a8))
+
 ## [6.9.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.0...6.9.1) (2022-07-12)
 
 
