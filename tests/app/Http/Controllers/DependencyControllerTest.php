@@ -60,7 +60,7 @@ class DependencyControllerTest extends BaseApiTestCase
         return [
             'key' => $key,
             'uri' => sprintf(
-                '%s/dependency/%d',
+                '%s/api/dependency/%d',
                 config(self::APP_URL_KEY),
                 Dependency::where('key', $key)->first()->id
             ),

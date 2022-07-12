@@ -167,6 +167,6 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     private function makeTestRequest(string $uri, string $token)
     {
-        $this->get($uri, ['Authorization' => 'Bearer ' . $token])->assertStatus(200);
+        $this->get('api' . $uri, ['Authorization' => 'Bearer ' . $token])->assertStatus(200);
     }
 }

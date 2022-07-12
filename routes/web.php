@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +23,7 @@ Route::get('dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+// Redirect to allow old plugin versions to update to the latest
+Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
+
+require __DIR__ . '/auth.php';
