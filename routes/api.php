@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\MiddlewareKeys;
 
 // Routes that the plugin user will use
-Route::middleware('api')->group(
-    function () {
-        Route::middleware('plugin.user')->group(
-            function () {
+Route::middleware('api')
+    ->name('api.')
+    ->group(
+        function () {
+        Route::middleware('plugin.user')
+            ->name('plugin.')
+            ->group(
+                function () {
                 Route::get(
                     '/authorise',
                     [
@@ -20,10 +24,18 @@ Route::middleware('api')->group(
                         'uses' => 'TeapotController@normalTeapots',
                     ]
                 );
+
                 // Dependencies
-                Route::get('dependency', 'DependencyController@getAllDependencies');
-                Route::get('dependency/{id}', 'DependencyController@getDependency')
-                    ->where('id', '[0-9]+');
+                Route::prefix('dependency')
+                    ->name('dependency.')
+                    ->group(function () {
+                        Route::get('{id}', 'DependencyController@getDependency')
+                            ->name('get')
+                            ->where('id', '[0-9]+');
+
+                        Route::get('', 'DependencyController@getAllDependencies')
+                            ->name('getall');
+                    });
 
                 // Departure releases
                 Route::post('departure/release/request', 'DepartureReleaseController@makeReleaseRequest');
@@ -94,7 +106,7 @@ Route::middleware('api')->group(
                         ->middleware(MiddlewareKeys::CONTROLLING_LIVE);
                 });
             }
-        );
+            );
 
 
         // Routes for user administration
@@ -263,8 +275,10 @@ Route::middleware('api')->group(
         );
 
         // Routes that can be hit by anybody at all, mostly login and informational routes
-        Route::middleware('public')->group(
-            function () {
+        Route::middleware('public')
+            ->name('public.')
+            ->group(
+                function () {
                 Route::get(
                     '/',
                     function () {
@@ -361,10 +375,7 @@ Route::middleware('api')->group(
                     Route::get('latest', 'VersionController@getLatestVersion');
                     Route::get('{version:version}', 'VersionController@getVersion');
                 });
-
-                Route::get('dependency/{id}', 'DependencyController@getDependency')
-                    ->where('id', '[0-9]+');
             }
-        );
+            );
     }
-);
+    );

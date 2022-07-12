@@ -17,12 +17,12 @@ class AuthenticateTest extends BaseApiTestCase
 
     public function testItRejectsUsersWithNoKey()
     {
-        $this->json('GET', '/authorise')->assertStatus(401);
+        $this->json('GET', '/api/authorise')->assertStatus(401);
     }
 
     public function testItRejectsUsersWithInvalidKey()
     {
-        $this->json('GET', '/authorise', [], ['Authorization' => 'Bearer nope'])
+        $this->json('GET', '/api/authorise', [], ['Authorization' => 'Bearer nope'])
             ->assertStatus(401);
     }
 }
