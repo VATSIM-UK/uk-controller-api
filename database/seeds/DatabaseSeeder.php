@@ -13,9 +13,6 @@ class DatabaseSeeder extends Seeder
         UserTableSeeder::class => [
             'user',
         ],
-        AdminTableSeeder::class => [
-            'admin',
-        ],
         AsrTableSeeder::class => [
             'altimeter_setting_region',
             'altimeter_setting_region_airfield',
