@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,8 +22,17 @@ Route::get('dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('version/latest', function () {
-    return redirect('api/version/latest');
-});
+// Redirect to allow old plugin versions to update to the latest
+Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
+
+// Redirects to allow Core to do Core things until updated
+Route::match(
+    ['get', 'post'],
+    'user/{cid}',
+    fn ($cid) => Redirect::to('api/user/' . $cid)
+);
+
+Route::post('user/{cid}/token', fn ($cid) => Redirect::to(sprintf('api/user/%s/token', $cid)));
+Route::delete('token/{tokenId}', fn ($tokenId) => Redirect::to(sprintf('api/token/%s', $tokenId)));
 
 require __DIR__.'/auth.php';
