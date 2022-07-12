@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
@@ -23,16 +24,41 @@ Route::get('dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 // Redirect to allow old plugin versions to update to the latest
-Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
+Route::get('version/latest', fn() => Redirect::to('api/version/latest'));
 
 // Redirects to allow Core to do Core things until updated
-Route::match(
-    ['get', 'post'],
-    'user/{cid}',
-    fn ($cid) => Redirect::to('api/user/' . $cid)
-);
+Route::middleware(['admin.user', 'api'])->group(function () {
+    Route::match(
+        ['get', 'post'],
+        'user/{cid}',
+        function (Request $request, $cid) {
+            $newRequest = Request::create('api/user/' . $cid, $request->method());
+            $newRequest->setUserResolver($request->getUserResolver());
+            $newRequest->headers->replace($request->headers->all());
+            return Route::dispatch($newRequest);
+        }
+    );
 
-Route::post('user/{cid}/token', fn ($cid) => Redirect::to(sprintf('api/user/%s/token', $cid)));
-Route::delete('token/{tokenId}', fn ($tokenId) => Redirect::to(sprintf('api/token/%s', $tokenId)));
+    Route::post(
+        'user/{cid}/token',
+        function (Request $request, $cid) {
+            $newRequest = Request::create(sprintf('api/user/%s/token', $cid), $request->method());
+            $newRequest->setUserResolver($request->getUserResolver());
+            $newRequest->headers->replace($request->headers->all());
+            return Route::dispatch($newRequest);
+        }
+    );
 
-require __DIR__.'/auth.php';
+
+    Route::delete(
+        'token/{tokenId}',
+        function (Request $request, $tokenId) {
+            $newRequest = Request::create(sprintf('api/token/%s', $tokenId), $request->method());
+            $newRequest->setUserResolver($request->getUserResolver());
+            $newRequest->headers->replace($request->headers->all());
+            return Route::dispatch($newRequest);
+        }
+    );
+});
+
+require __DIR__ . '/auth.php';
