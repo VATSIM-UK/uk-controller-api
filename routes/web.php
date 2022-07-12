@@ -22,7 +22,7 @@ Route::get('dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('version/latest', function () {
-    return redirect('api/version/latest);
+    return redirect('api/version/latest');
 });
 
 require __DIR__.'/auth.php';
