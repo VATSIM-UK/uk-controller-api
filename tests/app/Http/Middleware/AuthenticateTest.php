@@ -26,7 +26,7 @@ class AuthenticateTest extends BaseApiTestCase
 
     public function testItRedirectsToLoginPageIfWebRequestNotLoggedIn()
     {
-        $this->get('dashboard')
+        $this->get('horizon')
             ->assertRedirect();
     }
 }
