@@ -124,10 +124,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function canAccessFilament(): bool
     {
-        return in_array(
-            $this->id,
-            [1203533, 1258635, 1169992, 1294298]
-        );
+        return true;
     }
 
     public function getFilamentName(): string
