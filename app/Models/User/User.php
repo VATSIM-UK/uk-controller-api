@@ -139,4 +139,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return Attribute::get(fn () => $this->id);
     }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)->withTimestamps();
+    }
 }
