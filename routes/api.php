@@ -208,61 +208,61 @@ Route::middleware('api')
 
                     Route::prefix('admin')->group(
                         function () {
-                        Route::prefix('airfields')->group(function () {
-                            Route::get('', 'Admin\\StandAdminController@getAirfields');
-                            Route::prefix('{airfield:code}')->group(function () {
-                                Route::prefix('terminals')->group(function () {
-                                    Route::get('', 'Admin\\StandAdminController@getTerminals');
-                                    Route::get(
-                                        '{terminal:key}/stands',
-                                        'Admin\\StandAdminController@getStandsByTerminal'
-                                    );
-                                });
-                                Route::prefix('stands')->group(function () {
-                                    Route::post('', 'Admin\\StandAdminController@createNewStand');
-                                    Route::get(
-                                        '',
-                                        'Admin\\StandAdminController@getStandsForAirfield'
-                                    );
-                                    Route::prefix('{stand}')->group(function () {
+                            Route::prefix('airfields')->group(function () {
+                                Route::get('', 'Admin\\StandAdminController@getAirfields');
+                                Route::prefix('{airfield:code}')->group(function () {
+                                    Route::prefix('terminals')->group(function () {
+                                        Route::get('', 'Admin\\StandAdminController@getTerminals');
+                                        Route::get(
+                                            '{terminal:key}/stands',
+                                            'Admin\\StandAdminController@getStandsByTerminal'
+                                        );
+                                    });
+                                    Route::prefix('stands')->group(function () {
+                                        Route::post('', 'Admin\\StandAdminController@createNewStand');
                                         Route::get(
                                             '',
-                                            'Admin\\StandAdminController@getStandDetails'
+                                            'Admin\\StandAdminController@getStandsForAirfield'
                                         );
-                                        Route::put(
-                                            '',
-                                            'Admin\\StandAdminController@modifyStand'
-                                        );
-                                        Route::delete(
-                                            '',
-                                            'Admin\\StandAdminController@deleteStand'
-                                        );
-                                        Route::patch(
-                                            'close',
-                                            'Admin\\StandAdminController@closeStand'
-                                        );
-                                        Route::patch(
-                                            'open',
-                                            'Admin\\StandAdminController@openStand'
-                                        );
+                                        Route::prefix('{stand}')->group(function () {
+                                            Route::get(
+                                                '',
+                                                'Admin\\StandAdminController@getStandDetails'
+                                            );
+                                            Route::put(
+                                                '',
+                                                'Admin\\StandAdminController@modifyStand'
+                                            );
+                                            Route::delete(
+                                                '',
+                                                'Admin\\StandAdminController@deleteStand'
+                                            );
+                                            Route::patch(
+                                                'close',
+                                                'Admin\\StandAdminController@closeStand'
+                                            );
+                                            Route::patch(
+                                                'open',
+                                                'Admin\\StandAdminController@openStand'
+                                            );
+                                        });
                                     });
                                 });
                             });
-                        });
 
-                        Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
-                        Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
-                        Route::get('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@getHolds');
-                        Route::post('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@createHold');
-                        Route::get('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@getHold');
-                        Route::put('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@modifyHold');
-                        Route::delete('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@deleteHold');
-                        Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
-                        Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
-                        Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
+                            Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
+                            Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
+                            Route::get('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@getHolds');
+                            Route::post('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@createHold');
+                            Route::get('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@getHold');
+                            Route::put('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@modifyHold');
+                            Route::delete('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@deleteHold');
+                            Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
+                            Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
+                            Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
 
-                        Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
-                    }
+                            Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
+                        }
                     );
                 }
             );
