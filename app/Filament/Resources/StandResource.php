@@ -77,10 +77,10 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
-                                ->get()
-                                ->mapWithKeys(
-                                    fn (Terminal $terminal) => [$terminal->id => $terminal->description]
-                                )
+                                    ->get()
+                                    ->mapWithKeys(
+                                        fn (Terminal $terminal) => [$terminal->id => $terminal->description]
+                                    )
                             )
                             ->disabled(
                                 fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
@@ -96,11 +96,11 @@ class StandResource extends Resource
                             ->helperText(__('form.stands.identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (Closure $get, ?Model $record) => $get('airfield_id') ? new StandIdentifierMustBeUniqueAtAirfield(
+                                fn (Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
-                                ) : function () {
-                                }
+                                ),
+                                fn (Closure $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
                             ->label(__('form.stands.type.label'))
@@ -215,9 +215,6 @@ class StandResource extends Resource
                     ->label(__('table.stands.columns.allocation'))
                     ->default('--'),
             ])->defaultSort('airfield.code')
-            ->filters([
-                //
-            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
