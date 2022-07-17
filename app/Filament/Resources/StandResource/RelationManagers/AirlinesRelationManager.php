@@ -43,9 +43,6 @@ class AirlinesRelationManager extends RelationManager
                     ->label(__('table.stands.airlines.columns.not_before'))
                     ->date('H:i'),
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-airline')
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
@@ -91,8 +88,5 @@ class AirlinesRelationManager extends RelationManager
                             ->delete();
                     })
             ])
-            ->bulkActions([
-
-            ]);
     }
 }
