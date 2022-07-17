@@ -43,9 +43,6 @@ class PairedStandsRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
                 $attachAction->form(fn (): array => [
                     Select::make('recordId')
@@ -97,9 +94,6 @@ class PairedStandsRelationManager extends RelationManager
                     }
                 )
                     ->label(__('form.stands.pairs.detach.label'))
-            ])
-            ->bulkActions([
-
             ]);
     }
 }
