@@ -87,6 +87,6 @@ class AirlinesRelationManager extends RelationManager
                             ->where('id', $action->getRecord()->pivot_id)
                             ->delete();
                     })
-            ])
+            ]);
     }
 }
