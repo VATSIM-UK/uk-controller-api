@@ -53,9 +53,9 @@ class StandResource extends Resource
                             ->helperText(__('Required'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn () => Airfield::all()
+                                fn() => Airfield::all()
                                     ->sortBy('code', SORT_NATURAL)
-                                    ->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code])
+                                    ->mapWithKeys(fn(Airfield $airfield) => [$airfield->id => $airfield->code])
                             )
                             ->reactive()
                             ->afterStateUpdated(function (Closure $get, Closure $set) {
@@ -68,26 +68,26 @@ class StandResource extends Resource
                             })
                             ->preload()
                             ->searchable(!App::runningUnitTests())
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                            ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
+                            ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                            ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
                             ->label(__('form.stands.terminal.label'))
                             ->helperText(__('form.stands.terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
-                                ->get()
-                                ->mapWithKeys(
-                                    fn (Terminal $terminal) => [$terminal->id => $terminal->description]
-                                )
+                                fn(Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                    ->get()
+                                    ->mapWithKeys(
+                                        fn(Terminal $terminal) => [$terminal->id => $terminal->description]
+                                    )
                             )
                             ->disabled(
-                                fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
+                                fn(Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
                                     !Terminal::where('airfield_id', $get('airfield_id'))->exists()
                             )
                             ->dehydrated(
-                                fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
+                                fn(Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
                                     !Terminal::where('airfield_id', $get('airfield_id'))->exists()
                             ),
                         TextInput::make('identifier')
@@ -96,19 +96,19 @@ class StandResource extends Resource
                             ->helperText(__('form.stands.identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (Closure $get, ?Model $record) => $get('airfield_id') ? new StandIdentifierMustBeUniqueAtAirfield(
+                                fn(Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
-                                ) : function () {
-                                }
+                                ),
+                                fn(Closure $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
                             ->label(__('form.stands.type.label'))
                             ->helperText(__('form.stands.type.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn () => StandType::all()->mapWithKeys(
-                                    fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
+                                fn() => StandType::all()->mapWithKeys(
+                                    fn(StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
                                 )
                             ),
                         TextInput::make('latitude')
@@ -130,13 +130,13 @@ class StandResource extends Resource
                             ->helperText(__('form.stands.wake_category.helper'))
                             ->hintIcon('heroicon-o-scale')
                             ->options(
-                                fn () => WakeCategoryScheme::with('categories')
+                                fn() => WakeCategoryScheme::with('categories')
                                     ->uk()
                                     ->firstOrFail()
                                     ->categories
                                     ->sortBy('relative_weighting')
                                     ->mapWithKeys(
-                                        fn (WakeCategory $category) => [
+                                        fn(WakeCategory $category) => [
                                             $category->id => sprintf(
                                                 '%s (%s)',
                                                 $category->description,
@@ -151,8 +151,8 @@ class StandResource extends Resource
                             ->helperText(__('form.stands.aircraft_type.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->options(
-                                fn () => Aircraft::all()->mapWithKeys(
-                                    fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
+                                fn() => Aircraft::all()->mapWithKeys(
+                                    fn(Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
                                 )
                             )
                             ->searchable(!App::runningUnitTests()),
