@@ -215,9 +215,6 @@ class StandResource extends Resource
                     ->label(__('table.stands.columns.allocation'))
                     ->default('--'),
             ])->defaultSort('airfield.code')
-            ->filters([
-                //
-            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
