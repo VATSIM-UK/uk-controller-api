@@ -68,7 +68,6 @@ class Kernel extends HttpKernel
             MiddlewareKeys::GITHUB_AUTH,
         ],
         'web' => [
-            RedirectIfAuthenticated::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
