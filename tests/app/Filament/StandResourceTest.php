@@ -36,7 +36,7 @@ class StandResourceTest extends BaseFilamentTestCase
         $this->get(StandResource::getUrl())
             ->assertSuccessful()
             ->assertSeeText('EGLL')
-            ->assertSeeText('New stand');;
+            ->assertSeeText('EGBB');
     }
 
     private function indexRoleProvider(): array
