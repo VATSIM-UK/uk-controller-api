@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Release\Departure\DepartureReleaseRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -27,7 +26,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = 'horizon';
+    public const HOME = 'admin/dashboard';
 
     /**
      * Define the routes for the application.
