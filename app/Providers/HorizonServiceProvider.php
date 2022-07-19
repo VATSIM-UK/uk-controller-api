@@ -19,7 +19,9 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         // Horizon authentication is dealt with by the web admin guard
         Gate::define('viewHorizon', function (User $user = null) {
-            return (bool) $user;
+            return $user
+                ? $user->canAccessFilament()
+                : false;
         });
     }
 }
