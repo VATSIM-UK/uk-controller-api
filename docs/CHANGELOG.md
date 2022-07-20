@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.9.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.2...6.9.3) (2022-07-12)
+
+
+### Bug Fixes
+
+* remove core redirects ([309fa4c](https://github.com/VATSIM-UK/uk-controller-api/commit/309fa4cad40a5773406b55e02af0fee0753d6339))
+
 ## [6.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.1...6.9.2) (2022-07-12)
 
 
