@@ -129,12 +129,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function getFilamentName(): string
     {
-        return sprintf('%s %s', $this->first_name, $this->last_name, $this->id);
+        return sprintf('%s %s', $this->first_name, $this->last_name);
     }
 
     public function name(): Attribute
     {
-        return Attribute::get(fn() => $this->id);
+        return Attribute::get(fn() => $this->getFilamentName());
     }
 
     public function roles(): BelongsToMany

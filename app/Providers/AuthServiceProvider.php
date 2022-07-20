@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Stand\Stand;
+use App\Policies\ActivityLogPolicy;
 use App\Policies\DefaultFilamentPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use Spatie\Activitylog\Models\Activity;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         Stand::class => DefaultFilamentPolicy::class,
+        Activity::class => ActivityLogPolicy::class,
     ];
 
     /**

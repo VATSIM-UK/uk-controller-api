@@ -18,6 +18,11 @@ class DefaultFilamentPolicy
         return true;
     }
 
+    public function viewAny(): bool
+    {
+        return true;
+    }
+
     public function update(User $user): bool
     {
         return $this->userHasEditingRole($user);
