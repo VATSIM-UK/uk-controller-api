@@ -11,7 +11,10 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class DefaultFilamentPolicy
 {
+    use ChecksUserRoles;
     use HandlesAuthorization;
+
+    private const EDITING_ROLES = [RoleKeys::DIVISION_STAFF_GROUP, RoleKeys::WEB_TEAM, RoleKeys::OPERATIONS_TEAM];
 
     public function view(): bool
     {
@@ -25,38 +28,41 @@ class DefaultFilamentPolicy
 
     public function update(User $user): bool
     {
-        return $this->userHasEditingRole($user);
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
     }
 
     public function create(User $user): bool
     {
-        return $this->userHasEditingRole($user);
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
     }
 
     public function delete(User $user): bool
     {
-        return $this->userHasEditingRole($user);
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
     }
 
     public function restore(User $user): bool
     {
-        return $this->userHasEditingRole($user);
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
     }
 
     public function forceDelete(User $user): bool
     {
-        return $this->userHasEditingRole($user);
-    }
-
-    private function userHasEditingRole(User $user): bool
-    {
-        foreach ($user->roles as $role)
-        {
-            if ($role->isOneOf([RoleKeys::DIVISION_STAFF_GROUP, RoleKeys::WEB_TEAM, RoleKeys::OPERATIONS_TEAM])) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
     }
 }

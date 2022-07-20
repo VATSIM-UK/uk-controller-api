@@ -6,17 +6,14 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-/**
- * A base policy for doing things via Filament.
- */
-class ActivityLogPolicy
+class UserPolicy
 {
     use ChecksUserRoles;
     use HandlesAuthorization;
 
     private const ROLES = [RoleKeys::DIVISION_STAFF_GROUP, RoleKeys::WEB_TEAM];
 
-    public function view(User $user): bool
+    public function viewAny(User $user)
     {
         return $this->userHasRole(
             $user,
@@ -24,7 +21,7 @@ class ActivityLogPolicy
         );
     }
 
-    public function viewAny(User $user): bool
+    public function view(User $user)
     {
         return $this->userHasRole(
             $user,
@@ -32,27 +29,30 @@ class ActivityLogPolicy
         );
     }
 
-    public function update(): bool
+    public function create()
     {
         return false;
     }
 
-    public function create(): bool
+    public function update(User $user, User $model)
+    {
+        return $this->userHasRole(
+            $user,
+            self::ROLES
+        ) && $user->id !== $model->id;
+    }
+
+    public function delete()
     {
         return false;
     }
 
-    public function delete(): bool
+    public function restore()
     {
         return false;
     }
 
-    public function restore(): bool
-    {
-        return false;
-    }
-
-    public function forceDelete(): bool
+    public function forceDelete()
     {
         return false;
     }
