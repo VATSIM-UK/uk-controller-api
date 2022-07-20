@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.3...6.9.4) (2022-07-20)
+
+
+### Bug Fixes
+
+* condition on stand identifier checking ([e54e294](https://github.com/VATSIM-UK/uk-controller-api/commit/e54e294b4fe248e335db8427e3148266ba46fd82))
+* routes ([448326e](https://github.com/VATSIM-UK/uk-controller-api/commit/448326e263242d1e66a3c7db2e9eee76a72b0ab9))
+
 ## [6.9.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.2...6.9.3) (2022-07-12)
 
 
