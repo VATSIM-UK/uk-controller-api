@@ -35,6 +35,7 @@ class Stand extends Model
         'max_aircraft_id',
         'assignment_priority',
         'closed_at',
+        'isOpen',
     ];
 
     protected $casts = [
@@ -55,6 +56,11 @@ class Stand extends Model
         return $this->hasOne(StandAssignment::class);
     }
 
+    public function getAssignedCallsignAttribute(): ?string
+    {
+        return $this->assignment ? $this->assignment->callsign : null;
+    }
+
     public function airfield(): BelongsTo
     {
         return $this->belongsTo(Airfield::class);
@@ -69,12 +75,13 @@ class Stand extends Model
 
     public function airlines(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Airline::class,
-            'airline_stand',
-            'stand_id',
-            'airline_id'
-        )->withPivot('destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
+        return $this->belongsToMany(Airline::class)
+            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug')->withTimestamps();
+    }
+
+    public function uniqueAirlines(): BelongsToMany
+    {
+        return $this->belongsToMany(Airline::class)->distinct();
     }
 
     public function getCoordinateAttribute()
@@ -182,7 +189,7 @@ class Stand extends Model
             'stand_pairs',
             'stand_id',
             'paired_stand_id',
-        );
+        )->withPivot('id');
     }
 
     public function terminal(): BelongsTo
@@ -289,5 +296,10 @@ class Stand extends Model
     public function scopeNotClosed(Builder $query): Builder
     {
         return $query->whereNull('closed_at');
+    }
+
+    public function getAirfieldIdentifierAttribute(): string
+    {
+        return sprintf('%s - %s', $this->airfield->code, $this->identifier);
     }
 }

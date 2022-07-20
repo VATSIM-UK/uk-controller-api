@@ -23,12 +23,14 @@
         "spatie/laravel-schedule-monitor": "^3.0",
         "ohdearapp/ohdear-php-sdk": "^3.1",
         "sentry/sentry-laravel": "^2.4",
-        "composer/semver": "^3.2"
+        "composer/semver": "^3.2",
+        "filament/filament": "^2.13"
     },
     "require-dev": {
         "fakerphp/faker": "^1.13",
         "phpunit/phpunit": "^9.0",
-        "mockery/mockery": "^1.3"
+        "mockery/mockery": "^1.3",
+        "nunomaduro/collision": "^6.0"
     },
     "autoload": {
         "psr-4": {
@@ -51,6 +53,9 @@
     "scripts": {
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""
+        ],
+        "post-update-cmd": [
+            "@php artisan filament:upgrade"
         ]
     },
     "minimum-stability": "dev",

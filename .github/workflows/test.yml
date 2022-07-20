@@ -155,9 +155,6 @@ jobs:
       - name: Publish Horizon
         run: php artisan horizon:publish
 
-      - name: Optimize
-        run: php artisan optimize
-
       # Start Application
       - name: Serve Application
         run: php artisan serve -q &
@@ -168,7 +165,7 @@ jobs:
 
       # Run Tests
       - name: Run PHPUnit With Coverage
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: php artisan test --coverage-clover=coverage.xml
 
       # Run Coverage Suite
       - name: Upload Code Coverage Report
