@@ -21,9 +21,8 @@ Route::middleware('guest')->group(function () {
         return redirect()->route('filament.auth.login');
     });
 
-    Route::get('/auth/redirect', function () {
-        return Socialite::driver('vatsimuk')->redirect();
-    })->name('vatsimuk.redirect');
+    Route::get('/auth/redirect', [CoreAuthController::class, 'redirect'])
+        ->name('vatsimuk.redirect');
 
     Route::get('/auth/callback', [CoreAuthController::class, 'callback'])
         ->name('auth.login.callback');

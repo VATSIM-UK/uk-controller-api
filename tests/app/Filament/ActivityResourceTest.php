@@ -4,7 +4,6 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\ActivityResource;
-use App\Filament\Resources\StandResource;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
