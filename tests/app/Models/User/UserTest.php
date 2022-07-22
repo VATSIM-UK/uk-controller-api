@@ -78,8 +78,8 @@ class UserTest extends BaseFunctionalTestCase
     public function testItHasANameAttribute()
     {
         $this->assertEquals(
-            12345,
-            (new User(['id' => 12345, 'last_name' => 'User']))->name
+            'Test User',
+            (new User(['id' => 12345, 'first_name' => 'Test', 'last_name' => 'User']))->name
         );
     }
 }
