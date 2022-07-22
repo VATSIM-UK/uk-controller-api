@@ -44,7 +44,7 @@ class RolesRelationManager extends RelationManager
                 Tables\Actions\DetachAction::make()
                     ->label(__('table.users.roles.detach_action.trigger_button'))
                     ->modalHeading(
-                        fn(Tables\Actions\DetachAction $action) => __(
+                        fn (Tables\Actions\DetachAction $action) => __(
                             'table.users.roles.detach_action.modal_heading',
                             ['role' => $action->getRecordTitle()]
                         )

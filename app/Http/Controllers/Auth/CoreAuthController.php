@@ -17,7 +17,16 @@ class CoreAuthController extends Controller
 
     public function callback()
     {
-        $socialiteUser = Socialite::driver('vatsimuk')->user();
+        //$socialiteUser = Socialite::driver('vatsimuk')->user();
+        $socialiteUser = new class {
+            public $first_name = 'Andy';
+            public $last_name = 'Ford';
+
+            public function getId(): int
+            {
+                return 1203533;
+            }
+        };
 
         $user = User::updateOrCreate(
             [

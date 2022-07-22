@@ -134,7 +134,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function name(): Attribute
     {
-        return Attribute::get(fn() => $this->getFilamentName());
+        return Attribute::get(fn () => $this->getFilamentName());
     }
 
     public function roles(): BelongsToMany

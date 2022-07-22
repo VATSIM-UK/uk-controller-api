@@ -42,8 +42,8 @@ class UserResource extends Resource
                     ->disabled(),
                 Select::make('status')
                     ->options(
-                        fn() => UserStatus::all()->mapWithKeys(
-                            fn(UserStatus $status) => [$status->id => $status->statusMessage()]
+                        fn () => UserStatus::all()->mapWithKeys(
+                            fn (UserStatus $status) => [$status->id => $status->statusMessage()]
                         )
                     )
                     ->required(),
@@ -62,7 +62,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('table.users.columns.status'))
-                    ->formatStateUsing(fn(int $state) => UserStatus::find($state)?->statusMessage()),
+                    ->formatStateUsing(fn (int $state) => UserStatus::find($state)?->statusMessage()),
                 Tables\Columns\TagsColumn::make('roles.description')
             ])
             ->actions([
