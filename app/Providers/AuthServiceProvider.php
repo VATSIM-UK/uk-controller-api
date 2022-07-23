@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Sid;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
 use App\Policies\ActivityLogPolicy;
@@ -38,6 +39,7 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         Stand::class => DefaultFilamentPolicy::class,
+        Sid::class => DefaultFilamentPolicy::class,
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
     ];
