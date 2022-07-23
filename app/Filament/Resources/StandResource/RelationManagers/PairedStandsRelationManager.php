@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use App\Filament\Resources\ControlsRelationManagerAccess;
 use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class PairedStandsRelationManager extends RelationManager
 {
+    use ControlsRelationManagerAccess;
+
     protected static string $relationship = 'pairedStands';
     protected static ?string $inverseRelationship = 'pairedStands';
 
@@ -44,7 +47,7 @@ class PairedStandsRelationManager extends RelationManager
                     ->searchable(),
             ])
             ->headerActions([
-                $attachAction->form(fn (): array => [
+                $attachAction->form(fn(): array => [
                     Select::make('recordId')
                         ->required()
                         ->options(
@@ -61,7 +64,7 @@ class PairedStandsRelationManager extends RelationManager
                                 })
                                 ->get()
                                 ->mapWithKeys(
-                                    fn (Stand $stand) => [
+                                    fn(Stand $stand) => [
                                         $stand->{$attachAction->getRelationship()->getRelatedKeyName(
                                         )} => $attachAction->getRecordTitle($stand),
                                     ]
@@ -70,7 +73,7 @@ class PairedStandsRelationManager extends RelationManager
                         ->searchable(!App::runningUnitTests())
                         ->label(__('form.stands.pairs.stand.label'))
                         ->helperText(__('form.stands.pairs.stand.helper'))
-                        ->disableLabel(false)
+                        ->disableLabel(false),
                 ])
                     ->using(function (array $data) use ($attachAction) {
                         DB::transaction(function () use ($attachAction, $data) {
@@ -83,6 +86,7 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     })
                     ->label(__('form.stands.pairs.add.label'))
+                    ->visible(self::canUpdateRelations()),
             ])
             ->actions([
                 $detachAction->using(
@@ -93,7 +97,8 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     }
                 )
-                    ->label(__('form.stands.pairs.detach.label'))
+                    ->visible(self::canUpdateRelations())
+                    ->label(__('form.stands.pairs.detach.label')),
             ]);
     }
 }

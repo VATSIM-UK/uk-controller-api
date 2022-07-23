@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use App\Filament\Resources\ControlsRelationManagerAccess;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class AirlinesRelationManager extends RelationManager
 {
+    use ControlsRelationManagerAccess;
+
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'airlines';
     protected static ?string $inverseRelationship = 'stands';
@@ -45,7 +48,7 @@ class AirlinesRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-airline')
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                    ->form(fn(Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(__('form.stands.airlines.icao.label'))
                             ->required(),
@@ -76,8 +79,9 @@ class AirlinesRelationManager extends RelationManager
                                         Carbon::parse($get('not_before'))->startOfMinute()->toDateTimeString()
                                     );
                                 }
-                            })
-                    ]),
+                            }),
+                    ])
+                    ->visible(self::canUpdateRelations()),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make('unpair-airline')
@@ -87,6 +91,7 @@ class AirlinesRelationManager extends RelationManager
                             ->where('id', $action->getRecord()->pivot_id)
                             ->delete();
                     })
+                    ->visible(self::canUpdateRelations()),
             ]);
     }
 }
