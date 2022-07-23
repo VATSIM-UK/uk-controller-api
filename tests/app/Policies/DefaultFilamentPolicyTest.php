@@ -61,6 +61,16 @@ class DefaultFilamentPolicyTest extends BaseFunctionalTestCase
             'Force Delete Operations' => ['forceDelete', RoleKeys::OPERATIONS_TEAM, true],
             'Force Delete Web' => ['forceDelete', RoleKeys::WEB_TEAM, true],
             'Force Delete DSG' => ['forceDelete', RoleKeys::DIVISION_STAFF_GROUP, true],
+
+            // Filament Special Roles
+            'Attach No Role' => ['attach', null, false],
+            'Attach Operations' => ['attach', RoleKeys::OPERATIONS_TEAM, true],
+            'Attach Web' => ['attach', RoleKeys::WEB_TEAM, true],
+            'Attach DSG' => ['attach', RoleKeys::DIVISION_STAFF_GROUP, true],
+            'Detach No Role' => ['detach', null, false],
+            'Detach Operations' => ['detach', RoleKeys::OPERATIONS_TEAM, true],
+            'Detach Web' => ['detach', RoleKeys::WEB_TEAM, true],
+            'Detach DSG' => ['detach', RoleKeys::DIVISION_STAFF_GROUP, true],
         ];
     }
 }

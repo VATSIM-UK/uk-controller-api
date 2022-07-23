@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Filament\Resources\UserResource\RelationManagers\RolesRelationManager;
+use App\Models\Airline\Airline;
+use App\Models\Controller\Prenote;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
@@ -31,10 +34,13 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     protected $policies = [
+        Airline::class => DefaultFilamentPolicy::class,
+        Prenote::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
+        RolesRelationManager::class => UserPolicy::class,
     ];
 
     /**

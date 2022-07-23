@@ -2,18 +2,13 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
-use App\Filament\Resources\ControlsRelationManagerAccess;
-use Closure;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Support\Facades\Auth;
 
 class RolesRelationManager extends RelationManager
 {
-    use ControlsRelationManagerAccess;
-
     protected static string $relationship = 'roles';
 
     protected static ?string $recordTitleAttribute = 'description';
@@ -41,19 +36,17 @@ class RolesRelationManager extends RelationManager
                     ->modalButton(__('table.users.roles.attach_action.confirm_button'))
                     ->disableAttachAnother()
                     ->preloadRecordSelect()
-                    ->hidden(self::canUpdateRelations()),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()
                     ->label(__('table.users.roles.detach_action.trigger_button'))
                     ->modalHeading(
-                        fn(Tables\Actions\DetachAction $action) => __(
+                        fn (Tables\Actions\DetachAction $action) => __(
                             'table.users.roles.detach_action.modal_heading',
                             ['role' => $action->getRecordTitle()]
                         )
                     )
                     ->modalButton(__('table.users.roles.detach_action.confirm_button'))
-                    ->hidden(self::canUpdateRelations()),
             ]);
     }
 }

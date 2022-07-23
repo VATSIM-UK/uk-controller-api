@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
-use App\Filament\Resources\ControlsRelationManagerAccess;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\TextInput;
@@ -14,8 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class AirlinesRelationManager extends RelationManager
 {
-    use ControlsRelationManagerAccess;
-
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'airlines';
     protected static ?string $inverseRelationship = 'stands';
@@ -81,7 +78,6 @@ class AirlinesRelationManager extends RelationManager
                                 }
                             }),
                     ])
-                    ->visible(self::canUpdateRelations()),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make('unpair-airline')
@@ -91,7 +87,6 @@ class AirlinesRelationManager extends RelationManager
                             ->where('id', $action->getRecord()->pivot_id)
                             ->delete();
                     })
-                    ->visible(self::canUpdateRelations()),
             ]);
     }
 }

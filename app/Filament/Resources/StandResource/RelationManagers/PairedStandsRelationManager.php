@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
-use App\Filament\Resources\ControlsRelationManagerAccess;
 use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -14,8 +13,6 @@ use Illuminate\Support\Facades\DB;
 
 class PairedStandsRelationManager extends RelationManager
 {
-    use ControlsRelationManagerAccess;
-
     protected static string $relationship = 'pairedStands';
     protected static ?string $inverseRelationship = 'pairedStands';
 
@@ -86,7 +83,6 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     })
                     ->label(__('form.stands.pairs.add.label'))
-                    ->visible(self::canUpdateRelations()),
             ])
             ->actions([
                 $detachAction->using(
@@ -97,7 +93,6 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     }
                 )
-                    ->visible(self::canUpdateRelations())
                     ->label(__('form.stands.pairs.detach.label')),
             ]);
     }
