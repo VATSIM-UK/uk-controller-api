@@ -30,13 +30,6 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_DATA_ADMIN => 'Can administer live data stored in the system'
     ];
 
-    const ADMIN_SCOPES = [
-        self::SCOPE_USER_ADMIN,
-        self::SCOPE_DEPENDENCY_ADMIN,
-        self::SCOPE_VERSION_ADMIN,
-        self::SCOPE_DATA_ADMIN
-    ];
-
     protected $policies = [
         Stand::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
