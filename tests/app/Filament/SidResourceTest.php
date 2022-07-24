@@ -4,9 +4,12 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\SidResource;
+use App\Models\Controller\Prenote;
 use App\Models\Sid;
+use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 class SidResourceTest extends BaseFilamentTestCase
@@ -370,6 +373,61 @@ class SidResourceTest extends BaseFilamentTestCase
             ->set('data.initial_heading', 123)
             ->call('save')
             ->assertHasErrors(['data.identifier']);
+    }
+
+    public function testItListsPrenotes()
+    {
+        $rowToExpect = DB::table('sid_prenotes')->where('sid_id', 1)
+            ->where('prenote_id', 1)
+            ->first()
+            ->id;
+
+        Livewire::test(
+            SidResource\RelationManagers\PrenotesRelationManager::class,
+            ['ownerRecord' => Sid::findOrFail(1)]
+        )
+            ->assertCanSeeTableRecords([$rowToExpect]);
+    }
+
+    public function testItAddsPrenotes()
+    {
+        Livewire::test(
+            SidResource\RelationManagers\PrenotesRelationManager::class,
+            ['ownerRecord' => Sid::findOrFail(1)]
+        )
+            ->callTableAction('attach', Sid::findOrFail(1), ['recordId' => 2, 'priority' => 100])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'sid_prenotes',
+            [
+                'sid_id' => 1,
+                'prenote_id' => 2,
+            ]
+        );
+    }
+
+    public function testItRemovesPrenotes()
+    {
+        $prenote1 = Prenote::factory()->create();
+        $prenote2 = Prenote::factory()->create();
+        $prenote3 = Prenote::factory()->create();
+        $prenote4 = Prenote::factory()->create();
+        $prenote5 = Prenote::factory()->create();
+
+        Sid::find(1)->prenotes()->sync([$prenote1->id, $prenote2->id, $prenote3->id, $prenote4->id, $prenote5->id]);
+
+        Livewire::test(
+            SidResource\RelationManagers\PrenotesRelationManager::class,
+            ['ownerRecord' => Sid::findOrFail(1)]
+        )
+            ->callTableAction('detach', $prenote4)
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [$prenote1->id, $prenote2->id, $prenote3->id, $prenote5->id],
+            Sid::find(1)->prenotes()->pluck('prenotes.id')->toArray()
+        );
     }
 
     protected function getViewEditRecord(): Model
