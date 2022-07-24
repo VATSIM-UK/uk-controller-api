@@ -44,7 +44,6 @@ class UserPolicy
 
     public function attach(User $user, User $model)
     {
-        dd('hai');
         return $this->userHasRole(
             $user,
             self::ROLES
