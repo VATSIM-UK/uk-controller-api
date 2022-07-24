@@ -26,6 +26,22 @@ class DefaultFilamentPolicy
         return true;
     }
 
+    public function attach(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
+    public function detach(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
     public function update(User $user): bool
     {
         return $this->userHasRole(
