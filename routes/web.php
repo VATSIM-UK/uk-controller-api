@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Auth\CoreAuthController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,15 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('welcome', function () {
-    return view('welcome');
-})->name('welcome');
+Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('filament.auth.login');
+    });
 
-Route::get('dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+    Route::get('/auth/redirect', function () {
+        return Socialite::driver('vatsimuk')->redirect();
+    })->name('vatsimuk.redirect');
+
+    Route::get('/auth/callback', [CoreAuthController::class, 'callback'])
+        ->name('auth.login.callback');
+});
 
 // Redirect to allow old plugin versions to update to the latest
 Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
-
-require __DIR__ . '/auth.php';

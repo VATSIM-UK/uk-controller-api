@@ -5,6 +5,7 @@ namespace App\Models\User;
 use App\Models\Dependency\Dependency;
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -22,7 +23,7 @@ use Laravel\Passport\HasApiTokens;
  * Class User
  * @package App\Models
  */
-class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser
+class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName
 {
     use HasApiTokens, Authenticatable, Authorizable, HasFactory;
 
@@ -39,6 +40,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $fillable = [
         'id',
+        'first_name',
+        'last_name',
         'last_login',
     ];
 
@@ -119,13 +122,21 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsToMany(Dependency::class)->withTimestamps();
     }
 
+    public function canAccessFilament(): bool
+    {
+        return in_array(
+            $this->id,
+            [1203533, 1258635, 1169992, 1294298]
+        );
+    }
+
+    public function getFilamentName(): string
+    {
+        return sprintf('%s %s', $this->first_name, $this->last_name, $this->id);
+    }
+
     public function name(): Attribute
     {
         return Attribute::get(fn () => $this->id);
-    }
-
-    public function canAccessFilament(): bool
-    {
-        return false;
     }
 }

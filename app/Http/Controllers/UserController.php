@@ -201,33 +201,6 @@ class UserController extends BaseController
         }
     }
 
-    /**
-     * Allows us to authenticate admin users
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function adminLogin(Request $request) : JsonResponse
-    {
-        $admin = Admin::where('email', $request->json('email'))->first();
-
-        if (!$admin || !Hash::check($request->json('password'), $admin->password)) {
-            return response()->json(null, 403);
-        }
-
-        $user = $admin->user;
-        $token = $user->createToken('access', AuthServiceProvider::ADMIN_SCOPES);
-        $token->token->expires_at = Carbon::now()->addMinutes(20);
-        $token->token->save();
-
-        $returnValue = [
-            'access_token' => $token->accessToken,
-            'expires_at' => $token->token->expires_at->timestamp,
-        ];
-
-        return response()->json($returnValue, 201);
-    }
-
     private function getNotExistsMessage(int $userId): string
     {
         return sprintf('User with CID %d does not exist', $userId);

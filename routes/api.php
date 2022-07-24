@@ -363,13 +363,6 @@ Route::middleware('api')
                     // Wake categories
                     Route::get('wake-schemes/dependency', 'WakeController@getWakeSchemesDependency');
 
-                    // Admin login
-                    Route::prefix('admin')->group(
-                        function () {
-                            Route::post('login', 'UserController@adminLogin');
-                        }
-                    );
-
                     // Getting version
                     Route::prefix('version')->group(function () {
                         Route::get('latest', 'VersionController@getLatestVersion');
