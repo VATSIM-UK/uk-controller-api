@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use Closure;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Support\Facades\Auth;
 
 class RolesRelationManager extends RelationManager
 {
@@ -34,6 +36,7 @@ class RolesRelationManager extends RelationManager
                     ->label(__('table.users.roles.attach_action.trigger_button'))
                     ->modalHeading(__('table.users.roles.attach_action.modal_heading'))
                     ->modalButton(__('table.users.roles.attach_action.confirm_button'))
+                    ->hidden(self::hideActionsClosure())
                     ->disableAttachAnother()
                     ->preloadRecordSelect()
             ])
@@ -47,6 +50,12 @@ class RolesRelationManager extends RelationManager
                         )
                     )
                     ->modalButton(__('table.users.roles.detach_action.confirm_button'))
+                    ->hidden(self::hideActionsClosure()),
             ]);
+    }
+
+    private static function hideActionsClosure(): Closure
+    {
+        return fn (RolesRelationManager $livewire) => $livewire->getOwnerRecord()->id === Auth::id();
     }
 }

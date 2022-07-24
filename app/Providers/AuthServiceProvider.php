@@ -2,14 +2,15 @@
 
 namespace App\Providers;
 
-use App\Filament\Resources\UserResource\RelationManagers\RolesRelationManager;
 use App\Models\Airline\Airline;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
+use App\Models\User\Role;
 use App\Models\User\User;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DefaultFilamentPolicy;
+use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -40,7 +41,6 @@ class AuthServiceProvider extends ServiceProvider
         Sid::class => DefaultFilamentPolicy::class,
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
-        RolesRelationManager::class => UserPolicy::class,
     ];
 
     /**
