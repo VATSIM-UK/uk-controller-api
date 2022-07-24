@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.9.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.4...6.9.5) (2022-07-24)
+
+
+### Bug Fixes
+
+* horizon auth ([1b65dec](https://github.com/VATSIM-UK/uk-controller-api/commit/1b65dec705e070233af3277f13790893e080f53c))
+* re-add missing model ([e1039f0](https://github.com/VATSIM-UK/uk-controller-api/commit/e1039f0e68d8e337bc448eb5d804f01f355cecd6))
+
 ## [6.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.3...6.9.4) (2022-07-20)
 
 
