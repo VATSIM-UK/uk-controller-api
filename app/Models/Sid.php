@@ -62,7 +62,7 @@ class Sid extends Model
     public function airfieldRunwayIdentifier(): Attribute
     {
         return Attribute::get(
-            fn() => sprintf('%s/%s - %s', $this->runway->airfield->code, $this->runway->identifier, $this->identifier)
+            fn () => sprintf('%s/%s - %s', $this->runway->airfield->code, $this->runway->identifier, $this->identifier)
         );
     }
 }

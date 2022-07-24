@@ -46,17 +46,17 @@ class UserPolicy
     {
         dd('hai');
         return $this->userHasRole(
-                $user,
-                self::ROLES
-            ) && $user->id !== $model->id;
+            $user,
+            self::ROLES
+        ) && $user->id !== $model->id;
     }
 
     public function detach(User $user, User $model)
     {
         return $this->userHasRole(
-                $user,
-                self::ROLES
-            ) && $user->id !== $model->id;
+            $user,
+            self::ROLES
+        ) && $user->id !== $model->id;
     }
 
     public function delete()

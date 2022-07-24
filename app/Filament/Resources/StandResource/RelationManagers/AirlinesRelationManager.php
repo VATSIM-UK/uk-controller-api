@@ -45,7 +45,7 @@ class AirlinesRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-airline')
-                    ->form(fn(Tables\Actions\AttachAction $action): array => [
+                    ->form(fn (Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(__('form.stands.airlines.icao.label'))
                             ->required(),

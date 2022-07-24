@@ -48,10 +48,11 @@ class SidResource extends Resource
                     ->options(
                         fn () => Runway::with('airfield')
                             ->get()
-                            ->mapWithKeys(fn (Runway $runway) => [
+                            ->mapWithKeys(
+                                fn (Runway $runway) => [
                                 $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier)
                             ]
-                        ),
+                            ),
                     )
                     ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
                     ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
@@ -89,10 +90,11 @@ class SidResource extends Resource
                     ->hintIcon('heroicon-o-clipboard-list')
                     ->options(
                         fn () => Handoff::all()
-                            ->mapWithKeys(fn (Handoff $handoff) => [
+                            ->mapWithKeys(
+                                fn (Handoff $handoff) => [
                                 $handoff->id => $handoff->description
                             ]
-                        ),
+                            ),
                     )
                     ->searchable(),
             ]);
