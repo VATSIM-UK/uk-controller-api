@@ -29,6 +29,7 @@ class HandoffResource extends Resource
         return $form
             ->schema([
                 TextInput::make('description')
+                    ->label(__('form.handoffs.description.label'))
                     ->maxLength(255)
                     ->required()
             ]);
@@ -39,9 +40,11 @@ class HandoffResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
+                    ->label(__('table.handoffs.columns.description'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
+                    ->label(__('table.handoffs.columns.controllers'))
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

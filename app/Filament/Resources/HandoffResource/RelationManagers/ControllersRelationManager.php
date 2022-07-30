@@ -31,9 +31,11 @@ class ControllersRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('order')
-                    ->label('#'),
-                Tables\Columns\TextColumn::make('callsign'),
+                    ->label(__('table.handoffs.controller_positions.columns.order.label')),
+                Tables\Columns\TextColumn::make('callsign')
+                    ->label(__('table.handoffs.controller_positions.columns.callsign.label')),
                 Tables\Columns\TextColumn::make('frequency')
+                    ->label(__('table.handoffs.controller_positions.columns.frequency.label'))
                     ->formatStateUsing(fn(float $state) => FrequencyFormatter::formatFrequency($state)),
             ])
             ->headerActions([
@@ -41,6 +43,10 @@ class ControllersRelationManager extends RelationManager
                     ->form(fn(Tables\Actions\AttachAction $action, ControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
                         Forms\Components\Select::make('insert_after')
+                            ->label(__('table.handoffs.controller_positions.attach_form.insert_after.label'))
+                            ->helperText(
+                                __('table.handoffs.controller_positions.attach_form.insert_after.helper')
+                            )
                             ->options(
                                 $livewire->getOwnerRecord()
                                     ->controllers
@@ -57,7 +63,11 @@ class ControllersRelationManager extends RelationManager
                                 ? ControllerPosition::findOrFail($data['insert_after'])
                                 : null
                         );
-                    })->disableAttachAnother(),
+                    })
+                    ->disableAttachAnother()
+                    ->label(__('table.handoffs.controller_positions.attach_action.label'))
+                    ->modalHeading(__('table.handoffs.controller_positions.attach_action.modal_heading'))
+                    ->modalButton(__('table.handoffs.controller_positions.attach_action.modal_button')),
             ])
             ->actions([
                 Tables\Actions\Action::make('moveUp')
@@ -68,7 +78,7 @@ class ControllersRelationManager extends RelationManager
                             true
                         );
                     })
-                    ->label('Move Up')
+                    ->label(__('table.handoffs.controller_positions.move_up_action.label'))
                     ->icon('heroicon-o-arrow-up')
                     ->authorize(fn(ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\Action::make('moveDown')
@@ -79,7 +89,7 @@ class ControllersRelationManager extends RelationManager
                             false
                         );
                     })
-                    ->label('Move Down')
+                    ->label(__('table.handoffs.controller_positions.move_down_action.label'))
                     ->icon('heroicon-o-arrow-down')
                     ->authorize(fn(ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\DetachAction::make()
@@ -88,7 +98,7 @@ class ControllersRelationManager extends RelationManager
                             $record->pivot->pivotParent,
                             $record
                         );
-                    }),
+                    })->label(__('table.handoffs.controller_positions.detach_action.label')),
             ]);
     }
 }
