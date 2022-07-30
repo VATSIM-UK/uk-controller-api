@@ -93,8 +93,8 @@ class HandoffService
             // Increment everything else
             $controllersToChange = $handoff->controllers()
                 ->wherePivot('order', '>=', $handoffBefore->pivot->order)
-                ->orderBy('order', 'desc')
                 ->get();
+            $controllersToChange = $controllersToChange->sortByDesc('pivot.order');
 
             $controllersToChange->each(function (ControllerPosition $position) use ($handoff) {
                 DB::table('handoff_orders')
