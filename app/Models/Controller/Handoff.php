@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Handoff extends Model
 {
     protected $fillable = [
-        'key',
         'description',
         'created_at',
     ];
@@ -27,6 +26,7 @@ class Handoff extends Model
             'controller_position_id'
         )
             ->orderByPivot('order')
-            ->withPivot('order');
+            ->withPivot('order')
+            ->withTimestamps();
     }
 }

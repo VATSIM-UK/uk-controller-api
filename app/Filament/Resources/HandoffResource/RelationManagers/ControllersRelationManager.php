@@ -50,82 +50,43 @@ class ControllersRelationManager extends RelationManager
                             ),
                     ])
                     ->using(function (ControllersRelationManager $livewire, $data) {
-                        $currentPositions = $livewire->getOwnerRecord()->controllers->pluck('callsign')->toArray();
-
-                        if (!isset($data['insert_after'])) {
-                            HandoffService::setPositionsForHandoffId(
-                                $livewire->getOwnerRecord()->id,
-                                array_merge(
-                                    $currentPositions,
-                                    [ControllerPosition::findOrFail($data['recordId'])->callsign]
-                                )
-                            );
-
-                            return;
-                        }
-
-                        $insertAfterPosition = array_search(
-                            ControllerPosition::findOrFail($data['insert_after'])->callsign,
-                            $currentPositions
+                        HandoffService::insertPositionIntoHandoffOrder(
+                            $livewire->getOwnerRecord(),
+                            ControllerPosition::findOrFail($data['recordId']),
+                            after: isset($data['insert_after'])
+                                ? ControllerPosition::findOrFail($data['insert_after'])
+                                : null
                         );
-
-                        array_splice(
-                            $currentPositions,
-                            $insertAfterPosition + 1,
-                            0,
-                            [ControllerPosition::findOrFail($data['recordId'])->callsign]
-                        );
-                        HandoffService::setPositionsForHandoffId($livewire->getOwnerRecord()->id, $currentPositions);
                     })->disableAttachAnother(),
             ])
             ->actions([
                 Tables\Actions\Action::make('moveUp')
                     ->action(function (ControllerPosition $record) {
-                        $positions = $record->pivot->pivotParent->controllers->pluck('callsign')->toArray();
-                        $thisPosition = array_search(
-                            $record->callsign,
-                            $positions
+                        HandoffService::moveControllerInHandoffOrder(
+                            $record->pivot->pivotParent,
+                            $record,
+                            true
                         );
-
-                        if ($thisPosition === 0) {
-                            return;
-                        }
-
-                        $positionToSwap = $positions[$thisPosition - 1];
-                        $positions[$thisPosition - 1] = $record->callsign;
-                        $positions[$thisPosition] = $positionToSwap;
-
-                        HandoffService::setPositionsForHandoffId($record->pivot->handoff_id, $positions);
                     })
                     ->label('Move Up')
                     ->icon('heroicon-o-arrow-up')
                     ->authorize(fn(ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\Action::make('moveDown')
                     ->action(function (ControllerPosition $record) {
-                        $positions = $record->pivot->pivotParent->controllers->pluck('callsign')->toArray();
-                        $thisPosition = array_search(
-                            $record->callsign,
-                            $positions
+                        HandoffService::moveControllerInHandoffOrder(
+                            $record->pivot->pivotParent,
+                            $record,
+                            false
                         );
-
-                        if ($thisPosition === count($positions) - 1) {
-                            return;
-                        }
-
-                        $positionToSwap = $positions[$thisPosition + 1];
-                        $positions[$thisPosition + 1] = $record->callsign;
-                        $positions[$thisPosition] = $positionToSwap;
-
-                        HandoffService::setPositionsForHandoffId($record->pivot->handoff_id, $positions);
                     })
                     ->label('Move Down')
                     ->icon('heroicon-o-arrow-down')
                     ->authorize(fn(ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\DetachAction::make()
                     ->using(function (ControllerPosition $record) {
-                        HandoffService::removeFromHandoffOrderByModel(
+                        HandoffService::removeFromHandoffOrder(
                             $record->pivot->pivotParent,
-                            $record->callsign
+                            $record
                         );
                     }),
             ]);

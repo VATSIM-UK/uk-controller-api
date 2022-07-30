@@ -31,7 +31,6 @@ class HandoffResourceTest extends BaseFilamentTestCase
         $this->assertDatabaseHas(
             'handoffs',
             [
-                'key' => 'A_HANDOFF',
                 'description' => 'A Handoff',
             ]
         );
@@ -69,7 +68,6 @@ class HandoffResourceTest extends BaseFilamentTestCase
         $this->assertDatabaseHas(
             'handoffs',
             [
-                'key' => 'HANDOFF_ORDER_1',
                 'description' => 'A Handoff',
             ]
         );
@@ -145,8 +143,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeRemoved()
     {
-        HandoffService::setPositionsForHandoffId(
-            1,
+        HandoffService::setPositionsForHandoffByControllerCallsign(
+            Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -176,8 +174,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeRemovedAtTheEnd()
     {
-        HandoffService::setPositionsForHandoffId(
-            1,
+        HandoffService::setPositionsForHandoffByControllerCallsign(
+            Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -207,8 +205,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedUpTheOrder()
     {
-        HandoffService::setPositionsForHandoffId(
-            1,
+        HandoffService::setPositionsForHandoffByControllerCallsign(
+            Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -239,8 +237,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedUpTheOrderAtTheTop()
     {
-        HandoffService::setPositionsForHandoffId(
-            1,
+        HandoffService::setPositionsForHandoffByControllerCallsign(
+            Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -271,8 +269,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedDownTheOrder()
     {
-        HandoffService::setPositionsForHandoffId(
-            1,
+        HandoffService::setPositionsForHandoffByControllerCallsign(
+            Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -303,8 +301,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedDownAtTheBottom()
     {
-        HandoffService::setPositionsForHandoffId(
-            1,
+        HandoffService::setPositionsForHandoffByControllerCallsign(
+            Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
