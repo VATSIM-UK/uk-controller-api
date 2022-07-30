@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Sid;
@@ -47,8 +46,15 @@ class HandoffService
 
     public static function setPositionsForHandoffOrder(string $key, array $positions): void
     {
-        DB::transaction(function () use ($key, $positions) {
-            $handoff = DB::table('handoffs')->where('key', $key)->first()->id;
+        self::setPositionsForHandoffId(
+            DB::table('handoffs')->where('key', $key)->first()->id,
+            $positions
+        );
+    }
+
+    public static function setPositionsForHandoffId(int $handoff, array $positions): void
+    {
+        DB::transaction(function () use ($handoff, $positions) {
             DB::table('handoff_orders')
                 ->where('handoff_id', $handoff)
                 ->delete();
@@ -143,11 +149,19 @@ class HandoffService
 
     public static function removeFromHandoffOrder(string $handoffKey, string $positionToRemove): void
     {
+        self::removeFromHandoffOrderByModel(
+            Handoff::where('key', $handoffKey)
+                ->firstOrFail(),
+            $positionToRemove
+        );
+    }
+
+    public static function removeFromHandoffOrderByModel(Handoff $handoff, string $positionToRemove): void
+    {
         // Get the models
         try {
             DB::beginTransaction();
             $removePosition = ControllerPosition::where('callsign', $positionToRemove)->firstOrFail();
-            $handoff = Handoff::where('key', $handoffKey)->firstOrFail();
 
             // Check the insert before is in the handoff order
             $handoffRemove = $handoff->controllers->where('id', $removePosition->id)->first();

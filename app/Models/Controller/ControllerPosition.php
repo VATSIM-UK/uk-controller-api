@@ -48,6 +48,18 @@ class ControllerPosition extends Model implements ControllerPositionInterface
         );
     }
 
+    public function handoffs() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Handoff::class,
+            'handoff_orders',
+            'controller_position_id',
+            'handoff_id'
+        )
+            ->orderByPivot('order')
+            ->withPivot('order');
+    }
+
     public function alternativeCallsigns(): HasMany
     {
         return $this->hasMany(ControllerPositionAlternativeCallsign::class);

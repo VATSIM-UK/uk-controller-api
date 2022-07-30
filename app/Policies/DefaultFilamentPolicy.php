@@ -26,6 +26,22 @@ class DefaultFilamentPolicy
         return true;
     }
 
+    public function moveUp(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
+    public function moveDown(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
     public function attach(User $user): bool
     {
         return $this->userHasRole(
