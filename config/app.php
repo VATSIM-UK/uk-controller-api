@@ -167,7 +167,6 @@ return [
          */
         Laravel\Passport\PassportServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        \Spatie\EloquentSortable\EloquentSortableServiceProvider::class,
 
         /*
          * Application Service Providers...
