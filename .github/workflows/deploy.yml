@@ -76,6 +76,39 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          tools: v2
+
+      # Add GitHub Auth to Composer
+      - name: Add Composer GitHub Token
+        run: composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+
+      # Restore Caches
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Restore Composer Cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Restore Vendor From Cache
+        uses: actions/cache@v1
+        with:
+          path: vendor
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-interaction --optimize-autoloader --no-suggest
+
       #
       # YARN BUILD
       # Install node_modules and run webpack
@@ -105,6 +138,9 @@ jobs:
       # Not required for deployment
       - name: Remove node_modules
         run: 'rm -rf node_modules'
+
+      - name: Reduce Composer Dependencies To Production
+        run: composer install --no-interaction --no-dev --optimize-autoloader
 
       #
       # DEPLOYMENT
@@ -142,8 +178,8 @@ jobs:
             sed -i "s/^BUGSNAG_APP_VERSION.*$/BUGSNAG_APP_VERSION=$TAG/" .env
 
             # Install application dependencies
-            $PHP_PATH /usr/local/bin/composer install --no-interaction --no-dev
             $PHP_PATH artisan package:discover
+            $PHP_PATH artisan filament:upgrade
           envs: RELEASE_DIRECTORY,APPLICATION_ROOT,TAG,PHP_PATH
 
       - name: (Remote) Update symbolic links

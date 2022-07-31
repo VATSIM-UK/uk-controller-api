@@ -112,166 +112,166 @@ Route::middleware('api')
             // Routes for user administration
             Route::middleware('admin.user')->group(
                 function () {
-                // A test route for useradmin access
-                Route::get('useradmin', 'TeapotController@normalTeapots');
+                    // A test route for useradmin access
+                    Route::get('useradmin', 'TeapotController@normalTeapots');
 
-                // Get user
-                Route::get(
-                    'user/{cid}',
-                    [
+                    // Get user
+                    Route::get(
+                        'user/{cid}',
+                        [
                         'middleware' => MiddlewareKeys::VATSIM_CID,
                         'uses' => 'UserController@getUser',
                     ]
-                )->where('cid', '[0-9]+');
+                    )->where('cid', '[0-9]+');
 
-                // Create user
-                Route::post(
-                    'user/{cid}',
-                    [
+                    // Create user
+                    Route::post(
+                        'user/{cid}',
+                        [
                         'middleware' => MiddlewareKeys::VATSIM_CID,
                         'uses' => 'UserController@createUser',
                     ]
-                )->where('cid', '[0-9]+');
+                    )->where('cid', '[0-9]+');
 
-                // Reactivate user account
-                Route::put(
-                    'user/{cid}/reactivate',
-                    [
+                    // Reactivate user account
+                    Route::put(
+                        'user/{cid}/reactivate',
+                        [
                         'middleware' => MiddlewareKeys::VATSIM_CID,
                         'uses' => 'UserController@reactivateUser',
                     ]
-                )->where('cid', '[0-9]+');
+                    )->where('cid', '[0-9]+');
 
-                // Ban user account
-                Route::put(
-                    'user/{cid}/ban',
-                    [
+                    // Ban user account
+                    Route::put(
+                        'user/{cid}/ban',
+                        [
                         'middleware' => MiddlewareKeys::VATSIM_CID,
                         'uses' => 'UserController@banUser',
                     ]
-                )->where('cid', '[0-9]+');
+                    )->where('cid', '[0-9]+');
 
-                // Disable user account
-                Route::put(
-                    'user/{cid}/disable',
-                    [
+                    // Disable user account
+                    Route::put(
+                        'user/{cid}/disable',
+                        [
                         'middleware' => MiddlewareKeys::VATSIM_CID,
                         'uses' => 'UserController@disableUser',
                     ]
-                )->where('cid', '[0-9]+');
+                    )->where('cid', '[0-9]+');
 
-                // Create user token
-                Route::post(
-                    'user/{cid}/token',
-                    [
+                    // Create user token
+                    Route::post(
+                        'user/{cid}/token',
+                        [
                         'middleware' => MiddlewareKeys::VATSIM_CID,
                         'uses' => 'UserController@createUserToken',
                     ]
-                )->where('cid', '[0-9]+');
+                    )->where('cid', '[0-9]+');
 
-                // Delete user token
-                Route::delete(
-                    'token/{tokenId}',
-                    [
+                    // Delete user token
+                    Route::delete(
+                        'token/{tokenId}',
+                        [
                         'uses' => 'UserController@deleteUserToken',
                     ]
-                );
-            }
+                    );
+                }
             );
 
             // Routes for user administration
             Route::middleware('admin.version')->group(
                 function () {
-                // A test route for useradmin access
-                Route::get('versionadmin', 'TeapotController@normalTeapots');
+                    // A test route for useradmin access
+                    Route::get('versionadmin', 'TeapotController@normalTeapots');
 
-                // Routes for returning information about versions
-                Route::get('version', 'VersionController@getAllVersions');
-            }
+                    // Routes for returning information about versions
+                    Route::get('version', 'VersionController@getAllVersions');
+                }
             );
 
             // Routes for dependency administration
             Route::middleware('admin.dependency')->group(
                 function () {
-                Route::delete('sid/{id}', 'SidController@deleteSid')
+                    Route::delete('sid/{id}', 'SidController@deleteSid')
                     ->where('sid', 'd+');
-                Route::put('sid', 'SidController@createSid');
-                Route::put('sid/{id}', 'SidController@updateSid')
+                    Route::put('sid', 'SidController@createSid');
+                    Route::put('sid/{id}', 'SidController@updateSid')
                     ->where('sid', 'd+');
-            }
+                }
             );
 
             // Routes for data management.
             Route::middleware('admin.data')->group(
                 function () {
-                Route::get('dataadmin', 'TeapotController@normalTeapots');
+                    Route::get('dataadmin', 'TeapotController@normalTeapots');
 
-                Route::prefix('admin')->group(
-                    function () {
-                        Route::prefix('airfields')->group(function () {
-                            Route::get('', 'Admin\\StandAdminController@getAirfields');
-                            Route::prefix('{airfield:code}')->group(function () {
-                                Route::prefix('terminals')->group(function () {
-                                    Route::get('', 'Admin\\StandAdminController@getTerminals');
-                                    Route::get(
-                                        '{terminal:key}/stands',
-                                        'Admin\\StandAdminController@getStandsByTerminal'
-                                    );
-                                });
-                                Route::prefix('stands')->group(function () {
-                                    Route::post('', 'Admin\\StandAdminController@createNewStand');
-                                    Route::get(
-                                        '',
-                                        'Admin\\StandAdminController@getStandsForAirfield'
-                                    );
-                                    Route::prefix('{stand}')->group(function () {
+                    Route::prefix('admin')->group(
+                        function () {
+                            Route::prefix('airfields')->group(function () {
+                                Route::get('', 'Admin\\StandAdminController@getAirfields');
+                                Route::prefix('{airfield:code}')->group(function () {
+                                    Route::prefix('terminals')->group(function () {
+                                        Route::get('', 'Admin\\StandAdminController@getTerminals');
+                                        Route::get(
+                                            '{terminal:key}/stands',
+                                            'Admin\\StandAdminController@getStandsByTerminal'
+                                        );
+                                    });
+                                    Route::prefix('stands')->group(function () {
+                                        Route::post('', 'Admin\\StandAdminController@createNewStand');
                                         Route::get(
                                             '',
-                                            'Admin\\StandAdminController@getStandDetails'
+                                            'Admin\\StandAdminController@getStandsForAirfield'
                                         );
-                                        Route::put(
-                                            '',
-                                            'Admin\\StandAdminController@modifyStand'
-                                        );
-                                        Route::delete(
-                                            '',
-                                            'Admin\\StandAdminController@deleteStand'
-                                        );
-                                        Route::patch(
-                                            'close',
-                                            'Admin\\StandAdminController@closeStand'
-                                        );
-                                        Route::patch(
-                                            'open',
-                                            'Admin\\StandAdminController@openStand'
-                                        );
+                                        Route::prefix('{stand}')->group(function () {
+                                            Route::get(
+                                                '',
+                                                'Admin\\StandAdminController@getStandDetails'
+                                            );
+                                            Route::put(
+                                                '',
+                                                'Admin\\StandAdminController@modifyStand'
+                                            );
+                                            Route::delete(
+                                                '',
+                                                'Admin\\StandAdminController@deleteStand'
+                                            );
+                                            Route::patch(
+                                                'close',
+                                                'Admin\\StandAdminController@closeStand'
+                                            );
+                                            Route::patch(
+                                                'open',
+                                                'Admin\\StandAdminController@openStand'
+                                            );
+                                        });
                                     });
                                 });
                             });
-                        });
 
-                        Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
-                        Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
-                        Route::get('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@getHolds');
-                        Route::post('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@createHold');
-                        Route::get('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@getHold');
-                        Route::put('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@modifyHold');
-                        Route::delete('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@deleteHold');
-                        Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
-                        Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
-                        Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
+                            Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
+                            Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
+                            Route::get('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@getHolds');
+                            Route::post('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@createHold');
+                            Route::get('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@getHold');
+                            Route::put('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@modifyHold');
+                            Route::delete('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@deleteHold');
+                            Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
+                            Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
+                            Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
 
-                        Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
-                    }
-                );
-            }
+                            Route::get('/stand-types', 'Admin\\StandAdminController@getTypes');
+                        }
+                    );
+                }
             );
 
             Route::middleware('admin.github')->group(
                 function () {
-                Route::post('github', 'GithubController@processGithubWebhook');
-                Route::post('version', 'VersionController@createNewPluginVersion');
-            }
+                    Route::post('github', 'GithubController@processGithubWebhook');
+                    Route::post('version', 'VersionController@createNewPluginVersion');
+                }
             );
 
             // Routes that can be hit by anybody at all, mostly login and informational routes
@@ -282,8 +282,8 @@ Route::middleware('api')
                     Route::get(
                         '/',
                         function () {
-                        return response()->json(['message' => 'Welcome to the UK Controller Plugin API']);
-                    }
+                            return response()->json(['message' => 'Welcome to the UK Controller Plugin API']);
+                        }
                     );
 
                     // Aircraft
@@ -362,13 +362,6 @@ Route::middleware('api')
 
                     // Wake categories
                     Route::get('wake-schemes/dependency', 'WakeController@getWakeSchemesDependency');
-
-                    // Admin login
-                    Route::prefix('admin')->group(
-                        function () {
-                        Route::post('login', 'UserController@adminLogin');
-                    }
-                    );
 
                     // Getting version
                     Route::prefix('version')->group(function () {

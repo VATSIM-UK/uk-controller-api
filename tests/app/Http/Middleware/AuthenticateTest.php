@@ -2,8 +2,6 @@
 namespace App\Http\Middleware;
 
 use App\BaseApiTestCase;
-use App\Models\User\User;
-use App\Providers\AuthServiceProvider;
 use TestingUtils\Traits\WithSeedUsers;
 
 class AuthenticateTest extends BaseApiTestCase
@@ -24,5 +22,11 @@ class AuthenticateTest extends BaseApiTestCase
     {
         $this->json('GET', '/api/authorise', [], ['Authorization' => 'Bearer nope'])
             ->assertStatus(401);
+    }
+
+    public function testItRedirectsToLoginPageIfWebRequestNotLoggedIn()
+    {
+        $this->get('horizon')
+            ->assertRedirect();
     }
 }

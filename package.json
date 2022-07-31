@@ -13,8 +13,9 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^8.0.5",
     "@semantic-release/release-notes-generator": "^10.0.3",
-    "@tailwindcss/forms": "^0.3.4",
-    "commitizen": "^4.2.4",
+    "@tailwindcss/forms": "^0.5.2",
+    "@tailwindcss/typography": "^0.5.4",
+    "commitizen": "^4.2.5",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.34",
@@ -22,7 +23,8 @@
     "postcss": "^8.4.14",
     "postcss-import": "^14.1.0",
     "semantic-release": "19",
-    "tailwindcss": "^2.2.19"
+    "tailwindcss": "^3.1.6",
+    "tippy.js": "^6.3.7"
   },
   "scripts": {
     "dev": "yarn run development",
