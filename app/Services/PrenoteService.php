@@ -26,7 +26,7 @@ class PrenoteService
         })->toArray();
     }
 
-    public static function setPositionsForPrenote(Prenote $prenote, array $positions): void
+    public static function setPositionsForPrenote(Prenote|int $prenote, array $positions): void
     {
         DB::transaction(function () use ($prenote, $positions) {
             $order = 1;
@@ -34,7 +34,11 @@ class PrenoteService
             $prenote->controllers()->sync([]);
             $prenote->controllers()->sync(
                 collect($positions)
-                    ->map(fn(ControllerPosition $position) => $position->id)
+                    ->map(fn(ControllerPosition|int|string $position) => match (true) {
+                        is_string($position) => ControllerPosition::fromCallsign($position)->id,
+                        $position instanceof ControllerPosition => $position->id,
+                        default => $position
+                    })
                     ->mapWithKeys(
                         function (int $controllerId) use (&$order) {
                             return [$controllerId => ['order' => $order++]];
@@ -120,5 +124,48 @@ class PrenoteService
             $prenote->controllers()->sync([]);
             $prenote->controllers()->sync($controllersToSync);
         });
+    }
+
+    public static function moveControllerInPrenoteOrder(
+        Prenote|int $prenote,
+        ControllerPosition|int $position,
+        bool $up
+    ): void {
+        $position = is_int($position)
+            ? ControllerPosition::fromId($position)
+            : $position;
+
+        $prenote = is_int($prenote)
+            ? Prenote::findOrFail($prenote)
+            : $prenote;
+
+        $positions = $prenote->controllers()
+            ->pluck(self::CONTROLLERS_PRIMARY_COLUMN);
+        $positionToSwap = $positions->search(fn(int $prenotePosition) => $prenotePosition === $position->id);
+
+        if ($positionToSwap === false) {
+            throw new InvalidArgumentException('Position not in prenote order');
+        }
+
+        $arrayPositions = $positions->toArray();
+
+        // No need to do any swapping
+        if (
+            count($arrayPositions) === 1 ||
+            $up && $positionToSwap === 0 ||
+            !$up && $positionToSwap === count($arrayPositions) - 1
+        ) {
+            return;
+        }
+
+        $newItemLocation = $up ? $positionToSwap - 1 : $positionToSwap + 1;
+
+        [$arrayPositions[$positionToSwap], $arrayPositions[$newItemLocation]] =
+            [$arrayPositions[$newItemLocation], $arrayPositions[$positionToSwap]];
+
+        static::setPositionsForPrenote(
+            $prenote,
+            $arrayPositions
+        );
     }
 }

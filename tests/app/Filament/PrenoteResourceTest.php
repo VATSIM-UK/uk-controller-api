@@ -4,7 +4,9 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\PrenoteResource;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
+use App\Services\PrenoteService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -85,6 +87,248 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('save')
             ->assertHasErrors(['data.description']);
+    }
+
+    public function testItDisplaysControllers()
+    {
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )->assertCanSeeTableRecords([1, 2]);
+    }
+
+    public function testControllersCanBeAttachedAtTheEnd()
+    {
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('attach', Prenote::findOrFail(1), ['recordId' => 3])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeAttachedAfterAnotherController()
+    {
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('attach', Prenote::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'EGLL_N_APP',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeRemoved()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('detach', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeRemovedAtTheEnd()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('detach', ControllerPosition::findOrFail(4))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedUpTheOrder()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('moveUp', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_N_APP',
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedUpTheOrderAtTheTop()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('moveUp', ControllerPosition::findOrFail(1))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedDownTheOrder()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'EGLL_N_APP',
+                'LON_C_CTR',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedDownAtTheBottom()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
+        )
+            ->callTableAction('moveDown', ControllerPosition::findOrFail(4))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Prenote::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
     }
 
     protected function getViewEditRecord(): Model

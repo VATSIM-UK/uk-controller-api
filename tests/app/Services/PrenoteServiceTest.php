@@ -16,6 +16,7 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
         parent::setUp();
         $this->service = $this->app->make(PrenoteService::class);
     }
+
     public function testItReturnsPrenotesV2Dependency()
     {
         $expected = [
@@ -25,7 +26,7 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
                 'controller_positions' => [
                     1,
                     2,
-                ]
+                ],
             ],
             [
                 'id' => 2,
@@ -33,7 +34,7 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
                 'controller_positions' => [
                     2,
                     3,
-                ]
+                ],
             ],
         ];
 
@@ -49,6 +50,98 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
                 ControllerPosition::findOrFail(4),
                 ControllerPosition::findOrFail(1),
                 ControllerPosition::findOrFail(3),
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 3,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 4,
+            ]
+        );
+    }
+
+    public function testItSetsPositionsForPrenoteById()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                2,
+                4,
+                1,
+                3,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 3,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 4,
+            ]
+        );
+    }
+
+    public function testItSetsPositionsForPrenoteByCallsign()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                'EGLL_N_APP',
+                'LON_C_CTR',
+                'EGLL_S_TWR',
+                'LON_S_CTR',
             ]
         );
 
@@ -311,6 +404,248 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
                 'controller_position_id' => 3,
                 'order' => 3,
             ]
+        );
+    }
+
+    public function testItMovesPositionUpAtStartOfOrder()
+    {
+        PrenoteService::moveControllerInPrenoteOrder(
+            Prenote::findOrFail(1),
+            ControllerPosition::findOrFail(1),
+            true
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+    }
+
+    public function testItMovesPositionUpIfOnlyPosition()
+    {
+        PrenoteService::setPositionsForPrenote(Prenote::findOrFail(1), [ControllerPosition::findOrFail(1)]);
+        PrenoteService::moveControllerInPrenoteOrder(
+            Prenote::findOrFail(1),
+            ControllerPosition::findOrFail(1),
+            true
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+    }
+
+    public function testItMovesPositionUpInTheOrder()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        PrenoteService::moveControllerInPrenoteOrder(
+            Prenote::findOrFail(1),
+            ControllerPosition::findOrFail(2),
+            true
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 2,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItMovesPositionDownAtEndOfOrder()
+    {
+        PrenoteService::moveControllerInPrenoteOrder(
+            Prenote::findOrFail(1),
+            ControllerPosition::findOrFail(2),
+            false
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+    }
+
+    public function testItMovesPositionDownIfOnlyPosition()
+    {
+        PrenoteService::setPositionsForPrenote(Prenote::findOrFail(1), [ControllerPosition::findOrFail(1)]);
+        PrenoteService::moveControllerInPrenoteOrder(
+            Prenote::findOrFail(1),
+            ControllerPosition::findOrFail(1),
+            false
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+    }
+
+    public function testItMovesPositionDownInTheOrder()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        PrenoteService::moveControllerInPrenoteOrder(
+            Prenote::findOrFail(1),
+            ControllerPosition::findOrFail(2),
+            false
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 2,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItMovesPositionInOrderByIds()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        PrenoteService::moveControllerInPrenoteOrder(
+            1,
+            2,
+            false
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 2,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'prenote_orders',
+            [
+                'prenote_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItThrowsExceptionIfPositionToBeMovedIsNotInOrer()
+    {
+        PrenoteService::setPositionsForPrenote(
+            Prenote::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        $this->expectException(InvalidArgumentException::class);
+        PrenoteService::moveControllerInPrenoteOrder(
+            1,
+            4,
+            false
         );
     }
 }

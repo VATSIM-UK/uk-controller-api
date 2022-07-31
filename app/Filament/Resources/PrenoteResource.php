@@ -50,7 +50,7 @@ class PrenoteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ControllersRelationManager::class,
         ];
     }
 
