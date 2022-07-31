@@ -51,6 +51,7 @@ class PrenoteService
             ->wherePivot('order', '>=', $prenoteBefore->pivot->order)
             ->orderBy('order', 'desc')
             ->get();
+            $controllersToChange = $controllersToChange->sortByDesc('pivot.order');
 
             $controllersToChange->each(function (ControllerPosition $position) use ($prenote) {
                 DB::table('prenote_orders')
