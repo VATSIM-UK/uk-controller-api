@@ -100,5 +100,5 @@ class ControllersRelationManager extends RelationManager
                         );
                     })->label(__('table.prenotes.controller_positions.detach_action.label')),
             ]);
-    }    
+    }
 }

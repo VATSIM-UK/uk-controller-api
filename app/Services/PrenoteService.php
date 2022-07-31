@@ -34,7 +34,7 @@ class PrenoteService
             $prenote->controllers()->sync([]);
             $prenote->controllers()->sync(
                 collect($positions)
-                    ->map(fn(ControllerPosition|int|string $position) => match (true) {
+                    ->map(fn (ControllerPosition|int|string $position) => match (true) {
                         is_string($position) => ControllerPosition::fromCallsign($position)->id,
                         $position instanceof ControllerPosition => $position->id,
                         default => $position
@@ -78,7 +78,7 @@ class PrenoteService
                 ->concat(collect([$position]))
                 ->keyBy('id')
                 ->map(
-                    fn(ControllerPosition $position) => [
+                    fn (ControllerPosition $position) => [
                         'order' => static::getNewOrder($position, $controllerToWorkFrom, (bool)$before),
                     ]
                 )
@@ -141,7 +141,7 @@ class PrenoteService
 
         $positions = $prenote->controllers()
             ->pluck(self::CONTROLLERS_PRIMARY_COLUMN);
-        $positionToSwap = $positions->search(fn(int $prenotePosition) => $prenotePosition === $position->id);
+        $positionToSwap = $positions->search(fn (int $prenotePosition) => $prenotePosition === $position->id);
 
         if ($positionToSwap === false) {
             throw new InvalidArgumentException('Position not in prenote order');
