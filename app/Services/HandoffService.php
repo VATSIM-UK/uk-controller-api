@@ -67,11 +67,11 @@ class HandoffService
     {
         $controllerPositions = ControllerPosition::whereIn('callsign', $positions)
             ->get()
-            ->mapWithKeys(fn(ControllerPosition $position) => [$position->callsign => $position->id]);
+            ->mapWithKeys(fn (ControllerPosition $position) => [$position->callsign => $position->id]);
         self::setPositionsForHandoffByControllerId(
             $handoff,
             array_map(
-                fn(string $callsign) => $controllerPositions[$callsign],
+                fn (string $callsign) => $controllerPositions[$callsign],
                 $positions
             )
         );
@@ -82,7 +82,7 @@ class HandoffService
         self::setPositionsForHandoffByControllerId(
             $handoff,
             array_map(
-                fn(ControllerPosition $position) => $position->id,
+                fn (ControllerPosition $position) => $position->id,
                 $positions
             )
         );
@@ -117,7 +117,7 @@ class HandoffService
                 ->concat(collect([$position]))
                 ->keyBy('id')
                 ->map(
-                    fn(ControllerPosition $position) => [
+                    fn (ControllerPosition $position) => [
                         'order' => static::getNewOrder($position, $controllerToWorkFrom, (bool)$before),
                     ]
                 )
@@ -231,7 +231,7 @@ class HandoffService
 
         $positions = $handoff->controllers()
             ->pluck(self::CONTROLLERS_PRIMARY_COLUMN);
-        $positionToSwap = $positions->search(fn(int $handoffPosition) => $handoffPosition === $position->id);
+        $positionToSwap = $positions->search(fn (int $handoffPosition) => $handoffPosition === $position->id);
 
         if ($positionToSwap === false) {
             throw new InvalidArgumentException('Position not in handoff order');
