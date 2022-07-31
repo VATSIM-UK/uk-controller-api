@@ -67,5 +67,5 @@ class HandoffResource extends Resource
             'view' => Pages\ViewHandoff::route('/{record}'),
             'edit' => Pages\EditHandoff::route('/{record}/edit'),
         ];
-    }    
+    }
 }

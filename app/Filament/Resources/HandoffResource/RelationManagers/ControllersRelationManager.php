@@ -36,11 +36,11 @@ class ControllersRelationManager extends RelationManager
                     ->label(__('table.handoffs.controller_positions.columns.callsign.label')),
                 Tables\Columns\TextColumn::make('frequency')
                     ->label(__('table.handoffs.controller_positions.columns.frequency.label'))
-                    ->formatStateUsing(fn(float $state) => FrequencyFormatter::formatFrequency($state)),
+                    ->formatStateUsing(fn (float $state) => FrequencyFormatter::formatFrequency($state)),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->form(fn(Tables\Actions\AttachAction $action, ControllersRelationManager $livewire) => [
+                    ->form(fn (Tables\Actions\AttachAction $action, ControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
                         Forms\Components\Select::make('insert_after')
                             ->label(__('table.handoffs.controller_positions.attach_form.insert_after.label'))
@@ -51,7 +51,7 @@ class ControllersRelationManager extends RelationManager
                                 $livewire->getOwnerRecord()
                                     ->controllers
                                     ->mapWithKeys(
-                                        fn(ControllerPosition $controller) => [$controller->id => $controller->callsign]
+                                        fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
                                     )
                             ),
                     ])
@@ -80,7 +80,7 @@ class ControllersRelationManager extends RelationManager
                     })
                     ->label(__('table.handoffs.controller_positions.move_up_action.label'))
                     ->icon('heroicon-o-arrow-up')
-                    ->authorize(fn(ControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn (ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\Action::make('moveDown')
                     ->action(function (ControllerPosition $record) {
                         HandoffService::moveControllerInHandoffOrder(
@@ -91,7 +91,7 @@ class ControllersRelationManager extends RelationManager
                     })
                     ->label(__('table.handoffs.controller_positions.move_down_action.label'))
                     ->icon('heroicon-o-arrow-down')
-                    ->authorize(fn(ControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn (ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\DetachAction::make()
                     ->using(function (ControllerPosition $record) {
                         HandoffService::removeFromHandoffOrder(

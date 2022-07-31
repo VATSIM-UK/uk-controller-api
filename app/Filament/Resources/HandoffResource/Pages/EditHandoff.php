@@ -22,7 +22,7 @@ class EditHandoff extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $data['controllers'] = $this->getRecord()->controllers->map(
-            fn(ControllerPosition $controller) => ['controller' => $controller->id]
+            fn (ControllerPosition $controller) => ['controller' => $controller->id]
         )->toArray();
 
         return $data;
