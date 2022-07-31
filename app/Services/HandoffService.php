@@ -13,6 +13,8 @@ use LogicException;
 
 class HandoffService
 {
+    private const CONTROLLERS_PRIMARY_COLUMN = 'controller_positions.id';
+
     public function getHandoffsV2Dependency(): array
     {
         return Handoff::with([
@@ -65,11 +67,11 @@ class HandoffService
     {
         $controllerPositions = ControllerPosition::whereIn('callsign', $positions)
             ->get()
-            ->mapWithKeys(fn (ControllerPosition $position) => [$position->callsign => $position->id]);
+            ->mapWithKeys(fn(ControllerPosition $position) => [$position->callsign => $position->id]);
         self::setPositionsForHandoffByControllerId(
             $handoff,
             array_map(
-                fn (string $callsign) => $controllerPositions[$callsign],
+                fn(string $callsign) => $controllerPositions[$callsign],
                 $positions
             )
         );
@@ -80,7 +82,7 @@ class HandoffService
         self::setPositionsForHandoffByControllerId(
             $handoff,
             array_map(
-                fn (ControllerPosition $position) => $position->id,
+                fn(ControllerPosition $position) => $position->id,
                 $positions
             )
         );
@@ -115,7 +117,7 @@ class HandoffService
                 ->concat(collect([$position]))
                 ->keyBy('id')
                 ->map(
-                    fn (ControllerPosition $position) => [
+                    fn(ControllerPosition $position) => [
                         'order' => static::getNewOrder($position, $controllerToWorkFrom, (bool)$before),
                     ]
                 )
@@ -134,7 +136,8 @@ class HandoffService
             return $positionToInsertAround->pivot->order + ($before ? 0 : 1);
         }
 
-        return $position->pivot->order >= $positionToInsertAround->pivot->order + ($before ? 0 : 1)
+        $includeCurrentOffset = $before ? 0 : 1;
+        return $position->pivot->order >= $positionToInsertAround->pivot->order + $includeCurrentOffset
             ? $position->pivot->order + 1
             : $position->pivot->order;
     }
@@ -150,7 +153,7 @@ class HandoffService
 
             $order = 1;
             $controllersToSync = $handoff->controllers()
-                ->where('controller_positions.id', '<>', $controller->id)
+                ->where(self::CONTROLLERS_PRIMARY_COLUMN, '<>', $controller->id)
                 ->get()
                 ->mapWithKeys(function (ControllerPosition $position) use (&$order) {
                     return [$position->id => ['order' => $order++]];
@@ -209,7 +212,7 @@ class HandoffService
     private static function getHandoffsForPosition(int $positionId): Collection
     {
         return Handoff::whereHas('controllers', function (Builder $builder) use ($positionId) {
-            $builder->where('controller_positions.id', $positionId);
+            $builder->where(self::CONTROLLERS_PRIMARY_COLUMN, $positionId);
         })->get();
     }
 
@@ -227,8 +230,8 @@ class HandoffService
             : $handoff;
 
         $positions = $handoff->controllers()
-            ->pluck('controller_positions.id');
-        $positionToSwap = $positions->search(fn (int $handoffPosition) => $handoffPosition === $position->id);
+            ->pluck(self::CONTROLLERS_PRIMARY_COLUMN);
+        $positionToSwap = $positions->search(fn(int $handoffPosition) => $handoffPosition === $position->id);
 
         if ($positionToSwap === false) {
             throw new InvalidArgumentException('Position not in handoff order');
