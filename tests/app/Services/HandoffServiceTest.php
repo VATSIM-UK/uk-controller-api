@@ -7,8 +7,6 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
-use LogicException;
-use OutOfRangeException;
 
 class HandoffServiceTest extends BaseFunctionalTestCase
 {

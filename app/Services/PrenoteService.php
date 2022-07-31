@@ -2,17 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use OutOfRangeException;
+use InvalidArgumentException;
+use LogicException;
 
 class PrenoteService
 {
+    private const CONTROLLERS_PRIMARY_COLUMN = 'controller_positions.id';
+
     public function getPrenotesV2Dependency(): array
     {
         return Prenote::all()->map(function (Prenote $prenote) {
@@ -27,181 +26,99 @@ class PrenoteService
         })->toArray();
     }
 
-    public static function insertIntoOrderBefore(
-        string $prenoteKey,
-        string $positionToInsert,
-        string $insertBefore
+    public static function setPositionsForPrenote(Prenote $prenote, array $positions): void
+    {
+        DB::transaction(function () use ($prenote, $positions) {
+            $order = 1;
+
+            $prenote->controllers()->sync([]);
+            $prenote->controllers()->sync(
+                collect($positions)
+                    ->map(fn(ControllerPosition $position) => $position->id)
+                    ->mapWithKeys(
+                        function (int $controllerId) use (&$order) {
+                            return [$controllerId => ['order' => $order++]];
+                        }
+                    )
+                    ->toArray()
+            );
+        });
+    }
+
+    public static function insertPositionIntoPrenoteOrder(
+        Prenote $prenote,
+        ControllerPosition $position,
+        ?ControllerPosition $before = null,
+        ?ControllerPosition $after = null
     ): void {
-        try {
-            DB::beginTransaction();
-            // Get the models
-            $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();
-            $beforePosition = ControllerPosition::where('callsign', $insertBefore)->firstOrFail();
-            $prenote = Prenote::where('key', $prenoteKey)->firstOrFail();
+        DB::transaction(function () use ($prenote, $position, $before, $after) {
+            if (!$before && !$after) {
+                $prenote->controllers()
+                    ->attach($position, ['order' => $prenote->controllers()->count() + 1]);
 
-            // Check the insert before is in the prenote order
-            $prenoteBefore = $prenote->controllers->where('id', $beforePosition->id)->first();
-            if (!$prenoteBefore) {
-                throw new OutOfRangeException('Position to insert before not found in prenote order');
+                return;
             }
 
-            // Increment everything else
-            $controllersToChange = $prenote->controllers()
-            ->wherePivot('order', '>=', $prenoteBefore->pivot->order)
-            ->orderBy('order', 'desc')
-            ->get();
-            $controllersToChange = $controllersToChange->sortByDesc('pivot.order');
-
-            $controllersToChange->each(function (ControllerPosition $position) use ($prenote) {
-                DB::table('prenote_orders')
-                ->where(['controller_position_id' => $position->id, 'prenote_id' => $prenote->id])
-                ->update(['order' => DB::raw('`order` + 1')]);
-            });
-
-            // Pop the new position in
-            $prenote->controllers()->attach($insertPosition->id, ['order' => $prenoteBefore->pivot->order]);
-            DB::commit();
-        } catch (Exception $exception) {
-            DB::rollBack();
-            throw $exception;
-        }
-    }
-
-    public static function insertIntoOrderAfter(string $prenoteKey, string $positionToInsert, string $insertAfter): void
-    {
-        try {
-            DB::beginTransaction();
-            // Get the models
-            $insertPosition = ControllerPosition::where('callsign', $positionToInsert)->firstOrFail();
-            $afterPosition = ControllerPosition::where('callsign', $insertAfter)->firstOrFail();
-            $prenote = Prenote::where('key', $prenoteKey)->firstOrFail();
-
-            // Check the insert before is in the prenote order
-            $prenoteAfter = $prenote->controllers->where('id', $afterPosition->id)->first();
-            if (!$prenoteAfter) {
-                throw new OutOfRangeException('Position to insert after not found in prenote order');
+            if ($before && $after) {
+                throw new LogicException('Cannot insert controller position both before and after another');
             }
 
-            // Increment everything else
-            $controllersToChange = $prenote->controllers()
-            ->wherePivot('order', '>', $prenoteAfter->pivot->order)
-            ->orderBy('order', 'desc')
-            ->get();
+            $controllerToWorkFrom = $prenote->controllers()
+                ->find($before ?? $after);
 
-            $controllersToChange->each(function (ControllerPosition $position) use ($prenote) {
-                DB::table('prenote_orders')
-                ->where(['controller_position_id' => $position->id, 'prenote_id' => $prenote->id])
-                ->update(['order' => DB::raw('`order` + 1')]);
-            });
-
-            // Pop the new position in
-            $prenote->controllers()->attach($insertPosition->id, ['order' => $prenoteAfter->pivot->order + 1]);
-            DB::commit();
-        } catch (Exception $exception) {
-            DB::rollBack();
-            throw $exception;
-        }
-    }
-
-    public static function removeFromPrenoteOrder(string $prenoteKey, string $positionToRemove): void
-    {
-        try {
-            DB::beginTransaction();
-            // Get the models
-            $removePosition = ControllerPosition::where('callsign', $positionToRemove)->firstOrFail();
-            $prenote = Prenote::where('key', $prenoteKey)->firstOrFail();
-
-            // Check the insert before is in the prenote order
-            $prenoteRemove = $prenote->controllers->where('id', $removePosition->id)->first();
-            if (!$prenoteRemove) {
-                throw new OutOfRangeException('Position to remove not found in prenote order');
+            if (!$controllerToWorkFrom) {
+                throw new InvalidArgumentException('Controller is not part of prenote order');
             }
 
-            // Remove the position
-            DB::table('prenote_orders')
-            ->where(['controller_position_id' => $removePosition->id, 'prenote_id' => $prenote->id])->delete();
+            $controllersToSync = $prenote->controllers
+                ->concat(collect([$position]))
+                ->keyBy('id')
+                ->map(
+                    fn(ControllerPosition $position) => [
+                        'order' => static::getNewOrder($position, $controllerToWorkFrom, (bool)$before),
+                    ]
+                )
+                ->toArray();
+            $prenote->controllers()->sync([]);
+            $prenote->controllers()->sync($controllersToSync);
+        });
+    }
 
-            // Decrement order on everything else.
-            $controllersToChange = $prenote->controllers()
-            ->wherePivot('order', '>', $prenoteRemove->pivot->order)
-            ->orderBy('order', 'asc')
-            ->get();
-
-            $controllersToChange->each(function (ControllerPosition $position) use ($prenote) {
-                DB::table('prenote_orders')
-                ->where(['controller_position_id' => $position->id, 'prenote_id' => $prenote->id])
-                ->update(['order' => DB::raw('`order` - 1')]);
-            });
-            DB::commit();
-        } catch (Exception $exception) {
-            DB::rollBack();
-            throw $exception;
+    private static function getNewOrder(
+        ControllerPosition $position,
+        ControllerPosition $positionToInsertAround,
+        bool $before
+    ): int {
+        if (!$position->pivot) {
+            return $positionToInsertAround->pivot->order + ($before ? 0 : 1);
         }
+
+        $includeCurrentOffset = $before ? 0 : 1;
+        return $position->pivot->order >= $positionToInsertAround->pivot->order + $includeCurrentOffset
+            ? $position->pivot->order + 1
+            : $position->pivot->order;
     }
 
-    public static function updateAllPrenotesWithPosition(string $callsign, string $callsignToAdd, bool $before): void
+    public static function removeFromPrenoteOrder(Prenote $prenote, string|int|ControllerPosition $position): void
     {
-        $positionToAdd = ControllerPosition::where('callsign', $callsignToAdd)->firstOrFail();
-        $positionToAddAdjacent = ControllerPosition::where('callsign', $callsign)->firstOrFail();
+        DB::transaction(function () use ($prenote, $position) {
+            $controller = match (true) {
+                is_int($position) => ControllerPosition::fromId($position),
+                is_string($position) => ControllerPosition::fromCallsign($position),
+                default => $position
+            };
 
-        $method = $before ? 'insertIntoOrderBefore' : 'insertIntoOrderAfter';
-        foreach (self::getPrenotesForPosition($positionToAddAdjacent->id) as $prenote) {
-            self::$method($prenote, $positionToAdd->callsign, $positionToAddAdjacent->callsign);
-        }
-    }
+            $order = 1;
+            $controllersToSync = $prenote->controllers()
+                ->where(self::CONTROLLERS_PRIMARY_COLUMN, '<>', $controller->id)
+                ->get()
+                ->mapWithKeys(function (ControllerPosition $position) use (&$order) {
+                    return [$position->id => ['order' => $order++]];
+                })
+                ->toArray();
 
-    public static function removePositionFromAllPrenotes(string $callsign): void
-    {
-        $postionToRemove = ControllerPosition::where('callsign', $callsign)->firstOrFail();
-
-        foreach (self::getPrenotesForPosition($postionToRemove->id) as $prenote) {
-            self::removeFromPrenoteOrder($prenote, $callsign);
-        }
-    }
-
-    private static function getPrenotesForPosition(int $positionId): Collection
-    {
-        return DB::table('prenote_orders')
-            ->join('prenotes', 'prenote_id', '=', 'prenotes.id')
-            ->where('controller_position_id', $positionId)
-            ->distinct()
-            ->select('prenotes.key')
-            ->pluck('prenotes.key');
-    }
-
-    public static function createNewAirfieldPairingFromPrenote(
-        string $departureAirfield,
-        string $arrivalAirfield,
-        string $prenoteKey,
-        int $flightRuleId
-    ): void {
-        DB::transaction(
-            function () use ($departureAirfield, $arrivalAirfield, $prenoteKey, $flightRuleId) {
-                DB::table('airfield_pairing_prenotes')
-                    ->insert(
-                        [
-                            'origin_airfield_id' => Airfield::where('code', $departureAirfield)->firstOrFail()->id,
-                            'destination_airfield_id' => Airfield::where('code', $arrivalAirfield)->firstOrFail()->id,
-                            'prenote_id' => Prenote::where('key', $prenoteKey)->firstOrFail()->id,
-                            'flight_rule_id' => $flightRuleId,
-                            'created_at' => Carbon::now(),
-                        ]
-                    );
-            }
-        );
-    }
-
-    public static function deleteAirfieldPairingPrenoteForPair(
-        string $departureAirfield,
-        string $arrivalAirfield
-    ): void {
-        DB::transaction(
-            function () use ($departureAirfield, $arrivalAirfield) {
-                DB::table('airfield_pairing_prenotes')
-                    ->where('origin_airfield_id', Airfield::where('code', $departureAirfield)->firstOrFail()->id)
-                    ->where('destination_airfield_id', Airfield::where('code', $arrivalAirfield)->firstOrFail()->id)
-                    ->delete();
-            }
-        );
+            $prenote->controllers()->sync([]);
+            $prenote->controllers()->sync($controllersToSync);
+        });
     }
 }
