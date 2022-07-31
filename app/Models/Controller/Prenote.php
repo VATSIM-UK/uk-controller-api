@@ -31,7 +31,8 @@ class Prenote extends Model
             'controller_position_id'
         )
             ->orderByPivot('order')
-            ->withPivot('order');
+            ->withPivot('order')
+            ->withTimestamps();
     }
 
     public function sids(): BelongsToMany

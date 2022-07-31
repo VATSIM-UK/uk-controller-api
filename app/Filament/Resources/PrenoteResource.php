@@ -6,6 +6,7 @@ use App\Filament\Resources\PrenoteResource\Pages;
 use App\Filament\Resources\PrenoteResource\RelationManagers;
 use App\Models\Controller\Prenote;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -22,7 +23,10 @@ class PrenoteResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('description')
+                    ->label(__('form.handoffs.description.label'))
+                    ->maxLength(255)
+                    ->required(),
             ]);
     }
 
@@ -30,26 +34,24 @@ class PrenoteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description'),
-            ])
-            ->filters([
-                //
+                Tables\Columns\TextColumn::make('description')
+                    ->searchable(),
+                Tables\Columns\TagsColumn::make('controllers.callsign')
+                    ->searchable(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -58,5 +60,5 @@ class PrenoteResource extends Resource
             'view' => Pages\ViewPrenote::route('/{record}'),
             'edit' => Pages\EditPrenote::route('/{record}/edit'),
         ];
-    }    
+    }
 }
