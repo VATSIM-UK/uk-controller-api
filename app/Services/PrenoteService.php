@@ -18,7 +18,6 @@ class PrenoteService
         return Prenote::all()->map(function (Prenote $prenote) {
             return [
                 'id' => $prenote->id,
-                'key' => $prenote->key,
                 'description' => $prenote->description,
                 'controller_positions' => $prenote->controllers()
                     ->orderBy('order')

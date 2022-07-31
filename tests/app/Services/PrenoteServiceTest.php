@@ -325,7 +325,6 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
         $expected = [
             [
                 'id' => 1,
-                'key' => 'PRENOTE_ONE',
                 'description' => 'Prenote One',
                 'controller_positions' => [
                     1,
@@ -334,7 +333,6 @@ class PrenoteServiceTest extends BaseFunctionalTestCase
             ],
             [
                 'id' => 2,
-                'key' => 'PRENOTE_TWO',
                 'description' => 'Prenote Two',
                 'controller_positions' => [
                     2,
