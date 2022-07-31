@@ -24,7 +24,7 @@ class PrenoteResource extends Resource
         return $form
             ->schema([
                 TextInput::make('description')
-                    ->label(__('form.handoffs.description.label'))
+                    ->label(__('form.prenotes.description.label'))
                     ->maxLength(255)
                     ->required(),
             ]);
@@ -35,8 +35,10 @@ class PrenoteResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
+                    ->label(__('table.prenotes.columns.description'))
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
+                    ->label(__('table.prenotes.columns.controllers'))
                     ->searchable(),
             ])
             ->actions([
