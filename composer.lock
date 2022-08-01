@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "akaunting/laravel-money",
-            "version": "3.1.1",
+            "version": "3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/akaunting/laravel-money.git",
-                "reference": "daf8ca8dc91b5a08d31dbf0788e2a4723185451f"
+                "reference": "cbc66d1dc457c169f6081e0ae6c661b499dad301"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/akaunting/laravel-money/zipball/daf8ca8dc91b5a08d31dbf0788e2a4723185451f",
-                "reference": "daf8ca8dc91b5a08d31dbf0788e2a4723185451f",
+                "url": "https://api.github.com/repos/akaunting/laravel-money/zipball/cbc66d1dc457c169f6081e0ae6c661b499dad301",
+                "reference": "cbc66d1dc457c169f6081e0ae6c661b499dad301",
                 "shasum": ""
             },
             "require": {
@@ -70,9 +70,9 @@
             ],
             "support": {
                 "issues": "https://github.com/akaunting/laravel-money/issues",
-                "source": "https://github.com/akaunting/laravel-money/tree/3.1.1"
+                "source": "https://github.com/akaunting/laravel-money/tree/3.1.2"
             },
-            "time": "2022-07-20T09:28:53+00:00"
+            "time": "2022-07-27T08:16:36+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -1026,21 +1026,22 @@
         },
         {
             "name": "filament/filament",
-            "version": "v2.14.5",
+            "version": "v2.15.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/admin.git",
-                "reference": "66243ecd7a50241076ca249e0af37a386975f287"
+                "reference": "4017d4a6031462d2746fa160f9cf2adac9b7b7ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/admin/zipball/66243ecd7a50241076ca249e0af37a386975f287",
-                "reference": "66243ecd7a50241076ca249e0af37a386975f287",
+                "url": "https://api.github.com/repos/filamentphp/admin/zipball/4017d4a6031462d2746fa160f9cf2adac9b7b7ce",
+                "reference": "4017d4a6031462d2746fa160f9cf2adac9b7b7ce",
                 "shasum": ""
             },
             "require": {
                 "danharrin/livewire-rate-limiting": "^0.3|^1.0",
                 "filament/forms": "self.version",
+                "filament/notifications": "self.version",
                 "filament/support": "self.version",
                 "filament/tables": "self.version",
                 "illuminate/auth": "^8.6|^9.0",
@@ -1083,25 +1084,26 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2022-07-24T12:30:20+00:00"
+            "time": "2022-07-31T12:39:51+00:00"
         },
         {
             "name": "filament/forms",
-            "version": "v2.14.5",
+            "version": "v2.15.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/forms.git",
-                "reference": "4ba9c4dcdb232d1f3f253332f27be1fd715aa0ea"
+                "reference": "e7db032f178145b4301de0e0fb377d16085280ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/forms/zipball/4ba9c4dcdb232d1f3f253332f27be1fd715aa0ea",
-                "reference": "4ba9c4dcdb232d1f3f253332f27be1fd715aa0ea",
+                "url": "https://api.github.com/repos/filamentphp/forms/zipball/e7db032f178145b4301de0e0fb377d16085280ed",
+                "reference": "e7db032f178145b4301de0e0fb377d16085280ed",
                 "shasum": ""
             },
             "require": {
                 "blade-ui-kit/blade-heroicons": "^1.2",
                 "danharrin/date-format-converter": "^0.2",
+                "filament/notifications": "self.version",
                 "filament/support": "self.version",
                 "illuminate/console": "^8.6|^9.0",
                 "illuminate/contracts": "^8.6|^9.0",
@@ -1140,20 +1142,69 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2022-07-24T12:30:10+00:00"
+            "time": "2022-07-31T12:39:42+00:00"
         },
         {
-            "name": "filament/support",
-            "version": "v2.14.5",
+            "name": "filament/notifications",
+            "version": "v2.15.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/filamentphp/support.git",
-                "reference": "8f2859285ddb51cd7e36a9a83cbe51b614b7c2ee"
+                "url": "https://github.com/filamentphp/notifications.git",
+                "reference": "709b88ab374142808417fd76ebe8e3ff0d430bdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/support/zipball/8f2859285ddb51cd7e36a9a83cbe51b614b7c2ee",
-                "reference": "8f2859285ddb51cd7e36a9a83cbe51b614b7c2ee",
+                "url": "https://api.github.com/repos/filamentphp/notifications/zipball/709b88ab374142808417fd76ebe8e3ff0d430bdd",
+                "reference": "709b88ab374142808417fd76ebe8e3ff0d430bdd",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-heroicons": "^1.2",
+                "filament/support": "self.version",
+                "illuminate/contracts": "^8.6|^9.0",
+                "illuminate/filesystem": "^8.6|^9.0",
+                "illuminate/support": "^8.6|^9.0",
+                "livewire/livewire": "^2.6",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.9"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Filament\\Notifications\\NotificationsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Filament\\Notifications\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Effortlessly build TALL-powered notifications.",
+            "homepage": "https://github.com/filamentphp/filament",
+            "support": {
+                "issues": "https://github.com/filamentphp/filament/issues",
+                "source": "https://github.com/filamentphp/filament"
+            },
+            "time": "2022-07-26T14:00:46+00:00"
+        },
+        {
+            "name": "filament/support",
+            "version": "v2.15.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filamentphp/support.git",
+                "reference": "31b7633e8d5c3e89e5ca651a35d6a7b5243823bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filamentphp/support/zipball/31b7633e8d5c3e89e5ca651a35d6a7b5243823bb",
+                "reference": "31b7633e8d5c3e89e5ca651a35d6a7b5243823bb",
                 "shasum": ""
             },
             "require": {
@@ -1190,26 +1241,27 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2022-07-24T12:30:11+00:00"
+            "time": "2022-07-31T12:39:53+00:00"
         },
         {
             "name": "filament/tables",
-            "version": "v2.14.5",
+            "version": "v2.15.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/tables.git",
-                "reference": "e9e3b933433c3231e0c5b3454311677e14669b3c"
+                "reference": "bea71b294ba775e8bc25863e788557b3b0a63ab6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/tables/zipball/e9e3b933433c3231e0c5b3454311677e14669b3c",
-                "reference": "e9e3b933433c3231e0c5b3454311677e14669b3c",
+                "url": "https://api.github.com/repos/filamentphp/tables/zipball/bea71b294ba775e8bc25863e788557b3b0a63ab6",
+                "reference": "bea71b294ba775e8bc25863e788557b3b0a63ab6",
                 "shasum": ""
             },
             "require": {
                 "akaunting/laravel-money": "^1.2|^2.0|^3.0",
                 "blade-ui-kit/blade-heroicons": "^1.2",
                 "filament/forms": "self.version",
+                "filament/notifications": "self.version",
                 "filament/support": "self.version",
                 "illuminate/console": "^8.6|^9.0",
                 "illuminate/contracts": "^8.6|^9.0",
@@ -1244,7 +1296,7 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2022-07-24T12:30:09+00:00"
+            "time": "2022-07-31T12:39:46+00:00"
         },
         {
             "name": "firebase/php-jwt",
