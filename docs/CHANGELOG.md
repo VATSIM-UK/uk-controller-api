@@ -1,5 +1,30 @@
 # UK Controller Plugin API Changelog
 
+## [6.10.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.5...6.10.0) (2022-08-02)
+
+
+### Features
+
+* add activity log ([b853ece](https://github.com/VATSIM-UK/uk-controller-api/commit/b853ece322a243e85f7801ecd291598021b5fe41))
+* allow administration of users in filament ([571bb8f](https://github.com/VATSIM-UK/uk-controller-api/commit/571bb8fa903dee0e6e6e3d042f2c1d379dc2f542))
+* create roles and link users to roles ([d6205c4](https://github.com/VATSIM-UK/uk-controller-api/commit/d6205c4a6fc9341ee665d12d989e4f89d4232755))
+* display user roles on front page ([f7b317f](https://github.com/VATSIM-UK/uk-controller-api/commit/f7b317f94e0f45ccd31e8c7799822cad3f636550))
+* filament access policy ([3fbae27](https://github.com/VATSIM-UK/uk-controller-api/commit/3fbae272932814b814b85fd798adfe2fbae9bb8e))
+* horizon access by role ([9792e64](https://github.com/VATSIM-UK/uk-controller-api/commit/9792e6435347aaf34d5fb2c06dc5944d8e924106))
+
+
+### Bug Fixes
+
+* migration running order ([1387087](https://github.com/VATSIM-UK/uk-controller-api/commit/138708753fc6408c26ad36dd7d25a2ca2296bd3e))
+* relation manager model access ([1bf9ac2](https://github.com/VATSIM-UK/uk-controller-api/commit/1bf9ac2c02698ccf81d6de037a7dff1e98da1297))
+* remove testing from auth controller ([7b28284](https://github.com/VATSIM-UK/uk-controller-api/commit/7b282846c7e076959e9ab36fd590644f5d2921e1))
+* route middleware ([6d78e60](https://github.com/VATSIM-UK/uk-controller-api/commit/6d78e60539e40b738b3602fb773ea0286b04688a))
+
+
+### Data Updates
+
+* add web services roles ([5c9913b](https://github.com/VATSIM-UK/uk-controller-api/commit/5c9913b659b3a368effa8d2a67bfc83e7c7bdff5))
+
 ## [6.9.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.4...6.9.5) (2022-07-24)
 
 
