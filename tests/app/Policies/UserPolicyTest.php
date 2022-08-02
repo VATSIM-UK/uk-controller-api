@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Policies;
+
+use App\BaseFunctionalTestCase;
+use App\Models\User\Role;
+use App\Models\User\RoleKeys;
+use App\Models\User\User;
+
+class UserPolicyTest extends BaseFunctionalTestCase
+{
+    private readonly UserPolicy $userPolicy;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->userPolicy = $this->app->make(UserPolicy::class);
+    }
+
+    /**
+     * @dataProvider updateDataProvider
+     */
+    public function testItManagesUpdateAccess(?RoleKeys $role, bool $sameUser, bool $expected)
+    {
+        $user = User::factory()->create();
+        $otherUser = $sameUser
+            ? $user
+            : User::factory()->create();
+
+        if ($role) {
+            $user->roles()->sync([Role::idFromKey($role)]);
+        }
+
+        $this->assertEquals($expected, $this->userPolicy->update($user, $otherUser));
+    }
+
+    public function updateDataProvider(): array
+    {
+        return [
+            'Update No Role Different User' => [null, false, false],
+            'Update No Role Same User' => [null, true, false],
+            'Update DSG Different User' => [RoleKeys::DIVISION_STAFF_GROUP, false, true],
+            'Update DSG Same User' => [RoleKeys::DIVISION_STAFF_GROUP, true, false],
+            'Update Web Different User' => [RoleKeys::WEB_TEAM, false, true],
+            'Update Web Same User' => [RoleKeys::WEB_TEAM, true, false],
+            'Update Operations Different User' => [RoleKeys::OPERATIONS_TEAM, false, false],
+            'Update Operations Same User' => [RoleKeys::OPERATIONS_TEAM, true, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testItManagesAccessForOtherRoles(string $action, ?RoleKeys $role, bool $expected)
+    {
+        $user = User::factory()->create();
+        if ($role) {
+            $user->roles()->sync([Role::idFromKey($role)]);
+        }
+
+        $this->assertEquals($expected, $this->userPolicy->$action($user));
+    }
+
+    public function dataProvider(): array
+    {
+        return [
+            'View No Role' => ['view', null, false],
+            'View Operations' => ['view', RoleKeys::OPERATIONS_TEAM, false],
+            'View Web' => ['view', RoleKeys::WEB_TEAM, true],
+            'View DSG' => ['view', RoleKeys::DIVISION_STAFF_GROUP, true],
+            'View Any No Role' => ['viewAny', null, false],
+            'View Any Operations' => ['viewAny', RoleKeys::OPERATIONS_TEAM, false],
+            'View Any Web' => ['viewAny', RoleKeys::WEB_TEAM, true],
+            'View Any DSG' => ['viewAny', RoleKeys::DIVISION_STAFF_GROUP, true],
+            'Create No Role' => ['create', null, false],
+            'Create Operations' => ['create', RoleKeys::OPERATIONS_TEAM, false],
+            'Create Web' => ['create', RoleKeys::WEB_TEAM, false],
+            'Create DSG' => ['create', RoleKeys::DIVISION_STAFF_GROUP, false],
+            'Delete No Role' => ['delete', null, false],
+            'Delete Operations' => ['delete', RoleKeys::OPERATIONS_TEAM, false],
+            'Delete Web' => ['delete', RoleKeys::WEB_TEAM, false],
+            'Delete DSG' => ['delete', RoleKeys::DIVISION_STAFF_GROUP, false],
+            'Restore No Role' => ['restore', null, false],
+            'Restore Operations' => ['restore', RoleKeys::OPERATIONS_TEAM, false],
+            'Restore Web' => ['restore', RoleKeys::WEB_TEAM, false],
+            'Restore DSG' => ['restore', RoleKeys::DIVISION_STAFF_GROUP, false],
+            'Force Delete No Role' => ['forceDelete', null, false],
+            'Force Delete Operations' => ['forceDelete', RoleKeys::OPERATIONS_TEAM, false],
+            'Force Delete Web' => ['forceDelete', RoleKeys::WEB_TEAM, false],
+            'Force Delete DSG' => ['forceDelete', RoleKeys::DIVISION_STAFF_GROUP, false],
+        ];
+    }
+}

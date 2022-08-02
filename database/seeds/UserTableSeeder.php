@@ -22,6 +22,8 @@ class UserTableSeeder extends Seeder
         User::create(
             [
                 'id' => self::ADMIN_USER_CID,
+                'first_name' => 'User',
+                'last_name' => 'Admin',
                 'status' => 1,
             ]
         );
@@ -30,12 +32,16 @@ class UserTableSeeder extends Seeder
         User::create(
             [
                 'id' => self::ACTIVE_USER_CID,
+                'first_name' => 'User',
+                'last_name' => 'Active',
                 'status' => 1,
             ]
         );
         User::create(
             [
                 'id' => self::BANNED_USER_CID,
+                'first_name' => 'User',
+                'last_name' => 'Banned',
                 'status' => 2,
             ]
         );
@@ -43,6 +49,8 @@ class UserTableSeeder extends Seeder
         User::create(
             [
                 'id' => self::DISABLED_USER_CID,
+                'first_name' => 'User',
+                'last_name' => 'Account Disabled',
                 'status' => 3,
             ]
         );

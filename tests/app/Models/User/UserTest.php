@@ -62,26 +62,9 @@ class UserTest extends BaseFunctionalTestCase
         $this->assertEquals($token, $jsonData['tokens']->first()->id);
     }
 
-    /**
-     * @dataProvider webTeamProvider
-     */
-    public function testItCanAccessFilamentIfInTheWebTeam(int $id, bool $expected)
+    public function testItCanAccessFilament()
     {
-        $this->assertEquals(
-            $expected,
-            (new User(['id' => $id]))->canAccessFilament()
-        );
-    }
-
-    public function webTeamProvider(): array
-    {
-        return [
-            [1203533, true],
-            [1258635, true],
-            [1169992, true],
-            [1294298, true],
-            [1203534, false],
-        ];
+        $this->assertTrue((new User(['id' => 1234]))->canAccessFilament());
     }
 
     public function testItHasAFilamentName()
@@ -95,8 +78,8 @@ class UserTest extends BaseFunctionalTestCase
     public function testItHasANameAttribute()
     {
         $this->assertEquals(
-            12345,
-            (new User(['id' => 12345, 'last_name' => 'User']))->name
+            'Test User',
+            (new User(['id' => 12345, 'first_name' => 'Test', 'last_name' => 'User']))->name
         );
     }
 }

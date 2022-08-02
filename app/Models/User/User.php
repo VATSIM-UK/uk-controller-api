@@ -50,7 +50,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function accountStatus() : HasOne
+    public function accountStatus(): HasOne
     {
         return $this->hasOne(UserStatus::class, 'id', 'status');
     }
@@ -60,7 +60,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return User
      */
-    public function touchLastLogin() : User
+    public function touchLastLogin(): User
     {
         $this->last_login = Carbon::now();
         $this->save();
@@ -72,7 +72,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return User
      */
-    public function ban() : User
+    public function ban(): User
     {
         $this->status = UserStatus::BANNED;
         $this->save();
@@ -84,7 +84,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return User
      */
-    public function disable() : User
+    public function disable(): User
     {
         $this->status = UserStatus::DISABLED;
         $this->save();
@@ -96,7 +96,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return User
      */
-    public function activate() : User
+    public function activate(): User
     {
         $this->status = UserStatus::ACTIVE;
         $this->save();
@@ -108,7 +108,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @return array
      */
-    public function jsonSerialize() : array
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
@@ -124,19 +124,29 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function canAccessFilament(): bool
     {
-        return in_array(
-            $this->id,
-            [1203533, 1258635, 1169992, 1294298]
-        );
+        return true;
     }
 
     public function getFilamentName(): string
     {
-        return sprintf('%s %s', $this->first_name, $this->last_name, $this->id);
+        return sprintf('%s %s', $this->first_name, $this->last_name);
     }
 
     public function name(): Attribute
     {
-        return Attribute::get(fn () => $this->id);
+        return Attribute::get(fn () => $this->getFilamentName());
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)
+            ->withTimestamps();
+    }
+
+    public function hasRole(RoleKeys $role): bool
+    {
+        return $this->roles()
+            ->where('key', $role)
+            ->exists();
     }
 }

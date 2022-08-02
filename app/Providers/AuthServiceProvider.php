@@ -2,9 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\Stand\Stand;
+use App\Models\User\User;
+use App\Policies\ActivityLogPolicy;
+use App\Policies\DefaultFilamentPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use Spatie\Activitylog\Models\Activity;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -28,6 +34,12 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_DEPENDENCY_ADMIN,
         self::SCOPE_VERSION_ADMIN,
         self::SCOPE_DATA_ADMIN
+    ];
+
+    protected $policies = [
+        Stand::class => DefaultFilamentPolicy::class,
+        Activity::class => ActivityLogPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
