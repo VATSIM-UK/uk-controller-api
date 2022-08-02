@@ -70,7 +70,7 @@ class PairedStandsRelationManager extends RelationManager
                         ->searchable(!App::runningUnitTests())
                         ->label(__('form.stands.pairs.stand.label'))
                         ->helperText(__('form.stands.pairs.stand.helper'))
-                        ->disableLabel(false)
+                        ->disableLabel(false),
                 ])
                     ->using(function (array $data) use ($attachAction) {
                         DB::transaction(function () use ($attachAction, $data) {
@@ -93,7 +93,7 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     }
                 )
-                    ->label(__('form.stands.pairs.detach.label'))
+                    ->label(__('form.stands.pairs.detach.label')),
             ]);
     }
 }

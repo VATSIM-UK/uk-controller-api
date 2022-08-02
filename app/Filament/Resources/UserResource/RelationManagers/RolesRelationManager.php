@@ -36,9 +36,9 @@ class RolesRelationManager extends RelationManager
                     ->label(__('table.users.roles.attach_action.trigger_button'))
                     ->modalHeading(__('table.users.roles.attach_action.modal_heading'))
                     ->modalButton(__('table.users.roles.attach_action.confirm_button'))
+                    ->hidden(self::hideActionsClosure())
                     ->disableAttachAnother()
                     ->preloadRecordSelect()
-                    ->hidden(self::hideActionsClosure()),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()

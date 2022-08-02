@@ -76,8 +76,8 @@ class AirlinesRelationManager extends RelationManager
                                         Carbon::parse($get('not_before'))->startOfMinute()->toDateTimeString()
                                     );
                                 }
-                            })
-                    ]),
+                            }),
+                    ])
             ])
             ->actions([
                 Tables\Actions\DetachAction::make('unpair-airline')

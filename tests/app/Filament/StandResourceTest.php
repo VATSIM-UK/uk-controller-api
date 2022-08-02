@@ -6,136 +6,19 @@ use App\BaseFilamentTestCase;
 use App\Filament\Resources\StandResource;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
-use App\Models\User\Role;
-use App\Models\User\RoleKeys;
-use App\Models\User\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 class StandResourceTest extends BaseFilamentTestCase
 {
+    use ChecksDefaultFilamentAccess;
+
     public function setUp(): void
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now()->startOfSecond());
-    }
-
-    /**
-     * @dataProvider indexRoleProvider
-     */
-    public function testItCanBeIndexed(?RoleKeys $role)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        $this->get(StandResource::getUrl())
-            ->assertSuccessful()
-            ->assertSeeText('EGLL')
-            ->assertSeeText('EGBB');
-    }
-
-    private function indexRoleProvider(): array
-    {
-        return [
-            'None' => [null],
-            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP],
-            'Web' => [RoleKeys::WEB_TEAM],
-            'Operations' => [RoleKeys::OPERATIONS_TEAM],
-        ];
-    }
-
-    /**
-     * @dataProvider viewRoleProvider
-     */
-    public function testItCanBeViewed(?RoleKeys $role)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        $this->get(StandResource::getUrl('view', ['record' => Stand::findOrFail(1)]))
-            ->assertSuccessful()
-            ->assertSeeText('EGLL - 1L');
-    }
-
-    private function viewRoleProvider(): array
-    {
-        return [
-            'None' => [null],
-            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP],
-            'Web' => [RoleKeys::WEB_TEAM],
-            'Operations' => [RoleKeys::OPERATIONS_TEAM],
-        ];
-    }
-
-    /**
-     * @dataProvider createRoleProvider
-     */
-    public function testItCanOnlyBeCreatedByCertainRoles(?RoleKeys $role, bool $expectSuccess)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        $response = $this->get(StandResource::getUrl('create'));
-        if ($expectSuccess) {
-            $response->assertSuccessful()
-                ->assertSeeText('Create stand');
-        } else {
-            $response->assertForbidden();
-        }
-    }
-
-    private function createRoleProvider(): array
-    {
-        return [
-            'None' => [null, false],
-            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
-            'Web' => [RoleKeys::WEB_TEAM, true],
-            'Operations' => [RoleKeys::OPERATIONS_TEAM, true],
-        ];
-    }
-
-    /**
-     * @dataProvider editRoleProvider
-     */
-    public function testItCanOnlyBeEditedByCertainRoles(?RoleKeys $role, bool $expectSuccess)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        $response = $this->get(StandResource::getUrl('edit', ['record' => Stand::findOrFail(1)]));
-        if ($expectSuccess) {
-            $response->assertSuccessful()
-                ->assertSeeText('Edit EGLL - 1L');
-        } else {
-            $response->assertForbidden();
-        }
-    }
-
-    private function editRoleProvider(): array
-    {
-        return [
-            'None' => [null, false],
-            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
-            'Web' => [RoleKeys::WEB_TEAM, true],
-            'Operations' => [RoleKeys::OPERATIONS_TEAM, true],
-        ];
     }
 
     public function testItRetrievesDataForView()
@@ -964,5 +847,35 @@ class StandResourceTest extends BaseFilamentTestCase
                     'not_before' => '20:00:00',
                 ]
             )->assertHasTableActionErrors(['destination']);
+    }
+
+    protected function getViewEditRecord(): Model
+    {
+        return Stand::find(1);
+    }
+
+    protected function getResourceClass(): string
+    {
+        return StandResource::class;
+    }
+
+    protected function getEditText(): string
+    {
+        return 'Edit EGLL - 1L';
+    }
+
+    protected function getCreateText(): string
+    {
+        return 'Create stand';
+    }
+
+    protected function getViewText(): string
+    {
+        return 'EGLL - 1L';
+    }
+
+    protected function getIndexText(): array
+    {
+        return ['EGLL', 'EGBB'];
     }
 }

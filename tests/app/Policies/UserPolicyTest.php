@@ -20,7 +20,7 @@ class UserPolicyTest extends BaseFunctionalTestCase
     /**
      * @dataProvider updateDataProvider
      */
-    public function testItManagesUpdateAccess(?RoleKeys $role, bool $sameUser, bool $expected)
+    public function testItManagesUpdateAccess(string $action, ?RoleKeys $role, bool $sameUser, bool $expected)
     {
         $user = User::factory()->create();
         $otherUser = $sameUser
@@ -31,20 +31,38 @@ class UserPolicyTest extends BaseFunctionalTestCase
             $user->roles()->sync([Role::idFromKey($role)]);
         }
 
-        $this->assertEquals($expected, $this->userPolicy->update($user, $otherUser));
+        $this->assertEquals($expected, $this->userPolicy->$action($user, $otherUser));
     }
 
     public function updateDataProvider(): array
     {
         return [
-            'Update No Role Different User' => [null, false, false],
-            'Update No Role Same User' => [null, true, false],
-            'Update DSG Different User' => [RoleKeys::DIVISION_STAFF_GROUP, false, true],
-            'Update DSG Same User' => [RoleKeys::DIVISION_STAFF_GROUP, true, false],
-            'Update Web Different User' => [RoleKeys::WEB_TEAM, false, true],
-            'Update Web Same User' => [RoleKeys::WEB_TEAM, true, false],
-            'Update Operations Different User' => [RoleKeys::OPERATIONS_TEAM, false, false],
-            'Update Operations Same User' => [RoleKeys::OPERATIONS_TEAM, true, false],
+            'Update No Role Different User' => ['update', null, false, false],
+            'Update No Role Same User' => ['update', null, true, false],
+            'Update DSG Different User' => ['update', RoleKeys::DIVISION_STAFF_GROUP, false, true],
+            'Update DSG Same User' => ['update', RoleKeys::DIVISION_STAFF_GROUP, true, false],
+            'Update Web Different User' => ['update', RoleKeys::WEB_TEAM, false, true],
+            'Update Web Same User' => ['update', RoleKeys::WEB_TEAM, true, false],
+            'Update Operations Different User' => ['update', RoleKeys::OPERATIONS_TEAM, false, false],
+            'Update Operations Same User' => ['update', RoleKeys::OPERATIONS_TEAM, true, false],
+
+            // Filament special roles
+            'Attach No Role Different User' => ['attach', null, false, false],
+            'Attach No Role Same User' => ['attach', null, true, false],
+            'Attach DSG Different User' => ['attach', RoleKeys::DIVISION_STAFF_GROUP, false, true],
+            'Attach DSG Same User' => ['attach', RoleKeys::DIVISION_STAFF_GROUP, true, false],
+            'Attach Web Different User' => ['attach', RoleKeys::WEB_TEAM, false, true],
+            'Attach Web Same User' => ['attach', RoleKeys::WEB_TEAM, true, false],
+            'Attach Operations Different User' => ['attach', RoleKeys::OPERATIONS_TEAM, false, false],
+            'Attach Operations Same User' => ['attach', RoleKeys::OPERATIONS_TEAM, true, false],
+            'Detach No Role Different User' => ['detach', null, false, false],
+            'Detach No Role Same User' => ['detach', null, true, false],
+            'Detach DSG Different User' => ['detach', RoleKeys::DIVISION_STAFF_GROUP, false, true],
+            'Detach DSG Same User' => ['detach', RoleKeys::DIVISION_STAFF_GROUP, true, false],
+            'Detach Web Different User' => ['detach', RoleKeys::WEB_TEAM, false, true],
+            'Detach Web Same User' => ['detach', RoleKeys::WEB_TEAM, true, false],
+            'Detach Operations Different User' => ['detach', RoleKeys::OPERATIONS_TEAM, false, false],
+            'Detach Operations Same User' => ['detach', RoleKeys::OPERATIONS_TEAM, true, false],
         ];
     }
 
