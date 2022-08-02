@@ -1,5 +1,26 @@
 # UK Controller Plugin API Changelog
 
+## [6.11.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.10.0...6.11.0) (2022-08-02)
+
+
+### Features
+
+* associate prenotes with sids ([7449aa7](https://github.com/VATSIM-UK/uk-controller-api/commit/7449aa7a20d46fbc1a01b1ad6d7b4738a3d4658d))
+* **sid:** allow sid administration ([bfcc580](https://github.com/VATSIM-UK/uk-controller-api/commit/bfcc5801112877898eb7fa040bff6e04a58dfabd))
+
+
+### Bug Fixes
+
+* ordering ([a89bbc2](https://github.com/VATSIM-UK/uk-controller-api/commit/a89bbc2bf673f33339e117f0f41f9fad2a3765dd))
+* relation access ([fccaf58](https://github.com/VATSIM-UK/uk-controller-api/commit/fccaf58ec1ae8bfd22f7a4e647baebd50cf02425))
+* remove test code ([86a40d1](https://github.com/VATSIM-UK/uk-controller-api/commit/86a40d1705f7f9595223f949ead7a0e0318f86e9))
+* user permission auth ([4698d82](https://github.com/VATSIM-UK/uk-controller-api/commit/4698d82d0b2df19437a650973a30525fea970af9))
+
+
+### Data Updates
+
+* correct birmingham tower frequency ([b6c5aad](https://github.com/VATSIM-UK/uk-controller-api/commit/b6c5aad325d5877baa955bf0275d4e6c314b4082))
+
 ## [6.10.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.5...6.10.0) (2022-08-02)
 
 
