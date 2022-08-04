@@ -12,9 +12,7 @@ class DatabaseSeeder extends Seeder
         ],
         UserTableSeeder::class => [
             'user',
-        ],
-        AdminTableSeeder::class => [
-            'admin',
+            'role_user',
         ],
         AsrTableSeeder::class => [
             'altimeter_setting_region',

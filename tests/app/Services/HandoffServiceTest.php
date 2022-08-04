@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Handoff;
 use Illuminate\Support\Facades\DB;
-use OutOfRangeException;
+use InvalidArgumentException;
 
 class HandoffServiceTest extends BaseFunctionalTestCase
 {
@@ -31,7 +33,6 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $expected = [
             [
                 'id' => 1,
-                'key' => 'HANDOFF_ORDER_1',
                 'controller_positions' => [
                     4,
                     1,
@@ -40,7 +41,6 @@ class HandoffServiceTest extends BaseFunctionalTestCase
             ],
             [
                 'id' => 2,
-                'key' => 'HANDOFF_ORDER_2',
                 'controller_positions' => [
                     2,
                     3,
@@ -51,364 +51,884 @@ class HandoffServiceTest extends BaseFunctionalTestCase
         $this->assertSame($expected, $this->service->getHandoffsV2Dependency());
     }
 
-    public function testItSetsControllerPositionsForHandoffOrder()
+    public function testItCreatesANewHandoffOrderWithNoPositions()
     {
-        $handoff = HandoffService::createNewHandoffOrder('NEW_HANDOFF_ORDER', 'New!', ['EGLL_S_TWR']);
-        HandoffService::setPositionsForHandoffOrder('NEW_HANDOFF_ORDER', ['EGLL_N_APP', 'LON_S_CTR']);
-
-        $this->assertDatabaseMissing(
-            'handoff_orders',
+        $handoff = HandoffService::createNewHandoffOrder(
+            'test',
+            []
+        );
+        $this->assertDatabaseHas(
+           'handoffs',
             [
-                'handoff_id' => $handoff->id,
-                'controller_position_id' => 1,
+                'id' => $handoff->id,
+                'description' => 'test',
+            ]
+        );
+    }
+
+    public function testItCreatesANewHandoffOrderWithPositions()
+    {
+        $handoff = HandoffService::createNewHandoffOrder(
+            'test',
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
             ]
         );
 
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoffs',
+            [
+                'id' => $handoff->id,
+                'description' => 'test',
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
             [
                 'handoff_id' => $handoff->id,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => $handoff->id,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+    }
+
+    public function testItSetsControllerPositionsForHandoffOrderByControllerId()
+    {
+        HandoffService::setPositionsForHandoffByControllerId(
+            Handoff::findOrFail(1),
+            [
+                2,
+                4,
+                1,
+                3,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
                 'controller_position_id' => 2,
                 'order' => 1,
             ]
         );
-
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
-                'handoff_id' => $handoff->id,
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 3,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
                 'controller_position_id' => 3,
-                'order' => 2,
+                'order' => 4,
             ]
         );
     }
 
-    public function testItAddsANewHandoffOrder()
+    public function testItSetsControllerPositionsForHandoffOrderByControllerCallsign()
     {
-        $handoff = HandoffService::createNewHandoffOrder('NEW_HANDOFF_ORDER', 'New!', ['EGLL_N_APP', 'LON_S_CTR']);
-
-        $this->assertDatabaseHas(
-            'handoffs',
+        HandoffService::setPositionsForHandoffByControllerCallsign(
+            Handoff::findOrFail(1),
             [
-                'key' => 'NEW_HANDOFF_ORDER',
-                'description' => 'New!',
+                'EGLL_N_APP',
+                'LON_C_CTR',
+                'EGLL_S_TWR',
+                'LON_S_CTR',
             ]
         );
 
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
-                'handoff_id' => $handoff->id,
+                'handoff_id' => 1,
                 'controller_position_id' => 2,
                 'order' => 1,
             ]
         );
-
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
-                'handoff_id' => $handoff->id,
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 3,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
                 'controller_position_id' => 3,
-                'order' => 2,
+                'order' => 4,
             ]
         );
     }
 
-    public function testItInsertsIntoHandoffOrderBefore()
+    public function testItSetsControllerPositionsForHandoffOrderByController()
     {
-        HandoffService::insertIntoOrderBefore('HANDOFF_ORDER_1', 'LON_C_CTR', 'EGLL_S_TWR');
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
             [
-                'handoff_id' => 1,
-                'controller_position_id' => 4,
-                'order' => 1,
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(4),
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(3),
             ]
         );
 
         $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
                 'handoff_id' => 1,
                 'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
                 'order' => 3,
             ]
         );
-    }
-
-    public function testItThrowsAnExceptionIfBeforePositionNotInHandoffOrder()
-    {
-        $this->expectException(OutOfRangeException::class);
-        HandoffService::insertIntoOrderBefore('HANDOFF_ORDER_1', 'LON_C_CTR', 'LON_S_CTR');
-    }
-
-    public function testItInsertsIntoHandoffOrderAfter()
-    {
-        HandoffService::insertIntoOrderAfter('HANDOFF_ORDER_1', 'LON_C_CTR', 'EGLL_S_TWR');
-
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
                 'handoff_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 4,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 3,
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionIfAfterPositionNotInHandoffOrder()
-    {
-        $this->expectException(OutOfRangeException::class);
-        HandoffService::insertIntoOrderAfter('HANDOFF_ORDER_1', 'LON_C_CTR', 'LON_S_CTR');
-    }
-
-    public function testItDeletesFromHandoffOrder()
-    {
-        HandoffService::insertIntoOrderBefore('HANDOFF_ORDER_1', 'LON_C_CTR', 'EGLL_S_TWR');
-        HandoffService::removeFromHandoffOrder('HANDOFF_ORDER_1', 'LON_C_CTR');
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseMissing(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 4,
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionIfDeletePositionNotInHandoffOrder()
-    {
-        $this->expectException(OutOfRangeException::class);
-        HandoffService::removeFromHandoffOrder('HANDOFF_ORDER_1', 'LON_C_CTR');
-    }
-
-    public function testItUpdatesAllHandoffsThatContainAPositionBefore()
-    {
-        HandoffService::updateAllHandoffsWithPosition('EGLL_N_APP', 'LON_C_CTR', true);
-
-        // Handoff one
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 4,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 3,
-            ]
-        );
-
-        // Handoff two
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 2,
-                'controller_position_id' => 4,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 2,
-                'controller_position_id' => 2,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 2,
                 'controller_position_id' => 3,
-                'order' => 3,
+                'order' => 4,
             ]
         );
     }
 
-    public function testItUpdatesAllHandoffsThatContainAPositionAfter()
+    public function testItAddsAPositionToTheEndOfTheOrder()
     {
-        HandoffService::updateAllHandoffsWithPosition('EGLL_N_APP', 'LON_C_CTR', false);
+        HandoffService::insertPositionIntoHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(4)
+        );
 
-        // Handoff one
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
                 'handoff_id' => 1,
                 'controller_position_id' => 1,
                 'order' => 1,
             ]
         );
-
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
                 'handoff_id' => 1,
                 'controller_position_id' => 2,
                 'order' => 2,
             ]
         );
-
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
                 'handoff_id' => 1,
                 'controller_position_id' => 4,
                 'order' => 3,
             ]
         );
+    }
 
-        // Handoff two
-        $this->assertDatabaseHas(
-            'handoff_orders',
-            [
-                'handoff_id' => 2,
-                'controller_position_id' => 2,
-                'order' => 1,
-            ]
+    public function testItAddsAPositionToOrderBeforeAnother()
+    {
+        HandoffService::insertPositionIntoHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(4),
+            before: ControllerPosition::findOrFail(2)
         );
 
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
-                'handoff_id' => 2,
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
                 'controller_position_id' => 4,
                 'order' => 2,
             ]
         );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItAddsAPositionToOrderAfterAnother()
+    {
+        HandoffService::insertPositionIntoHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(4),
+            after: ControllerPosition::findOrFail(1)
+        );
 
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
-                'handoff_id' => 2,
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItThrowsExceptionIfInsertingBeforePositionNotInOrder()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        HandoffService::insertPositionIntoHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(4),
+            before: ControllerPosition::findOrFail(3)
+        );
+    }
+
+    public function testItRemovesControllersFromAHandoffOrderByModel()
+    {
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(4),
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        HandoffService::removeFromHandoffOrder(Handoff::findOrFail(1), ControllerPosition::findOrFail(1));
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
                 'controller_position_id' => 3,
                 'order' => 3,
             ]
         );
     }
 
-    public function testItRemovesFromAllHandoffs()
+    public function testItRemovesControllersFromAHandoffOrderById()
+    {
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(4),
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        HandoffService::removeFromHandoffOrder(Handoff::findOrFail(1), 1);
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItRemovesControllersFromAHandoffOrderByCallsign()
+    {
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(4),
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        HandoffService::removeFromHandoffOrder(Handoff::findOrFail(1), 'EGLL_S_TWR');
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItUpdatesAllHandoffsWithPositionBefore()
+    {
+        HandoffService::updateAllHandoffsWithPosition(
+            ControllerPosition::find(2),
+            ControllerPosition::find(4),
+            true
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 4,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 3,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItUpdatesAllHandoffsWithPositionAfter()
+    {
+        HandoffService::updateAllHandoffsWithPosition(
+            ControllerPosition::find(2),
+            ControllerPosition::find(4),
+            false
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 3,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 3,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItUpdatesAllHandoffsWithPositionBeforeByCallsign()
+    {
+        HandoffService::updateAllHandoffsWithPosition(
+            'EGLL_N_APP',
+            'LON_C_CTR',
+            true
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 4,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 4,
+                'order' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 3,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItRemovesPositionsFromAllHandoffs()
+    {
+        HandoffService::removePositionFromAllHandoffs(ControllerPosition::find(2));
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 2,
+                'controller_position_id' => 3,
+                'order' => 1,
+            ]
+        );
+    }
+
+    public function testItRemovesPositionsFromAllHandoffsByCallsign()
     {
         HandoffService::removePositionFromAllHandoffs('EGLL_N_APP');
-        $this->assertDatabaseMissing(
-            'handoff_orders',
-            [
-                'controller_position_id' => 2,
-            ]
-        );
 
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
                 'handoff_id' => 1,
                 'controller_position_id' => 1,
-                'order' => 1
+                'order' => 1,
             ]
         );
 
         $this->assertDatabaseHas(
-            'handoff_orders',
+           'handoff_orders',
             [
                 'handoff_id' => 2,
                 'controller_position_id' => 3,
-                'order' => 1
+                'order' => 1,
             ]
         );
     }
 
-    public function testItSetsHandoffForSid()
+    public function testItMovesPositionUpAtStartOfOrder()
     {
-        HandoffService::setHandoffForSid('EGLL', 'TEST1X', 'HANDOFF_ORDER_2');
-        $this->assertDatabaseHas(
-            'sid',
-            [
-                'runway_id' => 1,
-                'identifier' => 'TEST1X',
-                'handoff_id' => 2,
-            ]
+        HandoffService::moveControllerInHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(1),
+            true
         );
+
         $this->assertDatabaseHas(
-            'sid',
+           'handoff_orders',
             [
-                'runway_id' => 2,
-                'identifier' => 'TEST1Y',
                 'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 2,
             ]
         );
     }
 
-    public function testItDeletesHandoffByKey()
+    public function testItMovesPositionUpIfOnlyPosition()
     {
-        HandoffService::createNewHandoffOrder('TEST_XYZ', 'Test', ['EGLL_N_APP']);
-        HandoffService::deleteHandoffByKey('TEST_XYZ');
-        $this->assertDatabaseMissing(
-            'handoffs',
+        HandoffService::setPositionsForHandoffByController(Handoff::findOrFail(1), [ControllerPosition::findOrFail(1)]);
+        HandoffService::moveControllerInHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(1),
+            true
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
             [
-                'key' => 'TEST_XYZ',
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
             ]
+        );
+    }
+
+    public function testItMovesPositionUpInTheOrder()
+    {
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        HandoffService::moveControllerInHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(2),
+            true
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 2,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItMovesPositionDownAtEndOfOrder()
+    {
+        HandoffService::moveControllerInHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(2),
+            false
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 2,
+            ]
+        );
+    }
+
+    public function testItMovesPositionDownIfOnlyPosition()
+    {
+        HandoffService::setPositionsForHandoffByController(Handoff::findOrFail(1), [ControllerPosition::findOrFail(1)]);
+        HandoffService::moveControllerInHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(1),
+            false
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+    }
+
+    public function testItMovesPositionDownInTheOrder()
+    {
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        HandoffService::moveControllerInHandoffOrder(
+            Handoff::findOrFail(1),
+            ControllerPosition::findOrFail(2),
+            false
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 2,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItMovesPositionInOrderByIds()
+    {
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        HandoffService::moveControllerInHandoffOrder(
+            1,
+            2,
+            false
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 1,
+                'order' => 1,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 3,
+                'order' => 2,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+           'handoff_orders',
+            [
+                'handoff_id' => 1,
+                'controller_position_id' => 2,
+                'order' => 3,
+            ]
+        );
+    }
+
+    public function testItThrowsExceptionIfPositionToBeMovedIsNotInOrer()
+    {
+        HandoffService::setPositionsForHandoffByController(
+            Handoff::findOrFail(1),
+            [
+                ControllerPosition::findOrFail(1),
+                ControllerPosition::findOrFail(2),
+                ControllerPosition::findOrFail(3),
+            ]
+        );
+        $this->expectException(InvalidArgumentException::class);
+        HandoffService::moveControllerInHandoffOrder(
+            1,
+            4,
+            false
         );
     }
 }

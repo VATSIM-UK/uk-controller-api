@@ -2,11 +2,15 @@
 
 namespace App\Models\Controller;
 
+use App\Models\Sid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Prenote extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'key',
         'description',
@@ -25,6 +29,19 @@ class Prenote extends Model
             'prenote_orders',
             'prenote_id',
             'controller_position_id'
-        )->withPivot('order');
+        )
+            ->orderByPivot('order')
+            ->withPivot('order')
+            ->withTimestamps();
+    }
+
+    public function sids(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Sid::class,
+            'sid_prenotes',
+            'prenote_id',
+            'sid_id'
+        );
     }
 }

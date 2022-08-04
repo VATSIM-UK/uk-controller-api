@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\User\User;
+
 return [
     'defaults' => [
-        'guard' => 'web_admin',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
 
@@ -11,20 +13,16 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
-        'web_admin' => [
+        'web' => [
             'driver' => 'session',
-            'provider' => 'admin',
+            'provider' => 'users',
         ],
     ],
 
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\User\User::class,
+            'model' => User::class,
         ],
-        'admin' => [
-            'driver' => 'eloquent',
-            'model' => \App\Models\User\Admin::class,
-        ]
     ]
 ];

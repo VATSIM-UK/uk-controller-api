@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use Carbon\Carbon;
+use Closure;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AirlinesRelationManager extends RelationManager
 {
@@ -17,9 +19,9 @@ class AirlinesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'icao_code';
 
-    protected function canDelete(Model $record): bool
+    protected function getTableDescription(): ?string
     {
-        return false;
+        return __('table.stands.airlines.description');
     }
 
     public static function table(Table $table): Table
@@ -27,45 +29,64 @@ class AirlinesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('icao_code')
-                    ->label(__('ICAO Code'))
+                    ->label(__('table.stands.airlines.columns.icao'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('destination')
-                    ->label(__('Destination'))
+                    ->label(__('table.stands.airlines.columns.destination'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('callsign_slug')
-                    ->label(__('Callsign Slug')),
+                    ->label(__('table.stands.airlines.columns.callsign')),
                 Tables\Columns\TextColumn::make('priority')
-                    ->label(__('Allocation Priority')),
+                    ->label(__('table.stands.airlines.columns.priority')),
                 Tables\Columns\TextColumn::make('not_before')
-                    ->label(__('Not Before (UTC)')),
-            ])
-            ->filters([
-                //
+                    ->label(__('table.stands.airlines.columns.not_before'))
+                    ->date('H:i'),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                Tables\Actions\AttachAction::make('pair-airline')
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect()
-                            ->label('Airline')
+                            ->label(__('form.stands.airlines.icao.label'))
                             ->required(),
                         TextInput::make('destination')
-                            ->label(__('Destination'))
+                            ->label(__('form.stands.airlines.destination.label'))
+                            ->helperText(__('form.stands.airlines.destination.helper'))
                             ->maxLength(4),
                         TextInput::make('callsign_slug')
-                            ->label(__('Callsign Slug'))
-                            ->helperText('Callsign slug to match. Should not include the airline ICAO.')
+                            ->label(__('form.stands.airlines.callsign.label'))
+                            ->helperText(__('form.stands.airlines.callsign.helper'))
                             ->maxLength(4),
+                        TextInput::make('priority')
+                            ->label(__('form.stands.airlines.priority.label'))
+                            ->helperText(__('form.stands.airlines.priority.helper'))
+                            ->default(100)
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(9999)
+                            ->required(),
                         TimePicker::make('not_before')
-                            ->label(__('Do not allocate before (UTC)'))
-                            ->helperText('Will not allocate this stand automatically for arrivals before this time')
-                    ]),
+                            ->label(__('form.stands.airlines.not_before.label'))
+                            ->helperText(__('form.stands.airlines.not_before.helper'))
+                            ->displayFormat('H:i')
+                            ->afterStateUpdated(function (Closure $get, Closure $set) {
+                                if ($get('not_before') !== null) {
+                                    $set(
+                                        'not_before',
+                                        Carbon::parse($get('not_before'))->startOfMinute()->toDateTimeString()
+                                    );
+                                }
+                            }),
+                    ])
             ])
             ->actions([
-                Tables\Actions\DetachAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
+                Tables\Actions\DetachAction::make('unpair-airline')
+                    ->label(__('form.stands.airlines.remove.label'))
+                    ->using(function (Tables\Actions\DetachAction $action) {
+                        DB::table('airline_stand')
+                            ->where('id', $action->getRecord()->pivot_id)
+                            ->delete();
+                    })
             ]);
-    }    
+    }
 }

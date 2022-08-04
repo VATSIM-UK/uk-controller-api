@@ -2,9 +2,22 @@
 
 namespace App\Providers;
 
+use App\Models\Airline\Airline;
+use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Handoff;
+use App\Models\Controller\Prenote;
+use App\Models\Sid;
+use App\Models\Stand\Stand;
+use App\Models\User\Role;
+use App\Models\User\User;
+use App\Policies\ActivityLogPolicy;
+use App\Policies\DefaultFilamentPolicy;
+use App\Policies\RolePolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use Spatie\Activitylog\Models\Activity;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -23,11 +36,15 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_DATA_ADMIN => 'Can administer live data stored in the system'
     ];
 
-    const ADMIN_SCOPES = [
-        self::SCOPE_USER_ADMIN,
-        self::SCOPE_DEPENDENCY_ADMIN,
-        self::SCOPE_VERSION_ADMIN,
-        self::SCOPE_DATA_ADMIN
+    protected $policies = [
+        Airline::class => DefaultFilamentPolicy::class,
+        ControllerPosition::class => DefaultFilamentPolicy::class,
+        Handoff::class => DefaultFilamentPolicy::class,
+        Prenote::class => DefaultFilamentPolicy::class,
+        Stand::class => DefaultFilamentPolicy::class,
+        Sid::class => DefaultFilamentPolicy::class,
+        Activity::class => ActivityLogPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**

@@ -1,0 +1,184 @@
+<?php
+
+namespace App\Filament;
+
+use App\BaseFilamentTestCase;
+use App\Filament\Resources\UserResource;
+use App\Models\User\Role;
+use App\Models\User\RoleKeys;
+use App\Models\User\User;
+use Livewire\Livewire;
+use TestingUtils\Traits\WithSeedUsers;
+
+class UserResourceTest extends BaseFilamentTestCase
+{
+    use WithSeedUsers;
+
+    /**
+     * @dataProvider indexRoleProvider
+     */
+    public function testItCanBeIndexed(?RoleKeys $role, bool $shouldBeAllowed)
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        if ($role) {
+            $user->roles()->sync([Role::idFromKey($role)]);
+        }
+
+        if ($shouldBeAllowed) {
+            $this->get(UserResource::getUrl())
+                ->assertSuccessful();
+        } else {
+            $this->get(UserResource::getUrl())
+                ->assertForbidden();
+        }
+    }
+
+    private function indexRoleProvider(): array
+    {
+        return [
+            'None' => [null, false],
+            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
+            'Web' => [RoleKeys::WEB_TEAM, true],
+            'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
+        ];
+    }
+
+    /**
+     * @dataProvider viewRoleProvider
+     */
+    public function testItCanBeViewed(?RoleKeys $role, bool $shouldBeAllowed)
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        if ($role) {
+            $user->roles()->sync([Role::idFromKey($role)]);
+        }
+
+        if ($shouldBeAllowed) {
+            $this->get(UserResource::getUrl('view', ['record' => $this->activeUser()]))
+                ->assertSuccessful();
+        } else {
+            $this->get(UserResource::getUrl('view', ['record' => $this->activeUser()]))
+                ->assertForbidden();
+        }
+    }
+
+    private function viewRoleProvider(): array
+    {
+        return [
+            'None' => [null, false],
+            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
+            'Web' => [RoleKeys::WEB_TEAM, true],
+            'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
+        ];
+    }
+
+    /**
+     * @dataProvider editRoleProvider
+     */
+    public function testItCanBeEdited(?RoleKeys $role, bool $shouldBeAllowed, bool $sameUser)
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        if ($role) {
+            $user->roles()->sync([Role::idFromKey($role)]);
+        }
+
+        $userToEdit = $sameUser
+            ? $user
+            : $this->activeUser();
+
+        if ($shouldBeAllowed) {
+            $this->get(UserResource::getUrl('view', ['record' => $userToEdit]))
+                ->assertSuccessful();
+        } else {
+            $this->get(UserResource::getUrl('view', ['record' => $userToEdit]))
+                ->assertForbidden();
+        }
+    }
+
+    private function editRoleProvider(): array
+    {
+        return [
+            'None Different User' => [null, false, false],
+            'None Same User' => [null, false, true],
+            'DSG Different User' => [RoleKeys::DIVISION_STAFF_GROUP, true, true],
+            'DSG Same User' => [RoleKeys::DIVISION_STAFF_GROUP, true, false],
+            'Web Different User' => [RoleKeys::WEB_TEAM, true, true],
+            'Web Same User' => [RoleKeys::WEB_TEAM, true, false],
+            'Operations Same User' => [RoleKeys::OPERATIONS_TEAM, false, false],
+            'Operations Different User' => [RoleKeys::OPERATIONS_TEAM, false, false],
+        ];
+    }
+
+    public function testItLoadsDataForView()
+    {
+        Livewire::test(UserResource\Pages\ViewUser::class, ['record' => self::BANNED_USER_CID])
+            ->assertSet('data.first_name', 'User')
+            ->assertSet('data.last_name', 'Banned')
+            ->assertSet('data.status', 2);
+    }
+
+    public function testItLoadsDataForEdit()
+    {
+        Livewire::test(UserResource\Pages\EditUser::class, ['record' => self::BANNED_USER_CID])
+            ->assertSet('data.first_name', 'User')
+            ->assertSet('data.last_name', 'Banned')
+            ->assertSet('data.status', 2);
+    }
+
+    public function testAUsersStatusCanBeChanged()
+    {
+        Livewire::test(UserResource\Pages\EditUser::class, ['record' => self::BANNED_USER_CID])
+            ->set('data.status', 1)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertEquals(1, $this->activeUser()->status);
+    }
+
+    public function testItListsRoles()
+    {
+        $rowToExpect = Role::idFromKey(RoleKeys::DIVISION_STAFF_GROUP);
+        $this->bannedUser()->roles()->sync([$rowToExpect]);
+
+        Livewire::test(
+            UserResource\RelationManagers\RolesRelationManager::class,
+            ['ownerRecord' => $this->bannedUser()]
+        )
+            ->assertCanSeeTableRecords([$rowToExpect]);
+    }
+
+    public function testRolesCanBeAdded()
+    {
+        $rowToExpect = Role::idFromKey(RoleKeys::DIVISION_STAFF_GROUP);
+
+        Livewire::test(
+            UserResource\RelationManagers\RolesRelationManager::class,
+            ['ownerRecord' => $this->bannedUser()]
+        )
+            ->callTableAction('attach', Role::fromKey(RoleKeys::DIVISION_STAFF_GROUP), ['recordId' => $rowToExpect])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals([$rowToExpect], $this->bannedUser()->roles->pluck('id')->toArray());
+    }
+
+    public function testRolesCanBeRemoved()
+    {
+        $rowToExpect = Role::idFromKey(RoleKeys::DIVISION_STAFF_GROUP);
+        $this->bannedUser()->roles()->sync([$rowToExpect]);
+
+        Livewire::test(
+            UserResource\RelationManagers\RolesRelationManager::class,
+            ['ownerRecord' => $this->bannedUser()]
+        )
+            ->callTableAction('detach', Role::fromKey(RoleKeys::DIVISION_STAFF_GROUP), ['recordId' => $rowToExpect])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEmpty($this->bannedUser()->roles);
+    }
+}

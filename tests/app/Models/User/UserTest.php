@@ -61,4 +61,25 @@ class UserTest extends BaseFunctionalTestCase
         $this->assertInstanceOf(Collection::class, $jsonData['tokens']);
         $this->assertEquals($token, $jsonData['tokens']->first()->id);
     }
+
+    public function testItCanAccessFilament()
+    {
+        $this->assertTrue((new User(['id' => 1234]))->canAccessFilament());
+    }
+
+    public function testItHasAFilamentName()
+    {
+        $this->assertEquals(
+            'Test User',
+            (new User(['first_name' => 'Test', 'last_name' => 'User']))->getFilamentName()
+        );
+    }
+
+    public function testItHasANameAttribute()
+    {
+        $this->assertEquals(
+            'Test User',
+            (new User(['id' => 12345, 'first_name' => 'Test', 'last_name' => 'User']))->name
+        );
+    }
 }

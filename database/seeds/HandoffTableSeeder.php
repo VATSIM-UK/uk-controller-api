@@ -11,12 +11,10 @@ class HandoffTableSeeder extends Seeder
         Handoff::insert(
             [
                 [
-                    'key' => 'HANDOFF_ORDER_1',
                     'description' => 'foo',
                     'created_at' => Carbon::now(),
                 ],
                 [
-                    'key' => 'HANDOFF_ORDER_2',
                     'description' => 'foo',
                     'created_at' => Carbon::now(),
                 ],

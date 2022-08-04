@@ -11,17 +11,23 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandType;
+use App\Rules\Stand\StandIdentifierMustBeUniqueAtAirfield;
+use Closure;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
+use Illuminate\Validation\Rule;
 
 class StandResource extends Resource
 {
@@ -43,88 +49,124 @@ class StandResource extends Resource
                 Fieldset::make('Identifiers')->schema(
                     [
                         Select::make('airfield_id')
-                            ->label('Airfield')
+                            ->label(__('form.stands.airfield.label'))
                             ->helperText(__('Required'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn() => Airfield::all()->mapWithKeys(
-                                    fn(Airfield $airfield) => [$airfield->id => $airfield->code]
-                                )
+                                fn () => Airfield::all()
+                                    ->sortBy('code', SORT_NATURAL)
+                                    ->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code])
                             )
-                            ->searchable()
+                            ->reactive()
+                            ->afterStateUpdated(function (Closure $get, Closure $set) {
+                                $terminalId = $get('terminal_id');
+                                if ($terminalId && Terminal::find($terminalId)->airfield_id === $get('airfield_id')) {
+                                    return;
+                                }
+
+                                $set('terminal_id', null);
+                            })
+                            ->preload()
+                            ->searchable(!App::runningUnitTests())
                             ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
                             ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
-                            ->label('Terminal')
-                            ->helperText(__('Required'))
+                            ->label(__('form.stands.terminal.label'))
+                            ->helperText(__('form.stands.terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn() => Terminal::all()->mapWithKeys(
-                                    fn(Terminal $terminal) => [$terminal->id => $terminal->description]
-                                )
+                                fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                    ->get()
+                                    ->mapWithKeys(
+                                        fn (Terminal $terminal) => [$terminal->id => $terminal->description]
+                                    )
                             )
-                            ->searchable()
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                            ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
+                            ->disabled(
+                                fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
+                                    !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                            )
+                            ->dehydrated(
+                                fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
+                                    !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                            ),
                         TextInput::make('identifier')
-                            ->label(__('Identifier'))
+                            ->label(__('form.stands.identifier.label'))
                             ->maxLength(255)
-                            ->required(),
+                            ->helperText(__('form.stands.identifier.helper'))
+                            ->required()
+                            ->rule(
+                                fn (Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                    Airfield::findOrFail($get('airfield_id')),
+                                    $record
+                                ),
+                                fn (Closure $get) => $get('airfield_id')
+                            ),
                         Select::make('type_id')
-                            ->label(__('Type'))
+                            ->label(__('form.stands.type.label'))
+                            ->helperText(__('form.stands.type.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn() => StandType::all()->mapWithKeys(
-                                    fn(StandType $type) => [$type->id => $type->key]
+                                fn () => StandType::all()->mapWithKeys(
+                                    fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
                                 )
-                            )
-                            ->searchable(),
+                            ),
                         TextInput::make('latitude')
-                            ->label(__('Latitude'))
+                            ->label(__('form.stands.latitude.label'))
+                            ->helperText(__('form.stands.latitude.helper'))
                             ->numeric('decimal')
-                            ->helperText('The decimal latitude of the stand')
                             ->required(),
                         TextInput::make('longitude')
-                            ->label(__('Longitude'))
+                            ->label(__('form.stands.longitude.label'))
+                            ->helperText(__('form.stands.longitude.helper'))
                             ->numeric('decimal')
-                            ->helperText('The decimal longitude of the stand')
                             ->required(),
                     ]
                 ),
                 Fieldset::make('Allocation')->schema(
                     [
                         Select::make('wake_category_id')
-                            ->label(__('Maximum UK Wake Category'))
+                            ->label(__('form.stands.wake_category.label'))
+                            ->helperText(__('form.stands.wake_category.helper'))
                             ->hintIcon('heroicon-o-scale')
                             ->options(
-                                fn() => WakeCategoryScheme::with('categories')
+                                fn () => WakeCategoryScheme::with('categories')
                                     ->uk()
                                     ->firstOrFail()
                                     ->categories
+                                    ->sortBy('relative_weighting')
                                     ->mapWithKeys(
-                                        fn(WakeCategory $category) => [$category->id => sprintf('%s (%s)', $category->description, $category->code)]
+                                        fn (WakeCategory $category) => [
+                                            $category->id => sprintf(
+                                                '%s (%s)',
+                                                $category->description,
+                                                $category->code
+                                            ),
+                                        ]
                                     )
                             )
-                            ->helperText('Maximum UK WTC that can be assigned to this stand. Used as a fallback if no specific aircraft type if specified.')
-                            ->searchable()
                             ->required(),
                         Select::make('max_aircraft_id')
-                            ->label(__('Maximum Aircraft Type'))
+                            ->label(__('form.stands.aircraft_type.label'))
+                            ->helperText(__('form.stands.aircraft_type.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->options(
-                                fn() => Aircraft::all()->mapWithKeys(fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code])
+                                fn () => Aircraft::all()->mapWithKeys(
+                                    fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
+                                )
                             )
-                            ->helperText('Maximum aircraft size that can be assigned to the stand. Overrides Max WTC.')
-                            ->searchable(),
-                        Toggle::make('isOpen')
-                            ->label(__('Used for Allocation'))
-                            ->helperText('Stands not used for allocation will not be allocated by the automatic allocator or be available for controllers to assign.')
+                            ->searchable(!App::runningUnitTests()),
+                        Toggle::make('closed_at')
+                            ->label(__('form.stands.used_for_allocation.label'))
+                            ->helperText(__('form.stands.used_for_allocation.helper'))
                             ->default(true)
+                            ->afterStateHydrated(static function (Toggle $component, $state): void {
+                                $component->state(is_null($state));
+                            })
                             ->required(),
                         TextInput::make('assignment_priority')
-                            ->label(__('Allocation Priority'))
-                            ->helperText('Global priority when assigning. Lower value is higher priority.')
+                            ->label(__('form.stands.allocation_priority.label'))
+                            ->helperText(__('form.stands.allocation_priority.helper'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(9999)
@@ -140,39 +182,39 @@ class StandResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('Id'))
+                    ->label(__('table.stands.columns.id'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('airfield.code')
-                    ->label(__('Airfield'))
+                    ->label(__('table.stands.columns.airfield'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('terminal.description')
-                    ->label(__('Terminal'))
+                    ->label(__('table.stands.columns.terminal'))
                     ->default('--')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('identifier')
-                    ->label(__('Identifier'))
+                    ->label(__('table.stands.columns.identifier'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
-                    ->label(__('Airlines'))
+                    ->label(__('table.stands.columns.airlines'))
                     ->default(['--'])
                     ->sortable(),
-                Tables\Columns\BooleanColumn::make('isOpen')
-                    ->label(__('Used for Allocation')),
+                Tables\Columns\BooleanColumn::make('closed_at')
+                    ->label(__('table.stands.columns.airfield'))
+                    ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
+                        return $column->getRecord()->closed_at === null;
+                    }),
                 Tables\Columns\TextColumn::make('assignment_priority')
-                    ->label(__('Allocation Priority'))
+                    ->label(__('table.stands.columns.priority'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('assignedCallsign')
-                    ->label(__('Allocated To'))
-                    ->default('--')
+                    ->label(__('table.stands.columns.allocation'))
+                    ->default('--'),
             ])->defaultSort('airfield.code')
-            ->filters([
-                //
-            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -181,7 +223,7 @@ class StandResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
@@ -189,14 +231,14 @@ class StandResource extends Resource
             RelationManagers\PairedStandsRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListStands::route('/'),
             'create' => Pages\CreateStand::route('/create'),
             'edit' => Pages\EditStand::route('/{record}/edit'),
-            'view' => Pages\ViewStand::route('/{record}')
+            'view' => Pages\ViewStand::route('/{record}'),
         ];
     }
 }

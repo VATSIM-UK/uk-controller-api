@@ -4,11 +4,11 @@ namespace App\Filament\Resources\StandResource\RelationManagers;
 
 use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
-use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class PairedStandsRelationManager extends RelationManager
@@ -20,35 +20,31 @@ class PairedStandsRelationManager extends RelationManager
 
     protected function getTableDescription(): ?string
     {
-        return 'Stands that are paired cannot be simultaneously assigned to aircraft. ' .
-            'Note, this does not prevent aircraft from spawning up on a stand!';
+        return __('table.stands.paired.description');
     }
 
     public static function table(Table $table): Table
     {
-        $attachAction = Tables\Actions\AttachAction::make();
-        $detachAction = Tables\Actions\DetachAction::make();
+        $attachAction = Tables\Actions\AttachAction::make('pair-stand');
+        $detachAction = Tables\Actions\DetachAction::make('unpair-stand');
 
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('Id'))
+                    ->label(__('table.stands.paired.columns.id'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('airfield.code')
-                    ->label(__('Airfield'))
+                    ->label(__('table.stands.paired.columns.airfield'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('identifier')
-                    ->label(__('Identifier'))
+                    ->label(__('table.stands.paired.columns.identifier'))
                     ->sortable()
                     ->searchable(),
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
-                $attachAction->form(fn(Tables\Actions\AttachAction $action): array => [
+                $attachAction->form(fn (): array => [
                     Select::make('recordId')
                         ->required()
                         ->options(
@@ -58,20 +54,23 @@ class PairedStandsRelationManager extends RelationManager
                                 ->where('airfield_id', $attachAction->getRelationship()->getParent()->airfield_id)
                                 ->where('id', '<>', $attachAction->getRelationship()->getParent()->id)
                                 ->whereDoesntHave('pairedStands', function (Builder $pairedStand) use ($attachAction) {
-                                    $pairedStand->where('stand_pairs.paired_stand_id', $attachAction->getRelationship()->getParent()->id);
+                                    $pairedStand->where(
+                                        'stand_pairs.paired_stand_id',
+                                        $attachAction->getRelationship()->getParent()->id
+                                    );
                                 })
                                 ->get()
                                 ->mapWithKeys(
-                                    fn(Stand $stand) => [
+                                    fn (Stand $stand) => [
                                         $stand->{$attachAction->getRelationship()->getRelatedKeyName(
                                         )} => $attachAction->getRecordTitle($stand),
                                     ]
                                 )
                         )
-                        ->searchable()
-                        ->label('Stand to Pair')
-                        ->disableLabel(false)
-                        ->helperText('Only stands at the same airfield may be paired.')
+                        ->searchable(!App::runningUnitTests())
+                        ->label(__('form.stands.pairs.stand.label'))
+                        ->helperText(__('form.stands.pairs.stand.helper'))
+                        ->disableLabel(false),
                 ])
                     ->using(function (array $data) use ($attachAction) {
                         DB::transaction(function () use ($attachAction, $data) {
@@ -83,7 +82,7 @@ class PairedStandsRelationManager extends RelationManager
                             return $data;
                         });
                     })
-                    ->label('Add paired stand'),
+                    ->label(__('form.stands.pairs.add.label'))
             ])
             ->actions([
                 $detachAction->using(
@@ -94,10 +93,7 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     }
                 )
-                    ->label('Unpair'),
-            ])
-            ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
+                    ->label(__('form.stands.pairs.detach.label')),
             ]);
     }
 }

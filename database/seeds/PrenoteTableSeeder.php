@@ -10,11 +10,9 @@ class PrenoteTableSeeder extends Seeder
         Prenote::insert(
             [
                 [
-                    'key' => 'PRENOTE_ONE',
                     'description' => 'Prenote One',
                 ],
                 [
-                    'key' => 'PRENOTE_TWO',
                     'description' => 'Prenote Two',
                 ],
             ]

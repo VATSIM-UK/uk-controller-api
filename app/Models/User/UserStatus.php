@@ -42,4 +42,9 @@ class UserStatus extends Model
     {
         return $this->id === self::DISABLED;
     }
+
+    public function statusMessage(): string
+    {
+        return self::STATUS_MESSAGES[$this->id];
+    }
 }

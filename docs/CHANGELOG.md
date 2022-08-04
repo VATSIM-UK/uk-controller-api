@@ -1,5 +1,63 @@
 # UK Controller Plugin API Changelog
 
+## [6.9.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.4...6.9.5) (2022-07-24)
+
+
+### Bug Fixes
+
+* horizon auth ([1b65dec](https://github.com/VATSIM-UK/uk-controller-api/commit/1b65dec705e070233af3277f13790893e080f53c))
+* re-add missing model ([e1039f0](https://github.com/VATSIM-UK/uk-controller-api/commit/e1039f0e68d8e337bc448eb5d804f01f355cecd6))
+
+## [6.9.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.3...6.9.4) (2022-07-20)
+
+
+### Bug Fixes
+
+* condition on stand identifier checking ([e54e294](https://github.com/VATSIM-UK/uk-controller-api/commit/e54e294b4fe248e335db8427e3148266ba46fd82))
+* routes ([448326e](https://github.com/VATSIM-UK/uk-controller-api/commit/448326e263242d1e66a3c7db2e9eee76a72b0ab9))
+
+## [6.9.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.2...6.9.3) (2022-07-12)
+
+
+### Bug Fixes
+
+* remove core redirects ([309fa4c](https://github.com/VATSIM-UK/uk-controller-api/commit/309fa4cad40a5773406b55e02af0fee0753d6339))
+
+## [6.9.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.1...6.9.2) (2022-07-12)
+
+
+### Bug Fixes
+
+* let core do core things ([eefe991](https://github.com/VATSIM-UK/uk-controller-api/commit/eefe9919826fd5cc623c765eb57abd7688abc6a8))
+
+## [6.9.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.0...6.9.1) (2022-07-12)
+
+
+### Bug Fixes
+
+* temporary core redirects ([416e57d](https://github.com/VATSIM-UK/uk-controller-api/commit/416e57d952a6c11f2ef2db6d17b808e09bf9bd0a))
+
+## [6.9.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.3...6.9.0) (2022-07-12)
+
+
+### Features
+
+* make api the root of the api ([4d5d27f](https://github.com/VATSIM-UK/uk-controller-api/commit/4d5d27f2b6133a9010fe807c7adae66567797743))
+
+## [6.8.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.2...6.8.3) (2022-06-27)
+
+
+### Miscellaneous Chores
+
+* update to laravel 9 ([64dada0](https://github.com/VATSIM-UK/uk-controller-api/commit/64dada014262aecb9195ea41a44e11c756a2a400))
+
+## [6.8.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.1...6.8.2) (2022-06-26)
+
+
+### Miscellaneous Chores
+
+* **php:** drop support for PHP 7 ([abb2567](https://github.com/VATSIM-UK/uk-controller-api/commit/abb25671ab128b544af5e961689bddaab1aaaa54))
+
 ## [6.8.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.8.0...6.8.1) (2022-06-16)
 
 

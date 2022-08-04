@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\SocialiteProviders\CoreProvider;
+use Filament\Facades\Filament;
+use Illuminate\Support\HtmlString;
 use Laravel\Passport\Passport;
 use Illuminate\Validation\Rule;
 use App\Services\SectorfileService;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Contracts\Factory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +41,23 @@ class AppServiceProvider extends ServiceProvider
 
         Rule::macro('longitudeString', function () {
             return 'regex:' . SectorfileService::SECTORFILE_LONGITUDE_REGEX;
+        });
+
+        // Register our custom VATSIM UK Core SSO Socialite Provider
+        $socialite = $this->app->make(Factory::class);
+        $socialite->extend(
+            'vatsimuk',
+            function ($app) use ($socialite) {
+                $config = $app['config']['services.vatsim_uk_core'];
+                $config['redirect'] = route('auth.login.callback');
+
+                return $socialite->buildProvider(CoreProvider::class, $config);
+            }
+        );
+
+        // Filament styling
+        Filament::serving(function () {
+            Filament::registerTheme(mix('css/vatukfilament.css'));
         });
     }
 }
