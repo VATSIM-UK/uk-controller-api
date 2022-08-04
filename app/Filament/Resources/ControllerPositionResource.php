@@ -17,7 +17,8 @@ class ControllerPositionResource extends Resource
 {
     protected static ?string $model = ControllerPosition::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-microphone';
+    protected static ?string $recordTitleAttribute = 'callsign';
 
     public static function form(Form $form): Form
     {
@@ -25,16 +26,28 @@ class ControllerPositionResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('callsign')
                     ->required()
-                    ->unique(null, null, null, null, true)
-                    ->helperText('The callsign, e.g. EGLL_S_TWR')
+                    ->unique(ignoreRecord: true)
+                    ->label(__('form.controllers.callsign.label'))
+                    ->helperText(__('form.controllers.callsign.helper'))
                     ->rule(new ControllerPositionCallsign()),
                 Forms\Components\TextInput::make('frequency')
-                    ->numeric(false)
                     ->required()
                     ->rule(new ControllerPositionFrequency())
-                    ->label('Frequency')
-                    ->helperText('The full, 6 digit frequency')
+                    ->label(__('form.controllers.frequency.label'))
+                    ->helperText(__('form.controllers.frequency.helper'))
                     ->length(7),
+                Forms\Components\Toggle::make('requests_departure_releases')
+                    ->label(__('form.controllers.requests_departure_releases.label'))
+                    ->helperText(__('form.controllers.requests_departure_releases.helper')),
+                Forms\Components\Toggle::make('receives_departure_releases')
+                    ->label(__('form.controllers.receives_departure_releases.label'))
+                    ->helperText(__('form.controllers.receives_departure_releases.helper')),
+                Forms\Components\Toggle::make('sends_prenotes')
+                    ->label(__('form.controllers.sends_prenotes.label'))
+                    ->helperText(__('form.controllers.sends_prenotes.helper')),
+                Forms\Components\Toggle::make('receives_prenotes')
+                    ->label(__('form.controllers.receives_prenotes.label'))
+                    ->helperText(__('form.controllers.receives_prenotes.helper')),
             ]);
     }
 
@@ -43,31 +56,21 @@ class ControllerPositionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label('id'),
+                    ->label(__('table.controllers.columns.id')),
                 Tables\Columns\TextColumn::make('callsign')
-                    ->label('Callsign')
+                    ->label(__('table.controllers.columns.callsign'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('frequency')
-                    ->label('Frequency')
+                    ->label(__('table.controllers.columns.frequency'))
                     ->searchable(),
-            ])
-            ->filters([
-                //
+                Tables\Columns\TagsColumn::make('topDownAirfields.code')
+                    ->label(__('table.controllers.columns.top_down')),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-    
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
     
     public static function getPages(): array
@@ -75,6 +78,7 @@ class ControllerPositionResource extends Resource
         return [
             'index' => Pages\ListControllerPositions::route('/'),
             'create' => Pages\CreateControllerPosition::route('/create'),
+            'view' => Pages\ViewControllerPosition::route('/{record}'),
             'edit' => Pages\EditControllerPosition::route('/{record}/edit'),
         ];
     }    

@@ -6,4 +6,5 @@ return [
     'sids' => require_once __DIR__ . '/sids/table.php',
     'handoffs' => require_once __DIR__ . '/handoffs/table.php',
     'prenotes' => require_once __DIR__ . '/prenotes/table.php',
+    'controllers' => require_once __DIR__ . '/controllers/table.php',
 ];

@@ -2,32 +2,20 @@
 
 namespace App\Rules\Controller;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\InvokableRule;
 
-class ControllerPositionFrequency implements Rule
+class ControllerPositionFrequency implements InvokableRule
 {
-    const FREQUENCY = '2022'
+    private const FREQUENCY_REGEX = '/\d{3}\.(\d{3})/';
 
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
+    public function __invoke($attribute, $value, $fail)
     {
-
-        return is_numeric($value) && (((float) $value) % 0.025) === 0;
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return 'Invalid controller frequency';
+        $matches = [];
+        if (
+            !preg_match(self::FREQUENCY_REGEX, $value, $matches) ||
+            (int) $matches[1] % 25 !== 0
+        ) {
+            $fail('Test');
+        }
     }
 }
