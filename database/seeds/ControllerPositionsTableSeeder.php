@@ -25,11 +25,11 @@ class ControllerPositionsTableSeeder extends Seeder
                     'receives_departure_releases' => true,
                     'sends_prenotes' => true,
                     'receives_prenotes' => true,
-                    'frequency' => 119.720,
+                    'frequency' => 119.725,
                 ],
                 [
                     'callsign' => 'LON_S_CTR',
-                    'frequency' => 129.420,
+                    'frequency' => 129.425,
                     'requests_departure_releases' => true,
                     'receives_departure_releases' => true,
                     'sends_prenotes' => true,

@@ -27,6 +27,8 @@ class ControllerPosition extends Model implements ControllerPositionInterface
         'frequency',
         'requests_departure_releases',
         'receives_departure_releases',
+        'sends_prenotes',
+        'receives_prenotes',
         'created_at',
     ];
 

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ControllerPositionCallsign implements Rule
 {
-    const CALLSIGN_REGEX = '^[A-Za-z0-9]+(_[A-Za-z0-9]+)?_(DEL|GND|TWR|APP|CTR|FSS)$';
+    const CALLSIGN_REGEX = '^[A-Z]+(_[A-Z0-9]+)?_(DEL|GND|TWR|APP|CTR|FSS)$';
     const REGEX_MATCHED = 1;
     const DELIMITER = '/';
 
@@ -29,7 +29,7 @@ class ControllerPositionCallsign implements Rule
      */
     public function message()
     {
-        return 'Invalid controller callsign';
+        return __('validation.callsign');
     }
 
     public static function callsignValid(string $callsign): bool
