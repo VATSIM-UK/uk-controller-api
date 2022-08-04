@@ -81,5 +81,5 @@ class ControllerPositionResource extends Resource
             'view' => Pages\ViewControllerPosition::route('/{record}'),
             'edit' => Pages\EditControllerPosition::route('/{record}/edit'),
         ];
-    }    
+    }
 }
