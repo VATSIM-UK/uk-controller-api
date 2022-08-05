@@ -25,7 +25,7 @@ class ControllerService
                 return [
                     'id' => $position->id,
                     'callsign' => $position->callsign,
-                    'frequency' => $position->frequency,
+                    'frequency' => (float) $position->frequency,
                     'top_down' => $position->topDownAirfields->pluck('code')->toArray(),
                     'requests_departure_releases' => $position->requests_departure_releases,
                     'receives_departure_releases' => $position->receives_departure_releases,
