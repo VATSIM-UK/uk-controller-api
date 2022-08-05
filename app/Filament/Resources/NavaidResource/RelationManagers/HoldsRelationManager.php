@@ -108,6 +108,18 @@ class HoldsRelationManager extends RelationManager
                                                 : []
                                         ),
                                 ]),
+                            Forms\Components\Builder\Block::make('level-block')
+                                ->label('Blocked Level')
+                                ->schema([
+                                    Forms\Components\Repeater::make('levels')
+                                        ->schema([
+                                            Forms\Components\TextInput::make('level')
+                                                ->integer()
+                                                ->minValue(1000)
+                                                ->maxValue(60000)
+                                                ->required(),
+                                        ]),
+                                ]),
                         ]),
                 ]),
             ]);
@@ -168,16 +180,27 @@ class HoldsRelationManager extends RelationManager
                 Tables\Actions\EditAction::make()
                     ->mutateRecordDataUsing(function (Hold $record, array $data) {
                         $data['restrictions'] = $record->restrictions->map(
-                            fn(HoldRestriction $restriction) => [
-                                'type' => $restriction->restriction['type'],
-                                'data' => [
-                                    ...$restriction->restriction,
-                                    'id' => $restriction->id,
-                                    'runway' => [
-                                        'designator' => $restriction->restriction['runway']['designator'],
+                            fn(HoldRestriction $restriction) => match ($restriction->restriction['type']) {
+                                'minimum-level' => [
+                                    'type' => $restriction->restriction['type'],
+                                    'data' => [
+                                        ...$restriction->restriction,
+                                        'id' => $restriction->id,
+                                        'runway' => [
+                                            'designator' => isset($restriction->restriction['runway']) ? $restriction->restriction['runway']['designator'] : null,
+                                        ],
                                     ],
                                 ],
-                            ]
+                                'level-block' => [
+                                    'id' => $restriction->id,
+                                    'type' => $restriction->restriction['type'],
+                                    'data' => [
+                                        'levels' => collect($restriction->restriction['levels'])
+                                            ->map(fn(int $level) => ['level' => $level])
+                                            ->toArray(),
+                                    ],
+                                ]
+                            }
                         )->toArray();
                         return $data;
                     })->using(function (array $data, Hold $record) {
@@ -189,7 +212,10 @@ class HoldsRelationManager extends RelationManager
 
                             $restrictionIds = array_map(
                                 fn(array $restriction) => $restriction['data']['id'],
-                                $restrictions
+                                array_filter(
+                                    $restrictions,
+                                    fn(array $restriction) => isset($restriction['data']['id'])
+                                ),
                             );
 
                             // Remove restrictions we don't need
@@ -216,7 +242,7 @@ class HoldsRelationManager extends RelationManager
                             // Save new restrictions
                             $restrictionsToSave = array_filter(
                                 $restrictions,
-                                fn(array $restriction) => is_null($restriction['data']['id'])
+                                fn(array $restriction) => !isset($restriction['data']['id'])
                             );
                             $record->restrictions()->saveMany(
                                 array_map(
@@ -235,7 +261,8 @@ class HoldsRelationManager extends RelationManager
     private static function formatRestrictionData(array $formData): array
     {
         return match ($formData['type']) {
-            'minimum-level' => self::formatMinimumLevelRestriction($formData)
+            'minimum-level' => self::formatMinimumLevelRestriction($formData),
+            'level-block' => self::formatBlockedLevelRestriction($formData),
         };
     }
 
@@ -258,5 +285,16 @@ class HoldsRelationManager extends RelationManager
         }
 
         return $data;
+    }
+
+    private static function formatBlockedLevelRestriction(array $restriction): array
+    {
+        return [
+            'type' => $restriction['type'],
+            'levels' => array_map(
+                fn(array $level) => (int)$level['level'],
+                $restriction['data']['levels']
+            ),
+        ];
     }
 }
