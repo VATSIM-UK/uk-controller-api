@@ -34,7 +34,7 @@ class NetworkControllerPositionFactory extends Factory
     {
         $position = is_int($position) ? ControllerPosition::findOrFail($position) : $position;
 
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'callsign' => $position->callsign,
             'frequency' => $position->frequency,
             'controller_position_id' => $position->id,
@@ -43,7 +43,7 @@ class NetworkControllerPositionFactory extends Factory
 
     public function asUser(int|User $user): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'cid' => is_int($user) ? $user : $user->id,
         ]);
     }

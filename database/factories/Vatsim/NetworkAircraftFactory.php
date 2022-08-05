@@ -30,7 +30,7 @@ class NetworkAircraftFactory extends Factory
 
     public function asUser(int|User $user): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'cid' => is_int($user) ? $user : $user->id,
         ]);
     }
