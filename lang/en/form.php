@@ -7,4 +7,5 @@ return [
     'handoffs' => require_once __DIR__ . '/handoffs/form.php',
     'prenotes' => require_once __DIR__ . '/prenotes/form.php',
     'controllers' => require_once __DIR__ . '/controllers/form.php',
+    'navaids' => require_once __DIR__ . '/navaids/form.php',
 ];
