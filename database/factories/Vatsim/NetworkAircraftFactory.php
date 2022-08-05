@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Vatsim;
 
+use App\Models\User\User;
 use App\Models\Vatsim\NetworkAircraft;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class NetworkAircraftFactory extends Factory
@@ -26,5 +26,12 @@ class NetworkAircraftFactory extends Factory
             'callsign' => $this->faker->unique()->word,
             'transponder_last_updated_at' => null,
         ];
+    }
+
+    public function asUser(int|User $user): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'cid' => is_int($user) ? $user : $user->id,
+        ]);
     }
 }

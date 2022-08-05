@@ -4,11 +4,14 @@ namespace App\Models\Vatsim;
 
 use App\Helpers\Vatsim\ControllerPositionInterface;
 use App\Models\Controller\ControllerPosition;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NetworkControllerPosition extends Model implements ControllerPositionInterface
 {
+    use HasFactory;
+
     public $timestamps = true;
 
     protected $fillable = [

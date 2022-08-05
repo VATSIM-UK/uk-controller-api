@@ -2,6 +2,7 @@
 
 namespace App\Models\Vatsim;
 
+use App\Models\Airfield\Airfield;
 use App\Models\Hold\NavaidNetworkAircraft;
 use App\Models\Navigation\Navaid;
 use App\Models\Stand\Stand;
@@ -10,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
@@ -158,5 +160,14 @@ class NetworkAircraft extends Model
     public function scopeTimedOut(Builder $builder): Builder
     {
         return $builder->where('network_aircraft.updated_at', '<', Carbon::now()->subMinutes(self::TIME_OUT_MINUTES));
+    }
+
+    public function destinationAirfield(): BelongsTo
+    {
+        return $this->belongsTo(
+            Airfield::class,
+            'planned_destairport',
+            'code'
+        );
     }
 }
