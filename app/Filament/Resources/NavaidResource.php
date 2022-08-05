@@ -20,6 +20,8 @@ class NavaidResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-location-marker';
     protected static ?string $recordTitleAttribute = 'identifier';
+    protected static ?string $navigationLabel = 'Navaids and Holds';
+    protected static ?string $label = 'Navaids and Holds';
 
     public static function getEloquentQuery(): Builder
     {
@@ -79,7 +81,7 @@ class NavaidResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\HoldsRelationManager::class,
         ];
     }
 

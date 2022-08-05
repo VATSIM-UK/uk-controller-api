@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\Hold;
 
 use App\Models\Navigation\Navaid;
@@ -34,6 +35,12 @@ class Hold extends Model
         'maximum_altitude',
         'turn_direction',
         'description',
+    ];
+
+    protected $casts = [
+        'inbound_heading' => 'integer',
+        'minimum_altitude' => 'integer',
+        'maximum_altitude' => 'integer',
     ];
 
     public function navaid(): BelongsTo
