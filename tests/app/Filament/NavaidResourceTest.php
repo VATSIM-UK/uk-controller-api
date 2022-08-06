@@ -4,8 +4,11 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\NavaidResource;
+use App\Models\Hold\Hold;
+use App\Models\Hold\HoldRestriction;
 use App\Models\Navigation\Navaid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 class NavaidResourceTest extends BaseFilamentTestCase
@@ -256,6 +259,555 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.longitude']);
     }
 
+    public function testItCreatesPublishedHoldsWithNoRestrictions()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'holds',
+            [
+                'navaid_id' => $navaid->id,
+                'description' => 'A Hold',
+                'inbound_heading' => 123,
+                'minimum_altitude' => 4000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'left',
+            ]
+        );
+    }
+
+    public function testItCreatesPublishedHoldsWithLevelBlockRestriction()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'level-block',
+                            'data' => [
+                                'levels' => [
+                                    [
+                                        'level' => 12000,
+                                    ],
+                                    [
+                                        'level' => 13000,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'holds',
+            [
+                'id' => Hold::max('id'),
+                'navaid_id' => $navaid->id,
+                'description' => 'A Hold',
+                'inbound_heading' => 123,
+                'minimum_altitude' => 4000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'left',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'hold_restrictions',
+            [
+                'hold_id' => Hold::max('id'),
+                'restriction' => $this->castAsJson([
+                    'type' => 'level-block',
+                    'levels' => [12000, 13000],
+                ]),
+            ]
+        );
+    }
+
+    public function testItCreatesPublishedHoldsWithMinimumLevelRestrictionFullData()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'minimum-level',
+                            'data' => [
+                                'level' => 'MSL',
+                                'target' => 'EGLL',
+                                'override' => 5000,
+                                'runway' => [
+                                    'designator' => '27L',
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'holds',
+            [
+                'id' => Hold::max('id'),
+                'navaid_id' => $navaid->id,
+                'description' => 'A Hold',
+                'inbound_heading' => 123,
+                'minimum_altitude' => 4000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'left',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'hold_restrictions',
+            [
+                'hold_id' => Hold::max('id'),
+                'restriction' => $this->castAsJson([
+                    'type' => 'minimum-level',
+                    'level' => 'MSL',
+                    'target' => 'EGLL',
+                    'override' => 5000,
+                    'runway' => [
+                        'designator' => '27L',
+                        'type' => 'any',
+                    ],
+                ]),
+            ]
+        );
+    }
+
+    public function testItCreatesPublishedHoldsWithMinimumLevelRestrictionMinimalData()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'minimum-level',
+                            'data' => [
+                                'level' => 'MSL',
+                                'target' => 'EGLL',
+                                'override' => null,
+                                'runway' => [
+                                    'designator' => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'holds',
+            [
+                'id' => Hold::max('id'),
+                'navaid_id' => $navaid->id,
+                'description' => 'A Hold',
+                'inbound_heading' => 123,
+                'minimum_altitude' => 4000,
+                'maximum_altitude' => 5000,
+                'turn_direction' => 'left',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'hold_restrictions',
+            [
+                'hold_id' => Hold::max('id'),
+                'restriction' => $this->castAsJson([
+                    'type' => 'minimum-level',
+                    'level' => 'MSL',
+                    'target' => 'EGLL',
+                ]),
+            ]
+        );
+    }
+
+    public function testItDoesntCreateHoldDescriptionTooLong()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => Str::padLeft('', 256, 'a'),
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['description']);
+    }
+
+    public function testItDoesntCreateHoldInboundHeadingTooSmall()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 0,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['inbound_heading']);
+    }
+
+    public function testItDoesntCreateHoldInboundHeadingTooLong()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 361,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['inbound_heading']);
+    }
+
+    public function testItDoesntCreateHoldMinimumAltitudeTooSmall()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 999,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['minimum_altitude']);
+    }
+
+    public function testItDoesntCreateHoldMinimumAltitudeTooLarge()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 60001,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['minimum_altitude']);
+    }
+
+    public function testItDoesntCreateHoldMaximumAltitudeTooSmall()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 999,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['maximum_altitude']);
+    }
+
+    public function testItDoesntCreateHoldMaximumAltitudeTooBig()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 60001,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['maximum_altitude']);
+    }
+
+    public function testItDoesntCreateHoldMaximumAltitudeLessThanMinimum()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 3900,
+                    'turn_direction' => 'left',
+                ]
+            )
+            ->assertHasTableActionErrors(['maximum_altitude']);
+    }
+
+    public function testItDoesntCreateHoldWithLevelBlockRestrictionLevelTooSmall()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'level-block',
+                            'data' => [
+                                'levels' => [
+                                    [
+                                        'level' => 999,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasTableActionErrors(['restrictions.0.data.levels.0.level']);
+    }
+
+    public function testItDoesntCreateHoldWithLevelBlockRestrictionLevelTooBig()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'level-block',
+                            'data' => [
+                                'levels' => [
+                                    [
+                                        'level' => 60001,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasTableActionErrors(['restrictions.0.data.levels.0.level']);
+    }
+
+    public function testItDoesntCredatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooSmall()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'minimum-level',
+                            'data' => [
+                                'level' => 'MSL',
+                                'target' => 'EGLL',
+                                'override' => 999,
+                                'runway' => [
+                                    'designator' => '27L',
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasTableActionErrors(['restrictions.0.data.override']);
+    }
+
+    public function testItDoesntCredatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooBig()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'minimum-level',
+                            'data' => [
+                                'level' => 'MSL',
+                                'target' => 'EGLL',
+                                'override' => 60001,
+                                'runway' => [
+                                    'designator' => '27L',
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasTableActionErrors(['restrictions.0.data.override']);
+    }
+
+    public function testItDoesntCreatePublishedHoldsWithMinimumLevelRestrictionIfOverrideNotANumber()
+    {
+        $navaid = Navaid::factory()->create();
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction(
+                'create', $navaid,
+                [
+                    'description' => 'A Hold',
+                    'inbound_heading' => 123,
+                    'minimum_altitude' => 4000,
+                    'maximum_altitude' => 5000,
+                    'turn_direction' => 'left',
+                    'restrictions' => [
+                        [
+                            'type' => 'minimum-level',
+                            'data' => [
+                                'level' => 'MSL',
+                                'target' => 'EGLL',
+                                'override' => 'abc',
+                                'runway' => [
+                                    'designator' => '27L',
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+            ->assertHasTableActionErrors(['restrictions.0.data.override']);
+    }
+
+
+    public function testItLoadsPublishedHoldDataWithLevelBlockForView()
+    {
+        $navaid = Navaid::factory()->create();
+        $hold = $navaid->holds()->save(
+            Hold::factory()
+                ->has(HoldRestriction::factory()->withLevelBlockRestriction([1000, 2000]))->make()
+        );
+
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction('view', $hold)
+            ->assertSet('form', $hold->description)
+            ->assertSet('inbound_heading', $hold->inbound_heading)
+            ->assertSet('minimum_altitude', $hold->minimum_altitude)
+            ->assertSet('maximum_altitude', $hold->maximum_altitude)
+            ->assertSet('turn_direction', $hold->turn_direction)
+            ->assertSet('restrictions.0.type', 'level-block')
+            ->assertSet('restrictions.0.data.levels.0.level', 1000)
+            ->assertSet('restrictions.0.data.levels.1.level', 2000);
+    }
+
+    public function testItLoadsPublishedHoldDataWithMinimumLevelForViewWithFullData()
+    {
+        $navaid = Navaid::factory()->create();
+        $hold = $navaid->holds()->save(
+            Hold::factory()
+                ->has(HoldRestriction::factory()->withMinimumLevelRestriction('MSL', 'EGLL', 5000, '27L'))->make()
+        );
+
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction('view', $hold)
+            ->assertSet('description', $hold->description)
+            ->assertSet('inbound_heading', $hold->inbound_heading)
+            ->assertSet('minimum_altitude', $hold->minimum_altitude)
+            ->assertSet('maximum_altitude', $hold->maximum_altitude)
+            ->assertSet('turn_direction', $hold->turn_direction)
+            ->assertSet('restrictions.0.type', 'minimum-level')
+            ->assertSet('restrictions.0.data.level', 'MSL')
+            ->assertSet('restrictions.0.data.target', 'EGLL')
+            ->assertSet('restrictions.0.data.override', 5000)
+            ->assertSet('restrictions.0.data.runway.designator', '27L');
+    }
+
+    public function testItLoadsPublishedHoldDataWithMinimumLevelForViewWithMinimumData()
+    {
+        $navaid = Navaid::factory()->create();
+        $hold = $navaid->holds()->save(
+            Hold::factory()
+                ->has(HoldRestriction::factory()->withMinimumLevelRestriction('MSL', 'EGLL'))->make()
+        );
+
+        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+            ->callTableAction('view', $hold)
+            ->assertSet('description', $hold->description)
+            ->assertSet('inbound_heading', $hold->inbound_heading)
+            ->assertSet('minimum_altitude', $hold->minimum_altitude)
+            ->assertSet('maximum_altitude', $hold->maximum_altitude)
+            ->assertSet('turn_direction', $hold->turn_direction)
+            ->assertSet('restrictions.0.type', 'minimum-level')
+            ->assertSet('restrictions.0.data.level', 'MSL')
+            ->assertSet('restrictions.0.data.target', 'EGLL')
+            ->assertSet('restrictions.0.data.override', null)
+            ->assertSet('restrictions.0.data.runway.designator', null);
+    }
+
     protected function getViewEditRecord(): Model
     {
         return Navaid::findOrFail(1);
@@ -273,7 +825,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create navaid';
+        return 'Create Navaids and Holds';
     }
 
     protected function getViewText(): string

@@ -11,7 +11,8 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Support\Facades\DB;
 
-class AirlinesRelationManager extends RelationManager
+class
+AirlinesRelationManager extends RelationManager
 {
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'airlines';

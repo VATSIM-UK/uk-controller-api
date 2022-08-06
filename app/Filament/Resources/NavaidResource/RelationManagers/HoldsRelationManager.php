@@ -36,13 +36,16 @@ class HoldsRelationManager extends RelationManager
                     Forms\Components\TextInput::make('minimum_altitude')
                         ->required()
                         ->integer()
+                        ->step(100)
                         ->minValue(1000)
                         ->maxValue(60000),
                     Forms\Components\TextInput::make('maximum_altitude')
                         ->required()
                         ->integer()
+                        ->step(100)
                         ->minValue(1000)
-                        ->maxValue(60000),
+                        ->maxValue(60000)
+                        ->gte('minimum_altitude'),
                     Forms\Components\Select::make('turn_direction')
                         ->required()
                         ->options([
@@ -115,6 +118,7 @@ class HoldsRelationManager extends RelationManager
                                         ->schema([
                                             Forms\Components\TextInput::make('level')
                                                 ->integer()
+                                                ->step(100)
                                                 ->minValue(1000)
                                                 ->maxValue(60000)
                                                 ->required(),
@@ -149,111 +153,16 @@ class HoldsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->using(function (array $data, HoldsRelationManager $livewire) {
-                        $hold = null;
-                        DB::transaction(function () use (&$hold, $data, $livewire) {
-                            $hold = $livewire->getOwnerRecord()->holds()->save(
-                                new Hold([
-                                    'description' => $data['description'],
-                                    'inbound_heading' => $data['inbound_heading'],
-                                    'minimum_altitude' => $data['minimum_altitude'],
-                                    'maximum_altitude' => $data['maximum_altitude'],
-                                    'turn_direction' => $data['turn_direction'],
-                                ])
-                            );
-                            $hold->restrictions()->saveMany(
-                                array_map(
-                                    function (array $restriction) {
-                                        return new HoldRestriction([
-                                            'restriction' => self::formatRestrictionData($restriction),
-                                        ]);
-                                    },
-                                    $data['restrictions']
-                                )
-                            );
-                        });
-
-                        return $hold;
-                    }),
+                    ->using(
+                        fn(array $data, HoldsRelationManager $livewire): Hold => self::saveNewHold($data, $livewire)
+                    ),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()
+                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data)),
                 Tables\Actions\EditAction::make()
-                    ->mutateRecordDataUsing(function (Hold $record, array $data) {
-                        $data['restrictions'] = $record->restrictions->map(
-                            fn(HoldRestriction $restriction) => match ($restriction->restriction['type']) {
-                                'minimum-level' => [
-                                    'type' => $restriction->restriction['type'],
-                                    'data' => [
-                                        ...$restriction->restriction,
-                                        'id' => $restriction->id,
-                                        'runway' => [
-                                            'designator' => isset($restriction->restriction['runway']) ? $restriction->restriction['runway']['designator'] : null,
-                                        ],
-                                    ],
-                                ],
-                                'level-block' => [
-                                    'id' => $restriction->id,
-                                    'type' => $restriction->restriction['type'],
-                                    'data' => [
-                                        'levels' => collect($restriction->restriction['levels'])
-                                            ->map(fn(int $level) => ['level' => $level])
-                                            ->toArray(),
-                                    ],
-                                ]
-                            }
-                        )->toArray();
-                        return $data;
-                    })->using(function (array $data, Hold $record) {
-                        DB::transaction(function () use ($data, $record) {
-                            $restrictions = $data['restrictions'];
-                            unset($data['restrictions']);
-
-                            $record->update($data);
-
-                            $restrictionIds = array_map(
-                                fn(array $restriction) => $restriction['data']['id'],
-                                array_filter(
-                                    $restrictions,
-                                    fn(array $restriction) => isset($restriction['data']['id'])
-                                ),
-                            );
-
-                            // Remove restrictions we don't need
-                            $restrictionsToRemove = $record->restrictions->filter(
-                                function (HoldRestriction $restriction) use ($restrictionIds) {
-                                    return array_search($restriction->id, $restrictionIds) === false;
-                                }
-                            );
-                            foreach ($restrictionsToRemove as $restriction) {
-                                $record->restrictions()->delete($restriction);
-                            }
-
-                            // Update existing restrictions
-                            $restrictionsToUpdate = array_filter(
-                                $restrictions,
-                                fn(array $restriction) => isset($restriction['data']['id'])
-                            );
-                            foreach ($restrictionsToUpdate as $restriction) {
-                                $model = HoldRestriction::findOrFail($restriction['data']['id']);
-                                $model->restriction = self::formatRestrictionData($restriction);
-                                $model->save();
-                            }
-
-                            // Save new restrictions
-                            $restrictionsToSave = array_filter(
-                                $restrictions,
-                                fn(array $restriction) => !isset($restriction['data']['id'])
-                            );
-                            $record->restrictions()->saveMany(
-                                array_map(
-                                    fn(array $restriction) => new HoldRestriction(
-                                        ['restriction' => self::formatRestrictionData($restriction)]
-                                    ),
-                                    $restrictionsToSave
-                                )
-                            );
-                        });
-                    }),
+                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data))
+                    ->using(fn(Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
@@ -272,10 +181,11 @@ class HoldsRelationManager extends RelationManager
             'type' => $restriction['type'],
             'level' => $restriction['data']['level'],
             'target' => $restriction['data']['target'],
-            'override' => is_null(
-                $restriction['data']['override']
-            ) ? null : (int)$restriction['data']['override'],
         ];
+
+        if (isset($restriction['data']['override'])) {
+            $data['override'] = (int) $restriction['data']['override'];
+        }
 
         if (isset($restriction['data']['runway']['designator'])) {
             $data['runway'] = [
@@ -296,5 +206,116 @@ class HoldsRelationManager extends RelationManager
                 $restriction['data']['levels']
             ),
         ];
+    }
+
+    private static function mutateRecordData(Hold $record, array $data): array
+    {
+        $data['restrictions'] = $record->restrictions->map(
+            fn(HoldRestriction $restriction) => match ($restriction->restriction['type']) {
+                'minimum-level' => [
+                    'type' => $restriction->restriction['type'],
+                    'data' => [
+                        ...$restriction->restriction,
+                        'id' => $restriction->id,
+                        'runway' => [
+                            'designator' => isset($restriction->restriction['runway']) ? $restriction->restriction['runway']['designator'] : null,
+                        ],
+                    ],
+                ],
+                'level-block' => [
+                    'id' => $restriction->id,
+                    'type' => $restriction->restriction['type'],
+                    'data' => [
+                        'levels' => collect($restriction->restriction['levels'])
+                            ->map(fn(int $level) => ['level' => $level])
+                            ->toArray(),
+                    ],
+                ]
+            }
+        )->toArray();
+
+        return $data;
+    }
+
+    private static function saveUpdatedHold(array $data, Hold $record): void
+    {
+        DB::transaction(function () use ($data, $record) {
+            $restrictions = $data['restrictions'];
+            unset($data['restrictions']);
+
+            $record->update($data);
+
+            $restrictionIds = array_map(
+                fn(array $restriction) => $restriction['data']['id'],
+                array_filter(
+                    $restrictions,
+                    fn(array $restriction) => isset($restriction['data']['id'])
+                ),
+            );
+
+            // Remove restrictions we don't need
+            HoldRestriction::whereIn(
+                'id',
+                $record->restrictions->filter(
+                    function (HoldRestriction $restriction) use ($restrictionIds) {
+                        return array_search($restriction->id, $restrictionIds) === false;
+                    }
+                )
+            )->delete();
+
+            // Update existing restrictions
+            $restrictionsToUpdate = array_filter(
+                $restrictions,
+                fn(array $restriction) => isset($restriction['data']['id'])
+            );
+            foreach ($restrictionsToUpdate as $restriction) {
+                $model = HoldRestriction::findOrFail($restriction['data']['id']);
+                $model->restriction = self::formatRestrictionData($restriction);
+                $model->save();
+            }
+
+            // Save new restrictions
+            static::saveNewRestrictions(
+                $record,
+                array_filter(
+                    $restrictions,
+                    fn(array $restriction) => !isset($restriction['data']['id'])
+                )
+            );
+        });
+    }
+
+    private static function saveNewHold(array $data, HoldsRelationManager $livewire): Hold
+    {
+        $hold = null;
+        DB::transaction(function () use (&$hold, $data, $livewire) {
+            $hold = $livewire->getOwnerRecord()->holds()->save(
+                new Hold([
+                    'description' => $data['description'],
+                    'inbound_heading' => $data['inbound_heading'],
+                    'minimum_altitude' => $data['minimum_altitude'],
+                    'maximum_altitude' => $data['maximum_altitude'],
+                    'turn_direction' => $data['turn_direction'],
+                ])
+            );
+
+            static::saveNewRestrictions($hold, $data['restrictions']);
+        });
+
+        return $hold;
+    }
+
+    private static function saveNewRestrictions(Hold $hold, array $restrictions): void
+    {
+        $hold->restrictions()->saveMany(
+            array_map(
+                function (array $restriction) {
+                    return new HoldRestriction([
+                        'restriction' => self::formatRestrictionData($restriction),
+                    ]);
+                },
+                $restrictions
+            )
+        );
     }
 }
