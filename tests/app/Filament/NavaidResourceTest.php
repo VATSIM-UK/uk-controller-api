@@ -7,6 +7,7 @@ use App\Filament\Resources\NavaidResource;
 use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
 use App\Models\Navigation\Navaid;
+use Filament\Pages\Actions\ViewAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -14,6 +15,11 @@ use Livewire\Livewire;
 class NavaidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+
+    protected function tearDown(): void
+    {
+        Str::createUuidsNormally();
+    }
 
     public function testItLoadsDataForView()
     {
@@ -653,7 +659,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ->assertHasTableActionErrors(['restrictions.0.data.levels.0.level']);
     }
 
-    public function testItDoesntCredatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooSmall()
+    public function testItDoesntCreatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooSmall()
     {
         $navaid = Navaid::factory()->create();
         Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
@@ -683,7 +689,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ->assertHasTableActionErrors(['restrictions.0.data.override']);
     }
 
-    public function testItDoesntCredatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooBig()
+    public function testItDoesntCreatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooBig()
     {
         $navaid = Navaid::factory()->create();
         Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
@@ -747,65 +753,122 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItLoadsPublishedHoldDataWithLevelBlockForView()
     {
         $navaid = Navaid::factory()->create();
-        $hold = $navaid->holds()->save(
-            Hold::factory()
-                ->has(HoldRestriction::factory()->withLevelBlockRestriction([1000, 2000]))->make()
-        );
+        $hold = $navaid->holds()->save(Hold::factory()->make());
+        $restriction = HoldRestriction::factory()->withLevelBlockRestriction([1000, 2000])
+            ->create(['hold_id' => $hold->id]);
+        $hold->load('restrictions');
+
+        // For this test, we override the default UUID factory in Laravel's Str facade, so we get predictable results
+        // for restrictions
+        Str::createUuidsUsingSequence([0, 0, 1]);
 
         Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
-            ->callTableAction('view', $hold)
-            ->assertSet('form', $hold->description)
-            ->assertSet('inbound_heading', $hold->inbound_heading)
-            ->assertSet('minimum_altitude', $hold->minimum_altitude)
-            ->assertSet('maximum_altitude', $hold->maximum_altitude)
-            ->assertSet('turn_direction', $hold->turn_direction)
-            ->assertSet('restrictions.0.type', 'level-block')
-            ->assertSet('restrictions.0.data.levels.0.level', 1000)
-            ->assertSet('restrictions.0.data.levels.1.level', 2000);
+            ->mountTableAction(ViewAction::class, $hold)
+            ->assertTableActionDataSet(
+                [
+                    'description' => $hold->description,
+                    'inbound_heading' => $hold->inbound_heading,
+                    'minimum_altitude' => $hold->minimum_altitude,
+                    'maximum_altitude' => $hold->maximum_altitude,
+                    'turn_direction' => $hold->turn_direction,
+                    'restrictions' => [
+                        [
+                            'type' => 'level-block',
+                            'data' => [
+                                'levels' => [
+                                    [
+                                        'level' => 1000,
+                                    ],
+                                    [
+                                        'level' => 2000,
+                                    ],
+                                ],
+                                'id' => $restriction->id,
+                            ],
+                        ],
+                    ],
+                ],
+            );
     }
 
     public function testItLoadsPublishedHoldDataWithMinimumLevelForViewWithFullData()
     {
         $navaid = Navaid::factory()->create();
-        $hold = $navaid->holds()->save(
-            Hold::factory()
-                ->has(HoldRestriction::factory()->withMinimumLevelRestriction('MSL', 'EGLL', 5000, '27L'))->make()
-        );
+        $hold = $navaid->holds()->save(Hold::factory()->make());
+        $restriction = HoldRestriction::factory()->withMinimumLevelRestriction('MSL', 'EGLL', 5000, '27L')
+            ->create(['hold_id' => $hold->id]);
+        $hold->load('restrictions');
+
+        // For this test, we override the default UUID factory in Laravel's Str facade, so we get predictable results
+        // for restrictions
+        Str::createUuidsUsingSequence([0]);
 
         Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
-            ->callTableAction('view', $hold)
-            ->assertSet('description', $hold->description)
-            ->assertSet('inbound_heading', $hold->inbound_heading)
-            ->assertSet('minimum_altitude', $hold->minimum_altitude)
-            ->assertSet('maximum_altitude', $hold->maximum_altitude)
-            ->assertSet('turn_direction', $hold->turn_direction)
-            ->assertSet('restrictions.0.type', 'minimum-level')
-            ->assertSet('restrictions.0.data.level', 'MSL')
-            ->assertSet('restrictions.0.data.target', 'EGLL')
-            ->assertSet('restrictions.0.data.override', 5000)
-            ->assertSet('restrictions.0.data.runway.designator', '27L');
+            ->mountTableAction(ViewAction::class, $hold)
+            ->assertTableActionDataSet(
+                [
+                    'description' => $hold->description,
+                    'inbound_heading' => $hold->inbound_heading,
+                    'minimum_altitude' => $hold->minimum_altitude,
+                    'maximum_altitude' => $hold->maximum_altitude,
+                    'turn_direction' => $hold->turn_direction,
+                    'restrictions' => [
+                        [
+                            'type' => 'minimum-level',
+                            'data' => [
+                                'level' => 'MSL',
+                                'target' => 'EGLL',
+                                'override' => 5000,
+                                'runway' => [
+                                    'designator' => '27L',
+                                ],
+                                'type' => 'minimum-level',
+                                'id' => $restriction->id,
+                            ],
+                        ],
+                    ],
+                ]
+            );
     }
 
     public function testItLoadsPublishedHoldDataWithMinimumLevelForViewWithMinimumData()
     {
         $navaid = Navaid::factory()->create();
-        $hold = $navaid->holds()->save(
-            Hold::factory()
-                ->has(HoldRestriction::factory()->withMinimumLevelRestriction('MSL', 'EGLL'))->make()
-        );
+        $hold = $navaid->holds()->save(Hold::factory()->make());
+        $restriction = HoldRestriction::factory()->withMinimumLevelRestriction('MSL', 'EGLL')
+            ->create(['hold_id' => $hold->id]);
+        $hold->load('restrictions');
+
+        // For this test, we override the default UUID factory in Laravel's Str facade, so we get predictable results
+        // for restrictions
+        Str::createUuidsUsingSequence([0]);
 
         Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
-            ->callTableAction('view', $hold)
-            ->assertSet('description', $hold->description)
-            ->assertSet('inbound_heading', $hold->inbound_heading)
-            ->assertSet('minimum_altitude', $hold->minimum_altitude)
-            ->assertSet('maximum_altitude', $hold->maximum_altitude)
-            ->assertSet('turn_direction', $hold->turn_direction)
-            ->assertSet('restrictions.0.type', 'minimum-level')
-            ->assertSet('restrictions.0.data.level', 'MSL')
-            ->assertSet('restrictions.0.data.target', 'EGLL')
-            ->assertSet('restrictions.0.data.override', null)
-            ->assertSet('restrictions.0.data.runway.designator', null);
+            ->mountTableAction(ViewAction::class, $hold)
+            ->assertTableActionDataSet(
+                [
+                    'description' => $hold->description,
+                    'inbound_heading' => $hold->inbound_heading,
+                    'minimum_altitude' => $hold->minimum_altitude,
+                    'maximum_altitude' => $hold->maximum_altitude,
+                    'turn_direction' => $hold->turn_direction,
+                    'restrictions' => [
+                        [
+                            'type' => 'minimum-level',
+                            'data' => [
+                                'level' => 'MSL',
+                                'target' => 'EGLL',
+                                'override' => null,
+                                'runway' => [
+                                    'designator' => null,
+                                ],
+                                'type' => 'minimum-level',
+                                'id' => $restriction->id,
+                            ],
+                        ],
+                    ],
+                ]
+            );
     }
 
     protected function getViewEditRecord(): Model

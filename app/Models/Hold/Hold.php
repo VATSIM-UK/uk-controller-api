@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Model for a hold
@@ -48,14 +49,9 @@ class Hold extends Model
         return $this->belongsTo(Navaid::class);
     }
 
-    /**
-     * Relationship between a hold and its restrictions
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function restrictions()
+    public function restrictions(): HasMany
     {
-        return $this->hasMany(HoldRestriction::class, 'hold_id', 'id');
+        return $this->hasMany(HoldRestriction::class);
     }
 
     public function deemedSeparatedHolds(): BelongsToMany

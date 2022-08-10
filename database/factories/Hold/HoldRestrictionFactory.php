@@ -25,8 +25,10 @@ class HoldRestrictionFactory extends Factory
     public function withLevelBlockRestriction(array $levels): static
     {
         return $this->state(fn() => [
-            'type' => 'level-block',
-            'levels' => $levels,
+            'restriction' => [
+                'type' => 'level-block',
+                'levels' => $levels,
+            ]
         ]);
     }
 
@@ -54,7 +56,7 @@ class HoldRestrictionFactory extends Factory
                 ];
             }
 
-            return $data;
+            return ['restriction' => $data];
         });
     }
 }

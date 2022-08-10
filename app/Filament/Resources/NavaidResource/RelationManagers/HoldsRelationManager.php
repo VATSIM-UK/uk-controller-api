@@ -223,9 +223,9 @@ class HoldsRelationManager extends RelationManager
                     ],
                 ],
                 'level-block' => [
-                    'id' => $restriction->id,
                     'type' => $restriction->restriction['type'],
                     'data' => [
+                        'id' => $restriction->id,
                         'levels' => collect($restriction->restriction['levels'])
                             ->map(fn(int $level) => ['level' => $level])
                             ->toArray(),
