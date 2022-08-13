@@ -184,7 +184,7 @@ class HoldsRelationManager extends RelationManager
         ];
 
         if (isset($restriction['data']['override'])) {
-            $data['override'] = (int) $restriction['data']['override'];
+            $data['override'] = (int)$restriction['data']['override'];
         }
 
         if (isset($restriction['data']['runway']['designator'])) {
@@ -260,7 +260,7 @@ class HoldsRelationManager extends RelationManager
                     function (HoldRestriction $restriction) use ($restrictionIds) {
                         return array_search($restriction->id, $restrictionIds) === false;
                     }
-                )
+                )->pluck('id')
             )->delete();
 
             // Update existing restrictions
