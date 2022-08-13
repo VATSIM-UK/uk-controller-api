@@ -18,6 +18,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     protected function tearDown(): void
     {
+        parent::tearDown();;
         Str::createUuidsNormally();
     }
 
