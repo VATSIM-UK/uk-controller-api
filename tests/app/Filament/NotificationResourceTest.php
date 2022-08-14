@@ -28,6 +28,21 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ->assertSet('data.valid_to', $notification->valid_to);
     }
 
+    public function testViewingTheNotificationMarksItAsReadByTheUser()
+    {
+        $notification = Notification::factory()->create();
+
+        Livewire::test(ViewNotification::class, ['record' => $notification->id]);
+
+        $this->assertDatabaseHas(
+            'notification_user',
+            [
+                'user_id' => self::ACTIVE_USER_CID,
+                'notification_id' => $notification->id,
+            ]
+        );
+    }
+
     public function testItCreatesANotification()
     {
         $validFrom = Carbon::now()->addHours(4);
