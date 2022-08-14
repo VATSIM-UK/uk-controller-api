@@ -24,46 +24,59 @@ class HoldsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Fieldset::make('Parameters')->schema([
+                Forms\Components\Fieldset::make('Parameters')
+                    ->label(__('form.holds.parameters.label'))
+                    ->schema([
                     Forms\Components\TextInput::make('description')
+                        ->label(__('form.holds.description.label'))
                         ->required()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('inbound_heading')
+                        ->label(__('form.holds.inbound_heading.label'))
+                        ->helperText(__('form.holds.inbound_heading.helper'))
                         ->required()
                         ->integer()
                         ->minValue(1)
                         ->maxValue(360),
                     Forms\Components\TextInput::make('minimum_altitude')
+                        ->label(__('form.holds.minimum_altitude.label'))
+                        ->helperText(__('form.holds.minimum_altitude.helper'))
                         ->required()
                         ->integer()
                         ->step(100)
                         ->minValue(1000)
                         ->maxValue(60000),
                     Forms\Components\TextInput::make('maximum_altitude')
+                        ->label(__('form.holds.maximum_altitude.label'))
+                        ->helperText(__('form.holds.maximum_altitude.helper'))
                         ->required()
                         ->integer()
                         ->step(100)
-                        ->minValue(1000)
+                        ->minValue(2000)
                         ->maxValue(60000)
                         ->gte('minimum_altitude'),
                     Forms\Components\Select::make('turn_direction')
+                        ->label(__('form.holds.turn_direction.label'))
                         ->required()
                         ->options([
                             'left' => 'Left',
                             'right' => 'Right',
                         ]),
                 ]),
-                Forms\Components\Fieldset::make('Restrictions')->schema([
+                Forms\Components\Fieldset::make('Restrictions')
+                    ->label(__('form.holds.restrictions.label'))
+                    ->schema([
                     Forms\Components\Builder::make('restrictions')
-                        ->createItemButtonLabel(__('Add restriction'))
+                        ->createItemButtonLabel(__('form.holds.add_restriction.label'))
                         ->columnSpan('full')
                         ->inset()
                         ->blocks([
                             Forms\Components\Builder\Block::make('minimum-level')
-                                ->label('Minimum Level')
+                                ->label(__('form.holds.minimum_level.label'))
                                 ->schema([
                                     Forms\Components\Hidden::make('id'),
                                     Forms\Components\Select::make('level')
+                                        ->label(__('form.holds.minimum_level_level.label'))
                                         ->required()
                                         ->options([
                                             'MSL' => 'MSL',
@@ -71,6 +84,8 @@ class HoldsRelationManager extends RelationManager
                                             'MSL+2' => 'MSL + 2',
                                         ]),
                                     Forms\Components\Select::make('target')
+                                        ->label(__('form.holds.minimum_level_target.label'))
+                                        ->helperText(__('form.holds.minimum_level_target.helper'))
                                         ->required()
                                         ->searchable()
                                         ->options(
@@ -99,10 +114,14 @@ class HoldsRelationManager extends RelationManager
                                             $set('runway.designator', null);
                                         }),
                                     Forms\Components\TextInput::make('override')
+                                        ->label(__('form.holds.minimum_level_override.label'))
+                                        ->helperText(__('form.holds.minimum_level_override.helper'))
                                         ->integer()
                                         ->minValue(1000)
                                         ->maxValue(60000),
                                     Forms\Components\Select::make('runway.designator')
+                                        ->label(__('form.holds.minimum_level_runway.label'))
+                                        ->helperText(__('form.holds.minimum_level_runway.helper'))
                                         ->options(
                                             fn(Closure $get) => $get('target')
                                                 ? Runway::atAirfield($get('target'))->get()->mapWithKeys(
@@ -112,9 +131,11 @@ class HoldsRelationManager extends RelationManager
                                         ),
                                 ]),
                             Forms\Components\Builder\Block::make('level-block')
-                                ->label('Blocked Level')
+                                ->label(__('form.holds.level_block.label'))
                                 ->schema([
                                     Forms\Components\Repeater::make('levels')
+                                        ->label(__('form.holds.level_block_levels.label'))
+                                        ->helperText(__('form.holds.level_block_levels.helper'))
                                         ->schema([
                                             Forms\Components\TextInput::make('level')
                                                 ->integer()
@@ -134,21 +155,21 @@ class HoldsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
-                    ->label(__('table.navaids.published_holds.columns.description')),
+                    ->label(__('table.holds.columns.description')),
                 Tables\Columns\TextColumn::make('inbound_heading')
-                    ->label(__('table.navaids.published_holds.columns.heading')),
+                    ->label(__('table.holds.columns.heading')),
                 Tables\Columns\TextColumn::make('minimum_altitude')
-                    ->label(__('table.navaids.published_holds.columns.minimum_altitude')),
+                    ->label(__('table.holds.columns.minimum_altitude')),
                 Tables\Columns\TextColumn::make('maximum_altitude')
-                    ->label(__('table.navaids.published_holds.columns.maximum_altitude')),
+                    ->label(__('table.holds.columns.maximum_altitude')),
                 Tables\Columns\TextColumn::make('turn_direction')
                     ->enum([
                         'left' => 'Left',
                         'right' => 'Right',
                     ])
-                    ->label(__('table.navaids.published_holds.columns.turn_direction')),
+                    ->label(__('table.holds.columns.turn_direction')),
                 Tables\Columns\BooleanColumn::make('restrictions')
-                    ->label(__('table.navaids.published_holds.columns.has_restrictions'))
+                    ->label(__('table.holds.columns.has_restrictions'))
                     ->getStateUsing(fn(Hold $record) => $record->restrictions->isNotEmpty()),
             ])
             ->headerActions([
