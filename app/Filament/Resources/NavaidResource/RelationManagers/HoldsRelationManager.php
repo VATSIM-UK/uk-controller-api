@@ -91,7 +91,7 @@ class HoldsRelationManager extends RelationManager
                                         ->options(
                                             Airfield::all()
                                                 ->mapWithKeys(
-                                                    fn(Airfield $airfield) => [$airfield->code => $airfield->code]
+                                                    fn (Airfield $airfield) => [$airfield->code => $airfield->code]
                                                 ),
                                         )
                                         ->preload()
@@ -123,9 +123,9 @@ class HoldsRelationManager extends RelationManager
                                         ->label(__('form.holds.minimum_level_runway.label'))
                                         ->helperText(__('form.holds.minimum_level_runway.helper'))
                                         ->options(
-                                            fn(Closure $get) => $get('target')
+                                            fn (Closure $get) => $get('target')
                                                 ? Runway::atAirfield($get('target'))->get()->mapWithKeys(
-                                                    fn(Runway $runway) => [$runway->identifier => $runway->identifier]
+                                                    fn (Runway $runway) => [$runway->identifier => $runway->identifier]
                                                 )
                                                 : []
                                         ),
@@ -170,20 +170,20 @@ class HoldsRelationManager extends RelationManager
                     ->label(__('table.holds.columns.turn_direction')),
                 Tables\Columns\BooleanColumn::make('restrictions')
                     ->label(__('table.holds.columns.has_restrictions'))
-                    ->getStateUsing(fn(Hold $record) => $record->restrictions->isNotEmpty()),
+                    ->getStateUsing(fn (Hold $record) => $record->restrictions->isNotEmpty()),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->using(
-                        fn(array $data, HoldsRelationManager $livewire): Hold => self::saveNewHold($data, $livewire)
+                        fn (array $data, HoldsRelationManager $livewire): Hold => self::saveNewHold($data, $livewire)
                     ),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data)),
+                    ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data)),
                 Tables\Actions\EditAction::make()
-                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data))
-                    ->using(fn(Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
+                    ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data))
+                    ->using(fn (Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
@@ -223,7 +223,7 @@ class HoldsRelationManager extends RelationManager
         return [
             'type' => $restriction['type'],
             'levels' => array_map(
-                fn(array $level) => (int)$level['level'],
+                fn (array $level) => (int)$level['level'],
                 $restriction['data']['levels']
             ),
         ];
@@ -232,7 +232,7 @@ class HoldsRelationManager extends RelationManager
     private static function mutateRecordData(Hold $record, array $data): array
     {
         $data['restrictions'] = $record->restrictions->map(
-            fn(HoldRestriction $restriction) => match ($restriction->restriction['type']) {
+            fn (HoldRestriction $restriction) => match ($restriction->restriction['type']) {
                 'minimum-level' => [
                     'type' => $restriction->restriction['type'],
                     'data' => [
@@ -248,7 +248,7 @@ class HoldsRelationManager extends RelationManager
                     'data' => [
                         'id' => $restriction->id,
                         'levels' => collect($restriction->restriction['levels'])
-                            ->map(fn(int $level) => ['level' => $level])
+                            ->map(fn (int $level) => ['level' => $level])
                             ->toArray(),
                     ],
                 ]
@@ -267,10 +267,10 @@ class HoldsRelationManager extends RelationManager
             $record->update($data);
 
             $restrictionIds = array_map(
-                fn(array $restriction) => $restriction['data']['id'],
+                fn (array $restriction) => $restriction['data']['id'],
                 array_filter(
                     $restrictions,
-                    fn(array $restriction) => isset($restriction['data']['id'])
+                    fn (array $restriction) => isset($restriction['data']['id'])
                 ),
             );
 
@@ -287,7 +287,7 @@ class HoldsRelationManager extends RelationManager
             // Update existing restrictions
             $restrictionsToUpdate = array_filter(
                 $restrictions,
-                fn(array $restriction) => isset($restriction['data']['id'])
+                fn (array $restriction) => isset($restriction['data']['id'])
             );
             foreach ($restrictionsToUpdate as $restriction) {
                 $model = HoldRestriction::findOrFail($restriction['data']['id']);
@@ -300,7 +300,7 @@ class HoldsRelationManager extends RelationManager
                 $record,
                 array_filter(
                     $restrictions,
-                    fn(array $restriction) => !isset($restriction['data']['id'])
+                    fn (array $restriction) => !isset($restriction['data']['id'])
                 )
             );
         });

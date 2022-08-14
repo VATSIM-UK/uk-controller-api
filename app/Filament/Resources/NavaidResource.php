@@ -38,7 +38,7 @@ class NavaidResource extends Resource
                     ->maxLength(5)
                     ->label(__('form.navaids.identifier.label'))
                     ->helperText(__('form.navaids.identifier.helper'))
-                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord),
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
                 TextInput::make('latitude')
                     ->required()
                     ->numeric('decimal:7')

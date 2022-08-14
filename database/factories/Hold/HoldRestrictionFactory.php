@@ -24,7 +24,7 @@ class HoldRestrictionFactory extends Factory
 
     public function withLevelBlockRestriction(array $levels): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'restriction' => [
                 'type' => 'level-block',
                 'levels' => $levels,
