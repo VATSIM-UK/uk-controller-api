@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\NotificationResource\Pages;
 use App\Filament\Resources\NotificationResource\RelationManagers;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Notification\Notification;
 use Carbon\Carbon;
 use Filament\Forms\Components\DateTimePicker;
@@ -13,6 +14,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationResource extends Resource
@@ -72,6 +74,28 @@ class NotificationResource extends Resource
                     ->label(__('table.notifications.columns.read'))
                     ->getStateUsing(
                         fn(Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
+                    ),
+            ])
+            ->filters([
+                Tables\Filters\MultiSelectFilter::make('controllers')
+                    ->label(__('filter.notifications.controllers'))
+                    ->query(
+                        function (Builder $query, array $data) {
+                            if (empty($data['values'])) {
+                                return $query;
+                            }
+
+                            return $query->whereHas(
+                                'controllers',
+                                function (Builder $controllers) use ($data) {
+                                    return $controllers->whereIn('controller_positions.id', $data['values']);
+                                }
+                            );
+                        }
+                    )
+                    ->options(
+                        ControllerPosition::all()
+                            ->mapWithKeys(fn(ControllerPosition $position) => [$position->id => $position->callsign])
                     ),
             ])
             ->actions([

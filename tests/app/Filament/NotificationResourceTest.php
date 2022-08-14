@@ -5,6 +5,7 @@ namespace App\Filament;
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\NotificationResource;
 use App\Filament\Resources\NotificationResource\Pages\EditNotification;
+use App\Filament\Resources\NotificationResource\Pages\ListNotifications;
 use App\Filament\Resources\NotificationResource\Pages\ViewNotification;
 use App\Models\Notification\Notification;
 use Carbon\Carbon;
@@ -15,6 +16,24 @@ use Livewire\Livewire;
 class NotificationResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+
+    public function testItCanFilterForControllerRelevantNotifications()
+    {
+        $notification1 = Notification::factory()->create();
+        $notification2 = Notification::factory()->create();
+        $notification3 = Notification::factory()->create();
+        $notification4 = Notification::factory()->create();
+
+        $notification2->controllers()->sync([1, 2]);
+        $notification3->controllers()->sync([1, 3]);
+        $notification4->controllers()->sync([3, 4]);
+
+        Livewire::test(ListNotifications::class)
+            ->assertCanSeeTableRecords([$notification1, $notification2, $notification3, $notification4])
+            ->filterTable('controllers', ['values' => 1])
+            ->assertCanSeeTableRecords([$notification2, $notification3])
+            ->assertCanNotSeeTableRecords([$notification1, $notification4]);
+    }
 
     public function testItLoadsDataForView()
     {
