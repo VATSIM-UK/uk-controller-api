@@ -9,4 +9,5 @@ return [
     'prenotes' => require_once __DIR__ . '/prenotes/table.php',
     'controllers' => require_once __DIR__ . '/controllers/table.php',
     'navaids' => require_once __DIR__ . '/navaids/table.php',
+    'notifications' => require_once __DIR__ . '/notifications/table.php',
 ];

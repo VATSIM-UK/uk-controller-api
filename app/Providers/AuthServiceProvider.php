@@ -7,6 +7,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
 use App\Models\Navigation\Navaid;
+use App\Models\Notification\Notification;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
 use App\Models\User\Role;
@@ -34,7 +35,7 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_USER_ADMIN => 'Can perform user administration functions',
         self::SCOPE_VERSION_ADMIN => 'Can perform plugin version administration functions',
         self::SCOPE_DEPENDENCY_ADMIN => 'Can perform dependency administration functions',
-        self::SCOPE_DATA_ADMIN => 'Can administer live data stored in the system'
+        self::SCOPE_DATA_ADMIN => 'Can administer live data stored in the system',
     ];
 
     protected $policies = [
@@ -43,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         ControllerPosition::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
         Navaid::class => DefaultFilamentPolicy::class,
+        Notification::class => DefaultFilamentPolicy::class,
         Prenote::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
