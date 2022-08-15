@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.11.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.0...6.11.1) (2022-08-15)
+
+
+### Miscellaneous Chores
+
+* remove unused dependency code for airfield ownership ([2adb305](https://github.com/VATSIM-UK/uk-controller-api/commit/2adb3057fe6aef75a89709c37314bd6b06c3d91b))
+
 ## [6.11.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.10.0...6.11.0) (2022-08-02)
 
 
