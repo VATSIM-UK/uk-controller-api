@@ -21,6 +21,17 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         CcamsSquawkRange::query()->delete();
     }
 
+    public function testItDoesntAllocateBannedSquawks()
+    {
+        $this->createSquawkRange('1234', '1234');
+        $this->createSquawkRange('0200', '0200');
+        $this->createSquawkRange('1200', '1200');
+        $this->createSquawkRange('1201', '1201');
+
+        $this->assertEquals('1201', $this->allocator->allocate('BMI11A', [])->getCode());
+        $this->assertSquawkAssigned('BMI11A', '1201');
+    }
+
     public function testItAllocatesFreeSquawkInRange()
     {
         $this->createSquawkRange('7201', '7203');
@@ -71,7 +82,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
     ) {
         NetworkAircraft::create(
             [
-                'callsign' => $callsign
+                'callsign' => $callsign,
             ]
         );
         SquawkAssignment::create(
@@ -88,7 +99,7 @@ class CcamsSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing(
             'squawk_assignments',
             [
-                'callsign' => $callsign
+                'callsign' => $callsign,
             ]
         );
     }
