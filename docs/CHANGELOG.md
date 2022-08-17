@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.11.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.1...6.11.2) (2022-08-17)
+
+
+### Bug Fixes
+
+* add missing banned codes ([091411a](https://github.com/VATSIM-UK/uk-controller-api/commit/091411a3d55215c6d958b5f538ece608ec34eb01))
+* dont assign squawk codes that are non-assignable ([cd83002](https://github.com/VATSIM-UK/uk-controller-api/commit/cd830026c891eb79c8baf8e7ed51767e215c89b9))
+
 ## [6.11.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.0...6.11.1) (2022-08-15)
 
 
