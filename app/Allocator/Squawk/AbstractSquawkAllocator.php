@@ -3,6 +3,7 @@
 namespace App\Allocator\Squawk;
 
 use App\Models\Squawk\AbstractSquawkRange;
+use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use App\Models\Squawk\SquawkAssignment;
 use App\Services\NetworkAircraftService;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,6 +50,10 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
 
     private function tryAssignSquawk($callsign, $code): ?SquawkAssignmentInterface
     {
+        if (NonAssignableSquawkCode::where('code', $code)->exists()) {
+            return null;
+        }
+
         try {
             return SquawkAssignment::updateOrCreate(
                 ['callsign' => $callsign],
