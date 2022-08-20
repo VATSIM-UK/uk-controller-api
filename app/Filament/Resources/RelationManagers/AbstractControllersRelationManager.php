@@ -40,11 +40,11 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->label(self::tableTranslationString('controller_positions.columns.callsign.label')),
                 Tables\Columns\TextColumn::make('frequency')
                     ->label(self::tableTranslationString('controller_positions.columns.frequency.label'))
-                    ->formatStateUsing(fn(float $state) => FrequencyFormatter::formatFrequency($state)),
+                    ->formatStateUsing(fn (float $state) => FrequencyFormatter::formatFrequency($state)),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->form(fn(Tables\Actions\AttachAction $action, AbstractControllersRelationManager $livewire) => [
+                    ->form(fn (Tables\Actions\AttachAction $action, AbstractControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
                         Forms\Components\Select::make('insert_after')
                             ->label(self::tableTranslationString('controller_positions.attach_form.insert_after.label'))
@@ -55,7 +55,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
                                 $livewire->getOwnerRecord()
                                     ->controllers
                                     ->mapWithKeys(
-                                        fn(ControllerPosition $controller) => [$controller->id => $controller->callsign]
+                                        fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
                                     )
                             ),
                     ])
@@ -84,7 +84,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     })
                     ->label(self::tableTranslationString('controller_positions.move_up_action.label'))
                     ->icon('heroicon-o-arrow-up')
-                    ->authorize(fn(AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\Action::make('moveDown')
                     ->action(function (ControllerPosition $record) {
                         ControllerPositionHierarchyService::moveControllerInHierarchy(
@@ -95,7 +95,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     })
                     ->label(self::tableTranslationString('controller_positions.move_down_action.label'))
                     ->icon('heroicon-o-arrow-down')
-                    ->authorize(fn(AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\DetachAction::make()
                     ->using(function (ControllerPosition $record) {
                         ControllerPositionHierarchyService::removeFromHierarchy(
@@ -112,7 +112,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
      *
      * @return string
      */
-    protected static abstract function translationPathRoot(): string;
+    abstract protected static function translationPathRoot(): string;
 
     private static function tableTranslationString(string $path): string
     {
