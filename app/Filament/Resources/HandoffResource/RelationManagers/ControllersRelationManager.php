@@ -4,7 +4,7 @@ namespace App\Filament\Resources\HandoffResource\RelationManagers;
 
 use App\Helpers\Controller\FrequencyFormatter;
 use App\Models\Controller\ControllerPosition;
-use App\Services\HandoffService;
+use App\Services\ControllerPositionHierarchyService;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -56,7 +56,7 @@ class ControllersRelationManager extends RelationManager
                             ),
                     ])
                     ->using(function (ControllersRelationManager $livewire, $data) {
-                        HandoffService::insertPositionIntoHandoffOrder(
+                        ControllerPositionHierarchyService::insertPositionIntoHierarchy(
                             $livewire->getOwnerRecord(),
                             ControllerPosition::findOrFail($data['recordId']),
                             after: isset($data['insert_after'])
@@ -72,7 +72,7 @@ class ControllersRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\Action::make('moveUp')
                     ->action(function (ControllerPosition $record) {
-                        HandoffService::moveControllerInHandoffOrder(
+                        ControllerPositionHierarchyService::moveControllerInHierarchy(
                             $record->pivot->pivotParent,
                             $record,
                             true
@@ -83,7 +83,7 @@ class ControllersRelationManager extends RelationManager
                     ->authorize(fn (ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\Action::make('moveDown')
                     ->action(function (ControllerPosition $record) {
-                        HandoffService::moveControllerInHandoffOrder(
+                        ControllerPositionHierarchyService::moveControllerInHierarchy(
                             $record->pivot->pivotParent,
                             $record,
                             false
@@ -94,7 +94,7 @@ class ControllersRelationManager extends RelationManager
                     ->authorize(fn (ControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\DetachAction::make()
                     ->using(function (ControllerPosition $record) {
-                        HandoffService::removeFromHandoffOrder(
+                        ControllerPositionHierarchyService::removeFromHierarchy(
                             $record->pivot->pivotParent,
                             $record
                         );

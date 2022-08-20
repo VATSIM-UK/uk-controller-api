@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Prenote extends Model
+class Prenote extends Model implements HasControllerHierarchy
 {
     use HasFactory;
 

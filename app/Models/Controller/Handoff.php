@@ -5,7 +5,7 @@ namespace App\Models\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Handoff extends Model
+class Handoff extends Model implements HasControllerHierarchy
 {
     protected $fillable = [
         'description',

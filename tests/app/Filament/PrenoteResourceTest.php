@@ -6,6 +6,7 @@ use App\BaseFilamentTestCase;
 use App\Filament\Resources\PrenoteResource;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
+use App\Services\ControllerPositionHierarchyService;
 use App\Services\PrenoteService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -143,7 +144,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeRemoved()
     {
-        PrenoteService::setPositionsForPrenote(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -174,7 +175,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeRemovedAtTheEnd()
     {
-        PrenoteService::setPositionsForPrenote(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -205,7 +206,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedUpTheOrder()
     {
-        PrenoteService::setPositionsForPrenote(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -237,7 +238,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedUpTheOrderAtTheTop()
     {
-        PrenoteService::setPositionsForPrenote(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -269,7 +270,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedDownTheOrder()
     {
-        PrenoteService::setPositionsForPrenote(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -301,7 +302,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedDownAtTheBottom()
     {
-        PrenoteService::setPositionsForPrenote(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
