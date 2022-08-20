@@ -1,5 +1,19 @@
 # UK Controller Plugin API Changelog
 
+## [6.12.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.2...6.12.0) (2022-08-20)
+
+
+### Features
+
+* allow adding handoffs and reordering controllers ([71d3987](https://github.com/VATSIM-UK/uk-controller-api/commit/71d398781f9ce45c31d9d8f4a6fbb661562c9de1))
+* lang ([d931902](https://github.com/VATSIM-UK/uk-controller-api/commit/d9319028fe75281333bef55bf051df5554bd4529))
+
+
+### Bug Fixes
+
+* ordering ([6af80b7](https://github.com/VATSIM-UK/uk-controller-api/commit/6af80b706af13f2354594ab957d47d92346ff2b2))
+* remove unused provider ([91b6304](https://github.com/VATSIM-UK/uk-controller-api/commit/91b63047c01a3deff1813b39983ad33a7dd0a19a))
+
 ## [6.11.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.1...6.11.2) (2022-08-17)
 
 
