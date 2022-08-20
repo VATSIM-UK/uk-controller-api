@@ -6,7 +6,6 @@ use App\Helpers\Controller\FrequencyFormatter;
 use App\Models\Controller\ControllerPosition;
 use App\Services\ControllerPositionHierarchyService;
 use Filament\Forms;
-use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
@@ -19,16 +18,6 @@ abstract class AbstractControllersRelationManager extends RelationManager
 {
     protected static string $relationship = 'controllers';
     protected static ?string $recordTitleAttribute = 'callsign';
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('callsign')
-                    ->required()
-                    ->maxLength(255),
-            ]);
-    }
 
     public static function table(Table $table): Table
     {
@@ -118,13 +107,6 @@ abstract class AbstractControllersRelationManager extends RelationManager
     {
         return __(
             sprintf('table.%s.%s', static::translationPathRoot(), $path)
-        );
-    }
-
-    private static function formTranslationString(string $path): string
-    {
-        return __(
-            sprintf('form.%s.%s', static::translationPathRoot(), $path)
         );
     }
 }
