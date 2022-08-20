@@ -1,5 +1,66 @@
 # UK Controller Plugin API Changelog
 
+## [6.11.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.1...6.11.2) (2022-08-17)
+
+
+### Bug Fixes
+
+* add missing banned codes ([091411a](https://github.com/VATSIM-UK/uk-controller-api/commit/091411a3d55215c6d958b5f538ece608ec34eb01))
+* dont assign squawk codes that are non-assignable ([cd83002](https://github.com/VATSIM-UK/uk-controller-api/commit/cd830026c891eb79c8baf8e7ed51767e215c89b9))
+
+## [6.11.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.0...6.11.1) (2022-08-15)
+
+
+### Miscellaneous Chores
+
+* remove unused dependency code for airfield ownership ([2adb305](https://github.com/VATSIM-UK/uk-controller-api/commit/2adb3057fe6aef75a89709c37314bd6b06c3d91b))
+
+## [6.11.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.10.0...6.11.0) (2022-08-02)
+
+
+### Features
+
+* associate prenotes with sids ([7449aa7](https://github.com/VATSIM-UK/uk-controller-api/commit/7449aa7a20d46fbc1a01b1ad6d7b4738a3d4658d))
+* **sid:** allow sid administration ([bfcc580](https://github.com/VATSIM-UK/uk-controller-api/commit/bfcc5801112877898eb7fa040bff6e04a58dfabd))
+
+
+### Bug Fixes
+
+* ordering ([a89bbc2](https://github.com/VATSIM-UK/uk-controller-api/commit/a89bbc2bf673f33339e117f0f41f9fad2a3765dd))
+* relation access ([fccaf58](https://github.com/VATSIM-UK/uk-controller-api/commit/fccaf58ec1ae8bfd22f7a4e647baebd50cf02425))
+* remove test code ([86a40d1](https://github.com/VATSIM-UK/uk-controller-api/commit/86a40d1705f7f9595223f949ead7a0e0318f86e9))
+* user permission auth ([4698d82](https://github.com/VATSIM-UK/uk-controller-api/commit/4698d82d0b2df19437a650973a30525fea970af9))
+
+
+### Data Updates
+
+* correct birmingham tower frequency ([b6c5aad](https://github.com/VATSIM-UK/uk-controller-api/commit/b6c5aad325d5877baa955bf0275d4e6c314b4082))
+
+## [6.10.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.5...6.10.0) (2022-08-02)
+
+
+### Features
+
+* add activity log ([b853ece](https://github.com/VATSIM-UK/uk-controller-api/commit/b853ece322a243e85f7801ecd291598021b5fe41))
+* allow administration of users in filament ([571bb8f](https://github.com/VATSIM-UK/uk-controller-api/commit/571bb8fa903dee0e6e6e3d042f2c1d379dc2f542))
+* create roles and link users to roles ([d6205c4](https://github.com/VATSIM-UK/uk-controller-api/commit/d6205c4a6fc9341ee665d12d989e4f89d4232755))
+* display user roles on front page ([f7b317f](https://github.com/VATSIM-UK/uk-controller-api/commit/f7b317f94e0f45ccd31e8c7799822cad3f636550))
+* filament access policy ([3fbae27](https://github.com/VATSIM-UK/uk-controller-api/commit/3fbae272932814b814b85fd798adfe2fbae9bb8e))
+* horizon access by role ([9792e64](https://github.com/VATSIM-UK/uk-controller-api/commit/9792e6435347aaf34d5fb2c06dc5944d8e924106))
+
+
+### Bug Fixes
+
+* migration running order ([1387087](https://github.com/VATSIM-UK/uk-controller-api/commit/138708753fc6408c26ad36dd7d25a2ca2296bd3e))
+* relation manager model access ([1bf9ac2](https://github.com/VATSIM-UK/uk-controller-api/commit/1bf9ac2c02698ccf81d6de037a7dff1e98da1297))
+* remove testing from auth controller ([7b28284](https://github.com/VATSIM-UK/uk-controller-api/commit/7b282846c7e076959e9ab36fd590644f5d2921e1))
+* route middleware ([6d78e60](https://github.com/VATSIM-UK/uk-controller-api/commit/6d78e60539e40b738b3602fb773ea0286b04688a))
+
+
+### Data Updates
+
+* add web services roles ([5c9913b](https://github.com/VATSIM-UK/uk-controller-api/commit/5c9913b659b3a368effa8d2a67bfc83e7c7bdff5))
+
 ## [6.9.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.9.4...6.9.5) (2022-07-24)
 
 

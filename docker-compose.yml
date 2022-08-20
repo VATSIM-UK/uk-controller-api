@@ -9,6 +9,7 @@ services:
     restart: unless-stopped
     working_dir: /var/www
     extra_hosts:
+      - "sso.ukcp.devapp:127.0.0.1"
       - "ukcp.devapp:127.0.0.1"
     ports:
       - "80:80"
@@ -18,6 +19,7 @@ services:
       - type: bind
         source: .
         target: /var/www/ukcp
+      - ./.docker/web/sso:/var/www/sso
       - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
     networks:
       - ukcp-network
