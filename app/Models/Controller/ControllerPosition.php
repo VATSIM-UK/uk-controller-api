@@ -48,6 +48,19 @@ class ControllerPosition extends Model implements ControllerPositionInterface
         );
     }
 
+    public function handoffs() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Handoff::class,
+            'handoff_orders',
+            'controller_position_id',
+            'handoff_id'
+        )
+            ->orderByPivot('order')
+            ->withPivot('order')
+            ->withTimestamps();
+    }
+
     public function alternativeCallsigns(): HasMany
     {
         return $this->hasMany(ControllerPositionAlternativeCallsign::class);
@@ -91,5 +104,15 @@ class ControllerPosition extends Model implements ControllerPositionInterface
     public function isEnroute(): bool
     {
         return Str::contains($this->callsign, '_CTR');
+    }
+
+    public static function fromCallsign(string $callsign): ControllerPosition
+    {
+        return ControllerPosition::where('callsign', $callsign)->firstOrFail();
+    }
+
+    public static function fromId(int $id): ControllerPosition
+    {
+        return ControllerPosition::findOrFail($id);
     }
 }

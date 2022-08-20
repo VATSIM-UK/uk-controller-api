@@ -71,6 +71,14 @@ class DefaultFilamentPolicyTest extends BaseFunctionalTestCase
             'Detach Operations' => ['detach', RoleKeys::OPERATIONS_TEAM, true],
             'Detach Web' => ['detach', RoleKeys::WEB_TEAM, true],
             'Detach DSG' => ['detach', RoleKeys::DIVISION_STAFF_GROUP, true],
+            'Move Up No Role' => ['moveUp', null, false],
+            'Move Up Operations' => ['moveUp', RoleKeys::OPERATIONS_TEAM, true],
+            'Move Up Web' => ['moveUp', RoleKeys::WEB_TEAM, true],
+            'Move Up DSG' => ['moveUp', RoleKeys::DIVISION_STAFF_GROUP, true],
+            'Move Down No Role' => ['moveDown', null, false],
+            'Move Down Operations' => ['moveDown', RoleKeys::OPERATIONS_TEAM, true],
+            'Move Down Web' => ['moveDown', RoleKeys::WEB_TEAM, true],
+            'Move Down DSG' => ['moveDown', RoleKeys::DIVISION_STAFF_GROUP, true],
         ];
     }
 }
