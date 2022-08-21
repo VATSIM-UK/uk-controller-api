@@ -29,7 +29,7 @@ class NotificationController extends BaseController
         }
 
         return $query->get()
-            ->map(fn(Notification $notification) => array_merge(
+            ->map(fn (Notification $notification) => array_merge(
                 $notification->toArray(),
                 [
                     'valid_from' => $notification->valid_from->toDateTimeString(),
