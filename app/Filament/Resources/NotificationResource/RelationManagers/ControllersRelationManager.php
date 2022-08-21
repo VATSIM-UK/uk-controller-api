@@ -42,18 +42,19 @@ class ControllersRelationManager extends RelationManager
                         Forms\Components\MultiSelect::make('controllers')
                             ->searchable()
                             ->options(
-                                fn(ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
+                                fn (ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
                                     'id',
                                     $livewire->getOwnerRecord()->controllers()->pluck('controller_positions.id')
                                 )
                                     ->get()
                                     ->mapWithKeys(
-                                        fn(ControllerPosition $controllerPosition
+                                        fn (
+                                            ControllerPosition $controllerPosition
                                         ) => [$controllerPosition->id => $controllerPosition->callsign]
                                     )
                             )
-                            ->hidden(fn(Closure $get) => $get('global'))
-                            ->required(fn(Closure $get) => !$get('global')),
+                            ->hidden(fn (Closure $get) => $get('global'))
+                            ->required(fn (Closure $get) => !$get('global')),
                     ])
                     ->using(function (ControllersRelationManager $livewire, array $data) {
                         DB::transaction(function () use ($livewire, $data) {

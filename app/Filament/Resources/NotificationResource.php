@@ -72,7 +72,7 @@ class NotificationResource extends Resource
                 Tables\Columns\BooleanColumn::make('read')
                     ->label(__('table.notifications.columns.read'))
                     ->getStateUsing(
-                        fn(Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
+                        fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     ),
             ])
             ->filters([
@@ -94,7 +94,7 @@ class NotificationResource extends Resource
                     )
                     ->options(
                         ControllerPosition::all()
-                            ->mapWithKeys(fn(ControllerPosition $position) => [$position->id => $position->callsign])
+                            ->mapWithKeys(fn (ControllerPosition $position) => [$position->id => $position->callsign])
                     ),
             ])
             ->actions([
