@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.13.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.12.0...6.13.0) (2022-08-21)
+
+
+### Features
+
+* allow controllers to be added to prenotes ([249426a](https://github.com/VATSIM-UK/uk-controller-api/commit/249426a823478c9bf0c6687c2f8930de5cc6be8b))
+* allow creation and editing of prenotes ([09572e1](https://github.com/VATSIM-UK/uk-controller-api/commit/09572e1103c4adab6164896e73076ad36b7fc820))
+* drop keys from prenotes ([87fb2b1](https://github.com/VATSIM-UK/uk-controller-api/commit/87fb2b1809717d52b702c7d4df0ea39166080ed6))
+
 ## [6.12.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.11.2...6.12.0) (2022-08-20)
 
 
