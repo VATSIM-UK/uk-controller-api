@@ -52,7 +52,8 @@ class ControllersRelationManager extends RelationManager
                                         ) => [$controllerPosition->id => $controllerPosition->callsign]
                                     )
                             )
-                            ->hidden(fn(Closure $get) => $get('global')),
+                            ->hidden(fn(Closure $get) => $get('global'))
+                            ->required(fn(Closure $get) => !$get('global')),
                     ])
                     ->using(function (ControllersRelationManager $livewire, array $data) {
                         DB::transaction(function () use ($livewire, $data) {
@@ -61,12 +62,15 @@ class ControllersRelationManager extends RelationManager
                                 ->sync(
                                     $data['global']
                                         ? ControllerPosition::all()->pluck('id')
-                                        : array_merge(
-                                        $livewire->getOwnerRecord()->controllers()->pluck(
-                                            'controller_positions.id'
-                                        )->toArray(),
-                                        $data['controllers']
-                                    )
+                                        : collect($data['controllers'])
+                                        ->merge(
+                                            $livewire->getOwnerRecord()->controllers()->pluck(
+                                                'controller_positions.id'
+                                            )
+                                        )
+                                        ->unique()
+                                        ->values()
+                                        ->toArray()
                                 );
                         });
                     }),
