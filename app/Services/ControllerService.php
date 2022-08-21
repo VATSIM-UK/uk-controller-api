@@ -36,31 +36,6 @@ class ControllerService
         );
     }
 
-    /**
-     * Get the legacy dependency as represented in airfield-ownership.json.
-     *
-     * @return array
-     */
-    public function getLegacyAirfieldOwnershipDependency(): array
-    {
-        $airfields = Airfield::with('controllers')->get();
-
-        $dependency = [];
-        $airfields->each(
-            function (Airfield $airfield) use (&$dependency) {
-                $controllers = $airfield->controllers()->orderBy('order')->get();
-
-                $controllers->each(
-                    function (ControllerPosition $controller) use ($airfield, &$dependency) {
-                        $dependency[$airfield->code][] = $controller->callsign;
-                    }
-                );
-            }
-        );
-
-        return $dependency;
-    }
-
     public static function getControllerLevelFromCallsign(string $callsign): string
     {
         return strtoupper(strpos($callsign, '_') === false ? '' : substr($callsign, strrpos($callsign, '_') + 1));
