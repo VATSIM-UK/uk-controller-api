@@ -9,7 +9,7 @@ class NotificationTest extends BaseFunctionalTestCase
 {
     public function testItConvertsToArray()
     {
-        Carbon::setTestNow(Carbon::now());
+        Carbon::setTestNow(Carbon::now()->startOfSecond());
         $notification = Notification::create(
             [
                 'title' => 'Some title',

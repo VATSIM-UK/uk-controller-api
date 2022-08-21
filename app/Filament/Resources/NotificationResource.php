@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationResource extends Resource
 {
+    private const DATE_FORMAT = 'd M Y H:i';
+
     protected static ?string $model = Notification::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-bell';
@@ -38,13 +40,13 @@ class NotificationResource extends Resource
                 DateTimePicker::make('valid_from')
                     ->label(__('form.notifications.valid_from.label'))
                     ->helperText(__('form.notifications.valid_from.helper'))
-                    ->displayFormat('d M Y H:i')
+                    ->displayFormat(self::DATE_FORMAT)
                     ->withoutSeconds()
                     ->required(),
                 DateTimePicker::make('valid_to')
                     ->label(__('form.notifications.valid_to.label'))
                     ->helperText(__('form.notifications.valid_to.helper'))
-                    ->displayFormat('d M Y H:i')
+                    ->displayFormat(self::DATE_FORMAT)
                     ->withoutSeconds()
                     ->after('valid_from')
                     ->required(),
@@ -65,10 +67,10 @@ class NotificationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('valid_from')
                     ->label(__('table.notifications.columns.valid_from'))
-                    ->date('d M Y H:i'),
+                    ->date(self::DATE_FORMAT),
                 Tables\Columns\TextColumn::make('valid_to')
                     ->label(__('table.notifications.columns.valid_to'))
-                    ->date('d M Y H:i'),
+                    ->date(self::DATE_FORMAT),
                 Tables\Columns\BooleanColumn::make('read')
                     ->label(__('table.notifications.columns.read'))
                     ->getStateUsing(
