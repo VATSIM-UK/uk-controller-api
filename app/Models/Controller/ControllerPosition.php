@@ -61,6 +61,19 @@ class ControllerPosition extends Model implements ControllerPositionInterface
             ->withTimestamps();
     }
 
+    public function prenotes() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Prenote::class,
+            'prenote_orders',
+            'controller_position_id',
+            'prenote_id'
+        )
+            ->orderByPivot('order')
+            ->withPivot('order')
+            ->withTimestamps();
+    }
+
     public function alternativeCallsigns(): HasMany
     {
         return $this->hasMany(ControllerPositionAlternativeCallsign::class);

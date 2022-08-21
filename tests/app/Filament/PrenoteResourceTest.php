@@ -3,50 +3,50 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\HandoffResource;
+use App\Filament\Resources\PrenoteResource;
 use App\Models\Controller\ControllerPosition;
-use App\Models\Controller\Handoff;
+use App\Models\Controller\Prenote;
 use App\Services\ControllerPositionHierarchyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
-class HandoffResourceTest extends BaseFilamentTestCase
+class PrenoteResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
 
     public function testItLoadsDataForView()
     {
-        Livewire::test(HandoffResource\Pages\ViewHandoff::class, ['record' => 1])
-            ->assertSet('data.description', 'foo');
+        Livewire::test(PrenoteResource\Pages\ViewPrenote::class, ['record' => 1])
+            ->assertSet('data.description', 'Prenote One');
     }
 
-    public function testItCreatesAHandoff()
+    public function testItCreatesAPrenote()
     {
-        Livewire::test(HandoffResource\Pages\CreateHandoff::class)
-            ->set('data.description', 'A Handoff')
+        Livewire::test(PrenoteResource\Pages\CreatePrenote::class)
+            ->set('data.description', 'A Prenote')
             ->call('create')
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas(
-            'handoffs',
+            'prenotes',
             [
-                'description' => 'A Handoff',
+                'description' => 'A Prenote',
             ]
         );
     }
 
-    public function testItDoesntCreateHandoffIfDescriptionEmpty()
+    public function testItDoesntCreatePrenoteIfDescriptionEmpty()
     {
-        Livewire::test(HandoffResource\Pages\CreateHandoff::class)
+        Livewire::test(PrenoteResource\Pages\CreatePrenote::class)
             ->set('data.description', '')
             ->call('create')
             ->assertHasErrors(['data.description']);
     }
 
-    public function testItDoesntCreateHandoffIfDescriptionTooLong()
+    public function testItDoesntCreatePrenoteIfDescriptionTooLong()
     {
-        Livewire::test(HandoffResource\Pages\CreateHandoff::class)
+        Livewire::test(PrenoteResource\Pages\CreatePrenote::class)
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('create')
             ->assertHasErrors(['data.description']);
@@ -54,36 +54,36 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForEdit()
     {
-        Livewire::test(HandoffResource\Pages\EditHandoff::class, ['record' => 1])
-            ->assertSet('data.description', 'foo');
+        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
+            ->assertSet('data.description', 'Prenote One');
     }
 
-    public function testItEditsAHandoff()
+    public function testItEditsAPrenote()
     {
-        Livewire::test(HandoffResource\Pages\EditHandoff::class, ['record' => 1])
-            ->set('data.description', 'A Handoff')
+        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
+            ->set('data.description', 'A Prenote')
             ->call('save')
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas(
-            'handoffs',
+            'prenotes',
             [
-                'description' => 'A Handoff',
+                'description' => 'A Prenote',
             ]
         );
     }
 
-    public function testItDoesntEditHandoffIfDescriptionEmpty()
+    public function testItDoesntEditPrenoteIfIfDescriptionEmpty()
     {
-        Livewire::test(HandoffResource\Pages\EditHandoff::class, ['record' => 1])
+        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
             ->set('data.description', '')
             ->call('save')
             ->assertHasErrors(['data.description']);
     }
 
-    public function testItDoesntEditHandoffIfDescriptionTooLong()
+    public function testItDoesntEditPrenoteIfDescriptionTooLong()
     {
-        Livewire::test(HandoffResource\Pages\EditHandoff::class, ['record' => 1])
+        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('save')
             ->assertHasErrors(['data.description']);
@@ -92,18 +92,18 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testItDisplaysControllers()
     {
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )->assertCanSeeTableRecords([1, 2]);
     }
 
     public function testControllersCanBeAttachedAtTheEnd()
     {
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
-            ->callTableAction('attach', Handoff::findOrFail(1), ['recordId' => 3])
+            ->callTableAction('attach', Prenote::findOrFail(1), ['recordId' => 3])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(
@@ -112,7 +112,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'EGLL_N_APP',
                 'LON_S_CTR',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -122,10 +122,10 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeAttachedAfterAnotherController()
     {
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
-            ->callTableAction('attach', Handoff::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
+            ->callTableAction('attach', Prenote::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(
@@ -134,7 +134,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'LON_S_CTR',
                 'EGLL_N_APP',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -144,7 +144,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeRemoved()
     {
         ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
-            Handoff::findOrFail(1),
+            Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -153,8 +153,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -165,7 +165,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'LON_S_CTR',
                 'LON_C_CTR',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -175,7 +175,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeRemovedAtTheEnd()
     {
         ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
-            Handoff::findOrFail(1),
+            Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -184,8 +184,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(4))
             ->assertHasNoTableActionErrors();
@@ -196,7 +196,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'EGLL_N_APP',
                 'LON_S_CTR',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -206,7 +206,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeMovedUpTheOrder()
     {
         ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
-            Handoff::findOrFail(1),
+            Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -215,8 +215,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -228,7 +228,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'LON_S_CTR',
                 'LON_C_CTR',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -238,7 +238,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeMovedUpTheOrderAtTheTop()
     {
         ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
-            Handoff::findOrFail(1),
+            Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -247,8 +247,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(1))
             ->assertHasNoTableActionErrors();
@@ -260,7 +260,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'LON_S_CTR',
                 'LON_C_CTR',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -270,7 +270,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeMovedDownTheOrder()
     {
         ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
-            Handoff::findOrFail(1),
+            Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -279,8 +279,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -292,7 +292,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'EGLL_N_APP',
                 'LON_C_CTR',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -302,7 +302,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeMovedDownAtTheBottom()
     {
         ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
-            Handoff::findOrFail(1),
+            Prenote::findOrFail(1),
             [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',
@@ -311,8 +311,8 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Handoff::findOrFail(1)]
+            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            ['ownerRecord' => Prenote::findOrFail(1)]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(4))
             ->assertHasNoTableActionErrors();
@@ -324,7 +324,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'LON_S_CTR',
                 'LON_C_CTR',
             ],
-            Handoff::findOrFail(1)
+            Prenote::findOrFail(1)
                 ->controllers
                 ->pluck('callsign')
                 ->toArray()
@@ -333,31 +333,31 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     protected function getViewEditRecord(): Model
     {
-        return Handoff::find(1);
+        return Prenote::findOrFail(1);
     }
 
     protected function getResourceClass(): string
     {
-        return HandoffResource::class;
+        return PrenoteResource::class;
     }
 
     protected function getEditText(): string
     {
-        return 'Edit foo';
+        return 'Edit Prenote One';
     }
 
     protected function getCreateText(): string
     {
-        return 'Create handoff';
+        return 'Create prenote';
     }
 
     protected function getViewText(): string
     {
-        return 'View foo';
+        return 'View Prenote One';
     }
 
     protected function getIndexText(): array
     {
-        return ['Handoffs', 'foo', 'EGLL_S_TWR', 'EGLL_N_APP', 'LON_S_CTR'];
+        return ['Prenotes', 'Prenote One', 'Prenote Two'];
     }
 }
