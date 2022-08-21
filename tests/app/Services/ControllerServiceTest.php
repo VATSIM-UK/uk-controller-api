@@ -92,7 +92,7 @@ class ControllerServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 2,
                 'callsign' => 'EGLL_N_APP',
-                'frequency' => 119.72,
+                'frequency' => 119.725,
                 'top_down' => [
                     'EGLL',
                 ],
@@ -104,7 +104,7 @@ class ControllerServiceTest extends BaseFunctionalTestCase
             [
                 'id' => 3,
                 'callsign' => 'LON_S_CTR',
-                'frequency' => 129.42,
+                'frequency' => 129.425,
                 'top_down' => [
                     'EGLL',
                 ],
@@ -128,7 +128,7 @@ class ControllerServiceTest extends BaseFunctionalTestCase
             [
                 'id' => $positionWithNoTopDown->id,
                 'callsign' => $positionWithNoTopDown->callsign,
-                'frequency' => $positionWithNoTopDown->frequency,
+                'frequency' => (float) $positionWithNoTopDown->frequency,
                 'top_down' => [],
                 'requests_departure_releases' => false,
                 'receives_departure_releases' => false,
@@ -156,11 +156,11 @@ class ControllerServiceTest extends BaseFunctionalTestCase
         );
         $expected->put(
             2,
-            collect([new ParsedControllerPosition('EGLL', 'APP', 119.72)])
+            collect([new ParsedControllerPosition('EGLL', 'APP', 119.725)])
         );
         $expected->put(
             3,
-            collect([new ParsedControllerPosition('LON', 'CTR', 129.42)])
+            collect([new ParsedControllerPosition('LON', 'CTR', 129.425)])
         );
         $expected->put(
             4,
