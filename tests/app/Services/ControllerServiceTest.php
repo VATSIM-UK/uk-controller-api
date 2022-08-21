@@ -20,23 +20,6 @@ class ControllerServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(ControllerService::class);
     }
 
-    public function testItCreatesLegacyAirfieldOwnershipDependency()
-    {
-        $expected = [
-            'EGLL' => [
-                'EGLL_S_TWR',
-                'EGLL_N_APP',
-                'LON_S_CTR',
-            ],
-            'EGBB' => [
-                'LON_C_CTR',
-            ],
-        ];
-
-        $actual = $this->service->getLegacyAirfieldOwnershipDependency();
-        $this->assertSame($expected, $actual);
-    }
-
     /**
      * @dataProvider controllerLevelProvider
      */

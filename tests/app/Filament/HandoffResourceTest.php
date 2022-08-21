@@ -6,7 +6,7 @@ use App\BaseFilamentTestCase;
 use App\Filament\Resources\HandoffResource;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
-use App\Services\HandoffService;
+use App\Services\ControllerPositionHierarchyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -143,7 +143,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeRemoved()
     {
-        HandoffService::setPositionsForHandoffByControllerCallsign(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -174,7 +174,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeRemovedAtTheEnd()
     {
-        HandoffService::setPositionsForHandoffByControllerCallsign(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -205,7 +205,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedUpTheOrder()
     {
-        HandoffService::setPositionsForHandoffByControllerCallsign(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -237,7 +237,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedUpTheOrderAtTheTop()
     {
-        HandoffService::setPositionsForHandoffByControllerCallsign(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -269,7 +269,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedDownTheOrder()
     {
-        HandoffService::setPositionsForHandoffByControllerCallsign(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
@@ -301,7 +301,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testControllersCanBeMovedDownAtTheBottom()
     {
-        HandoffService::setPositionsForHandoffByControllerCallsign(
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
             Handoff::findOrFail(1),
             [
                 'EGLL_S_TWR',
