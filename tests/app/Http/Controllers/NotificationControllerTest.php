@@ -14,6 +14,7 @@ class NotificationControllerTest extends BaseApiTestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
+        DB::table('notifications')->delete();
     }
 
     public function testItDoesNotAllowUnauthenticatedRequests()
