@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\ControllerPositionResource;
+use App\Filament\Resources\ControllerPositionResource\Pages\ListControllerPositions;
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
@@ -11,6 +12,8 @@ use Livewire\Livewire;
 class ControllerPositionResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentTableActionAccess;
+    use ChecksFilamentReadOnlyTableActionAccess;
 
     public function testItLoadsDataForView()
     {
@@ -143,5 +146,44 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['EGLL_S_TWR', '118.500', 'EGLL_N_APP', '119.725'];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [ListControllerPositions::class => ControllerPosition::class];
+    }
+
+    protected function tableActionRecordId(): int|string
+    {
+        return 1;
+    }
+
+    protected function tableActionOwnerRecordClass(): string
+    {
+        return ControllerPosition::class;
+    }
+
+    protected function tableActionOwnerRecordId(): string
+    {
+        return 1;
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            ListControllerPositions::class => [
+                'edit',
+                'create',
+            ],
+        ];
+    }
+
+    protected function readOnlyTableActions(): array
+    {
+        return [
+            ListControllerPositions::class => [
+                'view',
+            ],
+        ];
     }
 }
