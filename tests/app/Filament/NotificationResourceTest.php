@@ -559,7 +559,6 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ControllersRelationManager::class => [
                 'attach',
                 'detach',
-                'bulkDetach',
             ],
         ];
     }
