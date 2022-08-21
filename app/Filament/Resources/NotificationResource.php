@@ -6,7 +6,6 @@ use App\Filament\Resources\NotificationResource\Pages;
 use App\Filament\Resources\NotificationResource\RelationManagers;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Notification\Notification;
-use Carbon\Carbon;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -107,7 +106,7 @@ class NotificationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ControllersRelationManager::class,
         ];
     }
 

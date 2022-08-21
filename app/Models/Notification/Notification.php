@@ -54,12 +54,7 @@ class Notification extends Model
 
     public function controllers(): BelongsToMany
     {
-        return $this->belongsToMany(
-            ControllerPosition::class,
-            'controller_position_notification',
-            'notification_id',
-            'controller_position_id'
-        );
+        return $this->belongsToMany(ControllerPosition::class);
     }
 
     public function readBy(): BelongsToMany

@@ -4,6 +4,7 @@ namespace App\Models\Controller;
 
 use App\Helpers\Vatsim\ControllerPositionInterface;
 use App\Models\Airfield\Airfield;
+use App\Models\Notification\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -74,6 +75,11 @@ class ControllerPosition extends Model implements ControllerPositionInterface
             ->orderByPivot('order')
             ->withPivot('order')
             ->withTimestamps();
+    }
+
+    public function notifications(): BelongsToMany
+    {
+        return $this->belongsToMany(Notification::class);
     }
 
     public function alternativeCallsigns(): HasMany
