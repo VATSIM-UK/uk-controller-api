@@ -7,12 +7,12 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Livewire\Livewire;
 
-trait ChecksFilamentTableActionAccess
+trait ChecksFilamentReadOnlyTableActionAccess
 {
     /**
-     * @dataProvider writeOnlyActionProvider
+     * @dataProvider readOnlyActionProvider
      */
-    public function testItShowsWriteOnlyTableActions(
+    public function testItShowsReadOnlyTableActions(
         string $relationManagerClass,
         string $action,
         string $tableActionRecordClass,
@@ -46,10 +46,12 @@ trait ChecksFilamentTableActionAccess
         }
     }
 
-    public function writeOnlyActionProvider(): array
+    public function readOnlyActionProvider(): array
     {
+        $readActions = $this->readOnlyTableActions();
+
         $allActions = [];
-        foreach ($this->writeTableActions() as $relationManager => $actions) {
+        foreach ($readActions as $relationManager => $actions) {
             foreach ($actions as $action) {
                 foreach (RoleKeys::cases() as $role) {
                     $allActions[sprintf(
@@ -65,10 +67,7 @@ trait ChecksFilamentTableActionAccess
                         $this->tableActionOwnerRecordClass(),
                         $this->tableActionOwnerRecordId(),
                         $role,
-                        in_array(
-                            $role,
-                            [RoleKeys::DIVISION_STAFF_GROUP, RoleKeys::OPERATIONS_TEAM, RoleKeys::WEB_TEAM]
-                        ),
+                        true,
                     ];
                 }
             }
@@ -85,5 +84,5 @@ trait ChecksFilamentTableActionAccess
 
     protected abstract function tableActionOwnerRecordId(): int|string;
 
-    protected abstract function writeTableActions(): array;
+    protected abstract function readOnlyTableActions(): array;
 }
