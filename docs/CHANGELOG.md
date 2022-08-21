@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.14.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.13.0...6.14.0) (2022-08-21)
+
+
+### Features
+
+* administer controller positions via filament ([7154670](https://github.com/VATSIM-UK/uk-controller-api/commit/7154670e6c88f74cf1619c27fc67bc52672cfc05))
+
+
+### Bug Fixes
+
+* number cast frequencies ([261d4fb](https://github.com/VATSIM-UK/uk-controller-api/commit/261d4fb370743a5ea82d5da2623764f6c37535a6))
+
 ## [6.13.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.12.0...6.13.0) (2022-08-21)
 
 
