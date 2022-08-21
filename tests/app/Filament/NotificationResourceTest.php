@@ -7,8 +7,11 @@ use App\Filament\Resources\NotificationResource;
 use App\Filament\Resources\NotificationResource\Pages\EditNotification;
 use App\Filament\Resources\NotificationResource\Pages\ListNotifications;
 use App\Filament\Resources\NotificationResource\Pages\ViewNotification;
+use App\Filament\Resources\NotificationResource\RelationManagers\ControllersRelationManager;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Notification\Notification;
 use Carbon\Carbon;
+use Filament\Tables\Actions\AttachAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -279,6 +282,224 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ->set('data.valid_to', Carbon::now()->addHours(6))
             ->call('save')
             ->assertHasErrors(['data.link']);
+    }
+
+    public function testItDisplaysControllers()
+    {
+        $notification = Notification::factory()->create();
+        $notification->controllers()->sync([1, 2]);
+
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->assertCountTableRecords(2)
+            ->assertCanSeeTableRecords([ControllerPosition::find(1), ControllerPosition::find(2)])
+            ->assertHasNoTableActionErrors();
+    }
+
+    public function testItAddsAllControllersIfGlobalSelected()
+    {
+        $notification = Notification::factory()->create();
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->callTableAction(
+                AttachAction::class,
+                data: [
+                    'global' => true,
+                ],
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 1,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 2,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 3,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 4,
+                'notification_id' => $notification->id,
+            ]
+        );
+    }
+
+    public function testItUpdatesControllersIfGlobalSelected()
+    {
+        $notification = Notification::factory()->create();
+        $notification->controllers()->sync([1, 2]);
+
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->callTableAction(
+                AttachAction::class,
+                data: [
+                    'global' => true,
+                ],
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 1,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 2,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 3,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 4,
+                'notification_id' => $notification->id,
+            ]
+        );
+    }
+
+    public function testItAddsControllers()
+    {
+        $notification = Notification::factory()->create();
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->callTableAction(
+                AttachAction::class,
+                data: [
+                    'global' => false,
+                    'controllers' => [
+                        1,
+                        3,
+                    ],
+                ],
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 1,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 2,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 3,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 4,
+                'notification_id' => $notification->id,
+            ]
+        );
+    }
+
+    public function testItUpdatesControllers()
+    {
+        $notification = Notification::factory()->create();
+        $notification->controllers()->sync([2]);
+
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->callTableAction(
+                AttachAction::class,
+                data: [
+                    'global' => false,
+                    'controllers' => [
+                        1,
+                        3,
+                    ],
+                ],
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 1,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 2,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 3,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 4,
+                'notification_id' => $notification->id,
+            ]
+        );
+    }
+
+    public function testItErrorsIfNoControllersSelected()
+    {
+        $notification = Notification::factory()->create();
+
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->callTableAction(
+                AttachAction::class,
+                data: [
+                    'global' => false,
+                    'controllers' => [],
+                ],
+            )
+            ->assertHasTableActionErrors(['controllers']);
     }
 
     protected function getViewEditRecord(): Model
