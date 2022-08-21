@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\PrenoteResource;
+use App\Filament\Resources\PrenoteResource\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
 use App\Services\ControllerPositionHierarchyService;
@@ -14,6 +15,7 @@ use Livewire\Livewire;
 class PrenoteResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentTableActionAccess;
 
     public function testItLoadsDataForView()
     {
@@ -359,5 +361,37 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['Prenotes', 'Prenote One', 'Prenote Two'];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [ControllersRelationManager::class => ControllerPosition::class];
+    }
+
+    protected function tableActionRecordId(): int|string
+    {
+        return 1;
+    }
+
+    protected function tableActionOwnerRecordClass(): string
+    {
+        return Prenote::class;
+    }
+
+    protected function tableActionOwnerRecordId(): string
+    {
+        return 1;
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            ControllersRelationManager::class => [
+                'attach',
+                'detach',
+                'moveUp',
+                'moveDown',
+            ],
+        ];
     }
 }

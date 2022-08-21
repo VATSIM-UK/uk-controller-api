@@ -19,6 +19,7 @@ use Livewire\Livewire;
 class NotificationResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentTableActionAccess;
 
     public function testItCanFilterForControllerRelevantNotifications()
     {
@@ -530,5 +531,36 @@ class NotificationResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['Foo'];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [ControllersRelationManager::class => ControllerPosition::class];
+    }
+
+    protected function tableActionRecordId(): int|string
+    {
+        return 1;
+    }
+
+    protected function tableActionOwnerRecordClass(): string
+    {
+        return Notification::class;
+    }
+
+    protected function tableActionOwnerRecordId(): string
+    {
+        return 1;
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            ControllersRelationManager::class => [
+                'attach',
+                'detach',
+                'bulkDetach',
+            ],
+        ];
     }
 }

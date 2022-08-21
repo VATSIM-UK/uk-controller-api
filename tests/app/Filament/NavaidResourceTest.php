@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\NavaidResource;
+use App\Filament\Resources\NavaidResource\RelationManagers\HoldsRelationManager;
 use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
 use App\Models\Navigation\Navaid;
@@ -16,6 +17,8 @@ use Livewire\Livewire;
 class NavaidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentTableActionAccess;
+    use ChecksFilamentReadOnlyTableActionAccess;
 
     protected function tearDown(): void
     {
@@ -270,7 +273,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItCreatesPublishedHoldsWithNoRestrictions()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -299,7 +302,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItCreatesPublishedHoldsWithLevelBlockRestriction()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -355,7 +358,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItCreatesPublishedHoldsWithMinimumLevelRestrictionFullData()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -415,7 +418,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItCreatesPublishedHoldsWithMinimumLevelRestrictionMinimalData()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -470,7 +473,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldDescriptionTooLong()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -487,7 +490,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldInboundHeadingTooSmall()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -504,7 +507,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldInboundHeadingTooLong()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -521,7 +524,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldMinimumAltitudeTooSmall()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -538,7 +541,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldMinimumAltitudeTooLarge()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -555,7 +558,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldMaximumAltitudeTooSmall()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -572,7 +575,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldMaximumAltitudeTooBig()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -589,7 +592,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldMaximumAltitudeLessThanMinimum()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -606,7 +609,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldWithLevelBlockRestrictionLevelTooSmall()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -635,7 +638,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateHoldWithLevelBlockRestrictionLevelTooBig()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -664,7 +667,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooSmall()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -694,7 +697,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreatePublishedHoldsWithMinimumLevelRestrictionIfOverrideTooBig()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -724,7 +727,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreatePublishedHoldsWithMinimumLevelRestrictionIfOverrideNotANumber()
     {
         $navaid = Navaid::factory()->create();
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create', $navaid,
                 [
@@ -763,7 +766,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         // for restrictions
         Str::createUuidsUsingSequence([0, 0, 1]);
 
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->mountTableAction(ViewAction::class, $hold)
             ->assertTableActionDataSet(
                 [
@@ -804,7 +807,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         // for restrictions
         Str::createUuidsUsingSequence([0]);
 
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->mountTableAction(ViewAction::class, $hold)
             ->assertTableActionDataSet(
                 [
@@ -844,7 +847,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         // for restrictions
         Str::createUuidsUsingSequence([0]);
 
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->mountTableAction(ViewAction::class, $hold)
             ->assertTableActionDataSet(
                 [
@@ -876,7 +879,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -907,7 +910,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -964,7 +967,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1025,7 +1028,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1081,7 +1084,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1099,7 +1102,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1117,7 +1120,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1135,7 +1138,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1153,7 +1156,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1171,7 +1174,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1189,7 +1192,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1207,7 +1210,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1225,7 +1228,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1255,7 +1258,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1285,7 +1288,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1316,7 +1319,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1347,7 +1350,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         $navaid = Navaid::factory()->create();
         $hold = $navaid->holds()->save(Hold::factory()->make());
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'edit', $hold,
                 [
@@ -1386,7 +1389,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         // for restrictions
         Str::createUuidsUsingSequence([0]);
 
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 EditAction::class,
                 $hold,
@@ -1420,7 +1423,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         // for restrictions
         Str::createUuidsUsingSequence([0]);
 
-        Livewire::test(NavaidResource\RelationManagers\HoldsRelationManager::class, ['ownerRecord' => $navaid])
+        Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 EditAction::class,
                 $hold,
@@ -1493,5 +1496,45 @@ class NavaidResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['WILLO', 'TIMBA', 'MAY'];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [HoldsRelationManager::class => Hold::class];
+    }
+
+    protected function tableActionRecordId(): int|string
+    {
+        return 1;
+    }
+
+    protected function tableActionOwnerRecordClass(): string
+    {
+        return Navaid::class;
+    }
+
+    protected function tableActionOwnerRecordId(): string
+    {
+        return 1;
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            HoldsRelationManager::class => [
+                'edit',
+                'delete',
+                'create',
+            ],
+        ];
+    }
+
+    protected function readOnlyTableActions(): array
+    {
+        return [
+            HoldsRelationManager::class => [
+                'view',
+            ],
+        ];
     }
 }

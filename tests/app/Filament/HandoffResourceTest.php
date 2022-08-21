@@ -363,9 +363,9 @@ class HandoffResourceTest extends BaseFilamentTestCase
         return ['Handoffs', 'foo', 'EGLL_S_TWR', 'EGLL_N_APP', 'LON_S_CTR'];
     }
 
-    protected function tableActionRecordClass(): string
+    protected function tableActionRecordClass(): array
     {
-        return ControllerPosition::class;
+        return [ControllersRelationManager::class => ControllerPosition::class];
     }
 
     protected function tableActionRecordId(): int|string

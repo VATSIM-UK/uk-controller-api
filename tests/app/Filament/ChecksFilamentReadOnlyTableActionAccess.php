@@ -62,7 +62,7 @@ trait ChecksFilamentReadOnlyTableActionAccess
                     )] = [
                         $relationManager,
                         $action,
-                        $this->tableActionRecordClass(),
+                        $this->tableActionRecordClass()[$relationManager],
                         $this->tableActionRecordId(),
                         $this->tableActionOwnerRecordClass(),
                         $this->tableActionOwnerRecordId(),
@@ -76,7 +76,7 @@ trait ChecksFilamentReadOnlyTableActionAccess
         return $allActions;
     }
 
-    protected abstract function tableActionRecordClass(): string;
+    protected abstract function tableActionRecordClass(): array;
 
     protected abstract function tableActionRecordId(): int|string;
 
