@@ -17,7 +17,6 @@ class PrenoteFactory extends Factory
     public function definition()
     {
         return [
-            'key' => $this->faker->unique()->sentence(),
             'description' => $this->faker->unique()->sentence(),
         ];
     }

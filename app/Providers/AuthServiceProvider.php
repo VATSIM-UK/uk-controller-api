@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Airline\Airline;
+use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
@@ -36,6 +38,8 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         Airline::class => DefaultFilamentPolicy::class,
+        ControllerPosition::class => DefaultFilamentPolicy::class,
+        Handoff::class => DefaultFilamentPolicy::class,
         Prenote::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,

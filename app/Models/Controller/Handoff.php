@@ -5,10 +5,9 @@ namespace App\Models\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Handoff extends Model
+class Handoff extends Model implements HasControllerHierarchy
 {
     protected $fillable = [
-        'key',
         'description',
         'created_at',
     ];
@@ -25,6 +24,9 @@ class Handoff extends Model
             'handoff_orders',
             'handoff_id',
             'controller_position_id'
-        )->withPivot('order');
+        )
+            ->orderByPivot('order')
+            ->withPivot('order')
+            ->withTimestamps();
     }
 }
