@@ -17,7 +17,7 @@ use Livewire\Livewire;
 class StandResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentTableActionAccess;
+    use ChecksFilamentActionVisibility;
 
     public function setUp(): void
     {
@@ -891,9 +891,12 @@ class StandResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    protected function tableActionRecordId(): int|string
+    protected function tableActionRecordId(): array
     {
-        return 1;
+        return [
+            PairedStandsRelationManager::class => 1,
+            AirlinesRelationManager::class => 1,
+        ];
     }
 
     protected function tableActionOwnerRecordClass(): string

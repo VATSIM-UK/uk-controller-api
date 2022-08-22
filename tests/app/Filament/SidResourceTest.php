@@ -15,7 +15,7 @@ use Livewire\Livewire;
 class SidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentTableActionAccess;
+    use ChecksFilamentActionVisibility;
 
     public function setUp(): void
     {
@@ -466,9 +466,9 @@ class SidResourceTest extends BaseFilamentTestCase
         return [PrenotesRelationManager::class => Prenote::class];
     }
 
-    protected function tableActionRecordId(): int|string
+    protected function tableActionRecordId(): array
     {
-        return 1;
+        return [PrenotesRelationManager::class => 1];
     }
 
     protected function tableActionOwnerRecordClass(): string

@@ -17,8 +17,7 @@ use Livewire\Livewire;
 class NavaidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentTableActionAccess;
-    use ChecksFilamentReadOnlyTableActionAccess;
+    use ChecksFilamentActionVisibility;
 
     protected function tearDown(): void
     {
@@ -1503,9 +1502,9 @@ class NavaidResourceTest extends BaseFilamentTestCase
         return [HoldsRelationManager::class => Hold::class];
     }
 
-    protected function tableActionRecordId(): int|string
+    protected function tableActionRecordId(): array
     {
-        return 1;
+        return [HoldsRelationManager::class => 1];
     }
 
     protected function tableActionOwnerRecordClass(): string

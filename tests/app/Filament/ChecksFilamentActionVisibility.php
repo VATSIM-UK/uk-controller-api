@@ -7,12 +7,12 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Livewire\Livewire;
 
-trait ChecksFilamentTableActionAccess
+trait ChecksFilamentActionVisibility
 {
     /**
-     * @dataProvider writeOnlyActionProvider
+     * @dataProvider actionProvider
      */
-    public function testItShowsWriteOnlyTableActions(
+    public function testItControlsActionVisibility(
         string $relationManagerClass,
         string $action,
         string $tableActionRecordClass,
@@ -46,10 +46,24 @@ trait ChecksFilamentTableActionAccess
         }
     }
 
-    public function writeOnlyActionProvider(): array
+    public function actionProvider(): array
+    {
+        return tap(
+            array_merge(
+                $this->generateActionTestCases($this->readOnlyTableActions(), $this->readOnlyRoles()),
+                $this->generateActionTestCases($this->writeTableActions(), $this->writeRoles()),
+            ),
+            function (array $allActions) {
+                $this->assertNotEmpty($allActions);
+            }
+        );
+    }
+
+    private function generateActionTestCases(array $actions, array $rolesThatCanPerformAction)
     {
         $allActions = [];
-        foreach ($this->writeTableActions() as $relationManager => $actions) {
+
+        foreach ($actions as $relationManager => $actions) {
             foreach ($actions as $action) {
                 foreach (RoleKeys::cases() as $role) {
                     $allActions[sprintf(
@@ -61,13 +75,13 @@ trait ChecksFilamentTableActionAccess
                         $relationManager,
                         $action,
                         $this->tableActionRecordClass()[$relationManager],
-                        $this->tableActionRecordId(),
+                        $this->tableActionRecordId()[$relationManager],
                         $this->tableActionOwnerRecordClass(),
                         $this->tableActionOwnerRecordId(),
                         $role,
                         in_array(
                             $role,
-                            [RoleKeys::DIVISION_STAFF_GROUP, RoleKeys::OPERATIONS_TEAM, RoleKeys::WEB_TEAM]
+                            $rolesThatCanPerformAction
                         ),
                     ];
                 }
@@ -77,13 +91,40 @@ trait ChecksFilamentTableActionAccess
         return $allActions;
     }
 
+    private function readOnlyRoles(): array
+    {
+        return [
+            RoleKeys::OPERATIONS_TEAM,
+            RoleKeys::WEB_TEAM,
+            RoleKeys::DIVISION_STAFF_GROUP,
+            null,
+        ];
+    }
+
+    private function writeRoles(): array
+    {
+        return [
+            RoleKeys::OPERATIONS_TEAM,
+            RoleKeys::WEB_TEAM,
+            RoleKeys::DIVISION_STAFF_GROUP,
+        ];
+    }
+
     protected abstract function tableActionRecordClass(): array;
 
-    protected abstract function tableActionRecordId(): int|string;
+    protected abstract function tableActionRecordId(): array;
 
     protected abstract function tableActionOwnerRecordClass(): string;
 
     protected abstract function tableActionOwnerRecordId(): int|string;
 
-    protected abstract function writeTableActions(): array;
+    protected function writeTableActions(): array
+    {
+        return [];
+    }
+
+    protected function readOnlyTableActions(): array
+    {
+        return [];
+    }
 }

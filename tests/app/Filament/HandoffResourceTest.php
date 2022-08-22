@@ -15,7 +15,7 @@ use Livewire\Livewire;
 class HandoffResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentTableActionAccess;
+    use ChecksFilamentActionVisibility;
 
     public function testItLoadsDataForView()
     {
@@ -368,9 +368,9 @@ class HandoffResourceTest extends BaseFilamentTestCase
         return [ControllersRelationManager::class => ControllerPosition::class];
     }
 
-    protected function tableActionRecordId(): int|string
+    protected function tableActionRecordId(): array
     {
-        return 1;
+        return [ControllersRelationManager::class => 1];
     }
 
     protected function tableActionOwnerRecordClass(): string
@@ -378,7 +378,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
         return Handoff::class;
     }
 
-    protected function tableActionOwnerRecordId(): string
+    protected function tableActionOwnerRecordId(): int|string
     {
         return 1;
     }
