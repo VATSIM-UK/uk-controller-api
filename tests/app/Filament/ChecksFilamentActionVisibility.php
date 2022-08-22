@@ -12,8 +12,8 @@ trait ChecksFilamentActionVisibility
     /**
      * @dataProvider actionProvider
      */
-    public function testItControlsActionVisibility(
-        string $relationManagerClass,
+    public function testItControlsTableActionVisibility(
+        string $componentClass,
         string $action,
         string $tableActionRecordClass,
         int|string $tableActionRecordId,
@@ -29,7 +29,7 @@ trait ChecksFilamentActionVisibility
         $this->actingAs($user);
 
         $livewire = Livewire::test(
-            $relationManagerClass,
+            $componentClass,
             [
                 'ownerRecord' => call_user_func(
                     $tableActionOwnerRecordClass . '::findOrFail',
@@ -59,23 +59,23 @@ trait ChecksFilamentActionVisibility
         );
     }
 
-    private function generateActionTestCases(array $actions, array $rolesThatCanPerformAction)
+    private function generateActionTestCases(array $actionsByComponent, array $rolesThatCanPerformAction)
     {
         $allActions = [];
 
-        foreach ($actions as $relationManager => $actions) {
+        foreach ($actionsByComponent as $component => $actions) {
             foreach ($actions as $action) {
                 foreach (RoleKeys::cases() as $role) {
                     $allActions[sprintf(
                         '%s, %s action with %s role',
-                        $relationManager,
+                        $component,
                         $action,
                         $role?->value ?? 'No'
                     )] = [
-                        $relationManager,
+                        $component,
                         $action,
-                        $this->tableActionRecordClass()[$relationManager],
-                        $this->tableActionRecordId()[$relationManager],
+                        $this->tableActionRecordClass()[$component],
+                        $this->tableActionRecordId()[$component],
                         $this->tableActionOwnerRecordClass(),
                         $this->tableActionOwnerRecordId(),
                         $role,
