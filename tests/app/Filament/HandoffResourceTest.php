@@ -15,7 +15,7 @@ use Livewire\Livewire;
 class HandoffResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksFilamentRelationManagerTableActionVisibility;
 
     public function testItLoadsDataForView()
     {

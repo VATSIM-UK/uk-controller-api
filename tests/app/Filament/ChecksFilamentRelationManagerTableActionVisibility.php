@@ -7,13 +7,13 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Livewire\Livewire;
 
-trait ChecksFilamentActionVisibility
+trait ChecksFilamentRelationManagerTableActionVisibility
 {
     /**
-     * @dataProvider actionProvider
+     * @dataProvider tableActionProvider
      */
     public function testItControlsTableActionVisibility(
-        string $componentClass,
+        string $relationManagerClass,
         string $action,
         string $tableActionRecordClass,
         int|string $tableActionRecordId,
@@ -21,7 +21,7 @@ trait ChecksFilamentActionVisibility
         int|string $tableActionOwnerRecordId,
         ?RoleKeys $role,
         bool $canSee
-    ) {
+    ): void {
         $user = User::factory()->create();
         if ($role) {
             $user->roles()->sync(Role::idFromKey($role));
@@ -29,7 +29,7 @@ trait ChecksFilamentActionVisibility
         $this->actingAs($user);
 
         $livewire = Livewire::test(
-            $componentClass,
+            $relationManagerClass,
             [
                 'ownerRecord' => call_user_func(
                     $tableActionOwnerRecordClass . '::findOrFail',
@@ -46,7 +46,7 @@ trait ChecksFilamentActionVisibility
         }
     }
 
-    public function actionProvider(): array
+    public function tableActionProvider(): array
     {
         return tap(
             array_merge(
@@ -59,23 +59,23 @@ trait ChecksFilamentActionVisibility
         );
     }
 
-    private function generateActionTestCases(array $actionsByComponent, array $rolesThatCanPerformAction)
+    private function generateActionTestCases(array $actionsByRelationManager, array $rolesThatCanPerformAction): array
     {
         $allActions = [];
 
-        foreach ($actionsByComponent as $component => $actions) {
+        foreach ($actionsByRelationManager as $relationManager => $actions) {
             foreach ($actions as $action) {
                 foreach (RoleKeys::cases() as $role) {
                     $allActions[sprintf(
                         '%s, %s action with %s role',
-                        $component,
+                        $relationManager,
                         $action,
                         $role?->value ?? 'No'
                     )] = [
-                        $component,
+                        $relationManager,
                         $action,
-                        $this->tableActionRecordClass()[$component],
-                        $this->tableActionRecordId()[$component],
+                        $this->tableActionRecordClass()[$relationManager],
+                        $this->tableActionRecordId()[$relationManager],
                         $this->tableActionOwnerRecordClass(),
                         $this->tableActionOwnerRecordId(),
                         $role,

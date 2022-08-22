@@ -12,7 +12,7 @@ use Livewire\Livewire;
 class ControllerPositionResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksFilamentRelationManagerTableActionVisibility;
     use ChecksFilamentReadOnlyTableActionAccess;
 
     public function testItLoadsDataForView()

@@ -15,7 +15,7 @@ use Livewire\Livewire;
 class SidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksFilamentRelationManagerTableActionVisibility;
 
     public function setUp(): void
     {
