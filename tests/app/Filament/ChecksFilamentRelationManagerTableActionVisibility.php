@@ -5,22 +5,18 @@ namespace App\Filament;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
+use Livewire\Testing\TestableLivewire;
 
 trait ChecksFilamentRelationManagerTableActionVisibility
 {
     /**
      * @dataProvider tableActionProvider
      */
-    public function testItControlsTableActionVisibility(
-        string $relationManagerClass,
-        string $action,
-        string $tableActionRecordClass,
-        int|string $tableActionRecordId,
-        string $tableActionOwnerRecordClass,
-        int|string $tableActionOwnerRecordId,
+    public function testItControlsActionVisibility(
+        callable $testCase,
         ?RoleKeys $role,
-        bool $canSee
     ): void {
         $user = User::factory()->create();
         if ($role) {
@@ -28,30 +24,33 @@ trait ChecksFilamentRelationManagerTableActionVisibility
         }
         $this->actingAs($user);
 
-        $livewire = Livewire::test(
-            $relationManagerClass,
-            [
-                'ownerRecord' => call_user_func(
-                    $tableActionOwnerRecordClass . '::findOrFail',
-                    $tableActionOwnerRecordId
-                ),
-            ]
-        );
-
-        $actionRecord = call_user_func($tableActionRecordClass . '::findOrFail', $tableActionRecordId);
-        if ($canSee) {
-            $livewire->assertTableActionVisible($action, $actionRecord);
-        } else {
-            $livewire->assertTableActionHidden($action, $actionRecord);
-        }
+        $testCase();
     }
 
     public function tableActionProvider(): array
     {
         return tap(
             array_merge(
-                $this->generateActionTestCases($this->readOnlyTableActions(), $this->readOnlyRoles()),
-                $this->generateActionTestCases($this->writeTableActions(), $this->writeRoles()),
+                $this->generateTableActionTestCases(
+                    $this->readOnlyTableActions(),
+                    $this->readOnlyRoles(),
+                ),
+                $this->generateTableActionTestCases(
+                    $this->writeTableActions(),
+                    $this->writeRoles(),
+                ),
+                $this->generateResourceTableTestCases(
+                    $this->writeResourceTableActions(),
+                    $this->writeRoles(),
+                ),
+                $this->generateResourceTableTestCases(
+                    $this->readOnlyResourceTableActions(),
+                    $this->readOnlyRoles(),
+                ),
+                $this->generateResourcePageActionTestCases(
+                    $this->writeResourcePageActions(),
+                    $this->writeRoles(),
+                ),
             ),
             function (array $allActions) {
                 $this->assertNotEmpty($allActions);
@@ -59,36 +58,162 @@ trait ChecksFilamentRelationManagerTableActionVisibility
         );
     }
 
-    private function generateActionTestCases(array $actionsByRelationManager, array $rolesThatCanPerformAction): array
-    {
+    private function generateTableActionTestCases(
+        array $actionsByRelationManager,
+        array $rolesThatCanPerformAction
+    ): array {
         $allActions = [];
 
         foreach ($actionsByRelationManager as $relationManager => $actions) {
             foreach ($actions as $action) {
                 foreach (RoleKeys::cases() as $role) {
                     $allActions[sprintf(
-                        '%s, %s action with %s role',
+                        '%s, %s table action with %s role',
                         $relationManager,
                         $action,
                         $role?->value ?? 'No'
                     )] = [
-                        $relationManager,
-                        $action,
-                        $this->tableActionRecordClass()[$relationManager],
-                        $this->tableActionRecordId()[$relationManager],
-                        $this->tableActionOwnerRecordClass(),
-                        $this->tableActionOwnerRecordId(),
+                        function () use ($relationManager, $role, $action, $rolesThatCanPerformAction) {
+                            $livewire = Livewire::test(
+                                $relationManager,
+                                $this->relationManagerLivewireParams(
+                                    $this->resourceClass(),
+                                    $this->resourceId(),
+                                )
+                            );
+
+                            $this->assertTableActionVisibility(
+                                $livewire,
+                                $this->tableActionRecordClass()[$relationManager] . '::findOrFail',
+                                $this->tableActionRecordId()[$relationManager],
+                                $action,
+                                in_array(
+                                    $role,
+                                    $rolesThatCanPerformAction
+                                )
+                            );
+                        },
                         $role,
-                        in_array(
-                            $role,
-                            $rolesThatCanPerformAction
-                        ),
                     ];
                 }
             }
         }
 
         return $allActions;
+    }
+
+    private function generateResourceTableTestCases(
+        array $actions,
+        array $rolesThatCanPerformAction
+    ): array {
+        $allActions = [];
+
+        foreach ($actions as $action) {
+            foreach (RoleKeys::cases() as $role) {
+                $allActions[sprintf(
+                    '%s, %s table action with %s role',
+                    $this->resourceClass(),
+                    $action,
+                    $role?->value ?? 'No'
+                )] = [
+                    function () use ($role, $action, $rolesThatCanPerformAction) {
+                        $livewire = Livewire::test(
+                            $this->resourceListingClass(),
+                            $this->resourceLivewireParams($this->resourceId())
+                        );
+
+                        $this->assertTableActionVisibility(
+                            $livewire,
+                            $this->resourceClass(),
+                            $this->resourceId(),
+                            $action,
+                            in_array(
+                                $role,
+                                $rolesThatCanPerformAction
+                            )
+                        );
+                    },
+                    $role,
+                ];
+            }
+        }
+
+        return $allActions;
+    }
+
+    private function generateResourcePageActionTestCases(
+        array $actions,
+        array $rolesThatCanPerformAction
+    ): array {
+        $allActions = [];
+
+        foreach ($actions as $action) {
+            foreach (RoleKeys::cases() as $role) {
+                $allActions[sprintf(
+                    '%s, %s page action with %s role',
+                    $this->resourceClass(),
+                    $action,
+                    $role?->value ?? 'No'
+                )] = [
+                    function () use ($role, $action, $rolesThatCanPerformAction) {
+                        $livewire = Livewire::test(
+                            $this->resourceListingClass(),
+                            $this->resourceLivewireParams($this->resourceId())
+                        );
+
+                        $canPerformAction = in_array(
+                            $role,
+                            $rolesThatCanPerformAction
+                        );
+
+                        if ($canPerformAction) {
+                            $livewire->assertPageActionVisible($action);
+                        } else {
+                            $livewire->assertPageActionHidden($action);
+                        }
+                    },
+                    $role,
+                ];
+            }
+        }
+
+        return $allActions;
+    }
+
+    private function assertTableActionVisibility(
+        TestableLivewire $livewire,
+        string $recordClass,
+        string $recordId,
+        string $action,
+        bool $actionCanBePerformed
+    ): void {
+        $actionRecord = call_user_func(
+            $recordClass . '::findOrFail',
+            $recordId
+        );
+
+        if ($actionCanBePerformed) {
+            $livewire->assertTableActionVisible($action, $actionRecord);
+        } else {
+            $livewire->assertTableActionHidden($action, $actionRecord);
+        }
+    }
+
+    private function relationManagerLivewireParams(string $ownerRecordClass, int|string $ownerRecordId): array
+    {
+        return [
+            'ownerRecord' => call_user_func(
+                $ownerRecordClass . '::findOrFail',
+                $ownerRecordId
+            ),
+        ];
+    }
+
+    private function resourceLivewireParams(int|string $recordId): array
+    {
+        return [
+            'record' => $recordId,
+        ];
     }
 
     private function readOnlyRoles(): array
@@ -110,13 +235,30 @@ trait ChecksFilamentRelationManagerTableActionVisibility
         ];
     }
 
-    protected abstract function tableActionRecordClass(): array;
+    protected function tableActionRecordClass(): array
+    {
+        return [];
+    }
 
-    protected abstract function tableActionRecordId(): array;
+    protected function tableActionRecordId(): array
+    {
+        return [];
+    }
 
-    protected abstract function tableActionOwnerRecordClass(): string;
+    protected function resourceId(): int|string
+    {
+        return '';
+    }
 
-    protected abstract function tableActionOwnerRecordId(): int|string;
+    protected function resourceClass(): string
+    {
+        return '';
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return '';
+    }
 
     protected function writeTableActions(): array
     {
@@ -124,6 +266,21 @@ trait ChecksFilamentRelationManagerTableActionVisibility
     }
 
     protected function readOnlyTableActions(): array
+    {
+        return [];
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [];
+    }
+
+    protected function writeResourcePageActions(): array
     {
         return [];
     }

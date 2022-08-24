@@ -13,7 +13,6 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
     use ChecksFilamentRelationManagerTableActionVisibility;
-    use ChecksFilamentReadOnlyTableActionAccess;
 
     public function testItLoadsDataForView()
     {
@@ -148,42 +147,33 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
         return ['EGLL_S_TWR', '118.500', 'EGLL_N_APP', '119.725'];
     }
 
-    protected function tableActionRecordClass(): array
-    {
-        return [ListControllerPositions::class => ControllerPosition::class];
-    }
-
-    protected function tableActionRecordId(): int|string
+    protected function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function tableActionOwnerRecordClass(): string
+    protected function resourceClass(): string
     {
         return ControllerPosition::class;
     }
 
-    protected function tableActionOwnerRecordId(): string
+    protected function resourceListingClass(): string
     {
-        return 1;
+        return ListControllerPositions::class;
     }
 
-    protected function writeTableActions(): array
+    protected function writeResourceTableActions(): array
     {
         return [
-            ListControllerPositions::class => [
-                'edit',
-                'create',
-            ],
+            'edit',
+            'create',
         ];
     }
 
-    protected function readOnlyTableActions(): array
+    protected function readOnlyResourceTableActions(): array
     {
         return [
-            ListControllerPositions::class => [
-                'view',
-            ],
+            'view',
         ];
     }
 }
