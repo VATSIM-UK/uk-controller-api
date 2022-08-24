@@ -3,6 +3,7 @@
 namespace App\Models\Runway;
 
 use App\Models\Airfield\Airfield;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -42,5 +43,12 @@ class Runway extends Model
             'first_runway_id',
             'second_runway_id',
         )->withTimestamps();
+    }
+
+    public function scopeAtAirfield(Builder $builder, string $airfield): Builder
+    {
+        return $builder->whereHas('airfield', function (Builder $airfieldQuery) use ($airfield) {
+            $airfieldQuery->where('code', $airfield);
+        });
     }
 }

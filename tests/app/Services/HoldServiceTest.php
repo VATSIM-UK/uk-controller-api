@@ -8,6 +8,7 @@ use App\Events\Hold\AircraftExitedHoldingArea;
 use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Hold\Hold;
+use App\Models\Hold\HoldRestriction;
 use App\Models\Navigation\Navaid;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
@@ -51,9 +52,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'turn_direction' => 'left',
                 'description' => 'WILLO',
                 'restrictions' => [
-                    [
-                        'foo' => 'bar',
-                    ],
+                    HoldRestriction::findOrFail(1)->restriction,
                 ],
                 'deemed_separated_holds' => [
                     [

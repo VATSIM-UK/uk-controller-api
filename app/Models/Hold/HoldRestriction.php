@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Models\Hold;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class HoldRestriction extends Model
 {
+    use HasFactory;
+
     public $timestamps = true;
 
     protected $hidden = [

@@ -6,6 +6,8 @@ use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
+use App\Models\Hold\Hold;
+use App\Models\Navigation\Navaid;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
 use App\Models\User\Role;
@@ -37,12 +39,17 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     protected $policies = [
+        // The defaults
         Airline::class => DefaultFilamentPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
+        Hold::class => DefaultFilamentPolicy::class,
+        Navaid::class => DefaultFilamentPolicy::class,
         Prenote::class => DefaultFilamentPolicy::class,
-        Stand::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
+        Stand::class => DefaultFilamentPolicy::class,
+
+        // Special policies
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
     ];
