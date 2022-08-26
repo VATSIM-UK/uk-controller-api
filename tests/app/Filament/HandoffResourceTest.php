@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\HandoffResource;
+use App\Filament\Resources\HandoffResource\Pages\ListHandoffs;
 use App\Filament\Resources\HandoffResource\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
@@ -15,7 +16,7 @@ use Livewire\Livewire;
 class HandoffResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentRelationManagerTableActionVisibility;
+    use ChecksFilamentActionVisibility;
 
     public function testItLoadsDataForView()
     {
@@ -363,6 +364,42 @@ class HandoffResourceTest extends BaseFilamentTestCase
         return ['Handoffs', 'foo', 'EGLL_S_TWR', 'EGLL_N_APP', 'LON_S_CTR'];
     }
 
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Handoff::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListHandoffs::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
     protected function tableActionRecordClass(): array
     {
         return [ControllersRelationManager::class => ControllerPosition::class];
@@ -371,16 +408,6 @@ class HandoffResourceTest extends BaseFilamentTestCase
     protected function tableActionRecordId(): array
     {
         return [ControllersRelationManager::class => 1];
-    }
-
-    protected function tableActionOwnerRecordClass(): string
-    {
-        return Handoff::class;
-    }
-
-    protected function tableActionOwnerRecordId(): int|string
-    {
-        return 1;
     }
 
     protected function writeTableActions(): array

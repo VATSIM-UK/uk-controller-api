@@ -12,7 +12,7 @@ use Livewire\Livewire;
 class ControllerPositionResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentRelationManagerTableActionVisibility;
+    use ChecksFilamentActionVisibility;
 
     public function testItLoadsDataForView()
     {
@@ -166,7 +166,6 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
     {
         return [
             'edit',
-            'create',
         ];
     }
 
@@ -174,6 +173,13 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
     {
         return [
             'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
         ];
     }
 }

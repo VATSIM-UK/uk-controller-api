@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 use Livewire\Testing\TestableLivewire;
 
-trait ChecksFilamentRelationManagerTableActionVisibility
+trait ChecksFilamentActionVisibility
 {
     /**
      * @dataProvider tableActionProvider
@@ -31,11 +31,11 @@ trait ChecksFilamentRelationManagerTableActionVisibility
     {
         return tap(
             array_merge(
-                $this->generateTableActionTestCases(
+                $this->generateRelationManagerTableActionTestCases(
                     $this->readOnlyTableActions(),
                     $this->readOnlyRoles(),
                 ),
-                $this->generateTableActionTestCases(
+                $this->generateRelationManagerTableActionTestCases(
                     $this->writeTableActions(),
                     $this->writeRoles(),
                 ),
@@ -58,7 +58,7 @@ trait ChecksFilamentRelationManagerTableActionVisibility
         );
     }
 
-    private function generateTableActionTestCases(
+    private function generateRelationManagerTableActionTestCases(
         array $actionsByRelationManager,
         array $rolesThatCanPerformAction
     ): array {
@@ -66,12 +66,12 @@ trait ChecksFilamentRelationManagerTableActionVisibility
 
         foreach ($actionsByRelationManager as $relationManager => $actions) {
             foreach ($actions as $action) {
-                foreach (RoleKeys::cases() as $role) {
+                foreach ($this->rolesToIterate() as $role) {
                     $allActions[sprintf(
                         '%s, %s table action with %s role',
                         $relationManager,
                         $action,
-                        $role?->value ?? 'No'
+                        $role?->value ?? 'no'
                     )] = [
                         function () use ($relationManager, $role, $action, $rolesThatCanPerformAction) {
                             $livewire = Livewire::test(
@@ -84,7 +84,7 @@ trait ChecksFilamentRelationManagerTableActionVisibility
 
                             $this->assertTableActionVisibility(
                                 $livewire,
-                                $this->tableActionRecordClass()[$relationManager] . '::findOrFail',
+                                $this->tableActionRecordClass()[$relationManager],
                                 $this->tableActionRecordId()[$relationManager],
                                 $action,
                                 in_array(
@@ -109,12 +109,12 @@ trait ChecksFilamentRelationManagerTableActionVisibility
         $allActions = [];
 
         foreach ($actions as $action) {
-            foreach (RoleKeys::cases() as $role) {
+            foreach ($this->rolesToIterate() as $role) {
                 $allActions[sprintf(
                     '%s, %s table action with %s role',
-                    $this->resourceClass(),
+                    $this->resourceListingClass(),
                     $action,
-                    $role?->value ?? 'No'
+                    $role?->value ?? 'no'
                 )] = [
                     function () use ($role, $action, $rolesThatCanPerformAction) {
                         $livewire = Livewire::test(
@@ -148,12 +148,12 @@ trait ChecksFilamentRelationManagerTableActionVisibility
         $allActions = [];
 
         foreach ($actions as $action) {
-            foreach (RoleKeys::cases() as $role) {
+            foreach ($this->rolesToIterate() as $role) {
                 $allActions[sprintf(
                     '%s, %s page action with %s role',
-                    $this->resourceClass(),
+                    $this->resourceListingClass(),
                     $action,
-                    $role?->value ?? 'No'
+                    $role?->value ?? 'no'
                 )] = [
                     function () use ($role, $action, $rolesThatCanPerformAction) {
                         $livewire = Livewire::test(
@@ -232,6 +232,16 @@ trait ChecksFilamentRelationManagerTableActionVisibility
             RoleKeys::OPERATIONS_TEAM,
             RoleKeys::WEB_TEAM,
             RoleKeys::DIVISION_STAFF_GROUP,
+        ];
+    }
+
+    private function rolesToIterate(): array
+    {
+        return [
+            RoleKeys::OPERATIONS_TEAM,
+            RoleKeys::WEB_TEAM,
+            RoleKeys::DIVISION_STAFF_GROUP,
+            null,
         ];
     }
 

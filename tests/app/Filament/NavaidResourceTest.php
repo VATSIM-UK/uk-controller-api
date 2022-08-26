@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\NavaidResource;
+use App\Filament\Resources\NavaidResource\Pages\ListNavaids;
 use App\Filament\Resources\NavaidResource\RelationManagers\HoldsRelationManager;
 use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
@@ -17,7 +18,7 @@ use Livewire\Livewire;
 class NavaidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentRelationManagerTableActionVisibility;
+    use ChecksFilamentActionVisibility;
 
     protected function tearDown(): void
     {
@@ -1497,6 +1498,42 @@ class NavaidResourceTest extends BaseFilamentTestCase
         return ['WILLO', 'TIMBA', 'MAY'];
     }
 
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Navaid::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListNavaids::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
     protected function tableActionRecordClass(): array
     {
         return [HoldsRelationManager::class => Hold::class];
@@ -1507,32 +1544,13 @@ class NavaidResourceTest extends BaseFilamentTestCase
         return [HoldsRelationManager::class => 1];
     }
 
-    protected function tableActionOwnerRecordClass(): string
-    {
-        return Navaid::class;
-    }
-
-    protected function tableActionOwnerRecordId(): string
-    {
-        return 1;
-    }
-
     protected function writeTableActions(): array
     {
         return [
             HoldsRelationManager::class => [
+                'create',
                 'edit',
                 'delete',
-                'create',
-            ],
-        ];
-    }
-
-    protected function readOnlyTableActions(): array
-    {
-        return [
-            HoldsRelationManager::class => [
-                'view',
             ],
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\SidResource;
+use App\Filament\Resources\SidResource\Pages\ListSids;
 use App\Filament\Resources\SidResource\RelationManagers\PrenotesRelationManager;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
@@ -15,7 +16,7 @@ use Livewire\Livewire;
 class SidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentRelationManagerTableActionVisibility;
+    use ChecksFilamentActionVisibility;
 
     public function setUp(): void
     {
@@ -461,6 +462,42 @@ class SidResourceTest extends BaseFilamentTestCase
         return ['EGLL', 'EGBB'];
     }
 
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Sid::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListSids::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
     protected function tableActionRecordClass(): array
     {
         return [PrenotesRelationManager::class => Prenote::class];
@@ -469,16 +506,6 @@ class SidResourceTest extends BaseFilamentTestCase
     protected function tableActionRecordId(): array
     {
         return [PrenotesRelationManager::class => 1];
-    }
-
-    protected function tableActionOwnerRecordClass(): string
-    {
-        return Sid::class;
-    }
-
-    protected function tableActionOwnerRecordId(): string
-    {
-        return 1;
     }
 
     protected function writeTableActions(): array

@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\StandResource;
+use App\Filament\Resources\StandResource\Pages\ListStands;
 use App\Filament\Resources\StandResource\RelationManagers\AirlinesRelationManager;
 use App\Filament\Resources\StandResource\RelationManagers\PairedStandsRelationManager;
 use App\Models\Airfield\Terminal;
@@ -17,7 +18,7 @@ use Livewire\Livewire;
 class StandResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentRelationManagerTableActionVisibility;
+    use ChecksFilamentActionVisibility;
 
     public function setUp(): void
     {
@@ -883,6 +884,42 @@ class StandResourceTest extends BaseFilamentTestCase
         return ['EGLL', 'EGBB'];
     }
 
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Stand::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListStands::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
     protected function tableActionRecordClass(): array
     {
         return [
@@ -897,16 +934,6 @@ class StandResourceTest extends BaseFilamentTestCase
             PairedStandsRelationManager::class => 1,
             AirlinesRelationManager::class => 1,
         ];
-    }
-
-    protected function tableActionOwnerRecordClass(): string
-    {
-        return Stand::class;
-    }
-
-    protected function tableActionOwnerRecordId(): string
-    {
-        return 1;
     }
 
     protected function writeTableActions(): array

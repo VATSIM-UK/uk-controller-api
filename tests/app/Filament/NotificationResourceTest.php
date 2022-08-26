@@ -19,7 +19,7 @@ use Livewire\Livewire;
 class NotificationResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentRelationManagerTableActionVisibility;
+    use ChecksFilamentActionVisibility;
 
     public function testItCanFilterForControllerRelevantNotifications()
     {
@@ -533,6 +533,42 @@ class NotificationResourceTest extends BaseFilamentTestCase
         return ['Foo'];
     }
 
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Notification::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListNotifications::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
     protected function tableActionRecordClass(): array
     {
         return [ControllersRelationManager::class => ControllerPosition::class];
@@ -541,16 +577,6 @@ class NotificationResourceTest extends BaseFilamentTestCase
     protected function tableActionRecordId(): array
     {
         return [ControllersRelationManager::class => 1];
-    }
-
-    protected function tableActionOwnerRecordClass(): string
-    {
-        return Notification::class;
-    }
-
-    protected function tableActionOwnerRecordId(): string
-    {
-        return 1;
     }
 
     protected function writeTableActions(): array
