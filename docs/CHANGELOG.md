@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.15.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.14.0...6.15.0) (2022-08-24)
+
+
+### Features
+
+* allow administration of navaids ([0d1001e](https://github.com/VATSIM-UK/uk-controller-api/commit/0d1001e06a87f23e88186cc846bb41180bdfb583))
+
+
+### Bug Fixes
+
+* hold access ([b0c85e9](https://github.com/VATSIM-UK/uk-controller-api/commit/b0c85e997b7d2957044b3b9119f0826404fcb704))
+
 ## [6.14.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.13.0...6.14.0) (2022-08-21)
 
 
