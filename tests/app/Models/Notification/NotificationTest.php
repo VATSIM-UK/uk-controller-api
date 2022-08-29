@@ -9,7 +9,7 @@ class NotificationTest extends BaseFunctionalTestCase
 {
     public function testItConvertsToArray()
     {
-        Carbon::setTestNow(Carbon::now());
+        Carbon::setTestNow(Carbon::now()->startOfSecond());
         $notification = Notification::create(
             [
                 'title' => 'Some title',
@@ -26,8 +26,8 @@ class NotificationTest extends BaseFunctionalTestCase
             'title' => 'Some title',
             'body' => 'Some body',
             'link' => 'Some link',
-            'valid_from' => Carbon::now(),
-            'valid_to' => Carbon::now()->addHour(),
+            'valid_from' => Carbon::now()->toISOString(),
+            'valid_to' => Carbon::now()->addHour()->toISOString(),
             'controllers' => [
                 'EGLL_S_TWR',
                 'EGLL_N_APP',

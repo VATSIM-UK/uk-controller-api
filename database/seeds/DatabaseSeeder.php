@@ -81,9 +81,14 @@ class DatabaseSeeder extends Seeder
             'network_aircraft',
             'network_aircraft_fir_events',
         ],
+        NotificationTableSeeder::class => [
+            'notifications',
+            'notification_user',
+            'controller_position_notification',
+        ],
         AssignedHoldsTableSeeder::class => [
             'assigned_holds',
-            'assigned_holds_history'
+            'assigned_holds_history',
         ],
         SquawkRangeTablesSeeder::class => [
             'ccams_squawk_ranges',
@@ -132,7 +137,7 @@ class DatabaseSeeder extends Seeder
         VrpTableSeeder::class => [
             'visual_reference_points',
             'airfield_visual_reference_point',
-        ]
+        ],
     ];
 
     const OTHER_TABLES_TO_TRUNCATE = [

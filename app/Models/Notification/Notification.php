@@ -5,12 +5,14 @@ namespace App\Models\Notification;
 use App\Models\Controller\ControllerPosition;
 use App\Models\User\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
@@ -18,7 +20,12 @@ class Notification extends Model
         'body',
         'link',
         'valid_from',
-        'valid_to'
+        'valid_to',
+    ];
+
+    protected $dates = [
+        'valid_from',
+        'valid_to',
     ];
 
     public function toArray(): array
@@ -45,17 +52,12 @@ class Notification extends Model
         });
     }
 
-    public function controllers() : BelongsToMany
+    public function controllers(): BelongsToMany
     {
-        return $this->belongsToMany(
-            ControllerPosition::class,
-            'controller_position_notification',
-            'notification_id',
-            'controller_position_id'
-        );
+        return $this->belongsToMany(ControllerPosition::class);
     }
 
-    public function readBy() : BelongsToMany
+    public function readBy(): BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
