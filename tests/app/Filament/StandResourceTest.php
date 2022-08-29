@@ -4,7 +4,11 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\StandResource;
+use App\Filament\Resources\StandResource\Pages\ListStands;
+use App\Filament\Resources\StandResource\RelationManagers\AirlinesRelationManager;
+use App\Filament\Resources\StandResource\RelationManagers\PairedStandsRelationManager;
 use App\Models\Airfield\Terminal;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +18,7 @@ use Livewire\Livewire;
 class StandResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentActionVisibility;
 
     public function setUp(): void
     {
@@ -618,7 +623,7 @@ class StandResourceTest extends BaseFilamentTestCase
     {
         Stand::findOrFail(1)->pairedStands()->sync([2]);
         Livewire::test(
-            StandResource\RelationManagers\PairedStandsRelationManager::class,
+            PairedStandsRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->assertCanSeeTableRecords([Stand::findOrFail(2)]);
@@ -627,7 +632,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItAllowsStandPairing()
     {
         Livewire::test(
-            StandResource\RelationManagers\PairedStandsRelationManager::class,
+            PairedStandsRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction('pair-stand', Stand::findOrFail(1), ['recordId' => 2])
@@ -643,7 +648,7 @@ class StandResourceTest extends BaseFilamentTestCase
         Stand::findOrFail(2)->pairedStands()->sync([3, 1]);
         Stand::findOrFail(3)->pairedStands()->sync([1, 2]);
         Livewire::test(
-            StandResource\RelationManagers\PairedStandsRelationManager::class,
+            PairedStandsRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction('unpair-stand', 2)
@@ -662,7 +667,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->id;
 
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->assertCanSeeTableRecords([$rowToExpect]);
@@ -671,7 +676,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItAllowsAirlinePairingWithMinimalData()
     {
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction('pair-airline', Stand::findOrFail(1), ['recordId' => 1, 'priority' => 100])
@@ -693,7 +698,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItAllowsAirlinePairingWithFullData()
     {
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction(
@@ -725,7 +730,7 @@ class StandResourceTest extends BaseFilamentTestCase
     {
         Stand::findOrFail(1)->airlines()->sync([1]);
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction(
@@ -764,7 +769,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->id;
 
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction('unpair-airline', $rowToUnpair)
@@ -776,7 +781,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItAllowsFailsAirlinePairingPriorityTooLow()
     {
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction(
@@ -795,7 +800,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItAllowsFailsAirlinePairingPriorityTooHigh()
     {
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction(
@@ -814,7 +819,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItAllowsFailsAirlinePairingCallsignTooLong()
     {
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction(
@@ -833,7 +838,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItAllowsFailsAirlinePairingDestinationTooLong()
     {
         Livewire::test(
-            StandResource\RelationManagers\AirlinesRelationManager::class,
+            AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
             ->callTableAction(
@@ -877,5 +882,71 @@ class StandResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['EGLL', 'EGBB'];
+    }
+
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Stand::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListStands::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [
+            PairedStandsRelationManager::class => Stand::class,
+            AirlinesRelationManager::class => Airline::class,
+        ];
+    }
+
+    protected function tableActionRecordId(): array
+    {
+        return [
+            PairedStandsRelationManager::class => 1,
+            AirlinesRelationManager::class => 1,
+        ];
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            PairedStandsRelationManager::class => [
+                'pair-stand',
+                'unpair-stand',
+            ],
+            AirlinesRelationManager::class => [
+                'pair-airline',
+                'unpair-airline',
+            ],
+        ];
     }
 }

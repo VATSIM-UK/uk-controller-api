@@ -4,6 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\HandoffResource;
+use App\Filament\Resources\HandoffResource\Pages\ListHandoffs;
+use App\Filament\Resources\HandoffResource\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Services\ControllerPositionHierarchyService;
@@ -14,6 +16,7 @@ use Livewire\Livewire;
 class HandoffResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentActionVisibility;
 
     public function testItLoadsDataForView()
     {
@@ -92,7 +95,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testItDisplaysControllers()
     {
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )->assertCanSeeTableRecords([1, 2]);
     }
@@ -100,7 +103,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeAttachedAtTheEnd()
     {
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('attach', Handoff::findOrFail(1), ['recordId' => 3])
@@ -122,7 +125,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeAttachedAfterAnotherController()
     {
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('attach', Handoff::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
@@ -153,7 +156,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(2))
@@ -184,7 +187,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(4))
@@ -215,7 +218,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(2))
@@ -247,7 +250,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(1))
@@ -279,7 +282,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
@@ -311,7 +314,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            HandoffResource\RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(4))
@@ -359,5 +362,63 @@ class HandoffResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['Handoffs', 'foo', 'EGLL_S_TWR', 'EGLL_N_APP', 'LON_S_CTR'];
+    }
+
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Handoff::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListHandoffs::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [ControllersRelationManager::class => ControllerPosition::class];
+    }
+
+    protected function tableActionRecordId(): array
+    {
+        return [ControllersRelationManager::class => 1];
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            ControllersRelationManager::class => [
+                'attach',
+                'detach',
+                'moveUp',
+                'moveDown',
+            ],
+        ];
     }
 }

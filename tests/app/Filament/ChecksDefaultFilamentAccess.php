@@ -6,6 +6,7 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
+use Livewire\Livewire;
 
 /**
  * Rather than repeating the same tests for every class that follows the default Filament access policy,

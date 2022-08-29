@@ -4,9 +4,10 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\SidResource;
+use App\Filament\Resources\SidResource\Pages\ListSids;
+use App\Filament\Resources\SidResource\RelationManagers\PrenotesRelationManager;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
-use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ use Livewire\Livewire;
 class SidResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentActionVisibility;
 
     public function setUp(): void
     {
@@ -383,7 +385,7 @@ class SidResourceTest extends BaseFilamentTestCase
             ->id;
 
         Livewire::test(
-            SidResource\RelationManagers\PrenotesRelationManager::class,
+            PrenotesRelationManager::class,
             ['ownerRecord' => Sid::findOrFail(1)]
         )
             ->assertCanSeeTableRecords([$rowToExpect]);
@@ -392,7 +394,7 @@ class SidResourceTest extends BaseFilamentTestCase
     public function testItAddsPrenotes()
     {
         Livewire::test(
-            SidResource\RelationManagers\PrenotesRelationManager::class,
+            PrenotesRelationManager::class,
             ['ownerRecord' => Sid::findOrFail(1)]
         )
             ->callTableAction('attach', Sid::findOrFail(1), ['recordId' => 2, 'priority' => 100])
@@ -418,7 +420,7 @@ class SidResourceTest extends BaseFilamentTestCase
         Sid::find(1)->prenotes()->sync([$prenote1->id, $prenote2->id, $prenote3->id, $prenote4->id, $prenote5->id]);
 
         Livewire::test(
-            SidResource\RelationManagers\PrenotesRelationManager::class,
+            PrenotesRelationManager::class,
             ['ownerRecord' => Sid::findOrFail(1)]
         )
             ->callTableAction('detach', $prenote4)
@@ -458,5 +460,61 @@ class SidResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['EGLL', 'EGBB'];
+    }
+
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Sid::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListSids::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [PrenotesRelationManager::class => Prenote::class];
+    }
+
+    protected function tableActionRecordId(): array
+    {
+        return [PrenotesRelationManager::class => 1];
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            PrenotesRelationManager::class => [
+                'attach',
+                'detach',
+            ],
+        ];
     }
 }

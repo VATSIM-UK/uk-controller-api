@@ -4,6 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\PrenoteResource;
+use App\Filament\Resources\PrenoteResource\Pages\ListPrenotes;
+use App\Filament\Resources\PrenoteResource\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
 use App\Services\ControllerPositionHierarchyService;
@@ -14,6 +16,7 @@ use Livewire\Livewire;
 class PrenoteResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
+    use ChecksFilamentActionVisibility;
 
     public function testItLoadsDataForView()
     {
@@ -359,5 +362,63 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     protected function getIndexText(): array
     {
         return ['Prenotes', 'Prenote One', 'Prenote Two'];
+    }
+
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return Prenote::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ListPrenotes::class;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected function readOnlyResourceTableActions(): array
+    {
+        return [
+            'view',
+        ];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [ControllersRelationManager::class => ControllerPosition::class];
+    }
+
+    protected function tableActionRecordId(): array
+    {
+        return [ControllersRelationManager::class => 1];
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            ControllersRelationManager::class => [
+                'attach',
+                'detach',
+                'moveUp',
+                'moveDown',
+            ],
+        ];
     }
 }
