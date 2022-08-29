@@ -11,8 +11,13 @@ abstract class BaseFilamentTestCase extends BaseFunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $user = User::findOrFail(self::ACTIVE_USER_CID);
+        $user = $this->filamentUser();
         $user->roles()->sync([Role::idFromKey(RoleKeys::WEB_TEAM)]);
-        $this->actingAs(User::findOrFail(self::ACTIVE_USER_CID), 'web');
+        $this->actingAs($user, 'web');
+    }
+
+    protected function filamentUser(): User
+    {
+        return User::findOrFail(self::ACTIVE_USER_CID);
     }
 }

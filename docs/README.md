@@ -17,7 +17,7 @@ The API is built on [Laravel Framework](https://laravel.com/) and uses [PHPUnit]
 
 ## System Requirements
 
-- PHP 7.4+
+- PHP 8.1+
 - MySQL 8.0
 
 # Local Deployment
@@ -29,10 +29,6 @@ followed by `docker-compose up`.
 
 The development database binds to Port 3306 and can be connected to using the password provided in
 the `docker-compose.yml`.
-
-## Running The Websocket Server
-
-The websocket service is automatically started on Port 6001.
 
 ## Setup Steps
 
@@ -59,7 +55,7 @@ The websocket service is automatically started on Port 6001.
 Assuming that you have run the migrations and seeded the database, running the tests is as simple as
 running the following command:
 
-`./vendor/bin/phpunit`
+`php artisan test`
 
 ### Testing with Docker
 A separate database is available via the docker deployment on the same network to avoid losing the data contained in the migrations.
@@ -73,15 +69,8 @@ In this instance, the phpunit command should be run from within the `web` contai
 
 `docker exec -it web /bin/bash`
 
-## Coding Style Checks
+## Coding Style
 
-To check that the code you have written adheres to the PSR-1 and PSR-2 standards, you can use PHP Codesniffer,
-which is a development dependency of this project. You can run it with the following command:
+This project uses PSR-12 for its formatting style. You can enforce these standards through most Code Editors, or, alternatively, StyleCI will run on every pull request.
 
-`./vendor/bin/phpcs --file-list=.phpcs --standard=PSR2`
-
-## Linting Dependencies
-
-You can lint the JSON dependencies that plugins will download by running the following command
-
-`php script/lint-dependencies.php`
+Every pull request is also run through SonarCloud to check for code smells.
