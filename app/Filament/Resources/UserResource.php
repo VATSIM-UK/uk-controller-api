@@ -59,7 +59,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('table.users.columns.name'))
-                    ->searchable(),
+                    ->searchable(['user.first_name', 'user.last_name']),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('table.users.columns.status'))
                     ->formatStateUsing(fn (int $state) => UserStatus::find($state)?->statusMessage()),
