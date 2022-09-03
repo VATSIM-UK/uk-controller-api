@@ -764,7 +764,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
         // For this test, we override the default UUID factory in Laravel's Str facade, so we get predictable results
         // for restrictions
-        Str::createUuidsUsingSequence([0, 0, 1]);
+        Str::createUuidsUsingSequence([0, 1, 0]);
 
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->mountTableAction(ViewAction::class, $hold)
