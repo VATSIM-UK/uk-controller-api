@@ -20,6 +20,11 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function canGloballySearch(): bool
+    {
+        return false;
+    }
+
     public static function getNavigationGroup(): ?string
     {
         return 'Administration';
