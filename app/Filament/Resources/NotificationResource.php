@@ -67,10 +67,12 @@ class NotificationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('valid_from')
                     ->label(__('table.notifications.columns.valid_from'))
-                    ->date(self::DATE_FORMAT),
+                    ->date(self::DATE_FORMAT)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('valid_to')
                     ->label(__('table.notifications.columns.valid_to'))
-                    ->date(self::DATE_FORMAT),
+                    ->date(self::DATE_FORMAT)
+                    ->sortable(),
                 Tables\Columns\BooleanColumn::make('read')
                     ->label(__('table.notifications.columns.read'))
                     ->getStateUsing(
@@ -102,7 +104,8 @@ class NotificationResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ]);
+            ])
+            ->defaultSort('valid_to', 'desc');
     }
 
     public static function getRelations(): array
