@@ -39,6 +39,37 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ->assertCanNotSeeTableRecords([$notification1, $notification4]);
     }
 
+    public function testItCanFilterForUnreadNotifications()
+    {
+        $notification1 = Notification::factory()->create();
+        $notification2 = Notification::factory()->create();
+        $notification3 = Notification::factory()->create();
+        $notification4 = Notification::factory()->create();
+
+        $notification1->readBy()->sync(self::ACTIVE_USER_CID);
+        $notification4->readBy()->sync(self::ACTIVE_USER_CID);
+
+        Livewire::test(ListNotifications::class)
+            ->assertCanSeeTableRecords([$notification1, $notification2, $notification3, $notification4])
+            ->filterTable('unread')
+            ->assertCanSeeTableRecords([$notification2, $notification3])
+            ->assertCanNotSeeTableRecords([$notification1, $notification4]);
+    }
+
+    public function testItCanFilterForActiveNotifications()
+    {
+        $notification1 = Notification::factory()->create();
+        $notification2 = Notification::factory()->finished()->create();
+        $notification3 = Notification::factory()->notStarted()->create();
+        $notification4 = Notification::factory()->create();
+
+        Livewire::test(ListNotifications::class)
+            ->assertCanSeeTableRecords([$notification1, $notification2, $notification3, $notification4])
+            ->filterTable('active')
+            ->assertCanNotSeeTableRecords([$notification2, $notification3])
+            ->assertCanSeeTableRecords([$notification1, $notification4]);
+    }
+
     public function testItLoadsDataForView()
     {
         $notification = Notification::factory()->create();
