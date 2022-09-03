@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.16.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.2...6.16.3) (2022-09-03)
+
+
+### Bug Fixes
+
+* make stands globally searchable ([7c04360](https://github.com/VATSIM-UK/uk-controller-api/commit/7c043607b41a19ad03f5a8dea2d6367a72c4d25f))
+* no user searching ([1493efc](https://github.com/VATSIM-UK/uk-controller-api/commit/1493efcdc298ea3fb00865a9c72cdb2c96d4be81))
+
 ## [6.16.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.1...6.16.2) (2022-09-03)
 
 
