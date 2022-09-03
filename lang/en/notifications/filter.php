@@ -5,4 +5,5 @@ return [
     'read' => 'Read',
     'read_false_label' => 'Unread',
     'read_true_label' => 'Read',
+    'active' => 'Only Active',
 ];

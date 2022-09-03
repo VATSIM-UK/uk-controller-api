@@ -20,4 +20,20 @@ class NotificationFactory extends Factory
             'valid_to' => Carbon::now()->addHour(),
         ];
     }
+
+    public function notStarted(): static
+    {
+        return $this->state(fn (array $values) => [
+            'valid_from' => Carbon::now()->addMinutes(30),
+            'valid_to' => Carbon::now()->addDay(),
+        ]);
+    }
+
+    public function finished(): static
+    {
+        return $this->state(fn (array $values) => [
+            'valid_from' => Carbon::now()->subHours(30),
+            'valid_to' => Carbon::now()->subMinutes(10),
+        ]);
+    }
 }

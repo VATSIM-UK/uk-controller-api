@@ -94,6 +94,10 @@ class NotificationResource extends Resource
                             ? $query->readBy(Auth::user())
                             : $query->unreadBy(Auth::user());
                     }),
+                Tables\Filters\Filter::make('active')
+                    ->label(__('filter.notifications.active'))
+                    ->toggle()
+                    ->query(fn (Builder $query) => $query->active()),
                 Tables\Filters\MultiSelectFilter::make('controllers')
                     ->label(__('filter.notifications.controllers'))
                     ->query(
