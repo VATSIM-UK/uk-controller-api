@@ -11,7 +11,7 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "composer/semver": "^3.2",
-        "filament/filament": "^2.15.40",
+        "filament/filament": "2.15.39",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0",
         "knplabs/github-api": "^3.0",
