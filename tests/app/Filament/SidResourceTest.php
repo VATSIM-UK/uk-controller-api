@@ -24,6 +24,15 @@ class SidResourceTest extends BaseFilamentTestCase
         Carbon::setTestNow(Carbon::now()->startOfSecond());
     }
 
+    public function testItCanFilterForAirfields()
+    {
+        Livewire::test(ListSids::class)
+            ->assertCanSeeTableRecords([Sid::find(1), Sid::find(2), Sid::find(3)])
+            ->filterTable('airfield', 1)
+            ->assertCanSeeTableRecords([Sid::find(1), Sid::find(2)])
+            ->assertCanNotSeeTableRecords([Sid::find(3)]);
+    }
+
     public function testItLoadsDataForView()
     {
         Sid::where('id', 1)->update(['initial_heading' => 350]);
@@ -444,7 +453,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     protected function getEditText(): string
     {
-        return 'Edit EGLL/27L - TEST1X';
+        return 'Edit TEST1X';
     }
 
     protected function getCreateText(): string
@@ -454,7 +463,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     protected function getViewText(): string
     {
-        return 'EGLL/27L - TEST1X';
+        return 'TEST1X';
     }
 
     protected function getIndexText(): array
