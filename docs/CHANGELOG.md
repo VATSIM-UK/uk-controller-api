@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.17.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.3...6.17.0) (2022-09-03)
+
+
+### Features
+
+* filter active notifications only ([34ff41b](https://github.com/VATSIM-UK/uk-controller-api/commit/34ff41b359b0f8a7221f3c7e330f05d1efafda5f))
+* filter read notifications ([720368f](https://github.com/VATSIM-UK/uk-controller-api/commit/720368f57d26f68ba399eb205798c3fb91f6561e))
+* sort notifications by valid to by default ([dcbda80](https://github.com/VATSIM-UK/uk-controller-api/commit/dcbda800607ee3d71d39da7f1071668667523af7))
+
 ## [6.16.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.2...6.16.3) (2022-09-03)
 
 
