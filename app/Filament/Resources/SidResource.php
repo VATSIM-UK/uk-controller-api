@@ -37,27 +37,27 @@ class SidResource extends Resource
                     ->helperText(__('form.sids.runway.helper'))
                     ->hintIcon('heroicon-o-chevron-double-up')
                     ->options(
-                        fn() => Runway::with('airfield')
+                        fn () => Runway::with('airfield')
                             ->get()
                             ->mapWithKeys(
-                                fn(Runway $runway) => [
+                                fn (Runway $runway) => [
                                     $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
                                 ]
                             ),
                     )
-                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('identifier')
                     ->label(__('form.sids.identifier.label'))
                     ->helperText(__('form.sids.identifier.helper'))
                     ->rule(
-                        fn(Closure $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
+                        fn (Closure $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
                             Runway::findOrFail($get('runway_id')),
                             $record
                         ),
-                        fn(Closure $get) => $get('runway_id')
+                        fn (Closure $get) => $get('runway_id')
                     )
                     ->required(),
                 Forms\Components\TextInput::make('initial_altitude')
@@ -80,9 +80,9 @@ class SidResource extends Resource
                     ->helperText(__('form.sids.handoff.helper'))
                     ->hintIcon('heroicon-o-clipboard-list')
                     ->options(
-                        fn() => Handoff::all()
+                        fn () => Handoff::all()
                             ->mapWithKeys(
-                                fn(Handoff $handoff) => [
+                                fn (Handoff $handoff) => [
                                     $handoff->id => $handoff->description,
                                 ]
                             ),
