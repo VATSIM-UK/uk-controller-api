@@ -453,7 +453,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     protected function getEditText(): string
     {
-        return 'Edit EGLL/27L - TEST1X';
+        return 'Edit TEST1X';
     }
 
     protected function getCreateText(): string
@@ -463,7 +463,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     protected function getViewText(): string
     {
-        return 'EGLL/27L - TEST1X';
+        return 'TEST1X';
     }
 
     protected function getIndexText(): array

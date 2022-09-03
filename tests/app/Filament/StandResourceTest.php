@@ -866,7 +866,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     protected function getEditText(): string
     {
-        return 'Edit EGLL - 1L';
+        return '1L';
     }
 
     protected function getCreateText(): string
@@ -876,7 +876,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     protected function getViewText(): string
     {
-        return 'EGLL - 1L';
+        return '1L';
     }
 
     protected function getIndexText(): array

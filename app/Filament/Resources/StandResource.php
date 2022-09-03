@@ -35,7 +35,7 @@ class StandResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
-    protected static ?string $recordTitleAttribute = 'airfieldIdentifier';
+    protected static ?string $recordTitleAttribute = 'identifier';
 
     protected static function getGlobalSearchEloquentQuery(): Builder
     {
