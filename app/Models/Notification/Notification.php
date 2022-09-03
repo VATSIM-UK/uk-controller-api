@@ -52,6 +52,13 @@ class Notification extends Model
         });
     }
 
+    public function scopeReadBy($query, User $user)
+    {
+        return $query->whereHas('readBy', function ($userQuery) use ($user) {
+            return $userQuery->where('user.id', $user->id);
+        });
+    }
+
     public function controllers(): BelongsToMany
     {
         return $this->belongsToMany(ControllerPosition::class);

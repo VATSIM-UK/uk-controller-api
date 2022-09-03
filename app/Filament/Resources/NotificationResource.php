@@ -80,6 +80,20 @@ class NotificationResource extends Resource
                     ),
             ])
             ->filters([
+                Tables\Filters\TernaryFilter::make('read')
+                    ->label(__('filter.notifications.read'))
+                    ->falseLabel(__('filter.notifications.read_false_label'))
+                    ->trueLabel(__('filter.notifications.read_true_label'))
+                    ->column('read')
+                    ->query(function (Builder $query, array $data) {
+                        if ($data['value'] === null) {
+                            return $query;
+                        }
+
+                        return $data['value']
+                            ? $query->readBy(Auth::user())
+                            : $query->unreadBy(Auth::user());
+                    }),
                 Tables\Filters\MultiSelectFilter::make('controllers')
                     ->label(__('filter.notifications.controllers'))
                     ->query(
