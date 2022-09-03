@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SidResource\Pages;
 use App\Filament\Resources\SidResource\RelationManagers;
+use App\Models\Airfield\Airfield;
 use App\Models\Controller\Handoff;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
@@ -25,17 +26,7 @@ class SidResource extends Resource
     protected static ?string $model = Sid::class;
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $recordRouteKeyName = 'sid.id';
-    protected static ?string $recordTitleAttribute = 'airfieldRunwayIdentifier';
-
-    public static function getEloquentQuery(): Builder
-    {
-        return Sid::with('runway', 'runway.airfield')
-            ->join('runways', 'sid.runway_id', '=', 'runways.id')
-            ->join('airfield', 'runways.airfield_id', '=', 'airfield.id')
-            ->select('sid.*')
-            ->orderBy('airfield.code')
-            ->orderBy('runways.identifier');
-    }
+    protected static ?string $recordTitleAttribute = 'identifier';
 
     public static function form(Form $form): Form
     {
@@ -46,27 +37,27 @@ class SidResource extends Resource
                     ->helperText(__('form.sids.runway.helper'))
                     ->hintIcon('heroicon-o-chevron-double-up')
                     ->options(
-                        fn () => Runway::with('airfield')
+                        fn() => Runway::with('airfield')
                             ->get()
                             ->mapWithKeys(
-                                fn (Runway $runway) => [
-                                $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier)
-                            ]
+                                fn(Runway $runway) => [
+                                    $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
+                                ]
                             ),
                     )
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
+                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
                     ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('identifier')
                     ->label(__('form.sids.identifier.label'))
                     ->helperText(__('form.sids.identifier.helper'))
                     ->rule(
-                        fn (Closure $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
+                        fn(Closure $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
                             Runway::findOrFail($get('runway_id')),
                             $record
                         ),
-                        fn (Closure $get) => $get('runway_id')
+                        fn(Closure $get) => $get('runway_id')
                     )
                     ->required(),
                 Forms\Components\TextInput::make('initial_altitude')
@@ -89,11 +80,11 @@ class SidResource extends Resource
                     ->helperText(__('form.sids.handoff.helper'))
                     ->hintIcon('heroicon-o-clipboard-list')
                     ->options(
-                        fn () => Handoff::all()
+                        fn() => Handoff::all()
                             ->mapWithKeys(
-                                fn (Handoff $handoff) => [
-                                $handoff->id => $handoff->description
-                            ]
+                                fn(Handoff $handoff) => [
+                                    $handoff->id => $handoff->description,
+                                ]
                             ),
                     )
                     ->searchable(),
@@ -121,6 +112,24 @@ class SidResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+            ])->filters([
+                Tables\Filters\SelectFilter::make('airfield')
+                    ->label(__('filter.sids.airfield'))
+                    ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code]))
+                    ->query(
+                        function (Builder $query, array $data) {
+                            if (empty($data['value'])) {
+                                return $query;
+                            }
+
+                            return $query->whereHas(
+                                'runway.airfield',
+                                function (Builder $airfield) use ($data) {
+                                    return $airfield->where('id', $data['value']);
+                                }
+                            );
+                        }
+                    ),
             ]);
     }
 
