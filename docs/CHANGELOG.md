@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.16.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.1...6.16.2) (2022-09-03)
+
+
+### Bug Fixes
+
+* branding colour in light mode ([8d6078b](https://github.com/VATSIM-UK/uk-controller-api/commit/8d6078b85ffb94df2e6ad50e8d46f827bfb8d982))
+
 ## [6.16.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.0...6.16.1) (2022-09-03)
 
 
