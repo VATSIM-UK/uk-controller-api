@@ -116,6 +116,7 @@ class SidResource extends Resource
                 Tables\Filters\SelectFilter::make('airfield')
                     ->label(__('filter.sids.airfield'))
                     ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code]))
+                    ->searchable()
                     ->query(
                         function (Builder $query, array $data) {
                             if (empty($data['value'])) {
