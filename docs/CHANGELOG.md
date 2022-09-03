@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.16.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.0...6.16.1) (2022-09-03)
+
+
+### Bug Fixes
+
+* fix filament version to work around bug ([1460c6d](https://github.com/VATSIM-UK/uk-controller-api/commit/1460c6da5786d45fc49ab183c24bb191d00c20a8))
+* user searching in filament admin ([8d28457](https://github.com/VATSIM-UK/uk-controller-api/commit/8d28457aa5a11e1e31922cb7c8dd779d5fb4fd74))
+
 ## [6.16.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.15.0...6.16.0) (2022-08-29)
 
 
