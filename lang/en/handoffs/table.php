@@ -3,6 +3,7 @@
 return [
     'columns' => [
         'description' => 'Description',
+        'sids' => 'SIDs',
         'controllers' => 'Controllers',
     ],
     'controller_positions' => [
