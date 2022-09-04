@@ -19,6 +19,39 @@ class SrdRouteResourceTest extends BaseFilamentTestCase
     use ChecksViewFilamentAccess;
     use ChecksListingFilamentAccess;
 
+    public function testItFiltersByOrigin()
+    {
+        Livewire::test(ListSrdRoutes::class)
+            ->assertCanSeeTableRecords(
+                [SrdRoute::find(1), SrdRoute::find(2), SrdRoute::find(3), SrdRoute::find(4), SrdRoute::find(5)]
+            )
+            ->filterTable('origin', ['isActive' => 'EGAA'])
+            ->assertCanSeeTableRecords([SrdRoute::find(5)])
+            ->assertCanNotSeeTableRecords([SrdRoute::find(1), SrdRoute::find(2), SrdRoute::find(3), SrdRoute::find(4)]);
+    }
+
+    public function testItFiltersByDestination()
+    {
+        Livewire::test(ListSrdRoutes::class)
+            ->assertCanSeeTableRecords(
+                [SrdRoute::find(1), SrdRoute::find(2), SrdRoute::find(3), SrdRoute::find(4), SrdRoute::find(5)]
+            )
+            ->filterTable('destination', ['isActive' => 'VEULE'])
+            ->assertCanSeeTableRecords([SrdRoute::find(4)])
+            ->assertCanNotSeeTableRecords([SrdRoute::find(1), SrdRoute::find(2), SrdRoute::find(3), SrdRoute::find(5)]);
+    }
+
+    public function testItFiltersByLevel()
+    {
+        Livewire::test(ListSrdRoutes::class)
+            ->assertCanSeeTableRecords(
+                [SrdRoute::find(1), SrdRoute::find(2), SrdRoute::find(3), SrdRoute::find(4), SrdRoute::find(5)]
+            )
+            ->filterTable('level', ['isActive' => 18000])
+            ->assertCanSeeTableRecords([SrdRoute::find(1), SrdRoute::find(2)])
+            ->assertCanNotSeeTableRecords([SrdRoute::find(3), SrdRoute::find(4), SrdRoute::find(5)]);
+    }
+
     public function testItListsNotes()
     {
         Livewire::test(

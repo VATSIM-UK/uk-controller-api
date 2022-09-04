@@ -11,6 +11,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class SrdRouteResource extends Resource
@@ -48,7 +49,30 @@ class SrdRouteResource extends Resource
                     ),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('origin')
+                    ->formComponent(TextInput::class)
+                    ->query(
+                        fn(Builder $query, array $data) => isset($data['isActive'])
+                            ? $query->where('origin', $data['isActive'])
+                            : $query
+                    ),
+                Tables\Filters\Filter::make('destination')
+                    ->formComponent(TextInput::class)
+                    ->query(
+                        fn(Builder $query, array $data) => isset($data['isActive'])
+                            ? $query->where('destination', $data['isActive'])
+                            : $query
+                    ),
+                Tables\Filters\Filter::make('level')
+                    ->formComponent(TextInput::class)
+                    ->query(
+                        fn(Builder $query, array $data) => isset($data['isActive'])
+                            ? $query->where(function (Builder $query) use ($data) {
+                                return $query->where('minimum_level', '<=', $data['isActive'])
+                                    ->orWhereNull('minimum_level');
+                            })->where('maximum_level', '>=', $data['isActive'])
+                            : $query
+                    ),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
