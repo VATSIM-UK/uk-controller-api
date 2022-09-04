@@ -20,5 +20,5 @@ class NotesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('note_text')
                     ->label(__('table.srd.notes.columns.text')),
             ]);
-    }    
+    }
 }

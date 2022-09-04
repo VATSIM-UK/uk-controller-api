@@ -56,28 +56,28 @@ class SrdRouteResource extends Resource
                 Tables\Columns\TextColumn::make('notes')
                     ->label(__('table.srd.columns.notes'))
                     ->formatStateUsing(
-                        fn(Collection $state): string => $state->map(fn(SrdNote $note) => $note->id)->join(',')
+                        fn (Collection $state): string => $state->map(fn (SrdNote $note) => $note->id)->join(',')
                     ),
             ])
             ->filters([
                 Tables\Filters\Filter::make('origin')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        fn (Builder $query, array $data) => isset($data['isActive'])
                             ? $query->where('origin', $data['isActive'])
                             : $query
                     ),
                 Tables\Filters\Filter::make('destination')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        fn (Builder $query, array $data) => isset($data['isActive'])
                             ? $query->where('destination', $data['isActive'])
                             : $query
                     ),
                 Tables\Filters\Filter::make('level')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        fn (Builder $query, array $data) => isset($data['isActive'])
                             ? $query->where(function (Builder $query) use ($data) {
                                 return $query->where('minimum_level', '<=', $data['isActive'])
                                     ->orWhereNull('minimum_level');
