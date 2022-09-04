@@ -854,11 +854,6 @@ class StandResourceTest extends BaseFilamentTestCase
             )->assertHasTableActionErrors(['destination']);
     }
 
-    protected function getViewEditRecord(): Model
-    {
-        return Stand::find(1);
-    }
-
     protected function getResourceClass(): string
     {
         return StandResource::class;
@@ -948,5 +943,15 @@ class StandResourceTest extends BaseFilamentTestCase
                 'unpair-airline',
             ],
         ];
+    }
+
+    protected function getEditRecord(): Model
+    {
+        return Stand::find(1);
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return Stand::find(1);
     }
 }

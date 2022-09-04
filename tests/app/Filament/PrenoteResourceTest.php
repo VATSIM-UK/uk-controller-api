@@ -334,11 +334,6 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
     }
 
-    protected function getViewEditRecord(): Model
-    {
-        return Prenote::findOrFail(1);
-    }
-
     protected function getResourceClass(): string
     {
         return PrenoteResource::class;
@@ -420,5 +415,15 @@ class PrenoteResourceTest extends BaseFilamentTestCase
                 'moveDown',
             ],
         ];
+    }
+
+    protected function getEditRecord(): Model
+    {
+        return Prenote::findOrFail(1);
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return Prenote::findOrFail(1);
     }
 }

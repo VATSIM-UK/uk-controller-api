@@ -1468,11 +1468,6 @@ class NavaidResourceTest extends BaseFilamentTestCase
         );
     }
 
-    protected function getViewEditRecord(): Model
-    {
-        return Navaid::findOrFail(1);
-    }
-
     protected function getResourceClass(): string
     {
         return NavaidResource::class;
@@ -1553,5 +1548,15 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 'delete',
             ],
         ];
+    }
+
+    protected function getEditRecord(): Model
+    {
+        return Navaid::findOrFail(1);
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return Navaid::findOrFail(1);
     }
 }

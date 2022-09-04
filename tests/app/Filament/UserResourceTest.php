@@ -3,37 +3,21 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
+use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
+use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
 use App\Filament\Resources\UserResource;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 use TestingUtils\Traits\WithSeedUsers;
 
 class UserResourceTest extends BaseFilamentTestCase
 {
     use WithSeedUsers;
-
-    /**
-     * @dataProvider indexRoleProvider
-     */
-    public function testItCanBeIndexed(?RoleKeys $role, bool $shouldBeAllowed)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        if ($shouldBeAllowed) {
-            $this->get(UserResource::getUrl())
-                ->assertSuccessful();
-        } else {
-            $this->get(UserResource::getUrl())
-                ->assertForbidden();
-        }
-    }
+    use ChecksListingFilamentAccess;
+    use ChecksViewFilamentAccess;
 
     private function indexRoleProvider(): array
     {
@@ -43,27 +27,6 @@ class UserResourceTest extends BaseFilamentTestCase
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
         ];
-    }
-
-    /**
-     * @dataProvider viewRoleProvider
-     */
-    public function testItCanBeViewed(?RoleKeys $role, bool $shouldBeAllowed)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        if ($shouldBeAllowed) {
-            $this->get(UserResource::getUrl('view', ['record' => $this->activeUser()]))
-                ->assertSuccessful();
-        } else {
-            $this->get(UserResource::getUrl('view', ['record' => $this->activeUser()]))
-                ->assertForbidden();
-        }
     }
 
     private function viewRoleProvider(): array
@@ -180,5 +143,25 @@ class UserResourceTest extends BaseFilamentTestCase
             ->assertHasNoTableActionErrors();
 
         $this->assertEmpty($this->bannedUser()->roles);
+    }
+
+    protected function getIndexText(): array
+    {
+        return ['Users'];
+    }
+
+    protected function getViewText(): string
+    {
+        return 'View User Banned';
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return User::findOrFail(self::BANNED_USER_CID);
+    }
+
+    protected function getResourceClass(): string
+    {
+        return UserResource::class;
     }
 }
