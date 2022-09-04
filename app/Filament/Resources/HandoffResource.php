@@ -43,8 +43,10 @@ class HandoffResource extends Resource
                     ->label(__('table.handoffs.columns.description'))
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TagsColumn::make('sids.identifier')
+                    ->label(__('table.handoffs.columns.sids')),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
-                    ->label(__('table.handoffs.columns.controllers'))
+                    ->label(__('table.handoffs.columns.controllers')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
