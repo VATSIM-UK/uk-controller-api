@@ -147,7 +147,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return ControllerPosition::class;
     }

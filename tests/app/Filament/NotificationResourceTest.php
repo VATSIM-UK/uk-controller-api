@@ -564,7 +564,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Notification::class;
     }

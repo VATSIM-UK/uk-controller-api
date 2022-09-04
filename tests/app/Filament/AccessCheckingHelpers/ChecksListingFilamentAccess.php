@@ -23,10 +23,10 @@ trait ChecksListingFilamentAccess
         }
 
         if (!$canIndex) {
-            $this->get(call_user_func($this->getResourceClass() . '::getUrl'))
+            $this->get(call_user_func($this->resourceClass() . '::getUrl'))
                 ->assertForbidden();
         } else {
-            $this->get(call_user_func($this->getResourceClass() . '::getUrl'))
+            $this->get(call_user_func($this->resourceClass() . '::getUrl'))
                 ->assertSuccessful()
                 ->assertSeeText($this->getIndexText());
         }

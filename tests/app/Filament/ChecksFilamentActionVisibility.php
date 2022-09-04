@@ -77,7 +77,7 @@ trait ChecksFilamentActionVisibility
                             $livewire = Livewire::test(
                                 $relationManager,
                                 $this->relationManagerLivewireParams(
-                                    $this->resourceClass(),
+                                    $this->resourceRecordClass(),
                                     $this->resourceId(),
                                 )
                             );
@@ -124,7 +124,7 @@ trait ChecksFilamentActionVisibility
 
                         $this->assertTableActionVisibility(
                             $livewire,
-                            $this->resourceClass(),
+                            $this->resourceRecordClass(),
                             $this->resourceId(),
                             $action,
                             in_array(
@@ -260,7 +260,7 @@ trait ChecksFilamentActionVisibility
         return '';
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return '';
     }
