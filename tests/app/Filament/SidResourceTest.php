@@ -441,11 +441,6 @@ class SidResourceTest extends BaseFilamentTestCase
         );
     }
 
-    protected function getViewEditRecord(): Model
-    {
-        return Sid::find(1);
-    }
-
     protected function getResourceClass(): string
     {
         return SidResource::class;
@@ -525,5 +520,15 @@ class SidResourceTest extends BaseFilamentTestCase
                 'detach',
             ],
         ];
+    }
+
+    protected function getEditRecord(): Model
+    {
+        return Sid::find(1);
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return Sid::find(1);
     }
 }

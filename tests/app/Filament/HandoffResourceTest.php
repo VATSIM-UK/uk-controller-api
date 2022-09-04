@@ -334,11 +334,6 @@ class HandoffResourceTest extends BaseFilamentTestCase
         );
     }
 
-    protected function getViewEditRecord(): Model
-    {
-        return Handoff::find(1);
-    }
-
     protected function getResourceClass(): string
     {
         return HandoffResource::class;
@@ -420,5 +415,15 @@ class HandoffResourceTest extends BaseFilamentTestCase
                 'moveDown',
             ],
         ];
+    }
+
+    protected function getEditRecord(): Model
+    {
+        return Handoff::find(1);
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return Handoff::find(1);
     }
 }
