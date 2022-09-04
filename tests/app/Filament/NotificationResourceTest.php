@@ -534,11 +534,6 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ->assertHasTableActionErrors(['controllers']);
     }
 
-    protected function getViewEditRecord(): Model
-    {
-        return Notification::findOrFail(1);
-    }
-
     protected function getResourceClass(): string
     {
         return NotificationResource::class;
@@ -618,5 +613,15 @@ class NotificationResourceTest extends BaseFilamentTestCase
                 'detach',
             ],
         ];
+    }
+
+    protected function getEditRecord(): Model
+    {
+        return Notification::findOrFail(1);
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return Notification::findOrFail(1);
     }
 }

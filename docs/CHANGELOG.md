@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.18.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.17.0...6.18.0) (2022-09-04)
+
+
+### Features
+
+* show sids in handoff table ([c8ecfbd](https://github.com/VATSIM-UK/uk-controller-api/commit/c8ecfbdde9916081463f9168c94e5b832faaec97))
+
 ## [6.17.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.16.3...6.17.0) (2022-09-03)
 
 

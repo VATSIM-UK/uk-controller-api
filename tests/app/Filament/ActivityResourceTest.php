@@ -3,14 +3,18 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
+use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
+use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
 use App\Filament\Resources\ActivityResource;
-use App\Models\User\Role;
 use App\Models\User\RoleKeys;
-use App\Models\User\User;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Activity;
 
 class ActivityResourceTest extends BaseFilamentTestCase
 {
+    use ChecksListingFilamentAccess;
+    use ChecksViewFilamentAccess;
+
     private readonly Activity $activity;
 
     public function setUp(): void
@@ -18,27 +22,6 @@ class ActivityResourceTest extends BaseFilamentTestCase
         parent::setUp();
         $this->activity = activity('test')
             ->log('ohai');
-    }
-
-    /**
-     * @dataProvider indexRoleProvider
-     */
-    public function testItCanBeIndexed(?RoleKeys $role, bool $shouldBeAllowed)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        if ($shouldBeAllowed) {
-            $this->get(ActivityResource::getUrl())
-                ->assertSuccessful();
-        } else {
-            $this->get(ActivityResource::getUrl())
-                ->assertForbidden();
-        }
     }
 
     private function indexRoleProvider(): array
@@ -51,27 +34,6 @@ class ActivityResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    /**
-     * @dataProvider viewRoleProvider
-     */
-    public function testItCanBeViewed(?RoleKeys $role, bool $shouldBeAllowed)
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        if ($role) {
-            $user->roles()->sync([Role::idFromKey($role)]);
-        }
-
-        if ($shouldBeAllowed) {
-            $this->get(ActivityResource::getUrl('view', ['record' => $this->activity]))
-                ->assertSuccessful();
-        } else {
-            $this->get(ActivityResource::getUrl('view', ['record' => $this->activity]))
-                ->assertForbidden();
-        }
-    }
-
     private function viewRoleProvider(): array
     {
         return [
@@ -80,5 +42,25 @@ class ActivityResourceTest extends BaseFilamentTestCase
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
         ];
+    }
+
+    protected function getIndexText(): array
+    {
+        return ['Activity Logs'];
+    }
+
+    protected function getViewText(): string
+    {
+        return 'View Activity Log';
+    }
+
+    protected function getViewRecord(): Model
+    {
+        return Activity::query()->firstOrFail();
+    }
+
+    protected function getResourceClass(): string
+    {
+        return ActivityResource::class;
     }
 }
