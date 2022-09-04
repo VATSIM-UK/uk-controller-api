@@ -16,8 +16,9 @@ class NotesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label('#'),
-                Tables\Columns\TextColumn::make('note_text'),
+                    ->label(__('table.srd.notes.columns.number')),
+                Tables\Columns\TextColumn::make('note_text')
+                    ->label(__('table.srd.notes.columns.text')),
             ]);
     }    
 }

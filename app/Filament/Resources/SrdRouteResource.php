@@ -24,11 +24,16 @@ class SrdRouteResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('origin'),
-                TextInput::make('destination'),
-                TextInput::make('minimum_level'),
-                TextInput::make('maximum_level'),
-                TextInput::make('route_segment'),
+                TextInput::make('origin')
+                    ->label(__('form.srd.origin.label')),
+                TextInput::make('destination')
+                    ->label(__('form.srd.destination.label')),
+                TextInput::make('minimum_level')
+                    ->label(__('form.srd.minimum_level.label')),
+                TextInput::make('maximum_level')
+                    ->label(__('form.srd.maximum_level.label')),
+                TextInput::make('route_segment')
+                    ->label(__('form.srd.route_segment.label')),
             ]);
     }
 
@@ -37,13 +42,19 @@ class SrdRouteResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('origin')
+                    ->label(__('table.srd.columns.origin'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('destination')
+                    ->label(__('table.srd.columns.destination'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('minimum_level'),
-                Tables\Columns\TextColumn::make('maximum_level'),
-                Tables\Columns\TextColumn::make('route_segment'),
+                Tables\Columns\TextColumn::make('minimum_level')
+                    ->label(__('table.srd.columns.minimum_level')),
+                Tables\Columns\TextColumn::make('maximum_level')
+                    ->label(__('table.srd.columns.maximum_level')),
+                Tables\Columns\TextColumn::make('route_segment')
+                    ->label(__('table.srd.columns.route_segment')),
                 Tables\Columns\TextColumn::make('notes')
+                    ->label(__('table.srd.columns.notes'))
                     ->formatStateUsing(
                         fn(Collection $state): string => $state->map(fn(SrdNote $note) => $note->id)->join(',')
                     ),
