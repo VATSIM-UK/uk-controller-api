@@ -624,4 +624,9 @@ class NotificationResourceTest extends BaseFilamentTestCase
     {
         return Notification::findOrFail(1);
     }
+
+    protected function resourceClass(): string
+    {
+        return NotificationResource::class;
+    }
 }

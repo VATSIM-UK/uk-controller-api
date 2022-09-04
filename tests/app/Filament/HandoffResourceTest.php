@@ -426,4 +426,9 @@ class HandoffResourceTest extends BaseFilamentTestCase
     {
         return Handoff::find(1);
     }
+
+    protected function resourceClass(): string
+    {
+        return HandoffResource::class;
+    }
 }

@@ -426,4 +426,9 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     {
         return Prenote::findOrFail(1);
     }
+
+    protected function resourceClass(): string
+    {
+        return PrenoteResource::class;
+    }
 }

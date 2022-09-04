@@ -63,4 +63,9 @@ class ActivityResourceTest extends BaseFilamentTestCase
     {
         return ActivityResource::class;
     }
+
+    protected function resourceClass(): string
+    {
+        return ActivityResource::class;
+    }
 }

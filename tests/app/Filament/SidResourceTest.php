@@ -531,4 +531,9 @@ class SidResourceTest extends BaseFilamentTestCase
     {
         return Sid::find(1);
     }
+
+    protected function resourceClass(): string
+    {
+        return SidResource::class;
+    }
 }

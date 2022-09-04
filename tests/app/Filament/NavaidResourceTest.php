@@ -1559,4 +1559,9 @@ class NavaidResourceTest extends BaseFilamentTestCase
     {
         return Navaid::findOrFail(1);
     }
+
+    protected function resourceClass(): string
+    {
+        return NavaidResource::class;
+    }
 }
