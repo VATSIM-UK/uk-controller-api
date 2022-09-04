@@ -9,11 +9,4 @@ use Filament\Resources\Pages\ListRecords;
 class ListSrdRoutes extends ListRecords
 {
     protected static string $resource = SrdRouteResource::class;
-
-    protected function getActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
 }
