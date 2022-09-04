@@ -7,8 +7,11 @@ use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
 use App\Filament\Resources\SrdRouteResource;
 use App\Filament\Resources\SrdRouteResource\Pages\ListSrdRoutes;
+use App\Filament\Resources\SrdRouteResource\RelationManagers\NotesRelationManager;
+use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Illuminate\Database\Eloquent\Model;
+use Livewire\Livewire;
 
 class SrdRouteResourceTest extends BaseFilamentTestCase
 {
@@ -16,9 +19,18 @@ class SrdRouteResourceTest extends BaseFilamentTestCase
     use ChecksViewFilamentAccess;
     use ChecksListingFilamentAccess;
 
+    public function testItListsNotes()
+    {
+        Livewire::test(
+            NotesRelationManager::class,
+            ['ownerRecord' => SrdRoute::findOrFail(5)]
+        )
+            ->assertCanSeeTableRecords([SrdNote::find(1), SrdNote::find(2), SrdNote::find(3)]);
+    }
+
     protected function getIndexText(): array
     {
-        return ['Srd Routes', 'EGLL', 'VEULE', '24500', '66000', 'MID UL612'];
+        return ['Srd Routes', 'EGLL', 'VEULE', '24500', '66000', 'MID UL612', '1,2,3'];
     }
 
     protected function getViewText(): string

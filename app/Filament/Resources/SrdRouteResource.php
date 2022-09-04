@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SrdRouteResource\Pages;
+use App\Filament\Resources\SrdRouteResource\RelationManagers\NotesRelationManager;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Filament\Forms\Components\TextInput;
@@ -57,7 +58,7 @@ class SrdRouteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            NotesRelationManager::class,
         ];
     }
 
