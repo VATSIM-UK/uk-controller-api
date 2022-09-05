@@ -13,7 +13,7 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^8.0.6",
     "@semantic-release/release-notes-generator": "^10.0.3",
-    "@tailwindcss/forms": "^0.5.2",
+    "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.4",
     "commitizen": "^4.2.5",
     "conventional-changelog-conventionalcommits": "^5.0.0",
