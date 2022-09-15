@@ -221,7 +221,7 @@ class StandResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])->defaultSort('airfield.code');
     }
 
     public static function getRelations(): array
