@@ -82,7 +82,7 @@ class DefaultFilamentPolicy
         );
     }
 
-    public function deleteAny(User $user): bool
+    public function deleteAny(): bool
     {
         return false;
     }
