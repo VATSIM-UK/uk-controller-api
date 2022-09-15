@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.18.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.18.0...6.18.1) (2022-09-15)
+
+
+### Bug Fixes
+
+* prevent bulk deletes ([05bc519](https://github.com/VATSIM-UK/uk-controller-api/commit/05bc519cf658d2d7e500ae5f565b8720073ef48d))
+
 ## [6.18.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.17.0...6.18.0) (2022-09-04)
 
 
