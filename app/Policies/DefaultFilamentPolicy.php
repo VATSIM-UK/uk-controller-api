@@ -82,6 +82,11 @@ class DefaultFilamentPolicy
         );
     }
 
+    public function deleteAny(User $user): bool
+    {
+        return false;
+    }
+
     public function restore(User $user): bool
     {
         return $this->userHasRole(

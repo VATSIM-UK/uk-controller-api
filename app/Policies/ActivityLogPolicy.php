@@ -47,6 +47,11 @@ class ActivityLogPolicy
         return false;
     }
 
+    public function deleteAny(): bool
+    {
+        return false;
+    }
+
     public function restore(): bool
     {
         return false;
