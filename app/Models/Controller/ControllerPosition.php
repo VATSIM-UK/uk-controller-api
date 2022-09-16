@@ -25,6 +25,7 @@ class ControllerPosition extends Model implements ControllerPositionInterface
 
     protected $fillable = [
         'callsign',
+        'description',
         'frequency',
         'requests_departure_releases',
         'receives_departure_releases',

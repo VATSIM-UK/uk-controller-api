@@ -25,30 +25,42 @@ class ControllerPositionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('callsign')
-                    ->required()
-                    ->unique(ignoreRecord: true)
-                    ->label(self::translateFormPath('callsign.label'))
-                    ->helperText(self::translateFormPath('callsign.helper'))
-                    ->rule(new ControllerPositionCallsign()),
-                Forms\Components\TextInput::make('frequency')
-                    ->required()
-                    ->rule(new ControllerPositionFrequency())
-                    ->label(self::translateFormPath('frequency.label'))
-                    ->helperText(self::translateFormPath('frequency.helper'))
-                    ->length(7),
-                Forms\Components\Toggle::make('requests_departure_releases')
-                    ->label(self::translateFormPath('requests_departure_releases.label'))
-                    ->helperText(self::translateFormPath('requests_departure_releases.helper')),
-                Forms\Components\Toggle::make('receives_departure_releases')
-                    ->label(self::translateFormPath('receives_departure_releases.label'))
-                    ->helperText(self::translateFormPath('receives_departure_releases.helper')),
-                Forms\Components\Toggle::make('sends_prenotes')
-                    ->label(self::translateFormPath('sends_prenotes.label'))
-                    ->helperText(self::translateFormPath('sends_prenotes.helper')),
-                Forms\Components\Toggle::make('receives_prenotes')
-                    ->label(self::translateFormPath('receives_prenotes.label'))
-                    ->helperText(self::translateFormPath('receives_prenotes.helper')),
+                Forms\Components\Fieldset::make('identifiers')
+                    ->label(self::translateFormPath('identifiers_section.label'))
+                    ->schema([
+                        Forms\Components\TextInput::make('callsign')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->label(self::translateFormPath('callsign.label'))
+                            ->helperText(self::translateFormPath('callsign.helper'))
+                            ->rule(new ControllerPositionCallsign()),
+                        Forms\Components\TextInput::make('description')
+                            ->maxLength(255)
+                            ->label(self::translateFormPath('description.label'))
+                            ->helperText(self::translateFormPath('description.helper')),
+                        Forms\Components\TextInput::make('frequency')
+                            ->required()
+                            ->rule(new ControllerPositionFrequency())
+                            ->label(self::translateFormPath('frequency.label'))
+                            ->helperText(self::translateFormPath('frequency.helper'))
+                            ->length(7),
+                    ]),
+                    Forms\Components\Fieldset::make('coordination')
+                        ->label(self::translateFormPath('coordination_section.label'))
+                        ->schema([
+                            Forms\Components\Toggle::make('requests_departure_releases')
+                                ->label(self::translateFormPath('requests_departure_releases.label'))
+                                ->helperText(self::translateFormPath('requests_departure_releases.helper')),
+                            Forms\Components\Toggle::make('receives_departure_releases')
+                                ->label(self::translateFormPath('receives_departure_releases.label'))
+                                ->helperText(self::translateFormPath('receives_departure_releases.helper')),
+                            Forms\Components\Toggle::make('sends_prenotes')
+                                ->label(self::translateFormPath('sends_prenotes.label'))
+                                ->helperText(self::translateFormPath('sends_prenotes.helper')),
+                            Forms\Components\Toggle::make('receives_prenotes')
+                                ->label(self::translateFormPath('receives_prenotes.label'))
+                                ->helperText(self::translateFormPath('receives_prenotes.helper')),
+                        ])
             ]);
     }
 
@@ -59,6 +71,10 @@ class ControllerPositionResource extends Resource
                 Tables\Columns\TextColumn::make('callsign')
                     ->label(self::translateTablePath('columns.callsign'))
                     ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->label(self::translateTablePath('columns.description'))
+                    ->formatStateUsing(fn (?string $state) => $state ?: '--')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency'))
