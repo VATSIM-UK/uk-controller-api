@@ -55,11 +55,7 @@ class StandResource extends Resource
                             ->label(self::translateFormPath('airfield.label'))
                             ->helperText(__('Required'))
                             ->hintIcon('heroicon-o-folder')
-                            ->options(
-                                fn () => Airfield::all()
-                                    ->sortBy('code', SORT_NATURAL)
-                                    ->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code])
-                            )
+                            ->options(SelectOptions::airfields())
                             ->reactive()
                             ->afterStateUpdated(function (Closure $get, Closure $set) {
                                 $terminalId = $get('terminal_id');
@@ -69,7 +65,6 @@ class StandResource extends Resource
 
                                 $set('terminal_id', null);
                             })
-                            ->preload()
                             ->searchable(!App::runningUnitTests())
                             ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
                             ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
@@ -153,11 +148,7 @@ class StandResource extends Resource
                             ->label(self::translateFormPath('aircraft_type.label'))
                             ->helperText(self::translateFormPath('aircraft_type.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
-                            ->options(
-                                fn () => Aircraft::all()->mapWithKeys(
-                                    fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
-                                )
-                            )
+                            ->options(SelectOptions::aircraftTypes())
                             ->searchable(!App::runningUnitTests()),
                         Toggle::make('closed_at')
                             ->label(self::translateFormPath('used_for_allocation.label'))
