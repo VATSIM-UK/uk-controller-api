@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandResource\Pages;
 use App\Filament\Resources\StandResource\RelationManagers;
 use App\Models\Aircraft\Aircraft;
@@ -225,7 +226,7 @@ class StandResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
                     ->label(__('filter.stands.airfield'))
-                    ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code]))
+                    ->options(SelectOptions::airfields())
                     ->searchable()
                     ->query(
                         function (Builder $query, array $data) {
@@ -238,7 +239,7 @@ class StandResource extends Resource
                     ),
                 Tables\Filters\MultiSelectFilter::make('airlines')
                     ->label(__('filter.stands.airlines'))
-                    ->options(Airline::all()->mapWithKeys(fn (Airline $airline) => [$airline->id => $airline->icao_code]))
+                    ->options(SelectOptions::airlines())
                     ->query(
                         function (Builder $query, array $data) {
                             if (empty($data['values'])) {

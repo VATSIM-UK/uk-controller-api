@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\SidResource\Pages;
 use App\Filament\Resources\SidResource\RelationManagers;
 use App\Models\Airfield\Airfield;
@@ -113,7 +114,7 @@ class SidResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
                     ->label(__('filter.sids.airfield'))
-                    ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code]))
+                    ->options(SelectOptions::airfields())
                     ->searchable()
                     ->query(
                         function (Builder $query, array $data) {

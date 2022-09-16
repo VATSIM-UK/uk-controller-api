@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\NotificationResource\Pages;
 use App\Filament\Resources\NotificationResource\RelationManagers;
 use App\Models\Controller\ControllerPosition;
@@ -90,6 +91,7 @@ class NotificationResource extends Resource
                     ->query(fn (Builder $query) => $query->active()),
                 Tables\Filters\MultiSelectFilter::make('controllers')
                     ->label(__('filter.notifications.controllers'))
+                    ->options(SelectOptions::controllers())
                     ->query(
                         function (Builder $query, array $data) {
                             if (empty($data['values'])) {
@@ -103,10 +105,6 @@ class NotificationResource extends Resource
                                 }
                             );
                         }
-                    )
-                    ->options(
-                        ControllerPosition::all()
-                            ->mapWithKeys(fn (ControllerPosition $position) => [$position->id => $position->callsign])
                     ),
             ])
             ->actions([
