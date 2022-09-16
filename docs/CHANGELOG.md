@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.20.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.19.0...6.20.0) (2022-09-16)
+
+
+### Features
+
+* controller position descriptions ([b7676ac](https://github.com/VATSIM-UK/uk-controller-api/commit/b7676ac12b3d741852d08dfebca864059f973327))
+* table default sorts ([6926b6e](https://github.com/VATSIM-UK/uk-controller-api/commit/6926b6eb0b2b0a5c0854cece4d4d5eb4da52603f))
+
 ## [6.19.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.18.1...6.19.0) (2022-09-16)
 
 
