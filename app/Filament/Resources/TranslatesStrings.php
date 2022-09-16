@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources;
 
+/**
+ * Trait for classes to use when they want to use the language translation files.
+ */
 trait TranslatesStrings
 {
     public static function translateTablePath(string $path)

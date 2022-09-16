@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class HandoffResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = Handoff::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
@@ -40,13 +42,13 @@ class HandoffResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
-                    ->label(__('table.handoffs.columns.description'))
+                    ->label(self::translateTablePath('columns.description'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TagsColumn::make('sids.identifier')
-                    ->label(__('table.handoffs.columns.sids')),
+                    ->label(self::translateTablePath('columns.sids')),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
-                    ->label(__('table.handoffs.columns.controllers')),
+                    ->label(self::translateTablePath('columns.controllers')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -69,5 +71,10 @@ class HandoffResource extends Resource
             'view' => Pages\ViewHandoff::route('/{record}'),
             'edit' => Pages\EditHandoff::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'handoffs';
     }
 }

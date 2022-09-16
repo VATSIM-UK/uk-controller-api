@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class PairedStandsRelationManager extends RelationManager
 {
+    use TranslatesStrings;
+    
     protected static string $relationship = 'pairedStands';
     protected static ?string $inverseRelationship = 'pairedStands';
 
@@ -20,7 +23,7 @@ class PairedStandsRelationManager extends RelationManager
 
     protected function getTableDescription(): ?string
     {
-        return __('table.stands.paired.description');
+        return self::translateTablePath('description');
     }
 
     public static function table(Table $table): Table
@@ -31,15 +34,15 @@ class PairedStandsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.stands.paired.columns.id'))
+                    ->label(self::translateTablePath('columns.id'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('airfield.code')
-                    ->label(__('table.stands.paired.columns.airfield'))
+                    ->label(self::translateTablePath('columns.airfield'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('identifier')
-                    ->label(__('table.stands.paired.columns.identifier'))
+                    ->label(self::translateTablePath('columns.identifier'))
                     ->sortable()
                     ->searchable(),
             ])
@@ -95,5 +98,10 @@ class PairedStandsRelationManager extends RelationManager
                 )
                     ->label(__('form.stands.pairs.detach.label')),
             ]);
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'stands.paired';
     }
 }

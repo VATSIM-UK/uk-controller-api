@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SidResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = Sid::class;
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $recordRouteKeyName = 'sid.id';
@@ -97,15 +99,15 @@ class SidResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('runway.airfield.code')
-                    ->label(__('table.sids.columns.airfield'))
+                    ->label(self::translateTablePath('columns.airfield'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('runway.identifier')
-                    ->label(__('table.sids.columns.runway')),
+                    ->label(self::translateTablePath('columns.runway')),
                 Tables\Columns\TextColumn::make('identifier')
-                    ->label(__('table.sids.columns.identifier')),
+                    ->label(self::translateTablePath('columns.identifier')),
                 Tables\Columns\TextColumn::make('initial_altitude')
-                    ->label(__('table.sids.columns.initial_altitude')),
+                    ->label(self::translateTablePath('columns.initial_altitude')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -148,5 +150,10 @@ class SidResource extends Resource
             'view' => Pages\ViewSid::route('/{record}'),
             'edit' => Pages\EditSid::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'sids';
     }
 }

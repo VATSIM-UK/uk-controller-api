@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class NavaidResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = Navaid::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-location-marker';
@@ -60,17 +62,15 @@ class NavaidResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.navaids.columns.id')),
                 Tables\Columns\TextColumn::make('identifier')
                     ->sortable()
                     ->searchable()
-                    ->label(__('table.navaids.columns.identifier')),
+                    ->label(self::translateTablePath('columns.identifier')),
                 Tables\Columns\BooleanColumn::make('has_published_holds')
                     ->getStateUsing(function (Navaid $record) {
                         return $record->holds->isNotEmpty();
                     })
-                    ->label(__('table.navaids.columns.published_holds')),
+                    ->label(self::translateTablePath('columns.published_holds')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -93,5 +93,10 @@ class NavaidResource extends Resource
             'view' => Pages\ViewNavaid::route('/{record}'),
             'edit' => Pages\EditNavaid::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'navaids';
     }
 }

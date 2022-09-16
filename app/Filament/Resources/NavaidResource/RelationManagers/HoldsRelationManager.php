@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\NavaidResource\RelationManagers;
 
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 class HoldsRelationManager extends RelationManager
 {
+    use TranslatesStrings;
+    
     protected static string $relationship = 'holds';
     protected static ?string $recordTitleAttribute = 'description';
     protected static ?string $title = 'Published Holds';
@@ -155,21 +158,21 @@ class HoldsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
-                    ->label(__('table.holds.columns.description')),
+                    ->label(self::translateTablePath('columns.description')),
                 Tables\Columns\TextColumn::make('inbound_heading')
-                    ->label(__('table.holds.columns.heading')),
+                    ->label(self::translateTablePath('columns.heading')),
                 Tables\Columns\TextColumn::make('minimum_altitude')
-                    ->label(__('table.holds.columns.minimum_altitude')),
+                    ->label(self::translateTablePath('columns.minimum_altitude')),
                 Tables\Columns\TextColumn::make('maximum_altitude')
-                    ->label(__('table.holds.columns.maximum_altitude')),
+                    ->label(self::translateTablePath('columns.maximum_altitude')),
                 Tables\Columns\TextColumn::make('turn_direction')
                     ->enum([
                         'left' => 'Left',
                         'right' => 'Right',
                     ])
-                    ->label(__('table.holds.columns.turn_direction')),
+                    ->label(self::translateTablePath('columns.turn_direction')),
                 Tables\Columns\BooleanColumn::make('restrictions')
-                    ->label(__('table.holds.columns.has_restrictions'))
+                    ->label(self::translateTablePath('columns.has_restrictions'))
                     ->getStateUsing(fn (Hold $record) => $record->restrictions->isNotEmpty()),
             ])
             ->headerActions([
@@ -338,5 +341,10 @@ class HoldsRelationManager extends RelationManager
                 $restrictions
             )
         );
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'holds';
     }
 }

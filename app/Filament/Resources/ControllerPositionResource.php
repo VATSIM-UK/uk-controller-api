@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ControllerPositionResource\Pages;
-use App\Filament\Resources\ControllerPositionResource\RelationManagers;
 use App\Models\Controller\ControllerPosition;
 use App\Rules\Controller\ControllerPositionCallsign;
 use App\Rules\Controller\ControllerPositionFrequency;
@@ -15,6 +14,8 @@ use Filament\Tables;
 
 class ControllerPositionResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = ControllerPosition::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-microphone';
@@ -55,17 +56,15 @@ class ControllerPositionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.controllers.columns.id')),
                 Tables\Columns\TextColumn::make('callsign')
-                    ->label(__('table.controllers.columns.callsign'))
+                    ->label(self::translateTablePath('columns.callsign'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('frequency')
-                    ->label(__('table.controllers.columns.frequency'))
+                    ->label(self::translateTablePath('columns.frequency'))
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('topDownAirfields.code')
-                    ->label(__('table.controllers.columns.top_down')),
+                    ->label(self::translateTablePath('columns.top_down')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -81,5 +80,10 @@ class ControllerPositionResource extends Resource
             'view' => Pages\ViewControllerPosition::route('/{record}'),
             'edit' => Pages\EditControllerPosition::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'controllers';
     }
 }

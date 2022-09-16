@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationResource extends Resource
 {
+    use TranslatesStrings;
+
     private const DATE_FORMAT = 'd M Y H:i';
 
     protected static ?string $model = Notification::class;
@@ -64,18 +66,18 @@ class NotificationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->label(__('table.notifications.columns.title'))
+                    ->label(self::translateTablePath('columns.title'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('valid_from')
-                    ->label(__('table.notifications.columns.valid_from'))
+                    ->label(self::translateTablePath('columns.valid_from'))
                     ->date(self::DATE_FORMAT)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('valid_to')
-                    ->label(__('table.notifications.columns.valid_to'))
+                    ->label(self::translateTablePath('columns.valid_to'))
                     ->date(self::DATE_FORMAT)
                     ->sortable(),
                 Tables\Columns\BooleanColumn::make('read')
-                    ->label(__('table.notifications.columns.read'))
+                    ->label(self::translateTablePath('columns.read'))
                     ->getStateUsing(
                         fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     ),
@@ -129,5 +131,10 @@ class NotificationResource extends Resource
             'view' => Pages\ViewNotification::route('/{record}'),
             'edit' => Pages\EditNotification::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'notifications';
     }
 }
