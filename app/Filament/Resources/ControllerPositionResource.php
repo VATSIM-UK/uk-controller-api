@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ControllerPositionResource\Pages;
-use App\Filament\Resources\ControllerPositionResource\RelationManagers;
 use App\Models\Controller\ControllerPosition;
 use App\Rules\Controller\ControllerPositionCallsign;
 use App\Rules\Controller\ControllerPositionFrequency;
@@ -15,6 +14,8 @@ use Filament\Tables;
 
 class ControllerPositionResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = ControllerPosition::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-microphone';
@@ -27,27 +28,27 @@ class ControllerPositionResource extends Resource
                 Forms\Components\TextInput::make('callsign')
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->label(__('form.controllers.callsign.label'))
-                    ->helperText(__('form.controllers.callsign.helper'))
+                    ->label(self::translateFormPath('callsign.label'))
+                    ->helperText(self::translateFormPath('callsign.helper'))
                     ->rule(new ControllerPositionCallsign()),
                 Forms\Components\TextInput::make('frequency')
                     ->required()
                     ->rule(new ControllerPositionFrequency())
-                    ->label(__('form.controllers.frequency.label'))
-                    ->helperText(__('form.controllers.frequency.helper'))
+                    ->label(self::translateFormPath('frequency.label'))
+                    ->helperText(self::translateFormPath('frequency.helper'))
                     ->length(7),
                 Forms\Components\Toggle::make('requests_departure_releases')
-                    ->label(__('form.controllers.requests_departure_releases.label'))
-                    ->helperText(__('form.controllers.requests_departure_releases.helper')),
+                    ->label(self::translateFormPath('requests_departure_releases.label'))
+                    ->helperText(self::translateFormPath('requests_departure_releases.helper')),
                 Forms\Components\Toggle::make('receives_departure_releases')
-                    ->label(__('form.controllers.receives_departure_releases.label'))
-                    ->helperText(__('form.controllers.receives_departure_releases.helper')),
+                    ->label(self::translateFormPath('receives_departure_releases.label'))
+                    ->helperText(self::translateFormPath('receives_departure_releases.helper')),
                 Forms\Components\Toggle::make('sends_prenotes')
-                    ->label(__('form.controllers.sends_prenotes.label'))
-                    ->helperText(__('form.controllers.sends_prenotes.helper')),
+                    ->label(self::translateFormPath('sends_prenotes.label'))
+                    ->helperText(self::translateFormPath('sends_prenotes.helper')),
                 Forms\Components\Toggle::make('receives_prenotes')
-                    ->label(__('form.controllers.receives_prenotes.label'))
-                    ->helperText(__('form.controllers.receives_prenotes.helper')),
+                    ->label(self::translateFormPath('receives_prenotes.label'))
+                    ->helperText(self::translateFormPath('receives_prenotes.helper')),
             ]);
     }
 
@@ -55,17 +56,15 @@ class ControllerPositionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.controllers.columns.id')),
                 Tables\Columns\TextColumn::make('callsign')
-                    ->label(__('table.controllers.columns.callsign'))
+                    ->label(self::translateTablePath('columns.callsign'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('frequency')
-                    ->label(__('table.controllers.columns.frequency'))
+                    ->label(self::translateTablePath('columns.frequency'))
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('topDownAirfields.code')
-                    ->label(__('table.controllers.columns.top_down')),
+                    ->label(self::translateTablePath('columns.top_down')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -81,5 +80,10 @@ class ControllerPositionResource extends Resource
             'view' => Pages\ViewControllerPosition::route('/{record}'),
             'edit' => Pages\EditControllerPosition::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'controllers';
     }
 }
