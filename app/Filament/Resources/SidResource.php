@@ -115,7 +115,7 @@ class SidResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
-                    ->label(__('filter.sids.airfield'))
+                    ->label(self::translateFilterPath('airfield'))
                     ->options(SelectOptions::airfields())
                     ->searchable()
                     ->query(

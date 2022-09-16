@@ -84,15 +84,15 @@ class NotificationResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('unread')
-                    ->label(__('filter.notifications.unread'))
+                    ->label(self::translateFilterPath('unread'))
                     ->query(fn (Builder $query) => $query->unreadBy(Auth::user()))
                     ->toggle(),
                 Tables\Filters\Filter::make('active')
-                    ->label(__('filter.notifications.active'))
+                    ->label(self::translateFilterPath('active'))
                     ->toggle()
                     ->query(fn (Builder $query) => $query->active()),
                 Tables\Filters\MultiSelectFilter::make('controllers')
-                    ->label(__('filter.notifications.controllers'))
+                    ->label(self::translateFilterPath('controllers'))
                     ->options(SelectOptions::controllers())
                     ->query(
                         function (Builder $query, array $data) {

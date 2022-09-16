@@ -222,7 +222,7 @@ class StandResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
-                    ->label(__('filter.stands.airfield'))
+                    ->label(self::translateFilterPath('airfield'))
                     ->options(SelectOptions::airfields())
                     ->searchable()
                     ->query(
@@ -235,7 +235,7 @@ class StandResource extends Resource
                         }
                     ),
                 Tables\Filters\MultiSelectFilter::make('airlines')
-                    ->label(__('filter.stands.airlines'))
+                    ->label(self::translateFilterPath('airlines'))
                     ->options(SelectOptions::airlines())
                     ->query(
                         function (Builder $query, array $data) {
