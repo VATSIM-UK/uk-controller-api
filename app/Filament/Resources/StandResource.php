@@ -32,6 +32,8 @@ use Illuminate\Validation\Rule;
 
 class StandResource extends Resource
 {
+    use TranslatesStrings;
+
     private const DEFAULT_COLUMN_VALUE = '--';
 
     protected static ?string $model = Stand::class;
@@ -185,35 +187,35 @@ class StandResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('airfield.code')
-                    ->label(__('table.stands.columns.airfield'))
+                    ->label(self::translateTablePath('columns.airfield'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('terminal.description')
-                    ->label(__('table.stands.columns.terminal'))
+                    ->label(self::translateTablePath('columns.terminal'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('wakeCategory.code')
-                    ->label(__('table.stands.columns.max_wtc')),
+                    ->label(self::translateTablePath('columns.max_wtc')),
                 Tables\Columns\TextColumn::make('maxAircraft.code')
-                    ->label(__('table.stands.columns.max_size'))
+                    ->label(self::translateTablePath('columns.max_size'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
-                    ->label(__('table.stands.columns.airlines'))
+                    ->label(self::translateTablePath('columns.airlines'))
                     ->default([self::DEFAULT_COLUMN_VALUE]),
                 Tables\Columns\BooleanColumn::make('closed_at')
-                    ->label(__('table.stands.columns.used'))
+                    ->label(self::translateTablePath('columns.used'))
                     ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
                         return $column->getRecord()->closed_at === null;
                     }),
                 Tables\Columns\TextColumn::make('assignment_priority')
-                    ->label(__('table.stands.columns.priority'))
+                    ->label(self::translateTablePath('columns.priority'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('assignedCallsign')
-                    ->label(__('table.stands.columns.allocation'))
+                    ->label(self::translateTablePath('columns.allocation'))
                     ->default('--'),
             ])->defaultSort('airfield.code')
             ->actions([
@@ -267,5 +269,10 @@ class StandResource extends Resource
             'edit' => Pages\EditStand::route('/{record}/edit'),
             'view' => Pages\ViewStand::route('/{record}'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'stands';
     }
 }
