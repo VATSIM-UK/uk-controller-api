@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Filament\Resources\TranslatesStrings;
 use Closure;
-use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
@@ -11,18 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class RolesRelationManager extends RelationManager
 {
+    use TranslatesStrings;
+    
     protected static string $relationship = 'roles';
 
     protected static ?string $recordTitleAttribute = 'description';
 
     protected function getTableDescription(): ?string
     {
-        return __('table.users.roles.description');
-    }
-
-    public static function form(Form $form): Form
-    {
-        return $form;
+        return self::translateTablePath('description');
     }
 
     public static function table(Table $table): Table
@@ -33,23 +30,23 @@ class RolesRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->label(__('table.users.roles.attach_action.trigger_button'))
-                    ->modalHeading(__('table.users.roles.attach_action.modal_heading'))
-                    ->modalButton(__('table.users.roles.attach_action.confirm_button'))
+                    ->label(self::translateTablePath('attach_action.trigger_button'))
+                    ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
+                    ->modalButton(self::translateTablePath('attach_action.confirm_button'))
                     ->hidden(self::hideActionsClosure())
                     ->disableAttachAnother()
                     ->preloadRecordSelect()
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()
-                    ->label(__('table.users.roles.detach_action.trigger_button'))
+                    ->label(self::translateTablePath('detach_action.trigger_button'))
                     ->modalHeading(
                         fn (Tables\Actions\DetachAction $action) => __(
                             'table.users.roles.detach_action.modal_heading',
                             ['role' => $action->getRecordTitle()]
                         )
                     )
-                    ->modalButton(__('table.users.roles.detach_action.confirm_button'))
+                    ->modalButton(self::translateTablePath('detach_action.confirm_button'))
                     ->hidden(self::hideActionsClosure()),
             ]);
     }
@@ -57,5 +54,10 @@ class RolesRelationManager extends RelationManager
     private static function hideActionsClosure(): Closure
     {
         return fn (RolesRelationManager $livewire) => $livewire->getOwnerRecord()->id === Auth::id();
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'users.roles';
     }
 }

@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class NavaidResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = Navaid::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-location-marker';
@@ -36,23 +38,23 @@ class NavaidResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(5)
-                    ->label(__('form.navaids.identifier.label'))
-                    ->helperText(__('form.navaids.identifier.helper'))
+                    ->label(self::translateFormPath('identifier.label'))
+                    ->helperText(self::translateFormPath('identifier.helper'))
                     ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
                 TextInput::make('latitude')
                     ->required()
                     ->numeric('decimal:7')
                     ->minValue(-90)
                     ->maxValue(90)
-                    ->label(__('form.navaids.latitude.label'))
-                    ->helperText(__('form.navaids.latitude.helper')),
+                    ->label(self::translateFormPath('latitude.label'))
+                    ->helperText(self::translateFormPath('latitude.helper')),
                 TextInput::make('longitude')
                     ->required()
                     ->numeric('decimal:7')
                     ->minValue(-180)
                     ->maxValue(180)
-                    ->label(__('form.navaids.longitude.label'))
-                    ->helperText(__('form.navaids.longitude.helper')),
+                    ->label(self::translateFormPath('longitude.label'))
+                    ->helperText(self::translateFormPath('longitude.helper')),
             ]);
     }
 
@@ -60,17 +62,15 @@ class NavaidResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.navaids.columns.id')),
                 Tables\Columns\TextColumn::make('identifier')
                     ->sortable()
                     ->searchable()
-                    ->label(__('table.navaids.columns.identifier')),
+                    ->label(self::translateTablePath('columns.identifier')),
                 Tables\Columns\BooleanColumn::make('has_published_holds')
                     ->getStateUsing(function (Navaid $record) {
                         return $record->holds->isNotEmpty();
                     })
-                    ->label(__('table.navaids.columns.published_holds')),
+                    ->label(self::translateTablePath('columns.published_holds')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -93,5 +93,10 @@ class NavaidResource extends Resource
             'view' => Pages\ViewNavaid::route('/{record}'),
             'edit' => Pages\EditNavaid::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'navaids';
     }
 }
