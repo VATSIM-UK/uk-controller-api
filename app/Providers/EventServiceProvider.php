@@ -12,6 +12,7 @@ use App\Events\SquawkAssignmentEvent;
 use App\Events\SquawkUnassignedEvent;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Filament\Helpers\SelectOptions;
 use App\Listeners\Database\MigrationsFinished;
 use App\Listeners\Dependency\UpdateDependencies;
 use App\Listeners\Hold\RecordHoldAssignment;
@@ -23,9 +24,14 @@ use App\Listeners\Squawk\MarkAssignmentHistoryDeletedOnUnassignment;
 use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
+use App\Models\Aircraft\Aircraft;
+use App\Models\Airfield\Airfield;
+use App\Models\Airline\Airline;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Hold\Hold;
 use App\Models\Stand\Stand;
 use App\Observers\HoldObserver;
+use App\Observers\SelectOptionsObserver;
 use App\Observers\StandObserver;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -70,5 +76,12 @@ class EventServiceProvider extends ServiceProvider
         NetworkControllersUpdatedEvent::class => [
             NetworkControllersUpdated::class,
         ],
+    ];
+
+    protected $observers = [
+        Aircraft::class => SelectOptionsObserver::class,
+        Airfield::class => SelectOptionsObserver::class,
+        Airline::class => SelectOptionsObserver::class,
+        ControllerPosition::class => SelectOptionsObserver::class,
     ];
 }
