@@ -181,10 +181,6 @@ class StandResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.stands.columns.id'))
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('airfield.code')
                     ->label(__('table.stands.columns.airfield'))
                     ->sortable()
@@ -198,6 +194,10 @@ class StandResource extends Resource
                     ->label(__('table.stands.columns.identifier'))
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('wakeCategory.code')
+                    ->label(__('table.stands.columns.max_wtc')),
+                Tables\Columns\TextColumn::make('maxAircraft.code')
+                    ->label(__('table.stands.columns.max_size')),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
                     ->label(__('table.stands.columns.airlines'))
                     ->default(['--']),
