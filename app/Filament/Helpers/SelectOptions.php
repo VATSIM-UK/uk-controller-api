@@ -23,8 +23,8 @@ class SelectOptions
     {
         return self::getOptions(
             Aircraft::class,
-            fn(): Collection => Aircraft::all()->mapWithKeys(
-                fn(Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
+            fn (): Collection => Aircraft::all()->mapWithKeys(
+                fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
             )->toBase()
         );
     }
@@ -33,8 +33,8 @@ class SelectOptions
     {
         return self::getOptions(
             Airfield::class,
-            fn(): Collection => Airfield::all()->mapWithKeys(
-                fn(Airfield $airfield) => [$airfield->id => $airfield->code]
+            fn (): Collection => Airfield::all()->mapWithKeys(
+                fn (Airfield $airfield) => [$airfield->id => $airfield->code]
             )->toBase()
         );
     }
@@ -43,8 +43,8 @@ class SelectOptions
     {
         return self::getOptions(
             Airline::class,
-            fn(): Collection => Airline::all()->mapWithKeys(
-                fn(Airline $airline) => [$airline->id => $airline->icao_code]
+            fn (): Collection => Airline::all()->mapWithKeys(
+                fn (Airline $airline) => [$airline->id => $airline->icao_code]
             )->toBase()
         );
     }
@@ -53,8 +53,8 @@ class SelectOptions
     {
         return self::getOptions(
             ControllerPosition::class,
-            fn(): Collection => ControllerPosition::all()->mapWithKeys(
-                fn(ControllerPosition $controller) => [$controller->id => $controller->callsign]
+            fn (): Collection => ControllerPosition::all()->mapWithKeys(
+                fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
             )->toBase()
         );
     }
