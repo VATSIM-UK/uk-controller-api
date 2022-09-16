@@ -9,6 +9,7 @@ use App\Models\Aircraft\WakeCategory;
 use App\Models\Aircraft\WakeCategoryScheme;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandType;
 use App\Rules\Stand\StandIdentifierMustBeUniqueAtAirfield;
@@ -187,9 +188,7 @@ class StandResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('terminal.description')
                     ->label(__('table.stands.columns.terminal'))
-                    ->default('--')
-                    ->sortable()
-                    ->searchable(),
+                    ->default('--'),
                 Tables\Columns\TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->sortable()
@@ -197,12 +196,13 @@ class StandResource extends Resource
                 Tables\Columns\TextColumn::make('wakeCategory.code')
                     ->label(__('table.stands.columns.max_wtc')),
                 Tables\Columns\TextColumn::make('maxAircraft.code')
-                    ->label(__('table.stands.columns.max_size')),
+                    ->label(__('table.stands.columns.max_size'))
+                    ->default(['--']),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
                     ->label(__('table.stands.columns.airlines'))
                     ->default(['--']),
                 Tables\Columns\BooleanColumn::make('closed_at')
-                    ->label(__('table.stands.columns.airfield'))
+                    ->label(__('table.stands.columns.used'))
                     ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
                         return $column->getRecord()->closed_at === null;
                     }),
@@ -217,6 +217,35 @@ class StandResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('airfield')
+                    ->label(__('filter.stands.airfield'))
+                    ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code]))
+                    ->searchable()
+                    ->query(
+                        function (Builder $query, array $data) {
+                            if (empty($data['value'])) {
+                                return $query;
+                            }
+
+                            return $query->where('airfield_id', $data['value']);
+                        }
+                    ),
+                Tables\Filters\MultiSelectFilter::make('airlines')
+                    ->label(__('filter.stands.airlines'))
+                    ->options(Airline::all()->mapWithKeys(fn (Airline $airline) => [$airline->id => $airline->icao_code]))
+                    ->query(
+                        function (Builder $query, array $data) {
+                            if (empty($data['values'])) {
+                                return $query;
+                            }
+
+                            return $query->whereHas('airlines', function (Builder $query) use ($data) {
+                                return $query->whereIn('airlines.id', $data['values']);
+                            });
+                        }
+                    ),
             ]);
     }
 
