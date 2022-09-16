@@ -110,9 +110,7 @@ class SidResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ])->filters([
+            ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
                     ->label(__('filter.sids.airfield'))
                     ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code]))
