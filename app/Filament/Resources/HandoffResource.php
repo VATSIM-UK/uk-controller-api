@@ -53,7 +53,7 @@ class HandoffResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make()
-            ]);
+            ])->defaultSort('description');
     }
     
     public static function getRelations(): array

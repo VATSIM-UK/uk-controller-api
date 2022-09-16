@@ -75,7 +75,7 @@ class NavaidResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ]);
+            ])->defaultSort('identifier');
     }
 
     public static function getRelations(): array

@@ -38,6 +38,7 @@ class PrenoteResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description'))
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.controllers'))
@@ -46,7 +47,7 @@ class PrenoteResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ]);
+            ])->defaultSort('description');
     }
 
     public static function getRelations(): array

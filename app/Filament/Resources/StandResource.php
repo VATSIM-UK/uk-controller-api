@@ -220,6 +220,9 @@ class StandResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ])
             ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
                     ->label(self::translateFilterPath('airfield'))
@@ -248,7 +251,8 @@ class StandResource extends Resource
                             });
                         }
                     ),
-            ]);
+            ])
+            ->defaultSort('airfield.code');
     }
 
     public static function getRelations(): array
