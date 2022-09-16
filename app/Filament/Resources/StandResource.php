@@ -200,8 +200,7 @@ class StandResource extends Resource
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
                     ->label(__('table.stands.columns.airlines'))
-                    ->default(['--'])
-                    ->sortable(),
+                    ->default(['--']),
                 Tables\Columns\BooleanColumn::make('closed_at')
                     ->label(__('table.stands.columns.airfield'))
                     ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
