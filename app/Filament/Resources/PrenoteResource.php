@@ -26,7 +26,7 @@ class PrenoteResource extends Resource
         return $form
             ->schema([
                 TextInput::make('description')
-                    ->label(__('form.prenotes.description.label'))
+                    ->label(self::translateFormPath('description.label'))
                     ->maxLength(255)
                     ->required(),
             ]);

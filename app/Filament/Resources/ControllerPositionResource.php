@@ -28,27 +28,27 @@ class ControllerPositionResource extends Resource
                 Forms\Components\TextInput::make('callsign')
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->label(__('form.controllers.callsign.label'))
-                    ->helperText(__('form.controllers.callsign.helper'))
+                    ->label(self::translateFormPath('callsign.label'))
+                    ->helperText(self::translateFormPath('callsign.helper'))
                     ->rule(new ControllerPositionCallsign()),
                 Forms\Components\TextInput::make('frequency')
                     ->required()
                     ->rule(new ControllerPositionFrequency())
-                    ->label(__('form.controllers.frequency.label'))
-                    ->helperText(__('form.controllers.frequency.helper'))
+                    ->label(self::translateFormPath('frequency.label'))
+                    ->helperText(self::translateFormPath('frequency.helper'))
                     ->length(7),
                 Forms\Components\Toggle::make('requests_departure_releases')
-                    ->label(__('form.controllers.requests_departure_releases.label'))
-                    ->helperText(__('form.controllers.requests_departure_releases.helper')),
+                    ->label(self::translateFormPath('requests_departure_releases.label'))
+                    ->helperText(self::translateFormPath('requests_departure_releases.helper')),
                 Forms\Components\Toggle::make('receives_departure_releases')
-                    ->label(__('form.controllers.receives_departure_releases.label'))
-                    ->helperText(__('form.controllers.receives_departure_releases.helper')),
+                    ->label(self::translateFormPath('receives_departure_releases.label'))
+                    ->helperText(self::translateFormPath('receives_departure_releases.helper')),
                 Forms\Components\Toggle::make('sends_prenotes')
-                    ->label(__('form.controllers.sends_prenotes.label'))
-                    ->helperText(__('form.controllers.sends_prenotes.helper')),
+                    ->label(self::translateFormPath('sends_prenotes.label'))
+                    ->helperText(self::translateFormPath('sends_prenotes.helper')),
                 Forms\Components\Toggle::make('receives_prenotes')
-                    ->label(__('form.controllers.receives_prenotes.label'))
-                    ->helperText(__('form.controllers.receives_prenotes.helper')),
+                    ->label(self::translateFormPath('receives_prenotes.label'))
+                    ->helperText(self::translateFormPath('receives_prenotes.helper')),
             ]);
     }
 

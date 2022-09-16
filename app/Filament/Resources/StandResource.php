@@ -52,7 +52,7 @@ class StandResource extends Resource
                 Fieldset::make('Identifiers')->schema(
                     [
                         Select::make('airfield_id')
-                            ->label(__('form.stands.airfield.label'))
+                            ->label(self::translateFormPath('airfield.label'))
                             ->helperText(__('Required'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
@@ -75,8 +75,8 @@ class StandResource extends Resource
                             ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
-                            ->label(__('form.stands.terminal.label'))
-                            ->helperText(__('form.stands.terminal.helper'))
+                            ->label(self::translateFormPath('terminal.label'))
+                            ->helperText(self::translateFormPath('terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
@@ -94,9 +94,9 @@ class StandResource extends Resource
                                     !Terminal::where('airfield_id', $get('airfield_id'))->exists()
                             ),
                         TextInput::make('identifier')
-                            ->label(__('form.stands.identifier.label'))
+                            ->label(self::translateFormPath('identifier.label'))
                             ->maxLength(255)
-                            ->helperText(__('form.stands.identifier.helper'))
+                            ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
                                 fn (Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
@@ -106,8 +106,8 @@ class StandResource extends Resource
                                 fn (Closure $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
-                            ->label(__('form.stands.type.label'))
-                            ->helperText(__('form.stands.type.helper'))
+                            ->label(self::translateFormPath('type.label'))
+                            ->helperText(self::translateFormPath('type.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn () => StandType::all()->mapWithKeys(
@@ -115,13 +115,13 @@ class StandResource extends Resource
                                 )
                             ),
                         TextInput::make('latitude')
-                            ->label(__('form.stands.latitude.label'))
-                            ->helperText(__('form.stands.latitude.helper'))
+                            ->label(self::translateFormPath('latitude.label'))
+                            ->helperText(self::translateFormPath('latitude.helper'))
                             ->numeric('decimal')
                             ->required(),
                         TextInput::make('longitude')
-                            ->label(__('form.stands.longitude.label'))
-                            ->helperText(__('form.stands.longitude.helper'))
+                            ->label(self::translateFormPath('longitude.label'))
+                            ->helperText(self::translateFormPath('longitude.helper'))
                             ->numeric('decimal')
                             ->required(),
                     ]
@@ -129,8 +129,8 @@ class StandResource extends Resource
                 Fieldset::make('Allocation')->schema(
                     [
                         Select::make('wake_category_id')
-                            ->label(__('form.stands.wake_category.label'))
-                            ->helperText(__('form.stands.wake_category.helper'))
+                            ->label(self::translateFormPath('wake_category.label'))
+                            ->helperText(self::translateFormPath('wake_category.helper'))
                             ->hintIcon('heroicon-o-scale')
                             ->options(
                                 fn () => WakeCategoryScheme::with('categories')
@@ -150,8 +150,8 @@ class StandResource extends Resource
                             )
                             ->required(),
                         Select::make('max_aircraft_id')
-                            ->label(__('form.stands.aircraft_type.label'))
-                            ->helperText(__('form.stands.aircraft_type.helper'))
+                            ->label(self::translateFormPath('aircraft_type.label'))
+                            ->helperText(self::translateFormPath('aircraft_type.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->options(
                                 fn () => Aircraft::all()->mapWithKeys(
@@ -160,16 +160,16 @@ class StandResource extends Resource
                             )
                             ->searchable(!App::runningUnitTests()),
                         Toggle::make('closed_at')
-                            ->label(__('form.stands.used_for_allocation.label'))
-                            ->helperText(__('form.stands.used_for_allocation.helper'))
+                            ->label(self::translateFormPath('used_for_allocation.label'))
+                            ->helperText(self::translateFormPath('used_for_allocation.helper'))
                             ->default(true)
                             ->afterStateHydrated(static function (Toggle $component, $state): void {
                                 $component->state(is_null($state));
                             })
                             ->required(),
                         TextInput::make('assignment_priority')
-                            ->label(__('form.stands.allocation_priority.label'))
-                            ->helperText(__('form.stands.allocation_priority.helper'))
+                            ->label(self::translateFormPath('allocation_priority.label'))
+                            ->helperText(self::translateFormPath('allocation_priority.helper'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(9999)

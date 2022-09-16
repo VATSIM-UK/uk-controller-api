@@ -71,8 +71,8 @@ class PairedStandsRelationManager extends RelationManager
                                 )
                         )
                         ->searchable(!App::runningUnitTests())
-                        ->label(__('form.stands.pairs.stand.label'))
-                        ->helperText(__('form.stands.pairs.stand.helper'))
+                        ->label(self::translateFormPath('stand.label'))
+                        ->helperText(self::translateFormPath('stand.helper'))
                         ->disableLabel(false),
                 ])
                     ->using(function (array $data) use ($attachAction) {
@@ -85,7 +85,7 @@ class PairedStandsRelationManager extends RelationManager
                             return $data;
                         });
                     })
-                    ->label(__('form.stands.pairs.add.label'))
+                    ->label(self::translateFormPath('add.label'))
             ])
             ->actions([
                 $detachAction->using(
@@ -96,7 +96,7 @@ class PairedStandsRelationManager extends RelationManager
                         });
                     }
                 )
-                    ->label(__('form.stands.pairs.detach.label')),
+                    ->label(self::translateFormPath('detach.label')),
             ]);
     }
 

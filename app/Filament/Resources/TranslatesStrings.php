@@ -12,6 +12,11 @@ trait TranslatesStrings
         return static::translatePath('table', $path);
     }
 
+    public static function translateFormPath(string $path)
+    {
+        return static::translatePath('form', $path);
+    }
+
     private static function translatePath(string $type, string $path)
     {
         return __(

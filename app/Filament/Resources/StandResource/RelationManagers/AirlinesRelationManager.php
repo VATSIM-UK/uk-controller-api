@@ -50,27 +50,27 @@ class AirlinesRelationManager extends RelationManager
                 Tables\Actions\AttachAction::make('pair-airline')
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect()
-                            ->label(__('form.stands.airlines.icao.label'))
+                            ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         TextInput::make('destination')
-                            ->label(__('form.stands.airlines.destination.label'))
-                            ->helperText(__('form.stands.airlines.destination.helper'))
+                            ->label(self::translateFormPath('destination.label'))
+                            ->helperText(self::translateFormPath('destination.helper'))
                             ->maxLength(4),
                         TextInput::make('callsign_slug')
-                            ->label(__('form.stands.airlines.callsign.label'))
-                            ->helperText(__('form.stands.airlines.callsign.helper'))
+                            ->label(self::translateFormPath('callsign.label'))
+                            ->helperText(self::translateFormPath('callsign.helper'))
                             ->maxLength(4),
                         TextInput::make('priority')
-                            ->label(__('form.stands.airlines.priority.label'))
-                            ->helperText(__('form.stands.airlines.priority.helper'))
+                            ->label(self::translateFormPath('priority.label'))
+                            ->helperText(self::translateFormPath('priority.helper'))
                             ->default(100)
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(9999)
                             ->required(),
                         TimePicker::make('not_before')
-                            ->label(__('form.stands.airlines.not_before.label'))
-                            ->helperText(__('form.stands.airlines.not_before.helper'))
+                            ->label(self::translateFormPath('not_before.label'))
+                            ->helperText(self::translateFormPath('not_before.helper'))
                             ->displayFormat('H:i')
                             ->afterStateUpdated(function (Closure $get, Closure $set) {
                                 if ($get('not_before') !== null) {
@@ -84,7 +84,7 @@ class AirlinesRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\DetachAction::make('unpair-airline')
-                    ->label(__('form.stands.airlines.remove.label'))
+                    ->label(self::translateFormPath('remove.label'))
                     ->using(function (Tables\Actions\DetachAction $action) {
                         DB::table('airline_stand')
                             ->where('id', $action->getRecord()->pivot_id)

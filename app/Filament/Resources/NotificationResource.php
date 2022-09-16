@@ -33,28 +33,28 @@ class NotificationResource extends Resource
         return $form
             ->schema([
                 TextInput::make('title')
-                    ->label(__('form.notifications.title.label'))
+                    ->label(self::translateFormPath('title.label'))
                     ->maxLength(255)
                     ->required(),
                 TextInput::make('link')
-                    ->label(__('form.notifications.link.label'))
-                    ->helperText(__('form.notifications.link.helper'))
+                    ->label(self::translateFormPath('link.label'))
+                    ->helperText(self::translateFormPath('link.helper'))
                     ->url(),
                 DateTimePicker::make('valid_from')
-                    ->label(__('form.notifications.valid_from.label'))
-                    ->helperText(__('form.notifications.valid_from.helper'))
+                    ->label(self::translateFormPath('valid_from.label'))
+                    ->helperText(self::translateFormPath('valid_from.helper'))
                     ->displayFormat(self::DATE_FORMAT)
                     ->withoutSeconds()
                     ->required(),
                 DateTimePicker::make('valid_to')
-                    ->label(__('form.notifications.valid_to.label'))
-                    ->helperText(__('form.notifications.valid_to.helper'))
+                    ->label(self::translateFormPath('valid_to.label'))
+                    ->helperText(self::translateFormPath('valid_to.helper'))
                     ->displayFormat(self::DATE_FORMAT)
                     ->withoutSeconds()
                     ->after('valid_from')
                     ->required(),
                 Textarea::make('body')
-                    ->label(__('form.notifications.body.label'))
+                    ->label(self::translateFormPath('body.label'))
                     ->maxLength(65535)
                     ->columnSpan('full')
                     ->required(),

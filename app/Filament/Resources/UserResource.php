@@ -37,15 +37,15 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('id')
-                    ->label(__('form.users.cid.label'))
+                    ->label(self::translateFormPath('cid.label'))
                     ->disabled(),
                 TextInput::make('first_name')
-                    ->label(__('form.users.first_name.label'))
-                    ->helperText(__('form.users.first_name.helper'))
+                    ->label(self::translateFormPath('first_name.label'))
+                    ->helperText(self::translateFormPath('first_name.helper'))
                     ->disabled(),
                 TextInput::make('last_name')
-                    ->label(__('form.users.last_name.label'))
-                    ->helperText(__('form.users.last_name.helper'))
+                    ->label(self::translateFormPath('last_name.label'))
+                    ->helperText(self::translateFormPath('last_name.helper'))
                     ->disabled(),
                 Select::make('status')
                     ->options(

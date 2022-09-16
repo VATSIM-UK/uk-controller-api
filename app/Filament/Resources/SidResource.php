@@ -36,8 +36,8 @@ class SidResource extends Resource
         return $form
             ->schema([
                 Select::make('runway_id')
-                    ->label(__('form.sids.runway.label'))
-                    ->helperText(__('form.sids.runway.helper'))
+                    ->label(self::translateFormPath('runway.label'))
+                    ->helperText(self::translateFormPath('runway.helper'))
                     ->hintIcon('heroicon-o-chevron-double-up')
                     ->options(
                         fn () => Runway::with('airfield')
@@ -53,8 +53,8 @@ class SidResource extends Resource
                     ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('identifier')
-                    ->label(__('form.sids.identifier.label'))
-                    ->helperText(__('form.sids.identifier.helper'))
+                    ->label(self::translateFormPath('identifier.label'))
+                    ->helperText(self::translateFormPath('identifier.helper'))
                     ->rule(
                         fn (Closure $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
                             Runway::findOrFail($get('runway_id')),
@@ -64,23 +64,23 @@ class SidResource extends Resource
                     )
                     ->required(),
                 Forms\Components\TextInput::make('initial_altitude')
-                    ->label(__('form.sids.initial_altitude.label'))
-                    ->helperText(__('form.sids.initial_altitude.helper'))
+                    ->label(self::translateFormPath('initial_altitude.label'))
+                    ->helperText(self::translateFormPath('initial_altitude.helper'))
                     ->hintIcon('heroicon-o-presentation-chart-line')
                     ->integer()
                     ->minValue(0)
                     ->maxValue(99999)
                     ->required(),
                 Forms\Components\TextInput::make('initial_heading')
-                    ->label(__('form.sids.initial_heading.label'))
-                    ->helperText(__('form.sids.initial_heading.helper'))
+                    ->label(self::translateFormPath('initial_heading.label'))
+                    ->helperText(self::translateFormPath('initial_heading.helper'))
                     ->hintIcon('heroicon-o-arrows-expand')
                     ->integer()
                     ->minValue(1)
                     ->maxValue(360),
                 Select::make('handoff_id')
-                    ->label(__('form.sids.handoff.label'))
-                    ->helperText(__('form.sids.handoff.helper'))
+                    ->label(self::translateFormPath('handoff.label'))
+                    ->helperText(self::translateFormPath('handoff.helper'))
                     ->hintIcon('heroicon-o-clipboard-list')
                     ->options(
                         fn () => Handoff::all()

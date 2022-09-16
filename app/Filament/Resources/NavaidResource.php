@@ -38,23 +38,23 @@ class NavaidResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(5)
-                    ->label(__('form.navaids.identifier.label'))
-                    ->helperText(__('form.navaids.identifier.helper'))
+                    ->label(self::translateFormPath('identifier.label'))
+                    ->helperText(self::translateFormPath('identifier.helper'))
                     ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
                 TextInput::make('latitude')
                     ->required()
                     ->numeric('decimal:7')
                     ->minValue(-90)
                     ->maxValue(90)
-                    ->label(__('form.navaids.latitude.label'))
-                    ->helperText(__('form.navaids.latitude.helper')),
+                    ->label(self::translateFormPath('latitude.label'))
+                    ->helperText(self::translateFormPath('latitude.helper')),
                 TextInput::make('longitude')
                     ->required()
                     ->numeric('decimal:7')
                     ->minValue(-180)
                     ->maxValue(180)
-                    ->label(__('form.navaids.longitude.label'))
-                    ->helperText(__('form.navaids.longitude.helper')),
+                    ->label(self::translateFormPath('longitude.label'))
+                    ->helperText(self::translateFormPath('longitude.helper')),
             ]);
     }
 

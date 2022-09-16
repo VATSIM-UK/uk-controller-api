@@ -31,7 +31,7 @@ class HandoffResource extends Resource
         return $form
             ->schema([
                 TextInput::make('description')
-                    ->label(__('form.handoffs.description.label'))
+                    ->label(self::translateFormPath('description.label'))
                     ->maxLength(255)
                     ->required()
             ]);
