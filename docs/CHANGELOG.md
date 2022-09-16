@@ -1,5 +1,26 @@
 # UK Controller Plugin API Changelog
 
+## [6.19.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.18.1...6.19.0) (2022-09-16)
+
+
+### Features
+
+* add wtc and size to stand table ([4b536c3](https://github.com/VATSIM-UK/uk-controller-api/commit/4b536c3dcbd0c168e6e2b5668d0e515d08844236))
+* filters for stands table ([0ee9506](https://github.com/VATSIM-UK/uk-controller-api/commit/0ee95061d1ea08b1f62c4e0927b043b288af5341))
+
+
+### Bug Fixes
+
+* make stand airlines column non-orderable ([7141a09](https://github.com/VATSIM-UK/uk-controller-api/commit/7141a09bae7d64be4c0034deac0931c1152a0a67))
+* remove delete bulk actions ([36a760b](https://github.com/VATSIM-UK/uk-controller-api/commit/36a760b204876fa21adb36f0a7749e6194791030))
+
+## [6.18.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.18.0...6.18.1) (2022-09-15)
+
+
+### Bug Fixes
+
+* prevent bulk deletes ([05bc519](https://github.com/VATSIM-UK/uk-controller-api/commit/05bc519cf658d2d7e500ae5f565b8720073ef48d))
+
 ## [6.18.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.17.0...6.18.0) (2022-09-04)
 
 

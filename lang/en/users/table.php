@@ -5,6 +5,7 @@ return [
         'id' => 'CID',
         'name' => 'Name',
         'status' => 'Status',
+        'roles' => 'Roles',
     ],
     'roles' => [
         'description' => 'Assign roles to a user. You may not assign roles to yourself.',

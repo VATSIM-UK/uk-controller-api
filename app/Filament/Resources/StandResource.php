@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandResource\Pages;
 use App\Filament\Resources\StandResource\RelationManagers;
 use App\Models\Aircraft\Aircraft;
@@ -19,7 +20,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -27,10 +27,13 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
-use Illuminate\Validation\Rule;
 
 class StandResource extends Resource
 {
+    use TranslatesStrings;
+
+    private const DEFAULT_COLUMN_VALUE = '--';
+
     protected static ?string $model = Stand::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
@@ -49,7 +52,7 @@ class StandResource extends Resource
                 Fieldset::make('Identifiers')->schema(
                     [
                         Select::make('airfield_id')
-                            ->label(__('form.stands.airfield.label'))
+                            ->label(self::translateFormPath('airfield.label'))
                             ->helperText(__('Required'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
@@ -72,8 +75,8 @@ class StandResource extends Resource
                             ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
-                            ->label(__('form.stands.terminal.label'))
-                            ->helperText(__('form.stands.terminal.helper'))
+                            ->label(self::translateFormPath('terminal.label'))
+                            ->helperText(self::translateFormPath('terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
@@ -91,9 +94,9 @@ class StandResource extends Resource
                                     !Terminal::where('airfield_id', $get('airfield_id'))->exists()
                             ),
                         TextInput::make('identifier')
-                            ->label(__('form.stands.identifier.label'))
+                            ->label(self::translateFormPath('identifier.label'))
                             ->maxLength(255)
-                            ->helperText(__('form.stands.identifier.helper'))
+                            ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
                                 fn (Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
@@ -103,8 +106,8 @@ class StandResource extends Resource
                                 fn (Closure $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
-                            ->label(__('form.stands.type.label'))
-                            ->helperText(__('form.stands.type.helper'))
+                            ->label(self::translateFormPath('type.label'))
+                            ->helperText(self::translateFormPath('type.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn () => StandType::all()->mapWithKeys(
@@ -112,13 +115,13 @@ class StandResource extends Resource
                                 )
                             ),
                         TextInput::make('latitude')
-                            ->label(__('form.stands.latitude.label'))
-                            ->helperText(__('form.stands.latitude.helper'))
+                            ->label(self::translateFormPath('latitude.label'))
+                            ->helperText(self::translateFormPath('latitude.helper'))
                             ->numeric('decimal')
                             ->required(),
                         TextInput::make('longitude')
-                            ->label(__('form.stands.longitude.label'))
-                            ->helperText(__('form.stands.longitude.helper'))
+                            ->label(self::translateFormPath('longitude.label'))
+                            ->helperText(self::translateFormPath('longitude.helper'))
                             ->numeric('decimal')
                             ->required(),
                     ]
@@ -126,8 +129,8 @@ class StandResource extends Resource
                 Fieldset::make('Allocation')->schema(
                     [
                         Select::make('wake_category_id')
-                            ->label(__('form.stands.wake_category.label'))
-                            ->helperText(__('form.stands.wake_category.helper'))
+                            ->label(self::translateFormPath('wake_category.label'))
+                            ->helperText(self::translateFormPath('wake_category.helper'))
                             ->hintIcon('heroicon-o-scale')
                             ->options(
                                 fn () => WakeCategoryScheme::with('categories')
@@ -147,8 +150,8 @@ class StandResource extends Resource
                             )
                             ->required(),
                         Select::make('max_aircraft_id')
-                            ->label(__('form.stands.aircraft_type.label'))
-                            ->helperText(__('form.stands.aircraft_type.helper'))
+                            ->label(self::translateFormPath('aircraft_type.label'))
+                            ->helperText(self::translateFormPath('aircraft_type.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->options(
                                 fn () => Aircraft::all()->mapWithKeys(
@@ -157,16 +160,16 @@ class StandResource extends Resource
                             )
                             ->searchable(!App::runningUnitTests()),
                         Toggle::make('closed_at')
-                            ->label(__('form.stands.used_for_allocation.label'))
-                            ->helperText(__('form.stands.used_for_allocation.helper'))
+                            ->label(self::translateFormPath('used_for_allocation.label'))
+                            ->helperText(self::translateFormPath('used_for_allocation.helper'))
                             ->default(true)
                             ->afterStateHydrated(static function (Toggle $component, $state): void {
                                 $component->state(is_null($state));
                             })
                             ->required(),
                         TextInput::make('assignment_priority')
-                            ->label(__('form.stands.allocation_priority.label'))
-                            ->helperText(__('form.stands.allocation_priority.helper'))
+                            ->label(self::translateFormPath('allocation_priority.label'))
+                            ->helperText(self::translateFormPath('allocation_priority.helper'))
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(9999)
@@ -181,38 +184,36 @@ class StandResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.stands.columns.id'))
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('airfield.code')
-                    ->label(__('table.stands.columns.airfield'))
+                    ->label(self::translateTablePath('columns.airfield'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('terminal.description')
-                    ->label(__('table.stands.columns.terminal'))
-                    ->default('--')
-                    ->sortable()
-                    ->searchable(),
+                    ->label(self::translateTablePath('columns.terminal'))
+                    ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('wakeCategory.code')
+                    ->label(self::translateTablePath('columns.max_wtc')),
+                Tables\Columns\TextColumn::make('maxAircraft.code')
+                    ->label(self::translateTablePath('columns.max_size'))
+                    ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
-                    ->label(__('table.stands.columns.airlines'))
-                    ->default(['--'])
-                    ->sortable(),
+                    ->label(self::translateTablePath('columns.airlines'))
+                    ->default([self::DEFAULT_COLUMN_VALUE]),
                 Tables\Columns\BooleanColumn::make('closed_at')
-                    ->label(__('table.stands.columns.airfield'))
+                    ->label(self::translateTablePath('columns.used'))
                     ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
                         return $column->getRecord()->closed_at === null;
                     }),
                 Tables\Columns\TextColumn::make('assignment_priority')
-                    ->label(__('table.stands.columns.priority'))
+                    ->label(self::translateTablePath('columns.priority'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('assignedCallsign')
-                    ->label(__('table.stands.columns.allocation'))
+                    ->label(self::translateTablePath('columns.allocation'))
                     ->default('--'),
             ])->defaultSort('airfield.code')
             ->actions([
@@ -221,7 +222,36 @@ class StandResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])->defaultSort('airfield.code');
+            ])->defaultSort('airfield.code')
+            ->filters([
+                Tables\Filters\SelectFilter::make('airfield')
+                    ->label(self::translateFilterPath('airfield'))
+                    ->options(SelectOptions::airfields())
+                    ->searchable()
+                    ->query(
+                        function (Builder $query, array $data) {
+                            if (empty($data['value'])) {
+                                return $query;
+                            }
+
+                            return $query->where('airfield_id', $data['value']);
+                        }
+                    ),
+                Tables\Filters\MultiSelectFilter::make('airlines')
+                    ->label(self::translateFilterPath('airlines'))
+                    ->options(SelectOptions::airlines())
+                    ->query(
+                        function (Builder $query, array $data) {
+                            if (empty($data['values'])) {
+                                return $query;
+                            }
+
+                            return $query->whereHas('airlines', function (Builder $query) use ($data) {
+                                return $query->whereIn('airlines.id', $data['values']);
+                            });
+                        }
+                    ),
+            ]);
     }
 
     public static function getRelations(): array
@@ -240,5 +270,10 @@ class StandResource extends Resource
             'edit' => Pages\EditStand::route('/{record}/edit'),
             'view' => Pages\ViewStand::route('/{record}'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'stands';
     }
 }

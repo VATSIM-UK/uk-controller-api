@@ -7,6 +7,7 @@ use App\Filament\Resources\ControllerPositionResource;
 use App\Filament\Resources\ControllerPositionResource\Pages\ListControllerPositions;
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 class ControllerPositionResourceTest extends BaseFilamentTestCase
@@ -25,10 +26,11 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
             ->assertSet('data.receives_prenotes', false);
     }
 
-    public function testItCreatesAControllerPosition()
+    public function testItCreatesAControllerPositionWithMinimumData()
     {
         Livewire::test(ControllerPositionResource\Pages\CreateControllerPosition::class)
             ->set('data.callsign', 'LON_W_CTR')
+            ->set('data.description', '')
             ->set('data.frequency', '126.075')
             ->set('data.requests_departure_releases', true)
             ->set('data.receives_departure_releases', true)
@@ -41,6 +43,34 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
             'controller_positions',
             [
                 'callsign' => 'LON_W_CTR',
+                'description' => null,
+                'frequency' => '126.075',
+                'requests_departure_releases' => 1,
+                'receives_departure_releases' => 1,
+                'sends_prenotes' => 0,
+                'receives_prenotes' => 1,
+            ]
+        );
+    }
+
+    public function testItCreatesAControllerPositionWithAllData()
+    {
+        Livewire::test(ControllerPositionResource\Pages\CreateControllerPosition::class)
+            ->set('data.callsign', 'LON_W_CTR')
+            ->set('data.description', 'London West (Bandbox)')
+            ->set('data.frequency', '126.075')
+            ->set('data.requests_departure_releases', true)
+            ->set('data.receives_departure_releases', true)
+            ->set('data.sends_prenotes', false)
+            ->set('data.receives_prenotes', true)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'controller_positions',
+            [
+                'callsign' => 'LON_W_CTR',
+                'description' => 'London West (Bandbox)',
                 'frequency' => '126.075',
                 'requests_departure_releases' => 1,
                 'receives_departure_releases' => 1,
@@ -63,6 +93,20 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.callsign']);
     }
 
+    public function testItDoesntCreateAPositionDescriptionTooLong()
+    {
+        Livewire::test(ControllerPositionResource\Pages\CreateControllerPosition::class)
+            ->set('data.callsign', 'LON_W_CTR')
+            ->set('data.description', Str::padRight('', 256, 'a'))
+            ->set('data.frequency', '126.075')
+            ->set('data.requests_departure_releases', true)
+            ->set('data.receives_departure_releases', true)
+            ->set('data.sends_prenotes', false)
+            ->set('data.receives_prenotes', true)
+            ->call('create')
+            ->assertHasErrors(['data.description']);
+    }
+
     public function testItDoesntCreateAPositionInvalidFrequency()
     {
         Livewire::test(ControllerPositionResource\Pages\CreateControllerPosition::class)
@@ -80,6 +124,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(ControllerPositionResource\Pages\EditControllerPosition::class, ['record' => 1])
             ->set('data.callsign', 'EGLL_S_TWR')
+            ->set('data.description', '')
             ->set('data.frequency', '126.075')
             ->set('data.requests_departure_releases', false)
             ->set('data.receives_departure_releases', false)
@@ -92,6 +137,34 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
             'controller_positions',
             [
                 'callsign' => 'EGLL_S_TWR',
+                'description' => null,
+                'frequency' => '126.075',
+                'requests_departure_releases' => false,
+                'receives_departure_releases' => false,
+                'sends_prenotes' => true,
+                'receives_prenotes' => false,
+            ]
+        );
+    }
+
+    public function testItEditsAControllerPositionAllData()
+    {
+        Livewire::test(ControllerPositionResource\Pages\EditControllerPosition::class, ['record' => 1])
+            ->set('data.callsign', 'EGLL_S_TWR')
+            ->set('data.description', 'Foo')
+            ->set('data.frequency', '126.075')
+            ->set('data.requests_departure_releases', false)
+            ->set('data.receives_departure_releases', false)
+            ->set('data.sends_prenotes', true)
+            ->set('data.receives_prenotes', false)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'controller_positions',
+            [
+                'callsign' => 'EGLL_S_TWR',
+                'description' => 'Foo',
                 'frequency' => '126.075',
                 'requests_departure_releases' => false,
                 'receives_departure_releases' => false,
@@ -107,6 +180,14 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
             ->set('data.callsign', 'EGLL_N_APP')
             ->call('save')
             ->assertHasErrors(['data.callsign']);
+    }
+
+    public function testItDoesntEditAPositionDescriptionTooLong()
+    {
+        Livewire::test(ControllerPositionResource\Pages\EditControllerPosition::class, ['record' => 1])
+            ->set('data.description', Str::padRight('', 256, 'a'))
+            ->call('save')
+            ->assertHasErrors(['data.description']);
     }
 
     public function testItDoesntEditAPositionInvalidFrequency()

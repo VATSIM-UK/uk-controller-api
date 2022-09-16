@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use App\Filament\Resources\TranslatesStrings;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class AirlinesRelationManager extends RelationManager
 {
+    use TranslatesStrings;
+    
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'airlines';
     protected static ?string $inverseRelationship = 'stands';
@@ -21,7 +24,7 @@ class AirlinesRelationManager extends RelationManager
 
     protected function getTableDescription(): ?string
     {
-        return __('table.stands.airlines.description');
+        return self::translateTablePath('description');
     }
 
     public static function table(Table $table): Table
@@ -29,45 +32,45 @@ class AirlinesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('icao_code')
-                    ->label(__('table.stands.airlines.columns.icao'))
+                    ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('destination')
-                    ->label(__('table.stands.airlines.columns.destination'))
+                    ->label(self::translateTablePath('columns.destination'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('callsign_slug')
-                    ->label(__('table.stands.airlines.columns.callsign')),
+                    ->label(self::translateTablePath('columns.callsign')),
                 Tables\Columns\TextColumn::make('priority')
-                    ->label(__('table.stands.airlines.columns.priority')),
+                    ->label(self::translateTablePath('columns.priority')),
                 Tables\Columns\TextColumn::make('not_before')
-                    ->label(__('table.stands.airlines.columns.not_before'))
+                    ->label(self::translateTablePath('columns.not_before'))
                     ->date('H:i'),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-airline')
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect()
-                            ->label(__('form.stands.airlines.icao.label'))
+                            ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         TextInput::make('destination')
-                            ->label(__('form.stands.airlines.destination.label'))
-                            ->helperText(__('form.stands.airlines.destination.helper'))
+                            ->label(self::translateFormPath('destination.label'))
+                            ->helperText(self::translateFormPath('destination.helper'))
                             ->maxLength(4),
                         TextInput::make('callsign_slug')
-                            ->label(__('form.stands.airlines.callsign.label'))
-                            ->helperText(__('form.stands.airlines.callsign.helper'))
+                            ->label(self::translateFormPath('callsign.label'))
+                            ->helperText(self::translateFormPath('callsign.helper'))
                             ->maxLength(4),
                         TextInput::make('priority')
-                            ->label(__('form.stands.airlines.priority.label'))
-                            ->helperText(__('form.stands.airlines.priority.helper'))
+                            ->label(self::translateFormPath('priority.label'))
+                            ->helperText(self::translateFormPath('priority.helper'))
                             ->default(100)
                             ->numeric()
                             ->minValue(1)
                             ->maxValue(9999)
                             ->required(),
                         TimePicker::make('not_before')
-                            ->label(__('form.stands.airlines.not_before.label'))
-                            ->helperText(__('form.stands.airlines.not_before.helper'))
+                            ->label(self::translateFormPath('not_before.label'))
+                            ->helperText(self::translateFormPath('not_before.helper'))
                             ->displayFormat('H:i')
                             ->afterStateUpdated(function (Closure $get, Closure $set) {
                                 if ($get('not_before') !== null) {
@@ -81,12 +84,17 @@ class AirlinesRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\DetachAction::make('unpair-airline')
-                    ->label(__('form.stands.airlines.remove.label'))
+                    ->label(self::translateFormPath('remove.label'))
                     ->using(function (Tables\Actions\DetachAction $action) {
                         DB::table('airline_stand')
                             ->where('id', $action->getRecord()->pivot_id)
                             ->delete();
                     })
             ]);
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'stands.airlines';
     }
 }

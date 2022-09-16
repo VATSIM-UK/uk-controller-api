@@ -1,9 +1,14 @@
 <?php
 
+
 return [
     'callsign' => [
         'label' => 'Callsign',
         'helper' => 'e.g. EGLL_S_TWR'
+    ],
+    'description' => [
+        'label' => 'Description',
+        'helper' => 'e.g. TC VATON'
     ],
     'frequency' => [
         'label' => 'Frequency',
@@ -24,5 +29,11 @@ return [
     'receives_prenotes' => [
         'label' => 'Receive prenotes',
         'helper' => 'Can this controller receive a prenote message from another controller',
+    ],
+    'identifiers_section'=> [
+        'label' => 'Identifiers',
+    ],
+    'coordination_section' => [
+        'label' => 'Coordination',
     ],
 ];

@@ -8,6 +8,6 @@ class ControllersRelationManager extends AbstractControllersRelationManager
 {
     protected static function translationPathRoot(): string
     {
-        return 'prenotes';
+        return 'prenotes.controller_positions';
     }
 }

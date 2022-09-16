@@ -14,6 +14,8 @@ use Filament\Tables;
 
 class PrenoteResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = Prenote::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
@@ -24,7 +26,7 @@ class PrenoteResource extends Resource
         return $form
             ->schema([
                 TextInput::make('description')
-                    ->label(__('form.prenotes.description.label'))
+                    ->label(self::translateFormPath('description.label'))
                     ->maxLength(255)
                     ->required(),
             ]);
@@ -35,11 +37,11 @@ class PrenoteResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
-                    ->label(__('table.prenotes.columns.description'))
+                    ->label(self::translateTablePath('columns.description'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
-                    ->label(__('table.prenotes.columns.controllers'))
+                    ->label(self::translateTablePath('columns.controllers'))
                     ->searchable(),
             ])
             ->actions([
@@ -63,5 +65,10 @@ class PrenoteResource extends Resource
             'view' => Pages\ViewPrenote::route('/{record}'),
             'edit' => Pages\EditPrenote::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'prenotes';
     }
 }
