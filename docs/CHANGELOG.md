@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.20.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.0...6.20.1) (2022-09-16)
+
+
+### Performance Improvements
+
+* select option caching ([677a1d8](https://github.com/VATSIM-UK/uk-controller-api/commit/677a1d8276f29d16d513c16dc69bdec52f86fe83))
+
 ## [6.20.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.19.0...6.20.0) (2022-09-16)
 
 
