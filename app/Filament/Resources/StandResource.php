@@ -32,6 +32,8 @@ use Illuminate\Validation\Rule;
 
 class StandResource extends Resource
 {
+    private const DEFAULT_COLUMN_VALUE = '--';
+
     protected static ?string $model = Stand::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
@@ -188,7 +190,7 @@ class StandResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('terminal.description')
                     ->label(__('table.stands.columns.terminal'))
-                    ->default('--'),
+                    ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->sortable()
@@ -197,10 +199,10 @@ class StandResource extends Resource
                     ->label(__('table.stands.columns.max_wtc')),
                 Tables\Columns\TextColumn::make('maxAircraft.code')
                     ->label(__('table.stands.columns.max_size'))
-                    ->default(['--']),
+                    ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
                     ->label(__('table.stands.columns.airlines'))
-                    ->default(['--']),
+                    ->default([self::DEFAULT_COLUMN_VALUE]),
                 Tables\Columns\BooleanColumn::make('closed_at')
                     ->label(__('table.stands.columns.used'))
                     ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
