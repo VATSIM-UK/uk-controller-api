@@ -3,9 +3,11 @@
 namespace App\Filament\Helpers;
 
 use App\Models\Aircraft\Aircraft;
+use App\Models\Aircraft\WakeCategoryScheme;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Handoff;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use LogicException;
@@ -17,6 +19,8 @@ class SelectOptions
         Airfield::class => 'SELECT_OPTIONS_AIRFIELDS',
         Airline::class => 'SELECT_OPTIONS_AIRLINES',
         ControllerPosition::class => 'SELECT_OPTIONS_CONTROLLER_POSITIONS',
+        Handoff::class => 'SELECT_OPTIONS_HANDOFFS',
+        WakeCategoryScheme::class => 'SELECT_OPTIONS_WAKE_SCHEMES',
     ];
 
     public static function aircraftTypes(): Collection
@@ -55,6 +59,26 @@ class SelectOptions
             ControllerPosition::class,
             fn (): Collection => ControllerPosition::all()->mapWithKeys(
                 fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
+            )->toBase()
+        );
+    }
+
+    public static function wakeSchemes(): Collection
+    {
+        return self::getOptions(
+            WakeCategoryScheme::class,
+            fn (): Collection => WakeCategoryScheme::all()->mapWithKeys(
+                fn (WakeCategoryScheme $scheme) => [$scheme->id => $scheme->name]
+            )->toBase()
+        );
+    }
+
+    public static function handoffs(): Collection
+    {
+        return self::getOptions(
+            Handoff::class,
+            fn (): Collection => Handoff::all()->mapWithKeys(
+                fn (Handoff $handoff) => [$handoff->id => $handoff->description]
             )->toBase()
         );
     }

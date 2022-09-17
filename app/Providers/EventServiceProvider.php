@@ -25,9 +25,11 @@ use App\Listeners\Squawk\RecordSquawkAssignmentHistory;
 use App\Listeners\Stand\DeleteAssignmentHistoryOnUnassignment;
 use App\Listeners\Stand\RecordStandAssignmentHistory;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Aircraft\WakeCategoryScheme;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Handoff;
 use App\Models\Hold\Hold;
 use App\Models\Stand\Stand;
 use App\Observers\HoldObserver;
@@ -82,6 +84,8 @@ class EventServiceProvider extends ServiceProvider
         Aircraft::class => SelectOptionsObserver::class,
         Airfield::class => SelectOptionsObserver::class,
         Airline::class => SelectOptionsObserver::class,
+        Handoff::class => SelectOptionsObserver::class,
         ControllerPosition::class => SelectOptionsObserver::class,
+        WakeCategoryScheme::class => SelectOptionsObserver::class,
     ];
 }
