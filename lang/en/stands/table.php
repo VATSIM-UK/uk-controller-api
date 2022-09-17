@@ -10,7 +10,6 @@ return [
         'airlines' => 'Airlines',
         'used' => 'Used for Allocation',
         'priority' => 'Allocation Priority',
-        'allocation' => 'Allocated To',
     ],
     'airlines' => [
         'description' => 'Airlines can be assigned to specific stands based on various parameters.',

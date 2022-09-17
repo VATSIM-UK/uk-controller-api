@@ -177,14 +177,12 @@ class StandResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
-                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('terminal.description')
                     ->label(self::translateTablePath('columns.terminal'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
-                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('wakeCategory.code')
                     ->label(self::translateTablePath('columns.max_wtc')),
@@ -203,10 +201,7 @@ class StandResource extends Resource
                     ->label(self::translateTablePath('columns.priority'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('assignedCallsign')
-                    ->label(self::translateTablePath('columns.allocation'))
-                    ->default('--'),
-            ])->defaultSort('airfield.code')
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -242,8 +237,7 @@ class StandResource extends Resource
                             });
                         }
                     ),
-            ])
-            ->defaultSort('airfield.code');
+            ]);
     }
 
     public static function getRelations(): array
