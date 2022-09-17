@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.20.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.1...6.20.2) (2022-09-17)
+
+
+### Performance Improvements
+
+* stand table performance and ordering ([952bbda](https://github.com/VATSIM-UK/uk-controller-api/commit/952bbda15e225e4a80ab3cab236fc9f18d6424e5))
+
 ## [6.20.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.0...6.20.1) (2022-09-16)
 
 
