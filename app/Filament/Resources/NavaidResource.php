@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Resources\NavaidResource\Pages;
 use App\Filament\Resources\NavaidResource\RelationManagers;
 use App\Models\Navigation\Navaid;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 class NavaidResource extends Resource
 {
     use TranslatesStrings;
+    use HasCoordinates;
 
     protected static ?string $model = Navaid::class;
 
@@ -41,20 +43,8 @@ class NavaidResource extends Resource
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
                     ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
-                TextInput::make('latitude')
-                    ->required()
-                    ->numeric('decimal:7')
-                    ->minValue(-90)
-                    ->maxValue(90)
-                    ->label(self::translateFormPath('latitude.label'))
-                    ->helperText(self::translateFormPath('latitude.helper')),
-                TextInput::make('longitude')
-                    ->required()
-                    ->numeric('decimal:7')
-                    ->minValue(-180)
-                    ->maxValue(180)
-                    ->label(self::translateFormPath('longitude.label'))
-                    ->helperText(self::translateFormPath('longitude.helper')),
+                self::latitudeInput(),
+                self::longitudeInput()
             ]);
     }
 
