@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
@@ -11,11 +12,9 @@ use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
-use App\Models\User\Role;
 use App\Models\User\User;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DefaultFilamentPolicy;
-use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -41,6 +40,7 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         // The defaults
+        Airfield::class => DefaultFilamentPolicy::class,
         Airline::class => DefaultFilamentPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
