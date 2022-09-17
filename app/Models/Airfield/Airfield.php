@@ -40,7 +40,6 @@ class Airfield extends Model implements MinStackDataProviderInterface
     ];
 
     protected $hidden = [
-        'standard_high',
         'created_at',
         'updated_at',
     ];
