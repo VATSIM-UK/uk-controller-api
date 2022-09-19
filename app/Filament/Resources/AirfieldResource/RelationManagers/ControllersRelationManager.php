@@ -11,7 +11,7 @@ class ControllersRelationManager extends AbstractControllersRelationManager
 {
     protected static ?string $inverseRelationship = 'topDownAirfields';
 
-    function getTableDescription(): ?string
+    public function getTableDescription(): ?string
     {
         return self::translateTablePath('table.description');
     }
