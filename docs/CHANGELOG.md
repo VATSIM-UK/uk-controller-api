@@ -1,5 +1,21 @@
 # UK Controller Plugin API Changelog
 
+## [6.22.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.21.0...6.22.0) (2022-09-19)
+
+
+### Features
+
+* allow top-down ordering for airfields ([5fb3ff4](https://github.com/VATSIM-UK/uk-controller-api/commit/5fb3ff4d9780c694d436627f08a2023e55976944))
+* automatically create default handoff for airfield ([0173963](https://github.com/VATSIM-UK/uk-controller-api/commit/017396318df1aa87644bc50638e84125d9ed8c29))
+* dont display default handoffs on handoff page ([d4391d6](https://github.com/VATSIM-UK/uk-controller-api/commit/d4391d6a77e242e8fba22dead0ae54e46036d306))
+* only show non airfield handoffs for sids ([76f2560](https://github.com/VATSIM-UK/uk-controller-api/commit/76f2560977ae7eb03f8401323bad6f64996c217f))
+* updating controllers changes default handoff ([5e6ce0c](https://github.com/VATSIM-UK/uk-controller-api/commit/5e6ce0cc04fb0760e856cb732f4c2bcda200ac3d))
+
+
+### Data Updates
+
+* missing handoff orders ([198f4f0](https://github.com/VATSIM-UK/uk-controller-api/commit/198f4f027cd9572b2574ca9fde26b6ee8537e61d))
+
 ## [6.21.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.2...6.21.0) (2022-09-19)
 
 
