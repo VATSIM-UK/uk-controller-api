@@ -859,19 +859,31 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    protected function writeTableActions(): array
-    {
-        return [];
-    }
-
-    protected function readOnlyTableActions(): array
-    {
-        return [];
-    }
-
     protected function resourceListingClass(): string
     {
         return ListAirfields::class;
+    }
+
+    protected function tableActionRecordClass(): array
+    {
+        return [ControllersRelationManager::class => ControllerPosition::class];
+    }
+
+    protected function tableActionRecordId(): array
+    {
+        return [ControllersRelationManager::class => 1];
+    }
+
+    protected function writeTableActions(): array
+    {
+        return [
+            ControllersRelationManager::class => [
+                'attach',
+                'detach',
+                'moveUp',
+                'moveDown',
+            ],
+        ];
     }
 
     protected function writeResourceTableActions(): array
