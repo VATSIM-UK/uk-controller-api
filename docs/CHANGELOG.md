@@ -1,5 +1,22 @@
 # UK Controller Plugin API Changelog
 
+## [6.21.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.2...6.21.0) (2022-09-19)
+
+
+### Features
+
+* display airfields in a table ([1197f14](https://github.com/VATSIM-UK/uk-controller-api/commit/1197f140f6a6786e8a1f6e180d5706eb903c29f8))
+
+
+### Bug Fixes
+
+* model properties ([886ca6f](https://github.com/VATSIM-UK/uk-controller-api/commit/886ca6fd1c65901e81669eec74ff75f783959df1))
+
+
+### Performance Improvements
+
+* cache more select options ([4548443](https://github.com/VATSIM-UK/uk-controller-api/commit/45484430779b1a298629a07cfdcedc3825ed2d3c))
+
 ## [6.20.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.1...6.20.2) (2022-09-17)
 
 
