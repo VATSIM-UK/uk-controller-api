@@ -429,4 +429,81 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, SelectOptions::wakeSchemes());
         $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_WAKE_SCHEMES'));
     }
+
+    public function testItGetsAndCachesNonAirfieldHandoffs()
+    {
+        $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
+        Airfield::findOrFail(1)->update(['handoff_id' => $airfieldHandoff->id]);
+        $expected = collect([
+            1 => 'foo',
+            2 => 'bar',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::nonAirfieldHandoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_NON_AIRFIELD_HANDOFFS'));
+    }
+
+    public function testItGetsCachedNonAirfieldHandoffsWithoutQuerying()
+    {
+        $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
+        Airfield::findOrFail(1)->update(['handoff_id' => $airfieldHandoff->id]);
+        
+        $expected = collect([
+            1 => 'foo',
+            2 => 'bar',
+        ]);
+
+        Cache::forever('SELECT_OPTIONS_NON_AIRFIELD_HANDOFFS', $expected);
+        Handoff::withoutEvents(function () {
+            Handoff::where('id', 1)->update(['description' => 'LOL']);
+        });
+
+        $this->assertEquals($expected, SelectOptions::nonAirfieldHandoffs());
+    }
+
+    public function testDeletingAHandoffRebuildsTheNonAirfieldCache()
+    {
+        $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
+        Airfield::findOrFail(1)->update(['handoff_id' => $airfieldHandoff->id]);
+        
+        $expected = collect([
+            1 => 'foo',
+        ]);
+
+        Handoff::findOrFail(2)->delete();
+        $this->assertEquals($expected, SelectOptions::nonAirfieldHandoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_NON_AIRFIELD_HANDOFFS'));
+    }
+
+    public function testCreatingAHandoffRebuildsNonAirfieldTheCache()
+    {
+        $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
+        Airfield::findOrFail(1)->update(['handoff_id' => $airfieldHandoff->id]);
+        
+        $newHandoff = Handoff::create(['description' => 'lol']);
+
+        $expected = collect([
+            1 => 'foo',
+            2 => 'bar',
+            $newHandoff->id => 'lol',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::nonAirfieldHandoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_NON_AIRFIELD_HANDOFFS'));
+    }
+
+    public function testUpdatingAHandoffRebuildsTheNonAirfieldCache()
+    {
+        $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
+        Airfield::findOrFail(1)->update(['handoff_id' => $airfieldHandoff->id]);
+        
+        $expected = collect([
+            1 => 'lol',
+            2 => 'bar',
+        ]);
+
+        Handoff::where('id', 1)->update(['description' => 'lol']);
+        $this->assertEquals($expected, SelectOptions::nonAirfieldHandoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_NON_AIRFIELD_HANDOFFS'));
+    }
 }
