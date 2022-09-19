@@ -39,7 +39,7 @@ class AirfieldResource extends Resource
                             ->required()
                             ->label(self::translateFormPath('code.label'))
                             ->helperText(self::translateFormPath('code.helper'))
-                            ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord),
+                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
                         ...self::coordinateInputs(),
                         TextInput::make('elevation')
                             ->required()
