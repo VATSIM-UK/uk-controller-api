@@ -30,4 +30,9 @@ trait HasCoordinates
             ->label(self::translateFormPath('longitude.label'))
             ->helperText(self::translateFormPath('longitude.helper'));
     }
+
+    public static function coordinateInputs(): array
+    {
+        return [self::latitudeInput(), self::longitudeInput()];
+    }
 }
