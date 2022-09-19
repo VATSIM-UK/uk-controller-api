@@ -5,11 +5,14 @@ namespace App\Filament\Resources\RelationManagers;
 use App\Filament\Resources\TranslatesStrings;
 use App\Helpers\Controller\FrequencyFormatter;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\HasControllerHierarchy;
 use App\Services\ControllerPositionHierarchyService;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Abstract relations manager for managing controller hierarchies
@@ -32,11 +35,11 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.callsign.label')),
                 Tables\Columns\TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency.label'))
-                    ->formatStateUsing(fn (float $state) => FrequencyFormatter::formatFrequency($state)),
+                    ->formatStateUsing(fn(float $state) => FrequencyFormatter::formatFrequency($state)),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->form(fn (Tables\Actions\AttachAction $action, AbstractControllersRelationManager $livewire) => [
+                    ->form(fn(Tables\Actions\AttachAction $action, AbstractControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
                         Forms\Components\Select::make('insert_after')
                             ->label(self::translateTablePath('attach_form.insert_after.label'))
@@ -45,18 +48,18 @@ abstract class AbstractControllersRelationManager extends RelationManager
                                 $livewire->getOwnerRecord()
                                     ->controllers
                                     ->mapWithKeys(
-                                        fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
+                                        fn(ControllerPosition $controller) => [$controller->id => $controller->callsign]
                                     )
                             ),
                     ])
                     ->using(function (AbstractControllersRelationManager $livewire, $data) {
-                        ControllerPositionHierarchyService::insertPositionIntoHierarchy(
+                        self::doUpdate(fn() => ControllerPositionHierarchyService::insertPositionIntoHierarchy(
                             $livewire->getOwnerRecord(),
                             ControllerPosition::findOrFail($data['recordId']),
                             after: isset($data['insert_after'])
                                 ? ControllerPosition::findOrFail($data['insert_after'])
                                 : null
-                        );
+                        ), $livewire->getOwnerRecord());
                     })
                     ->disableAttachAnother()
                     ->label(self::translateTablePath('attach_action.label'))
@@ -66,33 +69,46 @@ abstract class AbstractControllersRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\Action::make('moveUp')
                     ->action(function (ControllerPosition $record) {
-                        ControllerPositionHierarchyService::moveControllerInHierarchy(
+                        self::doUpdate(fn() => ControllerPositionHierarchyService::moveControllerInHierarchy(
                             $record->pivot->pivotParent,
                             $record,
                             true
-                        );
+                        ), $record->pivot->pivotParent);
                     })
                     ->label(self::translateTablePath('move_up_action.label'))
                     ->icon('heroicon-o-arrow-up')
-                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn(AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\Action::make('moveDown')
                     ->action(function (ControllerPosition $record) {
-                        ControllerPositionHierarchyService::moveControllerInHierarchy(
+                        self::doUpdate(fn() => ControllerPositionHierarchyService::moveControllerInHierarchy(
                             $record->pivot->pivotParent,
                             $record,
                             false
-                        );
+                        ), $record->pivot->pivotParent);
                     })
                     ->label(self::translateTablePath('move_down_action.label'))
                     ->icon('heroicon-o-arrow-down')
-                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn(AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\DetachAction::make()
                     ->using(function (ControllerPosition $record) {
-                        ControllerPositionHierarchyService::removeFromHierarchy(
+                        self::doUpdate(fn() => ControllerPositionHierarchyService::removeFromHierarchy(
                             $record->pivot->pivotParent,
                             $record
-                        );
+                        ), $record->pivot->pivotParent);
                     })->label(self::translateTablePath('detach_action.label')),
             ]);
+    }
+
+    private static function doUpdate(callable $update, Model $ownerRecord)
+    {
+        DB::transaction(function () use ($update, $ownerRecord) {
+            $update();
+            $ownerRecord->load('controllers');
+            static::postUpdate($ownerRecord);
+        });
+    }
+
+    protected static function postUpdate(Model $ownerRecord): void
+    {
     }
 }
