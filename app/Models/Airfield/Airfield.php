@@ -2,6 +2,8 @@
 
 namespace App\Models\Airfield;
 
+use App\Models\Controller\Handoff;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Location\Coordinate;
 use App\Models\Stand\Stand;
 use App\Models\Airfield\Terminal;
@@ -36,7 +38,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'wake_category_scheme_id',
         'handoff_id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected $hidden = [
@@ -49,6 +51,12 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'longitude' => 'float',
         'elevation' => 'integer',
     ];
+
+
+    public function handoff(): BelongsTo
+    {
+        return $this->belongsTo(Handoff::class);
+    }
 
     /**
      * @return HasOne

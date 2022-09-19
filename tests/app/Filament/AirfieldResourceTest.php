@@ -8,6 +8,7 @@ use App\Filament\Resources\AirfieldResource\Pages\CreateAirfield;
 use App\Filament\Resources\AirfieldResource\Pages\EditAirfield;
 use App\Filament\Resources\AirfieldResource\Pages\ListAirfields;
 use App\Models\Airfield\Airfield;
+use App\Models\Controller\Handoff;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -51,7 +52,39 @@ class AirfieldResourceTest extends BaseFilamentTestCase
                 'transition_altitude' => 3000,
                 'standard_high' => 1,
                 'wake_category_scheme_id' => 1,
-                'handoff_id' => null,
+            ]
+        );
+    }
+
+    public function testItCreatesADefaultHandoffWithTheAirfield()
+    {
+        $this->assertFalse(
+            Handoff::where('description', 'Default departure handoff for EGKK')->exists()
+        );
+        Livewire::test(CreateAirfield::class)
+            ->set('data.code', 'EGKK')
+            ->set('data.latitude', 12.3)
+            ->set('data.longitude', 45.6)
+            ->set('data.elevation', 123)
+            ->set('data.wake_category_scheme_id', 1)
+            ->set('data.transition_altitude', 3000)
+            ->set('data.standard_high', true)
+            ->call('create')
+            ->assertHasNoErrors();
+        
+        $handoff = Handoff::where('description', 'Default departure handoff for EGKK')->firstOrFail();
+
+        $this->assertDatabaseHas(
+            'airfield',
+            [
+                'code' => 'EGKK',
+                'latitude' => 12.3,
+                'longitude' => 45.6,
+                'elevation' => 123,
+                'transition_altitude' => 3000,
+                'standard_high' => 1,
+                'wake_category_scheme_id' => 1,
+                'handoff_id' => $handoff->id,
             ]
         );
     }
@@ -73,6 +106,20 @@ class AirfieldResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(CreateAirfield::class)
             ->set('data.code', 'EGLLLL')
+            ->set('data.latitude', 12.3)
+            ->set('data.longitude', 45.6)
+            ->set('data.elevation', 123)
+            ->set('data.wake_category_scheme_id', 1)
+            ->set('data.transition_altitude', 3000)
+            ->set('data.standard_high', true)
+            ->call('create')
+            ->assertHasErrors(['data.code']);
+    }
+
+    public function testItDoesntCreateAirfieldDuplicateIcao()
+    {
+        Livewire::test(CreateAirfield::class)
+            ->set('data.code', 'EGLL')
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
             ->set('data.elevation', 123)

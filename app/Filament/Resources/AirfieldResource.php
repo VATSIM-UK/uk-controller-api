@@ -35,6 +35,7 @@ class AirfieldResource extends Resource
                     ->label(self::translateFormPath('fieldset_identifiers.label'))
                     ->schema([
                         TextInput::make('code')
+                            ->unique(ignoreRecord: true)
                             ->rule(new AirfieldIcao())
                             ->required()
                             ->label(self::translateFormPath('code.label'))
