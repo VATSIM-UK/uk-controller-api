@@ -40,6 +40,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'elevation' => 1,
                 'transition_altitude' => 6000,
                 'wake_category_scheme_id' => 1,
+                'standard_high' => 1,
                 'controllers' => [
                     1,
                     2,
@@ -58,6 +59,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'elevation' => 1,
                 'transition_altitude' => 6000,
                 'wake_category_scheme_id' => 1,
+                'standard_high' => 0,
                 'controllers' => [
                     4,
                 ],
@@ -70,6 +72,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'elevation' => 1,
                 'transition_altitude' => 6000,
                 'wake_category_scheme_id' => 1,
+                'standard_high' => 1,
                 'controllers' => [],
                 'pairing-prenotes' => [],
                 'handoff_id' => null,
