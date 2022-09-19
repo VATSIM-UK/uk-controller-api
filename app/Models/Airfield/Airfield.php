@@ -3,10 +3,10 @@
 namespace App\Models\Airfield;
 
 use App\Models\Controller\Handoff;
+use App\Models\Controller\HasControllerHierarchy;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Location\Coordinate;
 use App\Models\Stand\Stand;
-use App\Models\Airfield\Terminal;
 use App\Models\Aircraft\SpeedGroup;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Airfield extends Model implements MinStackDataProviderInterface
+class Airfield extends Model implements MinStackDataProviderInterface, HasControllerHierarchy
 {
     use HasFactory;
 
