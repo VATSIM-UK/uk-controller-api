@@ -6,9 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
-use OutOfRangeException;
 
 class AirfieldServiceTest extends BaseFunctionalTestCase
 {
@@ -83,132 +81,13 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testItInsertsIntoTopdownOrderBefore()
-    {
-        AirfieldService::insertIntoOrderBefore('EGLL', 'FOO_CTR', 'EGLL_S_TWR');
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => $this->newController->id,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 3,
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionIfBeforePositionNotInTopdownOrder()
-    {
-        $this->expectException(OutOfRangeException::class);
-        AirfieldService::insertIntoOrderBefore('EGLL', 'LON_C_CTR', 'LON_C_CTR');
-    }
-
-    public function testItInsertsIntoTopdownOrderAfter()
-    {
-        AirfieldService::insertIntoOrderAfter('EGLL', 'FOO_CTR', 'EGLL_S_TWR');
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => $this->newController->id,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 3,
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionIfAfterPositionNotInTopdownOrder()
-    {
-        $this->expectException(OutOfRangeException::class);
-        AirfieldService::insertIntoOrderAfter('EGLL', 'LON_C_CTR', 'LON_C_CTR');
-    }
-
-    public function testItDeletesFromTopdownOrder()
-    {
-        AirfieldService::insertIntoOrderBefore('EGLL', 'FOO_CTR', 'EGLL_S_TWR');
-        AirfieldService::removeFromTopDownsOrder('EGLL', 'FOO_CTR');
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => 1,
-                'order' => 1,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => 2,
-                'order' => 2,
-            ]
-        );
-
-        $this->assertDatabaseHas(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => 3,
-                'order' => 3,
-            ]
-        );
-
-        $this->assertDatabaseMissing(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-                'controller_position_id' => $this->newController->id,
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionIfDeletePositionNotInTopdownOrder()
-    {
-        $this->expectException(OutOfRangeException::class);
-        AirfieldService::removeFromTopDownsOrder('EGLL', 'LON_C_CTR');
-    }
-
     public function testItUpdatesAllTopDownsThatContainAPositionBefore()
     {
-        AirfieldService::insertIntoOrderBefore('EGBB', 'EGLL_N_APP', 'LON_C_CTR');
+        ControllerPositionHierarchyService::insertPositionIntoHierarchy(
+            Airfield::find(2),
+            ControllerPosition::find(2),
+            before: ControllerPosition::find(4)
+        );
         AirfieldService::updateAllTopDownsWithPosition('EGLL_N_APP', 'FOO_CTR', true);
 
         // TopDown one
@@ -279,7 +158,11 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesAllTopDownsThatContainAPositionAfter()
     {
-        AirfieldService::insertIntoOrderBefore('EGBB', 'EGLL_N_APP', 'LON_C_CTR');
+        ControllerPositionHierarchyService::insertPositionIntoHierarchy(
+            Airfield::find(2),
+            ControllerPosition::find(2),
+            before: ControllerPosition::find(4)
+        );
         AirfieldService::updateAllTopDownsWithPosition('EGLL_N_APP', 'FOO_CTR', false);
 
         // TopDown one
@@ -350,8 +233,16 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesFromAllTopDowns()
     {
-        AirfieldService::insertIntoOrderAfter('EGLL', 'FOO_CTR', 'LON_S_CTR');
-        AirfieldService::insertIntoOrderAfter('EGBB', 'FOO_CTR', 'LON_C_CTR');
+        ControllerPositionHierarchyService::insertPositionIntoHierarchy(
+            Airfield::find(1),
+            $this->newController,
+            after: ControllerPosition::find(3)
+        );
+        ControllerPositionHierarchyService::insertPositionIntoHierarchy(
+            Airfield::find(2),
+            $this->newController,
+            after: ControllerPosition::find(4)
+        );
         AirfieldService::removePositionFromAllTopDowns('FOO_CTR');
         $this->assertDatabaseMissing(
             'top_downs',
@@ -401,7 +292,7 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
 
     public function testItAddsANewTopDownOrder()
     {
-        AirfieldService::createNewTopDownOrder('EGKR', ['EGLL_S_TWR', 'EGLL_N_APP']);
+        AirfieldService::createNewTopDownOrder(3, ['EGLL_S_TWR', 'EGLL_N_APP']);
 
         $this->assertDatabaseHas(
             'top_downs',
@@ -420,36 +311,6 @@ class AirfieldServiceTest extends BaseFunctionalTestCase
                 'order' => 2,
             ]
         );
-    }
-
-    public function testItThrowsAnExceptionWhenCreatingNewTopDownIfPositionNotFound()
-    {
-        $this->expectException(ModelNotFoundException::class);
-        AirfieldService::createNewTopDownOrder('EGKR', ['EGLL_S_TWR', 'EGLL_S_APP']);
-    }
-
-    public function testItThrowsAnExceptionWhenCreatingNewTopDownIfAirfieldNotFound()
-    {
-        $this->expectException(ModelNotFoundException::class);
-        AirfieldService::createNewTopDownOrder('EGXY', ['EGLL_S_TWR']);
-    }
-
-    public function testItDeletesATopDownOrder()
-    {
-        AirfieldService::deleteTopDownOrder('EGLL');
-
-        $this->assertDatabaseMissing(
-            'top_downs',
-            [
-                'airfield_id' => 1,
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionWhenDeletingTopDownIfAirfieldNotFound()
-    {
-        $this->expectException(ModelNotFoundException::class);
-        AirfieldService::deleteTopDownOrder('EGXY');
     }
 
     public function testItReturnsAirfieldDependency()

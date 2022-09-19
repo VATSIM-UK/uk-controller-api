@@ -115,6 +115,7 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
             'airfield_id',
             'controller_position_id'
         )
+            ->withTimestamps()
             ->withPivot('order')
             ->orderByPivot('order');
     }
