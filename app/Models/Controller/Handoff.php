@@ -2,10 +2,12 @@
 
 namespace App\Models\Controller;
 
+use App\Models\Airfield\Airfield;
 use App\Models\Sid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Handoff extends Model implements HasControllerHierarchy
 {
@@ -35,5 +37,10 @@ class Handoff extends Model implements HasControllerHierarchy
     public function sids(): HasMany
     {
         return $this->hasMany(Sid::class);
+    }
+
+    public function airfield(): HasOne
+    {
+        return $this->hasOne(Airfield::class);
     }
 }

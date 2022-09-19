@@ -71,7 +71,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
             ->set('data.standard_high', true)
             ->call('create')
             ->assertHasNoErrors();
-        
+
         $handoff = Handoff::where('description', 'Default departure handoff for EGKK')->firstOrFail();
 
         $this->assertDatabaseHas(

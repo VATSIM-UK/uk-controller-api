@@ -23,7 +23,8 @@ class HandoffResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return Handoff::with('controllers');
+        return Handoff::with('controllers')
+            ->whereDoesntHave('airfield');
     }
 
     public static function form(Form $form): Form
