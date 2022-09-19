@@ -40,7 +40,6 @@ class Airfield extends Model implements MinStackDataProviderInterface
     ];
 
     protected $hidden = [
-        'standard_high',
         'created_at',
         'updated_at',
     ];
@@ -108,7 +107,8 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'airfield_id',
             'controller_position_id'
         )
-            ->withPivot('order');
+            ->withPivot('order')
+            ->orderByPivot('order');
     }
 
     public function prenotePairings(): BelongsToMany

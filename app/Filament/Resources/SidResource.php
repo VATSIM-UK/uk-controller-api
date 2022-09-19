@@ -5,8 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\SidResource\Pages;
 use App\Filament\Resources\SidResource\RelationManagers;
-use App\Models\Airfield\Airfield;
-use App\Models\Controller\Handoff;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Rules\Sid\SidIdentifiersMustBeUniqueForRunway;
@@ -82,14 +80,7 @@ class SidResource extends Resource
                     ->label(self::translateFormPath('handoff.label'))
                     ->helperText(self::translateFormPath('handoff.helper'))
                     ->hintIcon('heroicon-o-clipboard-list')
-                    ->options(
-                        fn () => Handoff::all()
-                            ->mapWithKeys(
-                                fn (Handoff $handoff) => [
-                                    $handoff->id => $handoff->description,
-                                ]
-                            ),
-                    )
+                    ->options(SelectOptions::handoffs())
                     ->searchable(),
             ]);
     }

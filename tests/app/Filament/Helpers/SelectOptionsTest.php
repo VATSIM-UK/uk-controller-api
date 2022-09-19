@@ -4,10 +4,13 @@ namespace App\Filament\Helpers;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Aircraft\WakeCategoryScheme;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Handoff;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class SelectOptionsTest extends BaseFunctionalTestCase
 {
@@ -15,6 +18,7 @@ class SelectOptionsTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         SelectOptions::clearAllCaches();
+        DB::table('sid')->update(['handoff_id' => null]);
     }
 
     public function testItGetsAndCachesAircraftTypes()
@@ -298,5 +302,131 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ControllerPosition::where('id', 1)->update(['callsign' => 'LOL']);
         $this->assertEquals($expected, SelectOptions::controllers());
         $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_CONTROLLER_POSITIONS'));
+    }
+
+    public function testItGetsAndCachesHandoffs()
+    {
+        $expected = collect([
+            1 => 'foo',
+            2 => 'bar',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::handoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_HANDOFFS'));
+    }
+
+    public function testItGetsCachedHandoffsWithoutQuerying()
+    {
+        $expected = collect([
+            1 => 'foo',
+            2 => 'bar',
+        ]);
+
+        Cache::forever('SELECT_OPTIONS_HANDOFFS', $expected);
+        Handoff::withoutEvents(function () {
+            Handoff::where('id', 1)->update(['description' => 'LOL']);
+        });
+
+        $this->assertEquals($expected, SelectOptions::handoffs());
+    }
+
+    public function testDeletingAHandoffRebuildsTheCache()
+    {
+        $expected = collect([
+            1 => 'foo',
+        ]);
+
+        Handoff::findOrFail(2)->delete();
+        $this->assertEquals($expected, SelectOptions::handoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_HANDOFFS'));
+    }
+
+    public function testCreatingAHandoffRebuildsTheCache()
+    {
+        $newHandoff = Handoff::create(['description' => 'lol']);
+
+        $expected = collect([
+            1 => 'foo',
+            2 => 'bar',
+            $newHandoff->id => 'lol',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::handoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_HANDOFFS'));
+    }
+
+    public function testUpdatingAHandoffRebuildsTheCache()
+    {
+        $expected = collect([
+            1 => 'lol',
+            2 => 'bar',
+        ]);
+
+        Handoff::where('id', 1)->update(['description' => 'lol']);
+        $this->assertEquals($expected, SelectOptions::handoffs());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_HANDOFFS'));
+    }
+
+    public function testItGetsAndCachesWakeSchemes()
+    {
+        $expected = collect([
+            1 => 'UK',
+            2 => 'RECAT-EU',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::wakeSchemes());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_WAKE_SCHEMES'));
+    }
+
+    public function testItGetsCachedWakeSchemesWithoutQuerying()
+    {
+        $expected = collect([
+            1 => 'UK',
+            2 => 'RECAT-EU',
+        ]);
+
+        Cache::forever('SELECT_OPTIONS_WAKE_SCHEMES', $expected);
+        WakeCategoryScheme::withoutEvents(function () {
+            WakeCategoryScheme::where('id', 1)->update(['name' => 'LOL']);
+        });
+
+        $this->assertEquals($expected, SelectOptions::wakeSchemes());
+    }
+
+    public function testDeletingAWakeSchemeRebuildsTheCache()
+    {
+        $expected = collect([
+            1 => 'UK',
+        ]);
+
+        WakeCategoryScheme::findOrFail(2)->delete();
+        $this->assertEquals($expected, SelectOptions::wakeSchemes());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_WAKE_SCHEMES'));
+    }
+
+    public function testCreatingAWakeSchemeRebuildsTheCache()
+    {
+        $newScheme = WakeCategoryScheme::create(['key' => 'LOL', 'name' => 'lol']);
+
+        $expected = collect([
+            1 => 'UK',
+            2 => 'RECAT-EU',
+            $newScheme->id => 'lol',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::wakeSchemes());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_WAKE_SCHEMES'));
+    }
+
+    public function testUpdatingAWakeSchemeRebuildsTheCache()
+    {
+        $expected = collect([
+            1 => 'lol',
+            2 => 'RECAT-EU',
+        ]);
+
+        WakeCategoryScheme::where('id', 1)->update(['name' => 'lol']);
+        $this->assertEquals($expected, SelectOptions::wakeSchemes());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_WAKE_SCHEMES'));
     }
 }

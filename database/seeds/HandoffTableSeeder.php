@@ -15,7 +15,7 @@ class HandoffTableSeeder extends Seeder
                     'created_at' => Carbon::now(),
                 ],
                 [
-                    'description' => 'foo',
+                    'description' => 'bar',
                     'created_at' => Carbon::now(),
                 ],
             ]
