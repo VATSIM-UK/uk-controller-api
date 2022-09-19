@@ -145,8 +145,8 @@ class AirfieldService
             // Increment everything else
             $controllersToChange = $airfield->controllers()
                 ->wherePivot('order', '>=', $airfieldBefore->pivot->order)
-                ->orderBy('order', 'desc')
-                ->get();
+                ->get()
+                ->sortByDesc('pivot.order');
 
             $controllersToChange->each(function (ControllerPosition $position) use ($airfield) {
                 DB::table('top_downs')
@@ -181,8 +181,8 @@ class AirfieldService
             // Increment everything else
             $controllersToChange = $airfield->controllers()
                 ->wherePivot('order', '>', $airfieldAfter->pivot->order)
-                ->orderBy('order', 'desc')
-                ->get();
+                ->get()
+                ->sortByDesc('pivot.order');
 
             $controllersToChange->each(function (ControllerPosition $position) use ($airfield) {
                 DB::table('top_downs')
