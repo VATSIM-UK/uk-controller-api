@@ -2,9 +2,11 @@
 
 namespace App\Models\Airfield;
 
+use App\Models\Controller\Handoff;
+use App\Models\Controller\HasControllerHierarchy;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Location\Coordinate;
 use App\Models\Stand\Stand;
-use App\Models\Airfield\Terminal;
 use App\Models\Aircraft\SpeedGroup;
 use App\Models\MinStack\MslAirfield;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Helpers\MinStack\MinStackDataProviderInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Airfield extends Model implements MinStackDataProviderInterface
+class Airfield extends Model implements MinStackDataProviderInterface, HasControllerHierarchy
 {
     use HasFactory;
 
@@ -36,7 +38,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'wake_category_scheme_id',
         'handoff_id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected $hidden = [
@@ -49,6 +51,12 @@ class Airfield extends Model implements MinStackDataProviderInterface
         'longitude' => 'float',
         'elevation' => 'integer',
     ];
+
+
+    public function handoff(): BelongsTo
+    {
+        return $this->belongsTo(Handoff::class);
+    }
 
     /**
      * @return HasOne
@@ -107,6 +115,7 @@ class Airfield extends Model implements MinStackDataProviderInterface
             'airfield_id',
             'controller_position_id'
         )
+            ->withTimestamps()
             ->withPivot('order')
             ->orderByPivot('order');
     }

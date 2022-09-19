@@ -7,7 +7,11 @@ use App\Filament\Resources\AirfieldResource;
 use App\Filament\Resources\AirfieldResource\Pages\CreateAirfield;
 use App\Filament\Resources\AirfieldResource\Pages\EditAirfield;
 use App\Filament\Resources\AirfieldResource\Pages\ListAirfields;
+use App\Filament\Resources\AirfieldResource\RelationManagers\ControllersRelationManager;
 use App\Models\Airfield\Airfield;
+use App\Models\Controller\ControllerPosition;
+use App\Models\Controller\Handoff;
+use App\Services\ControllerPositionHierarchyService;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
 
@@ -15,6 +19,12 @@ class AirfieldResourceTest extends BaseFilamentTestCase
 {
     use ChecksFilamentActionVisibility;
     use ChecksDefaultFilamentAccess;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Airfield::findOrFail(1)->update(['handoff_id' => 1]);
+    }
 
     public function testItLoadsDataForView()
     {
@@ -51,7 +61,39 @@ class AirfieldResourceTest extends BaseFilamentTestCase
                 'transition_altitude' => 3000,
                 'standard_high' => 1,
                 'wake_category_scheme_id' => 1,
-                'handoff_id' => null,
+            ]
+        );
+    }
+
+    public function testItCreatesADefaultHandoffWithTheAirfield()
+    {
+        $this->assertFalse(
+            Handoff::where('description', 'Default departure handoff for EGKK')->exists()
+        );
+        Livewire::test(CreateAirfield::class)
+            ->set('data.code', 'EGKK')
+            ->set('data.latitude', 12.3)
+            ->set('data.longitude', 45.6)
+            ->set('data.elevation', 123)
+            ->set('data.wake_category_scheme_id', 1)
+            ->set('data.transition_altitude', 3000)
+            ->set('data.standard_high', true)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $handoff = Handoff::where('description', 'Default departure handoff for EGKK')->firstOrFail();
+
+        $this->assertDatabaseHas(
+            'airfield',
+            [
+                'code' => 'EGKK',
+                'latitude' => 12.3,
+                'longitude' => 45.6,
+                'elevation' => 123,
+                'transition_altitude' => 3000,
+                'standard_high' => 1,
+                'wake_category_scheme_id' => 1,
+                'handoff_id' => $handoff->id,
             ]
         );
     }
@@ -73,6 +115,20 @@ class AirfieldResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(CreateAirfield::class)
             ->set('data.code', 'EGLLLL')
+            ->set('data.latitude', 12.3)
+            ->set('data.longitude', 45.6)
+            ->set('data.elevation', 123)
+            ->set('data.wake_category_scheme_id', 1)
+            ->set('data.transition_altitude', 3000)
+            ->set('data.standard_high', true)
+            ->call('create')
+            ->assertHasErrors(['data.code']);
+    }
+
+    public function testItDoesntCreateAirfieldDuplicateIcao()
+    {
+        Livewire::test(CreateAirfield::class)
+            ->set('data.code', 'EGLL')
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
             ->set('data.elevation', 123)
@@ -230,7 +286,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
                 'transition_altitude' => 3000,
                 'standard_high' => 1,
                 'wake_category_scheme_id' => 1,
-                'handoff_id' => null,
+                'handoff_id' => 1,
             ]
         );
     }
@@ -388,6 +444,367 @@ class AirfieldResourceTest extends BaseFilamentTestCase
             ->set('data.standard_high', true)
             ->call('save')
             ->assertHasErrors(['data.transition_altitude']);
+    }
+
+    public function testItDisplaysControllers()
+    {
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )->assertCanSeeTableRecords([1, 2]);
+    }
+
+    public function testControllersCanBeAttachedAtTheEnd()
+    {
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('attach', Airfield::findOrFail(1), ['recordId' => 4])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeAttachedAfterAnotherController()
+    {
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('attach', Airfield::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'EGLL_N_APP',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeRemoved()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('detach', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeRemovedAtTheEnd()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('detach', ControllerPosition::findOrFail(4))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedUpTheOrder()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('moveUp', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_N_APP',
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedUpTheOrderAtTheTop()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('moveUp', ControllerPosition::findOrFail(1))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedDownTheOrder()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'LON_S_CTR',
+                'EGLL_N_APP',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testControllersCanBeMovedDownAtTheBottom()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('moveDown', ControllerPosition::findOrFail(4))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testAttachingAControllerChangesDefaultHandoffOrder()
+    {
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('attach', Airfield::findOrFail(1), ['recordId' => 4])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->handoff
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testRemovingControllersChangesDefaultHandoffOrder()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('detach', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->handoff
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testMovingControllersDownChangesDefaultHandoffOrder()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'LON_S_CTR',
+                'EGLL_N_APP',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->handoff
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
+    }
+
+    public function testMovingControllersUpChangesDefaultHandoffOrder()
+    {
+        ControllerPositionHierarchyService::setPositionsForHierarchyByControllerCallsign(
+            Airfield::findOrFail(1),
+            [
+                'EGLL_S_TWR',
+                'EGLL_N_APP',
+                'LON_S_CTR',
+                'LON_C_CTR',
+            ]
+        );
+        Livewire::test(
+            ControllersRelationManager::class,
+            ['ownerRecord' => Airfield::findOrFail(1)]
+        )
+            ->callTableAction('moveUp', ControllerPosition::findOrFail(3))
+            ->assertHasNoTableActionErrors();
+
+        $this->assertEquals(
+            [
+                'LON_S_CTR',
+                'EGLL_N_APP',
+                'LON_C_CTR',
+            ],
+            Airfield::findOrFail(1)
+                ->handoff
+                ->controllers
+                ->pluck('callsign')
+                ->toArray()
+        );
     }
 
     protected function getCreateText(): string

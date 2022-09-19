@@ -80,7 +80,7 @@ class SidResource extends Resource
                     ->label(self::translateFormPath('handoff.label'))
                     ->helperText(self::translateFormPath('handoff.helper'))
                     ->hintIcon('heroicon-o-clipboard-list')
-                    ->options(SelectOptions::handoffs())
+                    ->options(SelectOptions::nonAirfieldHandoffs())
                     ->searchable(),
             ]);
     }

@@ -14,19 +14,19 @@ use LogicException;
 
 class SelectOptions
 {
-    private const CACHE_KEYS = [
-        Aircraft::class => 'SELECT_OPTIONS_AIRCRAFT_TYPES',
-        Airfield::class => 'SELECT_OPTIONS_AIRFIELDS',
-        Airline::class => 'SELECT_OPTIONS_AIRLINES',
-        ControllerPosition::class => 'SELECT_OPTIONS_CONTROLLER_POSITIONS',
-        Handoff::class => 'SELECT_OPTIONS_HANDOFFS',
-        WakeCategoryScheme::class => 'SELECT_OPTIONS_WAKE_SCHEMES',
+    private const MODEL_CACHE_KEYS = [
+        Aircraft::class => [SelectOptionCacheKeys::AircraftTypes],
+        Airfield::class => [SelectOptionCacheKeys::Airfields],
+        Airline::class => [SelectOptionCacheKeys::Airlines],
+        ControllerPosition::class => [SelectOptionCacheKeys::ControllerPositions],
+        Handoff::class => [SelectOptionCacheKeys::Handoffs, SelectOptionCacheKeys::NonAirfieldHandoffs],
+        WakeCategoryScheme::class => [SelectOptionCacheKeys::WakeSchemes],
     ];
 
     public static function aircraftTypes(): Collection
     {
         return self::getOptions(
-            Aircraft::class,
+            SelectOptionCacheKeys::AircraftTypes,
             fn (): Collection => Aircraft::all()->mapWithKeys(
                 fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
             )->toBase()
@@ -36,7 +36,7 @@ class SelectOptions
     public static function airfields(): Collection
     {
         return self::getOptions(
-            Airfield::class,
+            SelectOptionCacheKeys::Airfields,
             fn (): Collection => Airfield::all()->mapWithKeys(
                 fn (Airfield $airfield) => [$airfield->id => $airfield->code]
             )->toBase()
@@ -46,7 +46,7 @@ class SelectOptions
     public static function airlines(): Collection
     {
         return self::getOptions(
-            Airline::class,
+            SelectOptionCacheKeys::Airlines,
             fn (): Collection => Airline::all()->mapWithKeys(
                 fn (Airline $airline) => [$airline->id => $airline->icao_code]
             )->toBase()
@@ -56,7 +56,7 @@ class SelectOptions
     public static function controllers(): Collection
     {
         return self::getOptions(
-            ControllerPosition::class,
+            SelectOptionCacheKeys::ControllerPositions,
             fn (): Collection => ControllerPosition::all()->mapWithKeys(
                 fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
             )->toBase()
@@ -66,7 +66,7 @@ class SelectOptions
     public static function wakeSchemes(): Collection
     {
         return self::getOptions(
-            WakeCategoryScheme::class,
+            SelectOptionCacheKeys::WakeSchemes,
             fn (): Collection => WakeCategoryScheme::all()->mapWithKeys(
                 fn (WakeCategoryScheme $scheme) => [$scheme->id => $scheme->name]
             )->toBase()
@@ -76,34 +76,53 @@ class SelectOptions
     public static function handoffs(): Collection
     {
         return self::getOptions(
-            Handoff::class,
+            SelectOptionCacheKeys::Handoffs,
             fn (): Collection => Handoff::all()->mapWithKeys(
                 fn (Handoff $handoff) => [$handoff->id => $handoff->description]
             )->toBase()
         );
     }
 
-    private static function getOptions(string $class, callable $default): Collection
+    public static function nonAirfieldHandoffs(): Collection
+    {
+        return self::getOptions(
+            SelectOptionCacheKeys::NonAirfieldHandoffs,
+            fn (): Collection => Handoff::whereDoesntHave('airfield')
+                ->get()
+                ->mapWithKeys(
+                    fn (Handoff $handoff) => [$handoff->id => $handoff->description]
+                )->toBase()
+        );
+    }
+
+    private static function getOptions(SelectOptionCacheKeys $cacheKey, callable $default): Collection
     {
         return Cache::rememberForever(
-            self::CACHE_KEYS[$class],
+            $cacheKey->value,
             $default
         );
     }
 
     public static function clearCache(string $class): void
     {
-        if (!array_key_exists($class, self::CACHE_KEYS)) {
+        if (!array_key_exists($class, self::MODEL_CACHE_KEYS)) {
             throw new LogicException(sprintf('No select option for class %s', $class));
         }
 
-        Cache::forget(self::CACHE_KEYS[$class]);
+        self::clearKeysForModel(self::MODEL_CACHE_KEYS[$class]);
+    }
+
+    public static function clearKeysForModel(array $keys):void
+    {
+        foreach ($keys as $key) {
+            Cache::forget($key->value);
+        }
     }
 
     public static function clearAllCaches(): void
     {
-        foreach (self::CACHE_KEYS as $key) {
-            Cache::forget($key);
+        foreach (self::MODEL_CACHE_KEYS as $keys) {
+            self::clearKeysForModel($keys);
         }
     }
 }

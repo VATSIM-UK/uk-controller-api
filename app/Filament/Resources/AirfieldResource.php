@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\AirfieldResource\Pages;
+use App\Filament\Resources\AirfieldResource\RelationManagers\ControllersRelationManager;
 use App\Models\Airfield\Airfield;
 use App\Rules\Airfield\AirfieldIcao;
 use Filament\Forms\Components\Fieldset;
@@ -35,6 +36,7 @@ class AirfieldResource extends Resource
                     ->label(self::translateFormPath('fieldset_identifiers.label'))
                     ->schema([
                         TextInput::make('code')
+                            ->unique(ignoreRecord: true)
                             ->rule(new AirfieldIcao())
                             ->required()
                             ->label(self::translateFormPath('code.label'))
@@ -93,7 +95,7 @@ class AirfieldResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ControllersRelationManager::class,
         ];
     }
 
