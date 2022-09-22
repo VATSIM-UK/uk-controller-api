@@ -8,6 +8,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
+use App\Models\Runway\Runway;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use LogicException;
@@ -20,6 +21,7 @@ class SelectOptions
         Airline::class => [SelectOptionCacheKeys::Airlines],
         ControllerPosition::class => [SelectOptionCacheKeys::ControllerPositions],
         Handoff::class => [SelectOptionCacheKeys::Handoffs, SelectOptionCacheKeys::NonAirfieldHandoffs],
+        Runway::class => [SelectOptionCacheKeys::Runways],
         WakeCategoryScheme::class => [SelectOptionCacheKeys::WakeSchemes],
     ];
 
@@ -91,6 +93,20 @@ class SelectOptions
                 ->get()
                 ->mapWithKeys(
                     fn (Handoff $handoff) => [$handoff->id => $handoff->description]
+                )->toBase()
+        );
+    }
+
+    public static function runways(): Collection
+    {
+        return self::getOptions(
+            SelectOptionCacheKeys::Runways,
+            fn (): Collection => Runway::with('airfield')
+                ->get()
+                ->mapWithKeys(
+                    fn (Runway $runway) => [
+                        $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
+                    ]
                 )->toBase()
         );
     }

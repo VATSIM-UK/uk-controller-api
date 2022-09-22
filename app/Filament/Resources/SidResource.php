@@ -37,15 +37,7 @@ class SidResource extends Resource
                     ->label(self::translateFormPath('runway.label'))
                     ->helperText(self::translateFormPath('runway.helper'))
                     ->hintIcon('heroicon-o-chevron-double-up')
-                    ->options(
-                        fn () => Runway::with('airfield')
-                            ->get()
-                            ->mapWithKeys(
-                                fn (Runway $runway) => [
-                                    $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
-                                ]
-                            ),
-                    )
+                    ->options(SelectOptions::runways())
                     ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
                     ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->searchable()
