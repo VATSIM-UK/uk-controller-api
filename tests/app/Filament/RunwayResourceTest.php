@@ -7,11 +7,21 @@ use App\Filament\Resources\RunwayResource;
 use App\Filament\Resources\RunwayResource\Pages\ListRunways;
 use App\Models\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
+use Livewire\Livewire;
 
 class RunwayResourceTest extends BaseFilamentTestCase
 {
     use ChecksFilamentActionVisibility;
     use ChecksDefaultFilamentAccess;
+
+    public function testItCanFilterForAirfields()
+    {
+        Livewire::test(ListRunways::class)
+            ->assertCanSeeTableRecords([Runway::find(1), Runway::find(2), Runway::find(3)])
+            ->filterTable('airfield', 1)
+            ->assertCanSeeTableRecords([Runway::find(1), Runway::find(2)])
+            ->assertCanNotSeeTableRecords([Runway::find(3)]);
+    }
 
     protected function getCreateText(): string
     {
