@@ -28,6 +28,6 @@ class RunwayIdentifier implements Rule
      */
     public function message()
     {
-        return 'Invalid runway identifier';
+        return __('validation.runways.identifier');
     }
 }

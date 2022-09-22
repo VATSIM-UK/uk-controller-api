@@ -2,10 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\RunwayResource\Pages;
 use App\Models\Runway\Runway;
+use App\Rules\Heading\ValidHeading;
+use App\Rules\Runway\RunwayIdentifier;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
+use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
@@ -14,6 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 class RunwayResource extends Resource
 {
     use TranslatesStrings;
+    use HasCoordinates;
 
     protected static ?string $model = Runway::class;
     protected static ?string $recordTitleAttribute = 'identifier';
@@ -24,7 +32,24 @@ class RunwayResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Select::make('airfield_id')
+                    ->label(self::translateFormPath('airfield.label'))
+                    ->helperText(self::translateFormPath('airfield.helper'))
+                    ->searchable()
+                    ->options(SelectOptions::airfields())
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->required(),
+                TextInput::make('identifier')
+                    ->label(self::translateFormPath('identifier.label'))
+                    ->helperText(self::translateFormPath('identifier.helper'))
+                    ->required()
+                    ->rule(new RunwayIdentifier()),
+                ...self::coordinateInputs('threshold_latitude', 'threshold_longitude'),
+                TextInput::make('heading')
+                    ->label(self::translateFormPath('heading.label'))
+                    ->helperText(self::translateFormPath('heading.helper'))
+                    ->required()
+                    ->rule(new ValidHeading()),
             ]);
     }
 
@@ -33,11 +58,14 @@ class RunwayResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('airfield.code')
+                    ->label(self::translateTablePath('columns.airfield'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('identifier')
+                    ->label(self::translateTablePath('columns.identifier'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('heading'),
+                Tables\Columns\TextColumn::make('heading')
+                    ->label(self::translateTablePath('columns.heading')),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
