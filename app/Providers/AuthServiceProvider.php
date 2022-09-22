@@ -10,6 +10,7 @@ use App\Models\Controller\Prenote;
 use App\Models\Hold\Hold;
 use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
+use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
@@ -48,6 +49,7 @@ class AuthServiceProvider extends ServiceProvider
         Navaid::class => DefaultFilamentPolicy::class,
         Notification::class => DefaultFilamentPolicy::class,
         Prenote::class => DefaultFilamentPolicy::class,
+        Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
 
