@@ -36,4 +36,29 @@ class AiracServiceTest extends BaseUnitTestCase
             AiracService::getBaseAiracDate()
         );
     }
+
+    /**
+     * @dataProvider airacDateProvider
+     */
+    public function testItGeneratesTheCurrentAirac(string $currentDate, string $expected)
+    {
+        Carbon::setTestNow(Carbon::parse($currentDate));
+
+        $this->assertEquals($expected, AiracService::getCurrentAirac());
+    }
+
+    private function airacDateProvider(): array
+    {
+        return [
+            'Before 2201' => ['2022-01-26 00:00:00', '2113'],
+            '2201' => ['2022-01-27 00:00:00', '2201'],
+            'End of 2201' => ['2022-02-23 00:00:00', '2201'],
+            '2202' => ['2022-02-24 00:00:00', '2202'],
+            '2209' => ['2022-09-20 00:00:00', '2209'],
+            '2211' => ['2022-11-04 00:00:00', '2211'],
+            '2213' => ['2022-12-30 00:00:00', '2213'],
+            '2213 in 2023' => ['2023-01-04 00:00:00', '2213'],
+            '2608' => ['2026-08-15 00:00:00', '2608'],
+        ];
+    }
 }
