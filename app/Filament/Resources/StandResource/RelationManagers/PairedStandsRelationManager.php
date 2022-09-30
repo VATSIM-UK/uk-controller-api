@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class PairedStandsRelationManager extends RelationManager
 {
+    use LimitsTableRecordListingOptions;
     use TranslatesStrings;
     
     protected static string $relationship = 'pairedStands';

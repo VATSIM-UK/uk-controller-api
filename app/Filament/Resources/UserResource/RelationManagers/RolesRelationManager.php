@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Closure;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RolesRelationManager extends RelationManager
 {
+    use LimitsTableRecordListingOptions;
     use TranslatesStrings;
     
     protected static string $relationship = 'roles';
