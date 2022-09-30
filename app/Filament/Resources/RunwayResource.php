@@ -66,6 +66,8 @@ class RunwayResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('heading')
                     ->label(self::translateTablePath('columns.heading')),
+                Tables\Columns\TagsColumn::make('sids.identifier')
+                    ->label(self::translateTablePath('columns.sids')),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('airfield')

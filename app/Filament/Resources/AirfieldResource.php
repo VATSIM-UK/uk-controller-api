@@ -81,6 +81,8 @@ class AirfieldResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('transition_altitude')
                     ->label(self::translateTablePath('columns.transition')),
+                Tables\Columns\TextColumn::make('runways.identifier')
+                    ->label(self::translateTablePath('columns.runways')),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.top_down'))
                     ->default(['--']),
