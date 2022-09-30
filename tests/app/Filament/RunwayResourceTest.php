@@ -73,14 +73,14 @@ class RunwayResourceTest extends BaseFilamentTestCase
             'runway_runway',
             [
                 'first_runway_id' => 3,
-                'second_runway_id' => 5,
+                'second_runway_id' => Runway::max('id'),
             ]
         );
 
         $this->assertDatabaseHas(
             'runway_runway',
             [
-                'first_runway_id' => 5,
+                'first_runway_id' => Runway::max('id'),
                 'second_runway_id' => 3,
             ]
         );
