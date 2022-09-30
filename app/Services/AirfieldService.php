@@ -5,13 +5,9 @@ namespace App\Services;
 use App\Models\Aircraft\SpeedGroup;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
-use App\Models\Flightplan\FlightRules;
-use Carbon\Carbon;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use OutOfRangeException;
 
 class AirfieldService
 {
@@ -127,7 +123,6 @@ class AirfieldService
                     );
                     continue;
                 }
-
 
                 ControllerPositionHierarchyService::insertPositionIntoHierarchy(
                     $airfield,

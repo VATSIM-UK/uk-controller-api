@@ -228,7 +228,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return ControllerPosition::class;
     }
@@ -267,5 +267,10 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return ControllerPosition::findOrFail(1);
+    }
+
+    protected function resourceClass(): string
+    {
+        return ControllerPositionResource::class;
     }
 }

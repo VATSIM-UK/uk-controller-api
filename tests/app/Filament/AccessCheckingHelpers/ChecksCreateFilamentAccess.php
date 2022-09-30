@@ -22,7 +22,7 @@ trait ChecksCreateFilamentAccess
             $user->roles()->sync([Role::idFromKey($role)]);
         }
 
-        $response = $this->get(call_user_func($this->getResourceClass() . '::getUrl', 'create'));
+        $response = $this->get(call_user_func($this->resourceClass() . '::getUrl', 'create'));
         if ($expectSuccess) {
             $response->assertSuccessful()
                 ->assertSeeText($this->getCreateText());

@@ -12,4 +12,5 @@ return [
     'navaids' => require_once __DIR__ . '/navaids/table.php',
     'notifications' => require_once __DIR__ . '/notifications/table.php',
     'runways' => require_once __DIR__ . '/runways/table.php',
+    'srd' => require_once __DIR__ . '/srd/table.php',
 ];

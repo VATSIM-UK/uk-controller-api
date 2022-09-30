@@ -1498,7 +1498,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Navaid::class;
     }
@@ -1558,5 +1558,10 @@ class NavaidResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Navaid::findOrFail(1);
+    }
+
+    protected function resourceClass(): string
+    {
+        return NavaidResource::class;
     }
 }

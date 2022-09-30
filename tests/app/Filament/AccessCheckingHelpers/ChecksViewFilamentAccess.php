@@ -25,13 +25,13 @@ trait ChecksViewFilamentAccess
 
         if ($canView) {
             $this->get(
-                call_user_func($this->getResourceClass() . '::getUrl', 'view', ['record' => $this->getViewRecord()])
+                call_user_func($this->resourceClass() . '::getUrl', 'view', ['record' => $this->getViewRecord()])
             )
                 ->assertSuccessful()
                 ->assertSeeText($this->getViewText());
         } else {
             $this->get(
-                call_user_func($this->getResourceClass() . '::getUrl', 'view', ['record' => $this->getViewRecord()])
+                call_user_func($this->resourceClass() . '::getUrl', 'view', ['record' => $this->getViewRecord()])
             )
                 ->assertForbidden();
         }

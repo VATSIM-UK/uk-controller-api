@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandResource\Pages;
 use App\Filament\Resources\StandResource\RelationManagers;
-use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Aircraft\WakeCategoryScheme;
 use App\Models\Airfield\Airfield;

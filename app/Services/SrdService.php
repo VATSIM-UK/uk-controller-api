@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Exceptions\SrdUpdateFailedException;
-use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -13,38 +12,27 @@ use Illuminate\Support\Facades\Storage;
 
 class SrdService
 {
-    private const SRD_URL = 'https://nats-uk.ead-it.com/cms-nats/export/sites/default/en/' .
-    'Publications/digital-datasets/srd/SRD_Spreadsheet.xls';
-    private const SRD_DOWNLOAD_FILE = 'downloaded-srd.xls';
     private const SRD_CURRENT_FILE = 'current-srd.xls';
-    private const SRD_UPDATED_AT_CACHE_KEY = 'SRD_UPDATED_AT';
+    private const SRD_VERSION_CACHE_KEY = 'SRD_VERSION';
 
     /**
      * @throws SrdUpdateFailedException
      */
-    public function updateSrdData(): bool
+    public function updateSrdData(): void
     {
         $this->downloadSrd();
-
-        // If it doesn't need updating, set the last updated at key for reference
-        if (!$this->localSrdNeedsUpdating()) {
-            $this->setSrdLastUpdatedDate();
-            return false;
-        }
-
         $this->updateLocalSrdData();
-        return true;
+        $this->setSrdVersion();
     }
 
-    public function newSrdShouldBeAvailable(): bool
+    public function srdNeedsUpdating(): bool
     {
-        return Cache::get(self::SRD_UPDATED_AT_CACHE_KEY, AiracService::getBaseAiracDate())
-            < AiracService::getPreviousAiracDay();
+        return Cache::get(self::SRD_VERSION_CACHE_KEY) !== AiracService::getCurrentAirac();
     }
 
-    private function downloadSrd()
+    private function downloadSrd(): void
     {
-        $srdContent = Http::get(self::SRD_URL);
+        $srdContent = Http::get($this->srdDownloadUrl());
 
         if (!$srdContent->ok()) {
             Log::critical(
@@ -54,35 +42,20 @@ class SrdService
             throw new SrdUpdateFailedException();
         }
 
-        $this->getImportsFilesystem()->put(self::SRD_DOWNLOAD_FILE, $srdContent->body());
+        $this->getImportsFilesystem()->put(self::SRD_CURRENT_FILE, $srdContent->body());
+    }
+
+    private function srdDownloadUrl(): string
+    {
+        return sprintf(config('srd.download_url'), AiracService::getCurrentAirac());
     }
 
     /**
-     * Run the SRD import command to import into the database and once run,
-     * move the downloaded file to "current" and update the last updated date in cache.
+     * Run the SRD import command to import into the database.
      */
     private function updateLocalSrdData(): void
     {
-        Artisan::call(sprintf('srd:import %s', self::SRD_DOWNLOAD_FILE));
-        $filesystem = $this->getImportsFilesystem();
-        if ($filesystem->exists(self::SRD_CURRENT_FILE)) {
-            $filesystem->delete(self::SRD_CURRENT_FILE);
-        }
-        $filesystem->move(self::SRD_DOWNLOAD_FILE, self::SRD_CURRENT_FILE);
-        $this->setSrdLastUpdatedDate();
-    }
-
-    /**
-     * Checks whether the local SRD needs updating by checking if the downloaded file is different
-     * to the one we currently have. This is required because we cannot predict the time at which the SRD
-     * will be released each time.
-     */
-    private function localSrdNeedsUpdating(): bool
-    {
-        $imports = $this->getImportsFilesystem();
-
-        return !$imports->exists(self::SRD_CURRENT_FILE) ||
-            md5($imports->get(self::SRD_CURRENT_FILE)) !== md5($imports->get(self::SRD_DOWNLOAD_FILE));
+        Artisan::call(sprintf('srd:import %s', self::SRD_CURRENT_FILE));
     }
 
     private function getImportsFilesystem(): Filesystem
@@ -90,8 +63,8 @@ class SrdService
         return Storage::disk('imports');
     }
 
-    private function setSrdLastUpdatedDate(): void
+    private function setSrdVersion(): void
     {
-        Cache::forever(self::SRD_UPDATED_AT_CACHE_KEY, Carbon::now());
+        Cache::forever(self::SRD_VERSION_CACHE_KEY, AiracService::getCurrentAirac());
     }
 }
