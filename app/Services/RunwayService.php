@@ -12,9 +12,18 @@ use App\Models\Runway\Runway;
 use App\Rules\Runway\RunwayIdentifier;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Whoops\Run;
 
 class RunwayService
 {
+    private const RUNWAY_IDENTIFIER_INVERSE_MAP = [
+        'C' => 'C',
+        'G' => 'G',
+        'L' => 'R',
+        'R' => 'L',
+    ];
+
     public static function addRunwayPair(
         string $airfield,
         string $firstIdentifier,
@@ -115,7 +124,7 @@ class RunwayService
 
     public function getRunwaysDependency(): array
     {
-        return Runway::with('inverses')->get()->map(fn (Runway $runway) => [
+        return Runway::with('inverses')->get()->map(fn(Runway $runway) => [
             'id' => $runway->id,
             'airfield_id' => $runway->airfield_id,
             'identifier' => $runway->identifier,
@@ -124,5 +133,30 @@ class RunwayService
             'threshold_longitude' => $runway->threshold_longitude,
             'inverse_runway_id' => $runway->inverses()->first() ? $runway->inverses()->first()->id : null,
         ])->toArray();
+    }
+
+    public static function inverseRunwayIdentifier(string $identifier): string
+    {
+        if (!self::runwayIdentifierValid($identifier)) {
+            throw RunwayIdentifierInvalidException::forIdentifier($identifier);
+        }
+
+        $matches = [];
+        preg_match(
+            '/^(0[1-9]|[1-2]\d|3[0-6])([LCRG]?)$/',
+            $identifier,
+            $matches
+        );
+
+        $directionComponent = (int)$matches[1];
+        $newDirectionComponent = $directionComponent === 18
+            ? 36
+            : ($directionComponent + 18) % 36;
+
+        return sprintf(
+            '%s%s',
+            Str::padLeft($newDirectionComponent, 2, '0'),
+            $matches[2] !== '' ? self::RUNWAY_IDENTIFIER_INVERSE_MAP[$matches[2]] : ''
+        );
     }
 }

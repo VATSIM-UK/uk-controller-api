@@ -8,6 +8,8 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditRunway extends EditRecord
 {
+    use SetsRunwayInverses;
+
     protected static string $resource = RunwayResource::class;
 
     protected function getActions(): array
@@ -15,5 +17,10 @@ class EditRunway extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function afterSave()
+    {
+        $this->setInverse($this->record);
     }
 }

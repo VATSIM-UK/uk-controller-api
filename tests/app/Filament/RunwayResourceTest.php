@@ -58,6 +58,34 @@ class RunwayResourceTest extends BaseFilamentTestCase
         );
     }
 
+    public function testItSetsTheInverseRunwayOnCreate()
+    {
+        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.identifier', '15')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 155)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'runway_runway',
+            [
+                'first_runway_id' => 3,
+                'second_runway_id' => 5,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'runway_runway',
+            [
+                'first_runway_id' => 5,
+                'second_runway_id' => 3,
+            ]
+        );
+    }
+
     public function testItDoesntCreateARunwayNoAirfield()
     {
         Livewire::test(RunwayResource\Pages\CreateRunway::class)
@@ -195,6 +223,41 @@ class RunwayResourceTest extends BaseFilamentTestCase
         );
     }
 
+    public function testEditingARunwaySetsInverses()
+    {
+        $runway = Runway::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '09L',
+                'heading' => 91,
+                'threshold_latitude' => 1,
+                'threshold_longitude' => 2,
+            ]
+        );
+
+        Livewire::test(EditRunway::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'runway_runway',
+            [
+                'first_runway_id' => 1,
+                'second_runway_id' => $runway->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'runway_runway',
+            [
+                'first_runway_id' => $runway->id,
+                'second_runway_id' => 1,
+            ]
+        );
+    }
+
     public function testItDoesntEditARunwayNoAirfield()
     {
         Livewire::test(EditRunway::class, ['record' => 1])
@@ -327,19 +390,19 @@ class RunwayResourceTest extends BaseFilamentTestCase
         return $this->getEditRecord();
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Runway::class;
-    }
-
-    protected function getResourceClass(): string
-    {
-        return RunwayResource::class;
     }
 
     protected function resourceId(): int|string
     {
         return 1;
+    }
+
+    protected function resourceClass(): string
+    {
+        return RunwayResource::class;
     }
 
     protected function writeResourcePageActions(): array
