@@ -35,11 +35,11 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.callsign.label')),
                 Tables\Columns\TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency.label'))
-                    ->formatStateUsing(fn (float $state) => FrequencyFormatter::formatFrequency($state)),
+                    ->formatStateUsing(fn(float $state) => FrequencyFormatter::formatFrequency($state)),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->form(fn (Tables\Actions\AttachAction $action, AbstractControllersRelationManager $livewire) => [
+                    ->form(fn(Tables\Actions\AttachAction $action, AbstractControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
                         Forms\Components\Select::make('insert_after')
                             ->label(self::translateTablePath('attach_form.insert_after.label'))
@@ -48,18 +48,21 @@ abstract class AbstractControllersRelationManager extends RelationManager
                                 $livewire->getOwnerRecord()
                                     ->controllers
                                     ->mapWithKeys(
-                                        fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
+                                        fn(ControllerPosition $controller) => [$controller->id => $controller->callsign]
                                     )
                             ),
                     ])
                     ->using(function (AbstractControllersRelationManager $livewire, $data) {
-                        self::doUpdate(fn () => ControllerPositionHierarchyService::insertPositionIntoHierarchy(
-                            $livewire->getOwnerRecord(),
-                            ControllerPosition::findOrFail($data['recordId']),
-                            after: isset($data['insert_after'])
-                                ? ControllerPosition::findOrFail($data['insert_after'])
-                                : null
-                        ), $livewire->getOwnerRecord());
+                        self::doUpdate(
+                            fn() => ControllerPositionHierarchyService::insertPositionIntoHierarchy(
+                                $livewire->getOwnerRecord(),
+                                ControllerPosition::findOrFail($data['recordId']),
+                                after: isset($data['insert_after'])
+                                    ? ControllerPosition::findOrFail($data['insert_after'])
+                                    : null
+                            ),
+                            $livewire->getOwnerRecord()
+                        );
                     })
                     ->disableAttachAnother()
                     ->label(self::translateTablePath('attach_action.label'))
@@ -69,32 +72,41 @@ abstract class AbstractControllersRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\Action::make('moveUp')
                     ->action(function (ControllerPosition $record) {
-                        self::doUpdate(fn () => ControllerPositionHierarchyService::moveControllerInHierarchy(
-                            $record->pivot->pivotParent,
-                            $record,
-                            true
-                        ), $record->pivot->pivotParent);
+                        self::doUpdate(
+                            fn() => ControllerPositionHierarchyService::moveControllerInHierarchy(
+                                $record->pivot->pivotParent,
+                                $record,
+                                true
+                            ),
+                            $record->pivot->pivotParent
+                        );
                     })
                     ->label(self::translateTablePath('move_up_action.label'))
                     ->icon('heroicon-o-arrow-up')
-                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn(AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\Action::make('moveDown')
                     ->action(function (ControllerPosition $record) {
-                        self::doUpdate(fn () => ControllerPositionHierarchyService::moveControllerInHierarchy(
-                            $record->pivot->pivotParent,
-                            $record,
-                            false
-                        ), $record->pivot->pivotParent);
+                        self::doUpdate(
+                            fn() => ControllerPositionHierarchyService::moveControllerInHierarchy(
+                                $record->pivot->pivotParent,
+                                $record,
+                                false
+                            ),
+                            $record->pivot->pivotParent
+                        );
                     })
                     ->label(self::translateTablePath('move_down_action.label'))
                     ->icon('heroicon-o-arrow-down')
-                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
+                    ->authorize(fn(AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 Tables\Actions\DetachAction::make()
                     ->using(function (ControllerPosition $record) {
-                        self::doUpdate(fn () => ControllerPositionHierarchyService::removeFromHierarchy(
-                            $record->pivot->pivotParent,
-                            $record
-                        ), $record->pivot->pivotParent);
+                        self::doUpdate(
+                            fn() => ControllerPositionHierarchyService::removeFromHierarchy(
+                                $record->pivot->pivotParent,
+                                $record
+                            ),
+                            $record->pivot->pivotParent
+                        );
                     })->label(self::translateTablePath('detach_action.label')),
             ]);
     }
