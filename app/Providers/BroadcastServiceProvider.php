@@ -3,13 +3,9 @@
 namespace App\Providers;
 
 use App\Broadcaster\PluginEventBroadcaster;
-use BeyondCode\LaravelWebSockets\Concerns\PushesToPusher;
-use Illuminate\Broadcasting\Broadcasters\PusherBroadcaster;
 use Illuminate\Broadcasting\BroadcastManager;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\ServiceProvider;
-use Pusher\Pusher;
 
 class BroadcastServiceProvider extends ServiceProvider
 {

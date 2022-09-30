@@ -224,13 +224,13 @@ class StandAdminController extends BaseController
      * @param integer $airfield_id
      * @return array
      */
-    private function formatObjectForStandFromRequest(StandRequest $request, int $airfield_id): array
+    private function formatObjectForStandFromRequest(StandRequest $request, int $airfieldId): array
     {
         $standDefaultAssignmentPriority = 100;
 
         return [
             'identifier' => $request->get('identifier'),
-            'airfield_id' => $airfield_id,
+            'airfield_id' => $airfieldId,
             'type_id' => $request->get('type_id'),
             'latitude' => $request->get('latitude'),
             'longitude' => $request->get('longitude'),
@@ -244,14 +244,14 @@ class StandAdminController extends BaseController
     /**
      * Check that a terminal is attached to a given airfield.
      *
-     * @param integer|null $terminal_id
-     * @param integer $airfield_id
+     * @param integer|null $terminalId
+     * @param integer $airfieldId
      * @return boolean
      */
-    private function checkForTerminalValidity(?int $terminal_id, int $airfield_id): bool
+    private function checkForTerminalValidity(?int $terminalId, int $airfieldId): bool
     {
-        if ($terminal = Terminal::find($terminal_id)) {
-            if ($terminal->airfield_id != $airfield_id) { // NOSONAR (cant merge the if statements, despite what sonar says!)
+        if ($terminal = Terminal::find($terminalId)) {
+            if ($terminal->airfield_id != $airfieldId) { // NOSONAR (cant merge the if statements, despite what sonar says!)
                 return false;
             }
         }
