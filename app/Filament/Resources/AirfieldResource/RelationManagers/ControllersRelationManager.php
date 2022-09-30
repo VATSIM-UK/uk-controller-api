@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AirfieldResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\RelationManagers\AbstractControllersRelationManager;
 use App\Models\Controller\ControllerPosition;
 use App\Services\ControllerPositionHierarchyService;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ControllersRelationManager extends AbstractControllersRelationManager
 {
+    use LimitsTableRecordListingOptions;
+
     protected static ?string $inverseRelationship = 'topDownAirfields';
 
     public function getTableDescription(): ?string

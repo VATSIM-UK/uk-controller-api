@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.25.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.24.0...6.25.0) (2022-09-30)
+
+
+### Features
+
+* srd version on routes page ([846327b](https://github.com/VATSIM-UK/uk-controller-api/commit/846327b8ab824475609897e1f8e95688bd691d31))
+
 ## [6.24.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.23.0...6.24.0) (2022-09-30)
 
 
