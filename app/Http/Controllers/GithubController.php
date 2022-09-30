@@ -44,7 +44,10 @@ class GithubController
 
         $response = null;
         foreach ($labelNames as $labelName) {
-            if ($labelName === config(self::CONFIG_KEY_PLUGIN_LABEL) || $labelName === config(self::CONFIG_KEY_API_LABEL)) {
+            if (
+                $labelName === config(self::CONFIG_KEY_PLUGIN_LABEL) ||
+                $labelName === config(self::CONFIG_KEY_API_LABEL)
+            ) {
                 $response = $this->handleEvent($request->json()->get('issue'));
                 break;
             }

@@ -5,7 +5,6 @@ namespace App\Filament\Resources\RelationManagers;
 use App\Filament\Resources\TranslatesStrings;
 use App\Helpers\Controller\FrequencyFormatter;
 use App\Models\Controller\ControllerPosition;
-use App\Models\Controller\HasControllerHierarchy;
 use App\Services\ControllerPositionHierarchyService;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -48,7 +47,8 @@ abstract class AbstractControllersRelationManager extends RelationManager
                                 $livewire->getOwnerRecord()
                                     ->controllers
                                     ->mapWithKeys(
-                                        fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
+                                        fn (ControllerPosition $controller) =>
+                                            [$controller->id => $controller->callsign]
                                     )
                             ),
                     ])

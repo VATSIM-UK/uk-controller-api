@@ -243,7 +243,9 @@ class HoldsRelationManager extends RelationManager
                         ...$restriction->restriction,
                         'id' => $restriction->id,
                         'runway' => [
-                            'designator' => isset($restriction->restriction['runway']) ? $restriction->restriction['runway']['designator'] : null,
+                            'designator' => isset($restriction->restriction['runway'])
+                                ? $restriction->restriction['runway']['designator']
+                                : null,
                         ],
                     ],
                 ],
