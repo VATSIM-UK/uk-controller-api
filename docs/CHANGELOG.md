@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.23.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.22.0...6.23.0) (2022-09-30)
+
+
+### Features
+
+* calculate the current airac name ([c1965c0](https://github.com/VATSIM-UK/uk-controller-api/commit/c1965c0b5341e6080b7338f220e3e8e4f1ca78ed))
+
+
+### Bug Fixes
+
+* download srd from new source ([8b2e30c](https://github.com/VATSIM-UK/uk-controller-api/commit/8b2e30cb734af6ca3bdabfec9c05d1094a1ddd8a))
+
 ## [6.22.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.21.0...6.22.0) (2022-09-19)
 
 
