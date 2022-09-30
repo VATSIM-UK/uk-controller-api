@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SidResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
@@ -9,6 +10,7 @@ use Filament\Tables;
 
 class PrenotesRelationManager extends RelationManager
 {
+    use LimitsTableRecordListingOptions;
     use TranslatesStrings;
     
     protected static string $relationship = 'prenotes';

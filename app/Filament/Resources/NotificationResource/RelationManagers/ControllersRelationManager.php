@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\NotificationResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\ControllerPosition;
 use Closure;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class ControllersRelationManager extends RelationManager
 {
+    use LimitsTableRecordListingOptions;
+
     use TranslatesStrings;
     
     protected static string $relationship = 'controllers';

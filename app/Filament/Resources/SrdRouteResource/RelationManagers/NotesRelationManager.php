@@ -2,12 +2,15 @@
 
 namespace App\Filament\Resources\SrdRouteResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 
 class NotesRelationManager extends RelationManager
 {
+    use LimitsTableRecordListingOptions;
+
     protected static string $relationship = 'notes';
     protected static ?string $recordTitleAttribute = 'id';
 

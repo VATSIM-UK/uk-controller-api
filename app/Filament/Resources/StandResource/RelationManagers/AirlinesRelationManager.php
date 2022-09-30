@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Carbon\Carbon;
 use Closure;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class AirlinesRelationManager extends RelationManager
 {
+    use LimitsTableRecordListingOptions;
     use TranslatesStrings;
     
     protected bool $allowsDuplicates = true;
