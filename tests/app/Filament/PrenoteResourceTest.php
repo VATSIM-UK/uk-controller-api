@@ -364,7 +364,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Prenote::class;
     }
@@ -425,5 +425,10 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Prenote::findOrFail(1);
+    }
+
+    protected function resourceClass(): string
+    {
+        return PrenoteResource::class;
     }
 }

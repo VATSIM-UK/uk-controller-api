@@ -471,7 +471,7 @@ class SidResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Sid::class;
     }
@@ -530,5 +530,10 @@ class SidResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Sid::find(1);
+    }
+
+    protected function resourceClass(): string
+    {
+        return SidResource::class;
     }
 }

@@ -904,9 +904,14 @@ class StandResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Stand::class;
+    }
+
+    protected function resourceClass(): string
+    {
+        return StandResource::class;
     }
 
     protected function resourceListingClass(): string

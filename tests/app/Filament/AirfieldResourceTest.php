@@ -839,12 +839,12 @@ class AirfieldResourceTest extends BaseFilamentTestCase
 
     protected function resourceClass(): string
     {
-        return Airfield::class;
+        return AirfieldResource::class;
     }
 
-    protected function getResourceClass(): string
+    protected function resourceRecordClass(): string
     {
-        return AirfieldResource::class;
+        return Airfield::class;
     }
 
     protected function resourceId(): int|string

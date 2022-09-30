@@ -160,7 +160,7 @@ class UserResourceTest extends BaseFilamentTestCase
         return User::findOrFail(self::BANNED_USER_CID);
     }
 
-    protected function getResourceClass(): string
+    protected function resourceClass(): string
     {
         return UserResource::class;
     }

@@ -22,7 +22,7 @@ trait ChecksEditFilamentAccess
         }
 
         $response = $this->get(
-            call_user_func($this->getResourceClass() . '::getUrl', 'edit', ['record' => $this->getEditRecord()])
+            call_user_func($this->resourceClass() . '::getUrl', 'edit', ['record' => $this->getEditRecord()])
         );
         if ($expectSuccess) {
             $response->assertSuccessful()->assertSeeText($this->getEditText());

@@ -364,7 +364,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Handoff::class;
     }
@@ -425,5 +425,10 @@ class HandoffResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Handoff::find(1);
+    }
+
+    protected function resourceClass(): string
+    {
+        return HandoffResource::class;
     }
 }

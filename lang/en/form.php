@@ -11,4 +11,5 @@ return [
     'controllers' => require_once __DIR__ . '/controllers/form.php',
     'navaids' => require_once __DIR__ . '/navaids/form.php',
     'notifications' => require_once __DIR__ . '/notifications/form.php',
+    'srd' => require_once __DIR__ . '/srd/form.php',
 ];

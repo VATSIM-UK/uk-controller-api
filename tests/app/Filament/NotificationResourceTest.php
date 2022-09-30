@@ -564,7 +564,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected function resourceRecordClass(): string
     {
         return Notification::class;
     }
@@ -623,5 +623,10 @@ class NotificationResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Notification::findOrFail(1);
+    }
+
+    protected function resourceClass(): string
+    {
+        return NotificationResource::class;
     }
 }
