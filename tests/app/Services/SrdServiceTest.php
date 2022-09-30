@@ -14,9 +14,8 @@ use Illuminate\Support\Facades\Storage;
 
 class SrdServiceTest extends BaseFunctionalTestCase
 {
-    private const SRD_DOWNLOAD_FILE = 'downloaded-srd.xls';
     private const SRD_CURRENT_FILE = 'current-srd.xls';
-    private const SRD_UPDATED_AT_CACHE_KEY = 'SRD_UPDATED_AT';
+    private const SRD_VERSION_CACHE_KEY = 'SRD_VERSION';
 
     private SrdService $service;
 
@@ -27,50 +26,6 @@ class SrdServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(SrdService::class);
     }
 
-    private function mockSrdUpdatedCache(Carbon $returnValue)
-    {
-        Cache::shouldReceive('get')
-            ->with(
-                'SRD_UPDATED_AT',
-                Mockery::on(function (Carbon $value) {
-                    return $value->isSameAs('Y-m-d H:i:s', AiracService::getBaseAiracDate());
-                })
-            )
-            ->andReturn($returnValue);
-    }
-
-    public function testNewSrdIsAvailableIfSrdNeverUpdated()
-    {
-        $this->mockSrdUpdatedCache(AiracService::getBaseAiracDate());
-
-        $this->assertTrue($this->service->newSrdShouldBeAvailable());
-    }
-
-    public function testNewSrdIsAvailableIfNewAiracIsAvailable()
-    {
-        $this->mockSrdUpdatedCache(AiracService::getBaseAiracDate()->addDays(15));
-
-        $this->assertTrue($this->service->newSrdShouldBeAvailable());
-    }
-
-    public function testNewSrdIsNotAvailableIfUpdatedSinceLastAirac()
-    {
-        $this->mockSrdUpdatedCache(AiracService::getPreviousAiracDay()->addSecond());
-        $this->assertFalse($this->service->newSrdShouldBeAvailable());
-    }
-
-    private function mockSrdHttpCall(int $statusCode, string $responseData)
-    {
-        $url = 'https://nats-uk.ead-it.com/cms-nats/export/sites/default/en/' .
-            'Publications/digital-datasets/srd/SRD_Spreadsheet.xls';
-        Http::fake([
-                       $url => Http::response(
-                           $responseData,
-                           $statusCode
-                       )
-                   ]);
-    }
-
     public function testItThrowsExceptionWhenSrdDownloadFails()
     {
         $this->expectException(SrdUpdateFailedException::class);
@@ -78,83 +33,65 @@ class SrdServiceTest extends BaseFunctionalTestCase
         $this->service->updateSrdData();
     }
 
-    private function mockSrdFilesystem(
-        string $responseData,
-        bool $currentFileExists,
-        bool $shouldRecieveMove,
-        string $currentFileData = null
-    ) {
-        $mockFileSystem = Mockery::mock(Filesystem::class);
-        $mockFileSystem->shouldReceive('put')->with(self::SRD_DOWNLOAD_FILE, $responseData)->once();
-        $mockFileSystem->shouldReceive('exists')->with(self::SRD_CURRENT_FILE)->andReturn($currentFileExists);
-        $mockFileSystem->shouldReceive('get')->with(self::SRD_DOWNLOAD_FILE)->andReturn($responseData);
-        $mockFileSystem->shouldReceive('get')->with(self::SRD_CURRENT_FILE)->andReturn($currentFileData);
+    public function testItUpdatesTheSrdData()
+    {
+        $this->mockSrdHttpCall(200, 'foo');
+        $this->mockSrdFilesystem('foo');
+        $this->mockCacheSrdVersionWrite();
 
-        if ($shouldRecieveMove) {
-            $mockFileSystem->shouldReceive('move')->with(self::SRD_DOWNLOAD_FILE, self::SRD_CURRENT_FILE);
-            $mockFileSystem->shouldReceive('delete')->with(self::SRD_CURRENT_FILE);
-            $mockFileSystem->shouldReceive('exists')->with(self::SRD_CURRENT_FILE)->andReturn(true);
-            Artisan::shouldReceive('call')->with('srd:import downloaded-srd.xls')->once();
-        } else {
-            $mockFileSystem->shouldNotReceive('move');
-            $mockFileSystem->shouldNotReceive('delete');
-            $mockFileSystem->shouldNotReceive('exists');
-            Artisan::shouldReceive('call')->never();
-        }
+        $this->service->updateSrdData();
+    }
+
+    public function testSrdNeedsUpdatingIfSrdNeverUpdated()
+    {
+        $this->mockSrdUpdatedCache(null);
+        $this->assertTrue($this->service->srdNeedsUpdating());
+    }
+
+    public function testSrdNeedsUpdatingIfSrdNotCurrentVersion()
+    {
+        $this->mockSrdUpdatedCache('2201');
+        $this->assertTrue($this->service->srdNeedsUpdating());
+    }
+
+    public function testSrdDoesNotNeedUpdatingIfSrdCurrentVersion()
+    {
+        $this->mockSrdUpdatedCache(AiracService::getCurrentAirac());
+        $this->assertFalse($this->service->srdNeedsUpdating());
+    }
+
+    private function mockSrdUpdatedCache(?string $returnValue): void
+    {
+        Cache::shouldReceive('get')->with(self::SRD_VERSION_CACHE_KEY)->andReturn($returnValue);
+    }
+
+    private function mockSrdHttpCall(int $statusCode, string $responseData): void
+    {
+        $expectedUrl = sprintf(config('srd.download_url'), AiracService::getCurrentAirac());
+        Http::fake([
+            $expectedUrl => Http::response(
+                $responseData,
+                $statusCode
+            ),
+        ])->preventStrayRequests();
+    }
+
+    private function mockSrdFilesystem(string $responseData): void
+    {
+        $mockFileSystem = Mockery::mock(Filesystem::class);
+        $mockFileSystem->shouldReceive('put')->with(self::SRD_CURRENT_FILE, $responseData)->once();
 
         Storage::shouldReceive('disk')->with('imports')->andReturn($mockFileSystem);
+        Artisan::shouldReceive('call')->with('srd:import current-srd.xls')->once();
     }
 
-    private function mockCacheTimestampWrite()
+    private function mockCacheSrdVersionWrite(): void
     {
         Cache::shouldReceive('forever')->with(
-            self::SRD_UPDATED_AT_CACHE_KEY,
+            self::SRD_VERSION_CACHE_KEY,
             Mockery::on(
-                function (Carbon $value) {
-                    return $value->isSameAs('Y-m-d H:i:s', Carbon::now());
-                }
+                fn(string $value) => $value === AiracService::getCurrentAirac()
             )
         )->once();
-    }
-
-    public function testItUpdatesSrdIfNoCurrentFileToCompareTo()
-    {
-        $this->mockSrdHttpCall(200, 'foo');
-        $this->mockSrdFilesystem(
-            'foo',
-            false,
-            true,
-        );
-        $this->mockCacheTimestampWrite();
-
-        $this->assertTrue($this->service->updateSrdData());
-    }
-
-    public function testItUpdatesSrdIfLocalFileDoesntMatchDownloaded()
-    {
-        $this->mockSrdHttpCall(200, 'foo');
-        $this->mockSrdFilesystem(
-            'foo',
-            true,
-            true,
-            'bar'
-        );
-        $this->mockCacheTimestampWrite();
-
-        $this->assertTrue($this->service->updateSrdData());
-    }
-
-    public function testItDoesntUpdateSrdIfLocalFileMatchesDownloaded()
-    {
-        $this->mockSrdHttpCall(200, 'foo');
-        $this->mockSrdFilesystem(
-            'foo',
-            true,
-            false,
-            'foo'
-        );
-        $this->mockCacheTimestampWrite();
-
-        $this->assertFalse($this->service->updateSrdData());
     }
 }
