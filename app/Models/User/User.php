@@ -44,6 +44,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'last_name',
         'last_login',
     ];
+    
+    protected $hidden = [
+        'last_login_ip',
+    ];
 
     /**
      * Returns the relation to the users status

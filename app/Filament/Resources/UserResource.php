@@ -15,6 +15,8 @@ use Filament\Tables;
 
 class UserResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
@@ -35,15 +37,15 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('id')
-                    ->label(__('form.users.cid.label'))
+                    ->label(self::translateFormPath('cid.label'))
                     ->disabled(),
                 TextInput::make('first_name')
-                    ->label(__('form.users.first_name.label'))
-                    ->helperText(__('form.users.first_name.helper'))
+                    ->label(self::translateFormPath('first_name.label'))
+                    ->helperText(self::translateFormPath('first_name.helper'))
                     ->disabled(),
                 TextInput::make('last_name')
-                    ->label(__('form.users.last_name.label'))
-                    ->helperText(__('form.users.last_name.helper'))
+                    ->label(self::translateFormPath('last_name.label'))
+                    ->helperText(self::translateFormPath('last_name.helper'))
                     ->disabled(),
                 Select::make('status')
                     ->options(
@@ -60,15 +62,16 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.users.columns.id'))
+                    ->label(self::translateTablePath('columns.id'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label(__('table.users.columns.name'))
+                    ->label(self::translateTablePath('columns.name'))
                     ->searchable(['user.first_name', 'user.last_name']),
                 Tables\Columns\TextColumn::make('status')
-                    ->label(__('table.users.columns.status'))
+                    ->label(self::translateTablePath('columns.status'))
                     ->formatStateUsing(fn (int $state) => UserStatus::find($state)?->statusMessage()),
                 Tables\Columns\TagsColumn::make('roles.description')
+                    ->label(self::translateTablePath('columns.roles'))
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -91,5 +94,10 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
             'view' => Pages\ViewUser::route('/{record}'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'users';
     }
 }

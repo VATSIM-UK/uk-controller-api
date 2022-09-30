@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\NotificationResource\RelationManagers;
 
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\ControllerPosition;
 use Closure;
 use Filament\Forms;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 class ControllersRelationManager extends RelationManager
 {
+    use TranslatesStrings;
+    
     protected static string $relationship = 'controllers';
     protected static ?string $recordTitleAttribute = 'callsign';
 
@@ -20,21 +23,21 @@ class ControllersRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('callsign')
-                    ->label(__('table.notifications.controller_positions.columns.callsign'))
+                    ->label(self::translateTablePath('columns.callsign'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('frequency')
-                    ->label(__('table.notifications.controller_positions.columns.frequency')),
+                    ->label(self::translateTablePath('columns.frequency')),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->label(__('table.notifications.controller_positions.attach_action.label'))
-                    ->modalHeading(__('table.notifications.controller_positions.attach_action.modal_heading'))
-                    ->modalButton(__('table.notifications.controller_positions.attach_action.modal_button'))
+                    ->label(self::translateTablePath('attach_action.label'))
+                    ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
+                    ->modalButton(self::translateTablePath('attach_action.modal_button'))
                     ->disableAttachAnother()
                     ->form([
                         Forms\Components\Toggle::make('global')
-                            ->label(__('table.notifications.controller_positions.attach_form.global.label'))
-                            ->helperText(__('table.notifications.controller_positions.attach_form.global.helper'))
+                            ->label(self::translateTablePath('attach_form.global.label'))
+                            ->helperText(self::translateTablePath('attach_form.global.helper'))
                             ->reactive()
                             ->afterStateUpdated(function (Closure $set) {
                                 $set('controllers', null);
@@ -82,5 +85,10 @@ class ControllersRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DetachBulkAction::make(),
             ]);
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'notifications.controller_positions';
     }
 }

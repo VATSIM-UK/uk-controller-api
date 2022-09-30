@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\SidResource\Pages;
 use App\Filament\Resources\SidResource\RelationManagers;
-use App\Models\Airfield\Airfield;
-use App\Models\Controller\Handoff;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Rules\Sid\SidIdentifiersMustBeUniqueForRunway;
@@ -23,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SidResource extends Resource
 {
+    use TranslatesStrings;
+
     protected static ?string $model = Sid::class;
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $recordRouteKeyName = 'sid.id';
@@ -33,8 +34,8 @@ class SidResource extends Resource
         return $form
             ->schema([
                 Select::make('runway_id')
-                    ->label(__('form.sids.runway.label'))
-                    ->helperText(__('form.sids.runway.helper'))
+                    ->label(self::translateFormPath('runway.label'))
+                    ->helperText(self::translateFormPath('runway.helper'))
                     ->hintIcon('heroicon-o-chevron-double-up')
                     ->options(
                         fn () => Runway::with('airfield')
@@ -50,8 +51,8 @@ class SidResource extends Resource
                     ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('identifier')
-                    ->label(__('form.sids.identifier.label'))
-                    ->helperText(__('form.sids.identifier.helper'))
+                    ->label(self::translateFormPath('identifier.label'))
+                    ->helperText(self::translateFormPath('identifier.helper'))
                     ->rule(
                         fn (Closure $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
                             Runway::findOrFail($get('runway_id')),
@@ -61,32 +62,25 @@ class SidResource extends Resource
                     )
                     ->required(),
                 Forms\Components\TextInput::make('initial_altitude')
-                    ->label(__('form.sids.initial_altitude.label'))
-                    ->helperText(__('form.sids.initial_altitude.helper'))
+                    ->label(self::translateFormPath('initial_altitude.label'))
+                    ->helperText(self::translateFormPath('initial_altitude.helper'))
                     ->hintIcon('heroicon-o-presentation-chart-line')
                     ->integer()
                     ->minValue(0)
                     ->maxValue(99999)
                     ->required(),
                 Forms\Components\TextInput::make('initial_heading')
-                    ->label(__('form.sids.initial_heading.label'))
-                    ->helperText(__('form.sids.initial_heading.helper'))
+                    ->label(self::translateFormPath('initial_heading.label'))
+                    ->helperText(self::translateFormPath('initial_heading.helper'))
                     ->hintIcon('heroicon-o-arrows-expand')
                     ->integer()
                     ->minValue(1)
                     ->maxValue(360),
                 Select::make('handoff_id')
-                    ->label(__('form.sids.handoff.label'))
-                    ->helperText(__('form.sids.handoff.helper'))
+                    ->label(self::translateFormPath('handoff.label'))
+                    ->helperText(self::translateFormPath('handoff.helper'))
                     ->hintIcon('heroicon-o-clipboard-list')
-                    ->options(
-                        fn () => Handoff::all()
-                            ->mapWithKeys(
-                                fn (Handoff $handoff) => [
-                                    $handoff->id => $handoff->description,
-                                ]
-                            ),
-                    )
+                    ->options(SelectOptions::nonAirfieldHandoffs())
                     ->searchable(),
             ]);
     }
@@ -96,26 +90,24 @@ class SidResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('runway.airfield.code')
-                    ->label(__('table.sids.columns.airfield'))
+                    ->label(self::translateTablePath('columns.airfield'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('runway.identifier')
-                    ->label(__('table.sids.columns.runway')),
+                    ->label(self::translateTablePath('columns.runway')),
                 Tables\Columns\TextColumn::make('identifier')
-                    ->label(__('table.sids.columns.identifier')),
+                    ->label(self::translateTablePath('columns.identifier')),
                 Tables\Columns\TextColumn::make('initial_altitude')
-                    ->label(__('table.sids.columns.initial_altitude')),
+                    ->label(self::translateTablePath('columns.initial_altitude')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ])->filters([
+            ->filters([
                 Tables\Filters\SelectFilter::make('airfield')
-                    ->label(__('filter.sids.airfield'))
-                    ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->id => $airfield->code]))
+                    ->label(self::translateFilterPath('airfield'))
+                    ->options(SelectOptions::airfields())
                     ->searchable()
                     ->query(
                         function (Builder $query, array $data) {
@@ -149,5 +141,10 @@ class SidResource extends Resource
             'view' => Pages\ViewSid::route('/{record}'),
             'edit' => Pages\EditSid::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'sids';
     }
 }

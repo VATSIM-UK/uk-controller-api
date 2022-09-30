@@ -2,14 +2,14 @@
 
 return [
     'columns' => [
-        'id' => 'Id',
         'airfield' => 'Airfield',
         'terminal' => 'Terminal',
         'identifier' => 'Identifier',
+        'max_wtc' => 'Max UK WTC',
+        'max_size' => 'Max Aircraft Size',
         'airlines' => 'Airlines',
         'used' => 'Used for Allocation',
         'priority' => 'Allocation Priority',
-        'allocation' => 'Allocated To',
     ],
     'airlines' => [
         'description' => 'Airlines can be assigned to specific stands based on various parameters.',

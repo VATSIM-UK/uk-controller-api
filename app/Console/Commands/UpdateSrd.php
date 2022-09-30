@@ -29,10 +29,12 @@ class UpdateSrd extends Command
     public function handle(SrdService $service)
     {
         $this->info('Starting SRD update');
-        if (!$service->newSrdShouldBeAvailable()) {
+        if (!$service->srdNeedsUpdating()) {
             $this->info('SRD is up to date');
             return;
         }
-        $this->info($service->updateSrdData() ? 'SRD update complete' : 'SRD not updated');
+
+        $service->updateSrdData();
+        $this->info('SRD updated successfully');
     }
 }

@@ -1,5 +1,81 @@
 # UK Controller Plugin API Changelog
 
+## [6.22.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.21.0...6.22.0) (2022-09-19)
+
+
+### Features
+
+* allow top-down ordering for airfields ([5fb3ff4](https://github.com/VATSIM-UK/uk-controller-api/commit/5fb3ff4d9780c694d436627f08a2023e55976944))
+* automatically create default handoff for airfield ([0173963](https://github.com/VATSIM-UK/uk-controller-api/commit/017396318df1aa87644bc50638e84125d9ed8c29))
+* dont display default handoffs on handoff page ([d4391d6](https://github.com/VATSIM-UK/uk-controller-api/commit/d4391d6a77e242e8fba22dead0ae54e46036d306))
+* only show non airfield handoffs for sids ([76f2560](https://github.com/VATSIM-UK/uk-controller-api/commit/76f2560977ae7eb03f8401323bad6f64996c217f))
+* updating controllers changes default handoff ([5e6ce0c](https://github.com/VATSIM-UK/uk-controller-api/commit/5e6ce0cc04fb0760e856cb732f4c2bcda200ac3d))
+
+
+### Data Updates
+
+* missing handoff orders ([198f4f0](https://github.com/VATSIM-UK/uk-controller-api/commit/198f4f027cd9572b2574ca9fde26b6ee8537e61d))
+
+## [6.21.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.2...6.21.0) (2022-09-19)
+
+
+### Features
+
+* display airfields in a table ([1197f14](https://github.com/VATSIM-UK/uk-controller-api/commit/1197f140f6a6786e8a1f6e180d5706eb903c29f8))
+
+
+### Bug Fixes
+
+* model properties ([886ca6f](https://github.com/VATSIM-UK/uk-controller-api/commit/886ca6fd1c65901e81669eec74ff75f783959df1))
+
+
+### Performance Improvements
+
+* cache more select options ([4548443](https://github.com/VATSIM-UK/uk-controller-api/commit/45484430779b1a298629a07cfdcedc3825ed2d3c))
+
+## [6.20.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.1...6.20.2) (2022-09-17)
+
+
+### Performance Improvements
+
+* stand table performance and ordering ([952bbda](https://github.com/VATSIM-UK/uk-controller-api/commit/952bbda15e225e4a80ab3cab236fc9f18d6424e5))
+
+## [6.20.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.20.0...6.20.1) (2022-09-16)
+
+
+### Performance Improvements
+
+* select option caching ([677a1d8](https://github.com/VATSIM-UK/uk-controller-api/commit/677a1d8276f29d16d513c16dc69bdec52f86fe83))
+
+## [6.20.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.19.0...6.20.0) (2022-09-16)
+
+
+### Features
+
+* controller position descriptions ([b7676ac](https://github.com/VATSIM-UK/uk-controller-api/commit/b7676ac12b3d741852d08dfebca864059f973327))
+* table default sorts ([6926b6e](https://github.com/VATSIM-UK/uk-controller-api/commit/6926b6eb0b2b0a5c0854cece4d4d5eb4da52603f))
+
+## [6.19.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.18.1...6.19.0) (2022-09-16)
+
+
+### Features
+
+* add wtc and size to stand table ([4b536c3](https://github.com/VATSIM-UK/uk-controller-api/commit/4b536c3dcbd0c168e6e2b5668d0e515d08844236))
+* filters for stands table ([0ee9506](https://github.com/VATSIM-UK/uk-controller-api/commit/0ee95061d1ea08b1f62c4e0927b043b288af5341))
+
+
+### Bug Fixes
+
+* make stand airlines column non-orderable ([7141a09](https://github.com/VATSIM-UK/uk-controller-api/commit/7141a09bae7d64be4c0034deac0931c1152a0a67))
+* remove delete bulk actions ([36a760b](https://github.com/VATSIM-UK/uk-controller-api/commit/36a760b204876fa21adb36f0a7749e6194791030))
+
+## [6.18.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.18.0...6.18.1) (2022-09-15)
+
+
+### Bug Fixes
+
+* prevent bulk deletes ([05bc519](https://github.com/VATSIM-UK/uk-controller-api/commit/05bc519cf658d2d7e500ae5f565b8720073ef48d))
+
 ## [6.18.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.17.0...6.18.0) (2022-09-04)
 
 

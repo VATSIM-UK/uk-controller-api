@@ -26,6 +26,26 @@ class StandResourceTest extends BaseFilamentTestCase
         Carbon::setTestNow(Carbon::now()->startOfSecond());
     }
 
+    public function testItCanFilterForAirfieldSpecificStands()
+    {
+        Livewire::test(ListStands::class)
+            ->assertCanSeeTableRecords([Stand::findOrFail(1), Stand::findOrFail(2), Stand::findOrFail(3)])
+            ->filterTable('airfield', 1)
+            ->assertCanSeeTableRecords([Stand::findOrFail(1), Stand::findOrFail(2)])
+            ->assertCanNotSeeTableRecords([Stand::findOrFail(3)]);
+    }
+
+    public function testItCanFilterForAirlineSpecificStands()
+    {
+        Stand::findOrFail(3)->airlines()->sync([1]);
+
+        Livewire::test(ListStands::class)
+            ->assertCanSeeTableRecords([Stand::findOrFail(1), Stand::findOrFail(2), Stand::findOrFail(3)])
+            ->filterTable('airlines', ['values' => 1])
+            ->assertCanSeeTableRecords([Stand::findOrFail(3)])
+            ->assertCanNotSeeTableRecords([Stand::findOrFail(1), Stand::findOrFail(2)]);
+    }
+
     public function testItRetrievesDataForView()
     {
         Stand::findOrFail(1)
@@ -889,6 +909,11 @@ class StandResourceTest extends BaseFilamentTestCase
         return Stand::class;
     }
 
+    protected function resourceClass(): string
+    {
+        return StandResource::class;
+    }
+
     protected function resourceListingClass(): string
     {
         return ListStands::class;
@@ -953,10 +978,5 @@ class StandResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Stand::find(1);
-    }
-
-    protected function resourceClass(): string
-    {
-        return StandResource::class;
     }
 }

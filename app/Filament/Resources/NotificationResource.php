@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\NotificationResource\Pages;
 use App\Filament\Resources\NotificationResource\RelationManagers;
 use App\Models\Controller\ControllerPosition;
@@ -18,6 +19,8 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationResource extends Resource
 {
+    use TranslatesStrings;
+
     private const DATE_FORMAT = 'd M Y H:i';
 
     protected static ?string $model = Notification::class;
@@ -30,28 +33,28 @@ class NotificationResource extends Resource
         return $form
             ->schema([
                 TextInput::make('title')
-                    ->label(__('form.notifications.title.label'))
+                    ->label(self::translateFormPath('title.label'))
                     ->maxLength(255)
                     ->required(),
                 TextInput::make('link')
-                    ->label(__('form.notifications.link.label'))
-                    ->helperText(__('form.notifications.link.helper'))
+                    ->label(self::translateFormPath('link.label'))
+                    ->helperText(self::translateFormPath('link.helper'))
                     ->url(),
                 DateTimePicker::make('valid_from')
-                    ->label(__('form.notifications.valid_from.label'))
-                    ->helperText(__('form.notifications.valid_from.helper'))
+                    ->label(self::translateFormPath('valid_from.label'))
+                    ->helperText(self::translateFormPath('valid_from.helper'))
                     ->displayFormat(self::DATE_FORMAT)
                     ->withoutSeconds()
                     ->required(),
                 DateTimePicker::make('valid_to')
-                    ->label(__('form.notifications.valid_to.label'))
-                    ->helperText(__('form.notifications.valid_to.helper'))
+                    ->label(self::translateFormPath('valid_to.label'))
+                    ->helperText(self::translateFormPath('valid_to.helper'))
                     ->displayFormat(self::DATE_FORMAT)
                     ->withoutSeconds()
                     ->after('valid_from')
                     ->required(),
                 Textarea::make('body')
-                    ->label(__('form.notifications.body.label'))
+                    ->label(self::translateFormPath('body.label'))
                     ->maxLength(65535)
                     ->columnSpan('full')
                     ->required(),
@@ -63,33 +66,34 @@ class NotificationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->label(__('table.notifications.columns.title'))
+                    ->label(self::translateTablePath('columns.title'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('valid_from')
-                    ->label(__('table.notifications.columns.valid_from'))
+                    ->label(self::translateTablePath('columns.valid_from'))
                     ->date(self::DATE_FORMAT)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('valid_to')
-                    ->label(__('table.notifications.columns.valid_to'))
+                    ->label(self::translateTablePath('columns.valid_to'))
                     ->date(self::DATE_FORMAT)
                     ->sortable(),
                 Tables\Columns\BooleanColumn::make('read')
-                    ->label(__('table.notifications.columns.read'))
+                    ->label(self::translateTablePath('columns.read'))
                     ->getStateUsing(
                         fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     ),
             ])
             ->filters([
                 Tables\Filters\Filter::make('unread')
-                    ->label(__('filter.notifications.unread'))
+                    ->label(self::translateFilterPath('unread'))
                     ->query(fn (Builder $query) => $query->unreadBy(Auth::user()))
                     ->toggle(),
                 Tables\Filters\Filter::make('active')
-                    ->label(__('filter.notifications.active'))
+                    ->label(self::translateFilterPath('active'))
                     ->toggle()
                     ->query(fn (Builder $query) => $query->active()),
                 Tables\Filters\MultiSelectFilter::make('controllers')
-                    ->label(__('filter.notifications.controllers'))
+                    ->label(self::translateFilterPath('controllers'))
+                    ->options(SelectOptions::controllers())
                     ->query(
                         function (Builder $query, array $data) {
                             if (empty($data['values'])) {
@@ -103,10 +107,6 @@ class NotificationResource extends Resource
                                 }
                             );
                         }
-                    )
-                    ->options(
-                        ControllerPosition::all()
-                            ->mapWithKeys(fn (ControllerPosition $position) => [$position->id => $position->callsign])
                     ),
             ])
             ->actions([
@@ -131,5 +131,10 @@ class NotificationResource extends Resource
             'view' => Pages\ViewNotification::route('/{record}'),
             'edit' => Pages\EditNotification::route('/{record}/edit'),
         ];
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'notifications';
     }
 }

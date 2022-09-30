@@ -69,7 +69,7 @@ return [
             'label' => 'Remove',
         ],
     ],
-    'pairs' => [
+    'paired' => [
         'stand' =>  [
             'label' => 'Stand to Pair',
             'helper' => 'Only stands at the same airfield may be paired.'

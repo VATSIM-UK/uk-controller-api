@@ -2,12 +2,15 @@
 
 namespace App\Filament\Resources\SidResource\RelationManagers;
 
+use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 
 class PrenotesRelationManager extends RelationManager
 {
+    use TranslatesStrings;
+    
     protected static string $relationship = 'prenotes';
 
     protected static ?string $recordTitleAttribute = 'description';
@@ -17,9 +20,9 @@ class PrenotesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('description')
-                    ->label(__('table.sids.prenotes.columns.description')),
+                    ->label(self::translateTablePath('columns.description')),
                 Tables\Columns\TagsColumn::make('controllers.callsign')
-                    ->label(__('table.sids.prenotes.columns.controllers')),
+                    ->label(self::translateTablePath('columns.controllers')),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
@@ -28,21 +31,26 @@ class PrenotesRelationManager extends RelationManager
                             ->label(__('form.stands.airlines.icao.label'))
                             ->required(),
                     ])
-                    ->label(__('table.sids.prenotes.attach_action.trigger_button'))
-                    ->modalHeading(__('table.sids.prenotes.attach_action.modal_heading'))
-                    ->modalButton(__('table.sids.prenotes.attach_action.confirm_button'))
+                    ->label(self::translateTablePath('attach_action.trigger_button'))
+                    ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
+                    ->modalButton(self::translateTablePath('attach_action.confirm_button'))
                     ->disableAttachAnother(),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()
-                    ->label(__('table.sids.prenotes.detach_action.trigger_button'))
+                    ->label(self::translateTablePath('detach_action.trigger_button'))
                     ->modalHeading(
                         fn (Tables\Actions\DetachAction $action) => __(
                             'table.sids.prenotes.detach_action.modal_heading',
                             ['prenote' => $action->getRecordTitle()]
                         )
                     )
-                    ->modalButton(__('table.sids.prenotes.detach_action.confirm_button'))
+                    ->modalButton(self::translateTablePath('detach_action.confirm_button'))
             ]);
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'sids.prenotes';
     }
 }

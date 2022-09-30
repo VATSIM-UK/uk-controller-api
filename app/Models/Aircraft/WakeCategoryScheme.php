@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WakeCategoryScheme extends Model
 {
+    public $timestamps = false;
+
     private const RECAT_EU_KEY = 'RECAT_EU';
     private const UK_KEY = 'UK';
 
