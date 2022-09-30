@@ -1,5 +1,19 @@
 # UK Controller Plugin API Changelog
 
+## [6.24.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.23.0...6.24.0) (2022-09-30)
+
+
+### Features
+
+* filter srd notes ([b2918ea](https://github.com/VATSIM-UK/uk-controller-api/commit/b2918ea1bd34118a87415899f72385222ea84de2))
+* list notes for an SRD route ([aab5d93](https://github.com/VATSIM-UK/uk-controller-api/commit/aab5d937b15fda03bbcd7a725cc59a788e74c1c5))
+* view srd routes ([328c33b](https://github.com/VATSIM-UK/uk-controller-api/commit/328c33bf32c730d924e9c6f02faed655d71bc083))
+
+
+### Bug Fixes
+
+* remove create action for srd routes ([9dd5728](https://github.com/VATSIM-UK/uk-controller-api/commit/9dd572841efe07b243659c8a3e8ed84b459053aa))
+
 ## [6.23.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.22.0...6.23.0) (2022-09-30)
 
 
