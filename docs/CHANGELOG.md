@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.25.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.25.0...6.25.1) (2022-09-30)
+
+
+### Bug Fixes
+
+* limit number of records to be displayed at once ([6a65113](https://github.com/VATSIM-UK/uk-controller-api/commit/6a65113cb71955f9957b4b582c02978964b30b24))
+
 ## [6.25.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.24.0...6.25.0) (2022-09-30)
 
 
