@@ -10,6 +10,8 @@ use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ControllersRelationManager extends RelationManager
@@ -45,6 +47,18 @@ class ControllersRelationManager extends RelationManager
                             ->afterStateUpdated(function (Closure $set) {
                                 $set('controllers', null);
                             }),
+                        Forms\Components\MultiSelect::make('position_level')
+                            ->options(
+                                [
+                                    'DEL' => 'Delivery',
+                                    'GND' => 'Ground',
+                                    'TWR' => 'Tower',
+                                    'APP' => 'Approach',
+                                    'CTR' => 'Enroute',
+                                ]
+                            )
+                            ->reactive()
+                            ->hidden(fn (Closure $get) => $get('global')),
                         Forms\Components\MultiSelect::make('controllers')
                             ->searchable()
                             ->options(
@@ -59,17 +73,15 @@ class ControllersRelationManager extends RelationManager
                                         ) => [$controllerPosition->id => $controllerPosition->callsign]
                                     )
                             )
-                            ->hidden(fn (Closure $get) => $get('global'))
-                            ->required(fn (Closure $get) => !$get('global')),
+                            ->hidden(fn (Closure $get) => $get('global') || $get('position_level'))
+                            ->required(fn (Closure $get) => !$get('global') && !$get('position_level')),
                     ])
                     ->using(function (ControllersRelationManager $livewire, array $data) {
                         DB::transaction(function () use ($livewire, $data) {
                             $livewire->getOwnerRecord()
                                 ->controllers()
                                 ->sync(
-                                    $data['global']
-                                        ? ControllerPosition::all()->pluck('id')
-                                        : collect($data['controllers'])
+                                    self::controllersForNotification($data)
                                         ->merge(
                                             $livewire->getOwnerRecord()->controllers()->pluck(
                                                 'controller_positions.id'
@@ -88,6 +100,27 @@ class ControllersRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DetachBulkAction::make(),
             ]);
+    }
+
+    private static function controllersForNotification(array $data): Collection
+    {
+        if ($data['global']) {
+            return ControllerPosition::all()->pluck('id');
+        }
+
+        if (!empty($data['position_level'])) {
+            $query = array_reduce(
+                array_map(
+                    fn (string $level) => ControllerPosition::where('callsign', 'like', '%' . $level),
+                    $data['position_level']
+                ),
+                fn (?Builder $carry, Builder $positionQuery) => $carry ? $carry->union($positionQuery) : $positionQuery
+            );
+
+            return $query->get()->pluck('id');
+        }
+
+        return collect($data['controllers']);
     }
 
     protected static function translationPathRoot(): string

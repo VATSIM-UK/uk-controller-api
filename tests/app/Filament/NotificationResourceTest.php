@@ -419,6 +419,98 @@ class NotificationResourceTest extends BaseFilamentTestCase
         );
     }
 
+    public function testItAddsAllControllersByPositionLevel()
+    {
+        $notification = Notification::factory()->create();
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->callTableAction(
+                AttachAction::class,
+                data: [
+                    'position_level' => ['TWR', 'APP'],
+                ],
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 1,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 2,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 3,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 4,
+                'notification_id' => $notification->id,
+            ]
+        );
+    }
+
+    public function testItUpdatesControllersIfPositionLevelSelected()
+    {
+        $notification = Notification::factory()->create();
+        $notification->controllers()->sync([1, 2]);
+
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+            ->callTableAction(
+                AttachAction::class,
+                data: [
+                    'position_level' => ['CTR'],
+                ],
+            )
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 1,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 2,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 3,
+                'notification_id' => $notification->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'controller_position_notification',
+            [
+                'controller_position_id' => 4,
+                'notification_id' => $notification->id,
+            ]
+        );
+    }
+
     public function testItAddsControllers()
     {
         $notification = Notification::factory()->create();
