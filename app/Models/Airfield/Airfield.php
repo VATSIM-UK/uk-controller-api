@@ -4,6 +4,7 @@ namespace App\Models\Airfield;
 
 use App\Models\Controller\Handoff;
 use App\Models\Controller\HasControllerHierarchy;
+use App\Models\Runway\Runway;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Location\Coordinate;
 use App\Models\Stand\Stand;
@@ -51,6 +52,11 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
         'longitude' => 'float',
         'elevation' => 'integer',
     ];
+
+    public function runways(): HasMany
+    {
+        return $this->hasMany(Runway::class);
+    }
 
 
     public function handoff(): BelongsTo

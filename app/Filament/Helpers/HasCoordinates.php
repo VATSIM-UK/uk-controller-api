@@ -9,9 +9,9 @@ trait HasCoordinates
 {
     use TranslatesStrings;
 
-    public static function latitudeInput(): TextInput
+    public static function latitudeInput(string $fieldName = 'latitude'): TextInput
     {
-        return TextInput::make('latitude')
+        return TextInput::make($fieldName)
             ->required()
             ->numeric('decimal:7')
             ->minValue(-90)
@@ -20,9 +20,9 @@ trait HasCoordinates
             ->helperText(self::translateFormPath('latitude.helper'));
     }
 
-    public static function longitudeInput(): TextInput
+    public static function longitudeInput(string $fieldName = 'longitude'): TextInput
     {
-        return TextInput::make('longitude')
+        return TextInput::make($fieldName)
             ->required()
             ->numeric('decimal:7')
             ->minValue(-180)
@@ -31,8 +31,10 @@ trait HasCoordinates
             ->helperText(self::translateFormPath('longitude.helper'));
     }
 
-    public static function coordinateInputs(): array
-    {
-        return [self::latitudeInput(), self::longitudeInput()];
+    public static function coordinateInputs(
+        string $latitudeFieldName = 'latitude',
+        string $longitudeFieldName = 'longitude'
+    ): array {
+        return [self::latitudeInput($latitudeFieldName), self::longitudeInput($longitudeFieldName)];
     }
 }

@@ -3,10 +3,12 @@
 namespace App\Models\Runway;
 
 use App\Models\Airfield\Airfield;
+use App\Models\Sid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Runway extends Model
 {
@@ -33,6 +35,11 @@ class Runway extends Model
     public function airfield(): BelongsTo
     {
         return $this->belongsTo(Airfield::class);
+    }
+
+    public function sids(): HasMany
+    {
+        return $this->hasMany(Sid::class);
     }
 
     public function inverses(): BelongsToMany

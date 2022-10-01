@@ -8,6 +8,7 @@ return [
     'handoffs' => require_once __DIR__ . '/handoffs/form.php',
     'holds' => require_once __DIR__ . '/holds/form.php',
     'prenotes' => require_once __DIR__ . '/prenotes/form.php',
+    'runways' => require_once __DIR__ . '/runways/form.php',
     'controllers' => require_once __DIR__ . '/controllers/form.php',
     'navaids' => require_once __DIR__ . '/navaids/form.php',
     'notifications' => require_once __DIR__ . '/notifications/form.php',

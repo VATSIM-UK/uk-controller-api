@@ -3,7 +3,9 @@
 
 namespace App\Rules\Heading;
 
-class ValidHeading
+use Illuminate\Contracts\Validation\Rule;
+
+class ValidHeading implements Rule
 {
     private const HEADING_REGEX = '/^\d{1,3}$/';
 
@@ -27,6 +29,6 @@ class ValidHeading
      */
     public function message()
     {
-        return 'Invalid runway identifier';
+        return __('validation.heading');
     }
 }

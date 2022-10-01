@@ -4,6 +4,7 @@ return [
     'columns' => [
         'code' => 'ICAO Code',
         'transition' => 'Transition Altitude',
+        'runways' => 'Runways',
         'top_down' => 'Top-down Order'
     ],
     'controller_positions' => [

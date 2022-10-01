@@ -287,4 +287,40 @@ class RunwayServiceTest extends BaseFunctionalTestCase
 
         $this->assertEquals($expected, $this->service->getRunwaysDependency());
     }
+
+    public function testItThrowsExceptionIfRunwayIdentifierIsInvalidForInverseCalculation()
+    {
+        $this->expectException(RunwayIdentifierInvalidException::class);
+        RunwayService::inverseRunwayIdentifier('foo');
+    }
+
+    /**
+     * @dataProvider runwayIdentifierProvider
+     */
+    public function testItCalculatesReverseRunwayIdentifier(string $identifier, string $expected)
+    {
+        $this->assertEquals(
+            $expected,
+            RunwayService::inverseRunwayIdentifier($identifier)
+        );
+    }
+
+    public function runwayIdentifierProvider(): array
+    {
+        return [
+            'Single digit, no side' => ['09', '27'],
+            'Double digit, no side' => ['27', '09'],
+            'Runway 18, no side' => ['18', '36'],
+            'Runway 36, no side' => ['36', '18'],
+            'Runway 01, no side' => ['01', '19'],
+            'Runway 19, no side' => ['19', '01'],
+            'Runway 35L' => ['35L', '17R'],
+            'Runway 08R' => ['08R', '26L'],
+            'Runway 05L' => ['05L', '23R'],
+            'Runway 15G' => ['15G', '33G'],
+            'Runway 33G' => ['33G', '15G'],
+            'Runway 06C' => ['06C', '24C'],
+            'Runway 24C' => ['24C', '06C'],
+        ];
+    }
 }
