@@ -15,6 +15,7 @@ trait SetsRunwayInverses
             ->first();
 
         if (!$inverseRunway) {
+            $runway->inverses()->sync([]);
             return;
         }
 

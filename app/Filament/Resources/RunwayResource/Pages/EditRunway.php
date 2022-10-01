@@ -19,6 +19,9 @@ class EditRunway extends EditRecord
         ];
     }
 
+    /**
+     * Set any inverse runways.
+     */
     protected function afterSave()
     {
         $this->setInverse($this->record);

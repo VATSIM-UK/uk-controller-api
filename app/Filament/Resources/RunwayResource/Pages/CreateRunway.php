@@ -11,6 +11,9 @@ class CreateRunway extends CreateRecord
 
     protected static string $resource = RunwayResource::class;
 
+    /**
+     * Set any inverse runways.
+     */
     public function afterCreate()
     {
         $this->setInverse($this->record);
