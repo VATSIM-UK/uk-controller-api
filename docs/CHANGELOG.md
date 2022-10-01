@@ -1,5 +1,21 @@
 # UK Controller Plugin API Changelog
 
+## [6.26.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.25.1...6.26.0) (2022-10-01)
+
+
+### Features
+
+* allow controllers to be selected by position type for notifications ([9cb95ca](https://github.com/VATSIM-UK/uk-controller-api/commit/9cb95cacb75d0a35f7454fe07ae2756769dfbb72))
+* create and edit runways ([fafff0d](https://github.com/VATSIM-UK/uk-controller-api/commit/fafff0d89e6666ea40c029b1d242f1f596f95a58))
+* display runway table ([4927a95](https://github.com/VATSIM-UK/uk-controller-api/commit/4927a9562334f7c2257519b8aeddf9ba0e240ddf))
+* filter runways by airfield ([8e1a86e](https://github.com/VATSIM-UK/uk-controller-api/commit/8e1a86e55c71a34f0ea3a8c5a407c984066f1276))
+* inverse runways ([f617a41](https://github.com/VATSIM-UK/uk-controller-api/commit/f617a41d75e087a076a0993ce485c09e16b1fa11))
+
+
+### Performance Improvements
+
+* cache runway select options ([bf47828](https://github.com/VATSIM-UK/uk-controller-api/commit/bf478287452c8e8f03cccce1b621e254ff5eece4))
+
 ## [6.25.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.25.0...6.25.1) (2022-09-30)
 
 
