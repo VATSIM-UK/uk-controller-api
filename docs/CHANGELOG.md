@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.27.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.26.0...6.27.0) (2022-10-02)
+
+
+### Features
+
+* display sids and stars in srd table ([df14440](https://github.com/VATSIM-UK/uk-controller-api/commit/df14440cb942fe24fa3df0bc263bd8555250a6e0))
+* prepend sid to route on srd form ([5b67742](https://github.com/VATSIM-UK/uk-controller-api/commit/5b677426fe60c506f9efb7e0140de841c94e84f5))
+* prepend sid to srd route segement ([154659e](https://github.com/VATSIM-UK/uk-controller-api/commit/154659ee0da86f04f7f2289f6200a88e0e274d38))
+
 ## [6.26.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.25.1...6.26.0) (2022-10-01)
 
 
