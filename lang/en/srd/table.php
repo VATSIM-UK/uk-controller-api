@@ -6,6 +6,8 @@ return [
         'destination' => 'Destination',
         'minimum_level' => 'Minimum Level',
         'maximum_level' => 'Maximum Level',
+        'sid' => 'SID',
+        'star' => 'STAR',
         'route_segment' => 'Route Segment',
         'notes' => 'Notes',
     ],

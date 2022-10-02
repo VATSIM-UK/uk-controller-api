@@ -51,6 +51,12 @@ class SrdRouteResource extends Resource
                     ->label(__('table.srd.columns.minimum_level')),
                 Tables\Columns\TextColumn::make('maximum_level')
                     ->label(__('table.srd.columns.maximum_level')),
+                Tables\Columns\TextColumn::make('sid')
+                    ->default('--')
+                    ->label(__('table.srd.columns.sid')),
+                Tables\Columns\TextColumn::make('star')
+                    ->default('--')
+                    ->label(__('table.srd.columns.star')),
                 Tables\Columns\TextColumn::make('route_segment')
                     ->label(__('table.srd.columns.route_segment')),
                 Tables\Columns\TextColumn::make('notes')
