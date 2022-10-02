@@ -16,6 +16,8 @@ use Illuminate\Support\Collection;
 
 class SrdRouteResource extends Resource
 {
+    use TranslatesStrings;
+    
     protected static ?string $model = SrdRoute::class;
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $navigationLabel = 'SRD Routes';
@@ -25,15 +27,15 @@ class SrdRouteResource extends Resource
         return $form
             ->schema([
                 TextInput::make('origin')
-                    ->label(__('form.srd.origin.label')),
+                    ->label(self::translateFormPath('origin.label')),
                 TextInput::make('destination')
-                    ->label(__('form.srd.destination.label')),
+                    ->label(self::translateFormPath('destination.label')),
                 TextInput::make('minimum_level')
-                    ->label(__('form.srd.minimum_level.label')),
+                    ->label(self::translateFormPath('minimum_level.label')),
                 TextInput::make('maximum_level')
-                    ->label(__('form.srd.maximum_level.label')),
+                    ->label(self::translateFormPath('maximum_level.label')),
                 TextInput::make('route_segment')
-                    ->label(__('form.srd.route_segment.label')),
+                    ->label(self::translateFormPath('route_segment.label')),
             ]);
     }
 
@@ -42,26 +44,26 @@ class SrdRouteResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('origin')
-                    ->label(__('table.srd.columns.origin'))
+                    ->label(self::translateTablePath('columns.origin'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('destination')
-                    ->label(__('table.srd.columns.destination'))
+                    ->label(self::translateTablePath('columns.destination'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('minimum_level')
-                    ->label(__('table.srd.columns.minimum_level')),
+                    ->label(self::translateTablePath('columns.minimum_level')),
                 Tables\Columns\TextColumn::make('maximum_level')
-                    ->label(__('table.srd.columns.maximum_level')),
+                    ->label(self::translateTablePath('columns.maximum_level')),
                 Tables\Columns\TextColumn::make('sid')
                     ->default('--')
-                    ->label(__('table.srd.columns.sid')),
+                    ->label(self::translateTablePath('columns.sid')),
                 Tables\Columns\TextColumn::make('star')
                     ->default('--')
-                    ->label(__('table.srd.columns.star')),
+                    ->label(self::translateTablePath('columns.star')),
                 Tables\Columns\TextColumn::make('route_segment')
-                    ->label(__('table.srd.columns.route_segment'))
+                    ->label(self::translateTablePath('columns.route_segment'))
                     ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record)),
                 Tables\Columns\TextColumn::make('notes')
-                    ->label(__('table.srd.columns.notes'))
+                    ->label(self::translateTablePath('columns.notes'))
                     ->formatStateUsing(
                         fn (Collection $state): string => $state->map(fn (SrdNote $note) => $note->id)->join(',')
                     ),
@@ -115,5 +117,10 @@ class SrdRouteResource extends Resource
     public static function buildFullSrdRouteString(SrdRoute $route): string
     {
         return trim(sprintf('%s %s', $route->sid, $route->route_segment));
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'srd';
     }
 }
