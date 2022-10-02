@@ -19,6 +19,7 @@ class WakeCategoriesImportTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->mockImporter = Mockery::mock(Importer::class);
+        $this->app->instance(Importer::class, $this->mockImporter);
     }
 
     public function testItThrowsExceptionIfFileNotFound()
@@ -36,9 +37,11 @@ class WakeCategoriesImportTest extends BaseFunctionalTestCase
         Storage::disk('imports')->put('wake.csv', 'testdata');
 
         $this->mockImporter->shouldReceive('withOutput')
+            ->once()
             ->andReturnSelf();
 
         $this->mockImporter->shouldReceive('import')
+            ->once()
             ->with('wake.csv', 'imports', Excel::CSV);
 
         Artisan::call('wake:import wake.csv');
@@ -58,6 +61,14 @@ class WakeCategoriesImportTest extends BaseFunctionalTestCase
 
         Storage::fake('imports');
         Storage::disk('imports')->put('wake.csv', 'testdata');
+
+        $this->mockImporter->shouldReceive('withOutput')
+            ->once()
+            ->andReturnSelf();
+
+        $this->mockImporter->shouldReceive('import')
+            ->once()
+            ->with('wake.csv', 'imports', Excel::CSV);
 
         Artisan::call('wake:import wake.csv');
         $dependency->refresh();

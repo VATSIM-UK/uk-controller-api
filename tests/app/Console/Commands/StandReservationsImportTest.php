@@ -3,11 +3,9 @@
 namespace App\Console\Commands;
 
 use App\BaseFunctionalTestCase;
-use App\Imports\Wake\Importer;
-use App\Models\Dependency\Dependency;
+use App\Imports\Stand\StandReservationsImport as Importer;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use InvalidArgumentException;
 use Maatwebsite\Excel\Excel;
 use Mockery;
 
@@ -19,6 +17,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->mockImporter = Mockery::mock(Importer::class);
+        $this->app->instance(Importer::class, $this->mockImporter);
     }
 
     public function testItReturnsErrorIfFileNotFound()
@@ -33,10 +32,12 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
         Storage::disk('imports')->put('stands.csv', 'testdata');
 
         $this->mockImporter->shouldReceive('withOutput')
+            ->once()
             ->andReturnSelf();
 
         $this->mockImporter->shouldReceive('import')
-            ->with('stands.csv', 'imports', Excel::CSV);
+            ->with('stands.csv', 'imports', Excel::CSV)
+            ->once();
 
         Artisan::call('stand-reservations:import stands.csv');
     }

@@ -17,6 +17,7 @@ class AllocateStandForArrivalTest extends BaseFunctionalTestCase
         Config::set('stands.auto_allocate', true);
         $serviceMock = Mockery::mock(StandService::class);
         $serviceMock->shouldReceive('getAircraftEligibleForArrivalStandAllocation')
+            ->once()
             ->andReturn(
                 new Collection(
                     [
@@ -27,21 +28,25 @@ class AllocateStandForArrivalTest extends BaseFunctionalTestCase
             );
 
         $serviceMock->shouldReceive('allocateStandForAircraft')
+            ->once()
             ->with(Mockery::on(function (NetworkAircraft $aircraft) {
                 return $aircraft->callsign === 'BAW123';
             }));
 
         $serviceMock->shouldReceive('removeAllocationIfDestinationChanged')
+            ->once()
             ->with(Mockery::on(function (NetworkAircraft $aircraft) {
                 return $aircraft->callsign === 'BAW123';
             }));
 
         $serviceMock->shouldReceive('allocateStandForAircraft')
+            ->once()
             ->with(Mockery::on(function (NetworkAircraft $aircraft) {
                 return $aircraft->callsign === 'BAW456';
             }));
 
         $serviceMock->shouldReceive('removeAllocationIfDestinationChanged')
+            ->once()
             ->with(Mockery::on(function (NetworkAircraft $aircraft) {
                 return $aircraft->callsign === 'BAW456';
             }));
