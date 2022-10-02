@@ -12,9 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class SrdRouteResource extends Resource
 {
@@ -61,9 +59,7 @@ class SrdRouteResource extends Resource
                     ->label(__('table.srd.columns.star')),
                 Tables\Columns\TextColumn::make('route_segment')
                     ->label(__('table.srd.columns.route_segment'))
-                    ->formatStateUsing(
-                        fn (Model $record) => trim(sprintf('%s %s', $record->sid, $record->route_segment))
-                    ),
+                    ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record)),
                 Tables\Columns\TextColumn::make('notes')
                     ->label(__('table.srd.columns.notes'))
                     ->formatStateUsing(
@@ -114,5 +110,10 @@ class SrdRouteResource extends Resource
             'index' => Pages\ListSrdRoutes::route('/'),
             'view' => Pages\ViewSrdRoute::route('/{record}'),
         ];
+    }
+
+    public static function buildFullSrdRouteString(SrdRoute $route): string
+    {
+        return trim(sprintf('%s %s', $route->sid, $route->route_segment));
     }
 }
