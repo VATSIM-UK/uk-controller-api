@@ -37,9 +37,11 @@ class RecatCategoriesImportTest extends BaseFunctionalTestCase
         Storage::disk('imports')->put('recat.csv', 'testdata');
 
         $this->mockImporter->shouldReceive('withOutput')
+            ->once()
             ->andReturnSelf();
 
         $this->mockImporter->shouldReceive('import')
+            ->once()
             ->with('recat.csv', 'imports', Excel::CSV);
 
         Artisan::call('wake:import-recat recat.csv');

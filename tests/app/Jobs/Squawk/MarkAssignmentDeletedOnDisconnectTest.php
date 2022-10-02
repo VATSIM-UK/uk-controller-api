@@ -11,19 +11,20 @@ use Mockery;
 class MarkAssignmentDeletedOnDisconnectTest extends BaseFunctionalTestCase
 {
     private MarkAssignmentDeletedOnDisconnect $listener;
-    private $squawkService;
+    private SquawkService $squawkService;
 
     public function setUp() : void
     {
         parent::setUp();
-        $this->listener = $this->app->make(MarkAssignmentDeletedOnDisconnect::class);
-        $this->squawkService = Mockery::mock(SquawkService::class);
         Carbon::setTestNow(Carbon::now());
+        $this->squawkService = Mockery::mock(SquawkService::class);
+        $this->app->instance(SquawkService::class, $this->squawkService);
+        $this->listener = $this->app->make(MarkAssignmentDeletedOnDisconnect::class);
     }
 
     public function testItDeletesSquawkAssignments()
     {
-        $this->squawkService->shouldReceive('deleteSquawkAssignment')->with('BAW123');
+        $this->squawkService->shouldReceive('deleteSquawkAssignment')->with('BAW123')->once();
         $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 }
