@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\SrdRouteResource\RelationManagers;
 
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
+use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
@@ -10,6 +11,7 @@ use Filament\Tables;
 class NotesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
+    use TranslatesStrings;
 
     protected static string $relationship = 'notes';
     protected static ?string $recordTitleAttribute = 'id';
@@ -19,9 +21,14 @@ class NotesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label(__('table.srd.notes.columns.number')),
+                    ->label(self::translateTablePath('columns.number')),
                 Tables\Columns\TextColumn::make('note_text')
-                    ->label(__('table.srd.notes.columns.text')),
+                    ->label(self::translateTablePath('columns.text')),
             ]);
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'srd.notes';
     }
 }

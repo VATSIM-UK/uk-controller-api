@@ -2,11 +2,11 @@
 
 namespace App\Filament;
 
-use App\BaseFunctionalTestCase;
+use App\BaseUnitTestCase;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use Filament\Facades\Filament;
 
-class LimitsTableRecordListingsTest extends BaseFunctionalTestCase
+class LimitsTableRecordListingsTest extends BaseUnitTestCase
 {
     public function testItLimitsHowManyRecordsCanBeLoadedInATable()
     {
