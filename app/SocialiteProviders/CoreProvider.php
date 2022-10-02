@@ -7,6 +7,9 @@ use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
 
+/**
+ * @codeCoverageIgnore
+ */
 class CoreProvider extends AbstractProvider implements ProviderInterface
 {
     /**
