@@ -82,7 +82,6 @@ class DatabaseSeeder extends Seeder
         ],
         NetworkAircraftTableSeeder::class => [
             'network_aircraft',
-            'network_aircraft_fir_events',
         ],
         NotificationTableSeeder::class => [
             'notifications',
