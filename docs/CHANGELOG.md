@@ -1,5 +1,19 @@
 # UK Controller Plugin API Changelog
 
+## [6.27.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.27.0...6.27.1) (2022-10-03)
+
+
+### Bug Fixes
+
+* disable bulk detach for controllers on notifications ([6971f26](https://github.com/VATSIM-UK/uk-controller-api/commit/6971f26109b0eba1914e4735f0f43122cce48d11))
+
+
+### Miscellaneous Chores
+
+* drop unused database table ([6a84d04](https://github.com/VATSIM-UK/uk-controller-api/commit/6a84d0492eb6c1bbb1aa1432f283e729a4f79907))
+* remove seeder ([6882b59](https://github.com/VATSIM-UK/uk-controller-api/commit/6882b59c31cf66bbe5d06b52f01b18bc11e16bca))
+* remove unused controller ([ca60fc2](https://github.com/VATSIM-UK/uk-controller-api/commit/ca60fc2097a51d64a679dc97cca14468b7c5dcc9))
+
 ## [6.27.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.26.0...6.27.0) (2022-10-02)
 
 
