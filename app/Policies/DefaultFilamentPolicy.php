@@ -140,17 +140,11 @@ class DefaultFilamentPolicy
     
     public function deleteAny(User $user): bool
     {
-        return $this->userHasRole(
-            $user,
-            self::EDITING_ROLES
-        );
+        return false;
     }
 
     public function forceDeleteAny(User $user): bool
     {
-        return $this->userHasRole(
-            $user,
-            self::EDITING_ROLES
-        );
+        return false;
     }
 }
