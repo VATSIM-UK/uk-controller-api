@@ -96,6 +96,9 @@ class ControllersRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\DetachAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DetachBulkAction::make()
             ]);
     }
 

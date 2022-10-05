@@ -82,11 +82,6 @@ class DefaultFilamentPolicy
         );
     }
 
-    public function deleteAny(): bool
-    {
-        return false;
-    }
-
     public function restore(User $user): bool
     {
         return $this->userHasRole(
@@ -101,5 +96,55 @@ class DefaultFilamentPolicy
             $user,
             self::EDITING_ROLES
         );
+    }
+
+    public function detachAny(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
+    public function dissociate(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
+    public function dissociateAny(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
+    public function replicate(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+
+    public function restoreAny(User $user): bool
+    {
+        return $this->userHasRole(
+            $user,
+            self::EDITING_ROLES
+        );
+    }
+    
+    public function deleteAny(): bool
+    {
+        return false;
+    }
+
+    public function forceDeleteAny(): bool
+    {
+        return false;
     }
 }
