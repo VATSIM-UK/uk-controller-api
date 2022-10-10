@@ -21,7 +21,7 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         Carbon::setTestNow(Carbon::now()->startOfSecond());
         $this->service = $this->app->make(DatabaseService::class);
         DatabaseTable::whereNotIn('name', ['stands', 'controller_positions'])->delete();
-        DB::statement('SET @@information_schema_stats_expiry = ' . 100);
+        DB::statement('SET @@information_schema_stats_expiry = ' . 1);
         DB::connection('mysql_analyze')->statement('ANALYZE TABLE stands, controller_positions');
     }
 
@@ -86,6 +86,7 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         $stand->created_at = Carbon::now()->subHour();
         $stand->save();
 
+        sleep(2);
         $this->service->updateTableStatus();
         $table->refresh();
         $this->assertEquals(Carbon::now()->addMinutes(5), $table->updated_at);
