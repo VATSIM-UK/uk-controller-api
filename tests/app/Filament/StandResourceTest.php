@@ -60,8 +60,8 @@ class StandResourceTest extends BaseFilamentTestCase
         Livewire::test(StandResource\Pages\ViewStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
-            ->assertSet('data.latitude', '51.47436111')
-            ->assertSet('data.longitude', '-0.48953611')
+            ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
+            ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.wake_category_id', 3)
@@ -86,8 +86,8 @@ class StandResourceTest extends BaseFilamentTestCase
         Livewire::test(StandResource\Pages\ViewStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
-            ->assertSet('data.latitude', '51.47436111')
-            ->assertSet('data.longitude', '-0.48953611')
+            ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
+            ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.wake_category_id', 3)
@@ -351,8 +351,8 @@ class StandResourceTest extends BaseFilamentTestCase
         Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
-            ->assertSet('data.latitude', '51.47436111')
-            ->assertSet('data.longitude', '-0.48953611')
+            ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
+            ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.wake_category_id', 3)
@@ -377,8 +377,8 @@ class StandResourceTest extends BaseFilamentTestCase
         Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
-            ->assertSet('data.latitude', '51.47436111')
-            ->assertSet('data.longitude', '-0.48953611')
+            ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
+            ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.wake_category_id', 3)
@@ -978,5 +978,10 @@ class StandResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Stand::find(1);
+    }
+
+    private function coordinateEqual(string $expected): callable
+    {
+        return fn (float $actual) => number_format($actual, 8) === $expected;
     }
 }
