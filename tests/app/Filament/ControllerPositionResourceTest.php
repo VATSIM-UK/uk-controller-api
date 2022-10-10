@@ -210,7 +210,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create controller position';
+        return 'Create Controller Position';
     }
 
     protected function getViewText(): string

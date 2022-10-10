@@ -1480,7 +1480,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create Navaids and Holds';
+        return 'Create Navaids And Holds';
     }
 
     protected function getViewText(): string

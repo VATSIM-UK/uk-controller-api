@@ -346,7 +346,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create handoff';
+        return 'Create Handoff';
     }
 
     protected function getViewText(): string
