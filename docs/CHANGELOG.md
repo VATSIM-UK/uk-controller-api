@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.27.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.27.1...6.27.2) (2022-10-10)
+
+
+### Bug Fixes
+
+* bulk detach on notifications ([ad928aa](https://github.com/VATSIM-UK/uk-controller-api/commit/ad928aa9d39467df76513b7fb9d244b627ce6bc6))
+
 ## [6.27.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.27.0...6.27.1) (2022-10-03)
 
 
