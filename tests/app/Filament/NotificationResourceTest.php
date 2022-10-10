@@ -638,7 +638,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create notification';
+        return 'Create Notification';
     }
 
     protected function getViewText(): string

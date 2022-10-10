@@ -346,7 +346,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create prenote';
+        return 'Create Prenote';
     }
 
     protected function getViewText(): string

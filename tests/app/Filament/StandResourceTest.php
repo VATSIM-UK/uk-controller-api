@@ -886,7 +886,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create stand';
+        return 'Create Stand';
     }
 
     protected function getViewText(): string

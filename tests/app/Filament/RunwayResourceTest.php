@@ -362,7 +362,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create runway';
+        return 'Create Runway';
     }
 
     protected function getEditRecord(): Model

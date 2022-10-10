@@ -453,7 +453,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create sid';
+        return 'Create Sid';
     }
 
     protected function getViewText(): string

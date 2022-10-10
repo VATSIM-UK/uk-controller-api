@@ -809,7 +809,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
 
     protected function getCreateText(): string
     {
-        return 'Create airfield';
+        return 'Create Airfield';
     }
 
     protected function getEditRecord(): Model
