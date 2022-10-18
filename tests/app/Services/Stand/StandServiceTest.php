@@ -1340,6 +1340,41 @@ class StandServiceTest extends BaseFunctionalTestCase
         $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 1)->exists());
     }
 
+    public function testItDoesntSupersedeAnExistingDepartureAssignment()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft1 = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW123',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft1->occupiedStand()->sync([2]);
+
+        // RYR787 already has the stand assigned, so BAW123 should not supersede it.
+        $aircraft2 = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft2->occupiedStand()->sync([2]);
+        $this->addStandAssignment('RYR787', 2);
+
+        $this->service->assignStandsForDeparture();
+
+        $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
+        $this->assertFalse(StandAssignment::where('callsign', 'BAW123')->exists());
+    }
+
     public function testItDoesntAssignStandsAtNonDepartureAirfields()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);
