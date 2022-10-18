@@ -35,10 +35,6 @@ class PairedStandsRelationManager extends RelationManager
 
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label(self::translateTablePath('columns.id'))
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
                     ->sortable()
