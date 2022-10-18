@@ -17,7 +17,6 @@ class OptimiseTables extends Command
         'msl_tma',
         'regional_pressure_settings',
         'network_aircraft',
-        'network_aircraft_fir_events',
         'stand_assignments',
         'stand_assignments_history',
         'aircraft_stand',
