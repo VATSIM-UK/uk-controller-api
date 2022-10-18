@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Laravel\Socialite\Two\User;
 use Mockery;
 
@@ -30,6 +31,13 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
 
         $this->get('auth/redirect')
             ->assertRedirect('https://vatsim.uk/oauth/authorize');
+    }
+
+    public function testInvalidStateFromSocialiteCausesAbort()
+    {
+        Socialite::shouldReceive('driver->user')->andThrow(new InvalidStateException);
+        $this->get('auth/callback')
+            ->assertUnauthorized();
     }
 
     public function testItCreatesAUserOnCallback()
