@@ -47,20 +47,10 @@ class MinStackLevelService
      */
     public function getAllAirfieldMinStackLevels(): array
     {
-        $airfields = Airfield::all();
-        $minStackLevels = [];
-
-        $airfields->each(
-            function (Airfield $airfield) use (&$minStackLevels) {
-                if ($airfield->msl === null) {
-                    return;
-                }
-
-                $minStackLevels[$airfield->code] = $airfield->msl->msl;
-            }
-        );
-
-        return $minStackLevels;
+        return MslAirfield::with('airfield')
+            ->get()
+            ->mapWithKeys(fn (MslAirfield $mslAirfield) => [$mslAirfield->airfield->code => $mslAirfield->msl])
+            ->toArray();
     }
 
     /**
@@ -68,20 +58,10 @@ class MinStackLevelService
      */
     public function getAllTmaMinStackLevels(): array
     {
-        $airfields = Tma::all();
-        $minStackLevels = [];
-
-        $airfields->each(
-            function (Tma $tma) use (&$minStackLevels) {
-                if ($tma->msl === null) {
-                    return;
-                }
-
-                $minStackLevels[$tma->name] = $tma->msl->msl;
-            }
-        );
-
-        return $minStackLevels;
+        return MslTma::with('tma')
+            ->get()
+            ->mapWithKeys(fn (MslTma $mslTma) => [$mslTma->tma->name => $mslTma->msl])
+            ->toArray();
     }
 
     public function updateMinimumStackLevelsFromMetars(Collection $metars): void
