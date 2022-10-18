@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.27.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.27.2...6.27.3) (2022-10-18)
+
+
+### Bug Fixes
+
+* dont optimise non existent tables ([dd34b14](https://github.com/VATSIM-UK/uk-controller-api/commit/dd34b14b0897b85f7a4f052cefd842df4dcab105))
+
 ## [6.27.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.27.1...6.27.2) (2022-10-10)
 
 
