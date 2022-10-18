@@ -11,7 +11,7 @@ return [
         'logger' => \Z3d0X\FilamentLogger\Loggers\ResourceLogger::class,
         'color' => 'success',
         'exclude' => [
-            //App\Filament\Resources\UserResource::class,
+            \App\Filament\Resources\SquawkAssignmentResource::class
         ],
     ],
 

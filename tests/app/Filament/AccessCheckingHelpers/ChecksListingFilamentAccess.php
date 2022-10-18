@@ -15,6 +15,7 @@ trait ChecksListingFilamentAccess
      */
     public function testItCanBeIndexed(?RoleKeys $role, bool $canIndex)
     {
+        $this->beforeListing();
         $user = User::factory()->create();
         $this->actingAs($user);
 
@@ -46,4 +47,12 @@ trait ChecksListingFilamentAccess
      * The text we expect to see on successful index load.
      */
     protected abstract function getIndexText(): array;
+
+    /**
+     * Can be overridden to provide a test fixture for the test if needed.
+     */
+    protected function beforeListing(): void
+    {
+
+    }
 }
