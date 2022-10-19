@@ -13,4 +13,5 @@ return [
     'notifications' => require_once __DIR__ . '/notifications/table.php',
     'runways' => require_once __DIR__ . '/runways/table.php',
     'srd' => require_once __DIR__ . '/srd/table.php',
+    'versions' => require_once __DIR__ . '/versions/table.php',
 ];
