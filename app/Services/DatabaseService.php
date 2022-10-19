@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseService
 {
+    private InformationSchemaService $informationSchemaService;
+
+    public function __construct(InformationSchemaService $informationSchemaService)
+    {
+        $this->informationSchemaService = $informationSchemaService;
+    }
+
     /**
      * Compare the stored information about database tables to the information_schema
      * to see if something has been updated.
@@ -55,10 +62,7 @@ class DatabaseService
     public function getLiveTableStatistics(Collection $tables): Collection
     {
         DB::connection('mysql_analyze')->statement('ANALYZE TABLE ' . $tables->implode(','));
-        return DB::connection('information_schema')->table('TABLES')
-            ->where('TABLE_SCHEMA', DB::connection()->getDatabaseName())
-            ->whereIn('TABLE_NAME', $tables->toArray())
-            ->get()
+        return $this->informationSchemaService->getInformationSchemaTables($tables->toArray())
             ->mapWithKeys(function (object $table) {
                 return [
                     $table->TABLE_NAME => $table->UPDATE_TIME ? Carbon::parse($table->UPDATE_TIME) : null,

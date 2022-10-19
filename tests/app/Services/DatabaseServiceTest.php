@@ -9,16 +9,21 @@ use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Mockery;
+use stdClass;
 
 class DatabaseServiceTest extends BaseFunctionalTestCase
 {
     private DatabaseService $service;
+    private InformationSchemaService $mockInformationSchema;
 
     public function setUp(): void
     {
         parent::setUp();
         Event::fake();
         Carbon::setTestNow(Carbon::now()->startOfSecond());
+        $this->mockInformationSchema = Mockery::mock(InformationSchemaService::class);
+        $this->app->instance(InformationSchemaService::class, $this->mockInformationSchema);
         $this->service = $this->app->make(DatabaseService::class);
         DatabaseTable::whereNotIn('name', ['stands', 'controller_positions'])->delete();
         DB::statement('SET @@information_schema_stats_expiry = ' . 1);
@@ -38,6 +43,15 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         $table->updated_at = null;
         $table->save();
 
+        $this->mockInformationSchema->shouldReceive('getInformationSchemaTables')
+            ->with(['stands', 'controller_positions'])
+            ->once()
+            ->andReturn(
+                DatabaseTable::all()->pluck('name')->map(
+                    fn(string $name) => $this->getInformationSchemaTableObject($name, null)
+                )
+            );
+
         $this->service->updateTableStatus();
         $table->refresh();
         $this->assertNotNull($table->updated_at);
@@ -52,10 +66,18 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         $stand->created_at = Carbon::now()->subHour();
         $stand->save();
 
-        sleep(3);
+        $this->mockInformationSchema->shouldReceive('getInformationSchemaTables')
+            ->with(['stands', 'controller_positions'])
+            ->once()
+            ->andReturn(
+                DatabaseTable::all()->pluck('name')->map(
+                    fn(string $name) => $this->getInformationSchemaTableObject($name, Carbon::now())
+                )
+            );
+
         $this->service->updateTableStatus();
         $table->refresh();
-        $this->assertNotEquals(Carbon::now()->subMinutes(5), $table->updated_at);
+        $this->assertEquals(Carbon::now()->startOfSecond(), $table->updated_at);
     }
 
     public function testItFiresEventOnTableUpdate()
@@ -68,13 +90,22 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         $table2->updated_at = null;
         $table2->save();
 
+        $this->mockInformationSchema->shouldReceive('getInformationSchemaTables')
+            ->with(['stands', 'controller_positions'])
+            ->once()
+            ->andReturn(
+                DatabaseTable::all()->pluck('name')->map(
+                    fn(string $name) => $this->getInformationSchemaTableObject($name, Carbon::now())
+                )
+            );
+
         $this->service->updateTableStatus();
 
         Event::assertDispatched(function (DatabaseTablesUpdated $event) {
             return $event->getTables()->pluck('name')->toArray() === [
-                'stands',
-                'controller_positions',
-            ];
+                    'stands',
+                    'controller_positions',
+                ];
         });
     }
 
@@ -87,7 +118,15 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         $stand->created_at = Carbon::now()->subHour();
         $stand->save();
 
-        sleep(3);
+        $this->mockInformationSchema->shouldReceive('getInformationSchemaTables')
+            ->with(['stands', 'controller_positions'])
+            ->once()
+            ->andReturn(
+                DatabaseTable::all()->pluck('name')->map(
+                    fn(string $name) => $this->getInformationSchemaTableObject($name, Carbon::now())
+                )
+            );
+
         $this->service->updateTableStatus();
         $table->refresh();
         $this->assertEquals(Carbon::now()->addMinutes(5), $table->updated_at);
@@ -99,10 +138,30 @@ class DatabaseServiceTest extends BaseFunctionalTestCase
         $table->updated_at = null;
         $table->save();
 
+        $this->mockInformationSchema->shouldReceive('getInformationSchemaTables')
+            ->with(['stands', 'controller_positions'])
+            ->once()
+            ->andReturn(
+                DatabaseTable::all()->pluck('name')->map(
+                    fn(string $name) => $this->getInformationSchemaTableObject($name, Carbon::now())
+                )
+            );
+
         DB::transaction(function () {
             $this->service->updateTableStatus();
         });
         $table->refresh();
         $this->assertNotNull($table->updated_at);
+    }
+
+    private function getInformationSchemaTableObject(string $tableName, ?Carbon $updateTime): object
+    {
+        return tap(
+            new stdClass(),
+            function (stdClass $object) use ($tableName, $updateTime) {
+                $object->TABLE_NAME = $tableName;
+                $object->UPDATE_TIME = $updateTime;
+            }
+        );
     }
 }
