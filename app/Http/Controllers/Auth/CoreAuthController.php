@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class CoreAuthController extends Controller
 {
@@ -17,7 +18,11 @@ class CoreAuthController extends Controller
 
     public function callback()
     {
-        $socialiteUser = Socialite::driver('vatsimuk')->user();
+        try {
+            $socialiteUser = Socialite::driver('vatsimuk')->user();
+        } catch (InvalidStateException) {
+            abort(401);
+        }
 
         $user = User::updateOrCreate(
             [
