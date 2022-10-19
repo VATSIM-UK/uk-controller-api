@@ -1,5 +1,18 @@
 # UK Controller Plugin API Changelog
 
+## [6.27.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.27.3...6.27.4) (2022-10-19)
+
+
+### Bug Fixes
+
+* abort with 401 if socialite fails on login ([a575917](https://github.com/VATSIM-UK/uk-controller-api/commit/a5759171e89506ed8090baefb2012ea23f72aaed))
+* **admin:** Ambiguous id on paired stand search ([476d13b](https://github.com/VATSIM-UK/uk-controller-api/commit/476d13b4e28f328861ff14b4e8ea229cb54bc85a))
+
+
+### Performance Improvements
+
+* fix n+1 query in msl retrieval ([8a7eb74](https://github.com/VATSIM-UK/uk-controller-api/commit/8a7eb74c1510da8639e58ce606c45148fa7bb8fb))
+
 ## [6.27.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.27.2...6.27.3) (2022-10-18)
 
 
