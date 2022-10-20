@@ -37,16 +37,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-         Bugsnag::registerCallback(function ($report) {
-             if (Auth::check()) {
-                 $user = Auth::user();
+        Bugsnag::registerCallback(function ($report) {
+            if (Auth::check()) {
+                $user = Auth::user();
 
-                 $report->setUser([
+                $report->setUser([
                      'id' => $user->id,
                      'name' => $user->name
                  ]);
-             }
-         });
+            }
+        });
 
         Rule::macro('latitudeString', function () {
             return 'regex:' . SectorfileService::SECTORFILE_LATITUDE_REGEX;
