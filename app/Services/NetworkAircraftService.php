@@ -128,8 +128,7 @@ class NetworkAircraftService
      */
     private function handleTimeouts(): void
     {
-        NetworkAircraft::withoutGlobalScope('active')
-            ->timedOut()
+        NetworkAircraft::timedOut()
             ->get()
             ->each(
                 function (NetworkAircraft $aircraft) {
