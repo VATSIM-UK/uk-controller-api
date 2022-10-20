@@ -19,6 +19,9 @@ return [
             'driver' => 'custom',
             'via' => NullLoggerFactory::class,
             'name' => 'NullLogger',
-        ]
+        ],
+        'bugsnag' => [
+            'driver' => 'bugsnag',
+        ],
     ],
 ];
