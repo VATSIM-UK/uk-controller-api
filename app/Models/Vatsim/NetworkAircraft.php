@@ -73,11 +73,6 @@ class NetworkAircraft extends Model
         });
     }
 
-    public static function booted()
-    {
-        parent::booted();
-    }
-
     public function getSquawkAttribute(): string
     {
         return $this->attributes['transponder'];
