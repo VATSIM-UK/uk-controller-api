@@ -12,6 +12,7 @@ use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
+use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
 use App\Policies\ActivityLogPolicy;
@@ -44,6 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         Airfield::class => DefaultFilamentPolicy::class,
         Airline::class => DefaultFilamentPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
+        CcamsSquawkRange::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
         Hold::class => DefaultFilamentPolicy::class,
         Navaid::class => DefaultFilamentPolicy::class,

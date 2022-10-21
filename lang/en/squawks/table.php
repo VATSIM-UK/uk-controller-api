@@ -8,4 +8,10 @@ return [
             'type' => 'Assignment Type',
         ],
     ],
+    'ccams' => [
+        'columns' => [
+            'first' => 'First Squawk in Range',
+            'last' => 'Last Squawk in Range',
+        ]
+    ],
 ];
