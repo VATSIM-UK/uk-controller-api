@@ -45,8 +45,7 @@ class CcamsSquawkRangeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCcamsSquawkRanges::route('/'),
-            'manage' => Pages\ManageCcamsSquawkRange::route('manage'),
+            'index' => Pages\ManageCcamsSquawkRange::route('/'),
         ];
     }
 
