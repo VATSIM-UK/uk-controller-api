@@ -14,8 +14,10 @@ use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
+use App\Models\Version\Version;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DefaultFilamentPolicy;
+use App\Policies\PluginVersionPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -56,6 +58,7 @@ class AuthServiceProvider extends ServiceProvider
         // Special policies
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
+        Version::class => PluginVersionPolicy::class,
     ];
 
     /**
