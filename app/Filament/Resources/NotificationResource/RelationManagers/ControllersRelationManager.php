@@ -59,23 +59,23 @@ class ControllersRelationManager extends RelationManager
                                 ]
                             )
                             ->reactive()
-                            ->hidden(fn(Closure $get) => $get('global')),
+                            ->hidden(fn (Closure $get) => $get('global')),
                         Forms\Components\MultiSelect::make('controllers')
                             ->searchable()
                             ->options(
-                                fn(ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
+                                fn (ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
                                     'id',
                                     $livewire->getOwnerRecord()->controllers()->pluck('controller_positions.id')
                                 )
                                     ->get()
                                     ->mapWithKeys(
-                                        fn(
+                                        fn (
                                             ControllerPosition $controllerPosition
                                         ) => [$controllerPosition->id => $controllerPosition->callsign]
                                     )
                             )
-                            ->hidden(fn(Closure $get) => $get('global') || $get('position_level'))
-                            ->required(fn(Closure $get) => !$get('global') && !$get('position_level')),
+                            ->hidden(fn (Closure $get) => $get('global') || $get('position_level'))
+                            ->required(fn (Closure $get) => !$get('global') && !$get('position_level')),
                     ])
                     ->using(function (ControllersRelationManager $livewire, array $data) {
                         DB::transaction(function () use ($livewire, $data) {
@@ -87,7 +87,7 @@ class ControllersRelationManager extends RelationManager
                                 )
                                 ->unique()
                                 ->values()
-                                ->map(fn(int $positionId) => [
+                                ->map(fn (int $positionId) => [
                                     'notification_id' => $livewire->getOwnerRecord()->id,
                                     'controller_position_id' => $positionId,
                                     'created_at' => Carbon::now(),
@@ -120,10 +120,10 @@ class ControllersRelationManager extends RelationManager
         if (!empty($data['position_level'])) {
             $query = array_reduce(
                 array_map(
-                    fn(string $level) => ControllerPosition::where('callsign', 'like', '%' . $level),
+                    fn (string $level) => ControllerPosition::where('callsign', 'like', '%' . $level),
                     $data['position_level']
                 ),
-                fn(?Builder $carry, Builder $positionQuery) => $carry ? $carry->union($positionQuery) : $positionQuery
+                fn (?Builder $carry, Builder $positionQuery) => $carry ? $carry->union($positionQuery) : $positionQuery
             );
 
             return $query->get()->pluck('id');
