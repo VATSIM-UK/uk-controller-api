@@ -92,7 +92,8 @@ class ControllersRelationManager extends RelationManager
                                     'controller_position_id' => $positionId,
                                     'created_at' => Carbon::now(),
                                     'updated_at' => Carbon::now(),
-                                ]);
+                                ])
+                                ->toArray();
 
                             DB::table('controller_position_notification')
                                 ->where('notification_id', $livewire->getOwnerRecord()->id)
