@@ -51,7 +51,6 @@ class Kernel extends ConsoleKernel
         OptimiseTables::class,
         CleanStandAssignmentsHistory::class,
         WakeCategoriesImport::class,
-        AllocateStandForArrival::class,
         StandReservationsImport::class,
         RecatCategoriesImport::class,
         UpdateSrd::class,
@@ -88,7 +87,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('networkdata:update-controllers')->everyMinute()
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
-        $schedule->command('stands:assign-arrival')->everyTwoMinutes();
         $schedule->command('schedule-monitor:clean')
             ->dailyAt('08:01');
         $schedule->command('srd:update')

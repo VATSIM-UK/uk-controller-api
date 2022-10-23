@@ -23,28 +23,12 @@ class StandService
 {
     public const STAND_DEPENDENCY_KEY = 'DEPENDENCY_STANDS';
 
-    /**
-     * How many minutes before arrival the stand should be assigned
-     */
-    private const ASSIGN_STAND_MINUTES_BEFORE = 15.0;
-
-    private ?Collection $allStandsByAirfield = null;
-
-    /**
-     * @var ArrivalStandAllocatorInterface[]
-     */
-    private $allocators;
-
     private StandAssignmentsService $assignmentsService;
 
     private AirfieldStandService $airfieldStandService;
 
-    /**
-     * @param ArrivalStandAllocatorInterface[] $allocators
-     */
-    public function __construct(array $allocators, StandAssignmentsService $assignmentsService, AirfieldStandService $airfieldStandService)
+    public function __construct(StandAssignmentsService $assignmentsService, AirfieldStandService $airfieldStandService)
     {
-        $this->allocators = $allocators;
         $this->assignmentsService = $assignmentsService;
         $this->airfieldStandService = $airfieldStandService;
     }
@@ -281,29 +265,6 @@ class StandService
             ->first();
     }
 
-    /**
-     * @return Collection|Stand[]
-     */
-
-    /**
-     * Use the stand assignment rules to allocate a stand for a given aircraft
-     */
-    public function allocateStandForAircraft(NetworkAircraft $aircraft): ?StandAssignment
-    {
-        if (!$this->shouldAllocateStand($aircraft)) {
-            return null;
-        }
-
-        foreach ($this->allocators as $allocator) {
-            if ($allocation = $allocator->allocate($aircraft)) {
-                event(new StandAssignedEvent($allocation));
-                return $allocation;
-            }
-        }
-
-        return null;
-    }
-
     public function getAircraftEligibleForArrivalStandAllocation(): Collection
     {
         return NetworkAircraft::whereIn(
@@ -369,57 +330,5 @@ class StandService
         $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
             $this->deleteStandAssignment($assignment);
         });
-    }
-
-    /**
-     * Criteria for whether a stand should be allocated
-     *
-     * 1. Cannot have the same departure and arrival airport (to cater for circuits)
-     * 2. Aircraft must not have an existing stand assignment
-     * 3. The arrival airfield must exist
-     * 4. The aircraft has to be moving (to prevent divide by zero errors)
-     * 5. The aircraft must have a discernible aircraft type
-     * 6. The aircraft type should be one that we allocate stands to
-     * 7. The aircraft needs to be within a certain number of minutes from landing
-     */
-    private function shouldAllocateStand(NetworkAircraft $aircraft): bool
-    {
-        return $aircraft->planned_depairport !== $aircraft->planned_destairport &&
-            StandAssignment::where('callsign', $aircraft->callsign)->doesntExist() &&
-            ($arrivalAirfield = Airfield::where('code', $aircraft->planned_destairport)->first()) !== null &&
-            $aircraft->groundspeed &&
-            ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
-            $aircraftType->allocate_stands &&
-            $this->getTimeFromAirfieldInMinutes($aircraft, $arrivalAirfield) < self::ASSIGN_STAND_MINUTES_BEFORE;
-    }
-
-    /**
-     * Ground speed is kts (nautical miles per hour), so for minutes multiply that by 60.
-     *
-     * @param NetworkAircraft $aircraft
-     * @param Airfield $airfield
-     * @return float
-     */
-    private function getTimeFromAirfieldInMinutes(NetworkAircraft $aircraft, Airfield $airfield): float
-    {
-        $distanceToAirfieldInNm = LocationService::metersToNauticalMiles(
-            $aircraft->latLong->getDistance($airfield->coordinate, new Haversine())
-        );
-        $groundspeed = $aircraft->groundspeed === 0 ? 1 : $aircraft->groundspeed;
-
-        return (float) ($distanceToAirfieldInNm / $groundspeed) * 60.0;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getAllocatorPreference(): array
-    {
-        return array_map(
-            function (ArrivalStandAllocatorInterface $allocator) {
-                return get_class($allocator);
-            },
-            $this->allocators
-        );
     }
 }
