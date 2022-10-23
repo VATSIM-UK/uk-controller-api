@@ -304,17 +304,6 @@ class StandService
         return null;
     }
 
-    public function removeAllocationIfDestinationChanged(NetworkAircraft $aircraft): void
-    {
-        if (
-            ($assignedStand = $this->getAssignedStandForAircraft($aircraft->callsign)) !== null &&
-            $assignedStand->airfield->code !== $aircraft->planned_destairport &&
-            $assignedStand->airfield->code !== $aircraft->planned_depairport
-        ) {
-            $this->deleteStandAssignmentByCallsign($aircraft->callsign);
-        }
-    }
-
     public function getAircraftEligibleForArrivalStandAllocation(): Collection
     {
         return NetworkAircraft::whereIn(
