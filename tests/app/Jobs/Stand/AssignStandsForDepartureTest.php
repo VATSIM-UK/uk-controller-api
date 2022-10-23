@@ -3,6 +3,7 @@
 namespace App\Jobs\Stand;
 
 use App\BaseUnitTestCase;
+use App\Services\Stand\DepartureAllocationService;
 use App\Services\Stand\StandService;
 use Mockery;
 
@@ -18,7 +19,7 @@ class AssignStandsForDepartureTest extends BaseUnitTestCase
 
     public function testHandleCallsStandService()
     {
-        $standService = Mockery::mock(StandService::class);
+        $standService = Mockery::mock(DepartureAllocationService::class);
         $standService->expects('assignStandsForDeparture')->withNoArgs()->once();
         $this->assign->handle($standService);
     }

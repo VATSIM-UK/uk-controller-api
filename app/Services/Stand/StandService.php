@@ -2,22 +2,17 @@
 
 namespace App\Services\Stand;
 
-use App\Allocator\Stand\ArrivalStandAllocatorInterface;
-use App\Events\StandAssignedEvent;
 use App\Exceptions\Stand\StandNotFoundException;
-use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\DependencyService;
-use App\Services\LocationService;
 use App\Services\NetworkAircraftService;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Location\Distance\Haversine;
 
 class StandService
 {
@@ -190,11 +185,6 @@ class StandService
         $this->assignmentsService->deleteStandAssignment($assignment);
     }
 
-    public function deleteStandAssignment(StandAssignment $assignment): void
-    {
-        $this->assignmentsService->deleteStandAssignment($assignment);
-    }
-
     public function getDepartureStandAssignmentForAircraft(NetworkAircraft $aircraft): ?StandAssignment
     {
         return StandAssignment::where('callsign', $aircraft->callsign)
@@ -274,61 +264,5 @@ class StandService
             ->notTimedOut()
             ->whereDoesntHave('assignedStand')
             ->get();
-    }
-
-    /**
-     * If two people are on the same stand, then we pick the first one to be there... two people
-     * can't be on the same stand. But we don't override an already assigned stand because that just gets messy.
-     */
-    private function getDepartureStandsToAssign(): Collection
-    {
-        $aircraftOnStands = NetworkAircraft::join('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
-            ->leftJoin('stand_assignments', 'stand_assignments.callsign', '=', 'network_aircraft.callsign')
-            ->orderByRaw('stand_assignments.callsign IS NULL')
-            ->orderBy('aircraft_stand.id')
-            ->select('network_aircraft.*')
-            ->get()
-            ->unique(function (NetworkAircraft $aircraft) {
-                return $aircraft->occupiedStand->first()->id;
-            });
-
-        return NetworkAircraft::join('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
-            ->join('stands', 'aircraft_stand.stand_id', '=', 'stands.id')
-            ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
-            ->leftJoin('stand_assignments', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
-            ->where(function (Builder $subquery): void {
-                $subquery->whereRaw('aircraft_stand.stand_id <> stand_assignments.stand_id')
-                    ->orWhereNull('stand_assignments.stand_id');
-            })
-            ->whereRaw('airfield.code = network_aircraft.planned_depairport')
-            ->whereIn('network_aircraft.callsign', $aircraftOnStands->pluck('callsign'))
-            ->select(['network_aircraft.*', 'aircraft_stand.stand_id'])
-            ->get();
-    }
-
-    private function getDepartureStandsToUnassign(): Collection
-    {
-        return StandAssignment::join('network_aircraft', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
-            ->join('stands', 'stand_assignments.stand_id', '=', 'stands.id')
-            ->join('airfield', 'stands.airfield_id', '=', 'airfield.id')
-            ->leftJoin('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
-            ->whereRaw('airfield.code = network_aircraft.planned_depairport')
-            ->whereNull('aircraft_stand.callsign')
-            ->select('stand_assignments.*')
-            ->get();
-    }
-
-    /**
-     * Assign aircraft to their occupied stand if at their departure airfield. Remove the assignments
-     * if they've left the stand.
-     */
-    public function assignStandsForDeparture(): void
-    {
-        $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
-            $this->assignStandToAircraft($aircraft->callsign, $aircraft->stand_id);
-        });
-        $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
-            $this->deleteStandAssignment($assignment);
-        });
     }
 }
