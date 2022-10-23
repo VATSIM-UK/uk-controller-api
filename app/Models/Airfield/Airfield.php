@@ -53,6 +53,11 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
         'elevation' => 'integer',
     ];
 
+    public static function fromCode(string $code): Airfield
+    {
+        return static::where('code', $code)->firstOrFail();
+    }
+
     public function runways(): HasMany
     {
         return $this->hasMany(Runway::class);

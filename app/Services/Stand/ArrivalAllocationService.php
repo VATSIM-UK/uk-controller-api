@@ -9,6 +9,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\LocationService;
+use Illuminate\Support\Collection;
 use Location\Distance\Haversine;
 
 class ArrivalAllocationService
@@ -56,14 +57,8 @@ class ArrivalAllocationService
      */
     private function allocateStandsForArrivingAircraft(): void
     {
-        NetworkAircraft::whereIn(
-            'planned_destairport',
-            Airfield::all()->pluck('code')->toArray()
-        )
-            ->notTimedOut()
-            ->whereDoesntHave('assignedStand')
-            ->get()
-            ->filter(fn (NetworkAircraft $aircraft) => $this->shouldAllocateStand($aircraft))
+        $this->getAircraftThatCanHaveArrivalStandsAllocated()
+            ->filter(fn(NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
             ->each(function (NetworkAircraft $aircraft) {
                 foreach ($this->allocators as $allocator) {
                     if ($allocation = $allocator->allocate($aircraft)) {
@@ -75,7 +70,7 @@ class ArrivalAllocationService
     }
 
     /**
-     * Criteria for whether a stand should be allocated
+     * Criteria for whether a stand can be allocated
      *
      * 1. Cannot have the same departure and arrival airport (to cater for circuits)
      * 2. Aircraft must not have an existing stand assignment
@@ -83,20 +78,32 @@ class ArrivalAllocationService
      * 4. The aircraft has to be moving (to prevent divide by zero errors)
      * 5. The aircraft must have a discernible aircraft type
      * 6. The aircraft type should be one that we allocate stands to
-     * 7. The aircraft needs to be within a certain number of minutes from landing
      */
-    private function shouldAllocateStand(NetworkAircraft $aircraft): bool
+    private function getAircraftThatCanHaveArrivalStandsAllocated(): Collection
     {
-        return $aircraft->planned_depairport !== $aircraft->planned_destairport &&
-            StandAssignment::where('callsign', $aircraft->callsign)->doesntExist() &&
-            ($arrivalAirfield = Airfield::where('code', $aircraft->planned_destairport)->first()) !== null &&
-            $aircraft->groundspeed &&
-            ($aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first()) &&
-            $aircraftType->allocate_stands &&
-            $this->getTimeFromAirfieldInMinutes($aircraft, $arrivalAirfield) < self::ASSIGN_STAND_MINUTES_BEFORE;
+        return NetworkAircraft::join('airfield', 'airfield.code', '=', 'network_aircraft.planned_destairport')
+            ->join('aircraft', 'aircraft.code', '=', 'network_aircraft.planned_aircraft')
+            ->leftJoin('stand_assignments', 'stand_assignments.callsign', '=', 'network_aircraft.callsign')
+            ->whereRaw('network_aircraft.planned_destairport <> network_aircraft.planned_depairport')
+            ->where('aircraft.allocate_stands', '<>', 0)
+            ->where('network_aircraft.groundspeed', '>', 0)
+            ->whereNull('stand_assignments.callsign')
+            ->notTimedOut()
+            ->select('network_aircraft.*')
+            ->get();
+    }
+
+    private function aircraftWithAssignmentDistance(NetworkAircraft $aircraft): bool
+    {
+        return $this->getTimeFromAirfieldInMinutes(
+                $aircraft,
+                Airfield::fromCode($aircraft->planned_destairport)
+            ) < self::ASSIGN_STAND_MINUTES_BEFORE;
     }
 
     /**
+     * When allocating arrival stands, we only want to do it if the aircraft is close to its arrival airfield.
+     *
      * Ground speed is kts (nautical miles per hour), so for minutes multiply that by 60.
      *
      * @param NetworkAircraft $aircraft
@@ -110,7 +117,7 @@ class ArrivalAllocationService
         );
         $groundspeed = $aircraft->groundspeed === 0 ? 1 : $aircraft->groundspeed;
 
-        return (float) ($distanceToAirfieldInNm / $groundspeed) * 60.0;
+        return (float)($distanceToAirfieldInNm / $groundspeed) * 60.0;
     }
 
     public function getAllocators(): array

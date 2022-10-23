@@ -227,6 +227,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
                 'groundspeed' => 100,
                 // Lambourne
                 'latitude' => 51.646099,
@@ -246,6 +247,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
                 'groundspeed' => 0,
                 // Lambourne
                 'latitude' => 51.646099,
@@ -270,6 +272,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
                 // Lambourne
                 'latitude' => 51.646099,
@@ -289,6 +292,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
                 // Lambourne
                 'latitude' => 51.646099,
@@ -314,6 +318,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGXX',
+                'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
                 // Lambourne
                 'latitude' => 51.646099,
@@ -333,6 +338,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B736',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
                 // Lambourne
                 'latitude' => 51.646099,
@@ -354,6 +360,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 'planned_aircraft' => 'B738',
                 'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
                 // Lambourne
                 'latitude' => 51.646099,
