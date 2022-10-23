@@ -5,7 +5,6 @@ namespace App\Services\Stand;
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
-use App\Exceptions\Stand\StandAlreadyAssignedException;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
@@ -62,12 +61,15 @@ class StandService
      */
     private $allocators;
 
+    private StandAssignmentsService $assignmentsService;
+
     /**
      * @param ArrivalStandAllocatorInterface[] $allocators
      */
-    public function __construct(array $allocators)
+    public function __construct(array $allocators, StandAssignmentsService $assignmentsService)
     {
         $this->allocators = $allocators;
+        $this->assignmentsService = $assignmentsService;
     }
 
     public function getStandsDependency(): Collection
@@ -191,33 +193,6 @@ class StandService
     }
 
     /**
-     * Creates a stand assignment by assigning an aircraft to a stand.
-     * If the stand is already occupied, then the previous assignment is not
-     * overridden.
-     *
-     * @param string $callsign
-     * @param int $standId
-     * @throws StandAlreadyAssignedException
-     */
-    public function assignAircraftToStand(string $callsign, int $standId): void
-    {
-        if (!$this->standExists($standId)) {
-            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
-        }
-
-        NetworkAircraftService::createPlaceholderAircraft($callsign);
-        $currentAssignment = StandAssignment::where('stand_id', $standId)->first();
-
-        if ($currentAssignment && $currentAssignment->callsign !== $callsign) {
-            throw new StandAlreadyAssignedException(
-                sprintf('Stand id %d is already assigned to %s', $standId, $currentAssignment->callsign)
-            );
-        }
-
-        $this->createStandAssignment($callsign, $standId);
-    }
-
-    /**
      * Creates a stand assignment by assigning a particular stand to an aircraft.
      * If the stand is already assigned, that assignment is first removed.
      *
@@ -248,33 +223,22 @@ class StandService
             }
         }
 
-        $this->createStandAssignment($callsign, $standId);
-    }
-
-    private function createStandAssignment(string $callsign, int $standId): void
-    {
-        $assignment = StandAssignment::updateOrCreate(
-            ['callsign' => $callsign],
-            [
-                'stand_id' => $standId,
-            ]
-        );
-
-        event(new StandAssignedEvent($assignment));
+        $this->assignmentsService->createStandAssignment($callsign, $standId);
     }
 
     public function deleteStandAssignmentByCallsign(string $callsign): void
     {
-        if (!StandAssignment::destroy($callsign)) {
+        $assignment = StandAssignment::find($callsign);
+        if (!$assignment) {
             return;
         }
 
-        event(new StandUnassignedEvent($callsign));
+        $this->assignmentsService->deleteStandAssignment($assignment);
     }
 
     public function deleteStandAssignment(StandAssignment $assignment): void
     {
-        $this->deleteStandAssignmentByCallsign($assignment->callsign);
+        $this->assignmentsService->deleteStandAssignment($assignment);
     }
 
     public function getDepartureStandAssignmentForAircraft(NetworkAircraft $aircraft): ?StandAssignment

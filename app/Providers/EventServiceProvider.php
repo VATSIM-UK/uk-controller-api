@@ -61,12 +61,6 @@ class EventServiceProvider extends ServiceProvider
         NetworkDataUpdatedEvent::class => [
             NetworkDataUpdated::class,
         ],
-        StandAssignedEvent::class => [
-            RecordStandAssignmentHistory::class,
-        ],
-        StandUnassignedEvent::class => [
-            DeleteAssignmentHistoryOnUnassignment::class,
-        ],
         MetarsUpdatedEvent::class => [
             MetarsUpdated::class,
         ],
