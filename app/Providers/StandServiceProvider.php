@@ -6,6 +6,7 @@ use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\CidReservedArrivalStandAllocator;
+use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\StandAdminService;
 use App\Services\Stand\StandAssignmentsService;
 use App\Services\Stand\StandService;
@@ -42,11 +43,13 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(DomesticInternationalStandAllocator::class),
                     $application->make(FallbackArrivalStandAllocator::class),
                 ],
-                $application->make(StandAssignmentsService::class)
+                $application->make(StandAssignmentsService::class),
+                $application->make(AirfieldStandService::class)
             );
         });
 
         $this->app->singleton(StandReservationsImport::class);
         $this->app->singleton(StandAdminService::class);
+        $this->app->singleton(AirfieldStandService::class);
     }
 }
