@@ -199,6 +199,28 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(1, StandAssignment::find('BMI221')->stand_id);
     }
 
+    public function testItDoesntAllocateStandIfTimedOut()
+    {
+        $this->doesntExpectEvents(StandAssignedEvent::class);
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BMI221',
+            [
+                'planned_aircraft' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'EGSS',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+            ]
+        );
+        $aircraft->updated_at = Carbon::now()->subMinutes(30);
+        $aircraft->save();
+
+        $this->service->allocateStandsAtArrivalAirfields();
+        $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+    }
+
     public function testItDoesntAllocateStandIfPerformingCircuits()
     {
         $this->doesntExpectEvents(StandAssignedEvent::class);

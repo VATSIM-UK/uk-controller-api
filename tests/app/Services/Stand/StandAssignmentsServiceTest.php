@@ -5,6 +5,7 @@ namespace App\Services\Stand;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandAssignmentsHistory;
 use Illuminate\Support\Facades\Event;
@@ -18,6 +19,28 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         parent::setUp();
         Event::fake();
         $this->service = $this->app->make(StandAssignmentsService::class);
+    }
+
+    public function testItGetsAnAssignment()
+    {
+        $assignment = StandAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
+        );
+        $this->assertEquals($assignment->id, $this->service->assignmentForCallsign('BAW123')->id);
+    }
+
+    public function testItReturnsNullIfNoAssignment()
+    {
+        StandAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
+        );
+        $this->assertNull($this->service->assignmentForCallsign('BAW555'));
     }
 
     public function testItDeletesAnAssignment()
@@ -37,6 +60,12 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing($assignment, ['callsign' => 'BAW123']);
         $this->assertSoftDeleted($history->refresh());
         Event::assertDispatched(fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW123');
+    }
+
+    public function testCreatingAStandAssignmentThrowsExceptionIfStandDoesntExist()
+    {
+        $this->expectException(StandNotFoundException::class);
+        $this->service->createStandAssignment('BAW123', 999);
     }
 
     public function testItCreatesAnAssignment()
@@ -68,7 +97,7 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         StandAssignment::create(
             [
                 'callsign' => 'BAW123',
-                'stand_id' => 1
+                'stand_id' => 1,
             ]
         );
         $this->service->createStandAssignment('BAW123', 2);

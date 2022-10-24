@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
@@ -20,6 +21,33 @@ class StandControllerTest extends BaseApiTestCase
                     'id' => 1,
                     'identifier' => '1L',
                 ],
+                [
+                    'id' => 2,
+                    'identifier' => '251',
+                ],
+            ],
+            'EGBB' => [
+                [
+                    'id' => 3,
+                    'identifier' => '32',
+                ]
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/dependency')
+            ->assertJson($expected)
+            ->assertStatus(200);
+    }
+
+    public function testStandDependencyIgnoresClosedStands()
+    {
+        Stand::where('identifier', '1L')
+            ->airfield('EGLL')
+            ->firstOrFail()
+            ->close();
+
+        $expected = [
+            'EGLL' => [
                 [
                     'id' => 2,
                     'identifier' => '251',

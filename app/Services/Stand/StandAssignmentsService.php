@@ -4,6 +4,8 @@ namespace App\Services\Stand;
 
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +16,11 @@ class StandAssignmentsService
     public function __construct(StandAssignmentsHistoryService $historyService)
     {
         $this->historyService = $historyService;
+    }
+
+    public function assignmentForCallsign(string $callsign): ?StandAssignment
+    {
+        return StandAssignment::find($callsign);
     }
 
     public function deleteStandAssignment(StandAssignment $assignment): void
@@ -28,6 +35,10 @@ class StandAssignmentsService
      */
     public function createStandAssignment(string $callsign, int $standId): void
     {
+        if (!Stand::find($standId)) {
+            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
+        }
+
         [$assignment, $existingAssignment] = DB::transaction(function () use ($callsign, $standId) {
             $existingAssignment = StandAssignment::where('stand_id', $standId)
                 ->where('callsign', '<>', $callsign)

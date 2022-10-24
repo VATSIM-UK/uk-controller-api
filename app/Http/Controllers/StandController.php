@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Airfield\Airfield;
+use App\Models\Stand\Stand;
+use App\Models\Stand\StandAssignment;
 use App\Rules\VatsimCallsign;
+use App\Services\Stand\AirfieldStandService;
+use App\Services\Stand\StandAssignmentsService;
 use App\Services\Stand\StandService;
+use App\Services\Stand\StandStatusService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,22 +19,49 @@ use Illuminate\Support\Facades\Cache;
 class StandController extends BaseController
 {
     const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
+    private readonly StandAssignmentsService $assignmentsService;
+    private readonly AirfieldStandService $airfieldStandService;
 
-    private StandService $standService;
-
-    public function __construct(StandService $standService)
-    {
-        $this->standService = $standService;
+    public function __construct(
+        StandAssignmentsService $assignmentsService,
+        AirfieldStandService $airfieldStandService
+    ) {
+        $this->assignmentsService = $assignmentsService;
+        $this->airfieldStandService = $airfieldStandService;
     }
 
     public function getStandsDependency(): JsonResponse
     {
-        return response()->json($this->standService->getStandsDependency());
+        return response()->json(
+            $this->airfieldStandService->getAllStandsByAirfield()
+                ->mapWithKeys(
+                    function (Airfield $airfield) {
+                        return [
+                            $airfield->code => $airfield->stands
+                                ->reject(fn(Stand $stand) => $stand->closed_at !== null)
+                                ->values()
+                                ->map(fn(Stand $stand) => [
+                                    'id' => $stand->id,
+                                    'identifier' => $stand->identifier,
+                                ]),
+                        ];
+                    }
+                )
+        );
     }
 
     public function getStandAssignments(): JsonResponse
     {
-        return response()->json($this->standService->getStandAssignments());
+        return response()->json(
+            StandAssignment::all()->map(
+                function (StandAssignment $assignment) {
+                    return [
+                        'callsign' => $assignment->callsign,
+                        'stand_id' => $assignment->stand_id,
+                    ];
+                }
+            )
+        );
     }
 
     public function createStandAssignment(Request $request): JsonResponse
@@ -37,7 +69,7 @@ class StandController extends BaseController
         $invalidRequest = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['string' , 'required', new VatsimCallsign],
+                'callsign' => ['string', 'required', new VatsimCallsign],
                 'stand_id' => 'integer|required',
             ]
         );
@@ -47,19 +79,21 @@ class StandController extends BaseController
         }
 
         try {
-            $this->standService->assignStandToAircraft(
+            $this->assignmentsService->createStandAssignment(
                 $request->json('callsign'),
-                (int) $request->json('stand_id')
+                (int)$request->json('stand_id')
             );
             return response()->json([], 201);
-        } catch (StandNotFoundException $notFoundException) {
+        } catch (StandNotFoundException) {
             return response()->json([], 404);
         }
     }
 
     public function deleteStandAssignment(string $callsign): JsonResponse
     {
-        $this->standService->deleteStandAssignmentByCallsign($callsign);
+        if ($assignment = $this->assignmentsService->assignmentForCallsign($callsign)) {
+            $this->assignmentsService->deleteStandAssignment($assignment);
+        }
         return response()->json([], 204);
     }
 
@@ -79,7 +113,7 @@ class StandController extends BaseController
             $this->getStandStatusCacheKey($airfield),
             $cacheRefreshTime,
             function () use ($airfield, $cacheRefreshTime) {
-                $standStatuses = $this->standService->getAirfieldStandStatus($airfield->code);
+                $standStatuses = StandStatusService::getAirfieldStandStatus($airfield->code);
                 return [
                     'stands' => $standStatuses,
                     'generated_at' => Carbon::now()->toIso8601String(),
@@ -102,11 +136,14 @@ class StandController extends BaseController
 
     public function getStandAssignmentForAircraft(string $aircraft): JsonResponse
     {
-        $stand = $this->standService->getAssignedStandForAircraft($aircraft);
-        return $stand
+        $assignment = $this->assignmentsService->assignmentForCallsign($aircraft);
+        return $assignment
             ? response()->json(
-                ['id' => $stand->id, 'airfield' => $stand->airfield->code, 'identifier' => $stand['identifier']],
-                200
+                [
+                    'id' => $assignment->stand_id,
+                    'airfield' => $assignment->stand->airfield->code,
+                    'identifier' => $assignment->stand->identifier,
+                ],
             )
             : response()->json([], 404);
     }
