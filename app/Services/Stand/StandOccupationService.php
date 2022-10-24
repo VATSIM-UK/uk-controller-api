@@ -2,7 +2,6 @@
 
 namespace App\Services\Stand;
 
-use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
