@@ -7,10 +7,9 @@ use App\Events\NetworkDataUpdatedEvent;
 use App\Jobs\Network\AircraftDisconnected;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Mockery;
 
@@ -36,7 +35,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
             $this->getPilotData('BMI223', true, null, null, '7778'),
         ];
 
-        Queue::fake();
+        Bus::fake();
         Carbon::setTestNow(Carbon::now()->startOfSecond());
         Date::setTestNow(Carbon::now());
         $this->mockDataService = Mockery::mock(NetworkDataService::class);
@@ -195,13 +194,13 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
     {
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
-        Queue::assertNotPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
             return $job->aircraft->callsign === 'BAW123';
         });
-        Queue::assertNotPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
             return $job->aircraft->callsign === 'BAW456 ';
         });
-        Queue::assertPushed(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+        Bus::assertDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
             return $job->aircraft->callsign === 'BAW789';
         });
     }

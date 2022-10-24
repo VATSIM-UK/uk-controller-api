@@ -131,12 +131,8 @@ class NetworkAircraftService
         NetworkAircraft::timedOut()
             ->get()
             ->each(
-                function (NetworkAircraft $aircraft) {
-                    $aircraft->getConnection()->transaction(
-                        function () use ($aircraft) {
-                            AircraftDisconnected::dispatch($aircraft);
-                        }
-                    );
+                function (NetworkAircraft $aircraft): void {
+                    AircraftDisconnected::dispatchSync($aircraft);
                 }
             );
     }
