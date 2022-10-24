@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandNotFoundException;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandAssignmentsHistory;
 use Illuminate\Support\Facades\Event;
@@ -151,6 +152,59 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         );
         Event::assertDispatched(
             fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW456'
+        );
+    }
+
+    public function testCreatingAnAssignmentRemovesExistingForPairedStand()
+    {
+        StandAssignment::create(
+            [
+                'callsign' => 'BAW456',
+                'stand_id' => 2,
+            ]
+        );
+        StandAssignment::create(
+            [
+                'callsign' => 'BAW789',
+                'stand_id' => 3,
+            ]
+        );
+        Stand::findOrFail(1)->pairedStands()->sync([2]);
+        Stand::findOrFail(2)->pairedStands()->sync([1]);
+        Stand::findOrFail(3)->pairedStands()->sync([2]);
+        Stand::findOrFail(2)->pairedStands()->sync([3]);
+
+        $this->service->createStandAssignment('BAW123', 2);
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 2,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW456',
+                'stand_id' => 2,
+            ]
+        );
+        $this->assertDatabaseMissing(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW789',
+                'stand_id' => 3,
+            ]
+        );
+        Event::assertDispatched(
+            fn(StandAssignedEvent $event): bool => $event->getStandAssignment()->callsign === 'BAW123' &&
+                $event->getStandAssignment()->stand_id === 2
+        );
+        Event::assertDispatched(
+            fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW456'
+        );
+        Event::assertDispatched(
+            fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW789'
         );
     }
 

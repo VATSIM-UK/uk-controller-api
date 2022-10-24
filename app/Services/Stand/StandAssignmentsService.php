@@ -7,6 +7,7 @@ use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class StandAssignmentsService
@@ -35,33 +36,41 @@ class StandAssignmentsService
      */
     public function createStandAssignment(string $callsign, int $standId): void
     {
-        if (!Stand::find($standId)) {
+        if (!($stand = Stand::with('pairedStands')->find($standId))) {
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
-        [$assignment, $existingAssignment] = DB::transaction(function () use ($callsign, $standId) {
-            $existingAssignment = StandAssignment::where('stand_id', $standId)
+        [$assignment, $existingAssignments] = DB::transaction(function () use ($callsign, $stand) {
+            // Remove assignments for this and paired stands
+            $existingAssignments = StandAssignment::where('stand_id', $stand->id)
                 ->where('callsign', '<>', $callsign)
-                ->first();
+                ->union(
+                    StandAssignment::whereIn(
+                        'stand_id',
+                        $stand->pairedStands->pluck('id')
+                    )
+                )
+                ->get();
 
-            if ($existingAssignment) {
-                $this->deleteAssignmentAndHistoryData($existingAssignment);
-            }
+            $existingAssignments->each(function (StandAssignment $assignment) {
+                $this->deleteAssignmentAndHistoryData($assignment);
+            });
 
+            // Create new stand assignment
             $assignment = StandAssignment::updateOrCreate(
                 ['callsign' => $callsign],
                 [
-                    'stand_id' => $standId,
+                    'stand_id' => $stand->id,
                 ]
             );
             $this->historyService->createHistoryItem($assignment);
 
-            return [$assignment, $existingAssignment];
+            return [$assignment, $existingAssignments];
         });
 
-        if ($existingAssignment) {
-            $this->unassignedEvent($existingAssignment);
-        }
+        $existingAssignments->each(function (StandAssignment $assignment) {
+            $this->unassignedEvent($assignment);
+        });
         event(new StandAssignedEvent($assignment));
     }
 
