@@ -6,6 +6,7 @@ use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Vatsim\NetworkAircraft;
 use App\Rules\VatsimCallsign;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\StandAssignmentsService;
@@ -91,9 +92,7 @@ class StandController extends BaseController
 
     public function deleteStandAssignment(string $callsign): JsonResponse
     {
-        if ($assignment = $this->assignmentsService->assignmentForCallsign($callsign)) {
-            $this->assignmentsService->deleteStandAssignment($assignment);
-        }
+        $this->assignmentsService->deleteAssignmentIfExists(NetworkAircraft::find($callsign));
         return response()->json([], 204);
     }
 

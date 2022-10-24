@@ -7,6 +7,7 @@ use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +23,13 @@ class StandAssignmentsService
     public function assignmentForCallsign(string $callsign): ?StandAssignment
     {
         return StandAssignment::find($callsign);
+    }
+
+    public function deleteAssignmentIfExists(NetworkAircraft $aircraft): void
+    {
+        if ($assignment = $this->assignmentForCallsign($aircraft->callsign)) {
+            $this->deleteStandAssignment($assignment);
+        }
     }
 
     public function deleteStandAssignment(StandAssignment $assignment): void

@@ -2,19 +2,21 @@
 
 namespace App\Jobs\Stand;
 
-use App\Events\StandUnassignedEvent;
 use App\Jobs\Network\AircraftDisconnectedSubtask;
-use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\Stand\StandAssignmentsService;
 
 class TriggerUnassignmentOnDisconnect implements AircraftDisconnectedSubtask
 {
+    private readonly StandAssignmentsService $assignmentsService;
+
+    public function __construct(StandAssignmentsService $assignmentsService)
+    {
+        $this->assignmentsService = $assignmentsService;
+    }
+
     public function perform(NetworkAircraft $aircraft): void
     {
-        $callsign = $aircraft->callsign;
-
-        if (StandAssignment::destroy($callsign)) {
-            event(new StandUnassignedEvent($callsign));
-        }
+        $this->assignmentsService->deleteAssignmentIfExists($aircraft);
     }
 }

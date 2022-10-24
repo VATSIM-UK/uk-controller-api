@@ -9,6 +9,7 @@ use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandAssignmentsHistory;
+use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\Event;
 
 class StandAssignmentsServiceTest extends BaseFunctionalTestCase
@@ -61,6 +62,31 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing($assignment, ['callsign' => 'BAW123']);
         $this->assertSoftDeleted($history->refresh());
         Event::assertDispatched(fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW123');
+    }
+
+    public function testItDeletesAnAssignmentIfExistsForAircraft()
+    {
+        $history = StandAssignmentsHistory::create([
+            'callsign' => 'BAW123',
+            'stand_id' => 1,
+        ]);
+        $assignment = StandAssignment::create(
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
+        );
+
+        $this->service->deleteAssignmentIfExists(NetworkAircraft::find('BAW123'));
+        $this->assertDatabaseMissing($assignment, ['callsign' => 'BAW123']);
+        $this->assertSoftDeleted($history->refresh());
+        Event::assertDispatched(fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW123');
+    }
+
+    public function testItDoesntDeleteAnAssignmentIfDoesntExistForAircraft()
+    {
+        $this->service->deleteAssignmentIfExists(NetworkAircraft::find('BAW123'));
+        Event::assertNotDispatched(fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW123');
     }
 
     public function testCreatingAStandAssignmentThrowsExceptionIfStandDoesntExist()
