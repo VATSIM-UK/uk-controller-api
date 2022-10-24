@@ -152,6 +152,7 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => 'B744',
+                'planned_aircraft_short' => 'B744',
                 'planned_destairport' => $arrivalAirport,
             ]
         );

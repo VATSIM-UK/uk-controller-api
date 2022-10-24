@@ -260,6 +260,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => $type,
+                'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
             ]
         );

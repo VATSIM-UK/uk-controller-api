@@ -181,6 +181,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => 'BAW898',
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => '',
                 'planned_depairport' => 'EIDW',
             ]
@@ -205,6 +206,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => $type,
+                'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $domestic ? 'EGKK' : 'EIDW',
             ]

@@ -138,6 +138,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => 'B744',
+                'planned_aircraft_short' => 'B744',
                 'planned_destairport' => $arrivalAirport,
             ]
         );

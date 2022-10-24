@@ -41,12 +41,10 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      */
     private function getArrivalAirfieldStandQuery(NetworkAircraft $aircraft): Builder
     {
-        $aircraftType = Aircraft::where('code', $aircraft->aircraftType)->first();
-
         return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
             $query->where('code', $aircraft->planned_destairport);
         })
-            ->sizeAppropriate($aircraftType)
+            ->sizeAppropriate($aircraft->planned_aircraft_short)
             ->available()
             ->select('stands.*');
     }

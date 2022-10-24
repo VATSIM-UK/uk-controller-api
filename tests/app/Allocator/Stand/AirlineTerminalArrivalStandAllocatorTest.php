@@ -137,6 +137,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => $arrivalAirport]
         );
     }
