@@ -59,12 +59,14 @@ class ArrivalAllocationService
         $this->getAircraftThatCanHaveArrivalStandsAllocated()
             ->filter(fn(NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
             ->each(function (NetworkAircraft $aircraft) {
-                foreach ($this->allocators as $allocator) {
-                    if ($allocation = $allocator->allocate($aircraft)) {
-                        event(new StandAssignedEvent($allocation));
-                        return;
+                StandAssignmentsLockingService::performActionWithLock(function() use ($aircraft) {
+                    foreach ($this->allocators as $allocator) {
+                        if ($allocation = $allocator->allocate($aircraft)) {
+                            event(new StandAssignedEvent($allocation));
+                            return;
+                        }
                     }
-                }
+                });
             });
     }
 

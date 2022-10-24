@@ -81,7 +81,7 @@ class StandOccupationService
                     ->orWhereNull('aircraft_stand.latitude');
             })
             ->where(function (Builder $subquery) {
-                // They not moving
+                // They are not moving
                 $subquery->where('groundspeed', '<=', self::MAX_OCCUPANCY_SPEED)
                     ->where('altitude', '<=', self::MAX_OCCUPANCY_ALTITUDE);
             })
@@ -169,12 +169,14 @@ class StandOccupationService
      */
     private function deleteConflictingAssignmentsFollowingOccupation(Collection $newOccupations): void
     {
-        StandAssignment::whereNotIn('callsign', $newOccupations->pluck('callsign'))
-            ->whereIn('stand_id', $newOccupations->pluck('stand_id'))
-            ->get()
-            ->each(function (StandAssignment $assignment) {
-                $this->assignmentsService->deleteStandAssignment($assignment);
-            });
+        StandAssignmentsLockingService::performActionWithLock(function () use ($newOccupations) {
+            StandAssignment::whereNotIn('callsign', $newOccupations->pluck('callsign'))
+                ->whereIn('stand_id', $newOccupations->pluck('stand_id'))
+                ->get()
+                ->each(function (StandAssignment $assignment) {
+                    $this->assignmentsService->deleteStandAssignment($assignment);
+                });
+        });
     }
 
     /**

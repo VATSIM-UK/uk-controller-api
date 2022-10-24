@@ -22,12 +22,14 @@ class DepartureAllocationService
      */
     public function assignStandsForDeparture(): void
     {
-        $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
-            $this->assignmentsService->deleteStandAssignment($assignment);
-        });
+        StandAssignmentsLockingService::performActionWithLock(function () {
+            $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
+                $this->assignmentsService->deleteStandAssignment($assignment);
+            });
 
-        $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
-            $this->assignmentsService->createStandAssignment($aircraft->callsign, $aircraft->stand_id);
+            $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
+                $this->assignmentsService->createStandAssignment($aircraft->callsign, $aircraft->stand_id);
+            });
         });
     }
 
