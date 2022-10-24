@@ -344,7 +344,8 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
             'transponder' => $transponder ?? '0457',
             'flight_plan' => $hasFlightplan
                 ? [
-                    'aircraft' => 'B738',
+                    'aircraft' => 'H/B738/M',
+                    'aircraft_short' => 'B738',
                     'departure' => 'EGKK',
                     'arrival' => 'EGPH',
                     'altitude' => '15001',
@@ -377,6 +378,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
                 $baseData,
                 [
                     'planned_aircraft' => $pilot['flight_plan']['aircraft'],
+                    'planned_aircraft_short' => $pilot['flight_plan']['aircraft_short'],
                     'planned_depairport' => $pilot['flight_plan']['departure'],
                     'planned_destairport' => $pilot['flight_plan']['arrival'],
                     'planned_altitude' => $pilot['flight_plan']['altitude'],

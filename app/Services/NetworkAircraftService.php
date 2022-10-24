@@ -93,6 +93,7 @@ class NetworkAircraftService
             'groundspeed' => $pilot['groundspeed'],
             'transponder' => $pilot['transponder'],
             'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
+            'planned_aircraft_short' => $this->getFlightplanDataElement($pilot, 'aircraft_short'),
             'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
             'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),
             'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),

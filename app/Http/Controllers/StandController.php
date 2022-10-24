@@ -10,7 +10,6 @@ use App\Models\Vatsim\NetworkAircraft;
 use App\Rules\VatsimCallsign;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\StandAssignmentsService;
-use App\Services\Stand\StandService;
 use App\Services\Stand\StandStatusService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;

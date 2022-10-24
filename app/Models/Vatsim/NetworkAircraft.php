@@ -40,6 +40,7 @@ class NetworkAircraft extends Model
         'altitude',
         'groundspeed',
         'planned_aircraft',
+        'planned_aircraft_short',
         'planned_depairport',
         'planned_destairport',
         'planned_altitude',

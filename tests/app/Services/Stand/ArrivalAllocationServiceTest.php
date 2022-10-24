@@ -46,6 +46,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_depairport' => 'EGKK',
                 'planned_destairport' => 'EGXY',
                 'groundspeed' => 150,
@@ -68,6 +69,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_depairport' => 'EGKK',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
@@ -92,6 +94,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // London
@@ -113,6 +116,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_depairport' => 'EGBB',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
@@ -133,6 +137,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'groundspeed' => 150,
                 // London
@@ -186,6 +191,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'EGSS',
                 'groundspeed' => 150,
@@ -206,6 +212,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'EGSS',
                 'groundspeed' => 150,
@@ -228,6 +235,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'EGLL',
                 'groundspeed' => 150,
@@ -248,6 +256,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'LFPG',
                 'groundspeed' => 100,
@@ -268,6 +277,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'LFPG',
                 'groundspeed' => 0,
@@ -293,6 +303,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
@@ -313,6 +324,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
@@ -339,6 +351,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGXX',
                 'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
@@ -359,6 +372,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B736',
+                'planned_aircraft_short' => 'B736',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
@@ -381,6 +395,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             'BMI221',
             [
                 'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
                 'planned_depairport' => 'LFPG',
                 'groundspeed' => 150,
