@@ -56,7 +56,7 @@ class ArrivalAllocationService
     private function allocateStandsForArrivingAircraft(): void
     {
         $this->getAircraftThatCanHaveArrivalStandsAllocated()
-            ->filter(fn(NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
+            ->filter(fn (NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
             ->each(function (NetworkAircraft $aircraft) {
                 StandAssignmentsLockingService::performActionWithLock(function () use ($aircraft) {
                     foreach ($this->allocators as $allocator) {
@@ -96,9 +96,9 @@ class ArrivalAllocationService
     private function aircraftWithAssignmentDistance(NetworkAircraft $aircraft): bool
     {
         return $this->getTimeFromAirfieldInMinutes(
-                $aircraft,
-                Airfield::fromCode($aircraft->planned_destairport)
-            ) < self::ASSIGN_STAND_MINUTES_BEFORE;
+            $aircraft,
+            Airfield::fromCode($aircraft->planned_destairport)
+        ) < self::ASSIGN_STAND_MINUTES_BEFORE;
     }
 
     /**

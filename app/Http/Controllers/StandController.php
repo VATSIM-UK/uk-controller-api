@@ -39,9 +39,9 @@ class StandController extends BaseController
                     function (Airfield $airfield) {
                         return [
                             $airfield->code => $airfield->stands
-                                ->reject(fn(Stand $stand) => $stand->closed_at !== null)
+                                ->reject(fn (Stand $stand) => $stand->closed_at !== null)
                                 ->values()
-                                ->map(fn(Stand $stand) => [
+                                ->map(fn (Stand $stand) => [
                                     'id' => $stand->id,
                                     'identifier' => $stand->identifier,
                                 ]),
