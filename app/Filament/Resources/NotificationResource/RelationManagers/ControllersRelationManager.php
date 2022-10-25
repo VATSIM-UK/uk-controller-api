@@ -5,6 +5,7 @@ namespace App\Filament\Resources\NotificationResource\RelationManagers;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\ControllerPosition;
+use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -19,7 +20,7 @@ class ControllersRelationManager extends RelationManager
     use LimitsTableRecordListingOptions;
 
     use TranslatesStrings;
-    
+
     protected static string $relationship = 'controllers';
     protected static ?string $recordTitleAttribute = 'callsign';
 
@@ -78,19 +79,27 @@ class ControllersRelationManager extends RelationManager
                     ])
                     ->using(function (ControllersRelationManager $livewire, array $data) {
                         DB::transaction(function () use ($livewire, $data) {
-                            $livewire->getOwnerRecord()
-                                ->controllers()
-                                ->sync(
-                                    self::controllersForNotification($data)
-                                        ->merge(
-                                            $livewire->getOwnerRecord()->controllers()->pluck(
-                                                'controller_positions.id'
-                                            )
-                                        )
-                                        ->unique()
-                                        ->values()
-                                        ->toArray()
-                                );
+                            $positionsToInsert = self::controllersForNotification($data)
+                                ->merge(
+                                    $livewire->getOwnerRecord()->controllers()->pluck(
+                                        'controller_positions.id'
+                                    )
+                                )
+                                ->unique()
+                                ->values()
+                                ->map(fn (int $positionId) => [
+                                    'notification_id' => $livewire->getOwnerRecord()->id,
+                                    'controller_position_id' => $positionId,
+                                    'created_at' => Carbon::now(),
+                                    'updated_at' => Carbon::now(),
+                                ])
+                                ->toArray();
+
+                            DB::table('controller_position_notification')
+                                ->where('notification_id', $livewire->getOwnerRecord()->id)
+                                ->delete();
+                            DB::table('controller_position_notification')
+                                ->insert($positionsToInsert);
                         });
                     }),
             ])
@@ -98,7 +107,7 @@ class ControllersRelationManager extends RelationManager
                 Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DetachBulkAction::make()
+                Tables\Actions\DetachBulkAction::make(),
             ]);
     }
 
