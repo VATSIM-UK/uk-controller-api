@@ -63,20 +63,16 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
     {
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->id, $assignment->id);
-        $this->assertEquals($expectedAssignment->stand_id, $this->domesticStand->id);
+        $this->assertEquals($this->domesticStand->id, $assignment);
     }
 
     public function testItAssignsAnInternationalStand()
     {
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', false);
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->id, $assignment->id);
-        $this->assertEquals($expectedAssignment->stand_id, $this->internationalStand->id);
+        $this->assertEquals($this->internationalStand->id, $assignment);
     }
 
     public function testItAssignsWeightAppropriateStands()
@@ -95,10 +91,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         $this->setWakeCategoryForAircraft('B738', 'J');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($weightAppropriateStand->id, $assignment->stand_id);
-        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
+        $this->assertEquals($weightAppropriateStand->id, $assignment);
     }
 
     public function testItAssignsInWeightAscendingOrder()
@@ -117,10 +111,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         $this->setWakeCategoryForAircraft('B738', 'S');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->id, $assignment->id);
-        $this->assertEquals($expectedAssignment->stand_id, $weightAppropriateStand->id);
+        $this->assertEquals($weightAppropriateStand->id, $assignment);
     }
 
     public function testItPrefersHigherPriorityUseStands()
@@ -139,10 +131,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->id, $assignment->id);
-        $this->assertEquals($expectedAssignment->stand_id, $this->domesticStand->id);
+        $this->assertEquals($this->domesticStand->id, $assignment);
     }
 
     public function testItDoesntAllocateTakenStands()
@@ -169,10 +159,8 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         );
 
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->id, $assignment->id);
-        $this->assertEquals($expectedAssignment->stand_id, $extraStand->id);
+        $this->assertEquals($extraStand->id, $assignment);
     }
 
     public function testItReturnsNothingOnNoDestinationAirport()
@@ -187,13 +175,11 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
         $this->assertNull($this->allocator->allocate($aircraft));
-        $this->assertFalse(StandAssignment::where('callsign', 'BAW898')->exists());
     }
 
     public function testItReturnsNothingOnNoStandAllocated()
     {
         $this->assertNull($this->allocator->allocate($this->createAircraft('BAW898', 'B738', 'XXXX', true)));
-        $this->assertFalse(StandAssignment::where('callsign', 'BAW898')->exists());
     }
 
     private function createAircraft(

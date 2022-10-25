@@ -4,35 +4,15 @@ namespace App\Allocator\Stand;
 
 use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\QueryException;
 
 abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInterface
 {
-    final public function allocate(NetworkAircraft $aircraft): ?StandAssignment
+    final public function allocate(NetworkAircraft $aircraft): ?int
     {
-        foreach ($this->getPossibleStands($aircraft) as $stand) {
-            try {
-                return StandAssignment::updateOrCreate(
-                    [
-                        'callsign' => $aircraft['callsign']
-                    ],
-                    [
-                        'stand_id' => $stand->id,
-                    ]
-                );
-            } catch (QueryException $queryException) {
-                // If it's a duplicate stand, ignore it and try a different stand
-                if ($queryException->errorInfo[1] !== 1062) {
-                    throw $queryException;
-                }
-            }
-        }
-
-        return null;
+        return $this->getPossibleStands($aircraft)->first()?->id;
     }
 
     /*

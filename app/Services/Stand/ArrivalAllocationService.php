@@ -3,7 +3,6 @@
 namespace App\Services\Stand;
 
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
-use App\Events\StandAssignedEvent;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
@@ -59,10 +58,10 @@ class ArrivalAllocationService
         $this->getAircraftThatCanHaveArrivalStandsAllocated()
             ->filter(fn(NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
             ->each(function (NetworkAircraft $aircraft) {
-                StandAssignmentsLockingService::performActionWithLock(function() use ($aircraft) {
+                StandAssignmentsLockingService::performActionWithLock(function () use ($aircraft) {
                     foreach ($this->allocators as $allocator) {
                         if ($allocation = $allocator->allocate($aircraft)) {
-                            event(new StandAssignedEvent($allocation));
+                            $this->assignmentsService->createStandAssignment($aircraft->callsign, $allocation);
                             return;
                         }
                     }
