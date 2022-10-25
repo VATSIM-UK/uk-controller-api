@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.29.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.0...6.29.1) (2022-10-25)
+
+
+### Performance Improvements
+
+* notification controllers query performance ([67992f1](https://github.com/VATSIM-UK/uk-controller-api/commit/67992f125cd7d7dd33cd18593b843f709d1fd714))
+
 ## [6.29.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.28.0...6.29.0) (2022-10-21)
 
 
