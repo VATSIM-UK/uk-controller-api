@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.29.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.1...6.29.2) (2022-10-26)
+
+
+### Bug Fixes
+
+* prevent mass deletes of squawk assignments ([8dbf5c0](https://github.com/VATSIM-UK/uk-controller-api/commit/8dbf5c0cbae24fc8cbdce357b73bdaece5622b84))
+
 ## [6.29.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.0...6.29.1) (2022-10-25)
 
 
