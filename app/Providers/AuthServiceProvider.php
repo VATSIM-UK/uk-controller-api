@@ -12,11 +12,13 @@ use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
+use App\Models\Squawk\SquawkAssignment;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
 use App\Models\Version\Version;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DefaultFilamentPolicy;
+use App\Policies\PluginEditableDataPolicy;
 use App\Policies\PluginVersionPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Carbon;
@@ -54,6 +56,9 @@ class AuthServiceProvider extends ServiceProvider
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
+
+        // Things the plugin can assign
+        SquawkAssignment::class => PluginEditableDataPolicy::class,
 
         // Special policies
         Activity::class => ActivityLogPolicy::class,
