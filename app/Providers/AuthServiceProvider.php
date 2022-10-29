@@ -13,6 +13,7 @@ use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
+use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Squawk\SquawkAssignment;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
@@ -54,6 +55,7 @@ class AuthServiceProvider extends ServiceProvider
         Hold::class => DefaultFilamentPolicy::class,
         Navaid::class => DefaultFilamentPolicy::class,
         Notification::class => DefaultFilamentPolicy::class,
+        OrcamSquawkRange::class => DefaultFilamentPolicy::class,
         Prenote::class => DefaultFilamentPolicy::class,
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,

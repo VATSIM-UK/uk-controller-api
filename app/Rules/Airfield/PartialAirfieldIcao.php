@@ -4,9 +4,9 @@ namespace App\Rules\Airfield;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class AirfieldIcao implements Rule
+class PartialAirfieldIcao implements Rule
 {
-    const AIRFIELD_REGEX = '/^[0-9A-Z]{4}$/';
+    const AIRFIELD_REGEX = '/^[0-9A-Z]{1,4}$/';
     const REGEX_MATCHED = 1;
 
     /**
@@ -16,7 +16,7 @@ class AirfieldIcao implements Rule
      * @param mixed $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         return is_string($value) && preg_match(self::AIRFIELD_REGEX, $value) === self::REGEX_MATCHED;
     }

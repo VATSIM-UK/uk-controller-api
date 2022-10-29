@@ -4,14 +4,14 @@ namespace App\Rules\Airfield;
 
 use App\BaseUnitTestCase;
 
-class AirfieldIcaoTest extends BaseUnitTestCase
+class PartialAirfieldIcaoTest extends BaseUnitTestCase
 {
-    private readonly AirfieldIcao $rule;
+    private readonly PartialAirfieldIcao $rule;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->rule = $this->app->make(AirfieldIcao::class);
+        $this->rule = $this->app->make(PartialAirfieldIcao::class);
     }
 
     public function validDataProvider(): array
@@ -25,6 +25,13 @@ class AirfieldIcaoTest extends BaseUnitTestCase
             ['KJFK'],
             ['EDDF'],
             ['EG12'],
+            ['L'],
+            ['LF'],
+            ['LFR'],
+            ['L123'],
+            ['LF12'],
+            ['LFR3'],
+            ['LFRR'],
         ];
     }
 
@@ -39,11 +46,11 @@ class AirfieldIcaoTest extends BaseUnitTestCase
     public function invalidDataProvider(): array
     {
         return [
-            'Too short' => ['EGL'],
+            'Too short' => [''],
             'Is null' => [null],
             'Too long' => ['EGCCC'],
-            'Wrong type' => [123],
             'Lower case' => ['egcc'],
+            'Wrong type' => [123],
             'Contains non-alphanumerics' => ['KJ[K'],
         ];
     }

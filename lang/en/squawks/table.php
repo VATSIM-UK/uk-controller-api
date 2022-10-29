@@ -12,6 +12,13 @@ return [
         'columns' => [
             'first' => 'First Squawk in Range',
             'last' => 'Last Squawk in Range',
-        ]
+        ],
+    ],
+    'orcam' => [
+        'columns' => [
+            'first' => 'First Squawk in Range',
+            'last' => 'Last Squawk in Range',
+            'origin' => 'Origin Airport Pattern',
+        ],
     ],
 ];
