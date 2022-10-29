@@ -61,6 +61,57 @@ class CcamsSquawkRangeResourceTest extends BaseFilamentTestCase
             ->assertHasPageActionErrors(['last']);
     }
 
+    public function testItEditsASquawkRange()
+    {
+        Livewire::test(ManageCcamsSquawkRange::class)
+            ->callTableAction(
+                'edit',
+                CcamsSquawkRange::findOrFail(1),
+                [
+                    'first' => '3456',
+                    'last' => '4567',
+                ]
+            )
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'ccams_squawk_ranges',
+            [
+                'id' => 1,
+                'first' => '3456',
+                'last' => '4567',
+            ]
+        );
+    }
+
+    public function testItDoesntEditARangeIfFirstInvalid()
+    {
+        Livewire::test(ManageCcamsSquawkRange::class)
+            ->callTableAction(
+                'edit',
+                CcamsSquawkRange::findOrFail(1),
+                [
+                    'first' => '234a',
+                    'last' => '4567',
+                ]
+            )
+            ->assertHasTableActionErrors(['first']);
+    }
+
+    public function testItDoesntEditARangeIfLastInvalid()
+    {
+        Livewire::test(ManageCcamsSquawkRange::class)
+            ->callTableAction(
+                'edit',
+                CcamsSquawkRange::findOrFail(1),
+                [
+                    'first' => '2345',
+                    'last' => '456a',
+                ]
+            )
+            ->assertHasTableActionErrors(['last']);
+    }
+
     protected function getCreateText(): string
     {
         return 'Create ccams squawk range';

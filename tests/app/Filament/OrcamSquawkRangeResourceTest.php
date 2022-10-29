@@ -92,6 +92,90 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
             ->assertHasPageActionErrors(['origin']);
     }
 
+    public function testItEditsASquawkRange()
+    {
+        Livewire::test(ManageOrcamSquawkRanges::class)
+            ->callTableAction(
+                'edit',
+                OrcamSquawkRange::findOrFail(1),
+                [
+                    'first' => '3456',
+                    'last' => '4567',
+                    'origin' => 'AF',
+                ]
+            )
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'orcam_squawk_ranges',
+            [
+                'id' => 1,
+                'first' => '3456',
+                'last' => '4567',
+                'origin' => 'AF',
+            ]
+        );
+    }
+
+    public function testItDoesntEditARangeIfFirstInvalid()
+    {
+        Livewire::test(ManageOrcamSquawkRanges::class)
+            ->callTableAction(
+                'edit',
+                OrcamSquawkRange::findOrFail(1),
+                [
+                    'first' => '345a',
+                    'last' => '4567',
+                    'origin' => 'AF',
+                ]
+            )
+            ->assertHasTableActionErrors(['first']);
+    }
+
+    public function testItDoesntEditARangeIfLastInvalid()
+    {
+        Livewire::test(ManageOrcamSquawkRanges::class)
+            ->callTableAction(
+                'edit',
+                OrcamSquawkRange::findOrFail(1),
+                [
+                    'first' => '3456',
+                    'last' => '456a',
+                    'origin' => 'AF',
+                ]
+            )
+            ->assertHasTableActionErrors(['last']);
+    }
+
+    public function testItDoesntEditARangeIfOriginMissing()
+    {
+        Livewire::test(ManageOrcamSquawkRanges::class)
+            ->callTableAction(
+                'edit',
+                OrcamSquawkRange::findOrFail(1),
+                [
+                    'first' => '3456',
+                    'last' => '4567',
+                ]
+            )
+            ->assertHasTableActionErrors(['origin']);
+    }
+
+    public function testItDoesntEditARangeIfOriginInvalid()
+    {
+        Livewire::test(ManageOrcamSquawkRanges::class)
+            ->callTableAction(
+                'edit',
+                OrcamSquawkRange::findOrFail(1),
+                [
+                    'first' => '3456',
+                    'last' => '4567',
+                    'origin' => 'AAAAAAAAAA',
+                ]
+            )
+            ->assertHasTableActionErrors(['origin']);
+    }
+
     protected function getCreateText(): string
     {
         return 'Create orcam squawk range';
