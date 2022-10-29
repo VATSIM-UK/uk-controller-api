@@ -25,4 +25,13 @@ return [
             'helper' => 'The pattern to match the origin airport against. Partial patterns are allowed. E.g. ED, LFR.',
         ],
     ],
+    'non_assignable' => [
+        'code' => [
+            'label' => 'Code',
+            'helper' => 'The banned squawk code.',
+        ],
+        'description' => [
+            'label' => 'Description',
+        ],
+    ],
 ];

@@ -21,4 +21,10 @@ return [
             'origin' => 'Origin Airport Pattern',
         ],
     ],
+    'non_assignable' => [
+        'columns' => [
+            'code' => 'Code',
+            'description' => 'Description',
+        ],
+    ],
 ];

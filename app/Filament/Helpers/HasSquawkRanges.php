@@ -10,19 +10,20 @@ trait HasSquawkRanges
 {
     use TranslatesStrings;
 
-    public static function squawkRangeInputs(): array
+    protected static function squawkRangeInputs(): array
     {
         return [
-            TextInput::make('first')
-                ->required()
-                ->rule(new SqauwkCode())
-                ->label(self::translateFormPath('first.label'))
-                ->helperText(self::translateFormPath('first.helper')),
-            TextInput::make('last')
-                ->required()
-                ->rule(new SqauwkCode())
-                ->label(self::translateFormPath('last.label'))
-                ->helperText(self::translateFormPath('last.helper'))
+            static::singleSquawkInput('first', 'first'),
+            static::singleSquawkInput('last', 'last'),
         ];
+    }
+
+    protected static function singleSquawkInput(string $name, string $labelName): TextInput
+    {
+        return TextInput::make($name)
+            ->required()
+            ->rule(new SqauwkCode())
+            ->label(self::translateFormPath(sprintf('%s.label', $labelName)))
+            ->helperText(self::translateFormPath(sprintf('%s.helper', $labelName)));
     }
 }

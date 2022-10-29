@@ -1,0 +1,257 @@
+<?php
+
+namespace App\Filament;
+
+use App\BaseFilamentTestCase;
+use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
+use App\Filament\Resources\NonAssignableSquawkCodeResource;
+use App\Filament\Resources\NonAssignableSquawkCodeResource\Pages\ManageNonAssignnableSquawkCodeRanges;
+use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
+use Illuminate\Support\Str;
+use Livewire\Livewire;
+
+class NonAssignableSquawkCodeResourceTest extends BaseFilamentTestCase
+{
+    use ChecksManageRecordsFilamentAccess;
+    use ChecksFilamentActionVisibility;
+
+    public function testItCreatesASquawkCode()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callPageAction(
+                'create',
+                [
+                    'code' => '2512',
+                    'description' => 'abc',
+                ]
+            )
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'non_assignable_squawk_codes',
+            [
+                'code' => '2512',
+                'description' => 'abc',
+            ]
+        );
+    }
+
+    public function testItDoesntCreateIfCodeNotUnique()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callPageAction(
+                'create',
+                [
+                    'code' => '1234',
+                    'description' => 'abc',
+                ]
+            )
+            ->assertHasPageActionErrors(['code']);
+    }
+
+    public function testItDoesntCreateIfCodeInvalid()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callPageAction(
+                'create',
+                [
+                    'code' => '123a',
+                    'description' => 'abc',
+                ]
+            )
+            ->assertHasPageActionErrors(['code']);
+    }
+
+    public function testItDoesntCreateARangeIfDescriptionMissing()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callPageAction(
+                'create',
+                [
+                    'first' => '1234',
+                ]
+            )
+            ->assertHasPageActionErrors(['description']);
+    }
+
+    public function testItDoesntCreateARangeIfDescriptionTooShort()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callPageAction(
+                'create',
+                [
+                    'first' => '1234',
+                    'description' => '',
+                ]
+            )
+            ->assertHasPageActionErrors(['description']);
+    }
+
+    public function testItDoesntCreateARangeIfDescriptionTooLong()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callPageAction(
+                'create',
+                [
+                    'first' => '1234',
+                    'description' => Str::padRight('', 256, 'a'),
+                ]
+            )
+            ->assertHasPageActionErrors(['description']);
+    }
+
+    public function testItEditsASquawkCode()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callTableAction(
+                'edit',
+                NonAssignableSquawkCode::findOrFail(1),
+                [
+                    'code' => '5621',
+                    'description' => 'abc',
+                ]
+            )
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'non_assignable_squawk_codes',
+            [
+                'id' => 1,
+                'code' => '5621',
+                'description' => 'abc',
+            ]
+        );
+    }
+
+    public function testItEditsASquawkCodeToChangeTheDescription()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callTableAction(
+                'edit',
+                NonAssignableSquawkCode::findOrFail(1),
+                [
+                    'code' => '7500',
+                    'description' => 'abc',
+                ]
+            )
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'non_assignable_squawk_codes',
+            [
+                'id' => 1,
+                'code' => '7500',
+                'description' => 'abc',
+            ]
+        );
+    }
+
+    public function testItEditingFailsIfNewCodeIsNotUnique()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callTableAction(
+                'edit',
+                NonAssignableSquawkCode::findOrFail(1),
+                [
+                    'code' => '7600',
+                    'description' => 'abc',
+                ]
+            )
+            ->assertHasTableActionErrors(['code']);
+    }
+
+    public function testItEditingFailsIfNewCodeIsInvalid()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callTableAction(
+                'edit',
+                NonAssignableSquawkCode::findOrFail(1),
+                [
+                    'code' => '760a',
+                    'description' => 'abc',
+                ]
+            )
+            ->assertHasTableActionErrors(['code']);
+    }
+
+    public function testItEditingFailsIfNewDescriptionIsMissing()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callTableAction(
+                'edit',
+                NonAssignableSquawkCode::findOrFail(1),
+                [
+                    'code' => '7231',
+                ]
+            )
+            ->assertHasTableActionErrors(['description']);
+    }
+
+    public function testItEditingFailsIfNewDescriptionIsTooShort()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callTableAction(
+                'edit',
+                NonAssignableSquawkCode::findOrFail(1),
+                [
+                    'code' => '7231',
+                    'description' => '',
+                ]
+            )
+            ->assertHasTableActionErrors(['description']);
+    }
+
+    public function testItEditingFailsIfNewDescriptionIsTooLong()
+    {
+        Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
+            ->callTableAction(
+                'edit',
+                NonAssignableSquawkCode::findOrFail(1),
+                [
+                    'code' => '7231',
+                    'description' => Str::padRight('', 256, 'a'),
+                ]
+            )
+            ->assertHasTableActionErrors(['description']);
+    }
+
+    protected function getCreateText(): string
+    {
+        return 'Create non assignable squawk code';
+    }
+
+    protected function getIndexText(): array
+    {
+        return ['Non Assignable Squawk Codes', '7500', 'Never to be used on the VATSIM network'];
+    }
+
+    protected function resourceClass(): string
+    {
+        return NonAssignableSquawkCodeResource::class;
+    }
+
+    protected function resourceListingClass(): string
+    {
+        return ManageNonAssignnableSquawkCodeRanges::class;
+    }
+
+    protected function resourceRecordClass(): string
+    {
+        return NonAssignableSquawkCode::class;
+    }
+
+    protected function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected function writeResourceTableActions(): array
+    {
+        return ['edit'];
+    }
+
+    protected function writeResourcePageActions(): array
+    {
+        return ['create'];
+    }
+}
