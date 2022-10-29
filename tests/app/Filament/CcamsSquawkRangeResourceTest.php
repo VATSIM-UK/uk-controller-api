@@ -5,14 +5,61 @@ namespace App\Filament;
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
 use App\Filament\Resources\CcamsSquawkRangeResource;
-use App\Filament\Resources\CcamsSquawkRangeResource\Pages\ListCcamsSquawkRanges;
+use App\Filament\Resources\CcamsSquawkRangeResource\Pages\ManageCcamsSquawkRange;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use Illuminate\Database\Eloquent\Model;
+use Livewire\Livewire;
 
 class CcamsSquawkRangeResourceTest extends BaseFilamentTestCase
 {
     use ChecksManageRecordsFilamentAccess;
     use ChecksFilamentActionVisibility;
+
+    public function testItCreatesASquawkRange()
+    {
+        Livewire::test(ManageCcamsSquawkRange::class)
+            ->callPageAction(
+                'create',
+                [
+                    'first' => '1234',
+                    'last' => '2345',
+                ]
+            )
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'ccams_squawk_ranges',
+            [
+                'first' => '1234',
+                'last' => '2345',
+            ]
+        );
+    }
+
+    public function testItDoesntCreateARangeIfFirstInvalid()
+    {
+        Livewire::test(ManageCcamsSquawkRange::class)
+            ->callPageAction(
+                'create',
+                [
+                    'first' => '123a',
+                    'last' => '2345',
+                ]
+            )
+            ->assertHasPageActionErrors(['first']);
+    }
+
+    public function testItDoesntCreateARangeIfLastInvalid()
+    {
+        Livewire::test(ManageCcamsSquawkRange::class)
+            ->callPageAction(
+                'create',
+                [
+                    'first' => '1234',
+                    'last' => '234b',
+                ]
+            )
+            ->assertHasPageActionErrors(['last']);
+    }
 
     protected function getCreateText(): string
     {
@@ -31,7 +78,7 @@ class CcamsSquawkRangeResourceTest extends BaseFilamentTestCase
 
     protected function resourceListingClass(): string
     {
-        return ListCcamsSquawkRanges::class;
+        return ManageCcamsSquawkRange::class;
     }
 
     protected function resourceRecordClass(): string

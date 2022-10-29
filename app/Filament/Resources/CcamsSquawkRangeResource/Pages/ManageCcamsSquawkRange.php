@@ -9,5 +9,6 @@ use Filament\Resources\Pages\ManageRecords;
 class ManageCcamsSquawkRange extends ManageRecords
 {
     use LimitsTableRecordListingOptions;
+
     protected static string $resource = CcamsSquawkRangeResource::class;
 }
