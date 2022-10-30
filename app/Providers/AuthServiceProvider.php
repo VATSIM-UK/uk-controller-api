@@ -12,6 +12,7 @@ use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
+use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
@@ -52,6 +53,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         // The defaults
         Airfield::class => DefaultFilamentPolicy::class,
+        AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
         Airline::class => DefaultFilamentPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
         CcamsSquawkRange::class => DefaultFilamentPolicy::class,
