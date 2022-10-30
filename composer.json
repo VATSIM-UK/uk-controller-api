@@ -10,6 +10,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-simplexml": "*",
+        "bugsnag/bugsnag-laravel": "^2.24",
         "composer/semver": "^3.2",
         "filament/filament": "^2.15.18",
         "fruitcake/laravel-cors": "^3.0",

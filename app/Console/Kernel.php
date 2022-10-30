@@ -22,6 +22,7 @@ use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
 use App\Console\Commands\WakeCategoriesImport;
+use Bugsnag\BugsnagLaravel\Commands\DeployCommand as BugsnagDeployCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\DeleteExpiredTokens;
@@ -62,6 +63,7 @@ class Kernel extends ConsoleKernel
         CleanPrenoteMessageHistory::class,
         CleanMissedApproachNotifications::class,
         CheckForKeyTableUpdates::class,
+        BugsnagDeployCommand::class,
     ];
 
     /**
@@ -97,5 +99,13 @@ class Kernel extends ConsoleKernel
         $schedule->command('plugin-events:clean')->everyTenMinutes();
         $schedule->command('metars:update')->everyMinute();
         $schedule->command('database:check-table-updates')->everyMinute();
+    }
+
+    protected function bootstrappers()
+    {
+        return array_merge(
+            [\Bugsnag\BugsnagLaravel\OomBootstrapper::class],
+            parent::bootstrappers(),
+        );
     }
 }

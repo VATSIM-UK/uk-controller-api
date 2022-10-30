@@ -174,9 +174,6 @@ jobs:
             # Symlink .env from root directory
             ln -s $APPLICATION_ROOT/.env .env
 
-            # Update Bugsnag version
-            sed -i "s/^BUGSNAG_APP_VERSION.*$/BUGSNAG_APP_VERSION=$TAG/" .env
-
             # Install application dependencies
             $PHP_PATH artisan package:discover
             $PHP_PATH artisan filament:upgrade

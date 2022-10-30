@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\SocialiteProviders\CoreProvider;
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Laravel\Passport\Passport;
 use Illuminate\Validation\Rule;
@@ -35,6 +37,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Bugsnag::registerCallback(function ($report) {
+            if (Auth::check()) {
+                $user = Auth::user();
+
+                $report->setUser([
+                     'id' => $user->id,
+                     'name' => $user->name
+                 ]);
+            }
+        });
+
         Rule::macro('latitudeString', function () {
             return 'regex:' . SectorfileService::SECTORFILE_LATITUDE_REGEX;
         });
