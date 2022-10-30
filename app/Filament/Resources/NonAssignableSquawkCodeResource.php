@@ -45,7 +45,9 @@ class NonAssignableSquawkCodeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])->defaultSort('code');
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->defaultSort('code');
     }
 
     public static function getPages(): array

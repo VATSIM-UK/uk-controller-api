@@ -44,6 +44,10 @@ class UnitDiscreteSquawkRangeResource extends Resource
                     ->label(self::translateTablePath('columns.first')),
                 Tables\Columns\TextColumn::make('last')
                     ->label(self::translateTablePath('columns.last')),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 
