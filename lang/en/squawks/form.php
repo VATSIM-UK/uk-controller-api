@@ -66,4 +66,14 @@ return [
             'helper' => 'The unit that owns the range, e.g. EGKK, SCO, THAMES',
         ],
     ],
+    'unit_discrete_guests' => [
+        'primary' => [
+            'label' => 'Owning Unit',
+            'helper' => 'The unit that owns the range, e.g. EGSS',
+        ],
+        'guest' => [
+            'label' => 'Guest Unit',
+            'helper' => 'The unit that inherits the range, e.g. ESSEX',
+        ],
+    ],
 ];

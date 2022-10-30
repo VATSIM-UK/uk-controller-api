@@ -42,4 +42,10 @@ return [
             'last' => 'Last Squawk in Range',
         ],
     ],
+    'unit_discrete_guests' => [
+        'columns' => [
+            'primary_unit' => 'Owning Unit',
+            'guest_unit' => 'Guest Unit',
+        ],
+    ],
 ];

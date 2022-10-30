@@ -4,6 +4,7 @@ use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use Illuminate\Database\Seeder;
 
 class SquawkRangeTablesSeeder extends Seeder
@@ -49,6 +50,11 @@ class SquawkRangeTablesSeeder extends Seeder
             'first' => '2342',
             'last' => '4252',
             'unit' => 'SCO',
+        ]);
+
+        UnitDiscreteSquawkRangeGuest::create([
+            'primary_unit' => 'LON',
+            'guest_unit' => 'LTC',
         ]);
     }
 }

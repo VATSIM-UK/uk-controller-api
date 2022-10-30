@@ -7,6 +7,7 @@ use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Pages\ManageUnitDiscreteSquawkRanges;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
@@ -100,7 +101,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                 [
                     'first' => '1234',
                     'last' => '2345',
-                    'unit' => 'EGKKL',
+                    'unit' => Str::padRight('', 256, 'a'),
                 ]
             )
             ->assertHasPageActionErrors(['unit']);
@@ -185,7 +186,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                 [
                     'first' => '1234',
                     'last' => '2345',
-                    'unit' => 'EGKKL',
+                    'unit' => Str::padRight('', 256, 'a'),
                 ]
             )
             ->assertHasTableActionErrors(['unit']);

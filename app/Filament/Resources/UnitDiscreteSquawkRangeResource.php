@@ -29,7 +29,7 @@ class UnitDiscreteSquawkRangeResource extends Resource
                     ->label(self::translateFormPath('unit.label'))
                     ->helperText(self::translateFormPath('unit.helper'))
                     ->required()
-                    ->maxLength(4),
+                    ->maxLength(255),
                 ...self::squawkRangeInputs(),
             ]);
     }
@@ -44,9 +44,6 @@ class UnitDiscreteSquawkRangeResource extends Resource
                     ->label(self::translateTablePath('columns.first')),
                 Tables\Columns\TextColumn::make('last')
                     ->label(self::translateTablePath('columns.last')),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
             ]);
     }
 

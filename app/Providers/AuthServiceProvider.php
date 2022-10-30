@@ -18,6 +18,7 @@ use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use App\Models\Squawk\SquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use App\Models\Stand\Stand;
@@ -69,6 +70,7 @@ class AuthServiceProvider extends ServiceProvider
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
+        UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
 
         // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,
