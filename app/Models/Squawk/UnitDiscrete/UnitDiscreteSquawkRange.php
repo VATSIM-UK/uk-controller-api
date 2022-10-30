@@ -2,20 +2,25 @@
 
 namespace App\Models\Squawk\UnitDiscrete;
 
+use App\Caster\UnitDiscreteSquawkRangeRuleCaster;
 use App\Models\Squawk\AbstractSquawkRange;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UnitDiscreteSquawkRange extends AbstractSquawkRange
 {
     protected $dates = [
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected $fillable = [
         'unit',
         'first',
         'last',
+        'rule',
+    ];
+
+    protected $casts = [
+        'rule' => UnitDiscreteSquawkRangeRuleCaster::class,
     ];
 
     public function first(): string
@@ -28,8 +33,8 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
         return $this->attributes['last'];
     }
 
-    public function rules(): HasMany
+    public function hasRule(): bool
     {
-        return $this->hasMany(UnitDiscreteSquawkRangeRule::class);
+        return !is_null($this->attributes['rule']);
     }
 }

@@ -16,12 +16,8 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator
         $parsedUnit = ControllerService::getControllerFacilityFromCallsign(
             $details['unit']
         );
-        $details['unit_type'] = isset($details['unit'])
-            ? ControllerService::getControllerLevelFromCallsign($details['unit'])
-            : '';
 
-        return UnitDiscreteSquawkRange::with('rules')
-            ->whereIn('unit', $this->getApplicableUnits($parsedUnit));
+        return UnitDiscreteSquawkRange::whereIn('unit', $this->getApplicableUnits($parsedUnit));
     }
 
     private function getApplicableUnits(string $unit): array
@@ -40,20 +36,12 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator
      */
     protected function filterRanges(Collection $ranges, array $details): Collection
     {
+        $details['unit_type'] = isset($details['unit'])
+            ? ControllerService::getControllerLevelFromCallsign($details['unit'])
+            : '';
+
         return $ranges->filter(
-            function (UnitDiscreteSquawkRange $range) use ($details) {
-                if ($range->rules->isEmpty()) {
-                    return true;
-                }
-
-                foreach ($range->rules as $rule) {
-                    if (!$rule->rule->passes('', $details)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
+            fn(UnitDiscreteSquawkRange $range): bool => !$range->hasRule() || $range->rule->passes('', $details)
         );
     }
 

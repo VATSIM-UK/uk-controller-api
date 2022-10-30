@@ -6,7 +6,6 @@ use App\BaseFunctionalTestCase;
 use App\Models\Squawk\SquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
-use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeRule;
 use App\Models\Vatsim\NetworkAircraft;
 
 class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
@@ -73,18 +72,16 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItAppliesRules()
+    {
+        $this->createSquawkRange('EGFF', '7201', '7210', ['rule' => 'APP', 'type' => 'UNIT_TYPE']);
+        $this->assertNotNull($this->allocator->allocate('BMI11A', ['unit' => 'EGFF_APP']));
+    }
+
+
     public function testItFiltersRangesWhereRulesDoNotPass()
     {
-        $range = $this->createSquawkRange('EGFF', '7201', '7210');
-        UnitDiscreteSquawkRangeRule::create(
-            [
-                'unit_discrete_squawk_range_id' => $range->id,
-                'rule' => [
-                    'rule' => 'TWR',
-                    'type' => 'UNIT_TYPE',
-                ],
-            ]
-        );
+        $this->createSquawkRange('EGFF', '7201', '7210', ['rule' => 'TWR', 'type' => 'UNIT_TYPE']);
         $this->assertNull($this->allocator->allocate('BMI11A', ['unit' => 'EGFF_APP']));
         $this->assertSquawkNotAsssigned('BMI11A');
     }
@@ -112,15 +109,20 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
     private function createSquawkRange(
         string $unit,
         string $first,
-        string $last
+        string $last,
+        array $rule = null
     ): UnitDiscreteSquawkRange {
-        return UnitDiscreteSquawkRange::create(
-            [
-                'unit' => $unit,
-                'first' => $first,
-                'last' => $last,
-            ]
-        );
+        $attributes = [
+            'unit' => $unit,
+            'first' => $first,
+            'last' => $last,
+        ];
+
+        if ($rule) {
+            $attributes['rule'] = $rule;
+        }
+
+        return UnitDiscreteSquawkRange::create($attributes);
     }
 
     private function createSquawkAssignment(
@@ -129,7 +131,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
     ) {
         NetworkAircraft::create(
             [
-                'callsign' => $callsign
+                'callsign' => $callsign,
             ]
         );
         SquawkAssignment::create(
@@ -146,7 +148,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing(
             'squawk_assignments',
             [
-                'callsign' => $callsign
+                'callsign' => $callsign,
             ]
         );
     }
