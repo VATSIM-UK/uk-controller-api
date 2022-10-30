@@ -44,5 +44,11 @@ class SquawkRangeTablesSeeder extends Seeder
             'origin' => 'LF',
             'destination' => 'EGP',
         ]);
+
+        UnitDiscreteSquawkRange::create([
+            'first' => '2342',
+            'last' => '4252',
+            'unit' => 'SCO',
+        ]);
     }
 }

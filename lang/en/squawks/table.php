@@ -35,4 +35,11 @@ return [
             'destination' => 'Destination Airfield Pattern',
         ],
     ],
+    'unit_discrete' => [
+        'columns' => [
+            'unit' => 'Owning Unit',
+            'first' => 'First Squawk in Range',
+            'last' => 'Last Squawk in Range',
+        ],
+    ],
 ];

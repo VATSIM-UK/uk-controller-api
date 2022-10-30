@@ -52,4 +52,18 @@ return [
             'helper' => 'The pattern to match the destination airfield against. Partial patterns are allowed. E.g. ED, LFR.',
         ],
     ],
+    'unit_discrete' => [
+        'first' => [
+            'label' => 'First Squawk in Range',
+            'helper' => 'The first squawk in the squawk range',
+        ],
+        'last' => [
+            'label' => 'Last Squawk in Range',
+            'helper' => 'The last squawk in the squawk range',
+        ],
+        'unit' => [
+            'label' => 'Unit',
+            'helper' => 'The unit that owns the range, e.g. EGKK, SCO, THAMES',
+        ],
+    ],
 ];
