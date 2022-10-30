@@ -13,6 +13,8 @@ use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Models\Squawk\SquawkAssignment;
+use App\Models\Srd\SrdNote;
+use App\Models\Srd\SrdRoute;
 use App\Models\Stand\Stand;
 use App\Models\User\User;
 use App\Models\Version\Version;
@@ -20,6 +22,7 @@ use App\Policies\ActivityLogPolicy;
 use App\Policies\DefaultFilamentPolicy;
 use App\Policies\PluginEditableDataPolicy;
 use App\Policies\PluginVersionPolicy;
+use App\Policies\ReadOnlyPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -59,6 +62,10 @@ class AuthServiceProvider extends ServiceProvider
 
         // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,
+
+        // Things that can only be updated by external processes
+        SrdNote::class => ReadOnlyPolicy::class,
+        SrdRoute::class => ReadOnlyPolicy::class,
 
         // Special policies
         Activity::class => ActivityLogPolicy::class,

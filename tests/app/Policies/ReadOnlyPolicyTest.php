@@ -2,19 +2,19 @@
 
 namespace App\Policies;
 
-use App\BaseFunctionalTestCase;
+use App\BaseUnitTestCase;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 
-class PluginVersionPolicyTest extends BaseFunctionalTestCase
+class ReadOnlyPolicyTest extends BaseUnitTestCase
 {
-    private readonly PluginVersionPolicy $pluginVersionPolicy;
+    private readonly ReadOnlyPolicy $readOnlyPolicy;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->pluginVersionPolicy = $this->app->make(PluginVersionPolicy::class);
+        $this->readOnlyPolicy = $this->app->make(ReadOnlyPolicy::class);
     }
 
     /**
@@ -27,7 +27,7 @@ class PluginVersionPolicyTest extends BaseFunctionalTestCase
             $user->roles()->sync([Role::idFromKey($role)]);
         }
 
-        $this->assertEquals($expected, $this->pluginVersionPolicy->$action($user));
+        $this->assertEquals($expected, $this->readOnlyPolicy->$action($user));
     }
 
     public function dataProvider(): array
@@ -51,7 +51,7 @@ class PluginVersionPolicyTest extends BaseFunctionalTestCase
             'Create DSG' => ['create', RoleKeys::DIVISION_STAFF_GROUP, false],
             'Delete No Role' => ['delete', null, false],
             'Delete Operations' => ['delete', RoleKeys::OPERATIONS_TEAM, false],
-            'Delete Web' => ['delete', RoleKeys::WEB_TEAM, true],
+            'Delete Web' => ['delete', RoleKeys::WEB_TEAM, false],
             'Delete DSG' => ['delete', RoleKeys::DIVISION_STAFF_GROUP, false],
             'Delete Any No Role' => ['deleteAny', null, false],
             'Delete Any Operations' => ['deleteAny', RoleKeys::OPERATIONS_TEAM, false],
@@ -59,7 +59,7 @@ class PluginVersionPolicyTest extends BaseFunctionalTestCase
             'Delete Any DSG' => ['deleteAny', RoleKeys::DIVISION_STAFF_GROUP, false],
             'Restore No Role' => ['restore', null, false],
             'Restore Operations' => ['restore', RoleKeys::OPERATIONS_TEAM, false],
-            'Restore Web' => ['restore', RoleKeys::WEB_TEAM, true],
+            'Restore Web' => ['restore', RoleKeys::WEB_TEAM, false],
             'Restore DSG' => ['restore', RoleKeys::DIVISION_STAFF_GROUP, false],
             'Restore Any No Role' => ['restoreAny', null, false],
             'Restore Any Operations' => ['restoreAny', RoleKeys::OPERATIONS_TEAM, false],
