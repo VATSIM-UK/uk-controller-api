@@ -345,24 +345,24 @@
         },
         {
             "name": "bugsnag/bugsnag-laravel",
-            "version": "v2.24.0",
+            "version": "v2.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-laravel.git",
-                "reference": "1853d8335e2c29412abd14e3522fbca0a4351d84"
+                "reference": "64546d9171b6645b5e5c4c12195193cf8ec61aad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/1853d8335e2c29412abd14e3522fbca0a4351d84",
-                "reference": "1853d8335e2c29412abd14e3522fbca0a4351d84",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/64546d9171b6645b5e5c4c12195193cf8ec61aad",
+                "reference": "64546d9171b6645b5e5c4c12195193cf8ec61aad",
                 "shasum": ""
             },
             "require": {
-                "bugsnag/bugsnag": "^3.28.0",
+                "bugsnag/bugsnag": "^3.29.0",
                 "bugsnag/bugsnag-psr-logger": "^1.4|^2.0",
                 "illuminate/contracts": "^5.0|^6.0|^7.0|^8.0|^9.0",
                 "illuminate/support": "^5.0|^6.0|^7.0|^8.0|^9.0",
-                "monolog/monolog": "^1.12|^2.0",
+                "monolog/monolog": "^1.12|^2.0|^3.0",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -402,9 +402,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bugsnag/bugsnag-laravel/issues",
-                "source": "https://github.com/bugsnag/bugsnag-laravel/tree/v2.24.0"
+                "source": "https://github.com/bugsnag/bugsnag-laravel/tree/v2.25.0"
             },
-            "time": "2022-05-20T14:12:51+00:00"
+            "time": "2022-10-25T10:33:03+00:00"
         },
         {
             "name": "bugsnag/bugsnag-psr-logger",
@@ -2054,16 +2054,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.4.1",
+            "version": "2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379"
+                "reference": "67c26b443f348a51926030c83481b85718457d3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/69568e4293f4fa993f3b0e51c9723e1e17c41379",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/67c26b443f348a51926030c83481b85718457d3d",
+                "reference": "67c26b443f348a51926030c83481b85718457d3d",
                 "shasum": ""
             },
             "require": {
@@ -2153,7 +2153,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.4.1"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.3"
             },
             "funding": [
                 {
@@ -2169,7 +2169,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-28T14:45:39+00:00"
+            "time": "2022-10-26T14:07:24+00:00"
         },
         {
             "name": "http-interop/http-factory-guzzle",
