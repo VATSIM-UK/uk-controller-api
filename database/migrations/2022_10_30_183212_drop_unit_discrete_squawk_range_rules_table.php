@@ -11,7 +11,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::dropIfExists('unit_discrete_squawk_range_rules');
+        Schema::drop('unit_discrete_squawk_range_rules');
     }
 
     /**

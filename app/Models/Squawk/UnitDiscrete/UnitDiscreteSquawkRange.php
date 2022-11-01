@@ -4,6 +4,7 @@ namespace App\Models\Squawk\UnitDiscrete;
 
 use App\Caster\UnitDiscreteSquawkRangeRuleCaster;
 use App\Models\Squawk\AbstractSquawkRange;
+use Illuminate\Contracts\Validation\Rule;
 
 class UnitDiscreteSquawkRange extends AbstractSquawkRange
 {
@@ -20,7 +21,7 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
     ];
 
     protected $casts = [
-        'rule' => UnitDiscreteSquawkRangeRuleCaster::class,
+        'rule' => 'array',
     ];
 
     public function first(): string
@@ -33,8 +34,13 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
         return $this->attributes['last'];
     }
 
-    public function hasRule(): bool
+    public function ruleObject(): ?Rule
     {
-        return !is_null($this->attributes['rule']);
+        return is_null($this->rule) ? null : (new UnitDiscreteSquawkRangeRuleCaster())->get(
+            $this,
+            'rule',
+            $this->rule,
+            []
+        );
     }
 }

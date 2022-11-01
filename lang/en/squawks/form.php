@@ -65,6 +65,18 @@ return [
             'label' => 'Unit',
             'helper' => 'The unit that owns the range, e.g. EGKK, SCO, THAMES',
         ],
+        'rule_type' => [
+            'label' => 'Rule',
+            'helper' => 'The rule to apply to determine whether or not the range is relevant.',
+        ],
+        'rule_flight_rules' => [
+            'label' => 'Flight Rules',
+            'helper' => 'Which flight rules this range applies to.',
+        ],
+        'rule_unit_type' => [
+            'label' => 'Position Type',
+            'helper' => 'The position type that can use this squawk. Useful for specifying that squawks are reserved for tower positions etc.',
+        ],
     ],
     'unit_discrete_guests' => [
         'primary' => [

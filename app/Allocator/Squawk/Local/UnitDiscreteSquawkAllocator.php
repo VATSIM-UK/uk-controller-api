@@ -41,7 +41,7 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator
             : '';
 
         return $ranges->filter(
-            fn(UnitDiscreteSquawkRange $range): bool => !$range->hasRule() || $range->rule->passes('', $details)
+            fn(UnitDiscreteSquawkRange $range): bool => $range->ruleObject()?->passes('', $details)
         );
     }
 
