@@ -100,7 +100,6 @@ class DatabaseSeeder extends Seeder
         ],
         SquawkAssignmentTablesSeeder::class => [
             'squawk_assignments',
-            'unit_discrete_squawk_range_rules',
             'squawk_assignments_history',
         ],
         StandTableSeeder::class => [
