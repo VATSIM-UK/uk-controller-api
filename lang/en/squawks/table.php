@@ -48,4 +48,10 @@ return [
             'guest_unit' => 'Guest Unit',
         ],
     ],
+    'unit_conspicuity' => [
+        'columns' => [
+            'unit' => 'Owning Unit',
+            'code' => 'Squawk Code',
+        ],
+    ],
 ];

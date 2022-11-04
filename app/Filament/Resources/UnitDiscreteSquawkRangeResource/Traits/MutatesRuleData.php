@@ -9,21 +9,25 @@ trait MutatesRuleData
     private static function mutateFormData(): callable
     {
         return function (array $data): array {
-            if (!$data['rule_type']) {
-                $data['rule'] = null;
-                return $data;
-            } elseif ($data['rule_type'] === UnitDiscreteSquawkRangeResource::RULE_TYPE_UNIT_TYPE) {
-                $data['rule'] = [
-                    'type' => $data['rule_type'],
-                    'rule' => $data['unit_type'],
+            if ($data['service']) {
+                $data['rules'][] = [
+                    'type' => 'SERVICE',
+                    'rule' => $data['service'],
                 ];
-            } elseif ($data['rule_type'] === UnitDiscreteSquawkRangeResource::RULE_TYPE_FLIGHT_RULES) {
-                $data['rule'] = [
-                    'type' => $data['rule_type'],
+            }
+
+            if ($data['flight_rules']) {
+                $data['rules'][] = [
+                    'type' => 'FLIGHT_RULES',
                     'rule' => $data['flight_rules'],
                 ];
-            } else {
-                $data['rule'] = null;
+            }
+
+            if ($data['unit_type']) {
+                $data['rules'][] = [
+                    'type' => 'UNIT_TYPE',
+                    'rule' => $data['unit_type'],
+                ];
             }
 
             return $data;

@@ -17,6 +17,7 @@ use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use App\Models\Squawk\SquawkAssignment;
+use App\Models\Squawk\UnitConspicuity\UnitConspicuitySquawkCode;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Models\Srd\SrdNote;
@@ -69,6 +70,7 @@ class AuthServiceProvider extends ServiceProvider
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
+        UnitConspicuitySquawkCode::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
 

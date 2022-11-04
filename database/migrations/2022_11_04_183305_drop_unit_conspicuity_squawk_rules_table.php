@@ -13,9 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('table', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('unit_conspicuity_squawk_rules');
     }
 
     /**
@@ -25,8 +23,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('table', function (Blueprint $table) {
-            //
-        });
+        //
     }
 };

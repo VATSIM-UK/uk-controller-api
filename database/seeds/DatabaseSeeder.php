@@ -97,6 +97,7 @@ class DatabaseSeeder extends Seeder
             'orcam_squawk_ranges',
             'airfield_pairing_squawk_ranges',
             'unit_discrete_squawk_ranges',
+            'unit_conspicuity_squawk_codes',
         ],
         SquawkAssignmentTablesSeeder::class => [
             'squawk_assignments',
