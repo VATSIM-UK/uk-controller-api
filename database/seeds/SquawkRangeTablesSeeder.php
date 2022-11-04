@@ -51,7 +51,7 @@ class SquawkRangeTablesSeeder extends Seeder
             'first' => '2342',
             'last' => '4252',
             'unit' => 'SCO',
-            'rule' => null,
+            'rules' => null,
         ]);
 
         UnitDiscreteSquawkRangeGuest::create([

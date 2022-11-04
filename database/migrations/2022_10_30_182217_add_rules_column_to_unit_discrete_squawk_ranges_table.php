@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('unit_discrete_squawk_ranges', function (Blueprint $table) {
-            $table->json('rule')
+            $table->json('rules')
                 ->nullable()
                 ->after('last')
                 ->comment('Rules for applying this range');
@@ -28,7 +28,7 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('unit_discrete_squawk_ranges', function (Blueprint $table) {
-            $table->dropColumn('rule');
+            $table->dropColumn('rules');
         });
     }
 };

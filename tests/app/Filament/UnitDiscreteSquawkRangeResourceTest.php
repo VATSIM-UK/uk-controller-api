@@ -38,7 +38,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
         );
     }
 
-    public function testItCreatesASquawkRangeWithAFlightRulesRule()
+    public function testItCreatesASquawkRangeWithRules()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
             ->callPageAction(
@@ -47,34 +47,8 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                     'first' => '1234',
                     'last' => '2345',
                     'unit' => 'EGKK',
-                    'rule_type' => 'FLIGHT_RULES',
                     'flight_rules' => 'VFR',
-                ]
-            )
-            ->assertHasNoErrors();
-
-        $this->assertDatabaseHas(
-            'unit_discrete_squawk_ranges',
-            [
-                'first' => '1234',
-                'last' => '2345',
-                'unit' => 'EGKK',
-            ]
-        );
-        $this->assertEquals(['type' => 'FLIGHT_RULES', 'rule' => 'VFR'],
-            UnitDiscreteSquawkRange::latest()->first()->rule);
-    }
-
-    public function testItCreatesASquawkRangeWithAUnitTypeRule()
-    {
-        Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
-                'create',
-                [
-                    'first' => '1234',
-                    'last' => '2345',
-                    'unit' => 'EGKK',
-                    'rule_type' => 'UNIT_TYPE',
+                    'service' => 'BASIC',
                     'unit_type' => 'APP',
                 ]
             )
@@ -88,7 +62,14 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                 'unit' => 'EGKK',
             ]
         );
-        $this->assertEquals(['type' => 'UNIT_TYPE', 'rule' => 'APP'], UnitDiscreteSquawkRange::latest()->first()->rule);
+        $this->assertEquals(
+            [
+                ['type' => 'SERVICE', 'rule' => 'BASIC'],
+                ['type' => 'FLIGHT_RULES', 'rule' => 'VFR'],
+                ['type' => 'UNIT_TYPE', 'rule' => 'APP'],
+            ],
+            UnitDiscreteSquawkRange::latest()->first()->rules
+        );
     }
 
     public function testItDoesntCreateARangeIfFirstInvalid()
@@ -160,42 +141,13 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
             ->assertHasPageActionErrors(['unit']);
     }
 
-    public function testItDoesntCreateARangeIfUnitTypeMissing()
-    {
-        Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
-                'create',
-                [
-                    'first' => '1234',
-                    'last' => '2345',
-                    'unit' => Str::padRight('', 256, 'a'),
-                    'rule_type' => 'UNIT_TYPE',
-                ]
-            )
-            ->assertHasPageActionErrors(['unit_type']);
-    }
-
-    public function testItDoesntCreateARangeIfFlightRulesMissing()
-    {
-        Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
-                'create',
-                [
-                    'first' => '1234',
-                    'last' => '2345',
-                    'unit' => Str::padRight('', 256, 'a'),
-                    'rule_type' => 'FLIGHT_RULES',
-                ]
-            )
-            ->assertHasPageActionErrors(['flight_rules']);
-    }
-
-    public function testItLoadsAFlightRulesRuleForEdit()
+    public function testItLoadsARangeWithRulesForEdit()
     {
         $rule = UnitDiscreteSquawkRange::findOrFail(2);
-        $rule->rule = [
-            'type' => 'FLIGHT_RULES',
-            'rule' => 'VFR',
+        $rule->rules = [
+            ['type' => 'FLIGHT_RULES', 'rule' => 'VFR'],
+            ['type' => 'SERVICE', 'rule' => 'BASIC'],
+            ['type' => 'UNIT_TYPE', 'rule' => 'APP'],
         ];
         $rule->save();
 
@@ -210,36 +162,9 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                     'first' => '2342',
                     'last' => '4252',
                     'unit' => 'SCO',
-                    'rule_type' => 'FLIGHT_RULES',
                     'flight_rules' => 'VFR',
-                    'unit_type' => null,
-                ]
-            );
-    }
-
-    public function testItLoadsAUnitTypeRuleForEdit()
-    {
-        $rule = UnitDiscreteSquawkRange::findOrFail(2);
-        $rule->rule = [
-            'type' => 'UNIT_TYPE',
-            'rule' => 'TWR',
-        ];
-        $rule->save();
-
-        Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->mountTableAction(
-                'edit',
-                UnitDiscreteSquawkRange::findOrFail(2),
-            )
-            ->assertTableActionDataSet(
-                [
-                    'id' => 2,
-                    'first' => '2342',
-                    'last' => '4252',
-                    'unit' => 'SCO',
-                    'rule_type' => 'UNIT_TYPE',
-                    'flight_rules' => null,
-                    'unit_type' => 'TWR',
+                    'unit_type' => 'APP',
+                    'service' => 'BASIC',
                 ]
             );
     }
@@ -269,7 +194,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
         );
     }
 
-    public function testItEditsASquawkRangeWithAFlightRulesRule()
+    public function testItEditsASquawkRangeWithRules()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
             ->callTableAction(
@@ -279,8 +204,9 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                     'first' => '3456',
                     'last' => '4567',
                     'unit' => 'EGKK',
-                    'rule_type' => 'FLIGHT_RULES',
                     'flight_rules' => 'VFR',
+                    'service' => 'BASIC',
+                    'unit_type' => 'APP',
                 ]
             )
             ->assertHasNoErrors();
@@ -294,35 +220,14 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                 'unit' => 'EGKK',
             ]
         );
-        $this->assertEquals(['type' => 'FLIGHT_RULES', 'rule' => 'VFR'], UnitDiscreteSquawkRange::find(1)->rule);
-    }
-
-    public function testItEditsASquawkRangeWithAUnitTypeRule()
-    {
-        Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callTableAction(
-                'edit',
-                UnitDiscreteSquawkRange::findOrFail(1),
-                [
-                    'first' => '3456',
-                    'last' => '4567',
-                    'unit' => 'EGKK',
-                    'rule_type' => 'UNIT_TYPE',
-                    'unit_type' => 'DEL',
-                ]
-            )
-            ->assertHasNoErrors();
-
-        $this->assertDatabaseHas(
-            'unit_discrete_squawk_ranges',
+        $this->assertEquals(
             [
-                'id' => 1,
-                'first' => '3456',
-                'last' => '4567',
-                'unit' => 'EGKK',
-            ]
+                ['type' => 'SERVICE', 'rule' => 'BASIC'],
+                ['type' => 'FLIGHT_RULES', 'rule' => 'VFR'],
+                ['type' => 'UNIT_TYPE', 'rule' => 'APP'],
+            ],
+            UnitDiscreteSquawkRange::find(1)->rules
         );
-        $this->assertEquals(['type' => 'UNIT_TYPE', 'rule' => 'DEL'], UnitDiscreteSquawkRange::find(1)->rule);
     }
 
     public function testItDoesntEditARangeIfFirstInvalid()
@@ -383,38 +288,6 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                 ]
             )
             ->assertHasTableActionErrors(['unit']);
-    }
-
-    public function testItDoesntEditARangeIfNoFlightRules()
-    {
-        Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callTableAction(
-                'edit',
-                UnitDiscreteSquawkRange::findOrFail(1),
-                [
-                    'first' => '1234',
-                    'last' => '2345',
-                    'unit' => 'EGKK',
-                    'rule_type' => 'FLIGHT_RULES',
-                ]
-            )
-            ->assertHasTableActionErrors(['flight_rules']);
-    }
-
-    public function testItDoesntEditARangeIfNoUnitType()
-    {
-        Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callTableAction(
-                'edit',
-                UnitDiscreteSquawkRange::findOrFail(1),
-                [
-                    'first' => '1234',
-                    'last' => '2345',
-                    'unit' => 'EGKK',
-                    'rule_type' => 'UNIT_TYPE',
-                ]
-            )
-            ->assertHasTableActionErrors(['unit_type']);
     }
 
     protected function getCreateText(): string

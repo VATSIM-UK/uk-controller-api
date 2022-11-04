@@ -29,7 +29,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('unit_conspicuity_squawk_codes', function (Blueprint $table) {
-            //
+            $table->dropColumn('rules');
         });
     }
 };

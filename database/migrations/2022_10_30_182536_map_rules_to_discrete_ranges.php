@@ -15,7 +15,8 @@ return new class extends Migration {
         DB::table('unit_discrete_squawk_range_rules')
             ->get()
             ->map(function (object $rule): void {
-                UnitDiscreteSquawkRange::findOrFail($rule->unit_discrete_squawk_range_id)->update(['rule' => json_decode($rule->rule)]);
+                $range = UnitDiscreteSquawkRange::findOrFail($rule->unit_discrete_squawk_range_id);
+                $range->update(['rules' => array_merge($range->rules ?? [], [json_decode($rule->rule)])]);
             });
     }
 

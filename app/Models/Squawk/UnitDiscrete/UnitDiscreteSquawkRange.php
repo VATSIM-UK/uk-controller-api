@@ -17,11 +17,11 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
         'unit',
         'first',
         'last',
-        'rule',
+        'rules',
     ];
 
     protected $casts = [
-        'rule' => 'array',
+        'rules' => 'array',
     ];
 
     public function first(): string
@@ -34,7 +34,7 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
         return $this->attributes['last'];
     }
 
-    public function ruleObject(): ?Rule
+    public function ruleObjects(): ?Rule
     {
         return is_null($this->rule) ? null : (new UnitDiscreteSquawkRangeRuleCaster())->get(
             $this,
