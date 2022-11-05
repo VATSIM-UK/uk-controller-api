@@ -38,8 +38,7 @@ class NonAssignableSquawkCodeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
-                    ->label(self::translateTablePath('columns.code')),
+                self::squawkCodeTableColumn(),
                 Tables\Columns\TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
             ])

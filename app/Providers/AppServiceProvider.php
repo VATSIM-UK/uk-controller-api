@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Filament\NavigationGroups;
 use App\SocialiteProviders\CoreProvider;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;

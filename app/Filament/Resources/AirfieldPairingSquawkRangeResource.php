@@ -44,10 +44,7 @@ class AirfieldPairingSquawkRangeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first')
-                    ->label(self::translateTablePath('columns.first')),
-                Tables\Columns\TextColumn::make('last')
-                    ->label(self::translateTablePath('columns.last')),
+                ...self::squawkRangeTableColumns(),
                 Tables\Columns\TextColumn::make('origin')
                     ->label(self::translateTablePath('columns.origin')),
                 Tables\Columns\TextColumn::make('destination')
