@@ -8,7 +8,7 @@ use Livewire\Livewire;
 class HasSquawkRangesTest extends BaseFilamentTestCase
 {
     /**
-     * @dataProvider coordinateProvider
+     * @dataProvider rangeProvider
      */
     public function testItHasSquawkRanges(string $first, string $last)
     {
@@ -19,7 +19,7 @@ class HasSquawkRangesTest extends BaseFilamentTestCase
             ->assertHasNoErrors();
     }
 
-    public function coordinateProvider(): array
+    public function rangeProvider(): array
     {
         return [
             'Low' => ['0001', '0005'],
@@ -28,22 +28,23 @@ class HasSquawkRangesTest extends BaseFilamentTestCase
             'Mid range 2' => ['5241', '5777'],
             'High range' => ['6666', '6771'],
             'High range 2' => ['7571', '7763'],
+            'Single squawk' => ['7571', '7571'],
         ];
     }
 
     /**
-     * @dataProvider badCoordinateProvider
+     * @dataProvider badRangeProvider
      */
     public function testItHasErrorsOnBadSquawks(string|null $first, string|null $last, array $expectedErrors)
     {
         Livewire::test(CreateFakeSquawkRange::class)
             ->set('data.first', $first)
-            ->set('data.longitude', $last)
+            ->set('data.last', $last)
             ->call('create')
             ->assertHasErrors($expectedErrors);
     }
 
-    public function badCoordinateProvider(): array
+    public function badRangeProvider(): array
     {
         return [
             'First null' => [null, '2312', ['data.first']],
@@ -52,6 +53,7 @@ class HasSquawkRangesTest extends BaseFilamentTestCase
             'First not numeric' => ['a231', '2241', ['data.first']],
             'Last not valid squawk' => ['2231', '2288', ['data.last']],
             'Last not numeric' => ['2231', '237a', ['data.last']],
+            'Last less than first' => ['2231', '2230', ['data.last']],
             'Both bad' => ['aaaa', '237a', ['data.first', 'data.last']],
         ];
     }

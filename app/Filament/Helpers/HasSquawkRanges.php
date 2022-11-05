@@ -14,7 +14,8 @@ trait HasSquawkRanges
     {
         return [
             static::singleSquawkInput('first', 'first'),
-            static::singleSquawkInput('last', 'last'),
+            static::singleSquawkInput('last', 'last')
+                ->gte('first'),
         ];
     }
 
