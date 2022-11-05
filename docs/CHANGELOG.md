@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.29.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.2...6.29.3) (2022-10-30)
+
+
+### Bug Fixes
+
+* prevent mass delete of srd routes ([bddfb5f](https://github.com/VATSIM-UK/uk-controller-api/commit/bddfb5f2e587f4b2cb41fa4aea367060983e0c9d))
+
 ## [6.29.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.1...6.29.2) (2022-10-26)
 
 

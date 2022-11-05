@@ -10,6 +10,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-simplexml": "*",
+        "bugsnag/bugsnag-laravel": "^2.24",
         "composer/semver": "^3.2",
         "filament/filament": "^2.15.18",
         "fruitcake/laravel-cors": "^3.0",
@@ -24,7 +25,7 @@
         "nesbot/carbon": "^2.32",
         "ohdearapp/ohdear-php-sdk": "^3.1",
         "predis/predis": "^2.0",
-        "sentry/sentry-laravel": "^2.4",
+        "sentry/sentry-laravel": "^3.0",
         "spatie/laravel-activitylog": "^4.5",
         "spatie/laravel-schedule-monitor": "^3.0",
         "z3d0x/filament-logger": "^0.4.0"
