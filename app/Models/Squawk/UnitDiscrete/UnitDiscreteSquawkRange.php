@@ -4,7 +4,7 @@ namespace App\Models\Squawk\UnitDiscrete;
 
 use App\Caster\UnitDiscreteSquawkRangeRuleCaster;
 use App\Models\Squawk\AbstractSquawkRange;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Collection;
 
 class UnitDiscreteSquawkRange extends AbstractSquawkRange
 {
@@ -34,13 +34,23 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
         return $this->attributes['last'];
     }
 
-    public function ruleObjects(): ?Rule
+    public function ruleCollection(): Collection
     {
-        return is_null($this->rule) ? null : (new UnitDiscreteSquawkRangeRuleCaster())->get(
-            $this,
-            'rule',
-            $this->rule,
-            []
+        return tap(
+            collect(),
+            function (Collection $rules) {
+                if (!$this->rules) {
+                    return;
+                }
+
+                foreach ($this->rules as $rule) {
+                    $rules->add(
+                        (new UnitDiscreteSquawkRangeRuleCaster())->get(
+                            $rule,
+                        )
+                    );
+                }
+            }
         );
     }
 }

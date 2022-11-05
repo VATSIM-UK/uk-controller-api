@@ -6,6 +6,7 @@ use App\Allocator\Squawk\AbstractSquawkAllocator;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Services\ControllerService;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -41,7 +42,10 @@ class UnitDiscreteSquawkAllocator extends AbstractSquawkAllocator
             : '';
 
         return $ranges->filter(
-            fn(UnitDiscreteSquawkRange $range): bool => $range->ruleObject()?->passes('', $details)
+            fn(UnitDiscreteSquawkRange $range): bool => $range->ruleCollection()->reduce(
+                fn(bool $carry, Rule $rule) => $carry && $rule->passes('', $details),
+                true
+            )
         );
     }
 

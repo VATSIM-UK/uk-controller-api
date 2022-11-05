@@ -74,14 +74,14 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAppliesRules()
     {
-        $this->createSquawkRange('EGFF', '7201', '7210', ['rule' => 'APP', 'type' => 'UNIT_TYPE']);
+        $this->createSquawkRange('EGFF', '7201', '7210', [['rule' => 'APP', 'type' => 'UNIT_TYPE']]);
         $this->assertNotNull($this->allocator->allocate('BMI11A', ['unit' => 'EGFF_APP']));
     }
 
 
     public function testItFiltersRangesWhereRulesDoNotPass()
     {
-        $this->createSquawkRange('EGFF', '7201', '7210', ['rule' => 'TWR', 'type' => 'UNIT_TYPE']);
+        $this->createSquawkRange('EGFF', '7201', '7210', [['rule' => 'TWR', 'type' => 'UNIT_TYPE']]);
         $this->assertNull($this->allocator->allocate('BMI11A', ['unit' => 'EGFF_APP']));
         $this->assertSquawkNotAsssigned('BMI11A');
     }
@@ -110,7 +110,7 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
         string $unit,
         string $first,
         string $last,
-        array $rule = null
+        array $rules = null
     ): UnitDiscreteSquawkRange {
         $attributes = [
             'unit' => $unit,
@@ -118,8 +118,8 @@ class UnitDiscreteSquawkAllocatorTest extends BaseFunctionalTestCase
             'last' => $last,
         ];
 
-        if ($rule) {
-            $attributes['rule'] = $rule;
+        if ($rules) {
+            $attributes['rules'] = $rules;
         }
 
         return UnitDiscreteSquawkRange::create($attributes);
