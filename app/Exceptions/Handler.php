@@ -35,9 +35,4 @@ class Handler extends ExceptionHandler
         StandNotFoundException::class,
         StandAlreadyAssignedException::class
     ];
-
-    public function report(Throwable $exception)
-    {
-        parent::report($exception);
-    }
 }
