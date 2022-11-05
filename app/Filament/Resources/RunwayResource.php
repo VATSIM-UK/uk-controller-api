@@ -25,8 +25,8 @@ class RunwayResource extends Resource
 
     protected static ?string $model = Runway::class;
     protected static ?string $recordTitleAttribute = 'identifier';
-
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up';
+    protected static ?string $navigationGroup = 'Airfield';
 
     public static function form(Form $form): Form
     {

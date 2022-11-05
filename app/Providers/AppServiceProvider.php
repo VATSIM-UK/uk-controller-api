@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Filament\NavigationGroups;
 use App\SocialiteProviders\CoreProvider;
 use Filament\Facades\Filament;
-use Illuminate\Support\HtmlString;
 use Laravel\Passport\Passport;
 use Illuminate\Validation\Rule;
 use App\Services\SectorfileService;
@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
          */
         Passport::ignoreMigrations();
     }
+
     /**
      * Bootstrap any application services.
      *
@@ -58,6 +59,16 @@ class AppServiceProvider extends ServiceProvider
         // Filament styling
         Filament::serving(function () {
             Filament::registerTheme(mix('css/vatukfilament.css'));
+            Filament::registerNavigationGroups(
+                [
+                    'Airfield',
+                    'Controller',
+                    'Enroute',
+                    'Squawk Ranges',
+                    'Plugin',
+                    'Administration',
+                ]
+            );
         });
     }
 }

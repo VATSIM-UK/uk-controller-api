@@ -14,6 +14,7 @@ class SquawkAssignmentResource extends Resource
 
     protected static ?string $model = SquawkAssignment::class;
     protected static ?string $navigationIcon = 'heroicon-o-wifi';
+    protected static ?string $navigationGroup = 'Enroute';
 
     public static function table(Table $table): Table
     {
@@ -29,7 +30,7 @@ class SquawkAssignmentResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('assignment_type')
                     ->label(self::translateTablePath('columns.type'))
-                    ->formatStateUsing(fn (string $state) => self::mapAssignmentTypeToString($state)),
+                    ->formatStateUsing(fn(string $state) => self::mapAssignmentTypeToString($state)),
             ]);
     }
 

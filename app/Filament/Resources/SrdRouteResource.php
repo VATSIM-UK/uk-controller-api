@@ -21,6 +21,7 @@ class SrdRouteResource extends Resource
     protected static ?string $model = SrdRoute::class;
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $navigationLabel = 'SRD Routes';
+    protected static ?string $navigationGroup = 'Enroute';
 
     public static function form(Form $form): Form
     {

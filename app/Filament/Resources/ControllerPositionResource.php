@@ -17,9 +17,9 @@ class ControllerPositionResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = ControllerPosition::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-microphone';
     protected static ?string $recordTitleAttribute = 'callsign';
+    protected static ?string $navigationGroup = 'Controller';
 
     public static function form(Form $form): Form
     {

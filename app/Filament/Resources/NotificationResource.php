@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\NotificationResource\Pages;
 use App\Filament\Resources\NotificationResource\RelationManagers;
-use App\Models\Controller\ControllerPosition;
 use App\Models\Notification\Notification;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Textarea;
@@ -24,9 +23,9 @@ class NotificationResource extends Resource
     private const DATE_FORMAT = 'd M Y H:i';
 
     protected static ?string $model = Notification::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-bell';
     protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $navigationGroup = 'Controller';
 
     public static function form(Form $form): Form
     {

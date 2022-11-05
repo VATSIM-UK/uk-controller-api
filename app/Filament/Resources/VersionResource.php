@@ -18,6 +18,7 @@ class VersionResource extends Resource
     protected static ?string $model = Version::class;
     protected static ?string $navigationLabel = 'Plugin Versions';
     protected static ?string $navigationIcon = 'heroicon-o-puzzle';
+    protected static ?string $navigationGroup = 'Plugin';
 
     public static function getEloquentQuery(): Builder
     {

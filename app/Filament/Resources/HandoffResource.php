@@ -17,9 +17,9 @@ class HandoffResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Handoff::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $recordTitleAttribute = 'description';
+    protected static ?string $navigationGroup = 'Airfield';
 
     public static function getEloquentQuery(): Builder
     {

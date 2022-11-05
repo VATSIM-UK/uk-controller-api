@@ -27,6 +27,7 @@ class AirfieldResource extends Resource
     protected static ?string $model = Airfield::class;
     protected static ?string $navigationIcon = 'heroicon-o-x-circle';
     protected static ?string $recordTitleAttribute = 'code';
+    protected static ?string $navigationGroup = 'Airfield';
 
     public static function form(Form $form): Form
     {

@@ -34,10 +34,9 @@ class StandResource extends Resource
     private const DEFAULT_COLUMN_VALUE = '--';
 
     protected static ?string $model = Stand::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-
     protected static ?string $recordTitleAttribute = 'identifier';
+    protected static ?string $navigationGroup = 'Airfield';
 
     protected static function getGlobalSearchEloquentQuery(): Builder
     {
