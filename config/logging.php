@@ -8,7 +8,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['custom', 'bugsnag'],
+            'channels' => ['bugsnag', 'custom'],
         ],
         'custom' => [
             'driver' => 'custom',
