@@ -12,7 +12,14 @@ use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
+use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
+use App\Models\Squawk\Ccams\CcamsSquawkRange;
+use App\Models\Squawk\Orcam\OrcamSquawkRange;
+use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use App\Models\Squawk\SquawkAssignment;
+use App\Models\Squawk\UnitConspicuity\UnitConspicuitySquawkCode;
+use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use App\Models\Stand\Stand;
@@ -49,16 +56,23 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         // The defaults
         Airfield::class => DefaultFilamentPolicy::class,
+        AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
         Airline::class => DefaultFilamentPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
+        CcamsSquawkRange::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
         Hold::class => DefaultFilamentPolicy::class,
         Navaid::class => DefaultFilamentPolicy::class,
+        NonAssignableSquawkCode::class => DefaultFilamentPolicy::class,
         Notification::class => DefaultFilamentPolicy::class,
+        OrcamSquawkRange::class => DefaultFilamentPolicy::class,
         Prenote::class => DefaultFilamentPolicy::class,
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => DefaultFilamentPolicy::class,
+        UnitConspicuitySquawkCode::class => DefaultFilamentPolicy::class,
+        UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
+        UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
 
         // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,

@@ -28,6 +28,6 @@ class AirfieldIcao implements Rule
      */
     public function message()
     {
-        return 'Invalid airfield';
+        return __('validation.airfield_icao');
     }
 }

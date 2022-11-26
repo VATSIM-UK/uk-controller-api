@@ -28,6 +28,7 @@ class SidResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $recordRouteKeyName = 'sid.id';
     protected static ?string $recordTitleAttribute = 'identifier';
+    protected static ?string $navigationGroup = 'Airfield';
 
     public static function form(Form $form): Form
     {

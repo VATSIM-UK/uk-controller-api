@@ -5,7 +5,7 @@ namespace App\Filament;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Resources\Pages\ManageRecords;
 use Livewire\Livewire;
 use Livewire\Testing\TestableLivewire;
 
@@ -161,16 +161,20 @@ trait ChecksFilamentActionVisibility
                             $this->resourceLivewireParams($this->resourceId())
                         );
 
-                        $canPerformAction = in_array(
+                        /*
+                         * When using ManageRecords, filament doesn't put the action on the page at all, whereas
+                         * assertPageActionDoesntExist will check the action exists first. So call a different method
+                         * depending on what class we're testing.
+                         */
+                        $checkToPerform = in_array(
                             $role,
                             $rolesThatCanPerformAction
-                        );
+                        ) ? 'assertPageActionVisible'
+                            : (get_parent_class(
+                                $this->resourceListingClass()
+                            ) === ManageRecords::class ? 'assertPageActionDoesNotExist' : 'assertPageActionHidden');
 
-                        if ($canPerformAction) {
-                            $livewire->assertPageActionVisible($action);
-                        } else {
-                            $livewire->assertPageActionHidden($action);
-                        }
+                        $livewire->$checkToPerform($action);
                     },
                     $role,
                 ];

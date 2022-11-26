@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PrenoteResource\Pages;
 use App\Filament\Resources\PrenoteResource\RelationManagers;
 use App\Models\Controller\Prenote;
-use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -17,9 +16,9 @@ class PrenoteResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Prenote::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $recordTitleAttribute = 'description';
+    protected static ?string $navigationGroup = 'Airfield';
 
     public static function form(Form $form): Form
     {

@@ -14,6 +14,7 @@ class SquawkAssignmentResource extends Resource
 
     protected static ?string $model = SquawkAssignment::class;
     protected static ?string $navigationIcon = 'heroicon-o-wifi';
+    protected static ?string $navigationGroup = 'Enroute';
 
     public static function table(Table $table): Table
     {

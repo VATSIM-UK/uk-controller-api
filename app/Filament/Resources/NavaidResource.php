@@ -26,6 +26,7 @@ class NavaidResource extends Resource
     protected static ?string $recordTitleAttribute = 'identifier';
     protected static ?string $navigationLabel = 'Navaids and Holds';
     protected static ?string $label = 'Navaids and Holds';
+    protected static ?string $navigationGroup = 'Enroute';
 
     public static function getEloquentQuery(): Builder
     {

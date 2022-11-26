@@ -6,7 +6,7 @@ use App\BaseUnitTestCase;
 
 class AirfieldIcaoTest extends BaseUnitTestCase
 {
-    private AirfieldIcao $rule;
+    private readonly AirfieldIcao $rule;
 
     public function setUp(): void
     {
@@ -43,6 +43,7 @@ class AirfieldIcaoTest extends BaseUnitTestCase
             'Is null' => [null],
             'Too long' => ['EGCCC'],
             'Wrong type' => [123],
+            'Lower case' => ['egcc'],
             'Contains non-alphanumerics' => ['KJ[K'],
         ];
     }
