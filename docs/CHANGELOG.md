@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.30.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.30.0...6.30.1) (2022-11-26)
+
+
+### Performance Improvements
+
+* allow more horizon memory ([25fb44e](https://github.com/VATSIM-UK/uk-controller-api/commit/25fb44e680493ac8084b9969a19e5a1859e5d6a8))
+
 ## [6.30.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.3...6.30.0) (2022-11-26)
 
 
