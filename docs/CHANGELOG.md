@@ -1,5 +1,30 @@
 # UK Controller Plugin API Changelog
 
+## [6.30.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.3...6.30.0) (2022-11-26)
+
+
+### Features
+
+* airfield pairing squawk administration ([61f94ad](https://github.com/VATSIM-UK/uk-controller-api/commit/61f94ad45b151f7109945445807917fdd02fcdef))
+* allow adminstration of ccams squawk ranges ([733da15](https://github.com/VATSIM-UK/uk-controller-api/commit/733da15a598ba032b19af4026d7575409244206f))
+* conspicuity codes ([6704987](https://github.com/VATSIM-UK/uk-controller-api/commit/6704987975a016e27fa978b4991cedf550f0de06))
+* non assignable squawk administration ([522a7c2](https://github.com/VATSIM-UK/uk-controller-api/commit/522a7c2afb4fcf6132ce9c27083fc2d89166de14))
+* orcam squawk range administration ([fd9af37](https://github.com/VATSIM-UK/uk-controller-api/commit/fd9af37f3f3e95916be68a9e91082a7d3ad5c9a8))
+* rules for unit squawk ranges ([0aa21cf](https://github.com/VATSIM-UK/uk-controller-api/commit/0aa21cf766eedf7af4b2f507f122386794b00524))
+* unit discrete guest admin ([259de0c](https://github.com/VATSIM-UK/uk-controller-api/commit/259de0c83d9ef34def74ed17d1aa3f4e4247d0cb))
+* unit discrete ranges can have more than one rule ([76313b8](https://github.com/VATSIM-UK/uk-controller-api/commit/76313b8e92fcf5abc59107229602057dd2c0fa7e))
+* unit discrete squawk range admin ([57bec38](https://github.com/VATSIM-UK/uk-controller-api/commit/57bec3806fe9ce6599a86379d2eb1ae6f20daa3b))
+
+
+### Bug Fixes
+
+* last squawk range in range must be greater than first ([57a601b](https://github.com/VATSIM-UK/uk-controller-api/commit/57a601b1f0a5c8bfc2d718b9cd3e8057f566d0cc))
+* limit records on the management class ([c200065](https://github.com/VATSIM-UK/uk-controller-api/commit/c200065c1ff69daef6d69a43ee133952a4de97ea))
+* match aircraft to allocations on their short aircraft code# ([9dde722](https://github.com/VATSIM-UK/uk-controller-api/commit/9dde72211b7d5162bdeaa2aa4c5147b4fad2caba))
+* prevent stand clashes by locking ([fce11d9](https://github.com/VATSIM-UK/uk-controller-api/commit/fce11d9edf9924d95e2e1a2380b4d502d337ed81))
+* run network aircraft disconnects synchronously ([c7059d4](https://github.com/VATSIM-UK/uk-controller-api/commit/c7059d4ba95b06eb85570e2d5a19368914954759))
+* show delete buttons on squawk resources ([4038910](https://github.com/VATSIM-UK/uk-controller-api/commit/40389101da8190b28a3ea532d51ec10e6f165077))
+
 ## [6.29.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.29.2...6.29.3) (2022-10-30)
 
 
