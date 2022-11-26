@@ -73,9 +73,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
         Airline::where('icao_code', 'VIR')->update(['is_cargo' => true]);
 
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
-        $this->assertEquals($databaseAllocation->stand_id, $allocation->stand_id);
-        $this->assertEquals($this->cargoStand->id, $allocation->stand_id);
+        $this->assertEquals($this->cargoStand->id, $allocation);
     }
 
     public function testItAllocatesCargoStandsAboveItsWeight()
@@ -84,9 +82,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
         Airline::where('icao_code', 'VIR')->update(['is_cargo' => true]);
 
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
-        $this->assertEquals($databaseAllocation->stand_id, $allocation->stand_id);
-        $this->assertEquals($this->cargoStand->id, $allocation->stand_id);
+        $this->assertEquals($this->cargoStand->id, $allocation);
     }
 
     public function testItReturnsNothingIfNoStandsToAllocated()
@@ -95,7 +91,6 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
         Airline::where('icao_code', 'VIR')->update(['is_cargo' => true]);
 
         $this->assertNull($this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL')));
-        $this->assertNull(StandAssignment::where('callsign', 'VIR22F')->first());
     }
 
     public function testItDoesntAllocateOccupiedStands()
@@ -109,25 +104,19 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
         );
 
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
         $this->assertNull($allocation);
-        $this->assertNull($databaseAllocation);
     }
 
     public function testItDoesntAllocateCargoStandsIfAirlineNotCargo()
     {
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
         $this->assertNull($allocation);
-        $this->assertNull($databaseAllocation);
     }
 
     public function testItDoesntAllocateCargoStandsIfNoAirline()
     {
         $allocation = $this->allocator->allocate($this->createAircraft('ABCDEF', 'EGLL'));
-        $databaseAllocation = StandAssignment::where('callsign', 'ABCDEF')->first();
         $this->assertNull($allocation);
-        $this->assertNull($databaseAllocation);
     }
 
     private function createAircraft(
@@ -138,6 +127,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => 'B744',
+                'planned_aircraft_short' => 'B744',
                 'planned_destairport' => $arrivalAirport,
             ]
         );

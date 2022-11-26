@@ -36,10 +36,7 @@ class CallsignFlightplanReservedArrivalStandAllocatorTest extends BaseFunctional
         );
 
         $actual = $this->allocator->allocate(NetworkAircraft::find('BAW123'));
-        $expected = StandAssignment::where('callsign', 'BAW123')->first();
-
-        $this->assertEquals($actual->stand_id, 1);
-        $this->assertEquals($actual->stand_id, $expected->stand_id);
+        $this->assertEquals(1, $actual);
     }
 
     public function testItDoesntAllocateReservedStandIfNotActive()

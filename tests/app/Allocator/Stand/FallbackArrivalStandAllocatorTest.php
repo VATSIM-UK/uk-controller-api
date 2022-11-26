@@ -53,12 +53,8 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $aircraft = $this->createAircraft('AEU252', 'A388', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
-        $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertEquals($stand->id, $assignment->stand_id);
-        $this->assertEquals('AEU252', $assignment->callsign);
+        $this->assertEquals($stand->id, $assignment);
     }
 
     public function testItAssignsInWeightAscendingOrder()
@@ -79,12 +75,8 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->setWakeCategoryForAircraft('B738', 'S');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
-        $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertEquals($stand->id, $assignment->stand_id);
-        $this->assertEquals('AEU252', $assignment->callsign);
+        $this->assertEquals($stand->id, $assignment);
     }
 
     public function testItAllocatesAboveItsWeight()
@@ -114,11 +106,8 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $aircraft = $this->createAircraft('AEU252', 'B744', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
-        $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertEquals('AEU252', $assignment->callsign);
+        $this->assertEquals($stand->id, $assignment);
     }
 
     public function testItAssignsStandsInPriorityOrder()
@@ -159,12 +148,8 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $aircraft = $this->createAircraft('AEU252', 'A388', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
-        $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertEquals($assignment->stand_id, $highPriority->id);
-        $this->assertEquals('AEU252', $assignment->callsign);
+        $this->assertEquals($highPriority->id, $assignment);
     }
 
     public function testItOnlyAssignsNonCargoStands()
@@ -207,11 +192,8 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $aircraft = $this->createAircraft('AEU252', 'A388', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
-        $expectedAssignment = StandAssignment::where('callsign', 'AEU252')->first();
 
-        $this->assertEquals($expectedAssignment->stand_id, $assignment->stand_id);
-        $this->assertEquals($expectedAssignment->callsign, $assignment->callsign);
-        $this->assertEquals('AEU252', $assignment->callsign);
+        $this->assertEquals($stand->id, $assignment);
     }
 
     public function testItDoesntAllocateTakenStands()
@@ -247,8 +229,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReturnsNothingOnNoStandAllocated()
     {
-        $this->assertNull($this->allocator->allocate($this->createAircraft('BAW898', 'B738', 'XXXX', true)));
-        $this->assertFalse(StandAssignment::where('callsign', 'BAW898')->exists());
+        $this->assertNull($this->allocator->allocate($this->createAircraft('BAW898', 'B738', 'XXXX')));
     }
 
     private function createAircraft(
@@ -260,6 +241,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => $type,
+                'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
             ]
         );

@@ -8,6 +8,7 @@ use App\Jobs\Hold\RemoveAssignmentsForAircraftLeavingHold;
 use App\Jobs\Prenote\CancelMessagesForDepartedAircraft;
 use App\Jobs\Release\Departure\CancelRequestsForDepartedAircraft;
 use App\Jobs\Squawk\ReserveActiveSquawks;
+use App\Jobs\Stand\AssignStandsForArrival;
 use App\Jobs\Stand\AssignStandsForDeparture;
 use App\Jobs\Stand\OccupyStands;
 use Illuminate\Foundation\Bus\PendingChain;
@@ -31,6 +32,7 @@ class NetworkDataUpdatedTest extends BaseUnitTestCase
             [
                 new OccupyStands(),
                 new AssignStandsForDeparture(),
+                new AssignStandsForArrival(),
                 new ReserveActiveSquawks(),
                 new RemoveAssignmentsForAircraftLeavingHold(),
                 new CancelRequestsForDepartedAircraft(),

@@ -3,7 +3,7 @@
 namespace App\Jobs\Stand;
 
 use App\BaseUnitTestCase;
-use App\Services\Stand\StandService;
+use App\Services\Stand\StandOccupationService;
 use Mockery;
 
 class OccupyStandsTest extends BaseUnitTestCase
@@ -18,7 +18,7 @@ class OccupyStandsTest extends BaseUnitTestCase
 
     public function testHandleCallsStandService()
     {
-        $standService = Mockery::mock(StandService::class);
+        $standService = Mockery::mock(StandOccupationService::class);
         $standService->expects('setOccupiedStands')->withNoArgs()->once();
         $this->occupy->handle($standService);
     }

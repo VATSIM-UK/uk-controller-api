@@ -8,11 +8,7 @@ use App\Models\Vatsim\NetworkAircraft;
 interface ArrivalStandAllocatorInterface
 {
     /**
-     * If called, should allocate a stand to an aircraft and return it. If an allocation
-     * is not possible, should return null.
-     *
-     * @param NetworkAircraft $aircraft
-     * @return StandAssignment|null
+     * Returns the id of the stand to allocate, or null if one is not found.
      */
-    public function allocate(NetworkAircraft $aircraft): ?StandAssignment;
+    public function allocate(NetworkAircraft $aircraft): ?int;
 }

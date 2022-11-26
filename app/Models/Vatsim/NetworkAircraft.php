@@ -40,6 +40,7 @@ class NetworkAircraft extends Model
         'altitude',
         'groundspeed',
         'planned_aircraft',
+        'planned_aircraft_short',
         'planned_depairport',
         'planned_destairport',
         'planned_altitude',
@@ -121,22 +122,6 @@ class NetworkAircraft extends Model
             'callsign',
             'navaid_id'
         )->withPivot('entered_at')->using(NavaidNetworkAircraft::class);
-    }
-
-    public function getAircraftTypeAttribute(): string
-    {
-        if (is_null($this->planned_aircraft)) {
-            return '';
-        }
-
-        $splitType = explode(self::AIRCRAFT_TYPE_SEPARATOR, $this->planned_aircraft);
-        foreach ($splitType as $split) {
-            if (preg_match(self::AIRCRAFT_TYPE_REGEX, $split)) {
-                return $split;
-            }
-        }
-
-        return '';
     }
 
     public function isVfr(): bool

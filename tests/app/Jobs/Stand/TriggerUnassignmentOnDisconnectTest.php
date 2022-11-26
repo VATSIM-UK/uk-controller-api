@@ -7,6 +7,7 @@ use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
+use Illuminate\Support\Facades\Event;
 
 class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
 {
@@ -15,14 +16,8 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
     public function setUp() : void
     {
         parent::setUp();
+        Event::fake();
         $this->listener = $this->app->make(TriggerUnassignmentOnDisconnect::class);
-    }
-
-    public function testItFiresEventIfStandAssignmentExists()
-    {
-        $this->addStandAssignment('BAW123', 1);
-        $this->expectsEvents(StandUnassignedEvent::class);
-        $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 
     public function testItDeletesStandAssignments()
@@ -30,13 +25,13 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
         $this->addStandAssignment('BAW123', 1);
         $this->expectsEvents([]);
         $this->listener->perform(NetworkAircraft::find('BAW123'));
-
+        Event::assertDispatched(fn (StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
         $this->assertNull(StandAssignment::find('BAW123'));
     }
 
     public function testDoesntFireEventIfNoAssignment()
     {
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        Event::assertNotDispatched(fn (StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
         $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 

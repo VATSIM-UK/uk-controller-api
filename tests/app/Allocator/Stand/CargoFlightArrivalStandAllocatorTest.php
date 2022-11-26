@@ -5,12 +5,10 @@ namespace App\Allocator\Stand;
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
-use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
-use Illuminate\Support\Facades\DB;
 use util\Traits\WithWakeCategories;
 
 class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
@@ -77,9 +75,7 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('VIR22F', 'EGLL');
         $aircraft->remarks = 'Some stuff RMK/CARGO Some more stuff';
         $allocation = $this->allocator->allocate($aircraft);
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
-        $this->assertEquals($databaseAllocation->stand_id, $allocation->stand_id);
-        $this->assertEquals($this->cargoStand->id, $allocation->stand_id);
+        $this->assertEquals($this->cargoStand->id, $allocation);
     }
 
     public function testItAllocatesCargoStandsAboveItsWeight()
@@ -89,9 +85,7 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('VIR22F', 'EGLL');
         $aircraft->remarks = 'Some stuff RMK/CARGO Some more stuff';
         $allocation = $this->allocator->allocate($aircraft);
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
-        $this->assertEquals($databaseAllocation->stand_id, $allocation->stand_id);
-        $this->assertEquals($this->cargoStand->id, $allocation->stand_id);
+        $this->assertEquals($this->cargoStand->id, $allocation);
     }
 
     public function testItReturnsNothingIfNoStandsToAllocated()
@@ -101,7 +95,6 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('VIR22F', 'EGLL');
         $aircraft->remarks = 'Some stuff RMK/CARGO Some more stuff';
         $this->assertNull($this->allocator->allocate($aircraft));
-        $this->assertNull(StandAssignment::where('callsign', 'VIR22F')->first());
     }
 
     public function testItDoesntAllocateOccupiedStands()
@@ -116,9 +109,7 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('VIR22F', 'EGLL');
         $aircraft->remarks = 'Some stuff RMK/CARGO Some more stuff';
         $allocation = $this->allocator->allocate($aircraft);
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
         $this->assertNull($allocation);
-        $this->assertNull($databaseAllocation);
     }
 
     public function testItDoesntAllocateCargoStandsIfFlightplanNotCargo()
@@ -126,9 +117,7 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('VIR22F', 'EGLL');
         $aircraft->remarks = 'Some stuff but not CARGO Some more stuff';
         $allocation = $this->allocator->allocate($aircraft);
-        $databaseAllocation = StandAssignment::where('callsign', 'VIR22F')->first();
         $this->assertNull($allocation);
-        $this->assertNull($databaseAllocation);
     }
 
     private function createAircraft(
@@ -139,6 +128,7 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => 'B744',
+                'planned_aircraft_short' => 'B744',
                 'planned_destairport' => $arrivalAirport,
             ]
         );
