@@ -151,7 +151,7 @@ return [
     |
     */
 
-    'memory_limit' => 32,
+    'memory_limit' => 128,
 
     /*
     |--------------------------------------------------------------------------
@@ -173,7 +173,7 @@ return [
             'maxProcesses' => 3,
             'balanceMaxShift' => 1,
             'balanceCooldown' => 15,
-            'memory' => 32,
+            'memory' => 128,
             'tries' => 1,
             'nice' => 0,
         ],
