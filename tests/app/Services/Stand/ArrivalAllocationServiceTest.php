@@ -14,6 +14,7 @@ use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CidReservedArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
+use App\Allocator\Stand\OriginAirfieldStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
@@ -163,12 +164,13 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 AirlineArrivalStandAllocator::class,
                 AirlineTerminalArrivalStandAllocator::class,
                 CargoAirlineFallbackStandAllocator::class,
+                OriginAirfieldStandAllocator::class,
                 DomesticInternationalStandAllocator::class,
                 FallbackArrivalStandAllocator::class,
             ],
             array_map(
                 fn(ArrivalStandAllocatorInterface $allocator) => get_class($allocator),
-                $this->service->getAllocators()
+                    $this->service->getAllocators()
             )
         );
     }

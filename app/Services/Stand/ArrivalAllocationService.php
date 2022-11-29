@@ -2,7 +2,6 @@
 
 namespace App\Services\Stand;
 
-use App\Allocator\Stand\ArrivalStandAllocatorInterface;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;

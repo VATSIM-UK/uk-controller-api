@@ -31,6 +31,7 @@ class Stand extends Model
         'longitude',
         'terminal_id',
         'type_id',
+        'origin_slug',
         'wake_category_id',
         'max_aircraft_id',
         'assignment_priority',
@@ -202,7 +203,8 @@ class Stand extends Model
         return $builder->whereHas('terminal', function (Builder $terminal) use ($airline) {
             $terminal->whereHas('airlines', function (Builder $airlineQuery) use ($airline) {
                 $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id);
-            });
+            }
+            );
         });
     }
 
@@ -227,9 +229,11 @@ class Stand extends Model
             $query->greaterRelativeWeighting(
                 $aircraftType->wakeCategories()->whereHas('scheme', function (Builder $scheme) {
                     $scheme->uk();
-                })->first() ?? WakeCategory::whereHas('scheme', function (Builder $scheme) {
+                }
+                )->first() ?? WakeCategory::whereHas('scheme', function (Builder $scheme) {
                     $scheme->uk();
-                })->where('code', 'J')->first()
+                }
+                )->where('code', 'J')->first()
             );
         });
     }
