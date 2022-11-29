@@ -65,10 +65,6 @@ return [
             'label' => 'Unit',
             'helper' => 'The unit that owns the range, e.g. EGKK, SCO, THAMES',
         ],
-        'rule_type' => [
-            'label' => 'Rule',
-            'helper' => 'The rule to apply to determine whether or not the range is relevant.',
-        ],
         'rule_flight_rules' => [
             'label' => 'Flight Rules',
             'helper' => 'Which flight rules this range applies to.',
@@ -100,10 +96,6 @@ return [
         'unit' => [
             'label' => 'Unit',
             'helper' => 'The unit that owns the range, e.g. EGKK, SCO, THAMES',
-        ],
-        'rule_type' => [
-            'label' => 'Rule',
-            'helper' => 'The rule to apply to determine whether or not the range is relevant.',
         ],
         'rule_flight_rules' => [
             'label' => 'Flight Rules',
