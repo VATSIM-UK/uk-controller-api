@@ -15,7 +15,7 @@ return [
         'description' => 'Airlines can be assigned to specific stands based on various parameters.',
         'columns' => [
             'icao' => 'ICAO Code',
-            'destination' => 'Destination',
+            'destination' => 'Origin',
             'callsign' => 'Callsign Slug',
             'priority' => 'Allocation Priority',
             'not_before' => 'Not Before [UTC]',
@@ -23,7 +23,7 @@ return [
     ],
     'paired' => [
         'description' => 'Stands that are paired cannot be simultaneously assigned to aircraft. ' .
-            'Note, this does not prevent aircraft from spawning up on a stand!',
+        'Note, this does not prevent aircraft from spawning up on a stand!',
         'columns' => [
             'id' => 'Id',
             'airfield' => 'Airfield',
