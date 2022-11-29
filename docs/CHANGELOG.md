@@ -1,5 +1,18 @@
 # UK Controller Plugin API Changelog
 
+## [6.30.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.30.1...6.30.2) (2022-11-29)
+
+
+### Bug Fixes
+
+* fix missing translation for ukfis in squawks ([f3ba376](https://github.com/VATSIM-UK/uk-controller-api/commit/f3ba376c289ac55b0d0862f4c81f986851f4baac))
+* stand airlines column name ([890b848](https://github.com/VATSIM-UK/uk-controller-api/commit/890b8480f16062b87df71cba115728463eda84a4)), closes [#1139](https://github.com/VATSIM-UK/uk-controller-api/issues/1139)
+
+
+### Miscellaneous Chores
+
+* remove redundant translation strings ([ddfd11b](https://github.com/VATSIM-UK/uk-controller-api/commit/ddfd11bea753d299167ba27c505ccdd2860a893c))
+
 ## [6.30.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.30.0...6.30.1) (2022-11-26)
 
 
