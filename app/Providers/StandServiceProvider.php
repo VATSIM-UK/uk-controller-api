@@ -21,6 +21,7 @@ use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Allocator\Stand\OriginAirfieldStandAllocator;
 
 class StandServiceProvider extends ServiceProvider
 {
@@ -49,6 +50,7 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(AirlineArrivalStandAllocator::class),
                     $application->make(AirlineTerminalArrivalStandAllocator::class),
                     $application->make(CargoAirlineFallbackStandAllocator::class),
+                    $application->make(OriginAirfieldStandAllocator::class),
                     $application->make(DomesticInternationalStandAllocator::class),
                     $application->make(FallbackArrivalStandAllocator::class),
                 ]

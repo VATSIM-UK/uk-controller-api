@@ -11,6 +11,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandType;
+use App\Rules\Airfield\PartialAirfieldIcao;
 use App\Rules\Stand\StandIdentifierMustBeUniqueAtAirfield;
 use Closure;
 use Filament\Forms\Components\Fieldset;
@@ -73,18 +74,18 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
-                                    ->get()
-                                    ->mapWithKeys(
-                                        fn (Terminal $terminal) => [$terminal->id => $terminal->description]
-                                    )
+                                ->get()
+                                ->mapWithKeys(
+                                    fn (Terminal $terminal) => [$terminal->id => $terminal->description]
+                                )
                             )
                             ->disabled(
                                 fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
-                                    !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                                !Terminal::where('airfield_id', $get('airfield_id'))->exists()
                             )
                             ->dehydrated(
                                 fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
-                                    !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                                !Terminal::where('airfield_id', $get('airfield_id'))->exists()
                             ),
                         TextInput::make('identifier')
                             ->label(self::translateFormPath('identifier.label'))
@@ -92,10 +93,10 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
-                                    Airfield::findOrFail($get('airfield_id')),
-                                    $record
-                                ),
+                                fn (Closure $get, ? Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                Airfield::findOrFail($get('airfield_id')),
+                                $record
+                            ),
                                 fn (Closure $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
@@ -104,8 +105,8 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn () => StandType::all()->mapWithKeys(
-                                    fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
-                                )
+                                fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
+                            )
                             ),
                         TextInput::make('latitude')
                             ->label(self::translateFormPath('latitude.label'))
@@ -127,19 +128,19 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-scale')
                             ->options(
                                 fn () => WakeCategoryScheme::with('categories')
-                                    ->uk()
-                                    ->firstOrFail()
-                                    ->categories
+                                        ->uk()
+                                        ->firstOrFail()
+                                ->categories
                                     ->sortBy('relative_weighting')
-                                    ->mapWithKeys(
-                                        fn (WakeCategory $category) => [
-                                            $category->id => sprintf(
-                                                '%s (%s)',
-                                                $category->description,
-                                                $category->code
-                                            ),
-                                        ]
-                                    )
+                                ->mapWithKeys(
+                                    fn (WakeCategory $category) => [
+                                    $category->id => sprintf(
+                                        '%s (%s)',
+                                        $category->description,
+                                        $category->code
+                                    ),
+                                ]
+                                )
                             )
                             ->required(),
                         Select::make('max_aircraft_id')
@@ -164,6 +165,10 @@ class StandResource extends Resource
                             ->maxValue(9999)
                             ->default(100)
                             ->required(),
+                        TextInput::make('origin_slug')
+                            ->label(self::translateFormPath('origin_slug.label'))
+                            ->helperText(self::translateFormPath('origin_slug.helper'))
+                            ->rule(new PartialAirfieldIcao()),
                     ]
                 ),
             ]);
@@ -230,9 +235,12 @@ class StandResource extends Resource
                                 return $query;
                             }
 
-                            return $query->whereHas('airlines', function (Builder $query) use ($data) {
-                                return $query->whereIn('airlines.id', $data['values']);
-                            });
+                            return $query->whereHas(
+                                'airlines',
+                                function (Builder $query) use ($data) {
+                                    return $query->whereIn('airlines.id', $data['values']);
+                                }
+                            );
                         }
                     ),
             ]);

@@ -54,6 +54,7 @@ class StandResourceTest extends BaseFilamentTestCase
                     'terminal_id' => 1,
                     'type_id' => 1,
                     'max_aircraft_id' => 1,
+                    'origin_slug' => 'EGL',
                 ]
             );
 
@@ -62,6 +63,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.identifier', '1L')
             ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
             ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
+            ->assertSet('data.origin_slug', 'EGL')
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.wake_category_id', 3)
@@ -90,6 +92,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
+            ->assertSet('data.origin_slug', null)
             ->assertSet('data.wake_category_id', 3)
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_id', 1)
@@ -116,6 +119,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'latitude' => 4.5,
                 'longitude' => 5.6,
                 'type_id' => null,
+                'origin_slug' => null,
                 'wake_category_id' => 5,
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
@@ -145,6 +149,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'latitude' => 4.5,
                 'longitude' => 5.6,
                 'type_id' => null,
+                'origin_slug' => null,
                 'wake_category_id' => 5,
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
@@ -162,6 +167,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EHA')
             ->set('data.wake_category_id', 5)
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
@@ -178,6 +184,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'latitude' => 4.5,
                 'longitude' => 5.6,
                 'type_id' => 3,
+                'origin_slug' => 'EHA',
                 'wake_category_id' => 5,
                 'max_aircraft_id' => 2,
                 'assignment_priority' => 100,
@@ -337,6 +344,24 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.assignment_priority']);
     }
 
+    public function testCreateFailsWithValidationErrorsIfOriginSlugInvalid()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EGLLLL')
+            ->set('data.wake_category_id', 5)
+            ->set('data.max_aircraft_id', 2)
+            ->set('data.assignment_priority', 100)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.origin_slug']);
+    }
+
     public function testItRetrievesDataForEdit()
     {
         Stand::findOrFail(1)
@@ -345,6 +370,7 @@ class StandResourceTest extends BaseFilamentTestCase
                     'terminal_id' => 1,
                     'type_id' => 1,
                     'max_aircraft_id' => 1,
+                    'origin_slug' => 'EGGD',
                 ]
             );
 
@@ -355,6 +381,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
+            ->assertSet('data.origin_slug', 'EGGD')
             ->assertSet('data.wake_category_id', 3)
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_id', 1)
@@ -370,6 +397,7 @@ class StandResourceTest extends BaseFilamentTestCase
                     'terminal_id' => 1,
                     'type_id' => 1,
                     'max_aircraft_id' => 1,
+                    'origin_slug' => 'EGGD',
                 ]
             );
         Stand::findOrFail(1)->close();
@@ -381,6 +409,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.longitude', $this->coordinateEqual('-0.48953611'))
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
+            ->assertSet('data.origin_slug', 'EGGD')
             ->assertSet('data.wake_category_id', 3)
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_id', 1)
@@ -408,6 +437,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'latitude' => 1.2,
                 'longitude' => 3.4,
                 'type_id' => null,
+                'origin_slug' => null,
                 'wake_category_id' => 4,
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
@@ -437,6 +467,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'latitude' => 4.5,
                 'longitude' => 5.6,
                 'type_id' => null,
+                'origin_slug' => null,
                 'wake_category_id' => 5,
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
@@ -454,6 +485,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EGGD')
             ->set('data.wake_category_id', 5)
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
@@ -470,6 +502,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'latitude' => 4.5,
                 'longitude' => 5.6,
                 'type_id' => 3,
+                'origin_slug' => 'EGGD',
                 'wake_category_id' => 5,
                 'max_aircraft_id' => 2,
                 'assignment_priority' => 100,
@@ -595,6 +628,24 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.closed_at', true)
             ->call('save')
             ->assertHasErrors(['data.assignment_priority']);
+    }
+
+    public function testEditFailsWithValidationErrorsIfOriginSlugInvalidPartialIcao()
+    {
+        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EGGGG')
+            ->set('data.wake_category_id', 5)
+            ->set('data.max_aircraft_id', 2)
+            ->set('data.assignment_priority', 100)
+            ->set('data.closed_at', true)
+            ->call('save')
+            ->assertHasErrors(['data.origin_slug']);
     }
 
     public function testItOnlyAllowsSelectionOfTerminalsAtTheRightAirfield()
@@ -982,6 +1033,6 @@ class StandResourceTest extends BaseFilamentTestCase
 
     private function coordinateEqual(string $expected): callable
     {
-        return fn (float $actual) => number_format($actual, 8) === $expected;
+        return fn(float $actual) => number_format($actual, 8) === $expected;
     }
 }
