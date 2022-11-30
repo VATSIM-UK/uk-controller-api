@@ -204,8 +204,8 @@ class Stand extends Model
             $terminal->whereHas(
                 'airlines',
                 function (Builder $airlineQuery) use ($airline) {
-                $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id);
-            }
+                    $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id);
+                }
             );
         });
     }
@@ -232,13 +232,13 @@ class Stand extends Model
                 $aircraftType->wakeCategories()->whereHas(
                     'scheme',
                     function (Builder $scheme) {
-                    $scheme->uk();
-                }
+                        $scheme->uk();
+                    }
                 )->first() ?? WakeCategory::whereHas(
                     'scheme',
                     function (Builder $scheme) {
-                    $scheme->uk();
-                }
+                        $scheme->uk();
+                    }
                 )->where('code', 'J')->first()
             );
         });

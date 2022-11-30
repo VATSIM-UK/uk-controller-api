@@ -94,9 +94,9 @@ class StandResource extends Resource
                             ->required()
                             ->rule(
                                 fn (Closure $get, ? Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
-                                Airfield::findOrFail($get('airfield_id')),
-                                $record
-                            ),
+                                    Airfield::findOrFail($get('airfield_id')),
+                                    $record
+                                ),
                                 fn (Closure $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
@@ -105,8 +105,8 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn () => StandType::all()->mapWithKeys(
-                                fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
-                            )
+                                    fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
+                                )
                             ),
                         TextInput::make('latitude')
                             ->label(self::translateFormPath('latitude.label'))
