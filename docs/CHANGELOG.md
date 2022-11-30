@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.31.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.30.2...6.31.0) (2022-11-30)
+
+
+### Features
+
+* arrival allocation based only on origin ([e0727de](https://github.com/VATSIM-UK/uk-controller-api/commit/e0727de1ceed74edd011f2859be36ad1147bf301))
+
 ## [6.30.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.30.1...6.30.2) (2022-11-29)
 
 
