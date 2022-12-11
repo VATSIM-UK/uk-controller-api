@@ -12,4 +12,10 @@ class FirExitPoint extends Model
         'exit_direction_start',
         'exit_direction_end',
     ];
+
+    protected $casts = [
+        'internal' => 'boolean',
+        'exit_direction_start' => 'integer',
+        'exit_direction_end' => 'integer',
+    ];
 }
