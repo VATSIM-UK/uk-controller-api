@@ -22,6 +22,14 @@ return [
     'turn_direction' => [
         'label' => 'Turn direction'
     ],
+    'outbound_leg_value' => [
+        'label' => 'Outbound Leg Value',
+        'helper' => 'Decimal for the value of the outbound leg. E.g. 1.5',
+    ],
+    'outbound_leg_unit' => [
+        'label' => 'Outbound Leg Unit',
+        'helper' => 'The unit of the outbound leg, e.g. minutes, nautical miles.',
+    ],
     'restrictions' => [
         'label' => 'Restrictions'
     ],

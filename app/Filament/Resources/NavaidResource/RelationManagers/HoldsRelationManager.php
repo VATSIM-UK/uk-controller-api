@@ -7,6 +7,7 @@ use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
+use App\Models\Measurement\MeasurementUnit;
 use App\Models\Runway\Runway;
 use Closure;
 use Filament\Forms;
@@ -21,7 +22,7 @@ class HoldsRelationManager extends RelationManager
     use LimitsTableRecordListingOptions;
 
     use TranslatesStrings;
-    
+
     protected static string $relationship = 'holds';
     protected static ?string $recordTitleAttribute = 'description';
     protected static ?string $title = 'Published Holds';
@@ -33,126 +34,144 @@ class HoldsRelationManager extends RelationManager
                 Forms\Components\Fieldset::make('Parameters')
                     ->label(self::translateFormPath('parameters.label'))
                     ->schema([
-                    Forms\Components\TextInput::make('description')
-                        ->label(self::translateFormPath('description.label'))
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('inbound_heading')
-                        ->label(self::translateFormPath('inbound_heading.label'))
-                        ->helperText(self::translateFormPath('inbound_heading.helper'))
-                        ->required()
-                        ->integer()
-                        ->minValue(1)
-                        ->maxValue(360),
-                    Forms\Components\TextInput::make('minimum_altitude')
-                        ->label(self::translateFormPath('minimum_altitude.label'))
-                        ->helperText(self::translateFormPath('minimum_altitude.helper'))
-                        ->required()
-                        ->integer()
-                        ->step(100)
-                        ->minValue(1000)
-                        ->maxValue(60000),
-                    Forms\Components\TextInput::make('maximum_altitude')
-                        ->label(self::translateFormPath('maximum_altitude.label'))
-                        ->helperText(self::translateFormPath('maximum_altitude.helper'))
-                        ->required()
-                        ->integer()
-                        ->step(100)
-                        ->minValue(2000)
-                        ->maxValue(60000)
-                        ->gte('minimum_altitude'),
-                    Forms\Components\Select::make('turn_direction')
-                        ->label(self::translateFormPath('turn_direction.label'))
-                        ->required()
-                        ->options([
-                            'left' => 'Left',
-                            'right' => 'Right',
-                        ]),
-                ]),
+                        Forms\Components\TextInput::make('description')
+                            ->label(self::translateFormPath('description.label'))
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('inbound_heading')
+                            ->label(self::translateFormPath('inbound_heading.label'))
+                            ->helperText(self::translateFormPath('inbound_heading.helper'))
+                            ->required()
+                            ->integer()
+                            ->minValue(1)
+                            ->maxValue(360),
+                        Forms\Components\TextInput::make('minimum_altitude')
+                            ->label(self::translateFormPath('minimum_altitude.label'))
+                            ->helperText(self::translateFormPath('minimum_altitude.helper'))
+                            ->required()
+                            ->integer()
+                            ->step(100)
+                            ->minValue(1000)
+                            ->maxValue(60000),
+                        Forms\Components\TextInput::make('maximum_altitude')
+                            ->label(self::translateFormPath('maximum_altitude.label'))
+                            ->helperText(self::translateFormPath('maximum_altitude.helper'))
+                            ->required()
+                            ->integer()
+                            ->step(100)
+                            ->minValue(2000)
+                            ->maxValue(60000)
+                            ->gte('minimum_altitude'),
+                        Forms\Components\Select::make('turn_direction')
+                            ->label(self::translateFormPath('turn_direction.label'))
+                            ->required()
+                            ->options([
+                                'left' => 'Left',
+                                'right' => 'Right',
+                            ]),
+                        Forms\Components\TextInput::make('outbound_leg_value')
+                            ->label(self::translateFormPath('outbound_leg_value.label'))
+                            ->helperText(self::translateFormPath('outbound_leg_value.helper'))
+                            ->numeric()
+                            ->reactive()
+                            ->required(fn(Closure $get): bool => (bool) $get('outbound_leg_unit'))
+                            ->minValue(0.5)
+                            ->maxValue(100),
+                        Forms\Components\Select::make('outbound_leg_unit')
+                            ->label(self::translateFormPath('outbound_leg_unit.label'))
+                            ->helperText(self::translateFormPath('outbound_leg_unit.helper'))
+                            ->required(fn(Closure $get): bool => (bool) $get('outbound_leg_value'))
+                            ->reactive()
+                            ->options(
+                                MeasurementUnit::whereIn('unit', ['nm', 'min'])
+                                    ->get()
+                                    ->mapWithKeys(fn(MeasurementUnit $unit): array => [$unit->id => $unit->description]
+                                    )
+                            ),
+                    ]),
                 Forms\Components\Fieldset::make('Restrictions')
                     ->label(self::translateFormPath('restrictions.label'))
                     ->schema([
-                    Forms\Components\Builder::make('restrictions')
-                        ->createItemButtonLabel(self::translateFormPath('add_restriction.label'))
-                        ->columnSpan('full')
-                        ->inset()
-                        ->blocks([
-                            Forms\Components\Builder\Block::make('minimum-level')
-                                ->label(self::translateFormPath('minimum_level.label'))
-                                ->schema([
-                                    Forms\Components\Hidden::make('id'),
-                                    Forms\Components\Select::make('level')
-                                        ->label(self::translateFormPath('minimum_level_level.label'))
-                                        ->required()
-                                        ->options([
-                                            'MSL' => 'MSL',
-                                            'MSL+1' => 'MSL + 1',
-                                            'MSL+2' => 'MSL + 2',
-                                        ]),
-                                    Forms\Components\Select::make('target')
-                                        ->label(self::translateFormPath('minimum_level_target.label'))
-                                        ->helperText(self::translateFormPath('minimum_level_target.helper'))
-                                        ->required()
-                                        ->searchable()
-                                        ->options(
-                                            Airfield::all()
-                                                ->mapWithKeys(
-                                                    fn (Airfield $airfield) => [$airfield->code => $airfield->code]
-                                                ),
-                                        )
-                                        ->preload()
-                                        ->reactive()
-                                        ->afterStateUpdated(function (Closure $get, Closure $set) {
-                                            $target = $get('target');
-                                            if (!$target || !$get('runway.designator')) {
+                        Forms\Components\Builder::make('restrictions')
+                            ->createItemButtonLabel(self::translateFormPath('add_restriction.label'))
+                            ->columnSpan('full')
+                            ->inset()
+                            ->blocks([
+                                Forms\Components\Builder\Block::make('minimum-level')
+                                    ->label(self::translateFormPath('minimum_level.label'))
+                                    ->schema([
+                                        Forms\Components\Hidden::make('id'),
+                                        Forms\Components\Select::make('level')
+                                            ->label(self::translateFormPath('minimum_level_level.label'))
+                                            ->required()
+                                            ->options([
+                                                'MSL' => 'MSL',
+                                                'MSL+1' => 'MSL + 1',
+                                                'MSL+2' => 'MSL + 2',
+                                            ]),
+                                        Forms\Components\Select::make('target')
+                                            ->label(self::translateFormPath('minimum_level_target.label'))
+                                            ->helperText(self::translateFormPath('minimum_level_target.helper'))
+                                            ->required()
+                                            ->searchable()
+                                            ->options(
+                                                Airfield::all()
+                                                    ->mapWithKeys(fn(Airfield $airfield) => [$airfield->code => $airfield->code]
+                                                    ),
+                                            )
+                                            ->preload()
+                                            ->reactive()
+                                            ->afterStateUpdated(function (Closure $get, Closure $set) {
+                                                $target = $get('target');
+                                                if (!$target || !$get('runway.designator')) {
+                                                    $set('runway.designator', null);
+                                                    return;
+                                                }
+
+                                                if (
+                                                    Runway::atAirfield($target)->where(
+                                                        'identifier',
+                                                            $get('runway.designator')
+                                                    )->exists()
+                                                ) {
+                                                    return;
+                                                }
+
                                                 $set('runway.designator', null);
-                                                return;
-                                            }
-
-                                            if (Runway::atAirfield($target)->where(
-                                                'identifier',
-                                                $get('runway.designator')
-                                            )->exists()
-                                            ) {
-                                                return;
-                                            }
-
-                                            $set('runway.designator', null);
-                                        }),
-                                    Forms\Components\TextInput::make('override')
-                                        ->label(self::translateFormPath('minimum_level_override.label'))
-                                        ->helperText(self::translateFormPath('minimum_level_override.helper'))
-                                        ->integer()
-                                        ->minValue(1000)
-                                        ->maxValue(60000),
-                                    Forms\Components\Select::make('runway.designator')
-                                        ->label(self::translateFormPath('minimum_level_runway.label'))
-                                        ->helperText(self::translateFormPath('minimum_level_runway.helper'))
-                                        ->options(
-                                            fn (Closure $get) => $get('target')
-                                                ? Runway::atAirfield($get('target'))->get()->mapWithKeys(
-                                                    fn (Runway $runway) => [$runway->identifier => $runway->identifier]
+                                            }),
+                                        Forms\Components\TextInput::make('override')
+                                            ->label(self::translateFormPath('minimum_level_override.label'))
+                                            ->helperText(self::translateFormPath('minimum_level_override.helper'))
+                                            ->integer()
+                                            ->minValue(1000)
+                                            ->maxValue(60000),
+                                        Forms\Components\Select::make('runway.designator')
+                                            ->label(self::translateFormPath('minimum_level_runway.label'))
+                                            ->helperText(self::translateFormPath('minimum_level_runway.helper'))
+                                            ->options(
+                                                fn(Closure $get) => $get('target')
+                                                ? Runway::atAirfield($get('target'))->get()->mapWithKeys(fn(Runway $runway) => [$runway->identifier => $runway->identifier]
                                                 )
                                                 : []
-                                        ),
-                                ]),
-                            Forms\Components\Builder\Block::make('level-block')
-                                ->label(self::translateFormPath('level_block.label'))
-                                ->schema([
-                                    Forms\Components\Repeater::make('levels')
-                                        ->label(self::translateFormPath('level_block_levels.label'))
-                                        ->helperText(self::translateFormPath('level_block_levels.helper'))
-                                        ->schema([
-                                            Forms\Components\TextInput::make('level')
-                                                ->integer()
-                                                ->step(100)
-                                                ->minValue(1000)
-                                                ->maxValue(60000)
-                                                ->required(),
-                                        ]),
-                                ]),
-                        ]),
-                ]),
+                                            ),
+                                    ]),
+                                Forms\Components\Builder\Block::make('level-block')
+                                    ->label(self::translateFormPath('level_block.label'))
+                                    ->schema([
+                                        Forms\Components\Repeater::make('levels')
+                                            ->label(self::translateFormPath('level_block_levels.label'))
+                                            ->helperText(self::translateFormPath('level_block_levels.helper'))
+                                            ->schema([
+                                                Forms\Components\TextInput::make('level')
+                                                    ->integer()
+                                                    ->step(100)
+                                                    ->minValue(1000)
+                                                    ->maxValue(60000)
+                                                    ->required(),
+                                            ]),
+                                    ]),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -176,20 +195,19 @@ class HoldsRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.turn_direction')),
                 Tables\Columns\BooleanColumn::make('restrictions')
                     ->label(self::translateTablePath('columns.has_restrictions'))
-                    ->getStateUsing(fn (Hold $record) => $record->restrictions->isNotEmpty()),
+                    ->getStateUsing(fn(Hold $record) => $record->restrictions->isNotEmpty()),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->using(
-                        fn (array $data, HoldsRelationManager $livewire): Hold => self::saveNewHold($data, $livewire)
+                    ->using(fn(array $data, HoldsRelationManager $livewire): Hold => self::saveNewHold($data, $livewire)
                     ),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data)),
+                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data)),
                 Tables\Actions\EditAction::make()
-                    ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data))
-                    ->using(fn (Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
+                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data))
+                    ->using(fn(Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
@@ -211,7 +229,7 @@ class HoldsRelationManager extends RelationManager
         ];
 
         if (isset($restriction['data']['override'])) {
-            $data['override'] = (int)$restriction['data']['override'];
+            $data['override'] = (int) $restriction['data']['override'];
         }
 
         if (isset($restriction['data']['runway']['designator'])) {
@@ -229,7 +247,7 @@ class HoldsRelationManager extends RelationManager
         return [
             'type' => $restriction['type'],
             'levels' => array_map(
-                fn (array $level) => (int)$level['level'],
+                fn(array $level) => (int) $level['level'],
                 $restriction['data']['levels']
             ),
         ];
@@ -238,7 +256,7 @@ class HoldsRelationManager extends RelationManager
     private static function mutateRecordData(Hold $record, array $data): array
     {
         $data['restrictions'] = $record->restrictions->map(
-            fn (HoldRestriction $restriction) => match ($restriction->restriction['type']) {
+            fn(HoldRestriction $restriction) => match ($restriction->restriction['type']) {
                 'minimum-level' => [
                     'type' => $restriction->restriction['type'],
                     'data' => [
@@ -246,8 +264,8 @@ class HoldsRelationManager extends RelationManager
                         'id' => $restriction->id,
                         'runway' => [
                             'designator' => isset($restriction->restriction['runway'])
-                                ? $restriction->restriction['runway']['designator']
-                                : null,
+                            ? $restriction->restriction['runway']['designator']
+                            : null,
                         ],
                     ],
                 ],
@@ -256,7 +274,7 @@ class HoldsRelationManager extends RelationManager
                     'data' => [
                         'id' => $restriction->id,
                         'levels' => collect($restriction->restriction['levels'])
-                            ->map(fn (int $level) => ['level' => $level])
+                            ->map(fn(int $level) => ['level' => $level])
                             ->toArray(),
                     ],
                 ]
@@ -275,17 +293,16 @@ class HoldsRelationManager extends RelationManager
             $record->update($data);
 
             $restrictionIds = array_map(
-                fn (array $restriction) => $restriction['data']['id'],
+                fn(array $restriction) => $restriction['data']['id'],
                 array_filter(
-                    $restrictions,
-                    fn (array $restriction) => isset($restriction['data']['id'])
+                    $restrictions, fn(array $restriction) => isset($restriction['data']['id'])
                 ),
             );
 
             // Remove restrictions we don't need
             HoldRestriction::whereIn(
                 'id',
-                $record->restrictions->filter(
+                    $record->restrictions->filter(
                     function (HoldRestriction $restriction) use ($restrictionIds) {
                         return array_search($restriction->id, $restrictionIds) === false;
                     }
@@ -295,7 +312,7 @@ class HoldsRelationManager extends RelationManager
             // Update existing restrictions
             $restrictionsToUpdate = array_filter(
                 $restrictions,
-                fn (array $restriction) => isset($restriction['data']['id'])
+                fn(array $restriction) => isset($restriction['data']['id'])
             );
             foreach ($restrictionsToUpdate as $restriction) {
                 $model = HoldRestriction::findOrFail($restriction['data']['id']);
@@ -308,7 +325,7 @@ class HoldsRelationManager extends RelationManager
                 $record,
                 array_filter(
                     $restrictions,
-                    fn (array $restriction) => !isset($restriction['data']['id'])
+                    fn(array $restriction) => !isset($restriction['data']['id'])
                 )
             );
         });

@@ -24,17 +24,14 @@ class Hold extends Model
         'updated_at',
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'navaid_id',
         'inbound_heading',
         'minimum_altitude',
         'maximum_altitude',
         'turn_direction',
+        'outbound_leg_value',
+        'outbound_leg_unit',
         'description',
     ];
 
@@ -42,6 +39,7 @@ class Hold extends Model
         'inbound_heading' => 'integer',
         'minimum_altitude' => 'integer',
         'maximum_altitude' => 'integer',
+        'outbound_leg_value' => 'float',
     ];
 
     public function navaid(): BelongsTo
