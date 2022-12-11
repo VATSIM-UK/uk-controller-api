@@ -18,7 +18,7 @@ return new class extends Migration {
             self::DEPENDENCY_KEY,
             sprintf('%s@%s', FirExitPointService::class, 'getFirExitDependency'),
         false,
-            'fir_exit_points.json',
+            'fir-exit-points.json',
             ['fir_exit_points']
         );
     }

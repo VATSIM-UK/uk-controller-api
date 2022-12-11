@@ -7,6 +7,7 @@ use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
+use App\Models\Dependency\Dependency;
 use App\Models\Hold\Hold;
 use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
@@ -80,6 +81,7 @@ class AuthServiceProvider extends ServiceProvider
         // Things that can only be updated by external processes
         SrdNote::class => ReadOnlyPolicy::class,
         SrdRoute::class => ReadOnlyPolicy::class,
+        Dependency::class => ReadOnlyPolicy::class,
 
         // Special policies
         Activity::class => ActivityLogPolicy::class,
