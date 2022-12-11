@@ -10,6 +10,7 @@ use App\Models\Controller\Prenote;
 use App\Models\Dependency\Dependency;
 use App\Models\Hold\Hold;
 use App\Models\IntentionCode\FirExitPoint;
+use App\Models\IntentionCode\IntentionCode;
 use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
@@ -65,6 +66,7 @@ class AuthServiceProvider extends ServiceProvider
         FirExitPoint::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
         Hold::class => DefaultFilamentPolicy::class,
+        IntentionCode::class => DefaultFilamentPolicy::class,
         Navaid::class => DefaultFilamentPolicy::class,
         NonAssignableSquawkCode::class => DefaultFilamentPolicy::class,
         Notification::class => DefaultFilamentPolicy::class,

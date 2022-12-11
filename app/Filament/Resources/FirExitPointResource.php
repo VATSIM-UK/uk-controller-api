@@ -21,7 +21,7 @@ class FirExitPointResource extends Resource
 
     protected static ?string $model = FirExitPoint::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-x';
     protected static ?string $navigationGroup = 'Intention Codes';
 
     public static function form(Form $form): Form
