@@ -3,6 +3,7 @@
 return [
     'airfields' => require_once __DIR__ . '/airfields/table.php',
     'dependencies' => require_once __DIR__ . '/dependencies/table.php',
+    'fir_exit_points' => require_once __DIR__ . '/fir_exit_points/table.php',
     'stands' => require_once __DIR__ . '/stands/table.php',
     'users' => require_once __DIR__ . '/users/table.php',
     'sids' => require_once __DIR__ . '/sids/table.php',

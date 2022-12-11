@@ -4,6 +4,7 @@ namespace App\Models\IntentionCode;
 
 use App\BaseFunctionalTestCase;
 use App\Services\IntentionCode\FirExitPointService;
+use Illuminate\Support\Facades\DB;
 
 class FirExitPointServiceTest extends BaseFunctionalTestCase
 {
@@ -13,6 +14,8 @@ class FirExitPointServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(FirExitPointService::class);
+        DB::table('fir_exit_points')
+            ->delete();
     }
 
     public function testItReturnsDependency()
