@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ControllerPositionPartialCallsign implements Rule
 {
-    const CALLSIGN_REGEX = '^[A-Z]+(_[A-Z0-9]+)?(_(DEL|GND|TWR|APP|CTR|FSS))?$';
+    const CALLSIGN_REGEX = '^[A-Z]+(_(DEL|GND|TWR|APP|CTR|FSS))?$';
     const REGEX_MATCHED = 1;
     const DELIMITER = '/';
 

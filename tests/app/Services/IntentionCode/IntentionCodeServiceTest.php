@@ -13,6 +13,7 @@ class IntentionCodeServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(IntentionCodeService::class);
+        IntentionCode::all()->each(fn(IntentionCode $code) => $code->delete());
     }
 
     public function testItReturnsIntentionCodeDependency()

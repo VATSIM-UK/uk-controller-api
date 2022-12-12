@@ -3,6 +3,7 @@
 return [
     'airfields' => require_once __DIR__ . '/airfields/form.php',
     'fir_exit_points' => require_once __DIR__ . '/fir_exit_points/form.php',
+    'intention' => require_once __DIR__ . '/intention/form.php',
     'stands' => require_once __DIR__ . '/stands/form.php',
     'users' => require_once __DIR__ . '/users/form.php',
     'sids' => require_once __DIR__ . '/sids/form.php',

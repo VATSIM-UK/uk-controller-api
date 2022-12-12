@@ -143,6 +143,9 @@ class DatabaseSeeder extends Seeder
         FirExitPointSeeder::class => [
             'fir_exit_points',
         ],
+        IntentionCodeSeeder::class => [
+            'intention_codes',
+        ],
     ];
 
     const OTHER_TABLES_TO_TRUNCATE = [
@@ -150,7 +153,6 @@ class DatabaseSeeder extends Seeder
         'missed_approach_notifications',
         'network_controller_positions',
         'controller_position_alternative_callsigns',
-        'intention_codes',
     ];
 
 

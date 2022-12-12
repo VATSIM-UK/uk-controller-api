@@ -4,11 +4,10 @@ namespace App\Filament\Resources\IntentionCodeResource\Pages;
 
 use App\Filament\Resources\IntentionCodeResource;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditIntentionCode extends EditRecord
+class ViewIntentionCode extends ViewRecord
 {
-    use MutatesIntentionCodes;
     use FillsIntentionCodeForms;
 
     protected static string $resource = IntentionCodeResource::class;
@@ -16,12 +15,7 @@ class EditIntentionCode extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make(),
         ];
-    }
-
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        return $this->mutateIntentionCode($data);
     }
 }
