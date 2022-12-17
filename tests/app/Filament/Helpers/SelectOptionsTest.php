@@ -9,6 +9,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
+use App\Models\IntentionCode\FirExitPoint;
 use App\Models\Runway\Runway;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         parent::setUp();
         SelectOptions::clearAllCaches();
         DB::table('sid')->update(['handoff_id' => null]);
+        DB::table('fir_exit_points')->delete();
     }
 
     public function testItGetsAndCachesAircraftTypes()
@@ -41,7 +43,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ]);
 
         Cache::forever('SELECT_OPTIONS_AIRCRAFT_TYPES', $expected);
-        Aircraft::withoutEvents(function () {
+        Aircraft::withoutEvents(function ()
+        {
             Aircraft::where('id', 1)->firstOrFail()->update(['code' => 'B744']);
         });
 
@@ -113,7 +116,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ]);
 
         Cache::forever('SELECT_OPTIONS_AIRFIELDS', $expected);
-        Airfield::withoutEvents(function () {
+        Airfield::withoutEvents(function ()
+        {
             Airfield::where('id', 1)->firstOrFail()->update(['code' => 'EGLK']);
         });
 
@@ -190,7 +194,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ]);
 
         Cache::forever('SELECT_OPTIONS_AIRLINES', $expected);
-        Airline::withoutEvents(function () {
+        Airline::withoutEvents(function ()
+        {
             Airline::where('id', 1)->firstOrFail()->update(['icao_code' => 'LOL']);
         });
 
@@ -273,7 +278,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ]);
 
         Cache::forever('SELECT_OPTIONS_CONTROLLER_POSITIONS', $expected);
-        ControllerPosition::withoutEvents(function () {
+        ControllerPosition::withoutEvents(function ()
+        {
             ControllerPosition::where('id', 1)->firstOrFail()->update(['callsign' => 'LOL']);
         });
 
@@ -351,7 +357,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ]);
 
         Cache::forever('SELECT_OPTIONS_HANDOFFS', $expected);
-        Handoff::withoutEvents(function () {
+        Handoff::withoutEvents(function ()
+        {
             Handoff::where('id', 1)->firstOrFail()->update(['description' => 'LOL']);
         });
 
@@ -426,7 +433,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ]);
 
         Cache::forever('SELECT_OPTIONS_WAKE_SCHEMES', $expected);
-        WakeCategoryScheme::withoutEvents(function () {
+        WakeCategoryScheme::withoutEvents(function ()
+        {
             WakeCategoryScheme::where('id', 1)->firstOrFail()->update(['name' => 'LOL']);
         });
 
@@ -496,14 +504,15 @@ class SelectOptionsTest extends BaseFunctionalTestCase
     {
         $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
         Airfield::findOrFail(1)->firstOrFail()->update(['handoff_id' => $airfieldHandoff->id]);
-        
+
         $expected = collect([
             1 => 'foo',
             2 => 'bar',
         ]);
 
         Cache::forever('SELECT_OPTIONS_NON_AIRFIELD_HANDOFFS', $expected);
-        Handoff::withoutEvents(function () {
+        Handoff::withoutEvents(function ()
+        {
             Handoff::where('id', 1)->firstOrFail()->update(['description' => 'LOL']);
         });
 
@@ -517,7 +526,7 @@ class SelectOptionsTest extends BaseFunctionalTestCase
 
         $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
         Airfield::findOrFail(1)->firstOrFail()->update(['handoff_id' => $airfieldHandoff->id]);
-        
+
         $expected = collect([
             1 => 'foo',
         ]);
@@ -534,7 +543,7 @@ class SelectOptionsTest extends BaseFunctionalTestCase
 
         $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
         Airfield::findOrFail(1)->firstOrFail()->update(['handoff_id' => $airfieldHandoff->id]);
-        
+
         $newHandoff = Handoff::create(['description' => 'lol']);
 
         $expected = collect([
@@ -554,7 +563,7 @@ class SelectOptionsTest extends BaseFunctionalTestCase
 
         $airfieldHandoff = Handoff::create(['description' => 'Airfield handoff']);
         Airfield::findOrFail(1)->firstOrFail()->update(['handoff_id' => $airfieldHandoff->id]);
-        
+
         $expected = collect([
             1 => 'lol',
             2 => 'bar',
@@ -586,7 +595,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         ]);
 
         Cache::forever('SELECT_OPTIONS_RUNWAYS', $expected);
-        Runway::withoutEvents(function () {
+        Runway::withoutEvents(function ()
+        {
             Runway::where('id', 1)->firstOrFail()->update(['identifier' => '23']);
         });
 
@@ -642,5 +652,191 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         Runway::where('id', 1)->firstOrFail()->update(['identifier' => '27R']);
         $this->assertEquals($expected, SelectOptions::runways());
         $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_RUNWAYS'));
+    }
+
+    public function testItGetsAndCachesFirExitPoints()
+    {
+        $point1 = FirExitPoint::create(
+            [
+                'exit_point' => 'FOO',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $point2 = FirExitPoint::create(
+            [
+                'exit_point' => 'BAR',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $point3 = FirExitPoint::create(
+            [
+                'exit_point' => 'BAZ',
+                'internal' => true,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $expected = collect([
+            $point1->id => 'FOO',
+            $point2->id => 'BAR',
+            $point3->id => 'BAZ (Internal)',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::firExitPoints());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_FIR_EXIT_POINTS'));
+    }
+
+    public function testItGetsCachedFirExitPointsWithoutQuerying()
+    {
+        $point1 = FirExitPoint::create(
+            [
+                'exit_point' => 'FOO',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $point2 = FirExitPoint::create(
+            [
+                'exit_point' => 'BAR',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $point3 = FirExitPoint::create(
+            [
+                'exit_point' => 'BAZ',
+                'internal' => true,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $expected = collect([
+            $point1->id => 'FOO',
+            $point2->id => 'BAR',
+            $point3->id => 'BAZ (Internal)',
+        ]);
+
+        Cache::forever('SELECT_OPTIONS_FIR_EXIT_POINTS', $expected);
+        FirExitPoint::withoutEvents(function () use ($point1)
+        {
+            FirExitPoint::where('id', $point1->id)->firstOrFail()->update(['exit_point' => 'LOL']);
+        });
+
+        $this->assertEquals($expected, SelectOptions::firExitPoints());
+    }
+
+    public function testDeletingAFirExitPointRebuildsTheCache()
+    {
+        $point1 = FirExitPoint::create(
+            [
+                'exit_point' => 'FOO',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $point2 = FirExitPoint::create(
+            [
+                'exit_point' => 'BAR',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        // Get options to build the cache.
+        SelectOptions::firExitPoints();
+
+        $expected = collect([
+            $point1->id => 'FOO',
+        ]);
+
+        FirExitPoint::findOrFail($point2->id)->delete();
+        $this->assertEquals($expected, SelectOptions::firExitPoints());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_FIR_EXIT_POINTS'));
+    }
+
+    public function testCreatingAnExitPointRebuildsTheCache()
+    {
+        $point1 = FirExitPoint::create(
+            [
+                'exit_point' => 'FOO',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $point2 = FirExitPoint::create(
+            [
+                'exit_point' => 'BAR',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+
+        // Get options to build the cache.
+        SelectOptions::firExitPoints();
+
+        $point = FirExitPoint::findOrFail($point1->id);
+        $newPoint = $point->replicate();
+        $newPoint->exit_point = 'LOL';
+        $newPoint->save();
+
+        $expected = collect([
+            $point1->id => 'FOO',
+            $point2->id => 'BAR',
+            $newPoint->id => 'LOL',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::firExitPoints());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_FIR_EXIT_POINTS'));
+    }
+
+    public function testUpdatingAnExitPointRebuildsTheCache()
+    {
+        $point1 = FirExitPoint::create(
+            [
+                'exit_point' => 'FOO',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        $point2 = FirExitPoint::create(
+            [
+                'exit_point' => 'BAR',
+                'internal' => false,
+                'exit_direction_start' => 0,
+                'exit_direction_end' => 1,
+            ]
+        );
+
+        // Get options to build the cache.
+        SelectOptions::firExitPoints();
+        $expected = collect([
+            $point1->id => 'FOO',
+            $point2->id => 'LOL',
+        ]);
+
+        FirExitPoint::where('id', $point2->id)->firstOrFail()->update(['exit_point' => 'LOL']);
+        $this->assertEquals($expected, SelectOptions::firExitPoints());
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_FIR_EXIT_POINTS'));
     }
 }

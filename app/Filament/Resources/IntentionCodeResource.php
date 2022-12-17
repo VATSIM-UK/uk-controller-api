@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\IntentionCodeResource\Pages;
 use App\Models\IntentionCode\ConditionType;
 use App\Models\IntentionCode\FirExitPoint;
@@ -159,10 +160,7 @@ class IntentionCodeResource extends Resource
                             ->helperText(self::translateFormPath('conditions.exit_point.helper'))
                             ->required()
                             ->searchable()
-                            ->options(
-                                FirExitPoint::all()
-                                    ->mapWithKeys(fn(FirExitPoint $firExitPoint) => [$firExitPoint->id => $firExitPoint->exit_point])
-                            )
+                            ->options(SelectOptions::firExitPoints())
 
                     ]),
                 Block::make(ConditionType::MaximumCruisingLevel->value)
