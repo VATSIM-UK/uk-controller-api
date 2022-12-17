@@ -4,6 +4,21 @@ return [
     'code_spec' => [
         'label' => 'Code Specification',
     ],
+    'priority' => [
+        'label' => 'Priority',
+    ],
+    'order_type' => [
+        'label' => 'Type',
+        'helper' => 'The method to determine order.',
+    ],
+    'position' => [
+        'label' => 'Position',
+        'helper' => 'Integer position in the priority.',
+    ],
+    'before_after_position' => [
+        'label' => 'Position',
+        'helper' => 'The position in the order to insert relative to.',
+    ],
     'code_type' => [
         'label' => 'Code Type',
         'helper' => 'Can either be a set code, or the last two characters of the airfield identifier.'

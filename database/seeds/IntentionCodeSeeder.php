@@ -19,7 +19,7 @@ class IntentionCodeSeeder extends Seeder
                         'airfields' => ['EGLL'],
                     ],
                 ],
-                'priority' => 55,
+                'priority' => 1,
             ]
         );
     }

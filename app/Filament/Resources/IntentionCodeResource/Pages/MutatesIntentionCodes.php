@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\IntentionCodeResource\Pages;
 
 use App\Models\IntentionCode\ConditionType;
+use App\Models\IntentionCode\IntentionCode;
 
 trait MutatesIntentionCodes
 {
@@ -12,7 +13,7 @@ trait MutatesIntentionCodes
             ...$this->mutateId($data),
             'code' => $this->mutateCode($data),
             'conditions' => $this->mutateConditions($data),
-            'priority' => rand(0, 9999999),
+            'priority' => $this->mutatePriority($data),
         ];
     }
 
@@ -105,5 +106,20 @@ trait MutatesIntentionCodes
         return [
             'conditions' => $this->mutateConditions($condition['data']),
         ];
+    }
+
+    private function mutatePriority(array $data): int
+    {
+        return match ($data['order_type']) {
+            'at_position' => $this->getFixedInsertPosition((int) $data['position']),
+            'before' => IntentionCode::findOrFail($data['insert_position'])->priority,
+            'after' => IntentionCode::findOrFail($data['insert_position'])->priority + 1,
+        };
+    }
+
+    private function getFixedInsertPosition(int $position): int
+    {
+        $maxInsertPosition = IntentionCode::max('priority') + 1;
+        return $position > $maxInsertPosition ? $maxInsertPosition : $position;
     }
 }

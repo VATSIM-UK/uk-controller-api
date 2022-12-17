@@ -33,12 +33,12 @@ class IntentionCodeFactory extends Factory
         return [
             'code' => [
                 'type' => 'single_code',
-                'code' => $this->faker->unique()->randomElement(self::CODES),
+                'code' => $this->faker->randomElement(self::CODES),
             ],
             'conditions' => [
-                $this->faker->unique()->randomElement(self::CONDITIONS)
+                $this->faker->randomElement(self::CONDITIONS)
             ],
-            'priority' => $this->faker->unique()->numberBetween(0, 999),
+            'priority' => $this->faker->unique()->numberBetween(0, 99999),
         ];
     }
 }

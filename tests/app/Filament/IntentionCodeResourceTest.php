@@ -328,11 +328,65 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(2, $code->priority);
+    }
+
+    public function testCreatingTheCodeWithPositionBefore()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'before')
+            ->set('data.insert_position', 1)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $code = IntentionCode::latest('id')->firstOrFail();
+        $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(1, $code->priority);
+    }
+
+    public function testCreatingTheCodeWithPositionAfter()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'after')
+            ->set('data.insert_position', 1)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $code = IntentionCode::latest('id')->firstOrFail();
+        $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(2, $code->priority);
+    }
+
+    public function testCreatingTheCodeWithPositionHigherThanMaxBringsItBackToTheTop()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $code = IntentionCode::latest('id')->firstOrFail();
+        $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(2, $code->priority);
     }
 
     public function testItDoesntCreateCodeIfNoCodeTypeSelected()
@@ -341,8 +395,83 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors(['data.code_type']);
+    }
+
+    public function testItDoesntCreateCodeIfNoOrderType()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->call('create')
+            ->assertHasErrors('data.order_type');
+    }
+
+    public function testItDoesntCreateCodeIfNoOrderPosition()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->call('create')
+            ->assertHasErrors('data.position');
+    }
+
+    public function testItDoesntCreateCodeIfOrderPositionLowerThan1()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 0)
+            ->call('create')
+            ->assertHasErrors('data.position');
+    }
+
+    public function testItDoesntCreateCodeIfPositionNotInteger()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 'abc')
+            ->call('create')
+            ->assertHasErrors('data.position');
+    }
+
+    public function testItDoesntCreateCodeIfPositionBeforeNotSpecified()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'before')
+            ->call('create')
+            ->assertHasErrors('data.insert_position');
+    }
+
+    public function testItDoesntCreateCodeIfPositionAfterNotSpecified()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'after')
+            ->call('create')
+            ->assertHasErrors('data.insert_position');
     }
 
     public function testItCreatesASingleCodeCode()
@@ -352,10 +481,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals(['type' => 'single_code', 'code' => 'A1'], $code->code);
     }
 
@@ -365,6 +496,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'single_code')
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.single_code');
     }
@@ -376,6 +509,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', 'A12')
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.single_code');
     }
@@ -387,10 +522,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'arrival_airfields', 'airfields' => ['EGLL', 'EGKK']]], $code->conditions);
     }
 
@@ -401,6 +538,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL@@@'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.airfields.0.airfield');
     }
@@ -412,6 +551,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.airfields');
     }
@@ -423,10 +564,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
             ->set('data.conditions.0.data.pattern', 'EGP')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'arrival_airfield_pattern', 'pattern' => 'EGP']], $code->conditions);
     }
 
@@ -437,6 +580,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
             ->set('data.conditions.0.data.pattern', 'X@@@@')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.pattern');
     }
@@ -447,6 +592,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.pattern');
     }
@@ -458,10 +605,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'exit_point')
             ->set('data.conditions.0.data.exit_point', 1)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'exit_point', 'exit_point' => 1]], $code->conditions);
     }
 
@@ -471,6 +620,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'exit_point')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.exit_point');
     }
@@ -482,10 +633,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
             ->set('data.conditions.0.data.maximum_cruising_level', 5000)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'maximum_cruising_level', 'level' => 5000]], $code->conditions);
     }
 
@@ -495,6 +648,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.maximum_cruising_level');
     }
@@ -506,6 +661,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
             ->set('data.conditions.0.data.maximum_cruising_level', 999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.maximum_cruising_level');
     }
@@ -517,6 +674,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
             ->set('data.conditions.0.data.maximum_cruising_level', 999999999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.maximum_cruising_level');
     }
@@ -528,10 +687,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
             ->set('data.conditions.0.data.cruising_level_above', 5000)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'cruising_level_above', 'level' => 5000]], $code->conditions);
     }
 
@@ -541,6 +702,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.cruising_level_above');
     }
@@ -552,6 +715,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
             ->set('data.conditions.0.data.cruising_level_above', 999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.cruising_level_above');
     }
@@ -563,6 +728,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
             ->set('data.conditions.0.data.cruising_level_above', 999999999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.cruising_level_above');
     }
@@ -575,10 +742,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'routing_via')
             ->set('data.conditions.0.data.routing_via', 'TEST')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'routing_via', 'point' => 'TEST']], $code->conditions);
     }
 
@@ -588,6 +757,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'routing_via')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.routing_via');
     }
@@ -599,6 +770,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'routing_via')
             ->set('data.conditions.0.data.routing_via', 'TESTTTT')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.routing_via');
     }
@@ -610,10 +783,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'controller_position_starts_with')
             ->set('data.conditions.0.data.controller_position_starts_with', 'TEST')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'controller_position_starts_with', 'starts_with' => 'TEST']], $code->conditions);
     }
 
@@ -624,6 +799,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'controller_position_starts_with')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.controller_position_starts_with');
     }
@@ -635,6 +812,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'controller_position_starts_with')
             ->set('data.conditions.0.data.controller_position_starts_with', 'EG@@')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.controller_position_starts_with');
     }
@@ -646,10 +825,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'not')
             ->set('data.conditions.0.data.conditions', [['type' => 'controller_position_starts_with', 'data' => ['controller_position_starts_with' => 'EGP']]])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'not', 'conditions' => [['type' => 'controller_position_starts_with', 'starts_with' => 'EGP']]]], $code->conditions);
     }
 
@@ -659,6 +840,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'not')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.conditions');
     }
@@ -670,10 +853,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'any_of')
             ->set('data.conditions.0.data.conditions', [['type' => 'controller_position_starts_with', 'data' => ['controller_position_starts_with' => 'EGP']]])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'any_of', 'conditions' => [['type' => 'controller_position_starts_with', 'starts_with' => 'EGP']]]], $code->conditions);
     }
 
@@ -683,6 +868,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'any_of')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.conditions');
     }
@@ -694,10 +881,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'all_of')
             ->set('data.conditions.0.data.conditions', [['type' => 'controller_position_starts_with', 'data' => ['controller_position_starts_with' => 'EGP']]])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'all_of', 'conditions' => [['type' => 'controller_position_starts_with', 'starts_with' => 'EGP']]]], $code->conditions);
     }
 
@@ -709,6 +898,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'all_of')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('create')
             ->assertHasErrors('data.conditions.0.data.conditions');
     }
@@ -1044,11 +1235,413 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(2, $code->priority);
+    }
+
+    public function testEditsTheCodeWithPositionBefore()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 4,
+            ]
+        );
+
+        IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGS',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGG',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 3,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'before')
+            ->set('data.insert_position', 1)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $code = IntentionCode::findOrFail($code->id);
+        $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(1, $code->priority);
+    }
+
+    public function testEditsTheCodeWithPositionAfter()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 4,
+            ]
+        );
+
+        IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 3,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'after')
+            ->set('data.insert_position', 1)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $code = IntentionCode::findOrFail($code->id);
+        $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(2, $code->priority);
+    }
+
+    public function testEditsTheCodeWithPositionHigherThanMaxBringsItBackToTheTop()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $code = IntentionCode::latest('id')->firstOrFail();
+        $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals(2, $code->priority);
+    }
+
+    public function testItDoesntEditCodeIfNoOrderType()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', null)
+            ->call('save')
+            ->assertHasErrors('data.order_type');
+    }
+
+    public function testItDoesntEditCodeIfNoOrderPosition()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', null)
+            ->call('save')
+            ->assertHasErrors('data.position');
+    }
+
+    public function testItDoesntEditCodeIfOrderPositionLowerThan1()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 0)
+            ->call('save')
+            ->assertHasErrors('data.position');
+    }
+
+    public function testItDoesntEditCodeIfPositionNotInteger()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 'abc')
+            ->call('save')
+            ->assertHasErrors('data.position');
+    }
+
+    public function testItDoesntEditCodeIfPositionBeforeNotSpecified()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'before')
+            ->call('save')
+            ->assertHasErrors('data.insert_position');
+    }
+
+    public function testItDoesntEditCodeIfPositionAfterNotSpecified()
+    {
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.code_type', 'single_code')
+            ->set('data.single_code', 'A1')
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'after')
+            ->call('save')
+            ->assertHasErrors('data.insert_position');
     }
 
     public function testItDoesntEditCodeIfNoCodeTypeSelected()
@@ -1079,6 +1672,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.code_type', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors(['data.code_type']);
     }
@@ -1111,10 +1706,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals(['type' => 'single_code', 'code' => 'A1'], $code->code);
     }
 
@@ -1146,6 +1743,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.single_code');
     }
@@ -1178,6 +1777,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', 'A12')
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.single_code');
     }
@@ -1211,10 +1812,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
 
         $this->assertEquals([['type' => 'arrival_airfields', 'airfields' => ['EGLL', 'EGKK']]], $code->conditions);
     }
@@ -1248,6 +1851,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL@@@'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.airfields.0.airfield');
     }
@@ -1281,6 +1886,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.airfields');
     }
@@ -1314,10 +1921,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
             ->set('data.conditions.0.data.pattern', 'EGP')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'arrival_airfield_pattern', 'pattern' => 'EGP']], $code->conditions);
     }
 
@@ -1350,6 +1959,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
             ->set('data.conditions.0.data.pattern', 'X@@@@')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.pattern');
     }
@@ -1382,6 +1993,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.pattern');
     }
@@ -1415,10 +2028,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'exit_point')
             ->set('data.conditions.0.data.exit_point', 1)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'exit_point', 'exit_point' => 1]], $code->conditions);
     }
 
@@ -1450,6 +2065,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'exit_point')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.exit_point');
     }
@@ -1483,10 +2100,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'maximum_cruising_level')
             ->set('data.conditions.0.data.maximum_cruising_level', 5000)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'maximum_cruising_level', 'level' => 5000]], $code->conditions);
     }
 
@@ -1518,6 +2137,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'maximum_cruising_level')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.maximum_cruising_level');
     }
@@ -1551,6 +2172,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'maximum_cruising_level')
             ->set('data.conditions.0.data.maximum_cruising_level', 999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.maximum_cruising_level');
     }
@@ -1584,6 +2207,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'maximum_cruising_level')
             ->set('data.conditions.0.data.maximum_cruising_level', 999999999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.maximum_cruising_level');
     }
@@ -1617,10 +2242,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'cruising_level_above')
             ->set('data.conditions.0.data.cruising_level_above', 5000)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'cruising_level_above', 'level' => 5000]], $code->conditions);
     }
 
@@ -1652,6 +2279,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'cruising_level_above')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.cruising_level_above');
     }
@@ -1685,6 +2314,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'cruising_level_above')
             ->set('data.conditions.0.data.cruising_level_above', 999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.cruising_level_above');
     }
@@ -1718,6 +2349,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'cruising_level_above')
             ->set('data.conditions.0.data.cruising_level_above', 999999999)
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.cruising_level_above');
     }
@@ -1752,10 +2385,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'routing_via')
             ->set('data.conditions.0.data.routing_via', 'TEST')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'routing_via', 'point' => 'TEST']], $code->conditions);
     }
 
@@ -1787,6 +2422,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'routing_via')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.routing_via');
     }
@@ -1820,6 +2457,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'routing_via')
             ->set('data.conditions.0.data.routing_via', 'TESTTTT')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.routing_via');
     }
@@ -1853,10 +2492,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'controller_position_starts_with')
             ->set('data.conditions.0.data.controller_position_starts_with', 'TEST')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'controller_position_starts_with', 'starts_with' => 'TEST']], $code->conditions);
     }
 
@@ -1889,6 +2530,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'controller_position_starts_with')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.controller_position_starts_with');
     }
@@ -1922,6 +2565,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'controller_position_starts_with')
             ->set('data.conditions.0.data.controller_position_starts_with', 'EG@@')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.controller_position_starts_with');
     }
@@ -1955,10 +2600,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'not')
             ->set('data.conditions.0.data.conditions', [['type' => 'controller_position_starts_with', 'data' => ['controller_position_starts_with' => 'EGP']]])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'not', 'conditions' => [['type' => 'controller_position_starts_with', 'starts_with' => 'EGP']]]], $code->conditions);
     }
 
@@ -1990,6 +2637,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'not')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.conditions');
     }
@@ -2023,10 +2672,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'any_of')
             ->set('data.conditions.0.data.conditions', [['type' => 'controller_position_starts_with', 'data' => ['controller_position_starts_with' => 'EGP']]])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'any_of', 'conditions' => [['type' => 'controller_position_starts_with', 'starts_with' => 'EGP']]]], $code->conditions);
     }
 
@@ -2058,6 +2709,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'any_of')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.conditions');
     }
@@ -2091,10 +2744,12 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'all_of')
             ->set('data.conditions.0.data.conditions', [['type' => 'controller_position_starts_with', 'data' => ['controller_position_starts_with' => 'EGP']]])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasNoErrors();
 
-        $code = IntentionCode::latest()->firstOrFail();
+        $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals([['type' => 'all_of', 'conditions' => [['type' => 'controller_position_starts_with', 'starts_with' => 'EGP']]]], $code->conditions);
     }
 
@@ -2128,6 +2783,8 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->set('data.single_code', null)
             ->set('data.conditions', [])
             ->set('data.conditions.0.type', 'all_of')
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
             ->call('save')
             ->assertHasErrors('data.conditions.0.data.conditions');
     }

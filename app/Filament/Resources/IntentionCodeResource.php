@@ -28,7 +28,6 @@ class IntentionCodeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = IntentionCode::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-code';
     protected static ?string $navigationGroup = 'Intention Codes';
 
@@ -55,9 +54,33 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('single_code.label'))
                             ->helperText(self::translateFormPath('single_code.helper'))
                     ]),
-                Select::make('insert_before')
-                    ->options(fn() => IntentionCode::all()->mapWithKeys(fn(IntentionCode $code) => [$code->id => self::formatCodeColumn($code)])
-                    ),
+                Fieldset::make('priority')
+                    ->label(self::translateFormPath('priority.label'))
+                    ->schema([
+                        Select::make('order_type')
+                            ->reactive()
+                            ->required()
+                            ->label(self::translateFormPath('order_type.label'))
+                            ->helperText(self::translateFormPath('order_type.helper'))
+                            ->options([
+                                'at_position' => 'At Position',
+                                'before' => 'Insert Before',
+                                'after' => 'Insert After',
+                            ]),
+                        TextInput::make('position')
+                            ->numeric()
+                            ->minValue(1)
+                            ->label(self::translateFormPath('position.label'))
+                            ->helperText(self::translateFormPath('position.helper'))
+                            ->hidden(fn(Closure $get) => $get('order_type') !== 'at_position')
+                            ->required(fn(Closure $get) => $get('order_type') === 'at_position'),
+                        Select::make('insert_position')
+                            ->label(self::translateFormPath('before_after_position.label'))
+                            ->helperText(self::translateFormPath('before_after_position.helper'))
+                            ->hidden(fn(Closure $get) => !in_array($get('order_type'), ['before', 'after']))
+                            ->required(fn(Closure $get) => in_array($get('order_type'), ['before', 'after']))
+                            ->options(fn() => IntentionCode::all()->mapWithKeys(fn(IntentionCode $code) => [$code->id => self::formatCodeColumn($code)])),
+                    ]),
                 Section::make(self::translateFormPath('conditions.conditions.label'))->schema([self::conditions()]),
             ]);
     }
