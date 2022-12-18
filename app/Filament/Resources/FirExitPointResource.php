@@ -3,15 +3,19 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FirExitPointResource\Pages;
+use App\Models\IntentionCode\ConditionType;
 use App\Models\IntentionCode\FirExitPoint;
+use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Heading\ValidHeading;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 
@@ -74,8 +78,46 @@ class FirExitPointResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->before(function (DeleteAction $action)
+                    {
+                        $hasIntentionCodes = IntentionCode::all()
+                            ->filter(fn(IntentionCode $intentionCode) => self::hasExitPointCondition($intentionCode->conditions, $action->getRecord()))
+                            ->isNotEmpty();
+
+                        if ($hasIntentionCodes) {
+                            Notification::make('cannot-delete-exit-point')
+                                ->warning()
+                                ->title('Exit point cannot be deleted')
+                                ->body('This exit point has intention codes associated with it.')
+                                ->persistent()
+                                ->send();
+                            $action->cancel();
+                        }
+                    }),
             ]);
+    }
+
+    private static function hasExitPointCondition(array $conditions, FirExitPoint $exitPoint): bool
+    {
+        foreach ($conditions as $condition) {
+            if (
+                ConditionType::from($condition['type']) === ConditionType::ExitPoint &&
+                $condition['exit_point'] === $exitPoint->id
+            ) {
+                return true;
+            }
+
+            if (
+                +
+                in_array(ConditionType::from($condition['type']), [ConditionType::AllOf, ConditionType::AnyOf, ConditionType::Not]) &&
+                self::hasExitPointCondition($condition['conditions'], $exitPoint)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function getPages(): array

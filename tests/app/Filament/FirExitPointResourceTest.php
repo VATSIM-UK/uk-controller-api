@@ -7,6 +7,7 @@ use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
 use App\Filament\Resources\FirExitPointResource;
 use App\Filament\Resources\FirExitPointResource\Pages\ManageFirExitPoints;
 use App\Models\IntentionCode\FirExitPoint;
+use App\Models\IntentionCode\IntentionCode;
 use Livewire\Livewire;
 
 class FirExitPointResourceTest extends BaseFilamentTestCase
@@ -336,6 +337,200 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                 ]
             )
             ->assertHasTableActionErrors(['exit_direction_end']);
+    }
+
+    public function testItDeletesExitPoints()
+    {
+        $point = FirExitPoint::create(
+            [
+                'exit_point' => 'TEST',
+                'internal' => true,
+                'exit_direction_start' => 123,
+                'exit_direction_end' => 234,
+            ]
+        );
+
+        Livewire::test(ManageFirExitPoints::class)
+            ->callTableAction(
+                'delete',
+                $point
+            )->assertOk();
+
+        $this->assertDatabaseMissing(
+            'fir_exit_points',
+            ['id' => $point->id]
+        );
+    }
+
+    public function testItDoesntDeletePointThatHasIntentionCodeAssociated()
+    {
+        $point = FirExitPoint::create(
+            [
+                'exit_point' => 'TEST',
+                'internal' => true,
+                'exit_direction_start' => 123,
+                'exit_direction_end' => 234,
+            ]
+        );
+
+        $code = IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'exit_point',
+                        'exit_point' => $point->id,
+                    ],
+                ],
+                'priority' => 99,
+            ]
+        );
+
+        Livewire::test(ManageFirExitPoints::class)
+            ->callTableAction(
+                'delete',
+                $point
+            );
+
+        $this->assertDatabaseHas(
+            'fir_exit_points',
+            ['id' => $point->id]
+        );
+    }
+
+    public function testItDoesntDeletePointThatHasIntentionCodeAssociatedInNotCondition()
+    {
+        $point = FirExitPoint::create(
+            [
+                'exit_point' => 'TEST',
+                'internal' => true,
+                'exit_direction_start' => 123,
+                'exit_direction_end' => 234,
+            ]
+        );
+
+        IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'not',
+                        'conditions' => [
+                            [
+                                'type' => 'exit_point',
+                                'exit_point' => $point->id,
+                            ],
+                        ],
+                    ],
+                ],
+                'priority' => 99,
+            ]
+        );
+
+        Livewire::test(ManageFirExitPoints::class)
+            ->callTableAction(
+                'delete',
+                $point
+            );
+
+        $this->assertDatabaseHas(
+            'fir_exit_points',
+            ['id' => $point->id]
+        );
+    }
+
+    public function testItDoesntDeletePointThatHasIntentionCodeAssociatedInAnyOfCondition()
+    {
+        $point = FirExitPoint::create(
+            [
+                'exit_point' => 'TEST',
+                'internal' => true,
+                'exit_direction_start' => 123,
+                'exit_direction_end' => 234,
+            ]
+        );
+
+        IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'exit_point',
+                                'exit_point' => $point->id,
+                            ],
+                        ],
+                    ],
+                ],
+                'priority' => 99,
+            ]
+        );
+
+        Livewire::test(ManageFirExitPoints::class)
+            ->callTableAction(
+                'delete',
+                $point
+            );
+
+        $this->assertDatabaseHas(
+            'fir_exit_points',
+            ['id' => $point->id]
+        );
+    }
+
+    public function testItDoesntDeletePointThatHasIntentionCodeAssociatedInAllOfCondition()
+    {
+        $point = FirExitPoint::create(
+            [
+                'exit_point' => 'TEST',
+                'internal' => true,
+                'exit_direction_start' => 123,
+                'exit_direction_end' => 234,
+            ]
+        );
+
+        IntentionCode::create(
+            [
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'all_of',
+                        'conditions' => [
+                            [
+                                'type' => 'exit_point',
+                                'exit_point' => $point->id,
+                            ],
+                        ],
+                    ],
+                ],
+                'priority' => 99,
+            ]
+        );
+
+        Livewire::test(ManageFirExitPoints::class)
+            ->callTableAction(
+                'delete',
+                $point
+            );
+
+        $this->assertDatabaseHas(
+            'fir_exit_points',
+            ['id' => $point->id]
+        );
     }
 
     protected function getCreateText(): string
