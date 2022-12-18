@@ -10,6 +10,7 @@ trait FillsIntentionCodeForms
     {
         return [
             'id' => $data['id'],
+            'description' => $data['description'],
             'code_type' => $data['code']['type'],
             'single_code' => $data['code']['type'] === 'single_code' ? $data['code']['code'] : null,
             'conditions' => $this->fillConditions($data['conditions']),

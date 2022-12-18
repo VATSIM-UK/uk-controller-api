@@ -7,6 +7,10 @@ return [
     'priority' => [
         'label' => 'Priority',
     ],
+        'description' => [
+        'label' => 'Description',
+        'helper' => 'Description of the intention code.',
+    ],
     'order_type' => [
         'label' => 'Type',
         'helper' => 'The method to determine order.',

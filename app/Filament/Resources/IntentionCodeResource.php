@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\IntentionCodeResource\Pages;
 use App\Models\IntentionCode\ConditionType;
-use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Airfield\PartialAirfieldIcao;
@@ -36,6 +35,11 @@ class IntentionCodeResource extends Resource
     {
         return $form
             ->schema([
+                        TextInput::make('description')
+                            ->required()
+                            ->maxLength(255)
+                                                        ->label(self::translateFormPath('description.label'))
+                            ->helperText(self::translateFormPath('description.helper')),
                 Fieldset::make('code_spec')
                     ->label(self::translateFormPath('code_spec.label'))
                     ->schema([
@@ -92,6 +96,8 @@ class IntentionCodeResource extends Resource
             ->columns([
                 TextColumn::make('priority')
                     ->label(self::translateTablePath('columns.priority')),
+                                    TextColumn::make('description')
+                    ->label(self::translateTablePath('columns.description')),
                 TextColumn::make('code')
                     ->formatStateUsing(fn(IntentionCode $record) => self::formatCodeColumn($record))
                     ->label(self::translateTablePath('columns.code')),

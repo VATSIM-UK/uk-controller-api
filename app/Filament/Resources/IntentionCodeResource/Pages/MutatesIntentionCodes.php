@@ -11,6 +11,7 @@ trait MutatesIntentionCodes
     {
         return [
             ...$this->mutateId($data),
+            'description' => $data['description'],
             'code' => $this->mutateCode($data),
             'conditions' => $this->mutateConditions($data),
             'priority' => $this->mutatePriority($data),

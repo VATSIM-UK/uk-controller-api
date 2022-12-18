@@ -9,6 +9,7 @@ class IntentionCodeSeeder extends Seeder
     {
         IntentionCode::create(
             [
+                'description' => 'A1 code',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',

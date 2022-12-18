@@ -31,6 +31,7 @@ class IntentionCodeFactory extends Factory
     public function definition(): array
     {
         return [
+            'description' => 'A desc',
             'code' => [
                 'type' => 'single_code',
                 'code' => $this->faker->randomElement(self::CODES),

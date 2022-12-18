@@ -22,6 +22,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'airfield_identifier',
                 ],
@@ -44,6 +45,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -68,6 +70,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 1, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -92,6 +95,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -116,6 +120,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -140,6 +145,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -164,6 +170,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -188,6 +195,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -212,6 +220,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -236,6 +245,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -266,6 +276,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -296,6 +307,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -324,6 +336,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesAnAirfieldIdentifierCode()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -334,6 +347,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->assertHasNoErrors();
 
         $code = IntentionCode::latest('id')->firstOrFail();
+        $this->assertEquals('A code', $code->description);
         $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
         $this->assertEquals(2, $code->priority);
     }
@@ -341,6 +355,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testCreatingTheCodeWithPositionBefore()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -358,6 +373,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testCreatingTheCodeWithPositionAfter()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -375,6 +391,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testCreatingTheCodeWithPositionHigherThanMaxBringsItBackToTheTop()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -389,9 +406,37 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         $this->assertEquals(2, $code->priority);
     }
 
+    public function testItDoesntCreateCodeIfDescriptionMissing()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
+            ->call('create')
+            ->assertHasErrors(['data.description']);
+    }
+
+    public function testItDoesntCreateCodeIfDescriptionTooLong()
+    {
+        Livewire::test(CreateIntentionCode::class)
+            ->set('data.description',Str::padRight('', 256, 'a'))
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
+            ->call('create')
+            ->assertHasErrors(['data.description']);
+    }
+
     public function testItDoesntCreateCodeIfNoCodeTypeSelected()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
@@ -404,6 +449,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateCodeIfNoOrderType()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -415,6 +461,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateCodeIfNoOrderPosition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -427,6 +474,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateCodeIfOrderPositionLowerThan1()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -440,6 +488,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateCodeIfPositionNotInteger()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -453,6 +502,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateCodeIfPositionBeforeNotSpecified()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -465,6 +515,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateCodeIfPositionAfterNotSpecified()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -477,6 +528,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASingleCodeCode()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -493,6 +545,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateSingleCodeIfNoCode()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.conditions.0.type', 'arrival_airfields')
             ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
@@ -505,6 +558,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateSingleCodeIfSingleCodeTooLong()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A12')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -518,6 +572,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithAnArrivalAirfieldsCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -534,6 +589,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithAirfieldsConditionIfAirfieldInvalid()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -547,6 +603,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithAirfieldsConditionIfNoAirfields()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -560,6 +617,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithAnArrivalAirfieldPatternCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
@@ -576,6 +634,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithAirfieldPatternConditionIfPatternInvalid()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
@@ -589,6 +648,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithAirfieldPatternConditionIfPatternMissing()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfield_pattern')
@@ -601,6 +661,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithAnExitPointCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'exit_point')
@@ -617,6 +678,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithExitPointConditionIfNoExitPoint()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'exit_point')
@@ -629,6 +691,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithAMaximumCruisingLevelCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
@@ -645,6 +708,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithMaximumCruisingLevelConditionIfLevelMissing()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
@@ -657,6 +721,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithMaximumCruisingLevelConditionIfLevelTooLow()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
@@ -670,6 +735,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithMaximumCruisingLevelConditionIfLevelTooHigh()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'maximum_cruising_level')
@@ -683,6 +749,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithACruisingLevelAboveCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
@@ -699,6 +766,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithCruisingLevelAboveConditionIfLevelMissing()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
@@ -711,6 +779,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithCruisingLevelAboveConditionIfLevelTooLow()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
@@ -724,6 +793,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithCruisingLevelAboveConditionIfLevelTooHigh()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'cruising_level_above')
@@ -738,6 +808,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithARoutingViaCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'routing_via')
@@ -754,6 +825,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithRoutingViaConditionIfNoVia()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'routing_via')
@@ -766,6 +838,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithRoutingViaConditionIfViaTooLong()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'routing_via')
@@ -779,6 +852,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithAControllerPositionStartsWithCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'controller_position_starts_with')
@@ -796,6 +870,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithControllerPositionStartsWithConditionIfWithMissing()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'controller_position_starts_with')
@@ -808,6 +883,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithControllerPositionStartsWithConditionIfWithInvalid()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'controller_position_starts_with')
@@ -821,6 +897,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithANotCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'not')
@@ -837,6 +914,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithANotConditionIfNoConditions()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'not')
@@ -849,6 +927,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithAnAnyOfCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'any_of')
@@ -865,6 +944,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithAnAnyOfConditionIfNoConditions()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'any_of')
@@ -877,6 +957,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesACodeWithAnAllOfCondition()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'all_of')
@@ -895,6 +976,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateWithAnAllOfConditionIfNoConditions()
     {
         Livewire::test(CreateIntentionCode::class)
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'all_of')
@@ -908,6 +990,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'airfield_identifier',
                 ],
@@ -930,6 +1013,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -954,6 +1038,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 1, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -978,6 +1063,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1002,6 +1088,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1026,6 +1113,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1050,6 +1138,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1074,6 +1163,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1098,6 +1188,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1122,6 +1213,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1152,6 +1244,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1182,6 +1275,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         Str::createUuidsUsingSequence([0, 0]);
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1211,6 +1305,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1231,6 +1326,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1245,10 +1341,84 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         $this->assertEquals(2, $code->priority);
     }
 
+    public function testItDoesntEditACodeIfDescriptionMissing()
+    {
+        $code = IntentionCode::create(
+            [
+                'description' => 'Foo',
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 99,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', null)
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
+            ->call('save')
+            ->assertHasErrors(['data.description']);
+    }
+
+
+    public function testItDoesntEditACodeIfDescriptionTooLong()
+    {
+        $code = IntentionCode::create(
+            [
+                'description' => 'Foo',
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'any_of',
+                        'conditions' => [
+                            [
+                                'type' => 'controller_position_starts_with',
+                                'starts_with' => 'EGP',
+                            ]
+                        ]
+                    ],
+                ],
+                'priority' => 99,
+            ]
+        );
+
+        Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description',Str::padRight('', 256, 'a'))
+            ->set('data.code_type', 'airfield_identifier')
+            ->set('data.single_code', null)
+            ->set('data.conditions.0.type', 'arrival_airfields')
+            ->set('data.conditions.0.data.airfields', [['airfield' => 'EGLL'], ['airfield' => 'EGKK']])
+            ->set('data.order_type', 'at_position')
+            ->set('data.position', 2)
+            ->call('save')
+            ->assertHasErrors(['data.description']);
+    }
+
     public function testEditsTheCodeWithPositionBefore()
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Some code',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1270,6 +1440,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
 
         IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1291,6 +1462,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
 
         IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1311,6 +1483,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'Some code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1322,6 +1495,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
 
         $code = IntentionCode::findOrFail($code->id);
         $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals('Some code', $code->description);
         $this->assertEquals(1, $code->priority);
     }
 
@@ -1329,6 +1503,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Some code',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1350,6 +1525,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
 
         IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1371,6 +1547,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
 
         IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1391,6 +1568,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'Some code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1401,7 +1579,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->assertHasNoErrors();
 
         $code = IntentionCode::findOrFail($code->id);
-        $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals('Some code', $code->description);
         $this->assertEquals(2, $code->priority);
     }
 
@@ -1409,6 +1587,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Some code',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1429,6 +1608,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'Some code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1440,6 +1620,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
 
         $code = IntentionCode::latest('id')->firstOrFail();
         $this->assertEquals(['type' => 'airfield_identifier'], $code->code);
+        $this->assertEquals('Some code', $code->description);
         $this->assertEquals(2, $code->priority);
     }
 
@@ -1447,6 +1628,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1467,6 +1649,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1480,6 +1663,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1500,6 +1684,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1514,6 +1699,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1534,6 +1720,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1548,6 +1735,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1568,6 +1756,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1582,6 +1771,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1602,6 +1792,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1615,6 +1806,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1635,6 +1827,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1648,6 +1841,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1668,6 +1862,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.single_code', null)
             ->set('data.code_type', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1682,6 +1877,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1702,6 +1898,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A1')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1719,6 +1916,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1739,6 +1937,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1753,6 +1952,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1773,6 +1973,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'single_code')
             ->set('data.single_code', 'A12')
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1787,6 +1988,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1807,6 +2009,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -1826,6 +2029,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1846,6 +2050,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -1861,6 +2066,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1881,6 +2087,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -1896,6 +2103,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1916,6 +2124,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -1934,6 +2143,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1954,6 +2164,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -1969,6 +2180,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -1989,6 +2201,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2003,6 +2216,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2023,6 +2237,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2041,6 +2256,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2061,6 +2277,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2075,6 +2292,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2095,6 +2313,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2113,6 +2332,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2133,6 +2353,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2147,6 +2368,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2167,6 +2389,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2182,6 +2405,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2202,6 +2426,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2217,6 +2442,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2237,6 +2463,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2255,6 +2482,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2275,6 +2503,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2289,6 +2518,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2309,6 +2539,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2324,6 +2555,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2344,6 +2576,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2360,6 +2593,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2380,6 +2614,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2398,6 +2633,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2418,6 +2654,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2432,6 +2669,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2452,6 +2690,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2467,6 +2706,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2487,6 +2727,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2506,6 +2747,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2526,6 +2768,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2540,6 +2783,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2560,6 +2804,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2575,6 +2820,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2595,6 +2841,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2613,6 +2860,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2633,6 +2881,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2647,6 +2896,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2667,6 +2917,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2685,6 +2936,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2705,6 +2957,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2719,6 +2972,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2739,6 +2993,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
@@ -2759,6 +3014,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     {
         $code = IntentionCode::create(
             [
+                'description' => 'Foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -2779,6 +3035,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
+            ->set('data.description', 'A code')
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions', [])
