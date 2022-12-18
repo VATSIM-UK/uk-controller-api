@@ -29,10 +29,19 @@ return new class extends Migration
 
                 $intentionCode->description = $intentionCode->code['type'] === 'airfield_identifier'
                     ? 'Home Airfields'
-                    : 'Code: ' . $intentionCode->code['code'];
+                    : $this->getCodeDescription($intentionCode->code['code'], $intentionCode->conditions);
 
                 $intentionCode->save();
             });
+    }
+
+    private function getCodeDescription(string $code, array $conditions): string
+    {
+        if ($conditions[0]['type'] !== 'exit_point') {
+            return $code;
+        }
+
+        return $code . ' (' . FirExitPoint::findOrFail($conditions[0]['exit_point'])->exit_point . ')';
     }
 
     /**
