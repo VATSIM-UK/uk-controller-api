@@ -373,8 +373,9 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $code = IntentionCode::create(
+        IntentionCode::create(
             [
+                'description' => 'foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -414,6 +415,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
 
         IntentionCode::create(
             [
+                'description' => 'foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -458,6 +460,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
 
         IntentionCode::create(
             [
+                'description' => 'foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
@@ -502,6 +505,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
 
         IntentionCode::create(
             [
+                'description' => 'foo',
                 'code' => [
                     'type' => 'single_code',
                     'code' => 'A1',
