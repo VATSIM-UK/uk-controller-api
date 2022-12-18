@@ -16,8 +16,7 @@ class IntentionCodeService
 
     public static function saveIntentionCode(IntentionCode $code, ?int $previousPriority = null): void
     {
-        DB::transaction(function () use ($code, $previousPriority)
-        {
+        DB::transaction(function () use ($code, $previousPriority) {
             if ($code->priority === $previousPriority) {
                 $code->save();
                 return;
@@ -28,8 +27,7 @@ class IntentionCodeService
                 IntentionCode::where('priority', '>=', $code->priority)
                     ->orderByDesc('priority')
                     ->each(
-                        function (IntentionCode $code)
-                        {
+                        function (IntentionCode $code) {
                             $code->update(['priority' => $code->priority + 1]);
                         }
                     );
@@ -49,8 +47,7 @@ class IntentionCodeService
                     ->where('priority', '>', $previousPriority)
                     ->orderBy('priority')
                     ->each(
-                        function (IntentionCode $code)
-                        {
+                        function (IntentionCode $code) {
                             $code->update(['priority' => $code->priority - 1]);
                         }
                     );
@@ -60,8 +57,7 @@ class IntentionCodeService
                     ->where('priority', '<', $previousPriority)
                     ->orderByDesc('priority')
                     ->each(
-                        function (IntentionCode $code)
-                        {
+                        function (IntentionCode $code) {
                             $code->update(['priority' => $code->priority + 1]);
                         }
                     );

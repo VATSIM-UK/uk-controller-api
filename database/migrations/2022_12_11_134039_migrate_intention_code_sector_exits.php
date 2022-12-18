@@ -4,8 +4,7 @@ use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,8 +13,7 @@ return new class extends Migration
     public function up()
     {
         IntentionCode::all()
-            ->each(function (IntentionCode $intentionCode)
-            {
+            ->each(function (IntentionCode $intentionCode) {
                 if ($intentionCode->conditions[0]['type'] === 'exit_point') {
                     $newConditions = $intentionCode->conditions;
                     $newConditions[0] = [

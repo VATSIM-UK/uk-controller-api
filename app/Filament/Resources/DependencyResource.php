@@ -35,11 +35,11 @@ class DependencyResource extends Resource
                 Action::make('download-dependency')
                     ->label(self::translateTablePath('actions.download.label'))
                     ->action(
-                        fn(Dependency $record) => response()
-                            ->streamDownload(function () use ($record) {
+                        fn (Dependency $record) => response()
+                            ->streamDownload(
+                                function () use ($record) {
                                 echo json_encode(DependencyService::fetchDependencyDataById($record->id));
-                            }
-                                ,
+                            },
                                 $record->local_file,
                                 ['Content-Type' => 'application/json']
                             )

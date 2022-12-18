@@ -30,8 +30,7 @@ class EditIntentionCode extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        return DB::transaction(function () use ($record, $data)
-        {
+        return DB::transaction(function () use ($record, $data) {
             return $this->saveIntentionCode($data, $record);
         });
     }

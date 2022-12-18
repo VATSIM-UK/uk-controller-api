@@ -17,7 +17,7 @@ return new class extends Migration {
         DependencyService::createDependency(
             self::DEPENDENCY_KEY,
             sprintf('%s@%s', FirExitPointService::class, 'getFirExitDependency'),
-        false,
+            false,
             'fir-exit-points.json',
             ['fir_exit_points']
         );

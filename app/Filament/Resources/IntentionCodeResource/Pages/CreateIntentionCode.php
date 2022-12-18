@@ -21,8 +21,7 @@ class CreateIntentionCode extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        return DB::transaction(function () use ($data)
-        {
+        return DB::transaction(function () use ($data) {
             return $this->saveIntentionCode($data);
         });
     }
