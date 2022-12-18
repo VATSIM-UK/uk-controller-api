@@ -37,15 +37,19 @@ trait MutatesIntentionCodes
         foreach ($data['conditions'] as $condition) {
             $mutatedConditions[] = [
                 'type' => $condition['type'],
-                ... match (ConditionType::from($condition['type'])) {
+                ...match (ConditionType::from($condition['type'])) {
                     ConditionType::ArrivalAirfields => $this->mutateArrivalAirfields($condition),
                     ConditionType::ArrivalAirfieldPattern => $this->mutateArrivalAirfieldPattern($condition),
                     ConditionType::ExitPoint => $this->mutateExitPoint($condition),
                     ConditionType::MaximumCruisingLevel => $this->mutateMaxLevel($condition),
                     ConditionType::CruisingLevelAbove => $this->mutateCruisingLevelAbove($condition),
                     ConditionType::RoutingVia => $this->mutateRoutingVia($condition),
-                    ConditionType::ControllerPositionStartsWith => $this->mutateControllerPositionStartsWith($condition),
-                    ConditionType::Not, ConditionType::AnyOf, ConditionType::AllOf => $this->mutateNestedConditions($condition),
+                    ConditionType::ControllerPositionStartsWith => $this->mutateControllerPositionStartsWith(
+                        $condition
+                    ),
+                    ConditionType::Not, ConditionType::AnyOf, ConditionType::AllOf => $this->mutateNestedConditions(
+                        $condition
+                    ),
                 }
             ];
         }
@@ -56,7 +60,7 @@ trait MutatesIntentionCodes
     private function mutateArrivalAirfields(array $condition): array
     {
         return [
-            'airfields' => array_map(fn (array $airfield) => $airfield['airfield'], $condition['data']['airfields']),
+            'airfields' => array_map(fn(array $airfield) => $airfield['airfield'], $condition['data']['airfields']),
         ];
     }
 

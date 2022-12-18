@@ -26,15 +26,19 @@ trait FillsIntentionCodeForms
             $filledConditions[] = [
                 'type' => $condition['type'],
                 'data' => [
-                    ... match (ConditionType::from($condition['type'])) {
+                    ...match (ConditionType::from($condition['type'])) {
                         ConditionType::ArrivalAirfields => $this->fillArrivalAirfieldsCondition($condition),
                         ConditionType::ArrivalAirfieldPattern => $this->fillArrivalAirfieldPatternCondition($condition),
                         ConditionType::ExitPoint => $this->fillExitPointCondition($condition),
                         ConditionType::MaximumCruisingLevel => $this->fillMaximumCruisingLevelCondition($condition),
                         ConditionType::CruisingLevelAbove => $this->fillCruisingLevelAboveCondition($condition),
                         ConditionType::RoutingVia => $this->fillRoutingViaCondition($condition),
-                        ConditionType::ControllerPositionStartsWith => $this->fillControllerPositionStartsWithCondition($condition),
-                        ConditionType::Not, ConditionType::AnyOf, ConditionType::AllOf => $this->fillNestedCondition($condition),
+                        ConditionType::ControllerPositionStartsWith => $this->fillControllerPositionStartsWithCondition(
+                            $condition
+                        ),
+                        ConditionType::Not, ConditionType::AnyOf, ConditionType::AllOf => $this->fillNestedCondition(
+                            $condition
+                        ),
                     }
                 ],
             ];
@@ -47,7 +51,7 @@ trait FillsIntentionCodeForms
     {
         return [
             'airfields' => array_map(
-                fn (string $airfield) => ['airfield' => $airfield],
+                fn(string $airfield) => ['airfield' => $airfield],
                 $condition['airfields']
             ),
         ];

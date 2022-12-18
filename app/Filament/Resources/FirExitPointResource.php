@@ -79,9 +79,15 @@ class FirExitPointResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->before(function (DeleteAction $action) {
+                    ->before(function (DeleteAction $action)
+                    {
                         $hasIntentionCodes = IntentionCode::all()
-                            ->filter(fn (IntentionCode $intentionCode) => self::hasExitPointCondition($intentionCode->conditions, $action->getRecord()))
+                            ->filter(
+                                fn(IntentionCode $intentionCode) => self::hasExitPointCondition(
+                                    $intentionCode->conditions,
+                                    $action->getRecord()
+                                )
+                            )
                             ->isNotEmpty();
 
                         if ($hasIntentionCodes) {
@@ -108,8 +114,10 @@ class FirExitPointResource extends Resource
             }
 
             if (
-                +
-                in_array(ConditionType::from($condition['type']), [ConditionType::AllOf, ConditionType::AnyOf, ConditionType::Not]) &&
+                in_array(
+                    ConditionType::from($condition['type']),
+                    [ConditionType::AllOf, ConditionType::AnyOf, ConditionType::Not]
+                ) &&
                 self::hasExitPointCondition($condition['conditions'], $exitPoint)
             ) {
                 return true;

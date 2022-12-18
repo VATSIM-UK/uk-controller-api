@@ -84,7 +84,11 @@ class IntentionCodeResource extends Resource
                             ->helperText(self::translateFormPath('before_after_position.helper'))
                             ->hidden(fn (Closure $get) => !in_array($get('order_type'), ['before', 'after']))
                             ->required(fn (Closure $get) => in_array($get('order_type'), ['before', 'after']))
-                            ->options(fn () => IntentionCode::all()->mapWithKeys(fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)])),
+                            ->options(
+                                fn () => IntentionCode::all()->mapWithKeys(
+                                    fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
+                                )
+                            ),
                     ]),
                 Section::make(self::translateFormPath('conditions.conditions.label'))->schema([self::conditions()]),
             ]);
