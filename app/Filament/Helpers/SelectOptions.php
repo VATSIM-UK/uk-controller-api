@@ -31,7 +31,8 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::AircraftTypes,
-            fn(): Collection => Aircraft::all()->mapWithKeys(fn(Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
+            fn (): Collection => Aircraft::all()->mapWithKeys(
+                fn (Aircraft $aircraft) => [$aircraft->id => $aircraft->code]
             )->toBase()
         );
     }
@@ -40,7 +41,8 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::Airfields,
-            fn(): Collection => Airfield::all()->mapWithKeys(fn(Airfield $airfield) => [$airfield->id => $airfield->code]
+            fn (): Collection => Airfield::all()->mapWithKeys(
+                fn (Airfield $airfield) => [$airfield->id => $airfield->code]
             )->toBase()
         );
     }
@@ -49,7 +51,8 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::Airlines,
-            fn(): Collection => Airline::all()->mapWithKeys(fn(Airline $airline) => [$airline->id => $airline->icao_code]
+            fn (): Collection => Airline::all()->mapWithKeys(
+                fn (Airline $airline) => [$airline->id => $airline->icao_code]
             )->toBase()
         );
     }
@@ -58,7 +61,8 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::ControllerPositions,
-            fn(): Collection => ControllerPosition::all()->mapWithKeys(fn(ControllerPosition $controller) => [$controller->id => $controller->callsign]
+            fn (): Collection => ControllerPosition::all()->mapWithKeys(
+                fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
             )->toBase()
         );
     }
@@ -67,7 +71,8 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::WakeSchemes,
-            fn(): Collection => WakeCategoryScheme::all()->mapWithKeys(fn(WakeCategoryScheme $scheme) => [$scheme->id => $scheme->name]
+            fn (): Collection => WakeCategoryScheme::all()->mapWithKeys(
+                fn (WakeCategoryScheme $scheme) => [$scheme->id => $scheme->name]
             )->toBase()
         );
     }
@@ -76,7 +81,8 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::Handoffs,
-            fn(): Collection => Handoff::all()->mapWithKeys(fn(Handoff $handoff) => [$handoff->id => $handoff->description]
+            fn (): Collection => Handoff::all()->mapWithKeys(
+                fn (Handoff $handoff) => [$handoff->id => $handoff->description]
             )->toBase()
         );
     }
@@ -85,9 +91,10 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::NonAirfieldHandoffs,
-            fn(): Collection => Handoff::whereDoesntHave('airfield')
+            fn (): Collection => Handoff::whereDoesntHave('airfield')
                 ->get()
-                ->mapWithKeys(fn(Handoff $handoff) => [$handoff->id => $handoff->description]
+                ->mapWithKeys(
+                    fn (Handoff $handoff) => [$handoff->id => $handoff->description]
                 )->toBase()
         );
     }
@@ -96,9 +103,10 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::Runways,
-            fn(): Collection => Runway::with('airfield')
+            fn (): Collection => Runway::with('airfield')
                 ->get()
-                ->mapWithKeys(fn(Runway $runway) => [
+                ->mapWithKeys(
+                    fn (Runway $runway) => [
                     $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
                 ]
                 )->toBase()
@@ -109,8 +117,9 @@ class SelectOptions
     {
         return self::getOptions(
             SelectOptionCacheKeys::FirExitPoints,
-            fn(): Collection => FirExitPoint::all()
-                ->mapWithKeys(fn(FirExitPoint $exitPoint) => [
+            fn (): Collection => FirExitPoint::all()
+                ->mapWithKeys(
+                    fn (FirExitPoint $exitPoint) => [
                     $exitPoint->id => sprintf(
                         '%s%s',
                         $exitPoint->exit_point,

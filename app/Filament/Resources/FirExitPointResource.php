@@ -79,11 +79,10 @@ class FirExitPointResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->before(function (DeleteAction $action)
-                    {
+                    ->before(function (DeleteAction $action) {
                         $hasIntentionCodes = IntentionCode::all()
                             ->filter(
-                                fn(IntentionCode $intentionCode) => self::hasExitPointCondition(
+                                fn (IntentionCode $intentionCode) => self::hasExitPointCondition(
                                     $intentionCode->conditions,
                                     $action->getRecord()
                                 )
