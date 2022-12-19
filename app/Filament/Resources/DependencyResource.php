@@ -38,8 +38,8 @@ class DependencyResource extends Resource
                         fn (Dependency $record) => response()
                             ->streamDownload(
                                 function () use ($record) {
-                                echo json_encode(DependencyService::fetchDependencyDataById($record->id));
-                            },
+                                    echo json_encode(DependencyService::fetchDependencyDataById($record->id));
+                                },
                                 $record->local_file,
                                 ['Content-Type' => 'application/json']
                             )
