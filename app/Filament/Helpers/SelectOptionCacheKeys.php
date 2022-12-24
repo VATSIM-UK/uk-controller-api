@@ -12,4 +12,6 @@ enum SelectOptionCacheKeys: string
     case NonAirfieldHandoffs = 'SELECT_OPTIONS_NON_AIRFIELD_HANDOFFS';
     case Runways = 'SELECT_OPTIONS_RUNWAYS';
     case WakeSchemes = 'SELECT_OPTIONS_WAKE_SCHEMES';
+
+    case FirExitPoints = 'SELECT_OPTIONS_FIR_EXIT_POINTS';
 }

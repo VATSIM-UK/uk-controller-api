@@ -76,6 +76,7 @@ class AppServiceProvider extends ServiceProvider
                     'Airfield',
                     'Controller',
                     'Enroute',
+                    'Intention Codes',
                     'Squawk Ranges',
                     'Plugin',
                     'Administration',

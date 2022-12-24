@@ -8,6 +8,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
+use App\Models\IntentionCode\FirExitPoint;
 use App\Models\Runway\Runway;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -20,6 +21,7 @@ class SelectOptions
         Airfield::class => [SelectOptionCacheKeys::Airfields],
         Airline::class => [SelectOptionCacheKeys::Airlines],
         ControllerPosition::class => [SelectOptionCacheKeys::ControllerPositions],
+        FirExitPoint::class => [SelectOptionCacheKeys::FirExitPoints],
         Handoff::class => [SelectOptionCacheKeys::Handoffs, SelectOptionCacheKeys::NonAirfieldHandoffs],
         Runway::class => [SelectOptionCacheKeys::Runways],
         WakeCategoryScheme::class => [SelectOptionCacheKeys::WakeSchemes],
@@ -105,8 +107,25 @@ class SelectOptions
                 ->get()
                 ->mapWithKeys(
                     fn (Runway $runway) => [
-                        $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
-                    ]
+                    $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
+                ]
+                )->toBase()
+        );
+    }
+
+    public static function firExitPoints(): Collection
+    {
+        return self::getOptions(
+            SelectOptionCacheKeys::FirExitPoints,
+            fn (): Collection => FirExitPoint::all()
+                ->mapWithKeys(
+                    fn (FirExitPoint $exitPoint) => [
+                    $exitPoint->id => sprintf(
+                        '%s%s',
+                        $exitPoint->exit_point,
+                        $exitPoint->internal ? ' (Internal)' : ''
+                    ),
+                ]
                 )->toBase()
         );
     }
@@ -128,7 +147,7 @@ class SelectOptions
         self::clearKeysForModel(self::MODEL_CACHE_KEYS[$class]);
     }
 
-    public static function clearKeysForModel(array $keys):void
+    public static function clearKeysForModel(array $keys): void
     {
         foreach ($keys as $key) {
             Cache::forget($key->value);

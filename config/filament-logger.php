@@ -1,6 +1,8 @@
 <?php
 
 use App\Filament\Resources\ActivityResource;
+use App\Filament\Resources\DependencyResource;
+use App\Filament\Resources\SquawkAssignmentResource;
 
 return [
     'activity_resource' => ActivityResource::class,
@@ -11,7 +13,8 @@ return [
         'logger' => \Z3d0X\FilamentLogger\Loggers\ResourceLogger::class,
         'color' => 'success',
         'exclude' => [
-            \App\Filament\Resources\SquawkAssignmentResource::class
+            SquawkAssignmentResource::class,
+            DependencyResource::class,
         ],
     ],
 
