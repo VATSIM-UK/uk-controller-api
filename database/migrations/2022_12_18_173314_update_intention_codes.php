@@ -5,7 +5,8 @@ use App\Models\IntentionCode\IntentionCode;
 use App\Services\IntentionCode\IntentionCodeService;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -95,6 +96,25 @@ return new class extends Migration {
             ]
         );
         IntentionCodeService::saveIntentionCode($reneqCode);
+
+        // Irish codes directions
+        FirExitPoint::whereIn('exit_point', ['MOLAK', 'NIPIT', 'ERNAN', 'DEGOS', 'NIMAT', 'NEVRI', 'RUBEX'])
+            ->update(['exit_direction_start' => 180]);
+
+        // ROTEV
+        $rotev = FirExitPoint::where('exit_point', 'NEVRI')
+            ->firstOrFail()
+            ->replicate();
+
+        $rotev->exit_point = 'ROTEV';
+        $rotev->save();
+
+        $rotevCode = IntentionCode::findOrFail(114)->replicate();
+        $newConditions = $rotevCode->conditions;
+        $newConditions[0]['exit_point'] = $rotev->id;
+        $rotevCode->conditions = $newConditions;
+        $rotevCode->description = 'G7 (ROTEV)';
+        IntentionCodeService::saveIntentionCode($rotevCode);
     }
 
     /**
