@@ -132,13 +132,25 @@ class IntentionCodeResource extends Resource
         };
     }
 
-    private static function conditions(): Builder
+    /**
+     * We only want to allow a single FIR exit point per intention code. This is necessary to make things simpler in 
+     * the plugin. TLDR:
+     *
+     * The plugin sends messages to its integrations, e.g. vStrips, these messages contain the FIR Exit Point that
+     * relates to a resolved intention code. Due to the way this solution is architected, it's a bit of a pain to have
+     * multiple FIR exit points per intention code.
+     *
+     * This method (and its recrusive calls) therefore only allows users to select a single FIR exit per intention code
+     * at the highest level and not nested in any Not/AllOf/AnyOf calls.
+     */
+    private static function conditions(?bool $disableExitPoint = false): Builder
     {
         return Builder::make('conditions')
             ->label(self::translateFormPath('conditions.conditions.label'))
             ->helperText(self::translateFormPath('conditions.conditions.helper'))
             ->required()
             ->collapsible()
+            ->reactive()
             ->blocks([
                 Block::make(ConditionType::ArrivalAirfields->value)
                     ->label(self::translateFormPath('conditions.arrival_airfields.menu_item'))
@@ -166,21 +178,14 @@ class IntentionCodeResource extends Resource
                 Block::make(ConditionType::ExitPoint->value)
                     ->label(self::translateFormPath('conditions.exit_point.menu_item'))
                     ->reactive()
+                    ->visible(!$disableExitPoint)
                     ->schema([
                         Select::make('exit_point')
                             ->label(self::translateFormPath('conditions.exit_point.label'))
                             ->helperText(self::translateFormPath('conditions.exit_point.helper'))
                             ->required()
                             ->searchable()
-                            ->options(
-                                function (Select $component)
-                                {
-                                    $data = $component->getLivewire()->data;
-                                    return self::getFirExitPointOptions(
-                                        isset($data, $data['conditions']) ? $data['conditions'] : null
-                                    );
-                                }
-                            )
+                            ->options(fn() => SelectOptions::firExitPoints()),
                     ]),
                 Block::make(ConditionType::MaximumCruisingLevel->value)
                     ->label(self::translateFormPath('conditions.maximum_cruising_level.menu_item'))
@@ -224,80 +229,18 @@ class IntentionCodeResource extends Resource
                     ]),
                 Block::make(ConditionType::Not->value)
                     ->label(self::translateFormPath('conditions.not.menu_item'))
-                    ->schema(fn() => [self::conditions()]),
+                    ->schema(fn() => [self::conditions(true)]),
                 Block::make(ConditionType::AnyOf->value)
                     ->label(self::translateFormPath('conditions.any_of.menu_item'))
-                    ->schema(fn() => [self::conditions()]),
+                    ->schema(fn() => [self::conditions(true)]),
                 Block::make(ConditionType::AllOf->value)
                     ->label(self::translateFormPath('conditions.all_of.menu_item'))
-                    ->schema(fn() => [self::conditions()])
+                    ->schema(fn() => [self::conditions(true)])
             ]);
     }
 
     protected static function translationPathRoot(): string
     {
         return 'intention';
-    }
-
-    /**
-     * We only want to allow a single FIR exit point per intention code. This is necessary to make things simpler in 
-     * the plugin. TLDR:
-     * 
-     * The plugin sends messages to its integrations, e.g. vStrips, these messages contain the FIR Exit Point that
-     * relates to a resolved intention code. Due to the way this solution is architected, it's a bit of a pain to have
-     * multiple FIR exit points per intention code.
-     * 
-     * This method (and its sub-methods) therefore only allows users to select a single FIR exit per intention code.
-     */
-    protected static function getFirExitPointOptions(?array $conditions): Collection
-    {
-        $selectOptions = SelectOptions::firExitPoints();
-        if (is_null($conditions) || self::countExitPointConditions($conditions) <= 1) {
-            return $selectOptions;
-        }
-
-        $foundExitPoint = self::getSelectedFirExitPoint($conditions);
-        return $foundExitPoint
-            ? $selectOptions->only($foundExitPoint)
-            : $selectOptions;
-    }
-
-    protected static function getSelectedFirExitPoint(array $conditions): ?int
-    {
-        foreach ($conditions as $condition) {
-            $parsedConditionType = ConditionType::from($condition['type']);
-
-            if ($parsedConditionType === ConditionType::ExitPoint) {
-                return $condition['data']['exit_point'];
-            }
-
-            if (in_array($parsedConditionType, [ConditionType::Not, ConditionType::AllOf, ConditionType::AnyOf])) {
-                $foundExitPoint = self::getSelectedFirExitPoint($condition['data']['conditions']);
-                if ($foundExitPoint) {
-                    return $foundExitPoint;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    protected static function countExitPointConditions(array $conditions): int
-    {
-        $foundConditions = 0;
-
-        foreach ($conditions as $condition) {
-            $parsedConditionType = ConditionType::from($condition['type']);
-
-            if ($parsedConditionType === ConditionType::ExitPoint) {
-                $foundConditions++;
-            }
-
-            if (in_array($parsedConditionType, [ConditionType::Not, ConditionType::AllOf, ConditionType::AnyOf])) {
-                $foundConditions += self::countExitPointConditions($condition['data']['conditions']);
-            }
-        }
-
-        return $foundConditions;
     }
 }
