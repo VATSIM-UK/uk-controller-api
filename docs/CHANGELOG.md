@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.33.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.32.0...6.33.0) (2023-01-03)
+
+
+### Features
+
+* only allow fir exit point conditions at highest level ([f0fc155](https://github.com/VATSIM-UK/uk-controller-api/commit/f0fc155b0fe8009418dd845170aabd76d9a91063))
+* only allow one fir exit point per intention code ([716ef9e](https://github.com/VATSIM-UK/uk-controller-api/commit/716ef9e1ae51c78b0327fe2b31a735a368b0ff49))
+
 ## [6.32.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.31.0...6.32.0) (2022-12-24)
 
 
