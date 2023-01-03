@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\IntentionCodeResource\Pages;
 use App\Models\IntentionCode\ConditionType;
+use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Airfield\PartialAirfieldIcao;
@@ -22,6 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Collection;
 
 class IntentionCodeResource extends Resource
 {
@@ -35,11 +37,11 @@ class IntentionCodeResource extends Resource
     {
         return $form
             ->schema([
-                        TextInput::make('description')
-                            ->required()
-                            ->maxLength(255)
-                                                        ->label(self::translateFormPath('description.label'))
-                            ->helperText(self::translateFormPath('description.helper')),
+                TextInput::make('description')
+                    ->required()
+                    ->maxLength(255)
+                    ->label(self::translateFormPath('description.label'))
+                    ->helperText(self::translateFormPath('description.helper')),
                 Fieldset::make('code_spec')
                     ->label(self::translateFormPath('code_spec.label'))
                     ->schema([
@@ -86,8 +88,8 @@ class IntentionCodeResource extends Resource
                             ->required(fn (Closure $get) => in_array($get('order_type'), ['before', 'after']))
                             ->options(
                                 fn () => IntentionCode::all()->mapWithKeys(
-                                    fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
-                                )
+                                fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
+                            )
                             ),
                     ]),
                 Section::make(self::translateFormPath('conditions.conditions.label'))->schema([self::conditions()]),
@@ -100,7 +102,7 @@ class IntentionCodeResource extends Resource
             ->columns([
                 TextColumn::make('priority')
                     ->label(self::translateTablePath('columns.priority')),
-                                    TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
                 TextColumn::make('code')
                     ->formatStateUsing(fn (IntentionCode $record) => self::formatCodeColumn($record))
@@ -132,12 +134,25 @@ class IntentionCodeResource extends Resource
         };
     }
 
-    private static function conditions(): Builder
+    /**
+     * We only want to allow a single FIR exit point per intention code. This is necessary to make things simpler in
+     * the plugin. TLDR:
+     *
+     * The plugin sends messages to its integrations, e.g. vStrips, these messages contain the FIR Exit Point that
+     * relates to a resolved intention code. Due to the way this solution is architected, it's a bit of a pain to have
+     * multiple FIR exit points per intention code.
+     *
+     * This method (and its recrusive calls) therefore only allows users to select a single FIR exit per intention code
+     * at the highest level and not nested in any Not/AllOf/AnyOf calls.
+     */
+    private static function conditions(?bool $disableExitPoint = false): Builder
     {
         return Builder::make('conditions')
             ->label(self::translateFormPath('conditions.conditions.label'))
             ->helperText(self::translateFormPath('conditions.conditions.helper'))
             ->required()
+            ->collapsible()
+            ->reactive()
             ->blocks([
                 Block::make(ConditionType::ArrivalAirfields->value)
                     ->label(self::translateFormPath('conditions.arrival_airfields.menu_item'))
@@ -164,14 +179,15 @@ class IntentionCodeResource extends Resource
                     ]),
                 Block::make(ConditionType::ExitPoint->value)
                     ->label(self::translateFormPath('conditions.exit_point.menu_item'))
+                    ->reactive()
+                    ->visible(!$disableExitPoint)
                     ->schema([
                         Select::make('exit_point')
                             ->label(self::translateFormPath('conditions.exit_point.label'))
                             ->helperText(self::translateFormPath('conditions.exit_point.helper'))
                             ->required()
                             ->searchable()
-                            ->options(SelectOptions::firExitPoints())
-
+                            ->options(fn () => SelectOptions::firExitPoints()),
                     ]),
                 Block::make(ConditionType::MaximumCruisingLevel->value)
                     ->label(self::translateFormPath('conditions.maximum_cruising_level.menu_item'))
@@ -215,13 +231,13 @@ class IntentionCodeResource extends Resource
                     ]),
                 Block::make(ConditionType::Not->value)
                     ->label(self::translateFormPath('conditions.not.menu_item'))
-                    ->schema(fn () => [self::conditions()]),
+                    ->schema(fn () => [self::conditions(true)]),
                 Block::make(ConditionType::AnyOf->value)
                     ->label(self::translateFormPath('conditions.any_of.menu_item'))
-                    ->schema(fn () => [self::conditions()]),
+                    ->schema(fn () => [self::conditions(true)]),
                 Block::make(ConditionType::AllOf->value)
                     ->label(self::translateFormPath('conditions.all_of.menu_item'))
-                    ->schema(fn () => [self::conditions()])
+                    ->schema(fn () => [self::conditions(true)])
             ]);
     }
 

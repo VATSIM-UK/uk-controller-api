@@ -34,7 +34,7 @@ return [
     'conditions' => [
         'conditions' => [
             'label' => 'Conditions',
-            'helper' => 'The conditions that must be met for this code to apply.',
+            'helper' => 'The conditions that must be met for this code to apply. Unless otherwise selected, these conditions are related by logical AND.',
         ],
         'arrival_airfields' => [
             'menu_item' => 'Arrival Airfields',
@@ -50,7 +50,7 @@ return [
         'exit_point' => [
             'menu_item' => 'FIR Exit Point',
             'label' => 'Exit Point',
-            'helper' => 'The place where the aircraft leaves the FIR. May be internal. In some cases, EGTT positions are shown intention codes based on where the aircraft leaves EGPX.',
+            'helper' => 'The place where the aircraft leaves the FIR. May be internal. In some cases, EGTT positions are shown intention codes based on where the aircraft leaves EGPX. Only one of these may be specified per intention code and must be specified at the highest level.',
         ],
         'maximum_cruising_level' => [
             'menu_item' => 'Maximum Cruising Altitude',
