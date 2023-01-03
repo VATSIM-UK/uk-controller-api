@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\IntentionCodeResource\Pages;
 use App\Models\IntentionCode\ConditionType;
+use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Airfield\PartialAirfieldIcao;
@@ -22,6 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Collection;
 
 class IntentionCodeResource extends Resource
 {
@@ -35,11 +37,11 @@ class IntentionCodeResource extends Resource
     {
         return $form
             ->schema([
-                        TextInput::make('description')
-                            ->required()
-                            ->maxLength(255)
-                                                        ->label(self::translateFormPath('description.label'))
-                            ->helperText(self::translateFormPath('description.helper')),
+                TextInput::make('description')
+                    ->required()
+                    ->maxLength(255)
+                    ->label(self::translateFormPath('description.label'))
+                    ->helperText(self::translateFormPath('description.helper')),
                 Fieldset::make('code_spec')
                     ->label(self::translateFormPath('code_spec.label'))
                     ->schema([
@@ -53,9 +55,9 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('code_type.label'))
                             ->helperText(self::translateFormPath('code_type.helper')),
                         TextInput::make('single_code')
-                            ->required(fn (Closure $get) => $get('code_type') === 'single_code')
+                            ->required(fn(Closure $get) => $get('code_type') === 'single_code')
                             ->maxLength(2)
-                            ->hidden(fn (Closure $get) => $get('code_type') !== 'single_code')
+                            ->hidden(fn(Closure $get) => $get('code_type') !== 'single_code')
                             ->label(self::translateFormPath('single_code.label'))
                             ->helperText(self::translateFormPath('single_code.helper'))
                     ]),
@@ -77,17 +79,15 @@ class IntentionCodeResource extends Resource
                             ->minValue(1)
                             ->label(self::translateFormPath('position.label'))
                             ->helperText(self::translateFormPath('position.helper'))
-                            ->hidden(fn (Closure $get) => $get('order_type') !== 'at_position')
-                            ->required(fn (Closure $get) => $get('order_type') === 'at_position'),
+                            ->hidden(fn(Closure $get) => $get('order_type') !== 'at_position')
+                            ->required(fn(Closure $get) => $get('order_type') === 'at_position'),
                         Select::make('insert_position')
                             ->label(self::translateFormPath('before_after_position.label'))
                             ->helperText(self::translateFormPath('before_after_position.helper'))
-                            ->hidden(fn (Closure $get) => !in_array($get('order_type'), ['before', 'after']))
-                            ->required(fn (Closure $get) => in_array($get('order_type'), ['before', 'after']))
-                            ->options(
-                                fn () => IntentionCode::all()->mapWithKeys(
-                                    fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
-                                )
+                            ->hidden(fn(Closure $get) => !in_array($get('order_type'), ['before', 'after']))
+                            ->required(fn(Closure $get) => in_array($get('order_type'), ['before', 'after']))
+                            ->options(fn() => IntentionCode::all()->mapWithKeys(fn(IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
+                            )
                             ),
                     ]),
                 Section::make(self::translateFormPath('conditions.conditions.label'))->schema([self::conditions()]),
@@ -100,10 +100,10 @@ class IntentionCodeResource extends Resource
             ->columns([
                 TextColumn::make('priority')
                     ->label(self::translateTablePath('columns.priority')),
-                                    TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
                 TextColumn::make('code')
-                    ->formatStateUsing(fn (IntentionCode $record) => self::formatCodeColumn($record))
+                    ->formatStateUsing(fn(IntentionCode $record) => self::formatCodeColumn($record))
                     ->label(self::translateTablePath('columns.code')),
 
             ])
@@ -138,6 +138,7 @@ class IntentionCodeResource extends Resource
             ->label(self::translateFormPath('conditions.conditions.label'))
             ->helperText(self::translateFormPath('conditions.conditions.helper'))
             ->required()
+            ->collapsible()
             ->blocks([
                 Block::make(ConditionType::ArrivalAirfields->value)
                     ->label(self::translateFormPath('conditions.arrival_airfields.menu_item'))
@@ -164,14 +165,22 @@ class IntentionCodeResource extends Resource
                     ]),
                 Block::make(ConditionType::ExitPoint->value)
                     ->label(self::translateFormPath('conditions.exit_point.menu_item'))
+                    ->reactive()
                     ->schema([
                         Select::make('exit_point')
                             ->label(self::translateFormPath('conditions.exit_point.label'))
                             ->helperText(self::translateFormPath('conditions.exit_point.helper'))
                             ->required()
                             ->searchable()
-                            ->options(SelectOptions::firExitPoints())
-
+                            ->options(
+                                function (Select $component)
+                                {
+                                    $data = $component->getLivewire()->data;
+                                    return self::getFirExitPointOptions(
+                                        isset($data, $data['conditions']) ? $data['conditions'] : null
+                                    );
+                                }
+                            )
                     ]),
                 Block::make(ConditionType::MaximumCruisingLevel->value)
                     ->label(self::translateFormPath('conditions.maximum_cruising_level.menu_item'))
@@ -215,18 +224,80 @@ class IntentionCodeResource extends Resource
                     ]),
                 Block::make(ConditionType::Not->value)
                     ->label(self::translateFormPath('conditions.not.menu_item'))
-                    ->schema(fn () => [self::conditions()]),
+                    ->schema(fn() => [self::conditions()]),
                 Block::make(ConditionType::AnyOf->value)
                     ->label(self::translateFormPath('conditions.any_of.menu_item'))
-                    ->schema(fn () => [self::conditions()]),
+                    ->schema(fn() => [self::conditions()]),
                 Block::make(ConditionType::AllOf->value)
                     ->label(self::translateFormPath('conditions.all_of.menu_item'))
-                    ->schema(fn () => [self::conditions()])
+                    ->schema(fn() => [self::conditions()])
             ]);
     }
 
     protected static function translationPathRoot(): string
     {
         return 'intention';
+    }
+
+    /**
+     * We only want to allow a single FIR exit point per intention code. This is necessary to make things simpler in 
+     * the plugin. TLDR:
+     * 
+     * The plugin sends messages to its integrations, e.g. vStrips, these messages contain the FIR Exit Point that
+     * relates to a resolved intention code. Due to the way this solution is architected, it's a bit of a pain to have
+     * multiple FIR exit points per intention code.
+     * 
+     * This method (and its sub-methods) therefore only allows users to select a single FIR exit per intention code.
+     */
+    protected static function getFirExitPointOptions(?array $conditions): Collection
+    {
+        $selectOptions = SelectOptions::firExitPoints();
+        if (is_null($conditions) || self::countExitPointConditions($conditions) <= 1) {
+            return $selectOptions;
+        }
+
+        $foundExitPoint = self::getSelectedFirExitPoint($conditions);
+        return $foundExitPoint
+            ? $selectOptions->only($foundExitPoint)
+            : $selectOptions;
+    }
+
+    protected static function getSelectedFirExitPoint(array $conditions): ?int
+    {
+        foreach ($conditions as $condition) {
+            $parsedConditionType = ConditionType::from($condition['type']);
+
+            if ($parsedConditionType === ConditionType::ExitPoint) {
+                return $condition['data']['exit_point'];
+            }
+
+            if (in_array($parsedConditionType, [ConditionType::Not, ConditionType::AllOf, ConditionType::AnyOf])) {
+                $foundExitPoint = self::getSelectedFirExitPoint($condition['data']['conditions']);
+                if ($foundExitPoint) {
+                    return $foundExitPoint;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected static function countExitPointConditions(array $conditions): int
+    {
+        $foundConditions = 0;
+
+        foreach ($conditions as $condition) {
+            $parsedConditionType = ConditionType::from($condition['type']);
+
+            if ($parsedConditionType === ConditionType::ExitPoint) {
+                $foundConditions++;
+            }
+
+            if (in_array($parsedConditionType, [ConditionType::Not, ConditionType::AllOf, ConditionType::AnyOf])) {
+                $foundConditions += self::countExitPointConditions($condition['data']['conditions']);
+            }
+        }
+
+        return $foundConditions;
     }
 }

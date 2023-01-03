@@ -50,7 +50,7 @@ return [
         'exit_point' => [
             'menu_item' => 'FIR Exit Point',
             'label' => 'Exit Point',
-            'helper' => 'The place where the aircraft leaves the FIR. May be internal. In some cases, EGTT positions are shown intention codes based on where the aircraft leaves EGPX.',
+            'helper' => 'The place where the aircraft leaves the FIR. May be internal. In some cases, EGTT positions are shown intention codes based on where the aircraft leaves EGPX. Only one of these may be specified per intention code.',
         ],
         'maximum_cruising_level' => [
             'menu_item' => 'Maximum Cruising Altitude',
