@@ -88,8 +88,8 @@ class IntentionCodeResource extends Resource
                             ->required(fn (Closure $get) => in_array($get('order_type'), ['before', 'after']))
                             ->options(
                                 fn () => IntentionCode::all()->mapWithKeys(
-                                fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
-                            )
+                                    fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
+                                )
                             ),
                     ]),
                 Section::make(self::translateFormPath('conditions.conditions.label'))->schema([self::conditions()]),
