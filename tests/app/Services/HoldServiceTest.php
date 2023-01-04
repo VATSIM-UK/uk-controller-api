@@ -42,9 +42,12 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 3 => ['vsl_insert_distance' => 7]
             ]
         );
+        Hold::findOrFail(1)->update(['outbound_leg_unit' => 2, 'outbound_leg_value' => 2.5]);
+
         $expected = [
             [
                 'id' => 1,
+                'navaid_id' => 1,
                 'fix' => 'WILLO',
                 'inbound_heading' => 285,
                 'minimum_altitude' => 7000,
@@ -64,9 +67,12 @@ class HoldServiceTest extends BaseFunctionalTestCase
                         'vsl_insert_distance' => 7,
                     ],
                 ],
+                'outbound_leg_value' => 2.5,
+                'outbound_leg_unit' => 'nm',
             ],
             [
                 'id' => 2,
+                'navaid_id' => 2,
                 'fix' => 'TIMBA',
                 'inbound_heading' => 309,
                 'minimum_altitude' => 7000,
@@ -75,9 +81,12 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'description' => 'TIMBA',
                 'restrictions' => [],
                 'deemed_separated_holds' => [],
+                'outbound_leg_value' => null,
+                'outbound_leg_unit' => null,
             ],
             [
                 'id' => 3,
+                'navaid_id' => 3,
                 'fix' => 'MAY',
                 'inbound_heading' => 90,
                 'minimum_altitude' => 3000,
@@ -86,6 +95,8 @@ class HoldServiceTest extends BaseFunctionalTestCase
                 'description' => 'Mayfield Low',
                 'restrictions' => [],
                 'deemed_separated_holds' => [],
+                'outbound_leg_value' => null,
+                'outbound_leg_unit' => null,
             ],
         ];
         $actual = $this->holdService->getHolds();
@@ -115,7 +126,8 @@ class HoldServiceTest extends BaseFunctionalTestCase
             [
                 'groundspeed' => 123,
                 'altitude' => 1000,
-                'latitude' => 51.989700, // This is Barkway
+                'latitude' => 51.989700,
+                // This is Barkway
                 'longitude' => 0.061944,
             ]
         );
@@ -147,7 +159,8 @@ class HoldServiceTest extends BaseFunctionalTestCase
             [
                 'groundspeed' => 123,
                 'altitude' => 1000,
-                'latitude' => 51.989700, // This is Barkway
+                'latitude' => 51.989700,
+                // This is Barkway
                 'longitude' => 0.061944,
             ]
         );
@@ -188,12 +201,12 @@ class HoldServiceTest extends BaseFunctionalTestCase
         );
 
         Event::assertDispatched(
-            AircraftEnteredHoldingArea::class,
+                AircraftEnteredHoldingArea::class,
             fn(AircraftEnteredHoldingArea $event) => $event->broadcastWith() == [
-                    'navaid_id' => 1,
-                    'callsign' => 'BAW123',
-                    'entered_at' => Carbon::now()
-                ]
+                'navaid_id' => 1,
+                'callsign' => 'BAW123',
+                'entered_at' => Carbon::now()
+            ]
         );
 
         Event::assertNotDispatched(AircraftExitedHoldingArea::class);
@@ -329,7 +342,8 @@ class HoldServiceTest extends BaseFunctionalTestCase
             [
                 'groundspeed' => 123,
                 'altitude' => 1000,
-                'latitude' => 51.989700, // This is Barkway
+                'latitude' => 51.989700,
+                // This is Barkway
                 'longitude' => 0.061944,
             ]
         );
@@ -346,11 +360,11 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
         Event::assertDispatched(
-            AircraftExitedHoldingArea::class,
+                AircraftExitedHoldingArea::class,
             fn(AircraftExitedHoldingArea $event) => $event->broadcastWith() == [
-                    'navaid_id' => 1,
-                    'callsign' => 'BAW123',
-                ]
+                'navaid_id' => 1,
+                'callsign' => 'BAW123',
+            ]
         );
     }
 
@@ -378,11 +392,11 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
         Event::assertDispatched(
-            AircraftExitedHoldingArea::class,
+                AircraftExitedHoldingArea::class,
             fn(AircraftExitedHoldingArea $event) => $event->broadcastWith() == [
-                    'navaid_id' => 1,
-                    'callsign' => 'BAW123',
-                ]
+                'navaid_id' => 1,
+                'callsign' => 'BAW123',
+            ]
         );
     }
 }
