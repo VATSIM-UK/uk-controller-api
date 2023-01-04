@@ -15,6 +15,7 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
 
 class HoldsRelationManager extends RelationManager
@@ -74,19 +75,18 @@ class HoldsRelationManager extends RelationManager
                             ->helperText(self::translateFormPath('outbound_leg_value.helper'))
                             ->numeric()
                             ->reactive()
-                            ->required(fn (Closure $get): bool => (bool) $get('outbound_leg_unit'))
+                            ->required(fn(Closure $get): bool => (bool) $get('outbound_leg_unit'))
                             ->minValue(0.5)
                             ->maxValue(100),
                         Forms\Components\Select::make('outbound_leg_unit')
                             ->label(self::translateFormPath('outbound_leg_unit.label'))
                             ->helperText(self::translateFormPath('outbound_leg_unit.helper'))
-                            ->required(fn (Closure $get): bool => (bool) $get('outbound_leg_value'))
+                            ->required(fn(Closure $get): bool => (bool) $get('outbound_leg_value'))
                             ->reactive()
                             ->options(
                                 MeasurementUnit::whereIn('unit', ['nm', 'min'])
                                     ->get()
-                                    ->mapWithKeys(
-                                        fn (MeasurementUnit $unit): array => [$unit->id => $unit->description]
+                                    ->mapWithKeys(fn(MeasurementUnit $unit): array => [$unit->id => $unit->description]
                                     )
                             ),
                     ]),
@@ -117,13 +117,13 @@ class HoldsRelationManager extends RelationManager
                                             ->searchable()
                                             ->options(
                                                 Airfield::all()
-                                                    ->mapWithKeys(
-                                                        fn (Airfield $airfield) => [$airfield->code => $airfield->code]
+                                                    ->mapWithKeys(fn(Airfield $airfield) => [$airfield->code => $airfield->code]
                                                     ),
                                             )
                                             ->preload()
                                             ->reactive()
-                                            ->afterStateUpdated(function (Closure $get, Closure $set) {
+                                            ->afterStateUpdated(function (Closure $get, Closure $set)
+                                            {
                                                 $target = $get('target');
                                                 if (!$target || !$get('runway.designator')) {
                                                     $set('runway.designator', null);
@@ -133,7 +133,7 @@ class HoldsRelationManager extends RelationManager
                                                 if (
                                                     Runway::atAirfield($target)->where(
                                                         'identifier',
-                                                        $get('runway.designator')
+                                                            $get('runway.designator')
                                                     )->exists()
                                                 ) {
                                                     return;
@@ -151,9 +151,8 @@ class HoldsRelationManager extends RelationManager
                                             ->label(self::translateFormPath('minimum_level_runway.label'))
                                             ->helperText(self::translateFormPath('minimum_level_runway.helper'))
                                             ->options(
-                                                fn (Closure $get) => $get('target')
-                                                ? Runway::atAirfield($get('target'))->get()->mapWithKeys(
-                                                    fn (Runway $runway) => [$runway->identifier => $runway->identifier]
+                                                fn(Closure $get) => $get('target')
+                                                ? Runway::atAirfield($get('target'))->get()->mapWithKeys(fn(Runway $runway) => [$runway->identifier => $runway->identifier]
                                                 )
                                                 : []
                                             ),
@@ -196,22 +195,28 @@ class HoldsRelationManager extends RelationManager
                         'right' => 'Right',
                     ])
                     ->label(self::translateTablePath('columns.turn_direction')),
+                TextColumn::make('outbound_leg')
+                    ->label(self::translateTablePath('columns.outbound_leg'))
+                    ->formatStateUsing(
+                        fn(Hold $record) => $record->outbound_leg_unit
+                        ? sprintf('%s %s', $record->outbound_leg_value, $record->outboundLegUnit->description)
+                        : '--'
+                    ),
                 Tables\Columns\BooleanColumn::make('restrictions')
                     ->label(self::translateTablePath('columns.has_restrictions'))
-                    ->getStateUsing(fn (Hold $record) => $record->restrictions->isNotEmpty()),
+                    ->getStateUsing(fn(Hold $record) => $record->restrictions->isNotEmpty()),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->using(
-                        fn (array $data, HoldsRelationManager $livewire): Hold => self::saveNewHold($data, $livewire)
+                    ->using(fn(array $data, HoldsRelationManager $livewire): Hold => self::saveNewHold($data, $livewire)
                     ),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data)),
+                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data)),
                 Tables\Actions\EditAction::make()
-                    ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data))
-                    ->using(fn (Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
+                    ->mutateRecordDataUsing(fn(Hold $record, array $data) => self::mutateRecordData($record, $data))
+                    ->using(fn(Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
@@ -251,7 +256,7 @@ class HoldsRelationManager extends RelationManager
         return [
             'type' => $restriction['type'],
             'levels' => array_map(
-                fn (array $level) => (int) $level['level'],
+                fn(array $level) => (int) $level['level'],
                 $restriction['data']['levels']
             ),
         ];
@@ -260,7 +265,7 @@ class HoldsRelationManager extends RelationManager
     private static function mutateRecordData(Hold $record, array $data): array
     {
         $data['restrictions'] = $record->restrictions->map(
-            fn (HoldRestriction $restriction) => match ($restriction->restriction['type']) {
+            fn(HoldRestriction $restriction) => match ($restriction->restriction['type']) {
                 'minimum-level' => [
                     'type' => $restriction->restriction['type'],
                     'data' => [
@@ -278,7 +283,7 @@ class HoldsRelationManager extends RelationManager
                     'data' => [
                         'id' => $restriction->id,
                         'levels' => collect($restriction->restriction['levels'])
-                            ->map(fn (int $level) => ['level' => $level])
+                            ->map(fn(int $level) => ['level' => $level])
                             ->toArray(),
                     ],
                 ]
@@ -290,17 +295,17 @@ class HoldsRelationManager extends RelationManager
 
     private static function saveUpdatedHold(array $data, Hold $record): void
     {
-        DB::transaction(function () use ($data, $record) {
+        DB::transaction(function () use ($data, $record)
+        {
             $restrictions = $data['restrictions'];
             unset($data['restrictions']);
 
             $record->update($data);
 
             $restrictionIds = array_map(
-                fn (array $restriction) => $restriction['data']['id'],
+                fn(array $restriction) => $restriction['data']['id'],
                 array_filter(
-                    $restrictions,
-                    fn (array $restriction) => isset($restriction['data']['id'])
+                    $restrictions, fn(array $restriction) => isset($restriction['data']['id'])
                 ),
             );
 
@@ -308,16 +313,17 @@ class HoldsRelationManager extends RelationManager
             HoldRestriction::whereIn(
                 'id',
                 $record->restrictions->filter(
-                        function (HoldRestriction $restriction) use ($restrictionIds) {
+                    function (HoldRestriction $restriction) use ($restrictionIds)
+                    {
                         return array_search($restriction->id, $restrictionIds) === false;
                     }
-                    )->pluck('id')
+                )->pluck('id')
             )->delete();
 
             // Update existing restrictions
             $restrictionsToUpdate = array_filter(
                 $restrictions,
-                fn (array $restriction) => isset($restriction['data']['id'])
+                fn(array $restriction) => isset($restriction['data']['id'])
             );
             foreach ($restrictionsToUpdate as $restriction) {
                 $model = HoldRestriction::findOrFail($restriction['data']['id']);
@@ -330,7 +336,7 @@ class HoldsRelationManager extends RelationManager
                 $record,
                 array_filter(
                     $restrictions,
-                    fn (array $restriction) => !isset($restriction['data']['id'])
+                    fn(array $restriction) => !isset($restriction['data']['id'])
                 )
             );
         });
@@ -339,7 +345,8 @@ class HoldsRelationManager extends RelationManager
     private static function saveNewHold(array $data, HoldsRelationManager $livewire): Hold
     {
         $hold = null;
-        DB::transaction(function () use (&$hold, $data, $livewire) {
+        DB::transaction(function () use (&$hold, $data, $livewire)
+        {
             $hold = $livewire->getOwnerRecord()->holds()->save(
                 new Hold([
                     'description' => $data['description'],
@@ -360,7 +367,8 @@ class HoldsRelationManager extends RelationManager
     {
         $hold->restrictions()->saveMany(
             array_map(
-                function (array $restriction) {
+                function (array $restriction)
+                {
                     return new HoldRestriction([
                         'restriction' => self::formatRestrictionData($restriction),
                     ]);
