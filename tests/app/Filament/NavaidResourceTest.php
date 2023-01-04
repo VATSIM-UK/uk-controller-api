@@ -279,7 +279,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 'create',
                 $navaid,
                 [
-                    'description' => 'A Hold',
+                    'description' => 'A Nice Hold',
                     'inbound_heading' => 123,
                     'minimum_altitude' => 4000,
                     'maximum_altitude' => 5000,
@@ -294,7 +294,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
             'holds',
             [
                 'navaid_id' => $navaid->id,
-                'description' => 'A Hold',
+                'description' => 'A Nice Hold',
                 'inbound_heading' => 123,
                 'minimum_altitude' => 4000,
                 'maximum_altitude' => 5000,

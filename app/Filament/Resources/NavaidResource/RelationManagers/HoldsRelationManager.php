@@ -355,6 +355,8 @@ class HoldsRelationManager extends RelationManager
                     'minimum_altitude' => $data['minimum_altitude'],
                     'maximum_altitude' => $data['maximum_altitude'],
                     'turn_direction' => $data['turn_direction'],
+                    'outbound_leg_value' => $data['outbound_leg_value'],
+                    'outbound_leg_unit' => $data['outbound_leg_unit'],
                 ])
             );
 
