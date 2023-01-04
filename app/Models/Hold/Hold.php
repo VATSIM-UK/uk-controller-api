@@ -56,7 +56,7 @@ class Hold extends Model
     public function deemedSeparatedHolds(): BelongsToMany
     {
         return $this->belongsToMany(
-                Hold::class,
+            Hold::class,
             'deemed_separated_holds',
             'first_hold_id',
             'second_hold_id',
