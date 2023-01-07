@@ -91,8 +91,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('networkdata:update-controllers')->everyMinute()
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
-        $schedule->command('schedule-monitor:clean')
-            ->dailyAt('08:01');
         $schedule->command('srd:update')
             ->cron('0 1-7 * * *');
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
