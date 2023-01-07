@@ -29,6 +29,7 @@ use App\Console\Commands\DeleteExpiredTokens;
 use App\Console\Commands\DeleteUserTokens;
 use App\Console\Commands\CreateUserToken;
 use App\Console\Commands\DataAdminCreate;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 class Kernel extends ConsoleKernel
 {
@@ -74,6 +75,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
         $schedule->command('tokens:delete-expired')->daily();
         $schedule->command('squawks:clean-history')->daily();
         $schedule->command('stands:clean-history')->daily();
@@ -89,8 +91,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('networkdata:update-controllers')->everyMinute()
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
-        $schedule->command('schedule-monitor:clean')
-            ->dailyAt('08:01');
         $schedule->command('srd:update')
             ->cron('0 1-7 * * *');
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
