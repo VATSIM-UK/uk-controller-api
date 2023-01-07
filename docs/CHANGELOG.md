@@ -1,5 +1,15 @@
 # UK Controller Plugin API Changelog
 
+## [6.33.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.33.0...6.33.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* optimise schedule task log items table daily ([64ad3df](https://github.com/VATSIM-UK/uk-controller-api/commit/64ad3df9f05593ce33b93ce82aa5ff6ae6362921))
+* prune schedule monitor daily ([ff88bd4](https://github.com/VATSIM-UK/uk-controller-api/commit/ff88bd49bf26c6e1650ba80f7c6cee498c58481d))
+* reduce number of tasks monitored ([aef1570](https://github.com/VATSIM-UK/uk-controller-api/commit/aef1570aa02e0d9e4a663047aab47d10cb287693))
+* remove unused schedule monitor command ([a630fca](https://github.com/VATSIM-UK/uk-controller-api/commit/a630fcad78cb19c0a8679e4439d7e10d4d8bf5c8))
+
 ## [6.33.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.32.0...6.33.0) (2023-01-03)
 
 
