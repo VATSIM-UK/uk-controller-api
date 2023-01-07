@@ -75,16 +75,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily();
-        $schedule->command('tokens:delete-expired')->daily();
-        $schedule->command('squawks:clean-history')->daily();
-        $schedule->command('stands:clean-history')->daily();
-        $schedule->command('holds:clean-history')->daily();
-        $schedule->command('departure-releases:clean-history')->daily();
-        $schedule->command('prenote-messages:clean-history')->daily();
-        $schedule->command('missed-approaches:clean-history')->daily();
-        $schedule->command('queue:prune-failed --hours=168')->daily();
-        $schedule->command('tables:optimise')->daily();
+        $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily()->doNotMonitor();
+        $schedule->command('tokens:delete-expired')->daily()->doNotMonitor();
+        $schedule->command('squawks:clean-history')->daily()->doNotMonitor();
+        $schedule->command('stands:clean-history')->daily()->doNotMonitor();
+        $schedule->command('holds:clean-history')->daily()->doNotMonitor();
+        $schedule->command('departure-releases:clean-history')->daily()->doNotMonitor();
+        $schedule->command('prenote-messages:clean-history')->daily()->doNotMonitor();
+        $schedule->command('missed-approaches:clean-history')->daily()->doNotMonitor();
+        $schedule->command('queue:prune-failed --hours=168')->daily()->doNotMonitor();
+        $schedule->command('tables:optimise')->daily()->doNotMonitor();
         $schedule->command('networkdata:update')->everyMinute()
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
@@ -92,9 +92,10 @@ class Kernel extends ConsoleKernel
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
         $schedule->command('srd:update')
-            ->cron('0 1-7 * * *');
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
-        $schedule->command('plugin-events:clean')->everyTenMinutes();
+            ->cron('0 1-7 * * *')
+            ->doNotMonitor();
+        $schedule->command('horizon:snapshot')->everyFiveMinutes()->doNotMonitor();
+        $schedule->command('plugin-events:clean')->everyTenMinutes()->doNotMonitor();
         $schedule->command('metars:update')->everyMinute();
         $schedule->command('database:check-table-updates')->everyMinute();
     }
