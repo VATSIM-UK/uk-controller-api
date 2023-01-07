@@ -28,6 +28,7 @@ class OptimiseTables extends Command
         'network_controller_positions',
         'failed_jobs',
         'navaid_network_aircraft',
+        'monitored_scheduled_task_log_items',
     ];
 
     protected $signature = 'tables:optimise';
