@@ -119,8 +119,8 @@ class HoldService
                     ) > self::HOLD_ENTRY_RADIUS
                 )->reject(
                     fn (Navaid $navaid) => $proximityNavaidsBefore->contains(
-                    fn (Navaid $proximityNavaid) => $proximityNavaid->id === $navaid->id
-                )
+                        fn (Navaid $proximityNavaid) => $proximityNavaid->id === $navaid->id
+                    )
                 );
 
                 if ($toAttach->isNotEmpty()) {
