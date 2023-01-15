@@ -8,5 +8,6 @@ class MeasurementUnit extends Model
 {
     protected $fillable = [
         'unit',
+        'description',
     ];
 }
