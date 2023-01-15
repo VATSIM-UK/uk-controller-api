@@ -1,5 +1,18 @@
 # UK Controller Plugin API Changelog
 
+## [6.34.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.33.1...6.34.0) (2023-01-15)
+
+
+### Features
+
+* allow specification of hold leg details ([518bab3](https://github.com/VATSIM-UK/uk-controller-api/commit/518bab394b882313489a26de6864a8b10e9aefcd))
+* display outbound leg in holds table ([286ad0b](https://github.com/VATSIM-UK/uk-controller-api/commit/286ad0b5b48df17adb22ac467a0df57b76a9aa52))
+
+
+### Bug Fixes
+
+* make new values save properly when saving hold ([6f7f8d9](https://github.com/VATSIM-UK/uk-controller-api/commit/6f7f8d951e058fa0b695bb2851c1b4a42dd708a6))
+
 ## [6.33.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.33.0...6.33.1) (2023-01-07)
 
 
