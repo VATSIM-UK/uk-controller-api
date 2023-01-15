@@ -7,7 +7,10 @@ use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\Prenote;
+use App\Models\Dependency\Dependency;
 use App\Models\Hold\Hold;
+use App\Models\IntentionCode\FirExitPoint;
+use App\Models\IntentionCode\IntentionCode;
 use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
 use App\Models\Runway\Runway;
@@ -54,14 +57,16 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     protected $policies = [
-        // The defaults
+            // The defaults
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
         Airline::class => DefaultFilamentPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
         CcamsSquawkRange::class => DefaultFilamentPolicy::class,
+        FirExitPoint::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
         Hold::class => DefaultFilamentPolicy::class,
+        IntentionCode::class => DefaultFilamentPolicy::class,
         Navaid::class => DefaultFilamentPolicy::class,
         NonAssignableSquawkCode::class => DefaultFilamentPolicy::class,
         Notification::class => DefaultFilamentPolicy::class,
@@ -74,14 +79,15 @@ class AuthServiceProvider extends ServiceProvider
         UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
 
-        // Things the plugin can assign
+            // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,
 
-        // Things that can only be updated by external processes
+            // Things that can only be updated by external processes
         SrdNote::class => ReadOnlyPolicy::class,
         SrdRoute::class => ReadOnlyPolicy::class,
+        Dependency::class => ReadOnlyPolicy::class,
 
-        // Special policies
+            // Special policies
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
         Version::class => PluginVersionPolicy::class,

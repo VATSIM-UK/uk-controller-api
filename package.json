@@ -8,10 +8,10 @@
     "test": "tests"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/changelog": "^6.0.2",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^8.0.6",
+    "@semantic-release/github": "^8.0.7",
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.8",
@@ -20,8 +20,8 @@
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.34",
     "lodash": "^4.17.21",
-    "postcss": "^8.4.19",
-    "postcss-import": "^15.0.0",
+    "postcss": "^8.4.20",
+    "postcss-import": "^15.1.0",
     "semantic-release": "19",
     "tailwindcss": "^3.2.4",
     "tippy.js": "^6.3.7"

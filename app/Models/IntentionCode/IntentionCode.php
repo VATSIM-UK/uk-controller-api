@@ -10,6 +10,7 @@ class IntentionCode extends Model
     use HasFactory;
 
     protected $fillable = [
+        'description',
         'code',
         'conditions',
         'priority'

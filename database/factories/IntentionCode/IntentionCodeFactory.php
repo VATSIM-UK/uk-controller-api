@@ -25,25 +25,21 @@ class IntentionCodeFactory extends Factory
         [
             'type' => 'arrival_airfield_pattern',
             'pattern' => 'EG',
-        ],
-        [
-            'type' => 'exit_point',
-            'exit_point' => 'ETRAT',
-            'exit_direction' => [90, 111],
-        ],
+        ]
     ];
 
     public function definition(): array
     {
         return [
+            'description' => 'A desc',
             'code' => [
                 'type' => 'single_code',
-                'code' => $this->faker->unique()->randomElement(self::CODES),
+                'code' => $this->faker->randomElement(self::CODES),
             ],
             'conditions' => [
-                $this->faker->unique()->randomElement(self::CONDITIONS)
+                $this->faker->randomElement(self::CONDITIONS)
             ],
-            'priority' => $this->faker->unique()->numberBetween(0, 999),
+            'priority' => $this->faker->unique()->numberBetween(0, 99999),
         ];
     }
 }

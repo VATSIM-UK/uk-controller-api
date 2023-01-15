@@ -1,5 +1,66 @@
 # UK Controller Plugin API Changelog
 
+## [6.33.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.33.0...6.33.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* optimise schedule task log items table daily ([64ad3df](https://github.com/VATSIM-UK/uk-controller-api/commit/64ad3df9f05593ce33b93ce82aa5ff6ae6362921))
+* prune schedule monitor daily ([ff88bd4](https://github.com/VATSIM-UK/uk-controller-api/commit/ff88bd49bf26c6e1650ba80f7c6cee498c58481d))
+* reduce number of tasks monitored ([aef1570](https://github.com/VATSIM-UK/uk-controller-api/commit/aef1570aa02e0d9e4a663047aab47d10cb287693))
+* remove unused schedule monitor command ([a630fca](https://github.com/VATSIM-UK/uk-controller-api/commit/a630fcad78cb19c0a8679e4439d7e10d4d8bf5c8))
+
+## [6.33.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.32.0...6.33.0) (2023-01-03)
+
+
+### Features
+
+* only allow fir exit point conditions at highest level ([f0fc155](https://github.com/VATSIM-UK/uk-controller-api/commit/f0fc155b0fe8009418dd845170aabd76d9a91063))
+* only allow one fir exit point per intention code ([716ef9e](https://github.com/VATSIM-UK/uk-controller-api/commit/716ef9e1ae51c78b0327fe2b31a735a368b0ff49))
+
+## [6.32.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.31.0...6.32.0) (2022-12-24)
+
+
+### Features
+
+* add fir exit point data ([4ce81e0](https://github.com/VATSIM-UK/uk-controller-api/commit/4ce81e0a2fe28d08c55db1c2e24ea8b5b99265d8))
+* add fir exit points dependency ([d43f2db](https://github.com/VATSIM-UK/uk-controller-api/commit/d43f2db90dc3ba710c1d56654ee64844b255d48e))
+* admin pages for FIR Exit Points ([be548f7](https://github.com/VATSIM-UK/uk-controller-api/commit/be548f7782fc08220ae3ebdb0e2b125a75cd75a6))
+* intention code admin ([4d722a8](https://github.com/VATSIM-UK/uk-controller-api/commit/4d722a87361c2d7f8b7affd9762a034f10c80c7f))
+* intention code admin ([836ec52](https://github.com/VATSIM-UK/uk-controller-api/commit/836ec52a3ecc5e4ea1d3a708912bbc989530a89d))
+* intention codes have descriptions ([dbfaff9](https://github.com/VATSIM-UK/uk-controller-api/commit/dbfaff959d4d2b2284662b2b7d547f2a68a4ee68))
+* plugin dependency information in filament ([617d0eb](https://github.com/VATSIM-UK/uk-controller-api/commit/617d0ebd073b928b9252ddbcd3563193499af5c0))
+* prevent exit point deletion if codes associated ([ad64d60](https://github.com/VATSIM-UK/uk-controller-api/commit/ad64d60f220c7eca1d40aee05f6c6130260a1840))
+
+
+### Bug Fixes
+
+* dont log dependency updates in filament ([b2bc68b](https://github.com/VATSIM-UK/uk-controller-api/commit/b2bc68bc6b7e1843898ac5bad927a15d6d8270fc))
+* test fix ([798c4e7](https://github.com/VATSIM-UK/uk-controller-api/commit/798c4e77aceab0b4f2ceea07453cf4d685187013))
+
+
+### Performance Improvements
+
+* cache fir exit point options ([6841a63](https://github.com/VATSIM-UK/uk-controller-api/commit/6841a633062db376a551e237d33c9510f4bad6d2))
+
+
+### Miscellaneous Chores
+
+* delete old code ([b1f1446](https://github.com/VATSIM-UK/uk-controller-api/commit/b1f144687a815a03e5f72af36a0caffc54bc7f3e))
+
+
+### Data Updates
+
+* irish codes update ([77dc056](https://github.com/VATSIM-UK/uk-controller-api/commit/77dc056ff3c29a748140bf4fa0881202415527f1))
+* update intention code data ([e9d90ec](https://github.com/VATSIM-UK/uk-controller-api/commit/e9d90ec87a1429191dc757e43fc5a0e603e3588b))
+
+## [6.31.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.30.2...6.31.0) (2022-11-30)
+
+
+### Features
+
+* arrival allocation based only on origin ([e0727de](https://github.com/VATSIM-UK/uk-controller-api/commit/e0727de1ceed74edd011f2859be36ad1147bf301))
+
 ## [6.30.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.30.1...6.30.2) (2022-11-29)
 
 

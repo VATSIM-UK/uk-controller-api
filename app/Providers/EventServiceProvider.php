@@ -31,6 +31,7 @@ use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Hold\Hold;
+use App\Models\IntentionCode\FirExitPoint;
 use App\Models\Runway\Runway;
 use App\Models\Stand\Stand;
 use App\Observers\HoldObserver;
@@ -79,8 +80,9 @@ class EventServiceProvider extends ServiceProvider
         Aircraft::class => SelectOptionsObserver::class,
         Airfield::class => SelectOptionsObserver::class,
         Airline::class => SelectOptionsObserver::class,
-        Handoff::class => SelectOptionsObserver::class,
         ControllerPosition::class => SelectOptionsObserver::class,
+        FirExitPoint::class => SelectOptionsObserver::class,
+        Handoff::class => SelectOptionsObserver::class,
         Runway::class => SelectOptionsObserver::class,
         WakeCategoryScheme::class => SelectOptionsObserver::class,
     ];
