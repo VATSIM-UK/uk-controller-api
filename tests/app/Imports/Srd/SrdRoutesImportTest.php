@@ -20,7 +20,8 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         // Empty the table first
-        SrdRoute::all()->each(function (SrdRoute $route) {
+        SrdRoute::all()->each(function (SrdRoute $route)
+        {
             $route->delete();
         });
         $this->import = new SrdRoutesImport();
@@ -171,5 +172,167 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
     public function testItSubscribesToBeforeSheetEvents()
     {
         $this->assertArrayHasKey(BeforeSheet::class, (new SrdRoutesImport())->registerEvents());
+    }
+
+    public function invalidRowProvider(): array
+    {
+        return [
+            'Origin null' => [
+                [
+                    null,
+                    'WOTAN',
+                    '140',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Origin empty' => [
+                [
+                    '',
+                    'WOTAN',
+                    '140',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Destination null' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '140',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    null,
+                    ''
+                ]
+            ],
+            'Destination empty' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '140',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    '',
+                    ''
+                ]
+            ],
+            'Min level empty' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Min level not numeric' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    'abc',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Min level too low' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '0',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Min level too high' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '991',
+                    '150',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Max level null' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '140',
+                    null,
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Max level empty' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '140',
+                    '',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Max level too low' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '140',
+                    '0',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+            'Max level too high' => [
+                [
+                    'EGGD',
+                    'WOTAN',
+                    '140',
+                    '999',
+                    'L9 KENET',
+                    'OCK1A',
+                    'EGLL',
+                    ''
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidRowProvider
+     */
+    public function testItDoesntProcessInvalidRows(array $row)
+    {
+        $collection = new Collection();
+        $collection->push($row);
+
+        $this->import->collection($collection);
+        $this->assertCount(0, SrdRoute::all());
     }
 }
