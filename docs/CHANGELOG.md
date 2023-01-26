@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.34.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.0...6.34.1) (2023-01-26)
+
+
+### Bug Fixes
+
+* dont process invalid srd routes ([36e0fdf](https://github.com/VATSIM-UK/uk-controller-api/commit/36e0fdfef42e5764e55541ccf271af780f4e6635))
+
 ## [6.34.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.33.1...6.34.0) (2023-01-15)
 
 
