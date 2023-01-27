@@ -32,7 +32,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
     {
         $collection = new Collection();
         $collection->push(
-            [
+            collect([
                 'EGGD',
                 'WOTAN',
                 '140',
@@ -41,7 +41,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'OCK1A',
                 'EGLL',
                 'Notes: 1 - 2',
-            ]
+            ])
         );
 
         $this->import->collection($collection);
@@ -62,7 +62,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
     {
         $collection = new Collection();
         $collection->push(
-            [
+            collect([
                 'EGGD',
                 'WOTAN',
                 'MC',
@@ -71,7 +71,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'OCK1A',
                 'EGLL',
                 ''
-            ]
+            ])
         );
 
         $this->import->collection($collection);
@@ -90,7 +90,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
     public function testItProcessesNoRouteString()
     {
         $collection = new Collection();
-        $collection->push([
+        $collection->push(collect([
             'EGGD',
             'WOTAN',
             'MC',
@@ -99,7 +99,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
             'OCK1A',
             'EGLL',
             ''
-        ]);
+        ]));
 
         $this->import->collection($collection);
         $this->assertCount(1, SrdRoute::all());
@@ -118,7 +118,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
     {
         $collection = new Collection();
         $collection->push(
-            [
+            collect([
                 'EGGD',
                 'WOTAN',
                 '140',
@@ -127,10 +127,10 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'OCK1A',
                 'EGLL',
                 ''
-            ]
+            ])
         );
         $collection->push(
-            [
+            collect([
                 'EGFF',
                 'ALVIN',
                 '140',
@@ -139,7 +139,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
                 'OCK1A',
                 'EGLL',
                 ''
-            ]
+            ])
         );
 
         $this->import->collection($collection);
@@ -330,7 +330,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
     public function testItDoesntProcessInvalidRows(array $row)
     {
         $collection = new Collection();
-        $collection->push($row);
+        $collection->push(collect($row));
 
         $this->import->collection($collection);
         $this->assertCount(0, SrdRoute::all());
