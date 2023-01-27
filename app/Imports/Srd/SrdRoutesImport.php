@@ -25,7 +25,7 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
         foreach ($rows as $key => $row) {
             if (!$this->routeValid($row)) {
                 $warningMessage = sprintf('Invalid SRD route found at index %d', $key);
-                Log::warning($warningMessage, $row);
+                Log::warning($warningMessage, $row->toArray());
                 $this->output->warning(sprintf('Invalid route found at index %d', $key));
                 $this->output->progressAdvance();
                 continue;
@@ -50,7 +50,7 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
         $this->output->progressFinish();
     }
 
-    private function routeValid(array $row): bool
+    private function routeValid(Collection $row): bool
     {
         return !empty($row[0]) &&
             !empty($row[6]) &&
