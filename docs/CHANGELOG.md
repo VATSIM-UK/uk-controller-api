@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.34.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.1...6.34.2) (2023-01-27)
+
+
+### Bug Fixes
+
+* proper srd logging ([47fcdf5](https://github.com/VATSIM-UK/uk-controller-api/commit/47fcdf5c7cef82ce79f416ee83f515872066ee57))
+
 ## [6.34.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.0...6.34.1) (2023-01-26)
 
 
