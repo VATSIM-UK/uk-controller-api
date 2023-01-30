@@ -2,6 +2,7 @@
 
 namespace App\Models\Hold;
 
+use App\Models\Measurement\MeasurementUnit;
 use App\Models\Navigation\Navaid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,17 +25,14 @@ class Hold extends Model
         'updated_at',
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'navaid_id',
         'inbound_heading',
         'minimum_altitude',
         'maximum_altitude',
         'turn_direction',
+        'outbound_leg_value',
+        'outbound_leg_unit',
         'description',
     ];
 
@@ -42,6 +40,7 @@ class Hold extends Model
         'inbound_heading' => 'integer',
         'minimum_altitude' => 'integer',
         'maximum_altitude' => 'integer',
+        'outbound_leg_value' => 'float',
     ];
 
     public function navaid(): BelongsTo
@@ -62,5 +61,10 @@ class Hold extends Model
             'first_hold_id',
             'second_hold_id',
         )->withPivot('vsl_insert_distance');
+    }
+
+    public function outboundLegUnit(): BelongsTo
+    {
+        return $this->belongsTo(MeasurementUnit::class, 'outbound_leg_unit');
     }
 }

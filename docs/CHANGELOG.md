@@ -1,5 +1,50 @@
 # UK Controller Plugin API Changelog
 
+## [6.34.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.1...6.34.2) (2023-01-27)
+
+
+### Bug Fixes
+
+* proper srd logging ([47fcdf5](https://github.com/VATSIM-UK/uk-controller-api/commit/47fcdf5c7cef82ce79f416ee83f515872066ee57))
+
+## [6.34.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.0...6.34.1) (2023-01-26)
+
+
+### Bug Fixes
+
+* dont process invalid srd routes ([36e0fdf](https://github.com/VATSIM-UK/uk-controller-api/commit/36e0fdfef42e5764e55541ccf271af780f4e6635))
+
+## [6.34.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.33.1...6.34.0) (2023-01-15)
+
+
+### Features
+
+* allow specification of hold leg details ([518bab3](https://github.com/VATSIM-UK/uk-controller-api/commit/518bab394b882313489a26de6864a8b10e9aefcd))
+* display outbound leg in holds table ([286ad0b](https://github.com/VATSIM-UK/uk-controller-api/commit/286ad0b5b48df17adb22ac467a0df57b76a9aa52))
+
+
+### Bug Fixes
+
+* make new values save properly when saving hold ([6f7f8d9](https://github.com/VATSIM-UK/uk-controller-api/commit/6f7f8d951e058fa0b695bb2851c1b4a42dd708a6))
+
+## [6.33.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.33.0...6.33.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* optimise schedule task log items table daily ([64ad3df](https://github.com/VATSIM-UK/uk-controller-api/commit/64ad3df9f05593ce33b93ce82aa5ff6ae6362921))
+* prune schedule monitor daily ([ff88bd4](https://github.com/VATSIM-UK/uk-controller-api/commit/ff88bd49bf26c6e1650ba80f7c6cee498c58481d))
+* reduce number of tasks monitored ([aef1570](https://github.com/VATSIM-UK/uk-controller-api/commit/aef1570aa02e0d9e4a663047aab47d10cb287693))
+* remove unused schedule monitor command ([a630fca](https://github.com/VATSIM-UK/uk-controller-api/commit/a630fcad78cb19c0a8679e4439d7e10d4d8bf5c8))
+
+## [6.33.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.32.0...6.33.0) (2023-01-03)
+
+
+### Features
+
+* only allow fir exit point conditions at highest level ([f0fc155](https://github.com/VATSIM-UK/uk-controller-api/commit/f0fc155b0fe8009418dd845170aabd76d9a91063))
+* only allow one fir exit point per intention code ([716ef9e](https://github.com/VATSIM-UK/uk-controller-api/commit/716ef9e1ae51c78b0327fe2b31a735a368b0ff49))
+
 ## [6.32.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.31.0...6.32.0) (2022-12-24)
 
 

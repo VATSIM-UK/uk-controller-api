@@ -30,39 +30,53 @@ class HoldService
      */
     public function getHolds(): array
     {
-        $data = Hold::with('restrictions', 'navaid', 'deemedSeparatedHolds')->get()->toArray();
-        foreach ($data as $key => $hold) {
-            foreach ($hold['restrictions'] as $restrictionKey => $restriction) {
-                $data[$key]['restrictions'][$restrictionKey] =
-                    $data[$key]['restrictions'][$restrictionKey]['restriction'];
-            }
+        return Hold::with('restrictions', 'navaid', 'deemedSeparatedHolds', 'outboundLegUnit')
+            ->get()
+            ->map(function (Hold $hold): array {
+                $data = $hold->toArray();
 
-            foreach ($hold['deemed_separated_holds'] as $separatedKey => $deemedSeparated) {
-                $data[$key]['deemed_separated_holds'][$separatedKey] = [
-                    'hold_id' => $deemedSeparated['id'],
-                    'vsl_insert_distance' => $deemedSeparated['pivot']['vsl_insert_distance'],
-                ];
-            }
+                // Set restriction data
+                foreach ($hold->restrictions as $restrictionKey => $restriction) {
+                    $data['restrictions'][$restrictionKey] = $restriction['restriction'];
+                }
 
-            $data[$key]['fix'] = $data[$key]['navaid']['identifier'];
-            unset($data[$key]['navaid_id'], $data[$key]['navaid']);
-        }
+                // Set deemed separated data
+                foreach ($hold->deemedSeparatedHolds as $separatedKey => $deemedSeparated) {
+                    $data['deemed_separated_holds'][$separatedKey] = [
+                        'hold_id' => $deemedSeparated['id'],
+                        'vsl_insert_distance' => $deemedSeparated['pivot']['vsl_insert_distance'],
+                    ];
+                }
 
-        return $data;
+                // Add the navaid fix (for BC purposes)
+                $data['fix'] = $hold->navaid->identifier;
+
+                // Set the outbound leg unit#
+                $data['outbound_leg_unit'] = $hold->outboundLegUnit?->unit;
+
+
+                unset($data['navaid']);
+                return $data;
+            })
+            ->toArray();
     }
 
     public function removeStaleAssignments(): void
     {
         DB::transaction(function () {
             $assignmentsToRemove = AssignedHold::with('aircraft', 'navaid')->get()
-                ->filter(function (AssignedHold $hold) {
-                    return ($hold->aircraft->groundspeed === 0 && $hold->aircraft->altitude < 1000) ||
-                        $hold->aircraft->latLong->getDistance($hold->navaid->coordinate, new Haversine()) > 55000;
-                });
+                ->filter(
+                    function (AssignedHold $hold) {
+                        return ($hold->aircraft->groundspeed === 0 && $hold->aircraft->altitude < 1000) ||
+                            $hold->aircraft->latLong->getDistance($hold->navaid->coordinate, new Haversine()) > 55000;
+                    }
+                );
 
-            $assignmentsToRemove->each(function (AssignedHold $assignedHold) {
-                event(new HoldUnassignedEvent($assignedHold->callsign));
-            });
+            $assignmentsToRemove->each(
+                function (AssignedHold $assignedHold) {
+                    event(new HoldUnassignedEvent($assignedHold->callsign));
+                }
+            );
 
             AssignedHold::whereIn('callsign', $assignmentsToRemove->pluck('callsign'))
                 ->delete();
@@ -121,9 +135,11 @@ class HoldService
                     );
 
                     $aircraft->proximityNavaids()->whereIn('navaids.id', $toAttach->pluck('id'))
-                        ->each(function (Navaid $navaid) use ($aircraft) {
-                            event(new AircraftEnteredHoldingArea($aircraft, $navaid));
-                        });
+                        ->each(
+                            function (Navaid $navaid) use ($aircraft) {
+                                event(new AircraftEnteredHoldingArea($aircraft, $navaid));
+                            }
+                        );
                 }
 
                 /**
@@ -136,9 +152,11 @@ class HoldService
 
                 if ($toDetach->isNotEmpty()) {
                     $aircraft->proximityNavaids()->detach($toDetach->pluck('id'));
-                    $toDetach->each(function (Navaid $navaid) use ($aircraft) {
-                        event(new AircraftExitedHoldingArea($aircraft, $navaid));
-                    });
+                    $toDetach->each(
+                        function (Navaid $navaid) use ($aircraft) {
+                            event(new AircraftExitedHoldingArea($aircraft, $navaid));
+                        }
+                    );
                 }
             }
         );
@@ -158,9 +176,11 @@ class HoldService
             ->where('altitude', '<', 1000)
             ->get()
             ->each(function (NetworkAircraft $aircraft) {
-                $aircraft->proximityNavaids->each(function (Navaid $navaid) use ($aircraft) {
-                    event(new AircraftExitedHoldingArea($aircraft, $navaid));
-                });
+                $aircraft->proximityNavaids->each(
+                    function (Navaid $navaid) use ($aircraft) {
+                        event(new AircraftExitedHoldingArea($aircraft, $navaid));
+                    }
+                );
                 $aircraft->proximityNavaids()->sync([]);
             });
     }
