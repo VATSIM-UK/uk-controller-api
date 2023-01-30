@@ -165,7 +165,7 @@ jobs:
 
       # Run Tests
       - name: Run PHPUnit With Coverage
-        run: php artisan test --coverage-clover=coverage.xml
+        run: ./vendor/bin/phpunit --coverage-clover=coverage.xml
 
       # Run Coverage Suite
       - name: Upload Code Coverage Report

@@ -106,7 +106,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
-            ->callTableAction('attach', Handoff::findOrFail(1), ['recordId' => 3])
+            ->callTableAction('attach', data: ['recordId' => 3])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(
@@ -128,7 +128,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
             ControllersRelationManager::class,
             ['ownerRecord' => Handoff::findOrFail(1)]
         )
-            ->callTableAction('attach', Handoff::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
+            ->callTableAction('attach', data: ['recordId' => 3, 'insert_after' => 1])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(

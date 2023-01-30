@@ -124,7 +124,7 @@ class UserResourceTest extends BaseFilamentTestCase
             UserResource\RelationManagers\RolesRelationManager::class,
             ['ownerRecord' => $this->bannedUser()]
         )
-            ->callTableAction('attach', Role::fromKey(RoleKeys::DIVISION_STAFF_GROUP), ['recordId' => $rowToExpect])
+            ->callTableAction('attach', data: ['recordId' => $rowToExpect])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals([$rowToExpect], $this->bannedUser()->roles->pluck('id')->toArray());
@@ -139,7 +139,7 @@ class UserResourceTest extends BaseFilamentTestCase
             UserResource\RelationManagers\RolesRelationManager::class,
             ['ownerRecord' => $this->bannedUser()]
         )
-            ->callTableAction('detach', Role::fromKey(RoleKeys::DIVISION_STAFF_GROUP), ['recordId' => $rowToExpect])
+            ->callTableAction('detach', Role::fromKey(RoleKeys::DIVISION_STAFF_GROUP))
             ->assertHasNoTableActionErrors();
 
         $this->assertEmpty($this->bannedUser()->roles);
