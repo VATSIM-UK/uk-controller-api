@@ -106,7 +106,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1)]
         )
-            ->callTableAction('attach', Prenote::findOrFail(1), ['recordId' => 3])
+            ->callTableAction('attach', data: ['recordId' => 3])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(
@@ -128,7 +128,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1)]
         )
-            ->callTableAction('attach', Prenote::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
+            ->callTableAction('attach', data: ['recordId' => 3, 'insert_after' => 1])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(

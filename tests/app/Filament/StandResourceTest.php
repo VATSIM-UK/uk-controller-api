@@ -706,7 +706,7 @@ class StandResourceTest extends BaseFilamentTestCase
             PairedStandsRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
-            ->callTableAction('pair-stand', Stand::findOrFail(1), ['recordId' => 2])
+            ->callTableAction('pair-stand', data: ['recordId' => 2])
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
         $this->assertEquals([2], Stand::findOrFail(1)->pairedStands->pluck('id')->toArray());
@@ -750,7 +750,7 @@ class StandResourceTest extends BaseFilamentTestCase
             AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1)]
         )
-            ->callTableAction('pair-airline', Stand::findOrFail(1), ['recordId' => 1, 'priority' => 100])
+            ->callTableAction('pair-airline', data: ['recordId' => 1, 'priority' => 100])
             ->assertHasNoTableActionErrors();
 
         $this->assertDatabaseHas(
@@ -774,7 +774,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-                Stand::findOrFail(1),
+            data:
                 [
                     'recordId' => 1,
                     'destination' => 'EGKK',
@@ -806,7 +806,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-                Stand::findOrFail(1),
+            data:
                 [
                     'recordId' => 1,
                     'destination' => 'EGKK',
@@ -857,7 +857,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-                Stand::findOrFail(1),
+            data:
                 [
                     'recordId' => 1,
                     'destination' => 'EGKK',
@@ -876,7 +876,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-                Stand::findOrFail(1),
+            data:
                 [
                     'recordId' => 1,
                     'destination' => 'EGKK',
@@ -895,7 +895,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-                Stand::findOrFail(1),
+            data:
                 [
                     'recordId' => 1,
                     'destination' => 'EGKK',
@@ -914,7 +914,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-                Stand::findOrFail(1),
+            data:
                 [
                     'recordId' => 1,
                     'destination' => 'EGKKS',

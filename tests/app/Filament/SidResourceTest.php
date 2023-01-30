@@ -406,7 +406,7 @@ class SidResourceTest extends BaseFilamentTestCase
             PrenotesRelationManager::class,
             ['ownerRecord' => Sid::findOrFail(1)]
         )
-            ->callTableAction('attach', Sid::findOrFail(1), ['recordId' => 2, 'priority' => 100])
+            ->callTableAction('attach', data: ['recordId' => 2, 'priority' => 100])
             ->assertHasNoTableActionErrors();
 
         $this->assertDatabaseHas(

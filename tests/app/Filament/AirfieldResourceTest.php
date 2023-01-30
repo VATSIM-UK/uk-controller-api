@@ -460,7 +460,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
             ControllersRelationManager::class,
             ['ownerRecord' => Airfield::findOrFail(1)]
         )
-            ->callTableAction('attach', Airfield::findOrFail(1), ['recordId' => 4])
+            ->callTableAction('attach', data: ['recordId' => 4])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(
@@ -483,7 +483,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
             ControllersRelationManager::class,
             ['ownerRecord' => Airfield::findOrFail(1)]
         )
-            ->callTableAction('attach', Airfield::findOrFail(1), ['recordId' => 3, 'insert_after' => 1])
+            ->callTableAction('attach', data: ['recordId' => 3, 'insert_after' => 1])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(
@@ -695,7 +695,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
             ControllersRelationManager::class,
             ['ownerRecord' => Airfield::findOrFail(1)]
         )
-            ->callTableAction('attach', Airfield::findOrFail(1), ['recordId' => 4])
+            ->callTableAction('attach', data: ['recordId' => 4])
             ->assertHasNoTableActionErrors();
 
         $this->assertEquals(

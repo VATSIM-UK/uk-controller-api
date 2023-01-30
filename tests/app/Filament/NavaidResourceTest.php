@@ -277,7 +277,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Nice Hold',
                     'inbound_heading' => 123,
@@ -311,7 +311,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -368,7 +368,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -429,7 +429,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -485,7 +485,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => Str::padLeft('', 256, 'a'),
                     'inbound_heading' => 123,
@@ -503,7 +503,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 0,
@@ -521,7 +521,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 361,
@@ -539,7 +539,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -557,7 +557,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -575,7 +575,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -593,7 +593,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -611,7 +611,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -629,7 +629,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -649,7 +649,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -669,7 +669,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -688,7 +688,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -718,7 +718,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -748,7 +748,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -779,7 +779,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
@@ -810,7 +810,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
         Livewire::test(HoldsRelationManager::class, ['ownerRecord' => $navaid])
             ->callTableAction(
                 'create',
-                $navaid,
+            data:
                 [
                     'description' => 'A Hold',
                     'inbound_heading' => 123,
