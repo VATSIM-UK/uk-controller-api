@@ -3,18 +3,17 @@
 namespace App\Rules\Controller;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class ControllerPositionPartialCallsignTest extends BaseUnitTestCase
 {
-    /**
-     * @dataProvider callsignProvider
-     */
+    #[DataProvider('callsignProvider')]
     public function testItValidatesCallsign(mixed $callsign, bool $expected)
     {
         $this->assertEquals($expected, (new ControllerPositionPartialCallsign())->passes('callsign', $callsign));
     }
 
-    public function callsignProvider(): array
+    public static function callsignProvider(): array
     {
         return [
             'Null' => [null, false],

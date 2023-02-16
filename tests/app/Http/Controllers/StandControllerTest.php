@@ -10,6 +10,7 @@ use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class StandControllerTest extends BaseApiTestCase
 {
@@ -97,16 +98,14 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(200);
     }
 
-    /**
-     * @dataProvider badAssignmentDataProvider
-     */
+    #[DataProvider('badAssignmentDataProvider')]
     public function testItReturnsInvalidRequestOnBadStandAssignmentData(array $data)
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
             ->assertStatus(400);
     }
 
-    public function badAssignmentDataProvider(): array
+    public static function badAssignmentDataProvider(): array
     {
         return [
             [

@@ -8,6 +8,7 @@ use App\Models\Aircraft\Aircraft;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class ImporterTest extends BaseFunctionalTestCase
 {
@@ -99,9 +100,7 @@ class ImporterTest extends BaseFunctionalTestCase
         $this->assertEquals(3, $secondAircraft->wakeCategories->first()->id);
     }
 
-    /**
-     * @dataProvider wakeTypesProvider
-     */
+    #[DataProvider('wakeTypesProvider')]
     public function testItImportsAllUkWakeTypes(string $wakeType, int $expectedTypeId)
     {
         $rows = (new Collection())
@@ -119,7 +118,7 @@ class ImporterTest extends BaseFunctionalTestCase
         $this->assertEquals($expectedTypeId, $aircraft->first()->wakeCategories->first()->id);
     }
 
-    public function wakeTypesProvider(): array
+    public static function wakeTypesProvider(): array
     {
         return [
             [

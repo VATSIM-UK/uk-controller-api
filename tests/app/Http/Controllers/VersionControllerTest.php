@@ -7,6 +7,7 @@ use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
 use App\Providers\AuthServiceProvider;
 use App\Services\VersionService;
+use PHPUnit\Metadata\Api\DataProvider;
 use TestingUtils\Traits\WithSeedUsers;
 
 class VersionControllerTest extends BaseApiTestCase
@@ -112,7 +113,7 @@ class VersionControllerTest extends BaseApiTestCase
             ->assertOk();
     }
 
-    public function badPublishDataProvider(): array
+    public static function badPublishDataProvider(): array
     {
         return [
             'No release' => [
@@ -143,9 +144,7 @@ class VersionControllerTest extends BaseApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider badPublishDataProvider
-     */
+    #[DataProvider('badPublishDataProvider')]
     public function testItHandlesBadPublishData(array $data)
     {
         $this->makeAuthenticatedApiGithubRequest('version', $data)

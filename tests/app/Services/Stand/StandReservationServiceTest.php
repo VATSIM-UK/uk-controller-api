@@ -14,6 +14,7 @@ use App\Models\Stand\StandReservation;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Exception;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class StandReservationServiceTest extends BaseFunctionalTestCase
 {
@@ -38,9 +39,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider goodDataProvider
-     */
+    #[DataProvider('goodDataProvider')]
     public function testItCreatesStandReservations(
         string $callsign,
         CarbonInterface $startTime,
@@ -48,7 +47,8 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         ?string $origin,
         ?string $destination,
         ?int $cid
-    ) {
+    )
+    {
         StandReservationService::createStandReservation(
             $callsign,
             1,
@@ -73,7 +73,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function goodDataProvider(): array
+    public static function goodDataProvider(): array
     {
         return [
             'Starts before existing, ends before existing' => [
@@ -127,9 +127,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItThrowsExceptionsForBadReservationData(
         string $callsign,
         int $standId,
@@ -140,7 +138,8 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         ?int $cid,
         string $expectedExceptionType,
         string $expectedExceptionMessage
-    ) {
+    )
+    {
         try {
             StandReservationService::createStandReservation(
                 $callsign,
@@ -164,7 +163,7 @@ class StandReservationServiceTest extends BaseFunctionalTestCase
         $this->fail('Expected exception but none thrown');
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Invalid callsign' => [

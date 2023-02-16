@@ -6,12 +6,11 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Metadata\Api\DataProvider;
 
 trait ChecksEditFilamentAccess
 {
-    /**
-     * @dataProvider editRoleProvider
-     */
+    #[DataProvider('editRoleProvider')]
     public function testItCanOnlyBeEditedByCertainRoles(?RoleKeys $role, bool $expectSuccess)
     {
         $user = User::factory()->create();

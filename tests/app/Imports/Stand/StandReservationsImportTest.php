@@ -5,6 +5,7 @@ namespace App\Imports\Stand;
 use App\BaseFunctionalTestCase;
 use Illuminate\Console\OutputStyle;
 use Mockery;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class StandReservationsImportTest extends BaseFunctionalTestCase
 {
@@ -112,7 +113,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
         );
     }
 
-    public function badReservationProvider(): array
+    public static function badReservationProvider(): array
     {
         return [
             'Unknown airport' => [
@@ -172,9 +173,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider badReservationProvider
-     */
+    #[DataProvider('badReservationProvider')]
     public function testItDoesntImportBadReservations(array $reservationData)
     {
         $reservation = collect(

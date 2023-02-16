@@ -7,6 +7,7 @@ use App\Events\EnrouteReleaseEvent;
 use App\Models\Release\Enroute\EnrouteReleaseType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class ReleaseControllerTest extends BaseApiTestCase
 {
@@ -137,9 +138,7 @@ class ReleaseControllerTest extends BaseApiTestCase
         );
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItReturnsBadRequestOnBadData(array $data)
     {
         $this->doesntExpectEvents(EnrouteReleaseEvent::class);
@@ -159,7 +158,7 @@ class ReleaseControllerTest extends BaseApiTestCase
     }
 
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             [[

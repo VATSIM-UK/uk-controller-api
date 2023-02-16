@@ -4,6 +4,7 @@ namespace App\Services\Metar\Parser;
 
 use App\BaseUnitTestCase;
 use App\Models\Airfield\Airfield;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class WindParserTest extends BaseUnitTestCase
 {
@@ -15,9 +16,7 @@ class WindParserTest extends BaseUnitTestCase
         $this->parser = $this->app->make(WindParser::class);
     }
 
-    /**
-     * @dataProvider windDataProvider
-     */
+    #[DataProvider('windDataProvider')]
     public function testItParsesWind(string $windToken, int $expectedSpeed, int $expectedDirection, ?int $expectedGust)
     {
         $parsed = $this->parser->parse(new Airfield(), collect([$windToken]));
@@ -27,7 +26,7 @@ class WindParserTest extends BaseUnitTestCase
         $this->assertEquals($expectedGust, $parsed->offsetGet('wind_gust'));
     }
 
-    public function windDataProvider(): array
+    public static function windDataProvider(): array
     {
         return [
             'No gusts' => [
@@ -63,16 +62,14 @@ class WindParserTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider badWindProvider
-     */
+    #[DataProvider('badWindProvider')]
     public function testItHandlesBadWind(string $windToken)
     {
         $parsed = $this->parser->parse(new Airfield(), collect([$windToken]));
         $this->assertEmpty($parsed);
     }
 
-    public function badWindProvider(): array
+    public static function badWindProvider(): array
     {
         return [
             'No knots' => [

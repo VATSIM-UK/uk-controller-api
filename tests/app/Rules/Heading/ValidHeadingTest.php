@@ -3,6 +3,7 @@
 namespace App\Rules\Heading;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class ValidHeadingTest extends BaseUnitTestCase
 {
@@ -14,15 +15,13 @@ class ValidHeadingTest extends BaseUnitTestCase
         $this->rule = new ValidHeading();
     }
 
-    /**
-     * @dataProvider goodDataProvider
-     */
+    #[DataProvider('goodDataProvider')]
     public function testItPasses($data)
     {
         $this->assertTrue($this->rule->passes('', $data));
     }
 
-    public function goodDataProvider(): array
+    public static function goodDataProvider(): array
     {
         return [
             'North Zero' => [0],
@@ -40,15 +39,13 @@ class ValidHeadingTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItFails($data)
     {
         $this->assertFalse($this->rule->passes('', $data));
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Null' => [null],

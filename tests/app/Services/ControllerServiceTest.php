@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Helpers\Vatsim\ParsedControllerPosition;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\ControllerPositionAlternativeCallsign;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class ControllerServiceTest extends BaseFunctionalTestCase
 {
@@ -20,15 +21,13 @@ class ControllerServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(ControllerService::class);
     }
 
-    /**
-     * @dataProvider controllerLevelProvider
-     */
+    #[DataProvider('controllerLevelProvider')]
     public function testItGetsControllerLevelFromCallsign(string $value, string $expected)
     {
         $this->assertEquals($expected, ControllerService::getControllerLevelFromCallsign($value));
     }
 
-    public function controllerLevelProvider(): array
+    public static function controllerLevelProvider(): array
     {
         return [
             ['', ''],
@@ -45,15 +44,13 @@ class ControllerServiceTest extends BaseFunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider controllerFacilityProvider
-     */
+    #[DataProvider('controllerFacilityProvider')]
     public function testItGetsControllerFacilityFromCallsign(string $value, string $expected)
     {
         $this->assertEquals($expected, ControllerService::getControllerFacilityFromCallsign($value));
     }
 
-    public function controllerFacilityProvider(): array
+    public static function controllerFacilityProvider(): array
     {
         return [
             ['EGKK', 'EGKK'],

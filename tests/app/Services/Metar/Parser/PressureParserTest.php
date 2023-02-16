@@ -4,6 +4,7 @@ namespace App\Services\Metar\Parser;
 
 use App\BaseUnitTestCase;
 use App\Models\Airfield\Airfield;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class PressureParserTest extends BaseUnitTestCase
 {
@@ -17,16 +18,14 @@ class PressureParserTest extends BaseUnitTestCase
         $this->airfield = new Airfield(['elevation' => 300]);
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItDoesntFindBadData(array $tokens)
     {
         $parsed = $this->parser->parse($this->airfield, collect($tokens));
         $this->assertEmpty($parsed);
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Empty metar' => [

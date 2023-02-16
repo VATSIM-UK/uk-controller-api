@@ -6,14 +6,13 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Metadata\Api\DataProvider;
 
 trait ChecksViewFilamentAccess
 {
     use HasResourceClass;
 
-    /**
-     * @dataProvider viewRoleProvider
-     */
+    #[DataProvider('viewRoleProvider')]
     public function testItCanBeViewed(?RoleKeys $role, bool $canView)
     {
         $user = User::factory()->create();

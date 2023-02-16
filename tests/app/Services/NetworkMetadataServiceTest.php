@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class NetworkMetadataServiceTest extends BaseFunctionalTestCase
 {
@@ -97,9 +98,7 @@ class NetworkMetadataServiceTest extends BaseFunctionalTestCase
         $this->service->getNetworkDataUrl();
     }
 
-    /**
-     * @dataProvider badMetadataProvider
-     */
+    #[DataProvider('badMetadataProvider')]
     public function testItHandlesBadMetadataResponse($metadata)
     {
         $this->fakeMetadataRequest(
@@ -110,7 +109,7 @@ class NetworkMetadataServiceTest extends BaseFunctionalTestCase
         $this->service->getNetworkDataUrl();
     }
 
-    public function badMetadataProvider(): array
+    public static function badMetadataProvider(): array
     {
         return [
             'Data URL is not URL' => [
@@ -184,7 +183,8 @@ class NetworkMetadataServiceTest extends BaseFunctionalTestCase
 
     private function assertMetadataRequest()
     {
-        Http::assertSent(function (Request $request) {
+        Http::assertSent(function (Request $request)
+        {
             return $request->header('User-Agent')[0] === 'UKCP API' &&
                 $request->url() === self::METADATA_URL;
         });

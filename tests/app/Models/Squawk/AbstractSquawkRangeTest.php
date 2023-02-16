@@ -6,30 +6,25 @@ use App\BaseUnitTestCase;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class AbstractSquawkRangeTest extends BaseUnitTestCase
 {
-    /**
-     * @dataProvider exceptionTestProvider
-     *
-     * @param string $first
-     * @param string $last
-     * @param string $exceptionClass
-     * @param string $exceptionMessage
-     */
+    #[DataProvider('exceptionTestProvider')]
     public function testItThrowsExceptionsOnBadData(
         string $first,
         string $last,
         string $exceptionClass,
         string $exceptionMessage
-    ) {
+    )
+    {
         $this->expectException($exceptionClass);
         $this->expectExceptionMessage($exceptionMessage);
         $range = new CcamsSquawkRange(['first' => $first, 'last' => $last]);
         $range->getAllSquawksInRange();
     }
 
-    public function exceptionTestProvider(): array
+    public static function exceptionTestProvider(): array
     {
         return [
             ['111', '0101', InvalidArgumentException::class, 'Invalid first squawk of range: 111'],
@@ -70,9 +65,7 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider rangeProvider
-     */
+    #[DataProvider('rangeProvider')]
     public function testItReturnsCorrectSquawksInRange(string $first, string $last, array $expected)
     {
         $range = new CcamsSquawkRange(['first' => $first, 'last' => $last]);
@@ -80,7 +73,7 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
         $this->assertEquals($expected, $range->getAllSquawksInRange());
     }
 
-    public function rangeProvider(): array
+    public static function rangeProvider(): array
     {
         return [
             // Within boundary
@@ -98,20 +91,19 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider inRangeProvider
-     */
+    #[DataProvider('rangeProvider')]
     public function testItReturnsIfSquawkIsInRange(
         string $first,
         string $last,
         string $code,
         bool $inRange
-    ) {
+    )
+    {
         $range = new CcamsSquawkRange(['first' => $first, 'last' => $last]);
         $this->assertEquals($inRange, $range->squawkInRange($code));
     }
 
-    public function inRangeProvider(): array
+    public static function inRangeProvider(): array
     {
         return [
             ['0000', '0007', '0000', true],

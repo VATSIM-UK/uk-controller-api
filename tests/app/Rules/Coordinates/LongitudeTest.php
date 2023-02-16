@@ -3,6 +3,7 @@
 namespace App\Rules\Coordinates;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class LongitudeTest extends BaseUnitTestCase
 {
@@ -14,15 +15,13 @@ class LongitudeTest extends BaseUnitTestCase
         $this->rule = new Longitude();
     }
 
-    /**
-     * @dataProvider goodDataProvider
-     */
+    #[DataProvider('goodDataProvider')]
     public function testItPasses($value)
     {
         $this->assertTrue($this->rule->passes('', $value));
     }
 
-    public function goodDataProvider(): array
+    public static function goodDataProvider(): array
     {
         return [
             'Valid float' => ['45.1'],
@@ -44,15 +43,13 @@ class LongitudeTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItFails($value)
     {
         $this->assertFalse($this->rule->passes('', $value));
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Is null' => [null],

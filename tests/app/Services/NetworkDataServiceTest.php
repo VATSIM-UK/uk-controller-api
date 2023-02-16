@@ -5,6 +5,7 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use Exception;
 use Mockery;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class NetworkDataServiceTest extends BaseFunctionalTestCase
 {
@@ -53,16 +54,14 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
         $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
             collect([
-                        'pilots' => $expected->toArray()
-                    ])
+                'pilots' => $expected->toArray()
+            ])
         );
 
         $this->assertEquals($expected, $this->service->getNetworkAircraftData());
     }
 
-    /**
-     * @dataProvider badAircraftProvider
-     */
+    #[DataProvider('badAircraftProvider')]
     public function testItDoesntReturnInvalidAircraft(array $data)
     {
         $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
@@ -72,7 +71,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->assertTrue($this->service->getNetworkAircraftData()->isEmpty());
     }
 
-    public function badAircraftProvider(): array
+    public static function badAircraftProvider(): array
     {
         return [
             'No pilots' => [
@@ -497,16 +496,14 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
 
         $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
             collect([
-                        'controllers' => $expected->toArray()
-                    ])
+                'controllers' => $expected->toArray()
+            ])
         );
 
         $this->assertEquals($expected, $this->service->getNetworkControllerData());
     }
 
-    /**
-     * @dataProvider badControllerProvider
-     */
+    #[DataProvider('badControllerProvider')]
     public function testItDoesntReturnInvalidControllers(array $data)
     {
         $this->dataDownloadService->expects('getNetworkData')->once()->andReturn(
@@ -516,7 +513,7 @@ class NetworkDataServiceTest extends BaseFunctionalTestCase
         $this->assertTrue($this->service->GetNetworkControllerData()->isEmpty());
     }
 
-    public function badControllerProvider(): array
+    public static function badControllerProvider(): array
     {
         return [
             'Cid missing' => [

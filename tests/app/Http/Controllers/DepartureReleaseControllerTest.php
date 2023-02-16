@@ -7,6 +7,7 @@ use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class DepartureReleaseControllerTest extends BaseApiTestCase
 {
@@ -45,7 +46,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         );
     }
 
-    public function badReleaseRequestProvider(): array
+    public static function badReleaseRequestProvider(): array
     {
         return [
             'Missing callsign' => [
@@ -159,9 +160,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider badReleaseRequestProvider
-     */
+    #[DataProvider('badReleaseRequestProvider')]
     public function testItDoesntCreateAReleaseOnBadData(array $requestData)
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'departure/release/request', $requestData)
@@ -358,7 +357,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         );
     }
 
-    public function badApprovalDataProvider(): array
+    public static function badApprovalDataProvider(): array
     {
         return [
             'Controller position id missing' => [
@@ -440,9 +439,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider badApprovalDataProvider
-     */
+    #[DataProvider('badApprovalDataProvider')]
     public function testReleasesCannotBeApprovedOnBadData(array $approvalData)
     {
         $request = DepartureReleaseRequest::create(
@@ -588,7 +585,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         );
     }
 
-    public function badRejectionDataProvider(): array
+    public static function badRejectionDataProvider(): array
     {
         return [
             'Controller position id missing' => [
@@ -620,9 +617,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider badRejectionDataProvider
-     */
+    #[DataProvider('badRejectionDataProvider')]
     public function testReleasesCannotBeRejectedOnBadData(array $rejectedData)
     {
         $request = DepartureReleaseRequest::create(
@@ -731,7 +726,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         );
     }
 
-    public function badAcknowledgementDataProvider(): array
+    public static function badAcknowledgementDataProvider(): array
     {
         return [
             'Controller position id missing' => [
@@ -751,9 +746,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider badAcknowledgementDataProvider
-     */
+    #[DataProvider('badAcknowledgementDataProvider')]
     public function testReleasesCannotBeAcknowledgedOnBadData(array $acknowledgeData)
     {
         $request = DepartureReleaseRequest::create(

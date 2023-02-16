@@ -3,6 +3,7 @@
 namespace App\Rules\Squawk;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class SquawkCodeTest extends BaseUnitTestCase
 {
@@ -14,7 +15,7 @@ class SquawkCodeTest extends BaseUnitTestCase
         $this->rule = $this->app->make(SqauwkCode::class);
     }
 
-    public function validDataProvider(): array
+    public static function validDataProvider(): array
     {
         return [
             ['0000'],
@@ -27,15 +28,13 @@ class SquawkCodeTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider validDataProvider
-     */
+    #[DataProvider('validDataProvider')]
     public function testItPassesOnValidSquawk(string $squawk)
     {
         $this->assertTrue($this->rule->passes(null, $squawk));
     }
 
-    public function invalidDataProvider(): array
+    public static function invalidDataProvider(): array
     {
         return [
             'Too short' => ['123'],
@@ -47,9 +46,7 @@ class SquawkCodeTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidDataProvider
-     */
+    #[DataProvider('invalidDataProvider')]
     public function testItFailsOnBadIcaos($icao)
     {
         $this->assertFalse($this->rule->passes(null, $icao));

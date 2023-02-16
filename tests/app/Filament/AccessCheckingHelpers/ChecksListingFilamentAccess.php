@@ -5,14 +5,13 @@ namespace App\Filament\AccessCheckingHelpers;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use PHPUnit\Metadata\Api\DataProvider;
 
 trait ChecksListingFilamentAccess
 {
     use HasResourceClass;
 
-    /**
-     * @dataProvider indexRoleProvider
-     */
+    #[DataProvider('indexRoleProvider')]
     public function testItCanBeIndexed(?RoleKeys $role, bool $canIndex)
     {
         $this->beforeListing();

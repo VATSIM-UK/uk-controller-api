@@ -4,6 +4,7 @@ namespace App\Rules\Controller;
 
 use App\BaseUnitTestCase;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class ControllerPositionFrequencyTest extends BaseUnitTestCase
 {
@@ -20,15 +21,13 @@ class ControllerPositionFrequencyTest extends BaseUnitTestCase
             ->fails();
     }
 
-    /**
-     * @dataProvider frequencyProvider
-     */
+    #[DataProvider('frequencyProvider')]
     public function testItValidatesFrequency(mixed $frequency, bool $expected)
     {
         $this->assertEquals($expected, $this->validateResult($frequency));
     }
 
-    public function frequencyProvider(): array
+    public static function frequencyProvider(): array
     {
         return [
             'Null' => [null, false],

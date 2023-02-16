@@ -8,12 +8,11 @@ use App\Models\User\User;
 use Filament\Resources\Pages\ManageRecords;
 use Livewire\Livewire;
 use Livewire\Testing\TestableLivewire;
+use PHPUnit\Metadata\Api\DataProvider;
 
 trait ChecksFilamentActionVisibility
 {
-    /**
-     * @dataProvider tableActionProvider
-     */
+    #[DataProvider('tableActionProvider')]
     public function testItControlsActionVisibility(
         callable $testCase,
         ?RoleKeys $role,
@@ -27,7 +26,7 @@ trait ChecksFilamentActionVisibility
         $testCase();
     }
 
-    public function tableActionProvider(): array
+    public static function tableActionProvider(): array
     {
         return tap(
             array_merge(

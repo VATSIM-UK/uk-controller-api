@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class PluginEditablePolicyTest extends BaseUnitTestCase
 {
@@ -14,15 +15,13 @@ class PluginEditablePolicyTest extends BaseUnitTestCase
         $this->policy = $this->app->make(PluginEditableDataPolicy::class);
     }
 
-    /**
-     * @dataProvider methodProvider
-     */
+    #[DataProvider('methodProvider')]
     public function testItChecksAccess(string $method, bool $expected)
     {
         $this->assertEquals($expected, $this->policy->$method());
     }
 
-    public function methodProvider(): array
+    public static function methodProvider(): array
     {
         return [
             'view' => ['view', true],

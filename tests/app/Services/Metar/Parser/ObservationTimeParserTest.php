@@ -5,6 +5,7 @@ namespace App\Services\Metar\Parser;
 use App\BaseUnitTestCase;
 use App\Models\Airfield\Airfield;
 use Carbon\Carbon;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class ObservationTimeParserTest extends BaseUnitTestCase
 {
@@ -17,9 +18,7 @@ class ObservationTimeParserTest extends BaseUnitTestCase
         Carbon::setTestNow(Carbon::parse('2021-12-11 12:00:00')->utc());
     }
 
-    /**
-     * @dataProvider timeDataProvider
-     */
+    #[DataProvider('timeDataProvider')]
     public function testItParsesData(string $timeToken, string $expectedTime)
     {
         $parsed = $this->parser->parse(new Airfield(), collect([$timeToken]));
@@ -27,7 +26,7 @@ class ObservationTimeParserTest extends BaseUnitTestCase
         $this->assertEquals(Carbon::parse($expectedTime), $parsed->offsetGet('observation_time'));
     }
 
-    public function timeDataProvider(): array
+    public static function timeDataProvider(): array
     {
         return [
             'Day less than ten' => [
@@ -57,15 +56,13 @@ class ObservationTimeParserTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItDoesntParseBadData(string $timeToken)
     {
         $this->assertEmpty($this->parser->parse(new Airfield(), collect([$timeToken])));
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Too short' => [

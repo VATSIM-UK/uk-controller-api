@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class UserPolicyTest extends BaseFunctionalTestCase
 {
@@ -17,9 +18,7 @@ class UserPolicyTest extends BaseFunctionalTestCase
         $this->userPolicy = $this->app->make(UserPolicy::class);
     }
 
-    /**
-     * @dataProvider updateDataProvider
-     */
+    #[DataProvider('updateDataProvider')]
     public function testItManagesUpdateAccess(string $action, ?RoleKeys $role, bool $sameUser, bool $expected)
     {
         $user = User::factory()->create();
@@ -34,7 +33,7 @@ class UserPolicyTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->userPolicy->$action($user, $otherUser));
     }
 
-    public function updateDataProvider(): array
+    public static function updateDataProvider(): array
     {
         return [
             'Update No Role Different User' => ['update', null, false, false],
@@ -66,9 +65,7 @@ class UserPolicyTest extends BaseFunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    #[DataProvider('dataProvider')]
     public function testItManagesAccessForOtherRoles(string $action, ?RoleKeys $role, bool $expected)
     {
         $user = User::factory()->create();
@@ -79,7 +76,7 @@ class UserPolicyTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->userPolicy->$action($user));
     }
 
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             'View No Role' => ['view', null, false],

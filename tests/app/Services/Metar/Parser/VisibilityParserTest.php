@@ -4,6 +4,7 @@ namespace App\Services\Metar\Parser;
 
 use App\BaseUnitTestCase;
 use App\Models\Airfield\Airfield;
+use PHPUnit\Metadata\Api\DataProvider;
 
 class VisibilityParserTest extends BaseUnitTestCase
 {
@@ -22,15 +23,13 @@ class VisibilityParserTest extends BaseUnitTestCase
         $this->assertEquals(5000, $parsed->offsetGet('visibility'));
     }
 
-    /**
-     * @dataProvider badVisibilityProvider
-     */
+    #[DataProvider('badVisibilityProvider')]
     public function testItDoesntParseMalformedVisibility(string $visibility)
     {
         $this->assertEmpty($this->parser->parse(new Airfield(), collect([$visibility])));
     }
 
-    public function badVisibilityProvider(): array
+    public static function badVisibilityProvider(): array
     {
         return [
             'Too long' => [

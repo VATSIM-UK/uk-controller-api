@@ -5,14 +5,13 @@ namespace App\Filament\AccessCheckingHelpers;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 trait ChecksCreateFilamentAccess
 {
     use HasResourceClass;
 
-    /**
-     * @dataProvider createRoleProvider
-     */
+    #[DataProvider('createRoleProvider')]
     public function testItCanOnlyBeCreatedByCertainRoles(?RoleKeys $role, bool $expectSuccess)
     {
         $user = User::factory()->create();
