@@ -13,7 +13,6 @@
         "bugsnag/bugsnag-laravel": "^2.24",
         "composer/semver": "^3.2",
         "filament/filament": "^2.15.18",
-        "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0",
         "knplabs/github-api": "^3.0",
         "laravel/framework": "^9.0",
