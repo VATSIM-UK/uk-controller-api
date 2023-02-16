@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\Prenote\PrenoteMessage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use PHPUnit\Metadata\Api\DataProvider;
 
 class PrenoteMessageControllerTest extends BaseApiTestCase
@@ -13,7 +14,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
-        $this->withoutEvents();
+        Event::fake();
     }
 
     public function testUnauthorisedUsersCantSendPrenoteMessages()

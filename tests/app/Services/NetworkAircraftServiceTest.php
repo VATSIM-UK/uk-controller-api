@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Mockery;
 
@@ -50,7 +51,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItAddsNewAircraftFromDataFeed()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
@@ -68,7 +69,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesExistingAircraftFromDataFeed()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
@@ -85,7 +86,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesExistingAircraftTransponderChangedAtFromDataFeed()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
@@ -109,7 +110,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
             ['transponder_last_updated_at' => $transponderUpdatedAt]
         );
 
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
@@ -127,7 +128,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesExistingAircraftOnTheGroundFromDataFeed()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseHas(
@@ -141,7 +142,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntAddAtcFromDataFeed()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(
@@ -154,7 +155,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntUpdateAircraftOutOfRangeFromTheDataFeed()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(
@@ -167,7 +168,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntUpdateAircraftWithInvalidTransponderFromDataFeed()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         $this->assertDatabaseMissing(

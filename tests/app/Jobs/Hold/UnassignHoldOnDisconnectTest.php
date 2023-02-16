@@ -7,6 +7,7 @@ use App\Events\HoldUnassignedEvent;
 use App\Models\Hold\AssignedHold;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 
 class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
 {
@@ -35,7 +36,7 @@ class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
 
     public function testItDeletesAssignedHold()
     {
-        $this->withoutEvents();
+        Event::fake();
         $this->listener->perform(NetworkAircraft::find('BAW123'));
 
         $this->assertDatabaseMissing(

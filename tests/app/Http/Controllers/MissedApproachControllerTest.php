@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\MissedApproach\MissedApproachNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
 use PHPUnit\Metadata\Api\DataProvider;
 use util\Traits\WithNetworkController;
 
@@ -15,7 +16,7 @@ class MissedApproachControllerTest extends BaseApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->withoutEvents();
+        Event::fake();
         $this->setNetworkController(self::ACTIVE_USER_CID);
     }
 

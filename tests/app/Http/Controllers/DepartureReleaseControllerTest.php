@@ -6,6 +6,7 @@ use App\BaseApiTestCase;
 use App\Models\Release\Departure\DepartureReleaseRequest;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use PHPUnit\Metadata\Api\DataProvider;
 
@@ -16,7 +17,7 @@ class DepartureReleaseControllerTest extends BaseApiTestCase
         parent::setUp();
         Carbon::setTestNow(Carbon::now()->startOfSecond());
         CarbonImmutable::setTestNow(Carbon::now()->startOfSecond());
-        $this->withoutEvents();
+        Event::fake();
     }
 
     public function testItRequestsARelease()
