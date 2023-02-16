@@ -8,11 +8,6 @@ use Illuminate\Support\Collection;
 
 class UnitDiscreteSquawkRange extends AbstractSquawkRange
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'unit',
         'first',
@@ -22,6 +17,8 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
 
     protected $casts = [
         'rules' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function first(): string
@@ -38,7 +35,8 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
     {
         return tap(
             collect(),
-            function (Collection $rules) {
+            function (Collection $rules)
+            {
                 if (!$this->rules) {
                     return;
                 }

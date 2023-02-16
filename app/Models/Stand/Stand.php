@@ -44,12 +44,9 @@ class Stand extends Model
         'latitude' => 'double',
         'longitude' => 'double',
         'assignment_priority' => 'integer',
-    ];
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'closed_at',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     public function assignment(): HasOne
@@ -69,7 +66,8 @@ class Stand extends Model
 
     public function scopeAirfield(Builder $query, string $airfield): Builder
     {
-        return $query->whereHas('airfield', function (Builder $airfieldQuery) use ($airfield) {
+        return $query->whereHas('airfield', function (Builder $airfieldQuery) use ($airfield)
+        {
             return $airfieldQuery->where('code', $airfield);
         });
     }
@@ -93,7 +91,8 @@ class Stand extends Model
     public function scopeUnoccupied(Builder $builder): Builder
     {
         return $builder->whereDoesntHave('occupier')
-            ->whereDoesntHave('pairedStands', function (Builder $pairedStand) {
+            ->whereDoesntHave('pairedStands', function (Builder $pairedStand)
+            {
                 $pairedStand->whereHas('occupier');
             });
     }
@@ -111,7 +110,8 @@ class Stand extends Model
     public function scopeUnassigned(Builder $builder): Builder
     {
         return $builder->whereDoesntHave('assignment')
-            ->whereDoesntHave('pairedStands', function (Builder $pairedStand) {
+            ->whereDoesntHave('pairedStands', function (Builder $pairedStand)
+            {
                 $pairedStand->whereHas('assignment');
             });
     }
@@ -126,7 +126,8 @@ class Stand extends Model
         return $builder->join('airline_stand', 'stands.id', '=', 'airline_stand.stand_id')
             ->where('airline_stand.airline_id', $airline->id)
             ->where(
-                function (Builder $query) {
+                function (Builder $query)
+                {
                     // Timezones here should be local because Heathrow.
                     $now = Carbon::now()->timezone('Europe/London')->toTimeString();
                     $query->whereNull('airline_stand.not_before')
@@ -157,28 +158,32 @@ class Stand extends Model
 
     public function scopeCargo(Builder $builder): Builder
     {
-        return $builder->whereHas('type', function (Builder $typeQuery) {
+        return $builder->whereHas('type', function (Builder $typeQuery)
+        {
             return $typeQuery->cargo();
         });
     }
 
     public function scopeNotCargo(Builder $builder): Builder
     {
-        return $builder->whereHas('type', function (Builder $typeQuery) {
+        return $builder->whereHas('type', function (Builder $typeQuery)
+        {
             return $typeQuery->notCargo();
         })->orWhereNull('type_id');
     }
 
     public function scopeDomestic(Builder $builder): Builder
     {
-        return $builder->whereHas('type', function (Builder $typeQuery) {
+        return $builder->whereHas('type', function (Builder $typeQuery)
+        {
             return $typeQuery->domestic();
         });
     }
 
     public function scopeInternational(Builder $builder): Builder
     {
-        return $builder->whereHas('type', function (Builder $typeQuery) {
+        return $builder->whereHas('type', function (Builder $typeQuery)
+        {
             return $typeQuery->international();
         });
     }
@@ -200,10 +205,12 @@ class Stand extends Model
 
     public function scopeAirlineTerminal(Builder $builder, Airline $airline): Builder
     {
-        return $builder->whereHas('terminal', function (Builder $terminal) use ($airline) {
+        return $builder->whereHas('terminal', function (Builder $terminal) use ($airline)
+        {
             $terminal->whereHas(
                 'airlines',
-                function (Builder $airlineQuery) use ($airline) {
+                function (Builder $airlineQuery) use ($airline)
+                {
                     $airlineQuery->where(self::QUERY_AIRLINE_ID_COLUMN, $airline->id);
                 }
             );
@@ -227,16 +234,19 @@ class Stand extends Model
      */
     public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
     {
-        return $builder->whereHas('wakeCategory', function (Builder $query) use ($aircraftType) {
+        return $builder->whereHas('wakeCategory', function (Builder $query) use ($aircraftType)
+        {
             $query->greaterRelativeWeighting(
                 $aircraftType->wakeCategories()->whereHas(
                     'scheme',
-                    function (Builder $scheme) {
+                    function (Builder $scheme)
+                    {
                         $scheme->uk();
                     }
                 )->first() ?? WakeCategory::whereHas(
                     'scheme',
-                    function (Builder $scheme) {
+                    function (Builder $scheme)
+                    {
                         $scheme->uk();
                     }
                 )->where('code', 'J')->first()
@@ -251,7 +261,8 @@ class Stand extends Model
 
     public function scopeAppropriateDimensions(Builder $builder, Aircraft $aircraftType): Builder
     {
-        return $builder->whereHas('maxAircraft', function (Builder $aircraftQuery) use ($aircraftType) {
+        return $builder->whereHas('maxAircraft', function (Builder $aircraftQuery) use ($aircraftType)
+        {
             $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan)
                 ->where('length', '>=', $aircraftType->length);
         })
@@ -276,7 +287,8 @@ class Stand extends Model
 
     public function scopeNotReserved(Builder $builder): Builder
     {
-        return $builder->whereDoesntHave('reservations', function (Builder $reservation) {
+        return $builder->whereDoesntHave('reservations', function (Builder $reservation)
+        {
             $reservation->active();
         });
     }

@@ -23,9 +23,9 @@ class Notification extends Model
         'valid_to',
     ];
 
-    protected $dates = [
-        'valid_from',
-        'valid_to',
+    protected $casts = [
+        'valid_from' => 'datetime',
+        'valid_to' => 'datetime',
     ];
 
     public function toArray(): array
@@ -47,7 +47,8 @@ class Notification extends Model
 
     public function scopeUnreadBy($query, User $user)
     {
-        return $query->whereDoesntHave('readBy', function ($userQuery) use ($user) {
+        return $query->whereDoesntHave('readBy', function ($userQuery) use ($user)
+        {
             return $userQuery->where('user.id', $user->id);
         });
     }

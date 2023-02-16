@@ -25,10 +25,10 @@ class PrenoteMessage extends Model
         'expires_at',
     ];
 
-    protected $dates = [
-        'created_at',
-        'expires_at',
-        'acknowledged_at',
+    protected $casts = [
+        'created_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'acknowledged_at' => 'datetime',
     ];
 
     public function scopeTarget(Builder $query, int $targetController): Builder

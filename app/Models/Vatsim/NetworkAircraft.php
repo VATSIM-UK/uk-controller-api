@@ -50,24 +50,23 @@ class NetworkAircraft extends Model
         'remarks',
     ];
 
-    protected $dates = [
-        'transponder_last_updated_at',
-    ];
-
     protected $casts = [
         'cid' => 'integer',
         'latitude' => 'float',
         'longitude' => 'float',
+        'transponder_last_updated_at' => 'datetime',
     ];
 
     public static function boot()
     {
         parent::boot();
-        static::creating(function (NetworkAircraft $aircraft) {
+        static::creating(function (NetworkAircraft $aircraft)
+        {
             $aircraft->setUpdatedAt(Carbon::now());
         });
 
-        static::updating(function (NetworkAircraft $aircraft) {
+        static::updating(function (NetworkAircraft $aircraft)
+        {
             if ($aircraft->isDirty('transponder')) {
                 $aircraft->transponder_last_updated_at = Carbon::now();
             }

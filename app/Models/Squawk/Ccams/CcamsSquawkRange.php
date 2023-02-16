@@ -6,9 +6,9 @@ use App\Models\Squawk\AbstractSquawkRange;
 
 class CcamsSquawkRange extends AbstractSquawkRange
 {
-    protected $dates = [
-        'created_at',
-        'updated_at'
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     protected $fillable = [
