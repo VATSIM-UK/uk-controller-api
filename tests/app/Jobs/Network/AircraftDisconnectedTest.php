@@ -12,7 +12,7 @@ class AircraftDisconnectedTest extends BaseFunctionalTestCase
     {
         $this->withoutEvents();
         StandAssignment::create(['callsign' => 'BAW123', 'stand_id' => 1]);
-        AircraftDisconnected::dispatchNow(NetworkAircraft::find('BAW123'));
+        AircraftDisconnected::dispatchSync(NetworkAircraft::find('BAW123'));
 
         $this->assertFalse(StandAssignment::where('callsign', 'BAW123')->exists());
     }
