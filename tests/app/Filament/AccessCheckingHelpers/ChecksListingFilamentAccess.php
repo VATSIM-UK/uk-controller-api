@@ -33,7 +33,7 @@ trait ChecksListingFilamentAccess
         }
     }
 
-    private function indexRoleProvider(): array
+    public static function indexRoleProvider(): array
     {
         return [
             'None' => [null, true],

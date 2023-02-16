@@ -31,7 +31,7 @@ trait ChecksCreateFilamentAccess
         }
     }
 
-    private function createRoleProvider(): array
+    public static function createRoleProvider(): array
     {
         return [
             'None' => [null, false],

@@ -31,7 +31,7 @@ trait ChecksEditFilamentAccess
         }
     }
 
-    private function editRoleProvider(): array
+    public static function editRoleProvider(): array
     {
         return [
             'None' => [null, false],
