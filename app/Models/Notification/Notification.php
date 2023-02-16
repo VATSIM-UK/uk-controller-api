@@ -47,8 +47,7 @@ class Notification extends Model
 
     public function scopeUnreadBy($query, User $user)
     {
-        return $query->whereDoesntHave('readBy', function ($userQuery) use ($user)
-        {
+        return $query->whereDoesntHave('readBy', function ($userQuery) use ($user) {
             return $userQuery->where('user.id', $user->id);
         });
     }

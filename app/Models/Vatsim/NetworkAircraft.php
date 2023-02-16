@@ -60,13 +60,11 @@ class NetworkAircraft extends Model
     public static function boot()
     {
         parent::boot();
-        static::creating(function (NetworkAircraft $aircraft)
-        {
+        static::creating(function (NetworkAircraft $aircraft) {
             $aircraft->setUpdatedAt(Carbon::now());
         });
 
-        static::updating(function (NetworkAircraft $aircraft)
-        {
+        static::updating(function (NetworkAircraft $aircraft) {
             if ($aircraft->isDirty('transponder')) {
                 $aircraft->transponder_last_updated_at = Carbon::now();
             }

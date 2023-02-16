@@ -35,8 +35,7 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
     {
         return tap(
             collect(),
-            function (Collection $rules)
-            {
+            function (Collection $rules) {
                 if (!$this->rules) {
                     return;
                 }
