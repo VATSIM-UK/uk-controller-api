@@ -14,23 +14,24 @@ class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
 
     private UnassignHoldOnDisconnect $listener;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->listener = $this->app->make(UnassignHoldOnDisconnect::class);
         Carbon::setTestNow(Carbon::now());
+        Event::fake();
     }
 
     public function testItDoesNotTriggerAHoldUnassignedEventIfAircraftNotHolding()
     {
         AssignedHold::where('callsign', 'BAW123')->delete();
-        $this->doesntExpectEvents(HoldUnassignedEvent::class);
+        Event::assertNotDispatched(HoldUnassignedEvent::class);
         $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 
     public function testItTriggersAHoldUnassignedEventIfAircraftIsAssignedHold()
     {
-        $this->expectsEvents(HoldUnassignedEvent::class);
+        Event::assertDispatched(HoldUnassignedEvent::class);
         $this->listener->perform(NetworkAircraft::find('BAW123'));
     }
 

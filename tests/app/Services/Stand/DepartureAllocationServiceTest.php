@@ -7,6 +7,7 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
+use Illuminate\Support\Facades\Event;
 
 class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 {
@@ -16,11 +17,12 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(DepartureAllocationService::class);
+        Event::fake();
     }
 
     public function testItAssignsOccupiedStandsAtDepartureAirfields()
     {
-        $this->expectsEvents(StandAssignedEvent::class);
+        Event::assertDispatched(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -39,7 +41,7 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesAssignedOccupiedStandsAtDepartureAirfields()
     {
-        $this->expectsEvents(StandAssignedEvent::class);
+        Event::assertDispatched(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -61,7 +63,7 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntSupersedeAnExistingDepartureAssignment()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
+        Event::assertNotDispatched(StandAssignedEvent::class);
         $aircraft1 = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BAW123',
             [
@@ -96,7 +98,7 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntAssignStandsAtNonDepartureAirfields()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
+        Event::assertNotDispatched(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -115,7 +117,7 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesAssignmentsAtDepartureAirfieldIfStandUnoccupied()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
+        Event::assertDispatched(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -134,7 +136,7 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntRemoveStandAssignmentsIfNoStandOccupiedButAssignmentNotAtDepartureAirfield()
     {
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        Event::assertNotDispatched(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [

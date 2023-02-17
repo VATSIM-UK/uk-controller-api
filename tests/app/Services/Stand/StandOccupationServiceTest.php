@@ -229,7 +229,7 @@ class StandOccupationServiceTest extends BaseFunctionalTestCase
 
     public function testItUsurpsAssignedStands()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
+        Event::assertDispatched(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [

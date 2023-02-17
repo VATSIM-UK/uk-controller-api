@@ -15,6 +15,7 @@ use App\Models\Squawk\SquawkAssignment;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use TestingUtils\Traits\WithSeedUsers;
 
 class SquawkServiceTest extends BaseFunctionalTestCase
@@ -28,11 +29,12 @@ class SquawkServiceTest extends BaseFunctionalTestCase
         parent::setUp();
         $this->squawkService = $this->app->make(SquawkService::class);
         Carbon::setTestNow(Carbon::now());
+        Event::fake();
     }
 
     public function testItDeletesSquawks()
     {
-        $this->expectsEvents(SquawkUnassignedEvent::class);
+        Event::assertDispatched(SquawkUnassignedEvent::class);
 
         SquawkAssignment::create(['callsign' => 'BAW123', 'code' => '0123', 'assignment_type' => 'ORCAM']);
         $this->assertTrue($this->squawkService->deleteSquawkAssignment('BAW123'));
@@ -47,7 +49,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testReturnsFalseOnNoSquawkDeleted()
     {
-        $this->doesntExpectEvents(SquawkUnassignedEvent::class);
+        Event::assertNotDispatched(SquawkUnassignedEvent::class);
         $this->assertFalse($this->squawkService->deleteSquawkAssignment('BAW123'));
     }
 
@@ -66,7 +68,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItAssignsALocalSquawkAndReturnsIt()
     {
-        $this->expectsEvents(SquawkAssignmentEvent::class);
+        Event::assertDispatched(SquawkAssignmentEvent::class);
         $assignment = $this->squawkService->assignLocalSquawk('BAW123', 'EGKK_APP', 'I');
         $this->assertEquals('0202', $assignment->getCode());
         $this->assertEquals('UNIT_DISCRETE', $assignment->getType());
@@ -75,14 +77,14 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntAssignLocalSquawkIfAllocatorFails()
     {
-        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        Event::assertNotDispatched(SquawkAssignmentEvent::class);
         UnitDiscreteSquawkRange::getQuery()->delete();
         $this->assertNull($this->squawkService->assignLocalSquawk('BAW123', 'EGKK_APP', 'I'));
     }
 
     public function testItAssignsAGeneralSquawkAndReturnsIt()
     {
-        $this->expectsEvents(SquawkAssignmentEvent::class);
+        Event::assertDispatched(SquawkAssignmentEvent::class);
         $assignment = $this->squawkService->assignGeneralSquawk('BAW123', 'KJFK', 'EGLL');
         $this->assertEquals('0101', $assignment->getCode());
         $this->assertEquals('ORCAM', $assignment->getType());
@@ -91,7 +93,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntAssignGeneralSquawkIfAllocatorFails()
     {
-        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        Event::assertNotDispatched(SquawkAssignmentEvent::class);
         OrcamSquawkRange::getQuery()->delete();
         CcamsSquawkRange::getQuery()->delete();
         $this->assertNull($this->squawkService->assignGeneralSquawk('BAW123', 'EGKK', 'EGLL'));
@@ -99,7 +101,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
 
     public function testItTriesNextAllocatorIfGeneralAllocationFails()
     {
-        $this->expectsEvents(SquawkAssignmentEvent::class);
+        Event::assertDispatched(SquawkAssignmentEvent::class);
         CcamsSquawkRange::create(
             [
                 'first' => '0303',
@@ -145,7 +147,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
                 'updated_at' => Carbon::now(),
             ]
         );
-        $this->expectsEvents(SquawkAssignmentEvent::class);
+        Event::assertDispatched(SquawkAssignmentEvent::class);
 
         $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseHas(
@@ -170,7 +172,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             ]
         );
         SquawkAssignment::create(['callsign' => 'RYR999', 'code' => '5678', 'assignment_type' => 'ORCAM']);
-        $this->expectsEvents(SquawkAssignmentEvent::class);
+        Event::assertDispatched(SquawkAssignmentEvent::class);
 
         $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseHas(
@@ -202,7 +204,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
                 ],
             ],
         );
-        $this->expectsEvents(SquawkAssignmentEvent::class);
+        Event::assertDispatched(SquawkAssignmentEvent::class);
 
         $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseHas(
@@ -234,7 +236,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
                 ],
             ],
         );
-        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        Event::assertNotDispatched(SquawkAssignmentEvent::class);
 
         $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseMissing(
@@ -257,7 +259,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
                 ],
             ],
         );
-        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        Event::assertNotDispatched(SquawkAssignmentEvent::class);
 
         $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseMissing(
@@ -286,7 +288,7 @@ class SquawkServiceTest extends BaseFunctionalTestCase
             ],
         );
         SquawkAssignment::create(['callsign' => 'WZZ888', 'code' => '1234', 'assignment_type' => 'ORCAM']);
-        $this->doesntExpectEvents(SquawkAssignmentEvent::class);
+        Event::assertNotDispatched(SquawkAssignmentEvent::class);
 
         $this->squawkService->reserveActiveSquawks();
         $this->assertDatabaseMissing(

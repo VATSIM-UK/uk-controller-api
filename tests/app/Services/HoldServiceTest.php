@@ -105,7 +105,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesStaleAssignmentIfAircraftOnGround()
     {
-        $this->expectsEvents(HoldUnassignedEvent::class);
+        Event::assertDispatched(HoldUnassignedEvent::class);
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 0,
@@ -121,7 +121,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesStaleAssignmentIfAreALongWayFromTheHold()
     {
-        $this->expectsEvents(HoldUnassignedEvent::class);
+        Event::assertDispatched(HoldUnassignedEvent::class);
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 123,
@@ -138,7 +138,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItDoesntRemoveStaleAssignmentsIfFlyingCloseToHold()
     {
-        $this->doesntExpectEvents(HoldUnassignedEvent::class);
+        Event::assertNotDispatched(HoldUnassignedEvent::class);
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 335,
@@ -201,7 +201,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
         );
 
         Event::assertDispatched(
-                AircraftEnteredHoldingArea::class,
+            AircraftEnteredHoldingArea::class,
             fn(AircraftEnteredHoldingArea $event) => $event->broadcastWith() == [
                 'navaid_id' => 1,
                 'callsign' => 'BAW123',
@@ -360,7 +360,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
         Event::assertDispatched(
-                AircraftExitedHoldingArea::class,
+            AircraftExitedHoldingArea::class,
             fn(AircraftExitedHoldingArea $event) => $event->broadcastWith() == [
                 'navaid_id' => 1,
                 'callsign' => 'BAW123',
@@ -392,7 +392,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         Event::assertNotDispatched(AircraftEnteredHoldingArea::class);
         Event::assertDispatched(
-                AircraftExitedHoldingArea::class,
+            AircraftExitedHoldingArea::class,
             fn(AircraftExitedHoldingArea $event) => $event->broadcastWith() == [
                 'navaid_id' => 1,
                 'callsign' => 'BAW123',

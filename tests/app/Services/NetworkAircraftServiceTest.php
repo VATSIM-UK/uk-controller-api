@@ -195,20 +195,23 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
     {
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
-        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job)
+        {
             return $job->aircraft->callsign === 'BAW123';
         });
-        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job)
+        {
             return $job->aircraft->callsign === 'BAW456 ';
         });
-        Bus::assertDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
+        Bus::assertDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job)
+        {
             return $job->aircraft->callsign === 'BAW789';
         });
     }
 
     public function testItFiresUpdatedEventsOnDataFeed()
     {
-        $this->expectsEvents(NetworkDataUpdatedEvent::class);
+        Event::assertDispatched(NetworkDataUpdatedEvent::class);
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
     }
@@ -334,7 +337,8 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
         float $latitude = null,
         float $longitude = null,
         string $transponder = null
-    ): array {
+    ): array
+    {
         return [
             'callsign' => $callsign,
             'cid' => self::ACTIVE_USER_CID,
@@ -344,17 +348,17 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
             'groundspeed' => 123,
             'transponder' => $transponder ?? '0457',
             'flight_plan' => $hasFlightplan
-                ? [
-                    'aircraft' => 'H/B738/M',
-                    'aircraft_short' => 'B738',
-                    'departure' => 'EGKK',
-                    'arrival' => 'EGPH',
-                    'altitude' => '15001',
-                    'flight_rules' => 'I',
-                    'route' => 'DIRECT',
-                    'remarks' => 'hi'
-                ]
-                : null,
+            ? [
+                'aircraft' => 'H/B738/M',
+                'aircraft_short' => 'B738',
+                'departure' => 'EGKK',
+                'arrival' => 'EGPH',
+                'altitude' => '15001',
+                'flight_rules' => 'I',
+                'route' => 'DIRECT',
+                'remarks' => 'hi'
+            ]
+            : null,
         ];
     }
 
@@ -362,7 +366,8 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
         string $callsign,
         bool $hasFlightplan = true,
         string $transponder = null
-    ): array {
+    ): array
+    {
         $pilot = $this->getPilotData($callsign, $hasFlightplan, null, null, $transponder);
         $baseData = [
             'callsign' => $pilot['callsign'],

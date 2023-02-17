@@ -7,11 +7,17 @@ use App\Events\HoldAssignedEvent;
 use App\Events\HoldUnassignedEvent;
 use App\Services\HoldService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 class HoldControllerTest extends BaseApiTestCase
 {
     const HOLD_ASSIGNED_URI = 'hold/assigned';
     const HOLD_ASSIGNED_URI_AIRCRAFT = 'hold/assigned/BAW123';
+
+    public function setUp(): void
+    {
+        Event::fake();
+    }
 
     public function testItConstructs()
     {
@@ -49,7 +55,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItDeletesAssignedHolds()
     {
-        $this->expectsEvents(HoldUnassignedEvent::class);
+        Event::assertDispatched(HoldUnassignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::HOLD_ASSIGNED_URI_AIRCRAFT)
             ->assertStatus(204);
 
@@ -63,7 +69,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItCanDeleteRepeatedly()
     {
-        $this->expectsEvents(HoldUnassignedEvent::class);
+        Event::assertDispatched(HoldUnassignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, self::HOLD_ASSIGNED_URI_AIRCRAFT)
             ->assertStatus(204);
 
@@ -81,7 +87,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'MAY'
         ];
 
-        $this->expectsEvents(HoldAssignedEvent::class);
+        Event::assertDispatched(HoldAssignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(201);
 
@@ -101,7 +107,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'MAY'
         ];
 
-        $this->expectsEvents(HoldAssignedEvent::class);
+        Event::assertDispatched(HoldAssignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(201);
 
@@ -121,7 +127,7 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'MAY'
         ];
 
-        $this->expectsEvents(HoldAssignedEvent::class);
+        Event::assertDispatched(HoldAssignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(201);
 
@@ -144,7 +150,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItRejectsAssignedHoldNavaidDoesntExist()
     {
-        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        Event::assertNotDispatched(HoldAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'navaid' => 'NOTMAY'
@@ -156,7 +162,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItRejectsAssignedHoldInvalidNavaid()
     {
-        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        Event::assertNotDispatched(HoldAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'navaid' => '123'
@@ -168,7 +174,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItRejectsAssignedHoldMissingNavaid()
     {
-        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        Event::assertNotDispatched(HoldAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
         ];
@@ -179,7 +185,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItRejectsAssignedHoldInvalidCallsign()
     {
-        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        Event::assertNotDispatched(HoldAssignedEvent::class);
         $data = [
             'callsign' => '[][]}]',
             'navaid' => 'TIMBA'
@@ -191,7 +197,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function testItRejectsAssignedHoldMissingCallsign()
     {
-        $this->doesntExpectEvents(HoldAssignedEvent::class);
+        Event::assertNotDispatched(HoldAssignedEvent::class);
         $data = [
             'navaid' => 'TIMBA'
         ];

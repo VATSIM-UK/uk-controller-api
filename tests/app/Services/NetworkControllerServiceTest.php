@@ -138,7 +138,7 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItFiresEventOnUpdate()
     {
-        $this->expectsEvents(NetworkControllersUpdatedEvent::class);
+        Event::assertDispatched(NetworkControllersUpdatedEvent::class);
         $this->dataService->shouldReceive('getNetworkControllerData')->once()->andReturn(new Collection());
         $this->service->updateNetworkData();
     }

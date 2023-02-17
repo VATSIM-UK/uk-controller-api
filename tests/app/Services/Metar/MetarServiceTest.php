@@ -35,27 +35,29 @@ class MetarServiceTest extends BaseFunctionalTestCase
 
     public function testItParsesMetars()
     {
-        $this->expectsEvents(MetarsUpdatedEvent::class);
+        Event::assertDispatched(MetarsUpdatedEvent::class);
         Metar::create(['airfield_id' => 1, 'raw' => 'bla', 'parsed' => []]);
         $noPressureAirfield = Airfield::factory()->create();
         $noMetarAirfield = Airfield::factory()->create();
 
         $dataResponse = [
-            'EGLL Q1001', // Will pull through the QNH as 1001
-            'EGBB Q0991 A2992', // Will pull through the QNH as 991
+            'EGLL Q1001',
+            // Will pull through the QNH as 1001
+            'EGBB Q0991 A2992',
+            // Will pull through the QNH as 991
             'EGKR A2992', // Will pull through altimeter and convert it to QNH,
             $noPressureAirfield->code, // Wont pull through a QNH as there is none.
         ];
 
 
         $expectedUrl = config(self::URL_CONFIG_KEY) . '?id=' . urlencode(
-                sprintf(
-                    'EGLL,EGBB,EGKR,%s,%s,%s',
-                    $noPressureAirfield->code,
-                    $noMetarAirfield->code,
-                    Carbon::now()->timestamp
-                )
-            );
+            sprintf(
+                'EGLL,EGBB,EGKR,%s,%s,%s',
+                $noPressureAirfield->code,
+                $noMetarAirfield->code,
+                Carbon::now()->timestamp
+            )
+        );
         Http::fake(
             [
                 $expectedUrl => Http::response(implode("\n", $dataResponse)),
@@ -65,7 +67,8 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $this->service->updateAllMetars();
 
         // Check the request
-        Http::assertSent(function (Request $request) use ($noPressureAirfield, $noMetarAirfield) {
+        Http::assertSent(function (Request $request) use ($noPressureAirfield, $noMetarAirfield)
+        {
             return $request->method() === 'GET' &&
                 Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
                 $request['id'] === sprintf(
@@ -123,7 +126,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesBadResponsesGracefully()
     {
-        $this->doesntExpectEvents(MetarsUpdatedEvent::class);
+        Event::assertNotDispatched(MetarsUpdatedEvent::class);
         Http::fake(
             [
                 config(self::URL_CONFIG_KEY) . '?id=' . urlencode(
@@ -135,7 +138,8 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $this->service->updateAllMetars();
 
         // Check the request
-        Http::assertSent(function (Request $request) {
+        Http::assertSent(function (Request $request)
+        {
             return $request->method() === 'GET' &&
                 Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
                 $request['id'] === 'EGLL,EGBB,EGKR,' . Carbon::now()->timestamp;
@@ -159,7 +163,8 @@ class MetarServiceTest extends BaseFunctionalTestCase
 
         $this->assertEquals(
             $expected,
-            $this->service->getParsers()->map(function (MetarParser $parser) {
+            $this->service->getParsers()->map(function (MetarParser $parser)
+            {
                 return get_class($parser);
             })->toArray()
         );
@@ -176,13 +181,13 @@ class MetarServiceTest extends BaseFunctionalTestCase
         ];
 
         $expectedUrl = config(self::URL_CONFIG_KEY) . '?id=' . urlencode(
-                sprintf(
-                    'EGLL,EGBB,EGKR,%s,%s,%s',
-                    $metarOne->airfield->code,
-                    $metarTwo->airfield->code,
-                    Carbon::now()->timestamp
-                )
-            );
+            sprintf(
+                'EGLL,EGBB,EGKR,%s,%s,%s',
+                $metarOne->airfield->code,
+                $metarTwo->airfield->code,
+                Carbon::now()->timestamp
+            )
+        );
         Http::fake(
             [
                 $expectedUrl => Http::response(implode("\n", $dataResponse)),
@@ -192,7 +197,8 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $this->service->updateAllMetars();
 
         // Check the request
-        Http::assertSent(function (Request $request) use ($metarOne, $metarTwo) {
+        Http::assertSent(function (Request $request) use ($metarOne, $metarTwo)
+        {
             return $request->method() === 'GET' &&
                 Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
                 $request['id'] === sprintf(
@@ -203,9 +209,11 @@ class MetarServiceTest extends BaseFunctionalTestCase
                 );
         });
 
-        Event::assertDispatched(MetarsUpdatedEvent::class, function (MetarsUpdatedEvent $event) use ($metarTwo) {
-            return $event->getMetars()->toArray() == collect([Metar::with('airfield')->findOrFail($metarTwo->id)]
-                )->toArray();
+        Event::assertDispatched(MetarsUpdatedEvent::class, function (MetarsUpdatedEvent $event) use ($metarTwo)
+        {
+            return $event->getMetars()->toArray() == collect(
+                        [Metar::with('airfield')->findOrFail($metarTwo->id)]
+                    )->toArray();
         });
     }
 
@@ -220,13 +228,13 @@ class MetarServiceTest extends BaseFunctionalTestCase
         ];
 
         $expectedUrl = config(self::URL_CONFIG_KEY) . '?id=' . urlencode(
-                sprintf(
-                    'EGLL,EGBB,EGKR,%s,%s,%s',
-                    $metarOne->airfield->code,
-                    $metarTwo->airfield->code,
-                    Carbon::now()->timestamp
-                )
-            );
+            sprintf(
+                'EGLL,EGBB,EGKR,%s,%s,%s',
+                $metarOne->airfield->code,
+                $metarTwo->airfield->code,
+                Carbon::now()->timestamp
+            )
+        );
         Http::fake(
             [
                 $expectedUrl => Http::response(implode("\n", $dataResponse)),
@@ -236,7 +244,8 @@ class MetarServiceTest extends BaseFunctionalTestCase
         $this->service->updateAllMetars();
 
         // Check the request
-        Http::assertSent(function (Request $request) use ($metarOne, $metarTwo) {
+        Http::assertSent(function (Request $request) use ($metarOne, $metarTwo)
+        {
             return $request->method() === 'GET' &&
                 Str::startsWith($request->url(), config(self::URL_CONFIG_KEY)) &&
                 $request['id'] === sprintf(

@@ -10,10 +10,17 @@ use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class StandControllerTest extends BaseApiTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Event::fake();
+    }
+
     public function testItReturnsStandDependency()
     {
         $expected = [
@@ -152,7 +159,7 @@ class StandControllerTest extends BaseApiTestCase
 
     public function testItDoesStandAssignment()
     {
-        $this->expectsEvents(StandAssignedEvent::class);
+        Event::assertDispatched(StandAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'stand_id' => 1
@@ -171,7 +178,7 @@ class StandControllerTest extends BaseApiTestCase
 
     public function testItReturnsNotFoundOnAssignmentIfStandDoesNotExist()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
+        Event::assertNotDispatched(StandAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'stand_id' => 55
@@ -182,7 +189,7 @@ class StandControllerTest extends BaseApiTestCase
 
     public function testItDeletesStandAssignments()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
+        Event::assertDispatched(StandUnassignedEvent::class);
         $this->addStandAssignment('BAW123', 1);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
             ->assertStatus(204);
@@ -190,7 +197,7 @@ class StandControllerTest extends BaseApiTestCase
 
     public function testItDeletesStandAssignmentsIfNonePresent()
     {
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
+        Event::assertNotDispatched(StandUnassignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
             ->assertStatus(204);
     }

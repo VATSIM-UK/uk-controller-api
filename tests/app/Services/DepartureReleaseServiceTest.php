@@ -25,11 +25,12 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         parent::setUp();
         $this->service = $this->app->make(DepartureReleaseService::class);
         Carbon::setTestNow(Carbon::now()->startOfSecond());
+        Event::fake();
     }
 
     public function testItCreatesADepartureReleaseRequest()
     {
-        $this->expectsEvents(DepartureReleaseRequestedEvent::class);
+        Event::assertDispatched(DepartureReleaseRequestedEvent::class);
         $this->service->makeReleaseRequest(
             'BAW123',
             self::ACTIVE_USER_CID,
@@ -76,7 +77,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItApprovesADepartureRelease()
     {
-        $this->expectsEvents(DepartureReleaseApprovedEvent::class);
+        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -116,7 +117,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItApprovesADepartureReleaseWithNoExpiryTime()
     {
-        $this->expectsEvents(DepartureReleaseApprovedEvent::class);
+        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -157,7 +158,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeApprovedIfAlreadyApproved()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        $this->doesntExpectEvents(DepartureReleaseApprovedEvent::class);
+        Event::assertNotDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -181,7 +182,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeApprovedIfAlreadyRejected()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        $this->doesntExpectEvents(DepartureReleaseApprovedEvent::class);
+        Event::assertNotDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -220,7 +221,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItRejectsADepartureRelease()
     {
-        $this->expectsEvents(DepartureReleaseRejectedEvent::class);
+        Event::assertDispatched(DepartureReleaseRejectedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -255,7 +256,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeRejectedIfAlreadyApproved()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        $this->doesntExpectEvents(DepartureReleaseRejectedEvent::class);
+        Event::assertNotDispatched(DepartureReleaseRejectedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -272,7 +273,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeRejectedIfAlreadyRejected()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        $this->doesntExpectEvents(DepartureReleaseRejectedEvent::class);
+        Event::assertNotDispatched(DepartureReleaseRejectedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -304,7 +305,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItAcknowledgesADepartureRelease()
     {
-        $this->expectsEvents(DepartureReleaseAcknowledgedEvent::class);
+        Event::assertDispatched(DepartureReleaseAcknowledgedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -339,7 +340,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeAcknowledgedIfAlreadyApproved()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        $this->doesntExpectEvents(DepartureReleaseAcknowledgedEvent::class);
+        Event::assertNotDispatched(DepartureReleaseAcknowledgedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -356,7 +357,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeAcknowledgedIfAlreadyRejected()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        $this->doesntExpectEvents(DepartureReleaseAcknowledgedEvent::class);
+        Event::assertNotDispatched(DepartureReleaseAcknowledgedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -372,7 +373,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItCancelsADepartureReleaseRequest()
     {
-        $this->expectsEvents(DepartureReleaseRequestCancelledEvent::class);
+        Event::assertDispatched(DepartureReleaseRequestCancelledEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -390,7 +391,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testOnlyTheRequestingUserCanCancelARequest()
     {
         $this->expectException(DepartureReleaseDecisionNotAllowedException::class);
-        $this->doesntExpectEvents(DepartureReleaseRequestCancelledEvent::class);
+        Event::assertNotDispatched(DepartureReleaseRequestCancelledEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -430,35 +431,40 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         // Check events
         Event::assertNotDispatched(
             DepartureReleaseRequestCancelledEvent::class,
-            function (DepartureReleaseRequestCancelledEvent $event) use ($release1) {
+            function (DepartureReleaseRequestCancelledEvent $event) use ($release1)
+            {
                 return $event->broadcastWith() === ['id' => $release1->id];
             }
         );
 
         Event::assertNotDispatched(
             DepartureReleaseRequestCancelledEvent::class,
-            function (DepartureReleaseRequestCancelledEvent $event) use ($release2) {
+            function (DepartureReleaseRequestCancelledEvent $event) use ($release2)
+            {
                 return $event->broadcastWith() === ['id' => $release2->id];
             }
         );
 
         Event::assertDispatched(
             DepartureReleaseRequestCancelledEvent::class,
-            function (DepartureReleaseRequestCancelledEvent $event) use ($release3) {
+            function (DepartureReleaseRequestCancelledEvent $event) use ($release3)
+            {
                 return $event->broadcastWith() === ['id' => $release3->id];
             }
         );
 
         Event::assertDispatched(
             DepartureReleaseRequestCancelledEvent::class,
-            function (DepartureReleaseRequestCancelledEvent $event) use ($release4) {
+            function (DepartureReleaseRequestCancelledEvent $event) use ($release4)
+            {
                 return $event->broadcastWith() === ['id' => $release4->id];
             }
         );
 
         Event::assertDispatched(
             DepartureReleaseRequestCancelledEvent::class,
-            function (DepartureReleaseRequestCancelledEvent $event) use ($release4a) {
+            function (DepartureReleaseRequestCancelledEvent $event) use ($release4a)
+            {
                 return $event->broadcastWith() === ['id' => $release4a->id];
             }
         );
