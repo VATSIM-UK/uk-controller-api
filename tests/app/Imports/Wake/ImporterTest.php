@@ -8,7 +8,7 @@ use App\Models\Aircraft\Aircraft;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Mockery;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ImporterTest extends BaseFunctionalTestCase
 {

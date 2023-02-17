@@ -11,7 +11,7 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TestingUtils\Traits\WithSeedUsers;
 
 class UserResourceTest extends BaseFilamentTestCase

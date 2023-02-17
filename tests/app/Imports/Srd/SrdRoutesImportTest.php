@@ -8,7 +8,7 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Mockery;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SrdRoutesImportTest extends BaseFunctionalTestCase
 {

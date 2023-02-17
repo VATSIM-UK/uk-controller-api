@@ -6,7 +6,7 @@ use App\BaseApiTestCase;
 use App\Models\MissedApproach\MissedApproachNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 use util\Traits\WithNetworkController;
 
 class MissedApproachControllerTest extends BaseApiTestCase

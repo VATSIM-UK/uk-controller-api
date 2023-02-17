@@ -9,7 +9,7 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Mockery;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RecatImporterTest extends BaseFunctionalTestCase
 {

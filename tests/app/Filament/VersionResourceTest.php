@@ -11,7 +11,7 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use App\Models\Version\Version;
 use Livewire\Livewire;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class VersionResourceTest extends BaseFilamentTestCase
 {

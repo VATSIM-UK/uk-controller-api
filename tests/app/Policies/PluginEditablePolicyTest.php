@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\BaseUnitTestCase;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PluginEditablePolicyTest extends BaseUnitTestCase
 {

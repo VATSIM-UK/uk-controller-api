@@ -5,7 +5,7 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AirlineServiceTest extends BaseFunctionalTestCase
 {

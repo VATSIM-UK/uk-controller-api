@@ -5,7 +5,7 @@ namespace App\Imports\Stand;
 use App\BaseFunctionalTestCase;
 use Illuminate\Console\OutputStyle;
 use Mockery;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StandReservationsImportTest extends BaseFunctionalTestCase
 {

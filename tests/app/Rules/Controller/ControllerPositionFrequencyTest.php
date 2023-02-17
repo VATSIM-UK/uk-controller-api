@@ -4,7 +4,7 @@ namespace App\Rules\Controller;
 
 use App\BaseUnitTestCase;
 use Illuminate\Support\Facades\Validator;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ControllerPositionFrequencyTest extends BaseUnitTestCase
 {

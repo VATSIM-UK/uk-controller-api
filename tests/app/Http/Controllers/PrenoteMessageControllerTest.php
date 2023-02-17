@@ -6,7 +6,7 @@ use App\BaseApiTestCase;
 use App\Models\Prenote\PrenoteMessage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PrenoteMessageControllerTest extends BaseApiTestCase
 {

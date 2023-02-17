@@ -5,7 +5,7 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use Exception;
 use Mockery;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NetworkDataServiceTest extends BaseFunctionalTestCase
 {

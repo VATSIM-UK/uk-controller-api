@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\BaseUnitTestCase;
 use Carbon\Carbon;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AiracServiceTest extends BaseUnitTestCase
 {

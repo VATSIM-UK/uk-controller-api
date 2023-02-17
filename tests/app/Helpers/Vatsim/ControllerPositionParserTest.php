@@ -4,7 +4,7 @@ namespace App\Helpers\Vatsim;
 
 use App\BaseUnitTestCase;
 use App\Models\Controller\ControllerPosition;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ControllerPositionParserTest extends BaseUnitTestCase
 {

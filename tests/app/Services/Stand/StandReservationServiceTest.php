@@ -14,7 +14,7 @@ use App\Models\Stand\StandReservation;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Exception;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StandReservationServiceTest extends BaseFunctionalTestCase
 {

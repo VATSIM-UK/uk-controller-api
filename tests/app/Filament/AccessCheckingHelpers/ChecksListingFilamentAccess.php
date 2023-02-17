@@ -5,7 +5,7 @@ namespace App\Filament\AccessCheckingHelpers;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 trait ChecksListingFilamentAccess
 {

@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NetworkMetadataServiceTest extends BaseFunctionalTestCase
 {

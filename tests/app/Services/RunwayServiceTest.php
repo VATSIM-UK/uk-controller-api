@@ -12,7 +12,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Runway\Runway;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RunwayServiceTest extends BaseFunctionalTestCase
 {

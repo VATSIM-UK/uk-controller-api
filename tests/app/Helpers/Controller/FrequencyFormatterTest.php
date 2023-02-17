@@ -3,7 +3,7 @@
 namespace App\Helpers\Controller;
 
 use App\BaseUnitTestCase;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FrequencyFormatterTest extends BaseUnitTestCase
 {

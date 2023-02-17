@@ -6,7 +6,7 @@ use App\BaseUnitTestCase;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AbstractSquawkRangeTest extends BaseUnitTestCase
 {

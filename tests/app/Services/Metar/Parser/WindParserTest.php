@@ -4,7 +4,7 @@ namespace App\Services\Metar\Parser;
 
 use App\BaseUnitTestCase;
 use App\Models\Airfield\Airfield;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class WindParserTest extends BaseUnitTestCase
 {

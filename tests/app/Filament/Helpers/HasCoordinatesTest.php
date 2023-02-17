@@ -4,7 +4,7 @@ namespace App\Filament\Helpers;
 
 use App\BaseFilamentTestCase;
 use Livewire\Livewire;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HasCoordinatesTest extends BaseFilamentTestCase
 {

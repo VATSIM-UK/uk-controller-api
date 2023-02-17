@@ -3,7 +3,7 @@
 namespace App\Rules\Airfield;
 
 use App\BaseUnitTestCase;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AirfieldIcaoTest extends BaseUnitTestCase
 {

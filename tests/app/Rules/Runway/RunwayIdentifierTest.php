@@ -3,7 +3,7 @@
 namespace App\Rules\Runway;
 
 use App\BaseUnitTestCase;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RunwayIdentifierTest extends BaseUnitTestCase
 {

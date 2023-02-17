@@ -6,7 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Helpers\Vatsim\ParsedControllerPosition;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\ControllerPositionAlternativeCallsign;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ControllerServiceTest extends BaseFunctionalTestCase
 {

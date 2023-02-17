@@ -6,7 +6,7 @@ use App\BaseFilamentTestCase;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use Livewire\Livewire;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MyRolesTest extends BaseFilamentTestCase
 {

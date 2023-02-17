@@ -8,7 +8,7 @@ use App\Models\User\User;
 use Filament\Resources\Pages\ManageRecords;
 use Livewire\Livewire;
 use Livewire\Testing\TestableLivewire;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 trait ChecksFilamentActionVisibility
 {
@@ -16,7 +16,8 @@ trait ChecksFilamentActionVisibility
     public function testItControlsActionVisibility(
         callable $testCase,
         ?RoleKeys $role,
-    ): void {
+    ): void
+    {
         $user = User::factory()->create();
         if ($role) {
             $user->roles()->sync(Role::idFromKey($role));
@@ -51,7 +52,8 @@ trait ChecksFilamentActionVisibility
                     $this->writeRoles(),
                 ),
             ),
-            function (array $allActions) {
+            function (array $allActions)
+            {
                 $this->assertNotEmpty($allActions);
             }
         );
@@ -60,7 +62,8 @@ trait ChecksFilamentActionVisibility
     private function generateRelationManagerTableActionTestCases(
         array $actionsByRelationManager,
         array $rolesThatCanPerformAction
-    ): array {
+    ): array
+    {
         $allActions = [];
 
         foreach ($actionsByRelationManager as $relationManager => $actions) {
@@ -72,28 +75,29 @@ trait ChecksFilamentActionVisibility
                         $action,
                         $role?->value ?? 'no'
                     )] = [
-                        function () use ($relationManager, $role, $action, $rolesThatCanPerformAction) {
-                            $livewire = Livewire::test(
-                                $relationManager,
-                                $this->relationManagerLivewireParams(
-                                    $this->resourceRecordClass(),
-                                    $this->resourceId(),
-                                )
-                            );
+                            function () use ($relationManager, $role, $action, $rolesThatCanPerformAction)
+                            {
+                                $livewire = Livewire::test(
+                                    $relationManager,
+                                    $this->relationManagerLivewireParams(
+                                        $this->resourceRecordClass(),
+                                        $this->resourceId(),
+                                    )
+                                );
 
-                            $this->assertTableActionVisibility(
-                                $livewire,
-                                $this->tableActionRecordClass()[$relationManager],
-                                $this->tableActionRecordId()[$relationManager],
-                                $action,
-                                in_array(
-                                    $role,
-                                    $rolesThatCanPerformAction
-                                )
-                            );
-                        },
-                        $role,
-                    ];
+                                $this->assertTableActionVisibility(
+                                    $livewire,
+                                    $this->tableActionRecordClass()[$relationManager],
+                                    $this->tableActionRecordId()[$relationManager],
+                                    $action,
+                                    in_array(
+                                        $role,
+                                        $rolesThatCanPerformAction
+                                    )
+                                );
+                            },
+                            $role,
+                        ];
                 }
             }
         }
@@ -104,7 +108,8 @@ trait ChecksFilamentActionVisibility
     private function generateResourceTableTestCases(
         array $actions,
         array $rolesThatCanPerformAction
-    ): array {
+    ): array
+    {
         $allActions = [];
 
         foreach ($actions as $action) {
@@ -115,25 +120,26 @@ trait ChecksFilamentActionVisibility
                     $action,
                     $role?->value ?? 'no'
                 )] = [
-                    function () use ($role, $action, $rolesThatCanPerformAction) {
-                        $livewire = Livewire::test(
-                            $this->resourceListingClass(),
-                            $this->resourceLivewireParams($this->resourceId())
-                        );
+                        function () use ($role, $action, $rolesThatCanPerformAction)
+                        {
+                            $livewire = Livewire::test(
+                                $this->resourceListingClass(),
+                                $this->resourceLivewireParams($this->resourceId())
+                            );
 
-                        $this->assertTableActionVisibility(
-                            $livewire,
-                            $this->resourceRecordClass(),
-                            $this->resourceId(),
-                            $action,
-                            in_array(
-                                $role,
-                                $rolesThatCanPerformAction
-                            )
-                        );
-                    },
-                    $role,
-                ];
+                            $this->assertTableActionVisibility(
+                                $livewire,
+                                $this->resourceRecordClass(),
+                                $this->resourceId(),
+                                $action,
+                                in_array(
+                                    $role,
+                                    $rolesThatCanPerformAction
+                                )
+                            );
+                        },
+                        $role,
+                    ];
             }
         }
 
@@ -143,7 +149,8 @@ trait ChecksFilamentActionVisibility
     private function generateResourcePageActionTestCases(
         array $actions,
         array $rolesThatCanPerformAction
-    ): array {
+    ): array
+    {
         $allActions = [];
 
         foreach ($actions as $action) {
@@ -154,29 +161,31 @@ trait ChecksFilamentActionVisibility
                     $action,
                     $role?->value ?? 'no'
                 )] = [
-                    function () use ($role, $action, $rolesThatCanPerformAction) {
-                        $livewire = Livewire::test(
-                            $this->resourceListingClass(),
-                            $this->resourceLivewireParams($this->resourceId())
-                        );
+                        function () use ($role, $action, $rolesThatCanPerformAction)
+                        {
+                            $livewire = Livewire::test(
+                                $this->resourceListingClass(),
+                                $this->resourceLivewireParams($this->resourceId())
+                            );
 
-                        /*
-                         * When using ManageRecords, filament doesn't put the action on the page at all, whereas
-                         * assertPageActionDoesntExist will check the action exists first. So call a different method
-                         * depending on what class we're testing.
-                         */
-                        $checkToPerform = in_array(
-                            $role,
-                            $rolesThatCanPerformAction
-                        ) ? 'assertPageActionVisible'
-                            : (get_parent_class(
-                                $this->resourceListingClass()
-                            ) === ManageRecords::class ? 'assertPageActionDoesNotExist' : 'assertPageActionHidden');
+                            /*
+                             * When using ManageRecords, filament doesn't put the action on the page at all, whereas
+                             * assertPageActionDoesntExist will check the action exists first. So call a different method
+                             * depending on what class we're testing.
+                             */
+                            $checkToPerform = in_array(
+                                $role,
+                                $rolesThatCanPerformAction
+                            ) ? 'assertPageActionVisible'
+                                : (
+                                    get_parent_class(
+                                        $this->resourceListingClass()
+                                    ) === ManageRecords::class ? 'assertPageActionDoesNotExist' : 'assertPageActionHidden');
 
-                        $livewire->$checkToPerform($action);
-                    },
-                    $role,
-                ];
+                            $livewire->$checkToPerform($action);
+                        },
+                        $role,
+                    ];
             }
         }
 
@@ -189,7 +198,8 @@ trait ChecksFilamentActionVisibility
         string $recordId,
         string $action,
         bool $actionCanBePerformed
-    ): void {
+    ): void
+    {
         $actionRecord = call_user_func(
             $recordClass . '::findOrFail',
             $recordId

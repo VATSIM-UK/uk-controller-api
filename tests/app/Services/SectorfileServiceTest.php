@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\BaseUnitTestCase;
 use InvalidArgumentException;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SectorfileServiceTest extends BaseUnitTestCase
 {

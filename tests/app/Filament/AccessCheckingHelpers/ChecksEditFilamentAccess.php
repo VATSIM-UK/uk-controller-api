@@ -6,7 +6,7 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 trait ChecksEditFilamentAccess
 {

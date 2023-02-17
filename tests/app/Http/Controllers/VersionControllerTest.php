@@ -7,7 +7,7 @@ use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
 use App\Providers\AuthServiceProvider;
 use App\Services\VersionService;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TestingUtils\Traits\WithSeedUsers;
 
 class VersionControllerTest extends BaseApiTestCase

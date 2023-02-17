@@ -10,7 +10,7 @@ use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
-use PHPUnit\Metadata\Api\DataProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StandControllerTest extends BaseApiTestCase
 {
@@ -113,35 +113,40 @@ class StandControllerTest extends BaseApiTestCase
                     'callsign' => 'asdfdsdfdsfdsfdsfdsfsdfsd',
                     'stand_id' => 1
                 ]
-            ], // Invalid callsign
+            ],
+            // Invalid callsign
             [
                 [
                     'callsign' => null,
                     'stand_id' => 1
                 ]
-            ], // Callsign null
+            ],
+            // Callsign null
             [
                 [
                     'stand_id' => 1
                 ]
-            ], // Callsign missing
+            ],
+            // Callsign missing
             [
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => 'asdas'
                 ]
-            ], // Invalid stand id
+            ],
+            // Invalid stand id
             [
                 [
                     'callsign' => 'BAW123',
                 ]
-            ], // Stand id missing
+            ],
+            // Stand id missing
             [
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => null
                 ]
-            ],  // Stand id null
+            ], // Stand id null
         ];
     }
 
