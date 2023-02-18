@@ -16,6 +16,7 @@ class HoldControllerTest extends BaseApiTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         Event::fake();
     }
 
@@ -110,9 +111,10 @@ class HoldControllerTest extends BaseApiTestCase
             'navaid' => 'MAY'
         ];
 
-        Event::assertDispatched(HoldAssignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, self::HOLD_ASSIGNED_URI, $data)
             ->assertStatus(201);
+
+        Event::assertDispatched(HoldAssignedEvent::class);
 
         $this->assertDatabaseHas(
             'assigned_holds',

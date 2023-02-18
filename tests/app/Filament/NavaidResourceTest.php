@@ -351,15 +351,14 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'level-block',
-                    'levels' => [12000, 13000],
-                ])->getValue(DB::connection()->getQueryGrammar()),
-            ]
+                'type' => 'level-block',
+                'levels' => [12000, 13000],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -406,21 +405,20 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                    'override' => 5000,
-                    'runway' => [
-                        'designator' => '27L',
-                        'type' => 'any',
-                    ],
-                ])->getValue(DB::connection()->getQueryGrammar()),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+                'override' => 5000,
+                'runway' => [
+                    'designator' => '27L',
+                    'type' => 'any',
+                ],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -467,16 +465,15 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                ])->getValue(DB::connection()->getQueryGrammar()),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1045,15 +1042,14 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => $hold->id,
-                'restriction' => $this->castAsJson([
-                    'type' => 'level-block',
-                    'levels' => [12000, 13000],
-                ])->getValue(DB::connection()->getQueryGrammar()),
-            ]
+                'type' => 'level-block',
+                'levels' => [12000, 13000],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1101,21 +1097,20 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => $hold->id,
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                    'override' => 5000,
-                    'runway' => [
-                        'designator' => '27L',
-                        'type' => 'any',
-                    ],
-                ])->getValue(DB::connection()->getQueryGrammar()),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+                'override' => 5000,
+                'runway' => [
+                    'designator' => '27L',
+                    'type' => 'any',
+                ],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1163,16 +1158,15 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                ])->getValue(DB::connection()->getQueryGrammar()),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1620,21 +1614,20 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 ]
             );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'id' => $restriction->id,
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                    'override' => 8000,
-                    'runway' => [
-                        'designator' => '27L',
-                        'type' => 'any',
-                    ],
-                ])->getValue(DB::connection()->getQueryGrammar()),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+                'override' => 8000,
+                'runway' => [
+                    'designator' => '27L',
+                    'type' => 'any',
+                ],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
