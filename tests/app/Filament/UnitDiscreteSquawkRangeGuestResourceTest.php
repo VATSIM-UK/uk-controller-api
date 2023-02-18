@@ -232,27 +232,27 @@ class UnitDiscreteSquawkRangeGuestResourceTest extends BaseFilamentTestCase
         return UnitDiscreteSquawkRangeGuestResource::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ManageUnitDiscreteSquawkRangeGuests::class;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return UnitDiscreteSquawkRangeGuest::class;
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return ['edit'];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return ['create'];
     }

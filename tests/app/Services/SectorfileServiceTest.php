@@ -50,7 +50,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
         SectorfileService::coordinateFromSectorfile($latitude, $longitude);
     }
 
-    public function invalidSectorfileLongitudeFormatProvider(): array
+    public static function invalidSectorfileLongitudeFormatProvider(): array
     {
         return [
             [self::VALID_TIMBA_LATITUDE, ''],

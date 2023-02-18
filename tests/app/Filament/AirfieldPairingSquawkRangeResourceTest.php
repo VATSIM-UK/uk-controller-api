@@ -268,27 +268,27 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
         return AirfieldPairingSquawkRangeResource::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ManageAirfieldPairingSquawkRange::class;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return AirfieldPairingSquawkRange::class;
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return ['edit'];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return ['create'];
     }

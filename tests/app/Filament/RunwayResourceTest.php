@@ -390,12 +390,12 @@ class RunwayResourceTest extends BaseFilamentTestCase
         return $this->getEditRecord();
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return Runway::class;
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
@@ -405,41 +405,41 @@ class RunwayResourceTest extends BaseFilamentTestCase
         return RunwayResource::class;
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [
             'create',
         ];
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListRunways::class;
     }
 
-    protected function tableActionRecordClass(): array
+    protected static function tableActionRecordClass(): array
     {
         return [];
     }
 
-    protected function tableActionRecordId(): array
+    protected static function tableActionRecordId(): array
     {
         return [];
     }
 
-    protected function writeTableActions(): array
+    protected static function writeTableActions(): array
     {
         return [
         ];
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [
         ];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
         ];

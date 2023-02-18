@@ -18,7 +18,7 @@ class HasCoordinatesTest extends BaseFilamentTestCase
             ->assertHasNoErrors();
     }
 
-    public function coordinateProvider(): array
+    public static function coordinateProvider(): array
     {
         return [
             'Normal' => [1.23, 4.56],

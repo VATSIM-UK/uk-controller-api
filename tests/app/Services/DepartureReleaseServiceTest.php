@@ -30,7 +30,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesADepartureReleaseRequest()
     {
-        Event::assertDispatched(DepartureReleaseRequestedEvent::class);
         $this->service->makeReleaseRequest(
             'BAW123',
             self::ACTIVE_USER_CID,
@@ -38,6 +37,8 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             2,
             125
         );
+
+        Event::assertDispatched(DepartureReleaseRequestedEvent::class);
 
         $this->assertDatabaseHas(
             'departure_release_requests',
@@ -77,7 +78,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItApprovesADepartureRelease()
     {
-        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -87,6 +87,8 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
                 'expires_at' => Carbon::now()->addMinutes(2),
             ]
         );
+
+        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
 
         $this->service->approveReleaseRequest(
             $request,
@@ -117,7 +119,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItApprovesADepartureReleaseWithNoExpiryTime()
     {
-        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -136,6 +137,8 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             CarbonImmutable::now()->addMinutes(3),
             'Some remarks'
         );
+
+        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
 
         $this->assertDatabaseHas(
             'departure_release_requests',
@@ -158,7 +161,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeApprovedIfAlreadyApproved()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        Event::assertNotDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -177,12 +179,12 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             CarbonImmutable::now()->addMinutes(3),
             ''
         );
+        Event::assertNotDispatched(DepartureReleaseApprovedEvent::class);
     }
 
     public function testReleasesCannotBeApprovedIfAlreadyRejected()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        Event::assertNotDispatched(DepartureReleaseApprovedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -201,6 +203,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             CarbonImmutable::now()->addMinutes(3),
             ''
         );
+        Event::assertNotDispatched(DepartureReleaseApprovedEvent::class);
     }
 
     public function testItThrowsExceptionIfControllerCannotRejectRequest()
@@ -221,7 +224,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItRejectsADepartureRelease()
     {
-        Event::assertDispatched(DepartureReleaseRejectedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -233,6 +235,8 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
 
         $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID, 'Some remarks');
+
+        Event::assertDispatched(DepartureReleaseRejectedEvent::class);
 
         $this->assertDatabaseHas(
             'departure_release_requests',
@@ -256,7 +260,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeRejectedIfAlreadyApproved()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        Event::assertNotDispatched(DepartureReleaseRejectedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -268,12 +271,12 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
         $request->approve(self::ACTIVE_USER_CID, 25, CarbonImmutable::now());
         $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID, '');
+        Event::assertNotDispatched(DepartureReleaseRejectedEvent::class);
     }
 
     public function testReleasesCannotBeRejectedIfAlreadyRejected()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        Event::assertNotDispatched(DepartureReleaseRejectedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -285,6 +288,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
         $request->reject(self::ACTIVE_USER_CID);
         $this->service->rejectReleaseRequest($request, 2, self::ACTIVE_USER_CID, '');
+        Event::assertNotDispatched(DepartureReleaseRejectedEvent::class);
     }
 
     public function testItThrowsExceptionIfControllerCannotAcknowledgeRequest()
@@ -305,7 +309,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
     public function testItAcknowledgesADepartureRelease()
     {
-        Event::assertDispatched(DepartureReleaseAcknowledgedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -317,6 +320,8 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
 
         $this->service->acknowledgeReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+
+        Event::assertDispatched(DepartureReleaseAcknowledgedEvent::class);
 
         $this->assertDatabaseHas(
             'departure_release_requests',
@@ -340,7 +345,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
     public function testReleasesCannotBeAcknowledgedIfAlreadyApproved()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        Event::assertNotDispatched(DepartureReleaseAcknowledgedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -352,12 +356,12 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
         $request->approve(self::ACTIVE_USER_CID, 25, CarbonImmutable::now());
         $this->service->acknowledgeReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+        Event::assertNotDispatched(DepartureReleaseAcknowledgedEvent::class);
     }
 
     public function testReleasesCannotBeAcknowledgedIfAlreadyRejected()
     {
         $this->expectException(DepartureReleaseAlreadyDecidedException::class);
-        Event::assertNotDispatched(DepartureReleaseAcknowledgedEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -369,11 +373,11 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
         $request->reject(self::ACTIVE_USER_CID);
         $this->service->acknowledgeReleaseRequest($request, 2, self::ACTIVE_USER_CID);
+        Event::assertNotDispatched(DepartureReleaseAcknowledgedEvent::class);
     }
 
     public function testItCancelsADepartureReleaseRequest()
     {
-        Event::assertDispatched(DepartureReleaseRequestCancelledEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -386,12 +390,12 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
 
         $this->service->cancelReleaseRequest($request, self::ACTIVE_USER_CID);
         $this->assertSoftDeleted($request);
+        Event::assertDispatched(DepartureReleaseRequestCancelledEvent::class);
     }
 
     public function testOnlyTheRequestingUserCanCancelARequest()
     {
         $this->expectException(DepartureReleaseDecisionNotAllowedException::class);
-        Event::assertNotDispatched(DepartureReleaseRequestCancelledEvent::class);
         $request = DepartureReleaseRequest::create(
             [
                 'callsign' => 'BAW123',
@@ -403,6 +407,7 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
         );
 
         $this->service->cancelReleaseRequest($request, self::BANNED_USER_CID);
+        Event::assertNotDispatched(DepartureReleaseRequestCancelledEvent::class);
     }
 
     public function testItCancelsRequestsForAirborneAircraft()

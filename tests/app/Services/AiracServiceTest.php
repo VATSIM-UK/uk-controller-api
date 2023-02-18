@@ -46,7 +46,7 @@ class AiracServiceTest extends BaseUnitTestCase
         $this->assertEquals($expected, AiracService::getCurrentAirac());
     }
 
-    private static function airacDataProvider(): array
+    public static function airacDataProvider(): array
     {
         return [
             'Before 2201' => ['2022-01-26 00:00:00', '2113'],

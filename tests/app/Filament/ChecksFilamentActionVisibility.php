@@ -31,35 +31,35 @@ trait ChecksFilamentActionVisibility
     {
         return tap(
             array_merge(
-                $this->generateRelationManagerTableActionTestCases(
-                    $this->readOnlyTableActions(),
-                    $this->readOnlyRoles(),
+                static::generateRelationManagerTableActionTestCases(
+                    static::readOnlyTableActions(),
+                    static::readOnlyRoles(),
                 ),
-                $this->generateRelationManagerTableActionTestCases(
-                    $this->writeTableActions(),
-                    $this->writeRoles(),
+                static::generateRelationManagerTableActionTestCases(
+                    static::writeTableActions(),
+                    static::writeRoles(),
                 ),
-                $this->generateResourceTableTestCases(
-                    $this->writeResourceTableActions(),
-                    $this->writeRoles(),
+                static::generateResourceTableTestCases(
+                    static::writeResourceTableActions(),
+                    static::writeRoles(),
                 ),
-                $this->generateResourceTableTestCases(
-                    $this->readOnlyResourceTableActions(),
-                    $this->readOnlyRoles(),
+                static::generateResourceTableTestCases(
+                    static::readOnlyResourceTableActions(),
+                    static::readOnlyRoles(),
                 ),
-                $this->generateResourcePageActionTestCases(
-                    $this->writeResourcePageActions(),
-                    $this->writeRoles(),
+                static::generateResourcePageActionTestCases(
+                    static::writeResourcePageActions(),
+                    static::writeRoles(),
                 ),
             ),
             function (array $allActions)
             {
-                $this->assertNotEmpty($allActions);
+                static::assertNotEmpty($allActions);
             }
         );
     }
 
-    private function generateRelationManagerTableActionTestCases(
+    private static function generateRelationManagerTableActionTestCases(
         array $actionsByRelationManager,
         array $rolesThatCanPerformAction
     ): array
@@ -68,7 +68,7 @@ trait ChecksFilamentActionVisibility
 
         foreach ($actionsByRelationManager as $relationManager => $actions) {
             foreach ($actions as $action) {
-                foreach ($this->rolesToIterate() as $role) {
+                foreach (static::rolesToIterate() as $role) {
                     $allActions[sprintf(
                         '%s, %s table action with %s role',
                         $relationManager,
@@ -79,16 +79,16 @@ trait ChecksFilamentActionVisibility
                             {
                                 $livewire = Livewire::test(
                                     $relationManager,
-                                    $this->relationManagerLivewireParams(
-                                        $this->resourceRecordClass(),
-                                        $this->resourceId(),
+                                    static::relationManagerLivewireParams(
+                                        static::resourceRecordClass(),
+                                        static::resourceId(),
                                     )
                                 );
 
-                                $this->assertTableActionVisibility(
+                                static::assertTableActionVisibility(
                                     $livewire,
-                                    $this->tableActionRecordClass()[$relationManager],
-                                    $this->tableActionRecordId()[$relationManager],
+                                    static::tableActionRecordClass()[$relationManager],
+                                    static::tableActionRecordId()[$relationManager],
                                     $action,
                                     in_array(
                                         $role,
@@ -105,7 +105,7 @@ trait ChecksFilamentActionVisibility
         return $allActions;
     }
 
-    private function generateResourceTableTestCases(
+    private static function generateResourceTableTestCases(
         array $actions,
         array $rolesThatCanPerformAction
     ): array
@@ -113,24 +113,24 @@ trait ChecksFilamentActionVisibility
         $allActions = [];
 
         foreach ($actions as $action) {
-            foreach ($this->rolesToIterate() as $role) {
+            foreach (static::rolesToIterate() as $role) {
                 $allActions[sprintf(
                     '%s, %s table action with %s role',
-                    $this->resourceListingClass(),
+                    static::resourceListingClass(),
                     $action,
                     $role?->value ?? 'no'
                 )] = [
                         function () use ($role, $action, $rolesThatCanPerformAction)
                         {
                             $livewire = Livewire::test(
-                                $this->resourceListingClass(),
-                                $this->resourceLivewireParams($this->resourceId())
+                                static::resourceListingClass(),
+                                static::resourceLivewireParams(static::resourceId())
                             );
 
-                            $this->assertTableActionVisibility(
+                            static::assertTableActionVisibility(
                                 $livewire,
-                                $this->resourceRecordClass(),
-                                $this->resourceId(),
+                                static::resourceRecordClass(),
+                                static::resourceId(),
                                 $action,
                                 in_array(
                                     $role,
@@ -146,7 +146,7 @@ trait ChecksFilamentActionVisibility
         return $allActions;
     }
 
-    private function generateResourcePageActionTestCases(
+    private static function generateResourcePageActionTestCases(
         array $actions,
         array $rolesThatCanPerformAction
     ): array
@@ -154,18 +154,18 @@ trait ChecksFilamentActionVisibility
         $allActions = [];
 
         foreach ($actions as $action) {
-            foreach ($this->rolesToIterate() as $role) {
+            foreach (static::rolesToIterate() as $role) {
                 $allActions[sprintf(
                     '%s, %s page action with %s role',
-                    $this->resourceListingClass(),
+                    static::resourceListingClass(),
                     $action,
                     $role?->value ?? 'no'
                 )] = [
                         function () use ($role, $action, $rolesThatCanPerformAction)
                         {
                             $livewire = Livewire::test(
-                                $this->resourceListingClass(),
-                                $this->resourceLivewireParams($this->resourceId())
+                                static::resourceListingClass(),
+                                static::resourceLivewireParams(static::resourceId())
                             );
 
                             /*
@@ -179,7 +179,7 @@ trait ChecksFilamentActionVisibility
                             ) ? 'assertPageActionVisible'
                                 : (
                                     get_parent_class(
-                                        $this->resourceListingClass()
+                                        static::resourceListingClass()
                                     ) === ManageRecords::class ? 'assertPageActionDoesNotExist' : 'assertPageActionHidden');
 
                             $livewire->$checkToPerform($action);
@@ -192,7 +192,7 @@ trait ChecksFilamentActionVisibility
         return $allActions;
     }
 
-    private function assertTableActionVisibility(
+    private static function assertTableActionVisibility(
         TestableLivewire $livewire,
         string $recordClass,
         string $recordId,
@@ -212,7 +212,7 @@ trait ChecksFilamentActionVisibility
         }
     }
 
-    private function relationManagerLivewireParams(string $ownerRecordClass, int|string $ownerRecordId): array
+    private static function relationManagerLivewireParams(string $ownerRecordClass, int|string $ownerRecordId): array
     {
         return [
             'ownerRecord' => call_user_func(
@@ -222,14 +222,14 @@ trait ChecksFilamentActionVisibility
         ];
     }
 
-    private function resourceLivewireParams(int|string $recordId): array
+    private static function resourceLivewireParams(int|string $recordId): array
     {
         return [
             'record' => $recordId,
         ];
     }
 
-    private function readOnlyRoles(): array
+    private static function readOnlyRoles(): array
     {
         return [
             RoleKeys::OPERATIONS_TEAM,
@@ -239,7 +239,7 @@ trait ChecksFilamentActionVisibility
         ];
     }
 
-    private function writeRoles(): array
+    private static function writeRoles(): array
     {
         return [
             RoleKeys::OPERATIONS_TEAM,
@@ -248,7 +248,7 @@ trait ChecksFilamentActionVisibility
         ];
     }
 
-    private function rolesToIterate(): array
+    private static function rolesToIterate(): array
     {
         return [
             RoleKeys::OPERATIONS_TEAM,
@@ -258,52 +258,52 @@ trait ChecksFilamentActionVisibility
         ];
     }
 
-    protected function tableActionRecordClass(): array
+    protected static function tableActionRecordClass(): array
     {
         return [];
     }
 
-    protected function tableActionRecordId(): array
+    protected static function tableActionRecordId(): array
     {
         return [];
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return '';
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return '';
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return '';
     }
 
-    protected function writeTableActions(): array
+    protected static function writeTableActions(): array
     {
         return [];
     }
 
-    protected function readOnlyTableActions(): array
+    protected static function readOnlyTableActions(): array
     {
         return [];
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [];
     }

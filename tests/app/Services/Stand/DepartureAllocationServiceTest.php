@@ -22,7 +22,6 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
     public function testItAssignsOccupiedStandsAtDepartureAirfields()
     {
-        Event::assertDispatched(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -37,11 +36,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
         $this->service->assignStandsForDeparture();
 
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
     }
 
     public function testItUpdatesAssignedOccupiedStandsAtDepartureAirfields()
     {
-        Event::assertDispatched(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -59,11 +58,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
         $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 1)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntSupersedeAnExistingDepartureAssignment()
     {
-        Event::assertNotDispatched(StandAssignedEvent::class);
         $aircraft1 = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BAW123',
             [
@@ -94,11 +93,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
         $this->assertFalse(StandAssignment::where('callsign', 'BAW123')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntAssignStandsAtNonDepartureAirfields()
     {
-        Event::assertNotDispatched(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -113,11 +112,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
         $this->service->assignStandsForDeparture();
 
         $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItRemovesAssignmentsAtDepartureAirfieldIfStandUnoccupied()
     {
-        Event::assertDispatched(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -132,11 +131,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->assignStandsForDeparture();
         $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertDispatched(StandUnassignedEvent::class);
     }
 
     public function testItDoesntRemoveStandAssignmentsIfNoStandOccupiedButAssignmentNotAtDepartureAirfield()
     {
-        Event::assertNotDispatched(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -151,6 +150,7 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->assignStandsForDeparture();
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandUnassignedEvent::class);
     }
 
     private function addStandAssignment(string $callsign, int $standId): void

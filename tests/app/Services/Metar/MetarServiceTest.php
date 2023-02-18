@@ -35,7 +35,6 @@ class MetarServiceTest extends BaseFunctionalTestCase
 
     public function testItParsesMetars()
     {
-        Event::assertDispatched(MetarsUpdatedEvent::class);
         Metar::create(['airfield_id' => 1, 'raw' => 'bla', 'parsed' => []]);
         $noPressureAirfield = Airfield::factory()->create();
         $noMetarAirfield = Airfield::factory()->create();
@@ -78,6 +77,8 @@ class MetarServiceTest extends BaseFunctionalTestCase
                     Carbon::now()->timestamp
                 );
         });
+
+        Event::assertDispatched(MetarsUpdatedEvent::class);
 
         // Check the metars are in the database
         $this->assertDatabaseHas(
@@ -126,7 +127,6 @@ class MetarServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesBadResponsesGracefully()
     {
-        Event::assertNotDispatched(MetarsUpdatedEvent::class);
         Http::fake(
             [
                 config(self::URL_CONFIG_KEY) . '?id=' . urlencode(
@@ -149,6 +149,7 @@ class MetarServiceTest extends BaseFunctionalTestCase
             'metars',
             0
         );
+        Event::assertNotDispatched(MetarsUpdatedEvent::class);
     }
 
     public function testItHasParsers()

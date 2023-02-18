@@ -53,7 +53,6 @@ class ReleaseControllerTest extends BaseApiTestCase
 
     public function testItCreatesAReleaseWithReleasePoint()
     {
-        Event::assertDispatched(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -66,6 +65,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(201);
+
+        Event::assertDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseHas(
             'enroute_releases',
@@ -83,7 +84,6 @@ class ReleaseControllerTest extends BaseApiTestCase
 
     public function testItCreatesAReleaseWithReleasePointMaxLength()
     {
-        Event::assertDispatched(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -96,6 +96,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(201);
+
+        Event::assertDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseHas(
             'enroute_releases',
@@ -113,7 +115,6 @@ class ReleaseControllerTest extends BaseApiTestCase
 
     public function testItCreatesAReleaseWithNoReleasePoint()
     {
-        Event::assertDispatched(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -125,6 +126,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(201);
+
+        Event::assertDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseHas(
             'enroute_releases',
@@ -143,13 +146,13 @@ class ReleaseControllerTest extends BaseApiTestCase
     #[DataProvider('badDataProvider')]
     public function testItReturnsBadRequestOnBadData(array $data)
     {
-        Event::assertNotDispatched(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
             $data,
         )
             ->assertStatus(400);
+        Event::assertNotDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseMissing(
             'enroute_releases',
@@ -265,7 +268,6 @@ class ReleaseControllerTest extends BaseApiTestCase
 
     public function testItReturnsNotFoundOnBadReleaseType()
     {
-        Event::assertNotDispatched(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -277,6 +279,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(404);
+            
+        Event::assertNotDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseMissing(
             'enroute_releases',

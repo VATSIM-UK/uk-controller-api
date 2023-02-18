@@ -229,7 +229,6 @@ class StandOccupationServiceTest extends BaseFunctionalTestCase
 
     public function testItUsurpsAssignedStands()
     {
-        Event::assertDispatched(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -243,6 +242,7 @@ class StandOccupationServiceTest extends BaseFunctionalTestCase
         $this->addStandAssignment('BAW123', 2);
 
         $this->service->setOccupiedStands();
+        Event::assertDispatched(StandUnassignedEvent::class);
         $this->assertDatabaseMissing(
             'stand_assignments',
             ['callsign' => 'BAW123']

@@ -24,7 +24,7 @@ class ActivityResourceTest extends BaseFilamentTestCase
             ->log('ohai');
     }
 
-    private function indexRoleProvider(): array
+    public static function indexRoleProvider(): array
     {
         return [
             'None' => [null, false],
@@ -34,7 +34,7 @@ class ActivityResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    private function viewRoleProvider(): array
+    public static function viewRoleProvider(): array
     {
         return [
             'None' => [null, false],

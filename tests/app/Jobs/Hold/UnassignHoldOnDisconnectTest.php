@@ -25,14 +25,14 @@ class UnassignHoldOnDisconnectTest extends BaseFunctionalTestCase
     public function testItDoesNotTriggerAHoldUnassignedEventIfAircraftNotHolding()
     {
         AssignedHold::where('callsign', 'BAW123')->delete();
-        Event::assertNotDispatched(HoldUnassignedEvent::class);
         $this->listener->perform(NetworkAircraft::find('BAW123'));
+        Event::assertNotDispatched(HoldUnassignedEvent::class);
     }
 
     public function testItTriggersAHoldUnassignedEventIfAircraftIsAssignedHold()
     {
-        Event::assertDispatched(HoldUnassignedEvent::class);
         $this->listener->perform(NetworkAircraft::find('BAW123'));
+        Event::assertDispatched(HoldUnassignedEvent::class);
     }
 
     public function testItDeletesAssignedHold()

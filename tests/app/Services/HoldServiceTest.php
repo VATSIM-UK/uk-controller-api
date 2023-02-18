@@ -105,7 +105,6 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
     public function testItRemovesStaleAssignmentIfAircraftOnGround()
     {
-        Event::assertDispatched(HoldUnassignedEvent::class);
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 0,
@@ -117,11 +116,11 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         $this->holdService->removeStaleAssignments();
         $this->assertTrue(AssignedHold::where('callsign', 'BAW123')->doesntExist());
+        Event::assertDispatched(HoldUnassignedEvent::class);
     }
 
     public function testItRemovesStaleAssignmentIfAreALongWayFromTheHold()
     {
-        Event::assertDispatched(HoldUnassignedEvent::class);
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 123,
@@ -134,11 +133,11 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         $this->holdService->removeStaleAssignments();
         $this->assertTrue(AssignedHold::where('callsign', 'BAW123')->doesntExist());
+        Event::assertDispatched(HoldUnassignedEvent::class);
     }
 
     public function testItDoesntRemoveStaleAssignmentsIfFlyingCloseToHold()
     {
-        Event::assertNotDispatched(HoldUnassignedEvent::class);
         NetworkAircraft::where('callsign', 'BAW123')->update(
             [
                 'groundspeed' => 335,
@@ -150,6 +149,7 @@ class HoldServiceTest extends BaseFunctionalTestCase
 
         $this->holdService->removeStaleAssignments();
         $this->assertTrue(AssignedHold::where('callsign', 'BAW123')->exists());
+        Event::assertNotDispatched(HoldUnassignedEvent::class);
     }
 
     public function testItDoesNotAddProximityNavaidsIfOutOfRange()

@@ -31,8 +31,8 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
 
     public function testDoesntFireEventIfNoAssignment()
     {
-        Event::assertNotDispatched(fn(StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
         $this->listener->perform(NetworkAircraft::find('BAW123'));
+        Event::assertNotDispatched(fn(StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment

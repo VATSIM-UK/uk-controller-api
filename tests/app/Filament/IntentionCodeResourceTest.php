@@ -422,7 +422,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateCodeIfDescriptionTooLong()
     {
         Livewire::test(CreateIntentionCode::class)
-            ->set('data.description',Str::padRight('', 256, 'a'))
+            ->set('data.description', Str::padRight('', 256, 'a'))
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -1403,7 +1403,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         );
 
         Livewire::test(EditIntentionCode::class, ['record' => $code->id])
-            ->set('data.description',Str::padRight('', 256, 'a'))
+            ->set('data.description', Str::padRight('', 256, 'a'))
             ->set('data.code_type', 'airfield_identifier')
             ->set('data.single_code', null)
             ->set('data.conditions.0.type', 'arrival_airfields')
@@ -3071,22 +3071,22 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         return ['Intention Codes', 'A1'];
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return IntentionCode::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListIntentionCodes::class;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [
             'edit',
@@ -3094,14 +3094,14 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
             'view',
         ];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [
             'create',

@@ -159,13 +159,14 @@ class StandControllerTest extends BaseApiTestCase
 
     public function testItDoesStandAssignment()
     {
-        Event::assertDispatched(StandAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'stand_id' => 1
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
             ->assertStatus(201);
+
+        Event::assertDispatched(StandAssignedEvent::class);
 
         $this->assertDatabaseHas(
             'stand_assignments',
@@ -178,28 +179,29 @@ class StandControllerTest extends BaseApiTestCase
 
     public function testItReturnsNotFoundOnAssignmentIfStandDoesNotExist()
     {
-        Event::assertNotDispatched(StandAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'stand_id' => 55
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
             ->assertStatus(404);
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDeletesStandAssignments()
     {
-        Event::assertDispatched(StandUnassignedEvent::class);
         $this->addStandAssignment('BAW123', 1);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
             ->assertStatus(204);
+
+        Event::assertDispatched(StandUnassignedEvent::class);
     }
 
     public function testItDeletesStandAssignmentsIfNonePresent()
     {
-        Event::assertNotDispatched(StandUnassignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
             ->assertStatus(204);
+        Event::assertNotDispatched(StandUnassignedEvent::class);
     }
 
     public function testItReturnsFreshStandStatuses()

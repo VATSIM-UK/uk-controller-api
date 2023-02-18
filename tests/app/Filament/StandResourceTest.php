@@ -950,12 +950,12 @@ class StandResourceTest extends BaseFilamentTestCase
         return ['EGLL', 'EGBB'];
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return Stand::class;
     }
@@ -965,33 +965,33 @@ class StandResourceTest extends BaseFilamentTestCase
         return StandResource::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListStands::class;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [
             'edit',
         ];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
             'view',
         ];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [
             'create',
         ];
     }
 
-    protected function tableActionRecordClass(): array
+    protected static function tableActionRecordClass(): array
     {
         return [
             PairedStandsRelationManager::class => Stand::class,
@@ -999,7 +999,7 @@ class StandResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    protected function tableActionRecordId(): array
+    protected static function tableActionRecordId(): array
     {
         return [
             PairedStandsRelationManager::class => 1,
@@ -1007,7 +1007,7 @@ class StandResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    protected function writeTableActions(): array
+    protected static function writeTableActions(): array
     {
         return [
             PairedStandsRelationManager::class => [
