@@ -230,6 +230,7 @@ class StandOccupationServiceTest extends BaseFunctionalTestCase
 
     public function testItUsurpsAssignedStands()
     {
+        Event::fake();
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [

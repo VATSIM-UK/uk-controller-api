@@ -211,6 +211,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItFiresUpdatedEventsOnDataFeed()
     {
+        Event::fake();
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
         Event::assertDispatched(NetworkDataUpdatedEvent::class);
