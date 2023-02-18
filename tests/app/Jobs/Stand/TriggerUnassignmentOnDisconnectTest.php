@@ -23,7 +23,6 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
     public function testItDeletesStandAssignments()
     {
         $this->addStandAssignment('BAW123', 1);
-        Event::assertDispatched([]);
         $this->listener->perform(NetworkAircraft::find('BAW123'));
         Event::assertDispatched(fn(StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
         $this->assertNull(StandAssignment::find('BAW123'));

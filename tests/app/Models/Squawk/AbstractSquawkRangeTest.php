@@ -91,7 +91,7 @@ class AbstractSquawkRangeTest extends BaseUnitTestCase
         ];
     }
 
-    #[DataProvider('rangeProvider')]
+    #[DataProvider('inRangeProvider')]
     public function testItReturnsIfSquawkIsInRange(
         string $first,
         string $last,

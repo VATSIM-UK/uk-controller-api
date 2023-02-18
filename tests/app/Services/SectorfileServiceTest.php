@@ -222,7 +222,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
     }
 
     #[DataProvider('validNatsFormatProvider')]
-    public static function testItConvertsFromNatsFormat(
+    public function testItConvertsFromNatsFormat(
         string $latitude,
         string $longitude,
         float $expectedLatitude,

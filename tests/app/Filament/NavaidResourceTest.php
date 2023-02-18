@@ -12,6 +12,7 @@ use App\Models\Navigation\Navaid;
 use Filament\Pages\Actions\ViewAction;
 use Filament\Tables\Actions\EditAction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -357,7 +358,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 'restriction' => $this->castAsJson([
                     'type' => 'level-block',
                     'levels' => [12000, 13000],
-                ]),
+                ])->getValue(DB::connection()->getQueryGrammar(),
             ]
         );
     }
@@ -418,7 +419,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                         'designator' => '27L',
                         'type' => 'any',
                     ],
-                ]),
+                ])->getValue(DB::connection()->getQueryGrammar(),
             ]
         );
     }
@@ -474,7 +475,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                     'type' => 'minimum-level',
                     'level' => 'MSL',
                     'target' => 'EGLL',
-                ]),
+                ])->getValue(DB::connection()->getQueryGrammar()),
             ]
         );
     }
@@ -1051,7 +1052,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 'restriction' => $this->castAsJson([
                     'type' => 'level-block',
                     'levels' => [12000, 13000],
-                ]),
+                ])->getValue(DB::connection()->getQueryGrammar(),
             ]
         );
     }
@@ -1113,7 +1114,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                         'designator' => '27L',
                         'type' => 'any',
                     ],
-                ]),
+                ])->getValue(DB::connection()->getQueryGrammar(),
             ]
         );
     }
@@ -1170,7 +1171,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                     'type' => 'minimum-level',
                     'level' => 'MSL',
                     'target' => 'EGLL',
-                ]),
+                ])->getValue(DB::connection()->getQueryGrammar(),
             ]
         );
     }
@@ -1632,7 +1633,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                         'designator' => '27L',
                         'type' => 'any',
                     ],
-                ]),
+                ])->getValue(DB::connection()->getQueryGrammar(),
             ]
         );
     }

@@ -88,8 +88,6 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             ]
         );
 
-        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
-
         $this->service->approveReleaseRequest(
             $request,
             2,
@@ -98,6 +96,8 @@ class DepartureReleaseServiceTest extends BaseFunctionalTestCase
             CarbonImmutable::now()->addMinutes(3),
             'Some remarks'
         );
+
+        Event::assertDispatched(DepartureReleaseApprovedEvent::class);
 
         $this->assertDatabaseHas(
             'departure_release_requests',

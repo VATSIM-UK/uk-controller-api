@@ -19,6 +19,7 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
     public function setUp(): void
     {
         parent::setUp();
+        Event::fake();
         $this->dataService = Mockery::mock(NetworkDataService::class);
         $this->app->instance(NetworkDataService::class, $this->dataService);
         $this->service = $this->app->make(NetworkControllerService::class);
@@ -26,7 +27,6 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesNoControllersOnNetwork()
     {
-        Event::fake();
         $this->dataService->shouldReceive('getNetworkControllerData')->once()->andReturn(new Collection());
         $this->service->updateNetworkData();
         $this->assertNull(NetworkControllerPosition::max('id'));
@@ -34,7 +34,6 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesControllersFromNetworkData()
     {
-        Event::fake();
         $position = NetworkControllerPosition::create(
             ['callsign' => 'EGLL_S_TWR', 'cid' => self::ACTIVE_USER_CID, 'frequency' => 118.5]
         );
@@ -81,7 +80,6 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItTimesOutStaleControllers()
     {
-        Event::fake();
         // Has "timed out" but is now in the data, so keep
         $positionToKeep = NetworkControllerPosition::create(
             ['callsign' => 'EGLL_S_TWR', 'cid' => self::ACTIVE_USER_CID, 'frequency' => 118.5]

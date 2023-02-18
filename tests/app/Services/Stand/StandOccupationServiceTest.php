@@ -7,6 +7,7 @@ use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
+use Illuminate\Support\Facades\Event;
 
 class StandOccupationServiceTest extends BaseFunctionalTestCase
 {
