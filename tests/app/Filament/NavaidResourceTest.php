@@ -358,7 +358,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 'restriction' => $this->castAsJson([
                     'type' => 'level-block',
                     'levels' => [12000, 13000],
-                ])->getValue(DB::connection()->getQueryGrammar(),
+                ])->getValue(DB::connection()->getQueryGrammar()),
             ]
         );
     }
@@ -419,7 +419,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                         'designator' => '27L',
                         'type' => 'any',
                     ],
-                ])->getValue(DB::connection()->getQueryGrammar(),
+                ])->getValue(DB::connection()->getQueryGrammar()),
             ]
         );
     }
@@ -1052,7 +1052,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 'restriction' => $this->castAsJson([
                     'type' => 'level-block',
                     'levels' => [12000, 13000],
-                ])->getValue(DB::connection()->getQueryGrammar(),
+                ])->getValue(DB::connection()->getQueryGrammar()),
             ]
         );
     }
@@ -1114,7 +1114,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                         'designator' => '27L',
                         'type' => 'any',
                     ],
-                ])->getValue(DB::connection()->getQueryGrammar(),
+                ])->getValue(DB::connection()->getQueryGrammar()),
             ]
         );
     }
@@ -1171,7 +1171,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                     'type' => 'minimum-level',
                     'level' => 'MSL',
                     'target' => 'EGLL',
-                ])->getValue(DB::connection()->getQueryGrammar(),
+                ])->getValue(DB::connection()->getQueryGrammar()),
             ]
         );
     }
@@ -1633,7 +1633,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
                         'designator' => '27L',
                         'type' => 'any',
                     ],
-                ])->getValue(DB::connection()->getQueryGrammar(),
+                ])->getValue(DB::connection()->getQueryGrammar()),
             ]
         );
     }
