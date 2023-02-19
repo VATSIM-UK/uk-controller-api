@@ -12,6 +12,7 @@ use App\Models\Navigation\Navaid;
 use Filament\Pages\Actions\ViewAction;
 use Filament\Tables\Actions\EditAction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -350,15 +351,14 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'level-block',
-                    'levels' => [12000, 13000],
-                ]),
-            ]
+                'type' => 'level-block',
+                'levels' => [12000, 13000],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -405,21 +405,20 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                    'override' => 5000,
-                    'runway' => [
-                        'designator' => '27L',
-                        'type' => 'any',
-                    ],
-                ]),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+                'override' => 5000,
+                'runway' => [
+                    'designator' => '27L',
+                    'type' => 'any',
+                ],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -466,16 +465,15 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                ]),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1044,15 +1042,14 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => $hold->id,
-                'restriction' => $this->castAsJson([
-                    'type' => 'level-block',
-                    'levels' => [12000, 13000],
-                ]),
-            ]
+                'type' => 'level-block',
+                'levels' => [12000, 13000],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1100,21 +1097,20 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => $hold->id,
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                    'override' => 5000,
-                    'runway' => [
-                        'designator' => '27L',
-                        'type' => 'any',
-                    ],
-                ]),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+                'override' => 5000,
+                'runway' => [
+                    'designator' => '27L',
+                    'type' => 'any',
+                ],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1162,16 +1158,15 @@ class NavaidResourceTest extends BaseFilamentTestCase
             ]
         );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'hold_id' => Hold::max('id'),
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                ]),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1619,21 +1614,20 @@ class NavaidResourceTest extends BaseFilamentTestCase
                 ]
             );
 
-        $this->assertDatabaseHas(
-            'hold_restrictions',
+        $hold = Hold::latest('id')->first();
+        $this->assertCount(1, $hold->restrictions);
+        $this->assertEquals(
             [
-                'id' => $restriction->id,
-                'restriction' => $this->castAsJson([
-                    'type' => 'minimum-level',
-                    'level' => 'MSL',
-                    'target' => 'EGLL',
-                    'override' => 8000,
-                    'runway' => [
-                        'designator' => '27L',
-                        'type' => 'any',
-                    ],
-                ]),
-            ]
+                'type' => 'minimum-level',
+                'level' => 'MSL',
+                'target' => 'EGLL',
+                'override' => 8000,
+                'runway' => [
+                    'designator' => '27L',
+                    'type' => 'any',
+                ],
+            ],
+            $hold->restrictions->first()->restriction
         );
     }
 
@@ -1662,53 +1656,53 @@ class NavaidResourceTest extends BaseFilamentTestCase
         return ['WILLO', 'TIMBA', 'MAY'];
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return Navaid::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListNavaids::class;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [
             'edit',
         ];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
             'view',
         ];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [
             'create',
         ];
     }
 
-    protected function tableActionRecordClass(): array
+    protected static function tableActionRecordClass(): array
     {
         return [HoldsRelationManager::class => Hold::class];
     }
 
-    protected function tableActionRecordId(): array
+    protected static function tableActionRecordId(): array
     {
         return [HoldsRelationManager::class => 1];
     }
 
-    protected function writeTableActions(): array
+    protected static function writeTableActions(): array
     {
         return [
             HoldsRelationManager::class => [

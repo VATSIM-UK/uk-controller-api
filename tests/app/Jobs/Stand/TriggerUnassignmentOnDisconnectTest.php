@@ -13,7 +13,7 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
 {
     private TriggerUnassignmentOnDisconnect $listener;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         Event::fake();
@@ -23,16 +23,15 @@ class TriggerUnassignmentOnDisconnectTest extends BaseFunctionalTestCase
     public function testItDeletesStandAssignments()
     {
         $this->addStandAssignment('BAW123', 1);
-        $this->expectsEvents([]);
         $this->listener->perform(NetworkAircraft::find('BAW123'));
-        Event::assertDispatched(fn (StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
+        Event::assertDispatched(fn(StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
         $this->assertNull(StandAssignment::find('BAW123'));
     }
 
     public function testDoesntFireEventIfNoAssignment()
     {
-        Event::assertNotDispatched(fn (StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
         $this->listener->perform(NetworkAircraft::find('BAW123'));
+        Event::assertNotDispatched(fn(StandUnassignedEvent $event) => $event->getCallsign() === 'BAW123');
     }
 
     private function addStandAssignment(string $callsign, int $standId): StandAssignment

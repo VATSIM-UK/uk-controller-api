@@ -53,7 +53,8 @@ class SidResourceTest extends BaseFilamentTestCase
             ->set('data.initial_heading', 215)
             ->set('data.handoff_id', 1)
             ->call('create')
-            ->assertHasNoErrors();;
+            ->assertHasNoErrors();
+        ;
 
         $this->assertDatabaseHas(
             'sid',
@@ -76,7 +77,8 @@ class SidResourceTest extends BaseFilamentTestCase
             ->set('data.initial_heading', 360)
             ->set('data.handoff_id', 1)
             ->call('create')
-            ->assertHasNoErrors();;
+            ->assertHasNoErrors();
+        ;
 
         $this->assertDatabaseHas(
             'sid',
@@ -99,7 +101,8 @@ class SidResourceTest extends BaseFilamentTestCase
             ->set('data.initial_heading', 1)
             ->set('data.handoff_id', 1)
             ->call('create')
-            ->assertHasNoErrors();;
+            ->assertHasNoErrors();
+        ;
 
         $this->assertDatabaseHas(
             'sid',
@@ -466,53 +469,53 @@ class SidResourceTest extends BaseFilamentTestCase
         return ['EGLL', 'EGBB'];
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return Sid::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListSids::class;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [
             'edit',
         ];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
             'view',
         ];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [
             'create',
         ];
     }
 
-    protected function tableActionRecordClass(): array
+    protected static function tableActionRecordClass(): array
     {
         return [PrenotesRelationManager::class => Prenote::class];
     }
 
-    protected function tableActionRecordId(): array
+    protected static function tableActionRecordId(): array
     {
         return [PrenotesRelationManager::class => 1];
     }
 
-    protected function writeTableActions(): array
+    protected static function writeTableActions(): array
     {
         return [
             PrenotesRelationManager::class => [

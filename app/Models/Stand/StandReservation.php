@@ -19,13 +19,10 @@ class StandReservation extends Model
         'destination'
     ];
 
-    protected $dates = [
-        'start',
-        'end',
-    ];
-
     protected $casts = [
         'stand_id' => 'integer',
+        'start' => 'datetime',
+        'end' => 'datetime',
     ];
 
     public function stand(): BelongsTo

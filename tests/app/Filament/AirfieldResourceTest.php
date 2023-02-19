@@ -842,39 +842,39 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         return AirfieldResource::class;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return Airfield::class;
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [
             'create',
         ];
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListAirfields::class;
     }
 
-    protected function tableActionRecordClass(): array
+    protected static function tableActionRecordClass(): array
     {
         return [ControllersRelationManager::class => ControllerPosition::class];
     }
 
-    protected function tableActionRecordId(): array
+    protected static function tableActionRecordId(): array
     {
         return [ControllersRelationManager::class => 1];
     }
 
-    protected function writeTableActions(): array
+    protected static function writeTableActions(): array
     {
         return [
             ControllersRelationManager::class => [
@@ -886,14 +886,14 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [
             'edit',
         ];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
             'view',

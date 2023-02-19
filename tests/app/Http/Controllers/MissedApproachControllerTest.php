@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\MissedApproach\MissedApproachNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\DataProvider;
 use util\Traits\WithNetworkController;
 
 class MissedApproachControllerTest extends BaseApiTestCase
@@ -14,7 +16,7 @@ class MissedApproachControllerTest extends BaseApiTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->withoutEvents();
+        Event::fake();
         $this->setNetworkController(self::ACTIVE_USER_CID);
     }
 
@@ -63,16 +65,14 @@ class MissedApproachControllerTest extends BaseApiTestCase
             ->assertForbidden();
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItReturnsBadOnBadData(array $requestData)
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'missed-approaches', $requestData)
             ->assertStatus(422);
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Callsign not a string' => [
@@ -123,9 +123,7 @@ class MissedApproachControllerTest extends BaseApiTestCase
         $this->assertNull($missed->acknowledged_at);
     }
 
-    /**
-     * @dataProvider badDataAcknowledgeProvider
-     */
+    #[DataProvider('badDataAcknowledgeProvider')]
     public function testItReturnsBadOnBadAcknowledgementData(array $requestData)
     {
         $missed = MissedApproachNotification::create(
@@ -136,7 +134,7 @@ class MissedApproachControllerTest extends BaseApiTestCase
             ->assertUnprocessable();
     }
 
-    public function badDataAcknowledgeProvider(): array
+    public static function badDataAcknowledgeProvider(): array
     {
         return [
             'Remarks not a string' => [

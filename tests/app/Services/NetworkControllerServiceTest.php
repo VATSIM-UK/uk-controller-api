@@ -8,6 +8,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Vatsim\NetworkControllerPosition;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
 use Mockery;
 
 class NetworkControllerServiceTest extends BaseFunctionalTestCase
@@ -18,6 +19,7 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
     public function setUp(): void
     {
         parent::setUp();
+        Event::fake();
         $this->dataService = Mockery::mock(NetworkDataService::class);
         $this->app->instance(NetworkDataService::class, $this->dataService);
         $this->service = $this->app->make(NetworkControllerService::class);
@@ -25,7 +27,6 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItHandlesNoControllersOnNetwork()
     {
-        $this->withoutEvents();
         $this->dataService->shouldReceive('getNetworkControllerData')->once()->andReturn(new Collection());
         $this->service->updateNetworkData();
         $this->assertNull(NetworkControllerPosition::max('id'));
@@ -33,7 +34,6 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItUpdatesControllersFromNetworkData()
     {
-        $this->withoutEvents();
         $position = NetworkControllerPosition::create(
             ['callsign' => 'EGLL_S_TWR', 'cid' => self::ACTIVE_USER_CID, 'frequency' => 118.5]
         );
@@ -43,17 +43,17 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
             ->once()
             ->andReturn(
                 collect([
-                            [
-                                'cid' => self::ACTIVE_USER_CID,
-                                'callsign' => 'EGLL_N_TWR',
-                                'frequency' => 118.7,
-                            ],
-                            [
-                                'cid' => self::BANNED_USER_CID,
-                                'callsign' => 'EGKK_APP',
-                                'frequency' => 126.820,
-                            ]
-                        ])
+                    [
+                        'cid' => self::ACTIVE_USER_CID,
+                        'callsign' => 'EGLL_N_TWR',
+                        'frequency' => 118.7,
+                    ],
+                    [
+                        'cid' => self::BANNED_USER_CID,
+                        'callsign' => 'EGKK_APP',
+                        'frequency' => 126.820,
+                    ]
+                ])
             );
 
         $this->service->updateNetworkData();
@@ -80,7 +80,6 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItTimesOutStaleControllers()
     {
-        $this->withoutEvents();
         // Has "timed out" but is now in the data, so keep
         $positionToKeep = NetworkControllerPosition::create(
             ['callsign' => 'EGLL_S_TWR', 'cid' => self::ACTIVE_USER_CID, 'frequency' => 118.5]
@@ -104,12 +103,12 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
             ->once()
             ->andReturn(
                 collect([
-                            [
-                                'cid' => self::ACTIVE_USER_CID,
-                                'callsign' => 'EGLL_S_TWR',
-                                'frequency' => 118.5,
-                            ],
-                        ])
+                    [
+                        'cid' => self::ACTIVE_USER_CID,
+                        'callsign' => 'EGLL_S_TWR',
+                        'frequency' => 118.5,
+                    ],
+                ])
             );
 
         $this->service->updateNetworkData();
@@ -137,9 +136,9 @@ class NetworkControllerServiceTest extends BaseFunctionalTestCase
 
     public function testItFiresEventOnUpdate()
     {
-        $this->expectsEvents(NetworkControllersUpdatedEvent::class);
         $this->dataService->shouldReceive('getNetworkControllerData')->once()->andReturn(new Collection());
         $this->service->updateNetworkData();
+        Event::assertDispatched(NetworkControllersUpdatedEvent::class);
     }
 
     public function testItMatchesControllerPositions()

@@ -50,14 +50,11 @@ class NetworkAircraft extends Model
         'remarks',
     ];
 
-    protected $dates = [
-        'transponder_last_updated_at',
-    ];
-
     protected $casts = [
         'cid' => 'integer',
         'latitude' => 'float',
         'longitude' => 'float',
+        'transponder_last_updated_at' => 'datetime',
     ];
 
     public static function boot()

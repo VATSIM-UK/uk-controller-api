@@ -6,14 +6,13 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 trait ChecksViewFilamentAccess
 {
     use HasResourceClass;
 
-    /**
-     * @dataProvider viewRoleProvider
-     */
+    #[DataProvider('viewRoleProvider')]
     public function testItCanBeViewed(?RoleKeys $role, bool $canView)
     {
         $user = User::factory()->create();
@@ -37,7 +36,7 @@ trait ChecksViewFilamentAccess
         }
     }
 
-    private function viewRoleProvider(): array
+    public static function viewRoleProvider(): array
     {
         return [
             'None' => [null, true],

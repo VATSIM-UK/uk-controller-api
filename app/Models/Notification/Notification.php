@@ -23,9 +23,9 @@ class Notification extends Model
         'valid_to',
     ];
 
-    protected $dates = [
-        'valid_from',
-        'valid_to',
+    protected $casts = [
+        'valid_from' => 'datetime',
+        'valid_to' => 'datetime',
     ];
 
     public function toArray(): array

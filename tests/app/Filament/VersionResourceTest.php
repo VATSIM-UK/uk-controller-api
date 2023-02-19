@@ -10,8 +10,8 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use App\Models\Version\Version;
-use Filament\Tables\Actions\DeleteAction;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class VersionResourceTest extends BaseFilamentTestCase
 {
@@ -27,9 +27,7 @@ class VersionResourceTest extends BaseFilamentTestCase
         return VersionResource::class;
     }
 
-    /**
-     * @dataProvider displaysActionProvider
-     */
+    #[DataProvider('displaysActionProvider')]
     public function testItDisplaysDeleteActionOnActiveVersions(?RoleKeys $role, bool $shouldDisplay)
     {
         $user = User::factory()->create();
@@ -47,9 +45,7 @@ class VersionResourceTest extends BaseFilamentTestCase
             );
     }
 
-    /**
-     * @dataProvider displaysActionProvider
-     */
+    #[DataProvider('displaysActionProvider')]
     public function testItDoesntDisplayRestoreActionOnActiveVersions(?RoleKeys $role)
     {
         $user = User::factory()->create();
@@ -66,9 +62,7 @@ class VersionResourceTest extends BaseFilamentTestCase
             );
     }
 
-    /**
-     * @dataProvider displaysActionProvider
-     */
+    #[DataProvider('displaysActionProvider')]
     public function testItDisplaysRestoreActionOnDeletedVersions(?RoleKeys $role, bool $shouldDisplay)
     {
         $user = User::factory()->create();
@@ -86,9 +80,7 @@ class VersionResourceTest extends BaseFilamentTestCase
             );
     }
 
-    /**
-     * @dataProvider displaysActionProvider
-     */
+    #[DataProvider('displaysActionProvider')]
     public function testItDoesntDisplayDeleteActionOnDeletedVersions(?RoleKeys $role)
     {
         $user = User::factory()->create();
@@ -105,7 +97,7 @@ class VersionResourceTest extends BaseFilamentTestCase
             );
     }
 
-    public function displaysActionProvider(): array
+    public static function displaysActionProvider(): array
     {
         return [
             'None' => [null, false],

@@ -4,12 +4,11 @@ namespace App\Filament\Helpers;
 
 use App\BaseFilamentTestCase;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HasSquawkRangesTest extends BaseFilamentTestCase
 {
-    /**
-     * @dataProvider rangeProvider
-     */
+    #[DataProvider('rangeProvider')]
     public function testItHasSquawkRanges(string $first, string $last)
     {
         Livewire::test(CreateFakeSquawkRange::class)
@@ -19,7 +18,7 @@ class HasSquawkRangesTest extends BaseFilamentTestCase
             ->assertHasNoErrors();
     }
 
-    public function rangeProvider(): array
+    public static function rangeProvider(): array
     {
         return [
             'Low' => ['0001', '0005'],
@@ -32,9 +31,7 @@ class HasSquawkRangesTest extends BaseFilamentTestCase
         ];
     }
 
-    /**
-     * @dataProvider badRangeProvider
-     */
+    #[DataProvider('badRangeProvider')]
     public function testItHasErrorsOnBadSquawks(string|null $first, string|null $last, array $expectedErrors)
     {
         Livewire::test(CreateFakeSquawkRange::class)
@@ -44,7 +41,7 @@ class HasSquawkRangesTest extends BaseFilamentTestCase
             ->assertHasErrors($expectedErrors);
     }
 
-    public function badRangeProvider(): array
+    public static function badRangeProvider(): array
     {
         return [
             'First null' => [null, '2312', ['data.first']],

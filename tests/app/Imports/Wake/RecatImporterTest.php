@@ -9,6 +9,7 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RecatImporterTest extends BaseFunctionalTestCase
 {
@@ -21,9 +22,7 @@ class RecatImporterTest extends BaseFunctionalTestCase
         $this->import->withOutput(Mockery::spy(OutputStyle::class));
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItHandlesBadData(Collection $data, string $expectedError)
     {
         $this->expectException(InvalidArgumentException::class);
@@ -31,7 +30,7 @@ class RecatImporterTest extends BaseFunctionalTestCase
         $this->import->collection($data);
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Empty row' => [

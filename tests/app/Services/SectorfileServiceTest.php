@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\BaseUnitTestCase;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SectorfileServiceTest extends BaseUnitTestCase
 {
@@ -14,9 +15,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
     const MINUTES_ERROR_MESSAGE = 'Cannot have more than 60 minutes';
     const SECONDS_ERROR_MESSAGE = 'Cannot have more than 60 seconds';
 
-    /**
-     * @dataProvider invalidSectorfileLatitudeFormatProvider
-     */
+    #[DataProvider('invalidSectorfileLatitudeFormatProvider')]
     public function testItThrowsExceptionInvalidSectorfileLatitude(string $latitude, string $longitude)
     {
         $this->expectException(InvalidArgumentException::class);
@@ -24,7 +23,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
         SectorfileService::coordinateFromSectorfile($latitude, $longitude);
     }
 
-    public function invalidSectorfileLatitudeFormatProvider(): array
+    public static function invalidSectorfileLatitudeFormatProvider(): array
     {
         return [
             ['', ''],
@@ -43,9 +42,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidSectorfileLongitudeFormatProvider
-     */
+    #[DataProvider('invalidSectorfileLongitudeFormatProvider')]
     public function testItThrowsExceptionInvalidSectorfileLongitude(string $latitude, string $longitude)
     {
         $this->expectException(InvalidArgumentException::class);
@@ -53,7 +50,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
         SectorfileService::coordinateFromSectorfile($latitude, $longitude);
     }
 
-    public function invalidSectorfileLongitudeFormatProvider(): array
+    public static function invalidSectorfileLongitudeFormatProvider(): array
     {
         return [
             [self::VALID_TIMBA_LATITUDE, ''],
@@ -72,20 +69,19 @@ class SectorfileServiceTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidDegreesMinuteSecondProvider
-     */
+    #[DataProvider('invalidDegreesMinuteSecondProvider')]
     public function testItFailsOnInvalidDegreesMinuteSecondData(
         string $latitude,
         string $longitude,
         string $expectedMessage
-    ) {
+    )
+    {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedMessage);
         SectorfileService::coordinateFromSectorfile($latitude, $longitude);
     }
 
-    public function invalidDegreesMinuteSecondProvider(): array
+    public static function invalidDegreesMinuteSecondProvider(): array
     {
         return [
             ['N090.00.00.001', self::VALID_TIMBA_LONGITUDE, self::LATITUDE_DEGREES_ERROR_MESSAGE],
@@ -105,40 +101,38 @@ class SectorfileServiceTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider validCoordinatesProvider
-     */
+    #[DataProvider('validCoordinatesProvider')]
     public function testItLoadsFromSectorfileCoordinates(
         string $latitude,
         string $longitude,
         float $expectedLatitude,
         float $expectedLongitude
-    ) {
+    )
+    {
         $coordinate = SectorfileService::coordinateFromSectorfile($latitude, $longitude);
         $this->assertEqualsWithDelta($expectedLatitude, $coordinate->getLat(), 0.001);
         $this->assertEqualsWithDelta($expectedLongitude, $coordinate->getLng(), 0.001);
     }
 
-    public function validCoordinatesProvider(): array
+    public static function validCoordinatesProvider(): array
     {
         return [
-            [self::VALID_TIMBA_LATITUDE, self::VALID_TIMBA_LONGITUDE, 50.94556, 0.26167], // TIMBA
+            [self::VALID_TIMBA_LATITUDE, self::VALID_TIMBA_LONGITUDE, 50.94556, 0.26167],
+            // TIMBA
             ['S050.59.06.000', 'W000.11.30.000', -50.985, -0.19167], // WILLO down under
         ];
     }
 
-    /**
-     * @dataProvider sectorfileFormatProvider
-     */
+    #[DataProvider('sectorfileFormatProvider')]
     public function testItConvertsToSectorfileFormat(float $latitude, float $longitude, string $expected)
     {
         $this->assertSame(
             $expected,
-            (string)SectorfileService::convertToSectorfileCoordinate($latitude, $longitude)
+            (string) SectorfileService::convertToSectorfileCoordinate($latitude, $longitude)
         );
     }
 
-    public function sectorfileFormatProvider()
+    public static function sectorfileFormatProvider()
     {
         return [
             'North east' => [
@@ -155,13 +149,11 @@ class SectorfileServiceTest extends BaseUnitTestCase
                 50.5205556,
                 -1.3333333,
                 'N050.31.14.000 W001.20.00.000'
-            ],  // This is KATHY
+            ], // This is KATHY
         ];
     }
 
-    /**
-     * @dataProvider badNatsLatitudeFormatProvider
-     */
+    #[DataProvider('badNatsLatitudeFormatProvider')]
     public function testItThrowsAnExceptionOnBadNatsLatitudeFormat(string $latitude)
     {
         $this->expectException(InvalidArgumentException::class);
@@ -169,7 +161,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
         SectorfileService::coordinateFromNats($latitude, '0080000W');
     }
 
-    public function badNatsLatitudeFormatProvider(): array
+    public static function badNatsLatitudeFormatProvider(): array
     {
         return [
             'No direction modifier' => [
@@ -190,9 +182,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider badNatsLongitudeFormatProvider
-     */
+    #[DataProvider('badNatsLongitudeFormatProvider')]
     public function testItThrowsAnExceptionOnBadNatsLongitudeFormat(string $longitude)
     {
         $this->expectException(InvalidArgumentException::class);
@@ -200,7 +190,7 @@ class SectorfileServiceTest extends BaseUnitTestCase
         SectorfileService::coordinateFromNats('525005N', $longitude);
     }
 
-    public function badNatsLongitudeFormatProvider(): array
+    public static function badNatsLongitudeFormatProvider(): array
     {
         return [
             'No direction modifier' => [
@@ -231,22 +221,21 @@ class SectorfileServiceTest extends BaseUnitTestCase
         SectorfileService::coordinateFromNats('525065N', '0024613W');
     }
 
-    /**
-     * @dataProvider validNatsFormatProvider
-     */
+    #[DataProvider('validNatsFormatProvider')]
     public function testItConvertsFromNatsFormat(
         string $latitude,
         string $longitude,
         float $expectedLatitude,
         float $expectedLongitude
-    ) {
+    )
+    {
         $coordinate = SectorfileService::coordinateFromNats($latitude, $longitude);
 
         $this->assertEqualsWithDelta($expectedLatitude, $coordinate->getLat(), 0.0001);
         $this->assertEqualsWithDelta($expectedLongitude, $coordinate->getLng(), 0.0001);
     }
 
-    public function validNatsFormatProvider(): array
+    public static function validNatsFormatProvider(): array
     {
         return [
             'North east' => [
@@ -266,7 +255,8 @@ class SectorfileServiceTest extends BaseUnitTestCase
                 '0012000W',
                 50.5205556,
                 -1.3333333,
-            ],  // This is KATHY
+            ],
+            // This is KATHY
             'North east with decimals' => [
                 '505644.00N',
                 '0001542.00E',

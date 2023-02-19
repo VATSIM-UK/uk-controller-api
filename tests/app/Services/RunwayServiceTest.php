@@ -12,6 +12,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Runway\Runway;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RunwayServiceTest extends BaseFunctionalTestCase
 {
@@ -23,9 +24,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(RunwayService::class);
     }
 
-    /**
-     * @dataProvider goodDataProvider
-     */
+    #[DataProvider('goodDataProvider')]
     public function testItCreatesRunways(
         string $airfield,
         string $firstIdentifier,
@@ -34,7 +33,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         string $secondIdentifier,
         int $secondHeading,
         Coordinate $secondThreshold
-    ) {
+    )
+    {
         $initialCount = DB::table('runways')->count();
         $initialCountPairs = DB::table('runway_runway')->count();
         $this->service::addRunwayPair(
@@ -95,7 +95,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function goodDataProvider(): array
+    public static function goodDataProvider(): array
     {
         // Coordinates are actually EGKK's 08R/26L
         return [
@@ -120,9 +120,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItThrowsExceptionOnBadRunwayCreationData(
         string $airfield,
         string $firstIdentifier,
@@ -133,7 +131,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         Coordinate $secondThreshold,
         string $expectedException,
         string $expectedExceptionMessage
-    ) {
+    )
+    {
         $initialCount = DB::table('runways')->count();
         $initialCountPairs = DB::table('runway_runway')->count();
 
@@ -158,7 +157,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         $this->fail('Expected exception but none thrown');
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         // Coordinates are actually EGKK's 08R/26L
         return [
@@ -294,9 +293,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         RunwayService::inverseRunwayIdentifier('foo');
     }
 
-    /**
-     * @dataProvider runwayIdentifierProvider
-     */
+    #[DataProvider('runwayIdentifierProvider')]
     public function testItCalculatesReverseRunwayIdentifier(string $identifier, string $expected)
     {
         $this->assertEquals(
@@ -305,7 +302,7 @@ class RunwayServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function runwayIdentifierProvider(): array
+    public static function runwayIdentifierProvider(): array
     {
         return [
             'Single digit, no side' => ['09', '27'],

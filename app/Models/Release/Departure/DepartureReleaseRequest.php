@@ -37,16 +37,13 @@ class DepartureReleaseRequest extends Model
 
     protected $casts = [
         'user_id' => 'integer',
-    ];
-
-    protected $dates = [
-        'created_at',
-        'expires_at',
-        'release_expires_at',
-        'released_at',
-        'rejected_at',
-        'acknowledged_at',
-        'release_valid_from',
+        'created_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'release_expires_at' => 'datetime',
+        'released_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'acknowledged_at' => 'datetime',
+        'release_valid_from' => 'datetime',
     ];
 
     /**

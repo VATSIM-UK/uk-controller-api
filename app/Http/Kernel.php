@@ -21,7 +21,7 @@ class Kernel extends HttpKernel
 {
     protected $middleware = [];
 
-    protected $routeMiddleware = [
+    protected $middlewareAliases = [
         MiddlewareKeys::AUTH => Authenticate::class,
         MiddlewareKeys::ADMIN_WEB => Authenticate::class,
         MiddlewareKeys::GITHUB_AUTH => GithubAuth::class,

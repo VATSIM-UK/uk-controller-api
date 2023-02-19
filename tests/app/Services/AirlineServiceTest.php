@@ -5,6 +5,7 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AirlineServiceTest extends BaseFunctionalTestCase
 {
@@ -19,9 +20,7 @@ class AirlineServiceTest extends BaseFunctionalTestCase
         $this->service = $this->app->make(AirlineService::class);
     }
 
-    /**
-     * @dataProvider aircraftProvider
-     */
+    #[DataProvider('aircraftProvider')]
     public function testItReturnsAirlinesForAircraft(string $callsign, string $expectedAirline)
     {
         $this->assertEquals(
@@ -30,7 +29,7 @@ class AirlineServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function aircraftProvider(): array
+    public static function aircraftProvider(): array
     {
         return [
             'British Airways' => [
@@ -53,9 +52,7 @@ class AirlineServiceTest extends BaseFunctionalTestCase
         $this->assertNull($this->service->getAirlineForAircraft(NetworkAircraft::create(['callsign' => '***'])));
     }
 
-    /**
-     * @dataProvider slugProvider
-     */
+    #[DataProvider('slugProvider')]
     public function testItReturnsCallsignSlugs(string $callsign, string $expectedSlug)
     {
         $this->assertEquals(
@@ -64,7 +61,7 @@ class AirlineServiceTest extends BaseFunctionalTestCase
         );
     }
 
-    public function slugProvider(): array
+    public static function slugProvider(): array
     {
         return [
             'Unknown airline' => [

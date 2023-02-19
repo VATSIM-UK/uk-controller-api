@@ -333,7 +333,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
             ->callTableAction(
                 AttachAction::class,
-                data: [
+            data: [
                     'global' => true,
                 ],
             )
@@ -380,7 +380,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
             ->callTableAction(
                 AttachAction::class,
-                data: [
+            data: [
                     'global' => true,
                 ],
             )
@@ -425,7 +425,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
             ->callTableAction(
                 AttachAction::class,
-                data: [
+            data: [
                     'position_level' => ['TWR', 'APP'],
                 ],
             )
@@ -472,7 +472,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
             ->callTableAction(
                 AttachAction::class,
-                data: [
+            data: [
                     'position_level' => ['CTR'],
                 ],
             )
@@ -517,7 +517,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
             ->callTableAction(
                 AttachAction::class,
-                data: [
+            data: [
                     'global' => false,
                     'controllers' => [
                         1,
@@ -568,7 +568,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
             ->callTableAction(
                 AttachAction::class,
-                data: [
+            data: [
                     'global' => false,
                     'controllers' => [
                         1,
@@ -618,7 +618,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
             ->callTableAction(
                 AttachAction::class,
-                data: [
+            data: [
                     'global' => false,
                     'controllers' => [],
                 ],
@@ -651,53 +651,53 @@ class NotificationResourceTest extends BaseFilamentTestCase
         return ['Foo'];
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return Notification::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListNotifications::class;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return [
             'edit',
         ];
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
             'view',
         ];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return [
             'create',
         ];
     }
 
-    protected function tableActionRecordClass(): array
+    protected static function tableActionRecordClass(): array
     {
         return [ControllersRelationManager::class => ControllerPosition::class];
     }
 
-    protected function tableActionRecordId(): array
+    protected static function tableActionRecordId(): array
     {
         return [ControllersRelationManager::class => 1];
     }
 
-    protected function writeTableActions(): array
+    protected static function writeTableActions(): array
     {
         return [
             ControllersRelationManager::class => [

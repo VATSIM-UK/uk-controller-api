@@ -3,6 +3,7 @@
 namespace App\Rules\Airfield;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PartialAirfieldIcaoTest extends BaseUnitTestCase
 {
@@ -14,7 +15,7 @@ class PartialAirfieldIcaoTest extends BaseUnitTestCase
         $this->rule = $this->app->make(PartialAirfieldIcao::class);
     }
 
-    public function validDataProvider(): array
+    public static function validDataProvider(): array
     {
         return [
             ['EGLL'],
@@ -35,15 +36,13 @@ class PartialAirfieldIcaoTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider validDataProvider
-     */
+    #[DataProvider('validDataProvider')]
     public function testItPassesOnValidIcaos(string $icao)
     {
         $this->assertTrue($this->rule->passes(null, $icao));
     }
 
-    public function invalidDataProvider(): array
+    public static function invalidDataProvider(): array
     {
         return [
             'Too short' => [''],
@@ -55,9 +54,7 @@ class PartialAirfieldIcaoTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidDataProvider
-     */
+    #[DataProvider('invalidDataProvider')]
     public function testItFailsOnBadIcaos($icao)
     {
         $this->assertFalse($this->rule->passes(null, $icao));

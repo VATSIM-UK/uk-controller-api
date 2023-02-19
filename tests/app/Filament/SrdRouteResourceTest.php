@@ -81,22 +81,22 @@ class SrdRouteResourceTest extends BaseFilamentTestCase
         return SrdRouteResource::class;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return SrdRoute::class;
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ListSrdRoutes::class;
     }
 
-    protected function readOnlyResourceTableActions(): array
+    protected static function readOnlyResourceTableActions(): array
     {
         return [
             'view',

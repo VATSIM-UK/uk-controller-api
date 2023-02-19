@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\BaseUnitTestCase;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AiracServiceTest extends BaseUnitTestCase
 {
@@ -37,9 +38,7 @@ class AiracServiceTest extends BaseUnitTestCase
         );
     }
 
-    /**
-     * @dataProvider airacDataProvider
-     */
+    #[DataProvider('airacDataProvider')]
     public function testItGeneratesTheCurrentAirac(string $currentDate, string $expected)
     {
         Carbon::setTestNow(Carbon::parse($currentDate));
@@ -47,7 +46,7 @@ class AiracServiceTest extends BaseUnitTestCase
         $this->assertEquals($expected, AiracService::getCurrentAirac());
     }
 
-    private function airacDataProvider(): array
+    public static function airacDataProvider(): array
     {
         return [
             'Before 2201' => ['2022-01-26 00:00:00', '2113'],

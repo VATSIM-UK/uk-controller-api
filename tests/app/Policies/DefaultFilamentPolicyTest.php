@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DefaultFilamentPolicyTest extends BaseFunctionalTestCase
 {
@@ -17,9 +18,7 @@ class DefaultFilamentPolicyTest extends BaseFunctionalTestCase
         $this->defaultFilamentPolicy = $this->app->make(DefaultFilamentPolicy::class);
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
+    #[DataProvider('dataProvider')]
     public function testItManagesAccess(string $action, ?RoleKeys $role, bool $expected)
     {
         $user = User::factory()->create();
@@ -30,7 +29,7 @@ class DefaultFilamentPolicyTest extends BaseFunctionalTestCase
         $this->assertEquals($expected, $this->defaultFilamentPolicy->$action($user));
     }
 
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             'View No Role' => ['view', null, true],

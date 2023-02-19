@@ -8,6 +8,7 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SrdRoutesImportTest extends BaseFunctionalTestCase
 {
@@ -174,7 +175,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
         $this->assertArrayHasKey(BeforeSheet::class, (new SrdRoutesImport())->registerEvents());
     }
 
-    public function invalidRowProvider(): array
+    public static function invalidRowProvider(): array
     {
         return [
             'Origin null' => [
@@ -324,9 +325,7 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidRowProvider
-     */
+    #[DataProvider('invalidRowProvider')]
     public function testItDoesntProcessInvalidRows(array $row)
     {
         $collection = new Collection();

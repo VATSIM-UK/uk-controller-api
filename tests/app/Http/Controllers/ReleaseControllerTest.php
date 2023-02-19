@@ -7,6 +7,8 @@ use App\Events\EnrouteReleaseEvent;
 use App\Models\Release\Enroute\EnrouteReleaseType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ReleaseControllerTest extends BaseApiTestCase
 {
@@ -14,6 +16,7 @@ class ReleaseControllerTest extends BaseApiTestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
+        Event::fake();
     }
 
     public function testItReturnsEnrouteReleaseTypeDependency()
@@ -50,7 +53,6 @@ class ReleaseControllerTest extends BaseApiTestCase
 
     public function testItCreatesAReleaseWithReleasePoint()
     {
-        $this->expectsEvents(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -63,6 +65,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(201);
+
+        Event::assertDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseHas(
             'enroute_releases',
@@ -80,7 +84,6 @@ class ReleaseControllerTest extends BaseApiTestCase
 
     public function testItCreatesAReleaseWithReleasePointMaxLength()
     {
-        $this->expectsEvents(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -93,6 +96,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(201);
+
+        Event::assertDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseHas(
             'enroute_releases',
@@ -110,7 +115,6 @@ class ReleaseControllerTest extends BaseApiTestCase
 
     public function testItCreatesAReleaseWithNoReleasePoint()
     {
-        $this->expectsEvents(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -122,6 +126,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(201);
+
+        Event::assertDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseHas(
             'enroute_releases',
@@ -137,18 +143,16 @@ class ReleaseControllerTest extends BaseApiTestCase
         );
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItReturnsBadRequestOnBadData(array $data)
     {
-        $this->doesntExpectEvents(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
             $data,
         )
             ->assertStatus(400);
+        Event::assertNotDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseMissing(
             'enroute_releases',
@@ -159,80 +163,111 @@ class ReleaseControllerTest extends BaseApiTestCase
     }
 
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
-            [[
-                'callsign' => 'ASDASDSADSADSADASDSADSA',
-                'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-            ]], // Bad callsign
-            [[
-                'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-            ]], // No callsign
-            [[
-                'callsign' => 'BAW123',
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-            ]], //No type
-            [[
-                'callsign' => 'BAW123',
-                'type' => 'abc',
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-            ]], // Bad Type
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'initiating_controller' => 123,
-                'target_controller' => 'LON_C_CTR',
-            ]], // Bad init controller
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'target_controller' => 'LON_C_CTR',
-            ]], // Mo init controller
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 123,
-            ]], // Bad rec controller
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'target_controller' => 'LON_S_CTR',
-            ]], // No rec controller
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-                'release_point' => null,
-            ]], // Bad release point
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-                'release_point' => 123,
-            ]], // Bad release point
-            [[
-                'callsign' => 'BAW123',
-                'type' => 1,
-                'initiating_controller' => 'LON_S_CTR',
-                'target_controller' => 'LON_C_CTR',
-                'release_point' => '1234567890123456',
-            ]], // Bad release point - too long
+            [
+                [
+                    'callsign' => 'ASDASDSADSADSADASDSADSA',
+                    'type' => 1,
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 'LON_C_CTR',
+                ]
+            ],
+            // Bad callsign
+            [
+                [
+                    'type' => 1,
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 'LON_C_CTR',
+                ]
+            ],
+            // No callsign
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 'LON_C_CTR',
+                ]
+            ],
+            //No type
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 'abc',
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 'LON_C_CTR',
+                ]
+            ],
+            // Bad Type
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 1,
+                    'initiating_controller' => 123,
+                    'target_controller' => 'LON_C_CTR',
+                ]
+            ],
+            // Bad init controller
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 1,
+                    'target_controller' => 'LON_C_CTR',
+                ]
+            ],
+            // Mo init controller
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 1,
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 123,
+                ]
+            ],
+            // Bad rec controller
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 1,
+                    'target_controller' => 'LON_S_CTR',
+                ]
+            ],
+            // No rec controller
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 1,
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 'LON_C_CTR',
+                    'release_point' => null,
+                ]
+            ],
+            // Bad release point
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 1,
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 'LON_C_CTR',
+                    'release_point' => 123,
+                ]
+            ],
+            // Bad release point
+            [
+                [
+                    'callsign' => 'BAW123',
+                    'type' => 1,
+                    'initiating_controller' => 'LON_S_CTR',
+                    'target_controller' => 'LON_C_CTR',
+                    'release_point' => '1234567890123456',
+                ]
+            ], // Bad release point - too long
         ];
     }
 
     public function testItReturnsNotFoundOnBadReleaseType()
     {
-        $this->doesntExpectEvents(EnrouteReleaseEvent::class);
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'release/enroute',
@@ -244,6 +279,8 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(404);
+            
+        Event::assertNotDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseMissing(
             'enroute_releases',

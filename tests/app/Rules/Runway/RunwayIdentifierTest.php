@@ -3,6 +3,7 @@
 namespace App\Rules\Runway;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RunwayIdentifierTest extends BaseUnitTestCase
 {
@@ -14,15 +15,13 @@ class RunwayIdentifierTest extends BaseUnitTestCase
         $this->rule = $this->app->make(RunwayIdentifier::class);
     }
 
-    /**
-     * @dataProvider goodDataProvider
-     */
+    #[DataProvider('goodDataProvider')]
     public function testItPassesValidation(string $identifier)
     {
         $this->assertTrue($this->rule->passes('', $identifier));
     }
 
-    public function goodDataProvider(): array
+    public static function goodDataProvider(): array
     {
         return [
             'Normal runway less than 10' => ['09'],
@@ -40,15 +39,13 @@ class RunwayIdentifierTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItFailsValidation(?string $identifier)
     {
         $this->assertFalse($this->rule->passes('', $identifier));
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             'Is null' => [null],

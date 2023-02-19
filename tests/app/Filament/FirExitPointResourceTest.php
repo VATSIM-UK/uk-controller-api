@@ -552,27 +552,27 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
         return FirExitPointResource::class;
     }
 
-    protected function resourceListingClass(): string
+    protected static function resourceListingClass(): string
     {
         return ManageFirExitPoints::class;
     }
 
-    protected function resourceRecordClass(): string
+    protected static function resourceRecordClass(): string
     {
         return FirExitPoint::class;
     }
 
-    protected function resourceId(): int|string
+    protected static function resourceId(): int|string
     {
         return 1;
     }
 
-    protected function writeResourceTableActions(): array
+    protected static function writeResourceTableActions(): array
     {
         return ['edit', 'delete'];
     }
 
-    protected function writeResourcePageActions(): array
+    protected static function writeResourcePageActions(): array
     {
         return ['create'];
     }

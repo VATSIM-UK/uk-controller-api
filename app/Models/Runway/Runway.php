@@ -25,11 +25,8 @@ class Runway extends Model
         'threshold_latitude' => 'double',
         'threshold_longitude' => 'double',
         'heading' => 'integer',
-    ];
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function airfield(): BelongsTo

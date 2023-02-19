@@ -44,12 +44,9 @@ class Stand extends Model
         'latitude' => 'double',
         'longitude' => 'double',
         'assignment_priority' => 'integer',
-    ];
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'closed_at',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     public function assignment(): HasOne

@@ -7,6 +7,7 @@ use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
+use Illuminate\Support\Facades\Event;
 
 class StandOccupationServiceTest extends BaseFunctionalTestCase
 {
@@ -229,7 +230,7 @@ class StandOccupationServiceTest extends BaseFunctionalTestCase
 
     public function testItUsurpsAssignedStands()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
+        Event::fake();
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -243,6 +244,7 @@ class StandOccupationServiceTest extends BaseFunctionalTestCase
         $this->addStandAssignment('BAW123', 2);
 
         $this->service->setOccupiedStands();
+        Event::assertDispatched(StandUnassignedEvent::class);
         $this->assertDatabaseMissing(
             'stand_assignments',
             ['callsign' => 'BAW123']

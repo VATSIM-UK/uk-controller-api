@@ -3,12 +3,11 @@
 namespace App\Helpers\Controller;
 
 use App\BaseUnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FrequencyFormatterTest extends BaseUnitTestCase
 {
-    /**
-     * @dataProvider frequencyProvider
-     */
+    #[DataProvider('frequencyProvider')]
     public function testItFormatsFrequencies(float $frequency, string $expected)
     {
         $this->assertEquals(
@@ -17,7 +16,7 @@ class FrequencyFormatterTest extends BaseUnitTestCase
         );
     }
 
-    public function frequencyProvider(): array
+    public static function frequencyProvider(): array
     {
         return [
             '6 digits' => [123.456, '123.456'],

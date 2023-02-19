@@ -10,9 +10,17 @@ use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StandControllerTest extends BaseApiTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Event::fake();
+    }
+
     public function testItReturnsStandDependency()
     {
         $expected = [
@@ -97,16 +105,14 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(200);
     }
 
-    /**
-     * @dataProvider badAssignmentDataProvider
-     */
+    #[DataProvider('badAssignmentDataProvider')]
     public function testItReturnsInvalidRequestOnBadStandAssignmentData(array $data)
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
             ->assertStatus(400);
     }
 
-    public function badAssignmentDataProvider(): array
+    public static function badAssignmentDataProvider(): array
     {
         return [
             [
@@ -114,47 +120,53 @@ class StandControllerTest extends BaseApiTestCase
                     'callsign' => 'asdfdsdfdsfdsfdsfdsfsdfsd',
                     'stand_id' => 1
                 ]
-            ], // Invalid callsign
+            ],
+            // Invalid callsign
             [
                 [
                     'callsign' => null,
                     'stand_id' => 1
                 ]
-            ], // Callsign null
+            ],
+            // Callsign null
             [
                 [
                     'stand_id' => 1
                 ]
-            ], // Callsign missing
+            ],
+            // Callsign missing
             [
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => 'asdas'
                 ]
-            ], // Invalid stand id
+            ],
+            // Invalid stand id
             [
                 [
                     'callsign' => 'BAW123',
                 ]
-            ], // Stand id missing
+            ],
+            // Stand id missing
             [
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => null
                 ]
-            ],  // Stand id null
+            ], // Stand id null
         ];
     }
 
     public function testItDoesStandAssignment()
     {
-        $this->expectsEvents(StandAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'stand_id' => 1
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
             ->assertStatus(201);
+
+        Event::assertDispatched(StandAssignedEvent::class);
 
         $this->assertDatabaseHas(
             'stand_assignments',
@@ -167,28 +179,29 @@ class StandControllerTest extends BaseApiTestCase
 
     public function testItReturnsNotFoundOnAssignmentIfStandDoesNotExist()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         $data = [
             'callsign' => 'BAW123',
             'stand_id' => 55
         ];
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'stand/assignment', $data)
             ->assertStatus(404);
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDeletesStandAssignments()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
         $this->addStandAssignment('BAW123', 1);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
             ->assertStatus(204);
+
+        Event::assertDispatched(StandUnassignedEvent::class);
     }
 
     public function testItDeletesStandAssignmentsIfNonePresent()
     {
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'stand/assignment/BAW123')
             ->assertStatus(204);
+        Event::assertNotDispatched(StandUnassignedEvent::class);
     }
 
     public function testItReturnsFreshStandStatuses()

@@ -7,6 +7,7 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
+use Illuminate\Support\Facades\Event;
 
 class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 {
@@ -16,11 +17,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(DepartureAllocationService::class);
+        Event::fake();
     }
 
     public function testItAssignsOccupiedStandsAtDepartureAirfields()
     {
-        $this->expectsEvents(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -35,11 +36,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
         $this->service->assignStandsForDeparture();
 
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
     }
 
     public function testItUpdatesAssignedOccupiedStandsAtDepartureAirfields()
     {
-        $this->expectsEvents(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -57,11 +58,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
         $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 1)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntSupersedeAnExistingDepartureAssignment()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         $aircraft1 = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BAW123',
             [
@@ -92,11 +93,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
         $this->assertFalse(StandAssignment::where('callsign', 'BAW123')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntAssignStandsAtNonDepartureAirfields()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -111,11 +112,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
         $this->service->assignStandsForDeparture();
 
         $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItRemovesAssignmentsAtDepartureAirfieldIfStandUnoccupied()
     {
-        $this->expectsEvents(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -130,11 +131,11 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->assignStandsForDeparture();
         $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertDispatched(StandUnassignedEvent::class);
     }
 
     public function testItDoesntRemoveStandAssignmentsIfNoStandOccupiedButAssignmentNotAtDepartureAirfield()
     {
-        $this->doesntExpectEvents(StandUnassignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'RYR787',
             [
@@ -149,6 +150,7 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->assignStandsForDeparture();
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandUnassignedEvent::class);
     }
 
     private function addStandAssignment(string $callsign, int $standId): void

@@ -4,13 +4,12 @@ namespace App\Filament\Helpers;
 
 use App\BaseFilamentTestCase;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HasCoordinatesTest extends BaseFilamentTestCase
 {
-    /**
-     * @dataProvider coordinateProvider
-     */
-    public function testItHasCoordinates(float $latitude, float $longitude)
+    #[DataProvider('coordinateProvider')]
+    public static function testItHasCoordinates(float $latitude, float $longitude)
     {
         Livewire::test(CreateFakeAirfield::class)
             ->set('data.latitude', $latitude)
@@ -19,7 +18,7 @@ class HasCoordinatesTest extends BaseFilamentTestCase
             ->assertHasNoErrors();
     }
 
-    public function coordinateProvider(): array
+    public static function coordinateProvider(): array
     {
         return [
             'Normal' => [1.23, 4.56],
@@ -38,9 +37,7 @@ class HasCoordinatesTest extends BaseFilamentTestCase
         ];
     }
 
-    /**
-     * @dataProvider badCoordinateProvider
-     */
+    #[DataProvider('badCoordinateProvider')]
     public function testItHasErrorsOnBadCoordinates(float|null $latitude, float|null $longitude, array $expectedErrors)
     {
         Livewire::test(CreateFakeAirfield::class)
@@ -50,7 +47,7 @@ class HasCoordinatesTest extends BaseFilamentTestCase
             ->assertHasErrors($expectedErrors);
     }
 
-    public function badCoordinateProvider(): array
+    public static function badCoordinateProvider(): array
     {
         return [
             'Latitude null' => [null, 4.56, ['data.latitude']],

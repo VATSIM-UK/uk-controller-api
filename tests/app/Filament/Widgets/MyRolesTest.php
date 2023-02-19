@@ -6,12 +6,11 @@ use App\BaseFilamentTestCase;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MyRolesTest extends BaseFilamentTestCase
 {
-    /**
-     * @dataProvider roleProvider
-     */
+    #[DataProvider('roleProvider')]
     public function testItDisplaysRoles(array $roles)
     {
         $roleModels = Role::whereIn('key', $roles)->get();
@@ -23,7 +22,7 @@ class MyRolesTest extends BaseFilamentTestCase
             ->assertSee($roleModels->map(fn(Role $role): string => $role->description)->toArray());
     }
 
-    public function roleProvider(): array
+    public static function roleProvider(): array
     {
         return [
             'DSG' => [[RoleKeys::DIVISION_STAFF_GROUP]],

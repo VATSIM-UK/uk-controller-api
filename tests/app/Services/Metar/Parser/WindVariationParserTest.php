@@ -4,6 +4,7 @@ namespace App\Services\Metar\Parser;
 
 use App\BaseUnitTestCase;
 use App\Models\Airfield\Airfield;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class WindVariationParserTest extends BaseUnitTestCase
 {
@@ -22,16 +23,14 @@ class WindVariationParserTest extends BaseUnitTestCase
         $this->assertEquals('210V250', $parsed->offsetGet('wind_variation'));
     }
 
-    /**
-     * @dataProvider badWindProvider
-     */
+    #[DataProvider('badWindProvider')]
     public function testItHandlesBadWindVariation(string $windToken)
     {
         $parsed = $this->parser->parse(new Airfield(), collect([$windToken]));
         $this->assertEmpty($parsed);
     }
 
-    public function badWindProvider(): array
+    public static function badWindProvider(): array
     {
         return [
             'No V' => [

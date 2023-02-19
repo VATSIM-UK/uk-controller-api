@@ -4,6 +4,7 @@ namespace App\Helpers\Vatsim;
 
 use App\BaseUnitTestCase;
 use App\Models\Controller\ControllerPosition;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ControllerPositionParserTest extends BaseUnitTestCase
 {
@@ -15,22 +16,21 @@ class ControllerPositionParserTest extends BaseUnitTestCase
         $this->parser = $this->app->make(ControllerPositionParser::class);
     }
 
-    /**
-     * @dataProvider validDataProvider
-     */
+    #[DataProvider('validDataProvider')]
     public function testItParsesValidPositions(
         ControllerPosition $positionToParse,
         string $expectedFacility,
         string $expectedType,
         float $expectedFrequency
-    ) {
+    )
+    {
         $actual = $this->parser->parse($positionToParse);
         $this->assertEquals($expectedFacility, $actual->getFacility());
         $this->assertEquals($expectedType, $actual->getUnitType());
         $this->assertEquals($expectedFrequency, $actual->getFrequency());
     }
 
-    public function validDataProvider(): array
+    public static function validDataProvider(): array
     {
         return [
             [
@@ -84,15 +84,13 @@ class ControllerPositionParserTest extends BaseUnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider badDataProvider
-     */
+    #[DataProvider('badDataProvider')]
     public function testItDoesntParseInvalidPositions(ControllerPosition $positionToParse)
     {
         $this->assertNull($this->parser->parse($positionToParse));
     }
 
-    public function badDataProvider(): array
+    public static function badDataProvider(): array
     {
         return [
             [

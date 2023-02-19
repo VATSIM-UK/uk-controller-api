@@ -3,20 +3,15 @@ namespace App\Console\Commands;
 
 use App\BaseFunctionalTestCase;
 use App\Models\User\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
-use InvalidArgumentException;
-use Mockery;
-use RuntimeException;
 
 class CreateUserTokenTest extends BaseFunctionalTestCase
 {
     const ARTISAN_COMMAND = 'token:create';
-    
+
     public function testItConstructs()
     {
-        $this->assertInstanceOf(CreateUserTokenTest::class, $this->app->make(CreateUserTokenTest::class));
+        $this->assertInstanceOf(CreateUserToken::class, $this->app->make(CreateUserToken::class));
     }
 
     public function testItFailsIfVatsimCidInvalid()

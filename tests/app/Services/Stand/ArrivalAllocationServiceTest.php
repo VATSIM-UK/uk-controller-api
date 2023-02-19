@@ -170,14 +170,13 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             ],
             array_map(
                 fn(ArrivalStandAllocatorInterface $allocator) => get_class($allocator),
-                    $this->service->getAllocators()
+                $this->service->getAllocators()
             )
         );
     }
 
     public function testItAllocatesAStandFromAllocator()
     {
-        $this->expectsEvents(StandAssignedEvent::class);
         StandReservation::create(
             [
                 'callsign' => 'BMI221',
@@ -205,11 +204,11 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertEquals(1, StandAssignment::find('BMI221')->stand_id);
+        Event::assertDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntAllocateStandIfTimedOut()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -228,11 +227,11 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntAllocateStandIfPerformingCircuits()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -249,11 +248,11 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntPerformAllocationIfStandTooFarFromAirfield()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -270,11 +269,11 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntPerformAllocationIfAircraftHasNoGroundspeed()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -291,16 +290,17 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntPerformAllocationIfNoStandAllocated()
     {
         // Delete all the stands so there's nothing to allocate
-        Stand::all()->each(function (Stand $stand) {
+        Stand::all()->each(function (Stand $stand)
+        {
             $stand->delete();
         });
 
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -317,11 +317,11 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntPerformAllocationIfStandAlreadyAssigned()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -344,11 +344,11 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertTrue(StandAssignment::where('callsign', 'BMI221')->where('stand_id', 1)->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntReturnAllocationIfAirfieldNotFound()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -365,11 +365,11 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntPerformAllocationIfUnknownAircraftType()
     {
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -386,13 +386,13 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItDoesntPerformAllocationIfAircraftTypeNotStandAssignable()
     {
         Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
 
-        $this->doesntExpectEvents(StandAssignedEvent::class);
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
@@ -409,6 +409,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->service->allocateStandsAtArrivalAirfields();
         $this->assertFalse(StandAssignment::where('callsign', 'BMI221')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     private function addStandAssignment(string $callsign, int $standId): void

@@ -11,6 +11,7 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TestingUtils\Traits\WithSeedUsers;
 
 class UserResourceTest extends BaseFilamentTestCase
@@ -19,7 +20,7 @@ class UserResourceTest extends BaseFilamentTestCase
     use ChecksListingFilamentAccess;
     use ChecksViewFilamentAccess;
 
-    private function indexRoleProvider(): array
+    public static function indexRoleProvider(): array
     {
         return [
             'None' => [null, false],
@@ -29,7 +30,7 @@ class UserResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    private function viewRoleProvider(): array
+    public static function viewRoleProvider(): array
     {
         return [
             'None' => [null, false],
@@ -39,9 +40,7 @@ class UserResourceTest extends BaseFilamentTestCase
         ];
     }
 
-    /**
-     * @dataProvider editRoleProvider
-     */
+    #[DataProvider('editRoleProvider')]
     public function testItCanBeEdited(?RoleKeys $role, bool $shouldBeAllowed, bool $sameUser)
     {
         $user = User::factory()->create();
@@ -64,7 +63,7 @@ class UserResourceTest extends BaseFilamentTestCase
         }
     }
 
-    private function editRoleProvider(): array
+    public static function editRoleProvider(): array
     {
         return [
             'None Different User' => [null, false, false],

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\Prenote\PrenoteMessage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PrenoteMessageControllerTest extends BaseApiTestCase
 {
@@ -12,7 +14,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::now());
-        $this->withoutEvents();
+        Event::fake();
     }
 
     public function testUnauthorisedUsersCantSendPrenoteMessages()
@@ -20,7 +22,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages')->assertUnauthorized();
     }
 
-    public function badCreateDataProvider(): array
+    public static function badCreateDataProvider(): array
     {
         return [
             'Missing callsign' => [
@@ -239,9 +241,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider badCreateDataProvider
-     */
+    #[DataProvider('badCreateDataProvider')]
     public function testItDoesntCreateAReleaseOnBadData(array $requestData)
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'prenotes/messages', $requestData)->assertStatus(422);
@@ -469,7 +469,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
             ->assertJsonStructure(['message']);
     }
 
-    public function badAcknowledgeDataProvider(): array
+    public static function badAcknowledgeDataProvider(): array
     {
         return [
             'Controller position id missing' => [
@@ -488,9 +488,7 @@ class PrenoteMessageControllerTest extends BaseApiTestCase
         ];
     }
 
-    /**
-     * @dataProvider badAcknowledgeDataProvider
-     */
+    #[DataProvider('badAcknowledgeDataProvider')]
     public function testItDoesntAcknowledgeAReleaseOnBadData(array $requestData)
     {
         $messageId = PrenoteMessage::create(
