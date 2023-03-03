@@ -18,7 +18,7 @@ use Livewire\Livewire;
 
 class NavaidResourceTest extends BaseFilamentTestCase
 {
-    use ChecksDefaultFilamentAccess;
+    use ChecksOperationsContributorAccess;
     use ChecksFilamentActionVisibility;
 
     protected function tearDown(): void
