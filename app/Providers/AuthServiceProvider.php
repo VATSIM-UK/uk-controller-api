@@ -61,7 +61,7 @@ class AuthServiceProvider extends ServiceProvider
             // The defaults
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
-        Airline::class => DefaultFilamentPolicy::class,
+        Airline::class => OperationsContributorPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
         CcamsSquawkRange::class => DefaultFilamentPolicy::class,
         FirExitPoint::class => DefaultFilamentPolicy::class,
