@@ -101,6 +101,7 @@ class VersionResourceTest extends BaseFilamentTestCase
     {
         return [
             'None' => [null, false],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, false],
             'Web' => [RoleKeys::WEB_TEAM, true],

@@ -235,6 +235,7 @@ trait ChecksFilamentActionVisibility
             RoleKeys::OPERATIONS_TEAM,
             RoleKeys::WEB_TEAM,
             RoleKeys::DIVISION_STAFF_GROUP,
+            RoleKeys::OPERATIONS_CONTRIBUTOR,
             null,
         ];
     }
@@ -254,6 +255,7 @@ trait ChecksFilamentActionVisibility
             RoleKeys::OPERATIONS_TEAM,
             RoleKeys::WEB_TEAM,
             RoleKeys::DIVISION_STAFF_GROUP,
+            RoleKeys::OPERATIONS_CONTRIBUTOR,
             null,
         ];
     }

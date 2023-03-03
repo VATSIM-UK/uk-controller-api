@@ -24,6 +24,7 @@ class UserResourceTest extends BaseFilamentTestCase
     {
         return [
             'None' => [null, false],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
@@ -34,6 +35,7 @@ class UserResourceTest extends BaseFilamentTestCase
     {
         return [
             'None' => [null, false],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
@@ -68,6 +70,8 @@ class UserResourceTest extends BaseFilamentTestCase
         return [
             'None Different User' => [null, false, false],
             'None Same User' => [null, false, true],
+            'Contributor Different User' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false, false],
+            'Contributor Same User' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false, true],
             'DSG Different User' => [RoleKeys::DIVISION_STAFF_GROUP, true, true],
             'DSG Same User' => [RoleKeys::DIVISION_STAFF_GROUP, true, false],
             'Web Different User' => [RoleKeys::WEB_TEAM, true, true],
