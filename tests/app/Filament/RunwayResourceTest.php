@@ -13,7 +13,7 @@ use Livewire\Livewire;
 
 class RunwayResourceTest extends BaseFilamentTestCase
 {
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
     use ChecksDefaultFilamentAccess;
 
     public function testItCanFilterForRunways()

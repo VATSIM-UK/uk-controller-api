@@ -19,7 +19,7 @@ use Livewire\Livewire;
 class NotificationResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
 
     public function testItCanFilterForControllerRelevantNotifications()
     {

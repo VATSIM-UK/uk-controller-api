@@ -12,7 +12,7 @@ use Livewire\Livewire;
 class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
 {
     use ChecksManageRecordsFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
 
     public function testItCreatesASquawkRange()
     {

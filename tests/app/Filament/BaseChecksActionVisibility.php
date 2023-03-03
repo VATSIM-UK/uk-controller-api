@@ -10,7 +10,7 @@ use Livewire\Livewire;
 use Livewire\Testing\TestableLivewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-trait ChecksFilamentActionVisibility
+trait BaseChecksActionVisibility
 {
     #[DataProvider('tableActionProvider')]
     public function testItControlsActionVisibility(
@@ -226,37 +226,6 @@ trait ChecksFilamentActionVisibility
     {
         return [
             'record' => $recordId,
-        ];
-    }
-
-    private static function readOnlyRoles(): array
-    {
-        return [
-            RoleKeys::OPERATIONS_TEAM,
-            RoleKeys::WEB_TEAM,
-            RoleKeys::DIVISION_STAFF_GROUP,
-            RoleKeys::OPERATIONS_CONTRIBUTOR,
-            null,
-        ];
-    }
-
-    private static function writeRoles(): array
-    {
-        return [
-            RoleKeys::OPERATIONS_TEAM,
-            RoleKeys::WEB_TEAM,
-            RoleKeys::DIVISION_STAFF_GROUP,
-        ];
-    }
-
-    private static function rolesToIterate(): array
-    {
-        return [
-            RoleKeys::OPERATIONS_TEAM,
-            RoleKeys::WEB_TEAM,
-            RoleKeys::DIVISION_STAFF_GROUP,
-            RoleKeys::OPERATIONS_CONTRIBUTOR,
-            null,
         ];
     }
 

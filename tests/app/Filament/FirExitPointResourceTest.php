@@ -13,7 +13,7 @@ use Livewire\Livewire;
 class FirExitPointResourceTest extends BaseFilamentTestCase
 {
     use ChecksManageRecordsFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
 
     public function testItCreatesAnExitPoint()
     {

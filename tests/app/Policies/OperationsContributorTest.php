@@ -78,7 +78,7 @@ class OperationsContributorTest extends BaseFunctionalTestCase
             'Force Delete Web' => ['forceDelete', RoleKeys::WEB_TEAM, true],
             'Force Delete DSG' => ['forceDelete', RoleKeys::DIVISION_STAFF_GROUP, true],
             'Force Delete Any No Role' => ['forceDeleteAny', null, false],
-            'Force Delete Any Operations Contributor' => ['forceDeleteAny',  RoleKeys::OPERATIONS_CONTRIBUTOR, true],
+            'Force Delete Any Operations Contributor' => ['forceDeleteAny',  RoleKeys::OPERATIONS_CONTRIBUTOR, false],
             'Force Delete Any Operations' => ['forceDeleteAny', RoleKeys::OPERATIONS_TEAM, false],
             'Force Delete Any Web' => ['forceDeleteAny', RoleKeys::WEB_TEAM, false],
             'Force Delete Any DSG' => ['forceDeleteAny', RoleKeys::DIVISION_STAFF_GROUP, false],

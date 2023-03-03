@@ -13,7 +13,7 @@ use Livewire\Livewire;
 class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
 {
     use ChecksManageRecordsFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
 
     public function testItCreatesASquawkRange()
     {

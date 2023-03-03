@@ -28,7 +28,7 @@ class MyRolesTest extends BaseFilamentTestCase
             'DSG' => [[RoleKeys::DIVISION_STAFF_GROUP]],
             'Web' => [[RoleKeys::WEB_TEAM]],
             'Ops' => [[RoleKeys::OPERATIONS_TEAM]],
-            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR],
+            'Contributor' => [[RoleKeys::OPERATIONS_CONTRIBUTOR]],
             'Multiple' => [[RoleKeys::OPERATIONS_TEAM, RoleKeys::DIVISION_STAFF_GROUP]],
         ];
     }

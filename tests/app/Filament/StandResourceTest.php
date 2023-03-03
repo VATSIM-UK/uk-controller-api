@@ -18,7 +18,7 @@ use Livewire\Livewire;
 class StandResourceTest extends BaseFilamentTestCase
 {
     use ChecksOperationsContributorAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksOperationsContributorActionVisibility;
 
     public function setUp(): void
     {

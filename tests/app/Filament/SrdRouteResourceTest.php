@@ -15,7 +15,7 @@ use Livewire\Livewire;
 
 class SrdRouteResourceTest extends BaseFilamentTestCase
 {
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
     use ChecksViewFilamentAccess;
     use ChecksListingFilamentAccess;
 
