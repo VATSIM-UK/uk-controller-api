@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.35.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.2...6.35.0) (2023-03-11)
+
+
+### Features
+
+* expand roles add operations contributor role ([29f58b6](https://github.com/VATSIM-UK/uk-controller-api/commit/29f58b6fb783d976d641b689010d4b6cc7c67209))
+* expand roles new policy ([641599c](https://github.com/VATSIM-UK/uk-controller-api/commit/641599c4ee418bc66a76fbb7442499148d094eef))
+
 ## [6.34.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.1...6.34.2) (2023-01-27)
 
 
