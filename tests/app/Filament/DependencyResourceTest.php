@@ -12,7 +12,7 @@ use Livewire\Livewire;
 
 class DependencyResourceTest extends BaseFilamentTestCase
 {
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
     use ChecksListingFilamentAccess;
 
     public function testItListsDependencies()

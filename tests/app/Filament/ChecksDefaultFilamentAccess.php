@@ -2,8 +2,8 @@
 
 namespace App\Filament;
 
-use App\Filament\AccessCheckingHelpers\ChecksCreateFilamentAccess;
-use App\Filament\AccessCheckingHelpers\ChecksEditFilamentAccess;
+use App\Filament\AccessCheckingHelpers\ChecksCreateDefaultFilamentAccess;
+use App\Filament\AccessCheckingHelpers\ChecksEditDefaultFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
 
@@ -13,8 +13,8 @@ use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
  */
 trait ChecksDefaultFilamentAccess
 {
-    use ChecksCreateFilamentAccess;
-    use ChecksEditFilamentAccess;
+    use ChecksCreateDefaultFilamentAccess;
+    use ChecksEditDefaultFilamentAccess;
     use ChecksListingFilamentAccess;
     use ChecksViewFilamentAccess;
 }

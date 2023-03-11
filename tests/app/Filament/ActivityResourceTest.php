@@ -5,6 +5,7 @@ namespace App\Filament;
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
+;
 use App\Filament\Resources\ActivityResource;
 use App\Models\User\RoleKeys;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,7 @@ class ActivityResourceTest extends BaseFilamentTestCase
     {
         return [
             'None' => [null, false],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
@@ -38,6 +40,7 @@ class ActivityResourceTest extends BaseFilamentTestCase
     {
         return [
             'None' => [null, false],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],

@@ -17,7 +17,7 @@ use Livewire\Livewire;
 
 class AirfieldResourceTest extends BaseFilamentTestCase
 {
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
     use ChecksDefaultFilamentAccess;
 
     protected function setUp(): void

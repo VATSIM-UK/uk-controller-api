@@ -12,7 +12,7 @@ use Livewire\Livewire;
 class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
 {
     use ChecksManageRecordsFilamentAccess;
-    use ChecksFilamentActionVisibility;
+    use ChecksDefaultFilamentActionVisibility;
 
     public function setUp(): void
     {

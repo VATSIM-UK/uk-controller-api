@@ -36,6 +36,7 @@ trait ChecksListingFilamentAccess
     {
         return [
             'None' => [null, true],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, true],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, true],

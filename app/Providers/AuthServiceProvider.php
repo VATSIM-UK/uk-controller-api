@@ -30,6 +30,7 @@ use App\Models\User\User;
 use App\Models\Version\Version;
 use App\Policies\ActivityLogPolicy;
 use App\Policies\DefaultFilamentPolicy;
+use App\Policies\OperationsContributorPolicy;
 use App\Policies\PluginEditableDataPolicy;
 use App\Policies\PluginVersionPolicy;
 use App\Policies\ReadOnlyPolicy;
@@ -60,21 +61,21 @@ class AuthServiceProvider extends ServiceProvider
             // The defaults
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
-        Airline::class => DefaultFilamentPolicy::class,
+        Airline::class => OperationsContributorPolicy::class,
         ControllerPosition::class => DefaultFilamentPolicy::class,
         CcamsSquawkRange::class => DefaultFilamentPolicy::class,
         FirExitPoint::class => DefaultFilamentPolicy::class,
         Handoff::class => DefaultFilamentPolicy::class,
-        Hold::class => DefaultFilamentPolicy::class,
+        Hold::class => OperationsContributorPolicy::class,
         IntentionCode::class => DefaultFilamentPolicy::class,
-        Navaid::class => DefaultFilamentPolicy::class,
+        Navaid::class => OperationsContributorPolicy::class,
         NonAssignableSquawkCode::class => DefaultFilamentPolicy::class,
         Notification::class => DefaultFilamentPolicy::class,
         OrcamSquawkRange::class => DefaultFilamentPolicy::class,
         Prenote::class => DefaultFilamentPolicy::class,
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
-        Stand::class => DefaultFilamentPolicy::class,
+        Stand::class => OperationsContributorPolicy::class,
         UnitConspicuitySquawkCode::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
