@@ -21,7 +21,6 @@ class SrdNotesImport implements WithEvents, ToCollection
         $row = 0;
         $this->output->progressStart($rows->count());
         while ($row < $rows->count()) {
-
             // Find the first one
             if (!$foundFirst) {
                 if (preg_match(self::NEW_ROW_REGEX, $rows[$row][0])) {
@@ -47,7 +46,6 @@ class SrdNotesImport implements WithEvents, ToCollection
         $startRow = $row;
         $rowText = '';
         while ($row < $rows->count()) {
-
             // If we find a new note, save the current
             if (preg_match(self::NEW_ROW_REGEX, $rows[$row][0])) {
                 break;

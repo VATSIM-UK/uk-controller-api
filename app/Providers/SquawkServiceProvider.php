@@ -23,7 +23,6 @@ class SquawkServiceProvider extends ServiceProvider implements DeferrableProvide
     public function register()
     {
         $this->app->bind(SquawkService::class, function (Application $app) {
-
             // Add the squawk allocation rules, in the order of preference
             return new SquawkService(
                 [

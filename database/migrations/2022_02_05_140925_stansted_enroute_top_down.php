@@ -6,8 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class StanstedEnrouteTopDown extends Migration
 {
-
-
     /**
      * Run the migrations.
      *

@@ -43,7 +43,6 @@ class SrdController
 
         // Format the results
         $results = $query->get()->map(function (SrdRoute $route) {
-
             // Add SID fix to start of string if it's available
             $routeString = '';
             if ($route->sid) {
