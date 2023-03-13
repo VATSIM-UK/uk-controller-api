@@ -30,7 +30,6 @@ class Importer implements WithHeadingRow, ToCollection
     {
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
-
             // Check for the data
             if (!isset($row[self::WAKE_CATEGORY_COLUMN], $row[self::TYPE_DESIGNATOR_COLUMN])) {
                 throw new InvalidWakeImportException('Invalid row format');
