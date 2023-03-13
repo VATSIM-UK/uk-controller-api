@@ -13,7 +13,6 @@ use Illuminate\Http\JsonResponse;
  */
 class RegionalPressureController extends BaseController
 {
-
     /**
      * @var RegionalPressureService
      */

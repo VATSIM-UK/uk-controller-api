@@ -15,7 +15,6 @@ use Illuminate\Routing\Controller as LaravelController;
  */
 class BaseController extends LaravelController
 {
-
     /**
      *    Checks the request to validate specific rules.
      *
