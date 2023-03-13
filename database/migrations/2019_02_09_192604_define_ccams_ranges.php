@@ -336,7 +336,6 @@ class DefineCcamsRanges extends Migration
         foreach ($rangeInfo as $range) {
             // If we don't yet have range owner, create one. There should be one range owner per combination of arr/dep
             if (!isset($processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']])) {
-
                 // Create the range owner and range information
                 $processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']] =
                     DB::table('squawk_general')->insertGetId(
