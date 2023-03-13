@@ -13,7 +13,6 @@ class RefactorSquawkRangeTables extends Migration
      */
     public function up()
     {
-
         // Firstly, create the range owner table
         Schema::create('squawk_range_owner', function (Blueprint $table) {
             $table->increments('id')->comment('The id of the owner');
@@ -71,7 +70,6 @@ class RefactorSquawkRangeTables extends Migration
      */
     public function down()
     {
-
         // Drop the squawk general_table
         Schema::dropIfExists('squawk_general');
 

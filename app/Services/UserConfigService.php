@@ -11,7 +11,6 @@ use App\Models\User\User;
  */
 class UserConfigService
 {
-
     /**
      * Manages user tokens
      *
