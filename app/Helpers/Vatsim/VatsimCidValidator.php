@@ -7,7 +7,6 @@ namespace App\Helpers\Vatsim;
  */
 class VatsimCidValidator
 {
-
     // The minimum possible CID
     const MINIMUM_CID = 800000;
 
