@@ -59,6 +59,36 @@ class SrdRoutesImportTest extends BaseFunctionalTestCase
         $this->assertEquals([1, 2], $model->notes()->pluck('id')->toArray());
     }
 
+    public function testItProcessesWithUnknownNotes()
+    {
+        $collection = new Collection();
+        $collection->push(
+            collect([
+                'EGGD',
+                'WOTAN',
+                '140',
+                '150',
+                'L9 KENET',
+                'OCK1A',
+                'EGLL',
+                'Notes: 2 - 3',
+            ])
+        );
+
+        $this->import->collection($collection);
+        $this->assertCount(1, SrdRoute::all());
+
+        $model = SrdRoute::where('origin', 'EGGD')->first();
+        $this->assertEquals('EGGD', $model->origin);
+        $this->assertEquals('EGLL', $model->destination);
+        $this->assertEquals('WOTAN', $model->sid);
+        $this->assertEquals('OCK1A', $model->star);
+        $this->assertSame(14000, $model->minimum_level);
+        $this->assertSame(15000, $model->maximum_level);
+        $this->assertEquals('L9 KENET', $model->route_segment);
+        $this->assertEquals([2], $model->notes()->pluck('id')->toArray());
+    }
+
     public function testItProcessesMinimumCruise()
     {
         $collection = new Collection();
