@@ -66,7 +66,7 @@ class StandAssignmentsService
             });
 
             // Create new stand assignment
-            NetworkAircraftService::createOrUpdateNetworkAircraft($callsign);
+            NetworkAircraftService::createPlaceholderAircraft($callsign);
             $assignment = StandAssignment::updateOrCreate(
                 ['callsign' => $callsign],
                 [
