@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.35.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.35.0...6.35.1) (2023-03-28)
+
+
+### Bug Fixes
+
+* create network aircraft before stand assignment ([3fc97d0](https://github.com/VATSIM-UK/uk-controller-api/commit/3fc97d0cbe518adc5fe3503805189773f817adb7))
+
 ## [6.35.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.34.2...6.35.0) (2023-03-11)
 
 
