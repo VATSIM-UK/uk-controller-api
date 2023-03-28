@@ -2,6 +2,7 @@
 
 namespace App\Imports\Srd;
 
+use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -65,7 +66,11 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
 
     private function getNoteIds(string $notes): array
     {
-        return explode(self::NOTES_DELIMETER, substr($notes, 6));
+        // Notes columns are in the format Notes: X - Y
+        // So the 6 here is the end of the Notes: part, ie the ids we want.
+        return SrdNote::whereIn('id', explode(self::NOTES_DELIMETER, substr($notes, 6)))
+            ->pluck('id')
+            ->toArray();
     }
 
     private function convertFlightLevel(string $flightLevel): ?int
