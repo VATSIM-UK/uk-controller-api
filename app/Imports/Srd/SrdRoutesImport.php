@@ -66,6 +66,8 @@ class SrdRoutesImport implements ToCollection, WithStartRow, WithEvents
 
     private function getNoteIds(string $notes): array
     {
+        // Notes columns are in the format Notes: X - Y
+        // So the 6 here is the end of the Notes: part, ie the ids we want.
         return SrdNote::whereIn('id', explode(self::NOTES_DELIMETER, substr($notes, 6)))
             ->pluck('id')
             ->toArray();
