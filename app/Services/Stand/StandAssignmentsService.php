@@ -8,6 +8,7 @@ use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\NetworkAircraftService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -65,6 +66,7 @@ class StandAssignmentsService
             });
 
             // Create new stand assignment
+            NetworkAircraftService::createPlaceholderAircraft($callsign);
             $assignment = StandAssignment::updateOrCreate(
                 ['callsign' => $callsign],
                 [
