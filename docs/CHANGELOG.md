@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.35.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.35.1...6.35.2) (2023-03-28)
+
+
+### Bug Fixes
+
+* handle missing srd notes ([9aba51e](https://github.com/VATSIM-UK/uk-controller-api/commit/9aba51e3f2d385f72a2db6bfec413da1ba5b083c))
+
 ## [6.35.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.35.0...6.35.1) (2023-03-28)
 
 
