@@ -3,6 +3,7 @@
 namespace App\Allocator;
 
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Support\Str;
 
 trait UsesDestinationStrings
 {
@@ -13,9 +14,9 @@ trait UsesDestinationStrings
             : $aircraftOrDestination;
 
         return [
-            substr($destination, 0, 1),
-            substr($destination, 0, 2),
-            substr($destination, 0, 3),
+            Str::substr($destination, 0, 1),
+            Str::substr($destination, 0, 2),
+            Str::substr($destination, 0, 3),
             $destination
         ];
     }
