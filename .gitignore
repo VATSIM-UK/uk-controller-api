@@ -18,3 +18,4 @@ bootstrap/cache/
 /public/vendor
 /public/mix-manifest.json
 yarn-error.log
+.phpunit.cache

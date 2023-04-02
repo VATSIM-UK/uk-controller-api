@@ -4,6 +4,7 @@ namespace App\Services\Stand;
 
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
 use App\Allocator\Stand\ArrivalStandAllocatorInterface;
@@ -162,6 +163,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 AirlineCallsignSlugArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
                 AirlineArrivalStandAllocator::class,
+                AirlineCallsignSlugTerminalArrivalStandAllocator::class,
                 AirlineTerminalArrivalStandAllocator::class,
                 CargoAirlineFallbackStandAllocator::class,
                 OriginAirfieldStandAllocator::class,

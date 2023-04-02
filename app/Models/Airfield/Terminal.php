@@ -21,7 +21,13 @@ class Terminal extends Model
 
     public function airlines(): BelongsToMany
     {
-        return $this->belongsToMany(Airline::class)->withTimestamps();
+        return $this->belongsToMany(Airline::class)
+            ->withPivot([
+                'priority',
+                'destination',
+                'callsign_slug',
+            ])
+            ->withTimestamps();
     }
 
     public function stands(): HasMany
