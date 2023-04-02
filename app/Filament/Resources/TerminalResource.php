@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\TerminalResource\Pages;
+use App\Filament\Resources\TerminalResource\RelationManagers\AirlinesRelationManager;
 use App\Models\Airfield\Terminal;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +14,7 @@ use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 
 class TerminalResource extends Resource
@@ -53,7 +55,10 @@ class TerminalResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->label(self::translateTablePath('columns.description'))
+                    ->label(self::translateTablePath('columns.description')),
+                Tables\Columns\TextColumn::make('airlines')
+                    ->label(self::translateTablePath('columns.airlines'))
+                    ->formatStateUsing(fn (Collection $state) => $state->count()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
