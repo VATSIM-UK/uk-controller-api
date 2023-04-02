@@ -879,7 +879,6 @@ return new class extends Migration {
                     'airline_id' => Airline::where('icao_code', 'TOM')->first()?->id,
                     'terminal_id' => $pierId,
                     'priority' => 1,
-                    'callsign_slug' => null,
                 ],
                 [
                     'airline_id' => Airline::where('icao_code', 'TSC')->first()?->id,
@@ -934,7 +933,6 @@ return new class extends Migration {
                     'airline_id' => Airline::where('icao_code', 'TOM')->first()?->id,
                     'terminal_id' => $pierId,
                     'priority' => 1,
-                    'callsign_slug' => null,
                 ],
                 [
                     'airline_id' => Airline::where('icao_code', 'TSC')->first()?->id,
@@ -979,7 +977,6 @@ return new class extends Migration {
                     'airline_id' => Airline::where('icao_code', 'TOM')->first()?->id,
                     'terminal_id' => $pierId,
                     'priority' => 1,
-                    'callsign_slug' => null,
                 ],
                 [
                     'airline_id' => Airline::where('icao_code', 'TSC')->first()?->id,
