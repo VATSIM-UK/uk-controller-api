@@ -30,13 +30,6 @@ class StandServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(StandService::class, function (Application $application) {
-            return new StandService(
-                $application->make(StandAssignmentsService::class),
-                $application->make(AirfieldStandService::class)
-            );
-        });
-
         $this->app->singleton(ArrivalAllocationService::class, function (Application $application) {
             return new ArrivalAllocationService(
                 $application->make(StandAssignmentsService::class),
