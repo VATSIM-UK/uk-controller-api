@@ -43,6 +43,7 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
                     $application->make(AirlineCallsignSlugTerminalArrivalStandAllocator::class),
+                    $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineTerminalArrivalStandAllocator::class),
                     $application->make(CargoAirlineFallbackStandAllocator::class),
                     $application->make(OriginAirfieldStandAllocator::class),
