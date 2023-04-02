@@ -3,23 +3,13 @@
 namespace App\Allocator\Squawk\General;
 
 use App\Allocator\Squawk\AbstractSquawkAllocator;
+use App\Allocator\UsesDestinationStrings;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use Illuminate\Database\Eloquent\Builder;
 
 class AirfieldPairingSquawkAllocator extends AbstractSquawkAllocator
 {
-    /**
-     * Returns a list of destination strings to try.
-     */
-    private function getDestinationStrings(string $destination): array
-    {
-        return [
-            substr($destination, 0, 1),
-            substr($destination, 0, 2),
-            substr($destination, 0, 3),
-            $destination
-        ];
-    }
+    use UsesDestinationStrings;
 
     protected function getOrderedSquawkRangesQuery(array $details): Builder
     {

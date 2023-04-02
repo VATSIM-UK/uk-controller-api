@@ -2,13 +2,15 @@
 
 namespace App\Allocator\Stand;
 
+use App\Allocator\UsesDestinationStrings;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class AirlineDestinationTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
+    use UsesDestinationStrings;
+
     private AirlineService $airlineService;
 
     public function __construct(AirlineService $airlineService)
@@ -30,15 +32,5 @@ class AirlineDestinationTerminalArrivalStandAllocator extends AbstractArrivalSta
             ->orderByRaw('airline_terminal.destination IS NOT NULL')
             ->orderByRaw('LENGTH(airline_terminal.destination) DESC')
             ->orderBy('airline_terminal.priority');
-    }
-
-    public function getDestinationStrings(NetworkAircraft $aircraft): array
-    {
-        return [
-            substr($aircraft->planned_depairport, 0, 1),
-            substr($aircraft->planned_depairport, 0, 2),
-            substr($aircraft->planned_depairport, 0, 3),
-            $aircraft->planned_depairport
-        ];
     }
 }
