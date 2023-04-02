@@ -10,7 +10,6 @@ class TerminalTableSeeder extends Seeder
         Terminal::create(
             [
                 'airfield_id' => 1,
-                'key' => 'T1',
                 'description' => 'Terminal 1',
             ]
         );
@@ -18,7 +17,6 @@ class TerminalTableSeeder extends Seeder
         Terminal::create(
             [
                 'airfield_id' => 1,
-                'key' => 'T2',
                 'description' => 'Terminal 2',
             ]
         );

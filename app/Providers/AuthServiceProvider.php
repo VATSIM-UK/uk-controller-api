@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Airfield\Airfield;
+use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
@@ -58,7 +59,7 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     protected $policies = [
-            // The defaults
+        // The defaults
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
         Airline::class => OperationsContributorPolicy::class,
@@ -76,19 +77,20 @@ class AuthServiceProvider extends ServiceProvider
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => OperationsContributorPolicy::class,
+        Terminal::class => DefaultFilamentPolicy::class,
         UnitConspicuitySquawkCode::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
 
-            // Things the plugin can assign
+        // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,
 
-            // Things that can only be updated by external processes
+        // Things that can only be updated by external processes
         SrdNote::class => ReadOnlyPolicy::class,
         SrdRoute::class => ReadOnlyPolicy::class,
         Dependency::class => ReadOnlyPolicy::class,
 
-            // Special policies
+        // Special policies
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
         Version::class => PluginVersionPolicy::class,
