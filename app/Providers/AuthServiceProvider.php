@@ -77,7 +77,7 @@ class AuthServiceProvider extends ServiceProvider
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
         Stand::class => OperationsContributorPolicy::class,
-        Terminal::class => DefaultFilamentPolicy::class,
+        Terminal::class => OperationsContributorPolicy::class,
         UnitConspicuitySquawkCode::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,

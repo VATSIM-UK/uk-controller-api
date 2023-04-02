@@ -3,19 +3,23 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
+use App\Filament\Resources\TerminalResource\RelationManagers\AirlinesRelationManager;
 use App\Filament\Resources\TerminalResource;
 use App\Filament\Resources\TerminalResource\Pages\CreateTerminal;
+use App\Filament\Resources\TerminalResource\Pages\EditTerminal;
 use App\Filament\Resources\TerminalResource\Pages\ListTerminals;
 use App\Filament\Resources\TerminalResource\Pages\ViewTerminal;
 use App\Models\Airfield\Terminal;
+use App\Models\Airline\Airline;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 class TerminalResourceTest extends BaseFilamentTestCase
 {
-    use ChecksDefaultFilamentActionVisibility;
-    use ChecksDefaultFilamentAccess;
+    use ChecksOperationsContributorActionVisibility;
+    use ChecksOperationsContributorAccess;
 
     public function testItLoadsDataForView()
     {
@@ -73,6 +77,232 @@ class TerminalResourceTest extends BaseFilamentTestCase
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('create')
             ->assertHasErrors(['data.description']);
+    }
+
+    public function testItLoadsDataForEdit()
+    {
+        Livewire::test(EditTerminal::class, ['record' => 1])
+            ->assertSet('data.airfield_id', 1)
+            ->assertSet('data.description', 'Terminal 1');
+    }
+
+    public function testItEditsATerminal()
+    {
+        Livewire::test(EditTerminal::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.description', 'A new terminal 2')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'terminals',
+            [
+                'id' => 1,
+                'airfield_id' => 1,
+                'description' => 'A new terminal 2',
+            ]
+        );
+    }
+
+    public function testItDoesntEditATerminalNoAirfieldId()
+    {
+        Livewire::test(EditTerminal::class, ['record' => 1])
+            ->set('data.airfield_id')
+            ->set('data.description', 'A new terminal')
+            ->call('save')
+            ->assertHasErrors(['data.airfield_id']);
+    }
+
+    public function testItDoesntEditATerminalNoDescription()
+    {
+        Livewire::test(EditTerminal::class, ['record' => 1])
+            ->set('data.description')
+            ->call('save')
+            ->assertHasErrors(['data.description']);
+    }
+
+    public function testItDoesntEditATerminalDescriptionEmpty()
+    {
+        Livewire::test(EditTerminal::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.description', '')
+            ->call('save')
+            ->assertHasErrors(['data.description']);
+    }
+
+    public function testItDoesntEditATerminalDescriptionToLong()
+    {
+        Livewire::test(EditTerminal::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.description', Str::padRight('', 256, 'a'))
+            ->call('save')
+            ->assertHasErrors(['data.description']);
+    }
+
+    public function testItAllowsAirlinePairingWithMinimalData()
+    {
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction('pair-airline', data: ['recordId' => 1, 'priority' => 100])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'airline_terminal',
+            [
+                'airline_id' => 1,
+                'terminal_id' => 1,
+                'destination' => null,
+                'priority' => 100,
+                'callsign_slug' => null,
+            ]
+        );
+    }
+
+    public function testItAllowsAirlinePairingWithFullData()
+    {
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign_slug' => '1234',
+                ]
+            )->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'airline_terminal',
+            [
+                'airline_id' => 1,
+                'terminal_id' => 1,
+                'destination' => 'EGKK',
+                'priority' => 55,
+                'callsign_slug' => '1234',
+            ]
+        );
+    }
+
+    public function testItAllowsAirlinesPairedMultipleTimes()
+    {
+        Terminal::findOrFail(1)->airlines()->sync([1]);
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign_slug' => '1234',
+                ]
+            )->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseCount('airline_terminal', 2);
+        $this->assertDatabaseHas(
+            'airline_terminal',
+            [
+                'airline_id' => 1,
+                'terminal_id' => 1,
+                'destination' => 'EGKK',
+                'priority' => 55,
+                'callsign_slug' => '1234',
+            ]
+        );
+    }
+
+    public function testItAllowsAirlineUnpairing()
+    {
+        Terminal::findOrFail(1)->airlines()->sync([3, 2, 1]);
+        $rowToUnpair = DB::table('airline_terminal')
+            ->where('terminal_id', 1)
+            ->where('airline_id', 3)
+            ->first()
+            ->id;
+
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction('unpair-airline', $rowToUnpair)
+            ->assertSuccessful()
+            ->assertHasNoTableActionErrors();
+        $this->assertEquals([1, 2], Terminal::findOrFail(1)->airlines->pluck('id')->sort()->values()->toArray());
+    }
+
+    public function testItFailsAirlinePairingPriorityTooLow()
+    {
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => -1,
+                    'callsign_slug' => '1234',
+                ]
+            )->assertHasTableActionErrors(['priority']);
+    }
+
+    public function testItFailsAirlinePairingPriorityTooHigh()
+    {
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 99999,
+                    'callsign_slug' => '1234',
+                ]
+            )->assertHasTableActionErrors(['priority']);
+    }
+
+    public function testItFailsAirlinePairingCallsignTooLong()
+    {
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign_slug' => '12345',
+                ]
+            )->assertHasTableActionErrors(['callsign_slug']);
+    }
+
+    public function testItFailsAirlinePairingDestinationTooLong()
+    {
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKKS',
+                    'priority' => 55,
+                    'callsign_slug' => '1234',
+                ]
+            )->assertHasTableActionErrors(['destination']);
     }
 
     protected function getCreateText(): string
@@ -134,17 +364,25 @@ class TerminalResourceTest extends BaseFilamentTestCase
 
     protected static function tableActionRecordClass(): array
     {
-        return [];
+        return [
+            AirlinesRelationManager::class => Airline::class,
+        ];
     }
 
     protected static function tableActionRecordId(): array
     {
-        return [];
+        return [
+            AirlinesRelationManager::class => 1,
+        ];
     }
 
     protected static function writeTableActions(): array
     {
         return [
+            AirlinesRelationManager::class => [
+                'pair-airline',
+                'unpair-airline',
+            ],
         ];
     }
 

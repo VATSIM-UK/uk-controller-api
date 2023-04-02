@@ -29,6 +29,7 @@ class Terminal extends Model
     {
         return $this->belongsToMany(Airline::class)
             ->withPivot([
+                'id',
                 'priority',
                 'destination',
                 'callsign_slug',

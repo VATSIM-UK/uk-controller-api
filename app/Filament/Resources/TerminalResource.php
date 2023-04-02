@@ -69,7 +69,7 @@ class TerminalResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AirlinesRelationManager::class,
         ];
     }
     
