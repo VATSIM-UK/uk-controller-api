@@ -37,6 +37,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAssignsTerminalsWithSpecificDestinations()
     {
+        Stand::query()->update(['terminal_id' => null]);
         $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
         $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1A']);
         DB::table('airline_terminal')->insert(
@@ -55,6 +56,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAPrefersStandsWithNoSpecificDestinations()
     {
+        Stand::query()->update(['terminal_id' => null]);
         $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
         $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1B']);
         $terminal2 = Terminal::factory()->create(['airfield_id' => 1]);
@@ -81,6 +83,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAssignsStandsWithSpecificCallsignSlugs()
     {
+        Stand::query()->update(['terminal_id' => null]);
         $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
         $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1A']);
         DB::table('airline_terminal')->insert(
@@ -99,6 +102,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAPrefersStandsWithNoSpecificCallsignSlugs()
     {
+        Stand::query()->update(['terminal_id' => null]);
         $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
         $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1B']);
         $terminal2 = Terminal::factory()->create(['airfield_id' => 1]);
