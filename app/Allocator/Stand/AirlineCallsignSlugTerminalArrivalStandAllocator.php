@@ -5,10 +5,11 @@ namespace App\Allocator\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 class AirlineCallsignSlugTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
+    use UsesCallsignSlugs;
+
     private AirlineService $airlineService;
 
     public function __construct(AirlineService $airlineService)
@@ -30,16 +31,5 @@ class AirlineCallsignSlugTerminalArrivalStandAllocator extends AbstractArrivalSt
             ->orderByRaw('airline_terminal.callsign_slug IS NOT NULL')
             ->orderByRaw('LENGTH(airline_terminal.callsign_slug) DESC')
             ->orderBy('airline_terminal.priority');
-    }
-
-    public function getCallsignSlugs(NetworkAircraft $aircraft): array
-    {
-        $slug = $this->airlineService->getCallsignSlugForAircraft($aircraft);
-        $slugs = [];
-        for ($i = 0; $i < Str::length($slug); $i++) {
-            $slugs[] = Str::substr($slug, 0, $i + 1);
-        }
-
-        return $slugs;
     }
 }
