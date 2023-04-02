@@ -1005,8 +1005,7 @@ return new class extends Migration {
     {
         DB::table('airline_terminal')
             ->insert(
-                array_filter($data, fn(array $pairing) => $pairing['airline_id'] !== null)
+                array_filter($data, fn (array $pairing) => $pairing['airline_id'] !== null)
             );
     }
-
 };

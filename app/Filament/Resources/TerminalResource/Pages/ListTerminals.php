@@ -9,7 +9,6 @@ use Filament\Resources\Pages\ListRecords;
 
 class ListTerminals extends ListRecords
 {
-
     use LimitsTableRecordListingOptions;
     protected static string $resource = TerminalResource::class;
 
