@@ -25,28 +25,24 @@ class LogAdminActionTest extends BaseApiTestCase
 
     public function testItRecordsAnAdminEvent()
     {
-        $airfieldCode = Airfield::factory()->create()->code;
-        $standData = [
-            'identifier' => '213L',
-            'terminal_id' => null,
-            'type_id' => StandType::first()->id,
-            'latitude' => 54.01,
-            'longitude' => 4.01,
-            'wake_category_id' => WakeCategory::first()->id
+        $navaidData = [
+            'identifier' => 'OHAI',
+            'latitude' => 1,
+            'longitude' => 2,
         ];
 
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
-            "admin/airfields/{$airfieldCode}/stands",
-            $standData
+            'api/admin/navaids',
+            $navaidData
         )->assertCreated();
 
         $this->assertDatabaseHas(
             'admin_log',
             [
                 'user_id' => self::ACTIVE_USER_CID,
-                'request_uri' => "/api/admin/airfields/{$airfieldCode}/stands",
-                'request_body' => json_encode($standData),
+                'request_uri' => "/api/admin/navaids",
+                'request_body' => json_encode($navaidData),
             ]
         );
     }
