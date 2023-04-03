@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Model for a user of the plugin.
@@ -25,7 +27,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName
 {
-    use HasApiTokens, Authenticatable, Authorizable, HasFactory;
+    use HasApiTokens, Authenticatable, Authorizable, HasFactory, LogsActivity;
 
     // The table name
     protected $table = 'user';
@@ -152,5 +154,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->roles()
             ->where('key', $role)
             ->exists();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->dontLogIfAttributesChangedOnly(['last_login', 'last_login_ip', 'created_at', 'updated_at']);
     }
 }
