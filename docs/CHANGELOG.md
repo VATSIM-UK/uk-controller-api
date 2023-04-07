@@ -1,5 +1,29 @@
 # UK Controller Plugin API Changelog
 
+## [6.36.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.35.2...6.36.0) (2023-04-07)
+
+
+### Features
+
+* allow airlines to be assigned to terminals in admin ([deef75a](https://github.com/VATSIM-UK/uk-controller-api/commit/deef75ac9b9cfe7cbf88f9a0acb9a532462229f7))
+* Allow arrival stand allocations by terminal and destination ([2dae2c9](https://github.com/VATSIM-UK/uk-controller-api/commit/2dae2c933829df9a6f78fe2357a6f59483c00056))
+* allow terminal creation via admin panel ([5c24e4b](https://github.com/VATSIM-UK/uk-controller-api/commit/5c24e4bc5776375cc7cab299768349904bed7714))
+* Allow terminals and callsign slugs to be used in stand allocation ([67135e8](https://github.com/VATSIM-UK/uk-controller-api/commit/67135e8ef58e073751fa4659e61bf2fcf51498de))
+* prefer non-slugged terminals for non matching flights ([96993c9](https://github.com/VATSIM-UK/uk-controller-api/commit/96993c95b114cbc9b35e132f9204209d8ccceb84))
+
+
+### Bug Fixes
+
+* allocators ([3f3263a](https://github.com/VATSIM-UK/uk-controller-api/commit/3f3263afa09623a6133fc25cd326792c1b3906a9))
+* dont log unnecessary changes to users ([eb8159a](https://github.com/VATSIM-UK/uk-controller-api/commit/eb8159a79d98ac66e03d174650c9a3b2e811ca82))
+* fix tests ([5432335](https://github.com/VATSIM-UK/uk-controller-api/commit/5432335b6ee9d672280daf68d5c14c05c0d87e63))
+
+
+### Data Updates
+
+* fix tom stands ([6093b95](https://github.com/VATSIM-UK/uk-controller-api/commit/6093b95cfa36abf77183fb060f0f993c74f8dbcc))
+* Gatwick terminals ([0131d0f](https://github.com/VATSIM-UK/uk-controller-api/commit/0131d0f4013b616e4eae70df5631f0878e8eeec8))
+
 ## [6.35.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.35.1...6.35.2) (2023-03-28)
 
 
