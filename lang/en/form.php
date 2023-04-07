@@ -16,4 +16,5 @@ return [
     'notifications' => require_once __DIR__ . '/notifications/form.php',
     'squawks' => require_once __DIR__ . '/squawks/form.php',
     'srd' => require_once __DIR__ . '/srd/form.php',
+    'terminals' => require_once __DIR__ . '/terminals/form.php',
 ];

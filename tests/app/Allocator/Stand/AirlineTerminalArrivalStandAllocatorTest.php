@@ -4,9 +4,11 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\WakeCategory;
+use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Support\Facades\DB;
 use util\Traits\WithWakeCategories;
 
 class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
@@ -31,6 +33,98 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
     {
         $aircraft = $this->createAircraft('BAW23451', 'EGLL');
         $this->assertEquals(2, $this->allocator->allocate($aircraft));
+    }
+
+    public function testItAssignsTerminalsWithSpecificDestinations()
+    {
+        Stand::query()->update(['terminal_id' => null]);
+        $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
+        $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1A']);
+        DB::table('airline_terminal')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'terminal_id' => $terminal1->id,
+                    'destination' => 'EGFF',
+                ],
+            ]
+        );
+
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals($stand1->id, $this->allocator->allocate($aircraft));
+    }
+
+    public function testItAPrefersStandsWithNoSpecificDestinations()
+    {
+        Stand::query()->update(['terminal_id' => null]);
+        $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
+        $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1B']);
+        $terminal2 = Terminal::factory()->create(['airfield_id' => 1]);
+        Stand::factory()->withTerminal($terminal2)->create(['airfield_id' => 1, 'identifier' => '1A']);
+
+        DB::table('airline_terminal')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'terminal_id' => $terminal2->id,
+                    'destination' => 'EGFF',
+                ],
+                [
+                    'airline_id' => 1,
+                    'terminal_id' => $terminal1->id,
+                    'destination' => null,
+                ],
+            ]
+        );
+
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals($stand1->id, $this->allocator->allocate($aircraft));
+    }
+
+    public function testItAssignsStandsWithSpecificCallsignSlugs()
+    {
+        Stand::query()->update(['terminal_id' => null]);
+        $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
+        $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1A']);
+        DB::table('airline_terminal')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'terminal_id' => $terminal1->id,
+                    'callsign_slug' => '333',
+                ],
+            ]
+        );
+
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals($stand1->id, $this->allocator->allocate($aircraft));
+    }
+
+    public function testItAPrefersStandsWithNoSpecificCallsignSlugs()
+    {
+        Stand::query()->update(['terminal_id' => null]);
+        $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
+        $stand1 = Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1B']);
+        $terminal2 = Terminal::factory()->create(['airfield_id' => 1]);
+        Stand::factory()->withTerminal($terminal2)->create(['airfield_id' => 1, 'identifier' => '1A']);
+
+        DB::table('airline_terminal')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'terminal_id' => $terminal2->id,
+                    'callsign_slug' => '333',
+                ],
+                [
+                    'airline_id' => 1,
+                    'terminal_id' => $terminal1->id,
+                    'callsign_slug' => null,
+                ],
+            ]
+        );
+
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertEquals($stand1->id, $this->allocator->allocate($aircraft));
     }
 
     public function testItAllocatesStandsInWeightAscendingOrder()
@@ -122,14 +216,19 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    private function createAircraft(string $callsign, string $arrivalAirport): NetworkAircraft
-    {
+    private function createAircraft(
+        string $callsign,
+        string $arrivalAirport,
+        string $departureAirport = 'EGGD'
+    ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
-                'planned_destairport' => $arrivalAirport]
+                'planned_destairport' => $arrivalAirport,
+                'planned_depairport' => $departureAirport,
+            ]
         );
     }
 }

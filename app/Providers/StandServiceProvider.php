@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\CidReservedArrivalStandAllocator;
@@ -10,7 +12,6 @@ use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\ArrivalAllocationService;
 use App\Services\Stand\StandAdminService;
 use App\Services\Stand\StandAssignmentsService;
-use App\Services\Stand\StandService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use App\Imports\Stand\StandReservationsImport;
@@ -30,13 +31,6 @@ class StandServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(StandService::class, function (Application $application) {
-            return new StandService(
-                $application->make(StandAssignmentsService::class),
-                $application->make(AirfieldStandService::class)
-            );
-        });
-
         $this->app->singleton(ArrivalAllocationService::class, function (Application $application) {
             return new ArrivalAllocationService(
                 $application->make(StandAssignmentsService::class),
@@ -48,6 +42,8 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(AirlineCallsignSlugArrivalStandAllocator::class),
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
+                    $application->make(AirlineCallsignSlugTerminalArrivalStandAllocator::class),
+                    $application->make(AirlineDestinationTerminalArrivalStandAllocator::class),
                     $application->make(AirlineTerminalArrivalStandAllocator::class),
                     $application->make(CargoAirlineFallbackStandAllocator::class),
                     $application->make(OriginAirfieldStandAllocator::class),
