@@ -26,6 +26,6 @@ class DomesticInternationalStandAllocator extends AbstractArrivalStandAllocator
 
     private function isDomestic(NetworkAircraft $aircraft): bool
     {
-        return Str::startsWith($aircraft->planned_depairport, ['EG']);
+        return Str::startsWith($aircraft->planned_depairport, ['EG', 'EI']);
     }
 }

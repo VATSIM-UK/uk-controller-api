@@ -61,7 +61,15 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAssignsADomesticStand()
     {
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
+        $assignment = $this->allocator->allocate($aircraft);
+
+        $this->assertEquals($this->domesticStand->id, $assignment);
+    }
+
+    public function testItAssignsADomesticStandForIreland()
+    {
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', 'EIKN');
         $assignment = $this->allocator->allocate($aircraft);
 
         $this->assertEquals($this->domesticStand->id, $assignment);
@@ -69,7 +77,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAssignsAnInternationalStand()
     {
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', false);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', 'KJFK');
         $assignment = $this->allocator->allocate($aircraft);
 
         $this->assertEquals($this->internationalStand->id, $assignment);
@@ -89,7 +97,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
         $this->setWakeCategoryForAircraft('B738', 'J');
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
 
         $this->assertEquals($weightAppropriateStand->id, $assignment);
@@ -109,7 +117,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
         $this->setWakeCategoryForAircraft('B738', 'S');
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
 
         $this->assertEquals($weightAppropriateStand->id, $assignment);
@@ -129,7 +137,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
 
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
 
         $this->assertEquals($this->domesticStand->id, $assignment);
@@ -150,7 +158,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
 
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL', true);
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         StandAssignment::create(
             [
                 'callsign' => 'AEU252',
@@ -179,14 +187,14 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReturnsNothingOnNoStandAllocated()
     {
-        $this->assertNull($this->allocator->allocate($this->createAircraft('BAW898', 'B738', 'XXXX', true)));
+        $this->assertNull($this->allocator->allocate($this->createAircraft('BAW898', 'B738', 'XXXX')));
     }
 
     private function createAircraft(
         string $callsign,
         string $type,
         string $arrivalAirport,
-        bool $domestic
+        string $departureAirport = 'EGKK'
     ): NetworkAircraft {
         return NetworkAircraft::create(
             [
@@ -194,7 +202,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft' => $type,
                 'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
-                'planned_depairport' => $domestic ? 'EGKK' : 'EIDW',
+                'planned_depairport' => $departureAirport,
             ]
         );
     }
