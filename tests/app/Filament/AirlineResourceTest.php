@@ -69,6 +69,156 @@ class AirlineResourceTest extends BaseFilamentTestCase
         );
     }
 
+    public function testItCreatesAnAirlineAndCopiesStandAndTerminalAssignments()
+    {
+        // Give the airline some terminals and stands
+        Airline::findOrFail(1)
+            ->stands()
+            ->sync([
+                1 => [
+                    'priority' => 50,
+                    'destination' => 'LF',
+                    'callsign_slug' => '23',
+                    'not_before' => '09:00:00',
+                ],
+                2 => [
+                    'priority' => 33,
+                    'destination' => 'KJ',
+                    'callsign_slug' => null,
+                    'not_before' => null,
+                ]
+            ]);
+
+        Airline::findOrFail(1)
+            ->terminals()
+            ->sync([
+                1 => [
+                    'priority' => 2,
+                    'destination' => 'EB',
+                    'callsign_slug' => null,
+                ],
+                2 => [
+                    'priority' => 21,
+                    'destination' => 'ED',
+                    'callsign_slug' => '55',
+                ]
+            ]);
+
+        Livewire::test(CreateAirline::class)
+            ->set('data.icao_code', 'EZY')
+            ->set('data.name', 'EasyJet')
+            ->set('data.callsign', 'EASY')
+            ->set('data.is_cargo', false)
+            ->set('data.copy_stand_assignments', 1)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        // Check the stands
+        $airline = Airline::where('icao_code', 'EZY')
+            ->firstOrFail();
+
+        $this->assertDatabaseHas(
+            'airline_stand',
+            [
+                'airline_id' => $airline->id,
+                'stand_id' => 1,
+                'priority' => 50,
+                'destination' => 'LF',
+                'callsign_slug' => '23',
+                'not_before' => '09:00:00',
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'airline_stand',
+            [
+                'airline_id' => $airline->id,
+                'stand_id' => 2,
+                'priority' => 33,
+                'destination' => 'KJ',
+                'callsign_slug' => null,
+                'not_before' => null,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'airline_terminal',
+            [
+                'airline_id' => $airline->id,
+                'terminal_id' => 1,
+                'priority' => 2,
+                'destination' => 'EB',
+                'callsign_slug' => null,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'airline_terminal',
+            [
+                'airline_id' => $airline->id,
+                'terminal_id' => 2,
+                'priority' => 21,
+                'destination' => 'ED',
+                'callsign_slug' => '55',
+            ]
+        );
+    }
+
+    public function testItCreatesAnAirlineAndDoesntCopyStandAndTerminalAssignments()
+    {
+        // Give the airline some terminals and stands
+        Airline::findOrFail(1)
+            ->stands()
+            ->sync([
+                1 => [
+                    'priority' => 50,
+                    'destination' => 'LF',
+                    'callsign_slug' => '23',
+                    'not_before' => '09:00:00',
+                ],
+                2 => [
+                    'priority' => 33,
+                    'destination' => 'KJ',
+                    'callsign_slug' => null,
+                    'not_before' => null,
+                ]
+            ]);
+
+        Airline::findOrFail(1)
+            ->terminals()
+            ->sync([
+                1 => [
+                    'priority' => 2,
+                    'destination' => 'EB',
+                    'callsign_slug' => null,
+                ],
+                2 => [
+                    'priority' => 21,
+                    'destination' => 'ED',
+                    'callsign_slug' => '55',
+                ]
+            ]);
+
+        Livewire::test(CreateAirline::class)
+            ->set('data.icao_code', 'EZY')
+            ->set('data.name', 'EasyJet')
+            ->set('data.callsign', 'EASY')
+            ->set('data.is_cargo', false)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        // Check the stands
+        $airline = Airline::where('icao_code', 'EZY')
+            ->firstOrFail();
+
+        $this->assertDatabaseMissing(
+            'airline_stand',
+            [
+                'airline_id' => $airline->id,
+            ]
+        );
+    }
+
     public function testItDoesntCreateAnAirlineNoIcaoCode()
     {
         Livewire::test(CreateAirline::class)

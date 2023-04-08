@@ -2,11 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\AirlineResource\Pages;
 use App\Models\Airline\Airline;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
+use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables\Actions\DeleteAction;
@@ -41,10 +46,24 @@ class AirlineResource extends Resource
                     ->maxLength(255)
                     ->label(self::translateFormPath('callsign.label'))
                     ->helperText(self::translateFormPath('callsign.helper')),
+
                 Toggle::make('is_cargo')
                     ->label(self::translateFormPath('is_cargo.label'))
                     ->helperText(self::translateFormPath('is_cargo.helper'))
                     ->required(),
+                Fieldset::make(self::translateFormPath('fieldset_creation_options.label'))
+                    ->schema(
+                        [
+                            Select::make('copy_stand_assignments')
+                                ->options(SelectOptions::airlines())
+                                ->searchable()
+                                ->label(self::translateFormPath('copy_stand_assignments.label'))
+                                ->helperText(self::translateFormPath('copy_stand_assignments.helper'))
+                        ]
+                    )
+                    ->hidden(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
             ]);
     }
 
