@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\AirlineResource\Pages;
+use App\Filament\Resources\AirlineResource\RelationManagers\StandsRelationManager;
 use App\Filament\Resources\AirlineResource\RelationManagers\TerminalsRelationManager;
 use App\Models\Airline\Airline;
 use Filament\Forms\Components\Fieldset;
@@ -95,6 +96,7 @@ class AirlineResource extends Resource
     {
         return [
             TerminalsRelationManager::class,
+            StandsRelationManager::class,
         ];
     }
 

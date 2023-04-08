@@ -18,4 +18,16 @@ return [
             'priority' => 'Allocation Priority',
         ],
     ],
+    'stands' => [
+        'description' => 'Airlines can be assigned to specific stands based on various parameters. The allocation ' .
+            'tries to match by Callsign Slug, then by Destination (always taking priority into account), then any ' .
+            'stand for that airline (preferring ones without specific callsigns or destinations).',
+        'columns' => [
+            'icao' => 'ICAO Code',
+            'destination' => 'Origin',
+            'callsign' => 'Callsign Slug',
+            'priority' => 'Allocation Priority',
+            'not_before' => 'Not Before [UTC]',
+        ],
+    ],
 ];

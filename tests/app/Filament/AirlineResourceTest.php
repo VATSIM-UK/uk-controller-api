@@ -8,9 +8,11 @@ use App\Filament\Resources\AirlineResource\Pages\CreateAirline;
 use App\Filament\Resources\AirlineResource\Pages\EditAirline;
 use App\Filament\Resources\AirlineResource\Pages\ListAirlines;
 use App\Filament\Resources\AirlineResource\Pages\ViewAirline;
+use App\Filament\Resources\AirlineResource\RelationManagers\StandsRelationManager;
 use App\Filament\Resources\AirlineResource\RelationManagers\TerminalsRelationManager;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
+use App\Models\Stand\Stand;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -519,7 +521,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
         );
     }
 
-    public function testItAllowsAirlinesPairedMultipleTimes()
+    public function testItAllowsTerminalsPairedMultipleTimes()
     {
         Terminal::findOrFail(1)->airlines()->sync([1]);
         Livewire::test(
@@ -636,6 +638,202 @@ class AirlineResourceTest extends BaseFilamentTestCase
             )->assertHasTableActionErrors(['destination']);
     }
 
+    public function testItListsStands()
+    {
+        Stand::findOrFail(1)->airlines()->sync([1]);
+        $rowToExpect = DB::table('airline_stand')->where('airline_id', 1)
+            ->where('stand_id', 1)
+            ->first()
+            ->id;
+
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->assertCanSeeTableRecords([$rowToExpect]);
+    }
+
+    public function testItAllowsStandPairingWithMinimalData()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction('pair-stand', data: ['recordId' => 1, 'priority' => 100])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'airline_stand',
+            [
+                'airline_id' => 1,
+                'stand_id' => 1,
+                'destination' => null,
+                'priority' => 100,
+                'callsign_slug' => null,
+                'not_before' => null,
+            ]
+        );
+    }
+
+    public function testItAllowsStandPairingWithFullData()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas(
+            'airline_stand',
+            [
+                'airline_id' => 1,
+                'stand_id' => 1,
+                'destination' => 'EGKK',
+                'priority' => 55,
+                'callsign_slug' => '1234',
+                'not_before' => '20:00:00',
+            ]
+        );
+    }
+
+    public function testItAllowsStandsToBePairedMultipleTimes()
+    {
+        Stand::findOrFail(1)->airlines()->sync([1]);
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseCount('airline_stand', 2);
+        $this->assertDatabaseHas(
+            'airline_stand',
+            [
+                'airline_id' => 1,
+                'stand_id' => 1,
+                'destination' => 'EGKK',
+                'priority' => 55,
+                'callsign_slug' => '1234',
+                'not_before' => '20:00:00',
+            ]
+        );
+    }
+
+    public function testItAllowsStandUnpairing()
+    {
+        Airline::findOrFail(1)->stands()->sync([2, 1]);
+        $rowToUnpair = DB::table('airline_stand')
+            ->where('stand_id', 1)
+            ->where('airline_id', 1)
+            ->first()
+            ->id;
+
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction('unpair-stand', $rowToUnpair)
+            ->assertSuccessful()
+            ->assertHasNoTableActionErrors();
+        $this->assertEquals([2], Airline::findOrFail(1)->stands->pluck('id')->sort()->values()->toArray());
+    }
+
+    public function testItAllowsFailsStandPairingPriorityTooLow()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => -1,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['priority']);
+    }
+
+    public function testItAllowsFailsStandPairingPriorityTooHigh()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 99999,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['priority']);
+    }
+
+    public function testItAllowsFailsStandPairingCallsignTooLong()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign_slug' => '12345',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['callsign_slug']);
+    }
+
+    public function testItAllowsFailsStandPairingDestinationTooLong()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKKS',
+                    'priority' => 55,
+                    'callsign_slug' => '1234',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['destination']);
+    }
+
     protected function getCreateText(): string
     {
         return 'Create Airline';
@@ -697,6 +895,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
     {
         return [
             TerminalsRelationManager::class => Terminal::class,
+            StandsRelationManager::class => Stand::class,
         ];
     }
 
@@ -704,6 +903,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
     {
         return [
             TerminalsRelationManager::class => 1,
+            StandsRelationManager::class => 1,
         ];
     }
 
@@ -713,6 +913,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
             TerminalsRelationManager::class => [
                 'pair-terminal',
                 'unpair-terminal',
+            ],
+            StandsRelationManager::class => [
+                'pair-stand',
+                'unpair-stand',
             ],
         ];
     }

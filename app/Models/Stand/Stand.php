@@ -307,6 +307,6 @@ class Stand extends Model
 
     public function getAirfieldIdentifierAttribute(): string
     {
-        return sprintf('%s - %s', $this->airfield->code, $this->identifier);
+        return sprintf('%s / %s', $this->airfield->code, $this->identifier);
     }
 }
