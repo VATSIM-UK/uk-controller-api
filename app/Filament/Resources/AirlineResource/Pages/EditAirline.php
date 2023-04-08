@@ -9,4 +9,3 @@ class EditAirline extends EditRecord
 {
     public static string $resource = AirlineResource::class;
 }
-

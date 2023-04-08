@@ -20,4 +20,3 @@ class ListAirlines extends ListRecords
         ];
     }
 }
-
