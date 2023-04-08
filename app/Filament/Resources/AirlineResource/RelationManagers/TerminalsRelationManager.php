@@ -33,7 +33,9 @@ class TerminalsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('terminal')
-                    ->formatStateUsing(fn (Terminal $record) => sprintf('%s / %s', $record->airfield->code, $record->description))
+                    ->formatStateUsing(
+                        fn (Terminal $record) => sprintf('%s / %s', $record->airfield->code, $record->description)
+                    )
                     ->label(self::translateTablePath('columns.terminal'))
                     ->sortable()
                     ->searchable(),
