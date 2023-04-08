@@ -51,7 +51,9 @@ class TerminalsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-terminal')
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
-                        $action->getRecordSelect()
+                        $action
+                            ->recordTitle(fn (Terminal $record):string => $record->airfieldDescription)
+                            ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         TextInput::make('destination')

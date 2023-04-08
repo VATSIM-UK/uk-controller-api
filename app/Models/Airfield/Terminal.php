@@ -41,4 +41,9 @@ class Terminal extends Model
     {
         return $this->hasMany(Stand::class);
     }
+
+    public function getAirfieldDescriptionAttribute(): string
+    {
+        return sprintf('%s / %s', $this->airfield->code, $this->description);
+    }
 }

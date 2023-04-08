@@ -57,7 +57,9 @@ class StandsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-stand')
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
-                        $action->getRecordSelect()
+                        $action
+                            ->recordTitle(fn (Stand $record):string => $record->airfieldIdentifier)
+                            ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         TextInput::make('destination')
