@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.37.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.36.0...6.37.0) (2023-04-08)
+
+
+### Features
+
+* treat flights from ireland as domestic for stand purposes ([71cb335](https://github.com/VATSIM-UK/uk-controller-api/commit/71cb335680b025b160ef9e5f9063be9e2b49f61c))
+
 ## [6.36.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.35.2...6.36.0) (2023-04-07)
 
 
