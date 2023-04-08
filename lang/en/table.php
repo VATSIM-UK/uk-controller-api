@@ -2,6 +2,7 @@
 
 return [
     'airfields' => require_once __DIR__ . '/airfields/table.php',
+    'airlines' => require_once __DIR__ . '/airlines/table.php',
     'dependencies' => require_once __DIR__ . '/dependencies/table.php',
     'fir_exit_points' => require_once __DIR__ . '/fir_exit_points/table.php',
     'intention' => require_once __DIR__ . '/intention/table.php',
