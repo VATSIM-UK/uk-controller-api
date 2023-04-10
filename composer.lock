@@ -10104,16 +10104,16 @@
         },
         {
             "name": "z3d0x/filament-logger",
-            "version": "v0.5.1",
+            "version": "v0.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Z3d0X/filament-logger.git",
-                "reference": "93b956989309ac6c622b9d03daac68bb4d260a01"
+                "reference": "209393e0ae34b341063ec1298e93b3f05329f859"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Z3d0X/filament-logger/zipball/93b956989309ac6c622b9d03daac68bb4d260a01",
-                "reference": "93b956989309ac6c622b9d03daac68bb4d260a01",
+                "url": "https://api.github.com/repos/Z3d0X/filament-logger/zipball/209393e0ae34b341063ec1298e93b3f05329f859",
+                "reference": "209393e0ae34b341063ec1298e93b3f05329f859",
                 "shasum": ""
             },
             "require": {
@@ -10172,9 +10172,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Z3d0X/filament-logger/issues",
-                "source": "https://github.com/Z3d0X/filament-logger/tree/v0.5.1"
+                "source": "https://github.com/Z3d0X/filament-logger/tree/v0.5.2"
             },
-            "time": "2023-03-13T04:35:48+00:00"
+            "time": "2023-04-05T16:34:08+00:00"
         }
     ],
     "packages-dev": [
