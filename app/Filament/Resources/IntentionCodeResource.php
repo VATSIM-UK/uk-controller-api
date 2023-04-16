@@ -108,6 +108,7 @@ class IntentionCodeResource extends Resource
                     ->label(self::translateTablePath('columns.code')),
 
             ])
+            ->defaultSort('priority')
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
