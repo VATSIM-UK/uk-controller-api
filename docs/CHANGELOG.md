@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.37.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.37.0...6.37.1) (2023-04-16)
+
+
+### Bug Fixes
+
+* adjust intention code priority when deleting ([ca05749](https://github.com/VATSIM-UK/uk-controller-api/commit/ca05749a07bf457e637c5aec025e87856e86d513)), closes [#1275](https://github.com/VATSIM-UK/uk-controller-api/issues/1275)
+* sort intention codes by priority ([c9909d4](https://github.com/VATSIM-UK/uk-controller-api/commit/c9909d48a18f73dccf830d5a3141e5be5e98d117))
+
 ## [6.37.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.36.0...6.37.0) (2023-04-08)
 
 
