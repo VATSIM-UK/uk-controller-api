@@ -86,7 +86,7 @@ class StandResource extends Resource
                                 )->exists()
                             )
                             ->dehydrated(
-                                fn (Page $livewire, Closure $get) => !Terminal::where(
+                                fn (Page $livewire, Closure $get) => Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
