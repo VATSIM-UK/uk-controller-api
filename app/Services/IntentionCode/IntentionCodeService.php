@@ -68,4 +68,21 @@ class IntentionCodeService
             $code->save();
         });
     }
+
+    /**
+     * Delete an intention code and shift all others down the priority.
+     */
+    public static function deleteIntentionCode(IntentionCode $code): void
+    {
+        DB::transaction(function () use ($code) {
+            $code->delete();
+            IntentionCode::where('priority', '>', $code->priority)
+                ->orderBy('priority')
+                ->each(
+                    function (IntentionCode $code) {
+                        $code->update(['priority' => $code->priority - 1]);
+                    }
+                );
+        });
+    }
 }
