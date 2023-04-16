@@ -9,7 +9,9 @@ use App\Filament\Resources\IntentionCodeResource\Pages\EditIntentionCode;
 use App\Filament\Resources\IntentionCodeResource\Pages\ListIntentionCodes;
 use App\Filament\Resources\IntentionCodeResource\Pages\ViewIntentionCode;
 use App\Models\IntentionCode\IntentionCode;
+use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -17,6 +19,114 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
 {
     use ChecksDefaultFilamentAccess;
     use ChecksDefaultFilamentActionVisibility;
+
+    public function testItDeletesIntentionCodesAndShiftsOthersDown()
+    {
+        DB::table('intention_codes')->delete();
+        $code1 = IntentionCode::create(
+            [
+                'description' => 'Foo',
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'arrival_airfields',
+                        'airfields' => ['EGLL'],
+                    ],
+                ],
+                'priority' => 1,
+            ]
+        );
+
+        $code2 = IntentionCode::create(
+            [
+                'description' => 'Foo',
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'arrival_airfields',
+                        'airfields' => ['EGLL'],
+                    ],
+                ],
+                'priority' => 2,
+            ]
+        );
+
+        $code3 = IntentionCode::create(
+            [
+                'description' => 'Foo',
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'arrival_airfields',
+                        'airfields' => ['EGLL'],
+                    ],
+                ],
+                'priority' => 3,
+            ]
+        );
+
+        $code4 = IntentionCode::create(
+            [
+                'description' => 'Foo',
+                'code' => [
+                    'type' => 'single_code',
+                    'code' => 'A1',
+                ],
+                'conditions' => [
+                    [
+                        'type' => 'arrival_airfields',
+                        'airfields' => ['EGLL'],
+                    ],
+                ],
+                'priority' => 4,
+            ]
+        );
+
+        Livewire::test(ListIntentionCodes::class)
+            ->callTableAction(DeleteAction::class, $code2)
+            ->assertHasNoErrors();
+
+        // Check we deleted the code we wanted to
+        $this->assertDatabaseCount('intention_codes', 3);
+        $this->assertDatabaseMissing(
+            'intention_codes',
+            [
+                'id' => $code2->id
+            ]
+        );
+
+        // Check other codes have shifted (or not)
+        $this->assertDatabaseHas(
+            'intention_codes',
+            [
+                'id' => $code1->id,
+                'priority' => 1,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'intention_codes',
+            [
+                'id' => $code3->id,
+                'priority' => 2,
+            ]
+        );
+        $this->assertDatabaseHas(
+            'intention_codes',
+            [
+                'id' => $code4->id,
+                'priority' => 3,
+            ]
+        );
+    }
 
     public function testItLoadsAnIntentionCodeForViewWithAirfieldIdentifier()
     {

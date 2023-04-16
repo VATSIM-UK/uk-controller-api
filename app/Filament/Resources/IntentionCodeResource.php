@@ -5,11 +5,11 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\IntentionCodeResource\Pages;
 use App\Models\IntentionCode\ConditionType;
-use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use App\Rules\Controller\ControllerPositionPartialCallsign;
+use App\Services\IntentionCode\IntentionCodeService;
 use Closure;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
@@ -23,7 +23,6 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Support\Collection;
 
 class IntentionCodeResource extends Resource
 {
@@ -112,7 +111,8 @@ class IntentionCodeResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->using(fn (IntentionCode $record) => IntentionCodeService::deleteIntentionCode($record)),
             ]);
     }
 
