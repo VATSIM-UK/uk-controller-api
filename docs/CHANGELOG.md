@@ -1,5 +1,20 @@
 # UK Controller Plugin API Changelog
 
+## [6.38.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.37.1...6.38.0) (2023-04-17)
+
+
+### Features
+
+* allow administration of airlines ([bd6cd6e](https://github.com/VATSIM-UK/uk-controller-api/commit/bd6cd6ee1e14209c9165a1293776219377eecc8f))
+* allow airline stand pairing on airline page ([0c9a824](https://github.com/VATSIM-UK/uk-controller-api/commit/0c9a82488d3429cbc61ef2471a56ef64b4654541))
+* allow airline terminal pairing from airlines page ([0bcefa4](https://github.com/VATSIM-UK/uk-controller-api/commit/0bcefa42f2d73a3d78408719c36fd4d49c44ff36))
+* allow airlines to copy others stand assignments on creation ([63f94e9](https://github.com/VATSIM-UK/uk-controller-api/commit/63f94e9e05121c5573a7f1defe9007dfab45c39b))
+
+
+### Bug Fixes
+
+* prefix stands and terminals with airfield icao ([43464e4](https://github.com/VATSIM-UK/uk-controller-api/commit/43464e4c9c838fdb25988fec4b0dd5dc9d4b6ce2))
+
 ## [6.37.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.37.0...6.37.1) (2023-04-16)
 
 
