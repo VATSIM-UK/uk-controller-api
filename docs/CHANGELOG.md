@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.38.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.38.0...6.38.1) (2023-04-20)
+
+
+### Bug Fixes
+
+* allow stand terminals to be edited ([ba2a1a8](https://github.com/VATSIM-UK/uk-controller-api/commit/ba2a1a890a9e4c93314c99d63d192ed0032af140))
+
 ## [6.38.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.37.1...6.38.0) (2023-04-17)
 
 
