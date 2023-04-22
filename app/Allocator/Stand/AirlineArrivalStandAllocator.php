@@ -21,8 +21,8 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
         return $airline === null
             ? null
             : $stands->airline($airline)
-                ->orderByRaw('airline_stand.destination IS NULL DESC')
-                ->orderByRaw('airline_stand.callsign_slug IS NULL DESC')
+                ->whereNull('airline_stand.destination')
+                ->whereNull('airline_stand.callsign_slug')
                 ->orderBy('airline_stand.priority');
     }
 }
