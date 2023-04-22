@@ -24,8 +24,8 @@ class AirlineTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
         return $stands->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
             ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
             ->where('airline_terminal.airline_id', $airline->id)
-            ->orderByRaw('airline_terminal.destination IS NULL DESC')
-            ->orderByRaw('airline_terminal.callsign_slug IS NULL DESC')
+            ->where('airline_terminal.destination')
+            ->where('airline_terminal.callsign_slug')
             ->orderBy('airline_terminal.priority');
     }
 }
