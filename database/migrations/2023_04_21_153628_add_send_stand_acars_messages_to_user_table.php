@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('user', function (Blueprint $table) {
             $table->boolean('send_stand_acars_messages')
+                ->default(false)
                 ->comment('Whether the user wants to be sent acars messages related to stand assignments');
         });
     }

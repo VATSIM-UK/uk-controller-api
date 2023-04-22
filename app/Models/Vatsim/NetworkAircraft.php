@@ -7,6 +7,7 @@ use App\Models\Hold\NavaidNetworkAircraft;
 use App\Models\Navigation\Navaid;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -148,5 +149,10 @@ class NetworkAircraft extends Model
             'planned_destairport',
             'code'
         );
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'cid');
     }
 }
