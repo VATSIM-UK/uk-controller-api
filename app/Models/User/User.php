@@ -52,6 +52,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'last_login_ip',
     ];
 
+    protected $casts = [
+        'send_stand_acars_messages' => 'boolean',
+    ];
+
     /**
      * Returns the relation to the users status
      *

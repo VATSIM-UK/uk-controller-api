@@ -153,6 +153,6 @@ class NetworkAircraft extends Model
 
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, 'cid');
+        return $this->hasOne(User::class, 'id', 'cid');
     }
 }

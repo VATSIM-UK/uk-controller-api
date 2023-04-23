@@ -7,12 +7,13 @@ use App\Acars\Message\Telex\StandAssignedTelexMessage;
 use App\Acars\Provider\AcarsProviderInterface;
 use App\Events\StandAssignedEvent;
 use App\Models\Stand\StandAssignment;
+use App\Services\LocationService;
 use Illuminate\Support\Facades\Log;
 use Location\Distance\Haversine;
 
 class SendStandAllocationAcarsMessage
 {
-    private const MIN_ASSIGNMENT_DISTANCE = 7.5;
+    private const MIN_ASSIGNMENT_DISTANCE_NAUTICAL_MILES = 7.5;
 
     private readonly AcarsProviderInterface $acarsProvider;
 
@@ -39,7 +40,9 @@ class SendStandAllocationAcarsMessage
         try {
             $this->acarsProvider->sendTelex(new StandAssignedTelexMessage($standAssignment));
         } catch (AcarsRequestException $requestException) {
-            Log::error(sprintf('Acars exception sending stand allocation message: %s', $requestException->getMessage()));
+            Log::error(
+                sprintf('Acars exception sending stand allocation message: %s', $requestException->getMessage())
+            );
         }
     }
 
@@ -53,11 +56,13 @@ class SendStandAllocationAcarsMessage
     private function aircraftIsNotTooCloseToDestination(StandAssignment $assignment): bool
     {
         $aircraft = $assignment->aircraft;
-        $airfield = $assignment->aifield;
-        return $airfield && $aircraft && $airfield->coordinate->getDistance(
-            $aircraft->latLong,
-                new Haversine()
-        ) > self::MIN_ASSIGNMENT_DISTANCE;
+        $airfield = $assignment->stand->airfield;
+        return $airfield && $aircraft && LocationService::metersToNauticalMiles(
+                $airfield->coordinate->getDistance(
+                    $aircraft->latLong,
+                    new Haversine()
+                )
+            ) > self::MIN_ASSIGNMENT_DISTANCE_NAUTICAL_MILES;
     }
 
     private function notArrivingAndDepartingSameAirport(StandAssignment $assignment): bool
@@ -67,16 +72,16 @@ class SendStandAllocationAcarsMessage
 
     private function standIsAtArrivalAirport(StandAssignment $assignment): bool
     {
-        return $assignment->stand->airport->code === $assignment->aircraft->planned_destairport;
+        return $assignment->stand->airfield->code === $assignment->aircraft->planned_destairport;
     }
 
     private function standAcarsMessagesAreEnabled(): bool
     {
-        return config('assignment_acars_message') === true;
+        return config('stands.assignment_acars_message') === true;
     }
 
     private function userAllowsStandAllocationMessages(StandAssignment $standAssignment): bool
     {
-        return $standAssignment->aircraft?->user !== null;
+        return (bool) $standAssignment->aircraft?->user?->send_stand_acars_messages;
     }
 }
