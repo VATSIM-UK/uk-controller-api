@@ -81,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
                     'Squawk Ranges',
                     'Plugin',
                     'Administration',
+                    'Documentation'
                 ]
             );
         });
