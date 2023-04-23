@@ -1,5 +1,20 @@
 # UK Controller Plugin API Changelog
 
+## [6.38.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.38.1...6.38.2) (2023-04-22)
+
+
+### Bug Fixes
+
+* ignore stands with specific rules for general airlineallocation ([65e50b8](https://github.com/VATSIM-UK/uk-controller-api/commit/65e50b85b1ad2f32cf224dc634271de8dc0f2702))
+* ignore terminals with specific rules for airline allocation ([26b8799](https://github.com/VATSIM-UK/uk-controller-api/commit/26b879917625f121ab590ccc0e59be54914f4d4c))
+
+## [6.38.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.38.0...6.38.1) (2023-04-20)
+
+
+### Bug Fixes
+
+* allow stand terminals to be edited ([ba2a1a8](https://github.com/VATSIM-UK/uk-controller-api/commit/ba2a1a890a9e4c93314c99d63d192ed0032af140))
+
 ## [6.38.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.37.1...6.38.0) (2023-04-17)
 
 

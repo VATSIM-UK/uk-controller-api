@@ -161,7 +161,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItCreatesAStandWithAllData()
     {
         Livewire::test(StandResource\Pages\CreateStand::class)
-            ->set('data.airfield_id', 2)
+            ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
             ->set('data.latitude', 4.5)
@@ -178,7 +178,7 @@ class StandResourceTest extends BaseFilamentTestCase
         $this->assertDatabaseHas(
             'stands',
             [
-                'airfield_id' => 2,
+                'airfield_id' => 1,
                 'terminal_id' => 1,
                 'identifier' => '33L',
                 'latitude' => 4.5,

@@ -80,12 +80,16 @@ class StandResource extends Resource
                                 )
                             )
                             ->disabled(
-                                fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
-                                !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                                fn (Page $livewire, Closure $get) => !Terminal::where(
+                                    'airfield_id',
+                                    $get('airfield_id')
+                                )->exists()
                             )
                             ->dehydrated(
-                                fn (Page $livewire, Closure $get) => !$livewire instanceof CreateRecord ||
-                                !Terminal::where('airfield_id', $get('airfield_id'))->exists()
+                                fn (Page $livewire, Closure $get) => Terminal::where(
+                                    'airfield_id',
+                                    $get('airfield_id')
+                                )->exists()
                             ),
                         TextInput::make('identifier')
                             ->label(self::translateFormPath('identifier.label'))

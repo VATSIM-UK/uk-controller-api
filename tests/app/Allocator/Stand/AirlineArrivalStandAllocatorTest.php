@@ -74,7 +74,7 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($this->allocator->allocate($aircraft), 1);
     }
 
-    public function testItAssignsStandsWithSpecificDestinations()
+    public function testItDoesntAssignStandsWithSpecificDestinations()
     {
         DB::table('airline_stand')->insert(
             [
@@ -86,30 +86,10 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertEquals(1, $this->allocator->allocate($aircraft));
+        $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    public function testItAPrefersStandsWithNoSpecificDestinations()
-    {
-        DB::table('airline_stand')->insert(
-            [
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 1,
-                    'destination' => 'EGGD',
-                ],
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 2,
-                    'destination' => null,
-                ],
-            ]
-        );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertEquals(2, $this->allocator->allocate($aircraft));
-    }
-
-    public function testItAssignsStandsWithSpecificCallsignSlugs()
+    public function testItDoesntAssignStandsWithSpecificCallsignSlugs()
     {
         DB::table('airline_stand')->insert(
             [
@@ -121,27 +101,7 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertEquals(1, $this->allocator->allocate($aircraft));
-    }
-
-    public function testItAPrefersStandsWithNoSpecificCallsignSlugs()
-    {
-        DB::table('airline_stand')->insert(
-            [
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 1,
-                    'callsign_slug' => '444',
-                ],
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 2,
-                    'callsign_slug' => null,
-                ],
-            ]
-        );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertEquals(2, $this->allocator->allocate($aircraft));
+        $this->assertNull($this->allocator->allocate($aircraft));
     }
 
     public function testItAllocatesStandsAtAppropriateWeight()
