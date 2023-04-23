@@ -9,7 +9,9 @@ use App\Models\Airfield\Terminal;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Columns\TextColumn;
 
 class TerminalsRelationManager extends RelationManager
 {
@@ -31,7 +33,7 @@ class TerminalsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('terminal')
+                TextColumn::make('terminal')
                     ->formatStateUsing(
                         fn (Terminal $record) => sprintf('%s / %s', $record->airfield->code, $record->description)
                     )
@@ -41,8 +43,8 @@ class TerminalsRelationManager extends RelationManager
                 ...self::commonPairingTableColumns(),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make('pair-terminal')
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                AttachAction::make('pair-terminal')
+                    ->form(fn (AttachAction $action): array => [
                         $action
                             ->recordTitle(fn (Terminal $record):string => $record->airfieldDescription)
                             ->getRecordSelect()

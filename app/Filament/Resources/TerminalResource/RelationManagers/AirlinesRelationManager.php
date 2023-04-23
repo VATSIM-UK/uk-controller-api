@@ -7,6 +7,9 @@ use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
+use Filament\Tables\Actions\AttachAction;
+use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Columns\TextColumn;
 
 class AirlinesRelationManager extends RelationManager
 {
@@ -28,15 +31,15 @@ class AirlinesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('icao_code')
+                TextColumn::make('icao_code')
                     ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
                 ...self::commonPairingTableColumns(),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make('pair-airline')
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                AttachAction::make('pair-airline')
+                    ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
@@ -44,7 +47,7 @@ class AirlinesRelationManager extends RelationManager
                     ])
             ])
             ->actions([
-                Tables\Actions\DetachAction::make('unpair-airline')
+                DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())
             ]);
