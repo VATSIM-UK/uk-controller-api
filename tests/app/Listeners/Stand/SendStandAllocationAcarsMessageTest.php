@@ -12,6 +12,7 @@ use App\Models\Stand\StandAssignment;
 use App\Models\User\User;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Mockery;
 
 class SendStandAllocationAcarsMessageTest extends BaseFunctionalTestCase
@@ -59,6 +60,12 @@ class SendStandAllocationAcarsMessageTest extends BaseFunctionalTestCase
         // Create handlers
         $this->event = new StandAssignedEvent($assignment);
         $this->handler = $this->app->make(SendStandAllocationAcarsMessage::class);
+    }
+
+    public function testItListensForEvents()
+    {
+        Event::fake();
+        Event::assertListening(StandAssignedEvent::class, SendStandAllocationAcarsMessage::class);
     }
 
     public function testItSendsAnAcarsMessage()
