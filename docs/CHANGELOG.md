@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.39.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.38.2...6.39.0) (2023-04-23)
+
+
+### Features
+
+* documentation for stand allocation ([22356c5](https://github.com/VATSIM-UK/uk-controller-api/commit/22356c58f3cdd9c424d84c043e35e2ddc8246ccc))
+
 ## [6.38.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.38.1...6.38.2) (2023-04-22)
 
 
