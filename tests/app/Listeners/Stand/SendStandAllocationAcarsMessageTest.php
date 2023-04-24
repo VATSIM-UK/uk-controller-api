@@ -103,6 +103,20 @@ class SendStandAllocationAcarsMessageTest extends BaseFunctionalTestCase
         $this->handler->handle($this->event);
     }
 
+    public function testItDoesntSendAcarsMessageIfAircraftHasNoLatitudeWhichIndicatesItsOnSweatbox()
+    {
+        $this->event->getStandAssignment()->aircraft->latitude = null;
+        $this->acarsProvider->shouldReceive('sendTelex')->never();
+        $this->handler->handle($this->event);
+    }
+
+    public function testItDoesntSendAcarsMessageIfAircraftHasNoLongitudeWhichIndicatesItsOnSweatbox()
+    {
+        $this->event->getStandAssignment()->aircraft->longitude = null;
+        $this->acarsProvider->shouldReceive('sendTelex')->never();
+        $this->handler->handle($this->event);
+    }
+
     public function testItDoesntSendAcarsMessageIfUserHasntPermittedIt()
     {
         $this->event->getStandAssignment()->aircraft->user->send_stand_acars_messages = false;

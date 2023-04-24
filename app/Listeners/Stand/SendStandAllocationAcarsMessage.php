@@ -48,9 +48,18 @@ class SendStandAllocationAcarsMessage
 
     private function meetsSendingConditions(StandAssignment $assignment): bool
     {
-        return $this->standIsAtArrivalAirport($assignment) &&
+        return $this->aircraftIsNotSweatbox($assignment) &&
+            $this->standIsAtArrivalAirport($assignment) &&
             $this->notArrivingAndDepartingSameAirport($assignment) &&
             $this->aircraftIsNotTooCloseToDestination($assignment);
+    }
+
+    /**
+     * For now, we know an aircraft isn't Sweatbox if we have a lat/long for it.
+     */
+    private function aircraftIsNotSweatbox(StandAssignment $assignment): bool
+    {
+        return isset($assignment->aircraft->latitude, $assignment->aircraft->longitude);
     }
 
     private function aircraftIsNotTooCloseToDestination(StandAssignment $assignment): bool
