@@ -16,6 +16,9 @@ class UserPreferences extends Page
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Preferences';
+    protected static ?string $navigationLabel = 'My Preferences';
+    protected static ?string $title = 'My Preferences';
+    protected static ?string $slug = 'my-preferences';
 
     protected static string $view = 'filament.pages.user-preferences';
 
