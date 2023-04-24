@@ -21,12 +21,13 @@ class StandAssignedTelexMessage implements TelexMessageInterface
     public function getBody(): string
     {
         return sprintf(
-            "VATSIM UK Stand Assignment\n" .
-            "--------------------------\n\n" .
             "You have been provisionally assigned stand %s.\n\n" .
             "This message is for planning purposes only, is non-binding, " .
             "and may change subject to availability and controller discretion.\n\n" .
-            "You will be notified if another assignment is made.",
+            "You will be notified if another assignment is made.\n\n" .
+            "Do not reply to this message, it is automatically generated.\n\n" .
+            "Safe landings!\n\n" .
+            "VATSIM UK",
             $this->getStandAssignmentString()
         );
     }
