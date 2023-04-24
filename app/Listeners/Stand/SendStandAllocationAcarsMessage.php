@@ -58,11 +58,11 @@ class SendStandAllocationAcarsMessage
         $aircraft = $assignment->aircraft;
         $airfield = $assignment->stand->airfield;
         return $airfield && $aircraft && LocationService::metersToNauticalMiles(
-                $airfield->coordinate->getDistance(
-                    $aircraft->latLong,
-                    new Haversine()
-                )
-            ) > self::MIN_ASSIGNMENT_DISTANCE_NAUTICAL_MILES;
+            $airfield->coordinate->getDistance(
+                $aircraft->latLong,
+                new Haversine()
+            )
+        ) > self::MIN_ASSIGNMENT_DISTANCE_NAUTICAL_MILES;
     }
 
     private function notArrivingAndDepartingSameAirport(StandAssignment $assignment): bool
