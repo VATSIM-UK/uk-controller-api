@@ -53,7 +53,8 @@ class HoppieAcarsProvider implements AcarsProviderInterface
                 $success = $this->responseSuccessful($response);
                 $messageWithoutLogon = array_filter(
                     $message,
-                    fn(string $key) => $key !== 'logon', ARRAY_FILTER_USE_KEY
+                    fn (string $key) => $key !== 'logon',
+                    ARRAY_FILTER_USE_KEY
                 );
 
                 AcarsMessage::create(
