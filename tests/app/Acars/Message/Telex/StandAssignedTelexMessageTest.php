@@ -33,13 +33,7 @@ class StandAssignedTelexMessageTest extends BaseFunctionalTestCase
         $expected = <<<END
 You have been provisionally assigned stand EGLL/251.
 
-This message is for planning purposes only, is non-binding, and may change subject to availability and controller discretion.
-
-You will be notified if another assignment is made.
-
-Do not reply to this message, it is automatically generated.
-
-Safe landings!
+Safe landings.
 
 VATSIM UK
 END;
