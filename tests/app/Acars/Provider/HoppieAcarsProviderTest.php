@@ -50,10 +50,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
             $this->assertEquals(
                 $loggedMessage->message,
-                sprintf(
-                    'logon=%s&type=telex&to=BAW123&from=VATSIMUK&packet=TEST',
-                    config('acars.hoppie.login_code')
-                )
+                'type=telex&to=BAW123&from=VATSIMUK&packet=TEST'
             );
             $this->assertFalse($loggedMessage->successful);
             return;
@@ -79,10 +76,7 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
             $loggedMessage = AcarsMessage::find(AcarsMessage::max('id'));
             $this->assertEquals(
                 $loggedMessage->message,
-                sprintf(
-                    'logon=%s&type=telex&to=BAW123&from=VATSIMUK&packet=TEST',
-                    config('acars.hoppie.login_code')
-                )
+                'type=telex&to=BAW123&from=VATSIMUK&packet=TEST'
             );
             $this->assertFalse($loggedMessage->successful);
             return;
