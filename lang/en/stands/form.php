@@ -85,4 +85,10 @@ return [
             'label' => 'Unpair',
         ],
     ],
+    'user_preferences' => [
+        'acars' => [
+            'label' => 'Send ACARS messages for arrival stands',
+            'helper' => 'If this setting is turned on, then you will automatically be sent an ACARS message via Hoppie whenever an arrival stand is allocated for you.',
+        ],
+    ],
 ];
