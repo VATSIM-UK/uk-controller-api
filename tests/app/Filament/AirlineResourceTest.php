@@ -669,6 +669,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'stand_id' => 1,
                 'destination' => null,
                 'priority' => 100,
+                'callsign' => null,
                 'callsign_slug' => null,
                 'not_before' => null,
             ]
@@ -688,6 +689,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
+                    'callsign' => 'abcd',
                     'callsign_slug' => '1234',
                     'not_before' => '20:00:00',
                 ]
@@ -700,6 +702,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'stand_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
+                'callsign' => 'abcd',
                 'callsign_slug' => '1234',
                 'not_before' => '20:00:00',
             ]
@@ -796,7 +799,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
             )->assertHasTableActionErrors(['priority']);
     }
 
-    public function testItAllowsFailsStandPairingCallsignTooLong()
+    public function testItAllowsFailsStandPairingCallsignSlugTooLong()
     {
         Livewire::test(
             StandsRelationManager::class,
@@ -813,6 +816,25 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'not_before' => '20:00:00',
                 ]
             )->assertHasTableActionErrors(['callsign_slug']);
+    }
+
+    public function testItAllowsFailsStandPairingCallsignTooLong()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign' => '12345',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['callsign']);
     }
 
     public function testItAllowsFailsStandPairingDestinationTooLong()

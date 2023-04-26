@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
@@ -10,7 +11,6 @@ use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\CidReservedArrivalStandAllocator;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\ArrivalAllocationService;
-use App\Services\Stand\StandAdminService;
 use App\Services\Stand\StandAssignmentsService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -39,6 +39,7 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(CallsignFlightplanReservedArrivalStandAllocator::class),
                     $application->make(CargoFlightPreferredArrivalStandAllocator::class),
                     $application->make(CargoFlightArrivalStandAllocator::class),
+                    $application->make(AirlineCallsignArrivalStandAllocator::class),
                     $application->make(AirlineCallsignSlugArrivalStandAllocator::class),
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
@@ -53,7 +54,6 @@ class StandServiceProvider extends ServiceProvider
             );
         });
         $this->app->singleton(StandReservationsImport::class);
-        $this->app->singleton(StandAdminService::class);
         $this->app->singleton(AirfieldStandService::class);
     }
 }

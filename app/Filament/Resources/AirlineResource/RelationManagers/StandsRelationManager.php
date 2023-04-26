@@ -37,16 +37,19 @@ class StandsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('stand_id')
                     ->formatStateUsing(fn (Stand $record) => $record->airfieldIdentifier)
-                    ->label(self::translateTablePath('columns.terminal'))
+                    ->label(self::translateTablePath('columns.stand'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('destination')
                     ->label(self::translateTablePath('columns.destination'))
                     ->default(self::DEFAULT_COLUMN_VALUE)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('callsign_slug')
+                Tables\Columns\TextColumn::make('callsign')
                     ->default(self::DEFAULT_COLUMN_VALUE)
                     ->label(self::translateTablePath('columns.callsign')),
+                Tables\Columns\TextColumn::make('callsign_slug')
+                    ->default(self::DEFAULT_COLUMN_VALUE)
+                    ->label(self::translateTablePath('columns.callsign_slug')),
                 Tables\Columns\TextColumn::make('priority')
                     ->default(self::DEFAULT_COLUMN_VALUE)
                     ->label(self::translateTablePath('columns.priority')),
@@ -66,9 +69,13 @@ class StandsRelationManager extends RelationManager
                             ->label(self::translateFormPath('destination.label'))
                             ->helperText(self::translateFormPath('destination.helper'))
                             ->maxLength(4),
-                        TextInput::make('callsign_slug')
+                        TextInput::make('callsign')
                             ->label(self::translateFormPath('callsign.label'))
                             ->helperText(self::translateFormPath('callsign.helper'))
+                            ->maxLength(4),
+                        TextInput::make('callsign_slug')
+                            ->label(self::translateFormPath('callsign_slug.label'))
+                            ->helperText(self::translateFormPath('callsign_slug.helper'))
                             ->maxLength(4),
                         TextInput::make('priority')
                             ->label(self::translateFormPath('priority.label'))

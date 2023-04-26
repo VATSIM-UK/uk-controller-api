@@ -77,6 +77,13 @@ This rule only applies to flights that have `RMK/CARGO` in their flightplan rema
 
 It will allocate any stands of type `CARGO`.
 
+### Airline Callsign
+
+This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.
+
+It then allocates any stands assigned to that airline which have a specified callsign that matches. These matches are exact matches
+only. For partial matches, see below.
+
 ### Airline Callsign Slug
 
 This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.

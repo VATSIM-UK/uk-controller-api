@@ -40,8 +40,10 @@ class AirlinesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('destination')
                     ->label(self::translateTablePath('columns.destination'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('callsign_slug')
+                Tables\Columns\TextColumn::make('callsign')
                     ->label(self::translateTablePath('columns.callsign')),
+                Tables\Columns\TextColumn::make('callsign_slug')
+                    ->label(self::translateTablePath('columns.callsign_slug')),
                 Tables\Columns\TextColumn::make('priority')
                     ->label(self::translateTablePath('columns.priority')),
                 Tables\Columns\TextColumn::make('not_before')
@@ -58,9 +60,13 @@ class AirlinesRelationManager extends RelationManager
                             ->label(self::translateFormPath('destination.label'))
                             ->helperText(self::translateFormPath('destination.helper'))
                             ->maxLength(4),
-                        TextInput::make('callsign_slug')
+                        TextInput::make('callsign')
                             ->label(self::translateFormPath('callsign.label'))
                             ->helperText(self::translateFormPath('callsign.helper'))
+                            ->maxLength(4),
+                        TextInput::make('callsign_slug')
+                            ->label(self::translateFormPath('callsign_slug.label'))
+                            ->helperText(self::translateFormPath('callsign_slug.helper'))
                             ->maxLength(4),
                         TextInput::make('priority')
                             ->label(self::translateFormPath('priority.label'))

@@ -30,7 +30,7 @@ class Airline extends Model
     public function stands(): BelongsToMany
     {
         return $this->belongsToMany(Stand::class)
-            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug')
+            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug', 'callsign')
             ->withTimestamps();
     }
 }
