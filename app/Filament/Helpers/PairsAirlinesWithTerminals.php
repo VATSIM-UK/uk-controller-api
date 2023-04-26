@@ -22,9 +22,12 @@ trait PairsAirlinesWithTerminals
                 ->label(self::translateTablePath('columns.destination'))
                 ->default(self::$defaultColumnValue)
                 ->sortable(),
-            TextColumn::make('callsign_slug')
+            TextColumn::make('callsign')
                 ->default(self::$defaultColumnValue)
                 ->label(self::translateTablePath('columns.callsign')),
+            TextColumn::make('callsign_slug')
+                ->default(self::$defaultColumnValue)
+                ->label(self::translateTablePath('columns.callsign_slug')),
             TextColumn::make('priority')
                 ->default(self::$defaultColumnValue)
                 ->label(self::translateTablePath('columns.priority'))
@@ -38,9 +41,13 @@ trait PairsAirlinesWithTerminals
                 ->label(self::translateFormPath('destination.label'))
                 ->helperText(self::translateFormPath('destination.helper'))
                 ->maxLength(4),
-            TextInput::make('callsign_slug')
+            TextInput::make('callsign')
                 ->label(self::translateFormPath('callsign.label'))
                 ->helperText(self::translateFormPath('callsign.helper'))
+                ->maxLength(4),
+            TextInput::make('callsign_slug')
+                ->label(self::translateFormPath('callsign_slug.label'))
+                ->helperText(self::translateFormPath('callsign_slug.helper'))
                 ->maxLength(4),
             TextInput::make('priority')
                 ->label(self::translateFormPath('priority.label'))

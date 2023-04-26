@@ -9,7 +9,7 @@ use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
 use util\Traits\WithWakeCategories;
 
-class AirlineCallsignStandAllocatorTest extends BaseFunctionalTestCase
+class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
     use WithWakeCategories;
 

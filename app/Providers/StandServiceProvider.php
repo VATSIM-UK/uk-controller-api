@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
@@ -43,6 +44,7 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(AirlineCallsignSlugArrivalStandAllocator::class),
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
                     $application->make(AirlineArrivalStandAllocator::class),
+                    $application->make(AirlineCallsignTerminalArrivalStandAllocator::class),
                     $application->make(AirlineCallsignSlugTerminalArrivalStandAllocator::class),
                     $application->make(AirlineDestinationTerminalArrivalStandAllocator::class),
                     $application->make(AirlineTerminalArrivalStandAllocator::class),

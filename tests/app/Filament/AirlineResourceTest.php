@@ -84,6 +84,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'priority' => 50,
                     'destination' => 'LF',
                     'callsign_slug' => '23',
+                    'callsign' => 'abc',
                     'not_before' => '09:00:00',
                 ],
                 2 => [
@@ -106,6 +107,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'priority' => 21,
                     'destination' => 'ED',
                     'callsign_slug' => '55',
+                    'callsign' => 'def',
                 ]
             ]);
 
@@ -130,6 +132,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 50,
                 'destination' => 'LF',
                 'callsign_slug' => '23',
+                'callsign' => 'abc',
                 'not_before' => '09:00:00',
             ]
         );
@@ -142,6 +145,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 33,
                 'destination' => 'KJ',
                 'callsign_slug' => null,
+                'callsign' => null,
                 'not_before' => null,
             ]
         );
@@ -154,6 +158,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 2,
                 'destination' => 'EB',
                 'callsign_slug' => null,
+                'callsign' => null,
             ]
         );
 
@@ -165,6 +170,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 21,
                 'destination' => 'ED',
                 'callsign_slug' => '55',
+                'callsign' => 'def',
             ]
         );
     }
@@ -488,6 +494,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'terminal_id' => 1,
                 'destination' => null,
                 'priority' => 100,
+                'callsign' => null,
                 'callsign_slug' => null,
             ]
         );
@@ -505,6 +512,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
+                    'callsign' => 'abcd',
                     'callsign_slug' => '1234',
                 ]
             )->assertHasNoTableActionErrors();
@@ -516,6 +524,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'terminal_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
+                'callsign' => 'abcd',
                 'callsign_slug' => '1234',
             ]
         );
@@ -605,6 +614,23 @@ class AirlineResourceTest extends BaseFilamentTestCase
     }
 
     public function testItFailsTerminalPairingCallsignTooLong()
+    {
+        Livewire::test(
+            TerminalsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-terminal',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign' => '12345',
+                ]
+            )->assertHasTableActionErrors(['callsign']);
+    }
+
+    public function testItFailsTerminalPairingCallsignSlugTooLong()
     {
         Livewire::test(
             TerminalsRelationManager::class,

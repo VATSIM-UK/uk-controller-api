@@ -155,6 +155,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
                 'terminal_id' => 1,
                 'destination' => null,
                 'priority' => 100,
+                'callsign' => null,
                 'callsign_slug' => null,
             ]
         );
@@ -172,6 +173,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
+                    'callsign' => 'abcd',
                     'callsign_slug' => '1234',
                 ]
             )->assertHasNoTableActionErrors();
@@ -183,6 +185,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
                 'terminal_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
+                'callsign' => 'abcd',
                 'callsign_slug' => '1234',
             ]
         );
@@ -272,6 +275,23 @@ class TerminalResourceTest extends BaseFilamentTestCase
     }
 
     public function testItFailsAirlinePairingCallsignTooLong()
+    {
+        Livewire::test(
+            AirlinesRelationManager::class,
+            ['ownerRecord' => Terminal::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-airline',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign' => '12345',
+                ]
+            )->assertHasTableActionErrors(['callsign']);
+    }
+
+    public function testItFailsAirlinePairingCallsignSlugTooLong()
     {
         Livewire::test(
             AirlinesRelationManager::class,

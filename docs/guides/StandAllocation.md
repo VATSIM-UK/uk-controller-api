@@ -122,6 +122,13 @@ based on the airlines priority preference.
 
 This is helpful when airlines only park on a few particular stands on a given pier/terminal.
 
+### Airline Callsign (Terminal)
+
+This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.
+
+It then allocates any stand on a terminal with a specific callsign that matches for that airline. These matches are exact matches
+only. For partial matches, see below.
+
 ### Airline Callsign Slug (Terminal)
 
 This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.

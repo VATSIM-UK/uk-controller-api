@@ -32,6 +32,7 @@ class Terminal extends Model
                 'id',
                 'priority',
                 'destination',
+                'callsign',
                 'callsign_slug',
             ])
             ->withTimestamps();

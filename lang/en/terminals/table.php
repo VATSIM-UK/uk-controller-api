@@ -7,13 +7,13 @@ return [
         'airlines' => 'Number of Assigned Airlines',
     ],
     'airlines' => [
-        'description' => 'Airlines can be assigned to specific terminals based on various parameters. The allocation ' .
-            'tries to match by Callsign Slug, then by Destination (always taking priority into account), then any ' .
-            'stand for that airline (preferring ones without specific callsigns or destinations).',
+        'description' => 'Airlines can be assigned to specific terminals based on various parameters. See the allocation guide
+        for more details.',
         'columns' => [
             'icao' => 'ICAO Code',
             'destination' => 'Origin',
-            'callsign' => 'Callsign Slug',
+            'callsign' => 'Callsign',
+            'callsign_slug' => 'Partial Callsign',
             'priority' => 'Allocation Priority',
         ],
     ],

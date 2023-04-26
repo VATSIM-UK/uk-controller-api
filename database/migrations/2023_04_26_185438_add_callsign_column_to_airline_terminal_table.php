@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('airline_stand', function (Blueprint $table) {
+        Schema::table('airline_terminal', function (Blueprint $table) {
             $table->string('callsign')
                 ->index()
                 ->nullable()
@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('airline_stand', function (Blueprint $table) {
+        Schema::table('airline_terminal', function (Blueprint $table) {
             $table->dropColumn('callsign');
         });
     }
