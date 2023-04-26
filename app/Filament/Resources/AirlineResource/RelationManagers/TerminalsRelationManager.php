@@ -36,12 +36,12 @@ class TerminalsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('terminal')
                     ->formatStateUsing(
-                        fn(Terminal $record) => sprintf('%s / %s', $record->airfield->code, $record->description)
+                        fn (Terminal $record) => sprintf('%s / %s', $record->airfield->code, $record->description)
                     )
                     ->label(self::translateTablePath('columns.terminal'))
                     ->sortable()
                     ->searchable(
-                        query: fn(Builder $query, string $search) => $query->where(
+                        query: fn (Builder $query, string $search) => $query->where(
                             'description',
                             'like',
                             '%' . $search . '%'
@@ -55,9 +55,9 @@ class TerminalsRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make('pair-terminal')
-                    ->form(fn(AttachAction $action): array => [
+                    ->form(fn (AttachAction $action): array => [
                         $action
-                            ->recordTitle(fn(Terminal $record): string => $record->airfieldDescription)
+                            ->recordTitle(fn (Terminal $record): string => $record->airfieldDescription)
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
