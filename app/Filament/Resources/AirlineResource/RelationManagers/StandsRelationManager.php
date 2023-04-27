@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\AirlineResource\RelationManagers;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\Stand;
 use Carbon\Carbon;
 use Closure;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -40,6 +43,11 @@ class StandsRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.stand'))
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('aircraft_id')
+                    ->label(self::translateTablePath('columns.aircraft'))
+                    ->formatStateUsing(fn (?int $state) => isset($state) ? Aircraft::find($state)->code : '')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('destination')
                     ->label(self::translateTablePath('columns.destination'))
                     ->default(self::DEFAULT_COLUMN_VALUE)
@@ -65,6 +73,11 @@ class StandsRelationManager extends RelationManager
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
+                        Select::make('aircraft_id')
+                            ->options(SelectOptions::aircraftTypes())
+                            ->searchable()
+                            ->label(self::translateFormPath('aircraft.label'))
+                            ->helperText(self::translateFormPath('aircraft.helper')),
                         TextInput::make('destination')
                             ->label(self::translateFormPath('destination.label'))
                             ->helperText(self::translateFormPath('destination.helper'))

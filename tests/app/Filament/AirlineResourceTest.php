@@ -83,6 +83,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 1 => [
                     'priority' => 50,
                     'destination' => 'LF',
+                    'aircraft_id' => 1,
                     'callsign_slug' => '23',
                     'callsign' => 'abc',
                     'not_before' => '09:00:00',
@@ -134,6 +135,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'callsign_slug' => '23',
                 'callsign' => 'abc',
                 'not_before' => '09:00:00',
+                'aircraft_id' => 1,
             ]
         );
 
@@ -147,6 +149,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'callsign_slug' => null,
                 'callsign' => null,
                 'not_before' => null,
+                'aircraft_id' => null,
             ]
         );
 
@@ -695,6 +698,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'stand_id' => 1,
                 'destination' => null,
                 'priority' => 100,
+                'aircraft_id' => null,
                 'callsign' => null,
                 'callsign_slug' => null,
                 'not_before' => null,
@@ -715,6 +719,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
+                    'aircraft_id' => 1,
                     'callsign' => 'abcd',
                     'callsign_slug' => '1234',
                     'not_before' => '20:00:00',
@@ -728,6 +733,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'stand_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
+                'aircraft_id' => 1,
                 'callsign' => 'abcd',
                 'callsign_slug' => '1234',
                 'not_before' => '20:00:00',

@@ -74,7 +74,7 @@ class Stand extends Model
     public function airlines(): BelongsToMany
     {
         return $this->belongsToMany(Airline::class)
-            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug', 'callsign')->withTimestamps();
+            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug', 'callsign', 'aircraft_id')->withTimestamps();
     }
 
     public function uniqueAirlines(): BelongsToMany

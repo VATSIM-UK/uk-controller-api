@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
+use App\Models\Aircraft\Aircraft;
 use Carbon\Carbon;
 use Closure;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -37,6 +40,11 @@ class AirlinesRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('aircraft_id')
+                    ->label(self::translateTablePath('columns.aircraft'))
+                    ->formatStateUsing(fn (?int $state) => isset($state) ? Aircraft::find($state)->code : '')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('destination')
                     ->label(self::translateTablePath('columns.destination'))
                     ->sortable(),
@@ -56,6 +64,11 @@ class AirlinesRelationManager extends RelationManager
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
+                        Select::make('aircraft_id')
+                            ->options(SelectOptions::aircraftTypes())
+                            ->searchable()
+                            ->label(self::translateFormPath('aircraft.label'))
+                            ->helperText(self::translateFormPath('aircraft.helper')),
                         TextInput::make('destination')
                             ->label(self::translateFormPath('destination.label'))
                             ->helperText(self::translateFormPath('destination.helper'))

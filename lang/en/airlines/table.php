@@ -23,6 +23,7 @@ return [
         for more details.',
         'columns' => [
             'stand' => 'Stand',
+            'aircraft' => 'Aircraft Type',
             'destination' => 'Origin',
             'callsign' => 'Callsign',
             'callsign_slug' => 'Partial Callsign',
