@@ -12,6 +12,7 @@ return [
         for more details.',
         'columns' => [
             'terminal' => 'Terminal',
+            'aircraft' => 'Aircraft Type',
             'destination' => 'Origin',
             'callsign' => 'Callsign',
             'callsign_slug' => 'Partial Callsign',

@@ -34,6 +34,7 @@ class Terminal extends Model
                 'destination',
                 'callsign',
                 'callsign_slug',
+                'aircraft_id',
             ])
             ->withTimestamps();
     }

@@ -26,6 +26,10 @@ return [
         'terminal' => [
             'label' => 'Terminal',
         ],
+        'aircraft' => [
+            'label' => 'Aircraft Type',
+            'helper' => 'The aircraft type that this airline will use when using this stand.'
+        ],
         'destination' => [
             'label' => 'Destination',
             'helper' => 'The destination used for this allocation. Can be partial matches, for example, "EGJ".'

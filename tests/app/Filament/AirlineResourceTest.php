@@ -106,6 +106,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 ],
                 2 => [
                     'priority' => 21,
+                    'aircraft_id' => 2,
                     'destination' => 'ED',
                     'callsign_slug' => '55',
                     'callsign' => 'def',
@@ -159,6 +160,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'airline_id' => $airline->id,
                 'terminal_id' => 1,
                 'priority' => 2,
+                'aircraft_id' => null,
                 'destination' => 'EB',
                 'callsign_slug' => null,
                 'callsign' => null,
@@ -171,6 +173,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'airline_id' => $airline->id,
                 'terminal_id' => 2,
                 'priority' => 21,
+                'aircraft_id' => 2,
                 'destination' => 'ED',
                 'callsign_slug' => '55',
                 'callsign' => 'def',
@@ -495,6 +498,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
             [
                 'airline_id' => 1,
                 'terminal_id' => 1,
+                'aircraft_id' => null,
                 'destination' => null,
                 'priority' => 100,
                 'callsign' => null,
@@ -513,6 +517,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'pair-terminal',
                 data: [
                     'recordId' => 1,
+                    'aircraft_id' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
                     'callsign' => 'abcd',
@@ -525,6 +530,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
             [
                 'airline_id' => 1,
                 'terminal_id' => 1,
+                'aircraft_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
                 'callsign' => 'abcd',

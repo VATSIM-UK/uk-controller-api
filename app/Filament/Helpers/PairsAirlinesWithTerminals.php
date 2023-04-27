@@ -3,7 +3,9 @@
 namespace App\Filament\Helpers;
 
 use App\Filament\Resources\TranslatesStrings;
+use App\Models\Aircraft\Aircraft;
 use Closure;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\DetachAction;
 use Filament\Tables\Columns\TextColumn;
@@ -18,6 +20,12 @@ trait PairsAirlinesWithTerminals
     private static function commonPairingTableColumns(): array
     {
         return [
+            TextColumn::make('aircraft_id')
+                ->default(self::$defaultColumnValue)
+                ->label(self::translateTablePath('columns.aircraft'))
+                ->formatStateUsing(fn (int|string $state) => is_int($state) ? Aircraft::find($state)->code : '')
+                ->sortable()
+                ->searchable(),
             TextColumn::make('destination')
                 ->label(self::translateTablePath('columns.destination'))
                 ->default(self::$defaultColumnValue)
@@ -37,6 +45,11 @@ trait PairsAirlinesWithTerminals
     private static function commonPairingFormFields(): array
     {
         return [
+            Select::make('aircraft_id')
+                ->searchable()
+                ->options(SelectOptions::aircraftTypes())
+                ->label(self::translateFormPath('aircraft.label'))
+                ->helperText(self::translateFormPath('aircraft.helper')),
             TextInput::make('destination')
                 ->label(self::translateFormPath('destination.label'))
                 ->helperText(self::translateFormPath('destination.helper'))

@@ -153,6 +153,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
             [
                 'airline_id' => 1,
                 'terminal_id' => 1,
+                'aircraft_id' => null,
                 'destination' => null,
                 'priority' => 100,
                 'callsign' => null,
@@ -171,6 +172,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
                 'pair-airline',
                 data: [
                     'recordId' => 1,
+                    'aircraft_id' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
                     'callsign' => 'abcd',
@@ -183,6 +185,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
             [
                 'airline_id' => 1,
                 'terminal_id' => 1,
+                'aircraft_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
                 'callsign' => 'abcd',

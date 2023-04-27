@@ -11,6 +11,7 @@ return [
         for more details.',
         'columns' => [
             'icao' => 'ICAO Code',
+            'aircraft' => 'Aircraft Type',
             'destination' => 'Origin',
             'callsign' => 'Callsign',
             'callsign_slug' => 'Partial Callsign',
