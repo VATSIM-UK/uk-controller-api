@@ -98,6 +98,11 @@ For example, a flight with callsign `BAW1234` will match any stand assigned to B
 - 12
 - 1
 
+### Airline Aircraft Type
+
+This rule takes the aircraft type, along with the airline for the given flight.
+
+It then allocates any stands assigned to that airline with a specific aircraft type that matches.
 
 ### Airline Destination
 
@@ -142,6 +147,12 @@ For example, a flight with callsign `BAW1234` will match any stand assigned to B
 - 123
 - 12
 - 1
+
+### Airline Aircraft Type (Terminal)
+
+This rule takes the aircraft type, along with the airline for the given flight.
+
+It then allocates any stand on a terminal with a specific aircraft type that matches for that airline.
 
 ### Airline Destination (Terminal)
 
