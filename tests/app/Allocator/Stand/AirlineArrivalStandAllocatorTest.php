@@ -104,6 +104,21 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
+    public function testItDoesntAssignStandsWithSpecificCallsigns()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'callsign' => '4444'
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertNull($this->allocator->allocate($aircraft));
+    }
+
     public function testItAllocatesStandsAtAppropriateWeight()
     {
         $this->setWakeCategoryForAircraft('B738', 'UM');

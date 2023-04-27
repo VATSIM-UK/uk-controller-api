@@ -23,6 +23,7 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
             : $stands->airline($airline)
                 ->whereNull('airline_stand.destination')
                 ->whereNull('airline_stand.callsign_slug')
+                ->whereNull('airline_stand.callsign')
                 ->orderBy('airline_stand.priority');
     }
 }
