@@ -2,9 +2,13 @@
 
 namespace App\Services\Stand;
 
+use App\Allocator\Stand\AirlineAircraftArrivalStandAllocator;
+use App\Allocator\Stand\AirlineAircraftTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
@@ -161,10 +165,14 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 CallsignFlightplanReservedArrivalStandAllocator::class,
                 CargoFlightPreferredArrivalStandAllocator::class,
                 CargoFlightArrivalStandAllocator::class,
+                AirlineCallsignArrivalStandAllocator::class,
                 AirlineCallsignSlugArrivalStandAllocator::class,
+                AirlineAircraftArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
                 AirlineArrivalStandAllocator::class,
+                AirlineCallsignTerminalArrivalStandAllocator::class,
                 AirlineCallsignSlugTerminalArrivalStandAllocator::class,
+                AirlineAircraftTerminalArrivalStandAllocator::class,
                 AirlineDestinationTerminalArrivalStandAllocator::class,
                 AirlineTerminalArrivalStandAllocator::class,
                 CargoAirlineFallbackStandAllocator::class,

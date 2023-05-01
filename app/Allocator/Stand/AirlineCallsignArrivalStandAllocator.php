@@ -6,8 +6,10 @@ use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
 
-class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
+class AirlineCallsignArrivalStandAllocator extends AbstractArrivalStandAllocator
 {
+    use UsesCallsignSlugs;
+
     private AirlineService $airlineService;
 
     public function __construct(AirlineService $airlineService)
@@ -18,13 +20,13 @@ class AirlineArrivalStandAllocator extends AbstractArrivalStandAllocator
     protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
     {
         $airline = $this->airlineService->getAirlineForAircraft($aircraft);
-        return $airline === null
-            ? null
-            : $stands->airline($airline)
-                ->whereNull('airline_stand.destination')
-                ->whereNull('airline_stand.callsign_slug')
-                ->whereNull('airline_stand.callsign')
-                ->whereNull('airline_stand.aircraft_id')
-                ->orderBy('airline_stand.priority');
+        if ($airline === null) {
+            return null;
+        }
+
+        return $stands->with('airlines')
+            ->airline($airline)
+            ->where('airline_stand.callsign', $this->getFullCallsignSlug($aircraft))
+            ->orderBy('airline_stand.priority');
     }
 }

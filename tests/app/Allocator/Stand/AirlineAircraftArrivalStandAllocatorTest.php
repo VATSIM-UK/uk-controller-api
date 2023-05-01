@@ -9,41 +9,46 @@ use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
 use util\Traits\WithWakeCategories;
 
-class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
+class AirlineAircraftArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
     use WithWakeCategories;
 
-    private AirlineArrivalStandAllocator $allocator;
+    private readonly AirlineAircraftArrivalStandAllocator $allocator;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(AirlineArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(AirlineAircraftArrivalStandAllocator::class);
     }
 
-    public function testItAllocatesAStandForTheAirline()
+    public function testItAllocatesAStandWithAnAircraftType()
     {
         DB::table('airline_stand')->insert(
             [
                 [
                     'airline_id' => 1,
-                    'stand_id' => 2,
-                    'destination' => null
+                    'stand_id' => 1,
+                    'aircraft_id' => null
                 ],
                 [
                     'airline_id' => 1,
-                    'stand_id' => 1,
-                    'destination' => null
+                    'stand_id' => 2,
+                    'aircraft_id' => 1
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'aircraft_id' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'aircraft_id' => 2
                 ],
             ]
         );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertContains($this->allocator->allocate($aircraft), [1, 2]);
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
+        $this->assertEquals(2, $this->allocator->allocate($aircraft));
     }
 
     public function testItConsidersAirlinePreferences()
@@ -52,89 +57,35 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 [
                     'airline_id' => 1,
-                    'stand_id' => 2,
-                    'destination' => null,
+                    'stand_id' => 1,
+                    'aircraft_id' => 1,
                     'priority' => 100,
                 ],
                 [
                     'airline_id' => 1,
-                    'stand_id' => 1,
-                    'destination' => null,
-                    'priority' => 1,
+                    'stand_id' => 2,
+                    'aircraft_id' => 1,
+                    'priority' => 3,
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'aircraft_id' => 1,
+                    'priority' => 2,
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => null,
-                    'priority' => 100,
+                    'aircraft_id' => 1,
+                    'priority' => 1,
                 ],
             ]
         );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertEquals($this->allocator->allocate($aircraft), 1);
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
+        $this->assertEquals(2, $this->allocator->allocate($aircraft));
     }
 
-    public function testItDoesntAssignStandsWithSpecificDestinations()
-    {
-        DB::table('airline_stand')->insert(
-            [
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 1,
-                    'destination' => 'EGGD'
-                ],
-            ]
-        );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertNull($this->allocator->allocate($aircraft));
-    }
-
-    public function testItDoesntAssignStandsWithSpecificCallsignSlugs()
-    {
-        DB::table('airline_stand')->insert(
-            [
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 1,
-                    'callsign_slug' => '4444'
-                ],
-            ]
-        );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertNull($this->allocator->allocate($aircraft));
-    }
-
-    public function testItDoesntAssignStandsWithSpecificCallsigns()
-    {
-        DB::table('airline_stand')->insert(
-            [
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 1,
-                    'callsign' => '4444'
-                ],
-            ]
-        );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertNull($this->allocator->allocate($aircraft));
-    }
-
-    public function testItDoesntAssignStandsWithSpecificAircraftTypes()
-    {
-        DB::table('airline_stand')->insert(
-            [
-                [
-                    'airline_id' => 1,
-                    'stand_id' => 1,
-                    'aircraft_id' => 1
-                ],
-            ]
-        );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
-        $this->assertNull($this->allocator->allocate($aircraft));
-    }
-
-    public function testItAllocatesStandsAtAppropriateWeight()
+    public function testItAllocatesAStandWithAnAppropriateWeight()
     {
         $this->setWakeCategoryForAircraft('B738', 'UM');
         $weightAppropriateStand = Stand::create(
@@ -143,38 +94,43 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id
+                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
             ]
         );
         DB::table('airline_stand')->insert(
             [
                 [
                     'airline_id' => 1,
-                    'stand_id' => 2,
-                    'destination' => null
+                    'stand_id' => 1,
+                    'aircraft_id' => null
                 ],
                 [
                     'airline_id' => 1,
-                    'stand_id' => 1,
-                    'destination' => null
+                    'stand_id' => 2,
+                    'aircraft_id' => 1
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'aircraft_id' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'aircraft_id' => 1
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => $weightAppropriateStand->id,
-                    'destination' => null
+                    'aircraft_id' => 1
                 ],
             ]
         );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
         $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft));
     }
 
-    public function testItAllocatesStandsInWeightAscendingOrder()
+    public function testItAllocatesAStandInWeightAscendingOrder()
     {
         $this->setWakeCategoryForAircraft('B738', 'S');
         $weightAppropriateStand = Stand::create(
@@ -183,34 +139,39 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id
+                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
             ]
         );
         DB::table('airline_stand')->insert(
             [
                 [
                     'airline_id' => 1,
-                    'stand_id' => 2,
-                    'destination' => null
+                    'stand_id' => 1,
+                    'aircraft_id' => null
                 ],
                 [
                     'airline_id' => 1,
-                    'stand_id' => 1,
-                    'destination' => null
+                    'stand_id' => 2,
+                    'aircraft_id' => 1
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'aircraft_id' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'aircraft_id' => 1
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => $weightAppropriateStand->id,
-                    'destination' => null
+                    'aircraft_id' => 1
                 ],
             ]
         );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
         $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft));
     }
 
@@ -220,27 +181,56 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
             [
                 [
                     'airline_id' => 1,
-                    'stand_id' => 2,
-                    'destination' => null
+                    'stand_id' => 1,
+                    'aircraft_id' => 1
                 ],
                 [
                     'airline_id' => 1,
-                    'stand_id' => 1,
-                    'destination' => null
+                    'stand_id' => 2,
+                    'aircraft_id' => 1
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'aircraft_id' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'aircraft_id' => 1
                 ],
             ]
         );
 
-        $occupier = $this->createAircraft('EZY7823', 'EGLL');
-        $occupier->occupiedStand()->sync([2]);
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $occupier = $this->createAircraft('EZY7823', 'EGLL', 'EGGD');
+        $occupier->occupiedStand()->sync([1]);
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
+        $this->assertEquals(2, $this->allocator->allocate($aircraft));
+    }
 
-        $this->assertEquals(1, $this->allocator->allocate($aircraft));
+    public function testItDoesntAllocateAStandWithNoAircraftType()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'aircraft_id' => null
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'aircraft_id' => null
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'aircraft_id' => 1
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
+        $this->assertNull($this->allocator->allocate($aircraft));
     }
 
     public function testItDoesntAllocateAtTheWrongAirfield()
@@ -250,31 +240,31 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'destination' => null
+                    'aircraft_id' => 1
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'aircraft_id' => 1,
                 ],
             ]
         );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    public function testItDoesntAllocateForTheWrongAirline()
+    public function testItDoesntAllocateForTheWrongAircraftType()
     {
         DB::table('airline_stand')->insert(
             [
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => null
+                    'aircraft_id' => 2,
                 ],
             ]
         );
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
@@ -285,18 +275,18 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'destination' => null
+                    'aircraft_id' => 1
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'destination' => null
+                    'aircraft_id' => 1
                 ],
             ]
         );
         NetworkAircraft::find('BAW123')->occupiedStand()->sync([1]);
 
-        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD');
         $this->assertEquals(2, $this->allocator->allocate($aircraft));
     }
 
@@ -307,27 +297,32 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'destination' => null
+                    'aircraft_id' => 1
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'aircraft_id' => 1
                 ],
             ]
         );
-        $aircraft = $this->createAircraft('***1234', 'EGLL');
+        $aircraft = $this->createAircraft('***1234', 'EGLL', 'EGGD');
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    private function createAircraft(string $callsign, string $arrivalAirport): NetworkAircraft
-    {
+    private function createAircraft(
+        string $callsign,
+        string $arrivalAirport,
+        string $departureAirport
+    ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
-                'planned_destairport' => $arrivalAirport]
+                'planned_destairport' => $arrivalAirport,
+                'planned_depairport' => $departureAirport,
+            ]
         );
     }
 }
