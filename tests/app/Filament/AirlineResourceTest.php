@@ -83,7 +83,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 1 => [
                     'priority' => 50,
                     'destination' => 'LF',
+                    'aircraft_id' => 1,
                     'callsign_slug' => '23',
+                    'callsign' => 'abc',
                     'not_before' => '09:00:00',
                 ],
                 2 => [
@@ -104,8 +106,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 ],
                 2 => [
                     'priority' => 21,
+                    'aircraft_id' => 2,
                     'destination' => 'ED',
                     'callsign_slug' => '55',
+                    'callsign' => 'def',
                 ]
             ]);
 
@@ -130,7 +134,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 50,
                 'destination' => 'LF',
                 'callsign_slug' => '23',
+                'callsign' => 'abc',
                 'not_before' => '09:00:00',
+                'aircraft_id' => 1,
             ]
         );
 
@@ -142,7 +148,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 33,
                 'destination' => 'KJ',
                 'callsign_slug' => null,
+                'callsign' => null,
                 'not_before' => null,
+                'aircraft_id' => null,
             ]
         );
 
@@ -152,8 +160,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'airline_id' => $airline->id,
                 'terminal_id' => 1,
                 'priority' => 2,
+                'aircraft_id' => null,
                 'destination' => 'EB',
                 'callsign_slug' => null,
+                'callsign' => null,
             ]
         );
 
@@ -163,8 +173,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'airline_id' => $airline->id,
                 'terminal_id' => 2,
                 'priority' => 21,
+                'aircraft_id' => 2,
                 'destination' => 'ED',
                 'callsign_slug' => '55',
+                'callsign' => 'def',
             ]
         );
     }
@@ -486,8 +498,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
             [
                 'airline_id' => 1,
                 'terminal_id' => 1,
+                'aircraft_id' => null,
                 'destination' => null,
                 'priority' => 100,
+                'callsign' => null,
                 'callsign_slug' => null,
             ]
         );
@@ -503,8 +517,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'pair-terminal',
                 data: [
                     'recordId' => 1,
+                    'aircraft_id' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
+                    'callsign' => 'abcd',
                     'callsign_slug' => '1234',
                 ]
             )->assertHasNoTableActionErrors();
@@ -514,8 +530,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
             [
                 'airline_id' => 1,
                 'terminal_id' => 1,
+                'aircraft_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
+                'callsign' => 'abcd',
                 'callsign_slug' => '1234',
             ]
         );
@@ -616,6 +634,23 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
+                    'callsign' => '12345',
+                ]
+            )->assertHasTableActionErrors(['callsign']);
+    }
+
+    public function testItFailsTerminalPairingCallsignSlugTooLong()
+    {
+        Livewire::test(
+            TerminalsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-terminal',
+                data: [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
                     'callsign_slug' => '12345',
                 ]
             )->assertHasTableActionErrors(['callsign_slug']);
@@ -669,6 +704,8 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'stand_id' => 1,
                 'destination' => null,
                 'priority' => 100,
+                'aircraft_id' => null,
+                'callsign' => null,
                 'callsign_slug' => null,
                 'not_before' => null,
             ]
@@ -688,6 +725,8 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
+                    'aircraft_id' => 1,
+                    'callsign' => 'abcd',
                     'callsign_slug' => '1234',
                     'not_before' => '20:00:00',
                 ]
@@ -700,6 +739,8 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'stand_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
+                'aircraft_id' => 1,
+                'callsign' => 'abcd',
                 'callsign_slug' => '1234',
                 'not_before' => '20:00:00',
             ]
@@ -796,7 +837,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
             )->assertHasTableActionErrors(['priority']);
     }
 
-    public function testItAllowsFailsStandPairingCallsignTooLong()
+    public function testItAllowsFailsStandPairingCallsignSlugTooLong()
     {
         Livewire::test(
             StandsRelationManager::class,
@@ -813,6 +854,25 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'not_before' => '20:00:00',
                 ]
             )->assertHasTableActionErrors(['callsign_slug']);
+    }
+
+    public function testItAllowsFailsStandPairingCallsignTooLong()
+    {
+        Livewire::test(
+            StandsRelationManager::class,
+            ['ownerRecord' => Airline::findOrFail(1)]
+        )
+            ->callTableAction(
+                'pair-stand',
+                data:
+                [
+                    'recordId' => 1,
+                    'destination' => 'EGKK',
+                    'priority' => 55,
+                    'callsign' => '12345',
+                    'not_before' => '20:00:00',
+                ]
+            )->assertHasTableActionErrors(['callsign']);
     }
 
     public function testItAllowsFailsStandPairingDestinationTooLong()

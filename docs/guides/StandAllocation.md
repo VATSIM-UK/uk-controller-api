@@ -77,6 +77,13 @@ This rule only applies to flights that have `RMK/CARGO` in their flightplan rema
 
 It will allocate any stands of type `CARGO`.
 
+### Airline Callsign
+
+This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.
+
+It then allocates any stands assigned to that airline which have a specified callsign that matches. These matches are exact matches
+only. For partial matches, see below.
+
 ### Airline Callsign Slug
 
 This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.
@@ -91,6 +98,11 @@ For example, a flight with callsign `BAW1234` will match any stand assigned to B
 - 12
 - 1
 
+### Airline Aircraft Type
+
+This rule takes the aircraft type, along with the airline for the given flight.
+
+It then allocates any stands assigned to that airline with a specific aircraft type that matches.
 
 ### Airline Destination
 
@@ -115,6 +127,13 @@ based on the airlines priority preference.
 
 This is helpful when airlines only park on a few particular stands on a given pier/terminal.
 
+### Airline Callsign (Terminal)
+
+This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.
+
+It then allocates any stand on a terminal with a specific callsign that matches for that airline. These matches are exact matches
+only. For partial matches, see below.
+
 ### Airline Callsign Slug (Terminal)
 
 This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.
@@ -128,6 +147,12 @@ For example, a flight with callsign `BAW1234` will match any stand assigned to B
 - 123
 - 12
 - 1
+
+### Airline Aircraft Type (Terminal)
+
+This rule takes the aircraft type, along with the airline for the given flight.
+
+It then allocates any stand on a terminal with a specific aircraft type that matches for that airline.
 
 ### Airline Destination (Terminal)
 

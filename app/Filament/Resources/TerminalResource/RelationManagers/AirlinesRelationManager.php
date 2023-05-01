@@ -2,20 +2,21 @@
 
 namespace App\Filament\Resources\TerminalResource\RelationManagers;
 
+use App\Filament\Helpers\PairsAirlinesWithTerminals;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
-use Filament\Tables;
-use Illuminate\Support\Facades\DB;
+use Filament\Tables\Actions\AttachAction;
+use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Columns\TextColumn;
 
 class AirlinesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
+    use PairsAirlinesWithTerminals;
     use TranslatesStrings;
 
-    private const DEFAULT_COLUMN_VALUE = '--';
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'airlines';
     protected static ?string $inverseRelationship = 'terminals';
@@ -30,53 +31,25 @@ class AirlinesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('icao_code')
+                TextColumn::make('icao_code')
                     ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('destination')
-                    ->label(self::translateTablePath('columns.destination'))
-                    ->default(self::DEFAULT_COLUMN_VALUE)
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('callsign_slug')
-                    ->default(self::DEFAULT_COLUMN_VALUE)
-                    ->label(self::translateTablePath('columns.callsign')),
-                Tables\Columns\TextColumn::make('priority')
-                    ->default(self::DEFAULT_COLUMN_VALUE)
-                    ->label(self::translateTablePath('columns.priority'))
+                ...self::commonPairingTableColumns(),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make('pair-airline')
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                AttachAction::make('pair-airline')
+                    ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
-                        TextInput::make('destination')
-                            ->label(self::translateFormPath('destination.label'))
-                            ->helperText(self::translateFormPath('destination.helper'))
-                            ->maxLength(4),
-                        TextInput::make('callsign_slug')
-                            ->label(self::translateFormPath('callsign.label'))
-                            ->helperText(self::translateFormPath('callsign.helper'))
-                            ->maxLength(4),
-                        TextInput::make('priority')
-                            ->label(self::translateFormPath('priority.label'))
-                            ->helperText(self::translateFormPath('priority.helper'))
-                            ->default(100)
-                            ->numeric()
-                            ->minValue(1)
-                            ->maxValue(9999)
-                            ->required(),
+                        ...self::commonPairingFormFields(),
                     ])
             ])
             ->actions([
-                Tables\Actions\DetachAction::make('unpair-airline')
+                DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
-                    ->using(function (Tables\Actions\DetachAction $action) {
-                        DB::table('airline_terminal')
-                            ->where('id', $action->getRecord()->pivot_id)
-                            ->delete();
-                    })
+                    ->using(self::unpairingClosure())
             ]);
     }
 
