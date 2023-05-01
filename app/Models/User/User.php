@@ -45,10 +45,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'first_name',
         'last_name',
         'last_login',
+        'send_stand_acars_messages',
+        'stand_acars_messages_uncontrolled_airfield',
     ];
     
     protected $hidden = [
         'last_login_ip',
+    ];
+
+    protected $casts = [
+        'send_stand_acars_messages' => 'boolean',
     ];
 
     /**

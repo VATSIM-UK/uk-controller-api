@@ -118,6 +118,11 @@ class ControllerPosition extends Model implements ControllerPositionInterface
         return (float) $this->frequency;
     }
 
+    public function isDelivery(): bool
+    {
+        return Str::contains($this->callsign, '_DEL');
+    }
+
     public function isApproach(): bool
     {
         return Str::contains($this->callsign, '_APP');

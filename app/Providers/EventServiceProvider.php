@@ -86,4 +86,9 @@ class EventServiceProvider extends ServiceProvider
         Runway::class => SelectOptionsObserver::class,
         WakeCategoryScheme::class => SelectOptionsObserver::class,
     ];
+
+    public function shouldDiscoverEvents(): bool
+    {
+        return true;
+    }
 }

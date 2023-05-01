@@ -177,6 +177,8 @@ jobs:
             # Install application dependencies
             $PHP_PATH artisan package:discover
             $PHP_PATH artisan filament:upgrade
+            $PHP_PATH artisan optimize
+            $PHP_PATH artisan event:cache
           envs: RELEASE_DIRECTORY,APPLICATION_ROOT,TAG,PHP_PATH
 
       - name: (Remote) Update symbolic links

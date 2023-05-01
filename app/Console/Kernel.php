@@ -76,6 +76,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('model:prune', ['--model' => MonitoredScheduledTaskLogItem::class])->daily()->doNotMonitor();
+        $schedule->command('model:prune')->daily()->doNotMonitor();
         $schedule->command('tokens:delete-expired')->daily()->doNotMonitor();
         $schedule->command('squawks:clean-history')->daily()->doNotMonitor();
         $schedule->command('stands:clean-history')->daily()->doNotMonitor();
