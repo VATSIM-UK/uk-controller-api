@@ -5,13 +5,14 @@ namespace App\Filament\Resources\AirlineResource\RelationManagers;
 use App\Filament\Helpers\PairsAirlinesWithTerminals;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
+use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
-use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
 
 class TerminalsRelationManager extends RelationManager
 {
@@ -39,24 +40,34 @@ class TerminalsRelationManager extends RelationManager
                     )
                     ->label(self::translateTablePath('columns.terminal'))
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(
+                        query: fn (Builder $query, string $search) => $query->where(
+                            'description',
+                            'like',
+                            '%' . $search . '%'
+                        )
+                            ->orWhereIn(
+                                'airfield_id',
+                                Airfield::where('code', 'like', '%' . $search . '%')->pluck('id')
+                            )
+                    ),
                 ...self::commonPairingTableColumns(),
             ])
             ->headerActions([
                 AttachAction::make('pair-terminal')
                     ->form(fn (AttachAction $action): array => [
                         $action
-                            ->recordTitle(fn (Terminal $record):string => $record->airfieldDescription)
+                            ->recordTitle(fn (Terminal $record): string => $record->airfieldDescription)
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         ...self::commonPairingFormFields(),
-                    ])
+                    ]),
             ])
             ->actions([
                 DetachAction::make('unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
-                    ->using(self::unpairingClosure())
+                    ->using(self::unpairingClosure()),
             ]);
     }
 

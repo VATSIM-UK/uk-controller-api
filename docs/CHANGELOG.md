@@ -1,5 +1,20 @@
 # UK Controller Plugin API Changelog
 
+## [6.40.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.39.0...6.40.0) (2023-05-01)
+
+
+### Features
+
+* allow airlines to have specific aircraft types assigned to stands ([c0fa325](https://github.com/VATSIM-UK/uk-controller-api/commit/c0fa32505a1232c826fe60082be981215fceea33))
+* allow callsigns to be matched to specific stands ([50c923f](https://github.com/VATSIM-UK/uk-controller-api/commit/50c923f3ae8d66cd7ebb5f0340a0e3cf4231e6d2)), closes [#1299](https://github.com/VATSIM-UK/uk-controller-api/issues/1299)
+* allow specific aircraft types with airline allocations ([c920549](https://github.com/VATSIM-UK/uk-controller-api/commit/c920549e59841e93a098300694c4d258f05417d6))
+* allow specific airline callsigns to be paired to terminals ([9f9bf08](https://github.com/VATSIM-UK/uk-controller-api/commit/9f9bf088ad3760da6150374f84e3674285dcf219))
+
+
+### Bug Fixes
+
+* airline terminal table crash ([63cedf5](https://github.com/VATSIM-UK/uk-controller-api/commit/63cedf5cb37a45a38eac7fff99c8739611a37c38))
+
 ## [6.39.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.38.2...6.39.0) (2023-04-23)
 
 

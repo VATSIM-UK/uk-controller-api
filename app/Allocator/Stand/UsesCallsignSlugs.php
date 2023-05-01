@@ -9,12 +9,17 @@ trait UsesCallsignSlugs
 {
     private function getCallsignSlugs(NetworkAircraft $aircraft): array
     {
-        $slug = $this->airlineService->getCallsignSlugForAircraft($aircraft);
+        $slug = $this->getFullCallsignSlug($aircraft);
         $slugs = [];
         for ($i = 0; $i < Str::length($slug); $i++) {
             $slugs[] = Str::substr($slug, 0, $i + 1);
         }
 
         return $slugs;
+    }
+
+    private function getFullCallsignSlug(NetworkAircraft $aircraft): string
+    {
+        return $this->airlineService->getCallsignSlugForAircraft($aircraft);
     }
 }
