@@ -31,4 +31,29 @@ class UserPreferencesTest extends BaseFilamentTestCase
             ]
         );
     }
+
+    public function testItTogglesStandAcarsMessagesAtUncontrolledAirfields()
+    {
+        Livewire::test(UserPreferences::class)
+            ->set('stand_acars_messages_uncontrolled_airfield', true);
+
+        $this->assertDatabaseHas(
+            'user',
+            [
+                'id' => self::ACTIVE_USER_CID,
+                'stand_acars_messages_uncontrolled_airfield' => 1,
+            ]
+        );
+
+        Livewire::test(UserPreferences::class)
+            ->set('stand_acars_messages_uncontrolled_airfield', false);
+
+        $this->assertDatabaseHas(
+            'user',
+            [
+                'id' => self::ACTIVE_USER_CID,
+                'stand_acars_messages_uncontrolled_airfield' => 0,
+            ]
+        );
+    }
 }

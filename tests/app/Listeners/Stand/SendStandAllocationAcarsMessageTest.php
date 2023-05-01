@@ -7,10 +7,12 @@ use App\Acars\Provider\AcarsProviderInterface;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Models\Airfield\Airfield;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\User\User;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Models\Vatsim\NetworkControllerPosition;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Mockery;
@@ -36,10 +38,13 @@ class SendStandAllocationAcarsMessageTest extends BaseFunctionalTestCase
             'latitude' => 51.4775, // Heathrow
             'longitude' => -0.461389,
         ]);
+        $airfield->controllers()->sync([1 => ['order' => 1,], 2 => ['order' => 2], 3 => ['order' => 3]]);
         $stand = Stand::factory()->create(['airfield_id' => $airfield->id]);
 
         // Create aircraft and user
-        $user = User::factory()->create(['send_stand_acars_messages' => true]);
+        $user = User::factory()->create(
+            ['send_stand_acars_messages' => true, 'stand_acars_messages_uncontrolled_airfield' => true]
+        );
         $aircraft = NetworkAircraft::factory()->create(
             [
                 'cid' => $user->id,
@@ -68,7 +73,7 @@ class SendStandAllocationAcarsMessageTest extends BaseFunctionalTestCase
         Event::assertListening(StandAssignedEvent::class, SendStandAllocationAcarsMessage::class);
     }
 
-    public function testItSendsAnAcarsMessage()
+    public function testItSendsAnAcarsMessageAtUncontrolledAirfieldIfUserHasElectedToReceive()
     {
         $this->acarsProvider->shouldReceive('sendTelex')
             ->with(
@@ -81,6 +86,54 @@ class SendStandAllocationAcarsMessageTest extends BaseFunctionalTestCase
         $this->handler->handle($this->event);
     }
 
+    public function testItSendsAnAcarsMessageAtControlledAirfieldIfUserDoesntWantUncontrolled()
+    {
+        NetworkControllerPosition::create(
+            [
+                'callsign' => 'EGLL_S_TWR',
+                'cid' => self::ACTIVE_USER_CID,
+                'frequency' => '123.450',
+                'controller_position_id' => 1,
+            ]
+        );
+
+        $this->event->getStandAssignment()->aircraft->user->stand_acars_messages_uncontrolled_airfield = false;
+
+        $this->acarsProvider->shouldReceive('sendTelex')
+            ->with(
+                Mockery::on(
+                    fn(StandAssignedTelexMessage $message) => $message->getTarget(
+                        ) === $this->event->getStandAssignment()->callsign
+                )
+            )->once();
+
+        $this->handler->handle($this->event);
+    }
+
+    public function testItDoesntSendAnAcarsMessageAtUncontrolledAirfieldIfUserDoesntWantUncontrolled()
+    {
+        $this->event->getStandAssignment()->aircraft->user->stand_acars_messages_uncontrolled_airfield = false;
+        $this->acarsProvider->shouldReceive('sendTelex')->never();
+        $this->handler->handle($this->event);
+    }
+
+    public function testItDoesntSendAnAcarsMessageAtControlledAirfieldIfControllerIsDelivery()
+    {
+        ControllerPosition::find(1)->update(['callsign' => 'EGLL_DEL']);
+        NetworkControllerPosition::create(
+            [
+                'callsign' => 'EGLL_DEL',
+                'cid' => self::ACTIVE_USER_CID,
+                'frequency' => '123.450',
+                'controller_position_id' => 1,
+            ]
+        );
+
+        $this->event->getStandAssignment()->aircraft->user->stand_acars_messages_uncontrolled_airfield = false;
+        $this->acarsProvider->shouldReceive('sendTelex')->never();
+        $this->handler->handle($this->event);
+    }
+
     public function testItDoesntSendAcarsMessageIfStandIsNotAtArrivalAirport()
     {
         $this->event->getStandAssignment()->aircraft->planned_destairport = '1234';
@@ -90,7 +143,8 @@ class SendStandAllocationAcarsMessageTest extends BaseFunctionalTestCase
 
     public function testItDoesntSendAcarsMessageIfAircraftIsArrivingAtItsDepartureAirport()
     {
-        $this->event->getStandAssignment()->aircraft->planned_depairport = $this->event->getStandAssignment()->aircraft->planned_destairport;
+        $this->event->getStandAssignment()->aircraft->planned_depairport = $this->event->getStandAssignment(
+        )->aircraft->planned_destairport;
         $this->acarsProvider->shouldReceive('sendTelex')->never();
         $this->handler->handle($this->event);
     }

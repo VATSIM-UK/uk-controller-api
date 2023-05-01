@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\User\User;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Pages\Page;
@@ -28,19 +29,31 @@ class UserPreferences extends Page
     {
         $this->form->fill([
             'send_stand_acars_messages' => $this->user->send_stand_acars_messages,
+            'stand_acars_messages_uncontrolled_airfield' => $this->user->stand_acars_messages_uncontrolled_airfield,
         ]);
     }
 
     protected function getFormSchema(): array
     {
         return [
-            Toggle::make('send_stand_acars_messages')
-                ->label(self::translateFormPath('user_preferences.acars.label'))
-                ->helperText(self::translateFormPath('user_preferences.acars.helper'))
-                ->reactive()
-                ->afterStateUpdated(function () {
-                    $this->submit();
-                })
+            Fieldset::make('stand_acars')
+                ->label(self::translateFormPath('user_preferences.acars_heading.label'))
+                ->schema([
+                    Toggle::make('send_stand_acars_messages')
+                        ->label(self::translateFormPath('user_preferences.acars.label'))
+                        ->helperText(self::translateFormPath('user_preferences.acars.helper'))
+                        ->reactive()
+                        ->afterStateUpdated(function () {
+                            $this->submit();
+                        }),
+                    Toggle::make('stand_acars_messages_uncontrolled_airfield')
+                        ->label(self::translateFormPath('user_preferences.acars_uncontrolled.label'))
+                        ->helperText(self::translateFormPath('user_preferences.acars_uncontrolled.helper'))
+                        ->reactive()
+                        ->afterStateUpdated(function () {
+                            $this->submit();
+                        }),
+                ]),
         ];
     }
 
