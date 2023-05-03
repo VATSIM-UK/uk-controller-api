@@ -73,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
             Filament::registerTheme(mix('css/vatukfilament.css'));
             Filament::registerNavigationGroups(
                 [
+                    'Preferences',
                     'Airline',
                     'Airfield',
                     'Controller',

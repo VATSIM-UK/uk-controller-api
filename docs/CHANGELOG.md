@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.41.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.40.0...6.41.0) (2023-05-01)
+
+
+### Features
+
+* allow stand acars messages at uncontrolled airfield toggle ([edb9ac1](https://github.com/VATSIM-UK/uk-controller-api/commit/edb9ac1585897c274f7ea9dc4e2dd9d456fed1bb))
+
 ## [6.40.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.39.0...6.40.0) (2023-05-01)
 
 
