@@ -41,7 +41,7 @@ class RegionalPressureService
                 $altimeterSettingRegion->key,
                 [
                     'altimeter_setting_region_id' => $altimeterSettingRegion->id,
-                    'value' => $this->calculateRegionalPressure($relevantMetars),
+                    'value' => $this->calculateRegionalPressure($altimeterSettingRegion, $relevantMetars),
                 ]
             );
         }
@@ -85,11 +85,14 @@ class RegionalPressureService
     }
 
     /**
-     * Regional pressure is the lowest QNH - 1
+     * Regional pressure is based on the lowest QNH in the region, usually subtract 1. Though at London, Manchester
+     * etc it's just the QNH at one airfield.
      */
-    private function calculateRegionalPressure(Collection $relevantMetars): int
-    {
-        $rps = $relevantMetars->pluck('qnh')->min() - 1;
+    private function calculateRegionalPressure(
+        AltimeterSettingRegion $altimeterSettingRegion,
+        Collection $relevantMetars
+    ): int {
+        $rps = $relevantMetars->pluck('qnh')->min() + $altimeterSettingRegion->adjustment;
         return $rps < 0 ? 0 : $rps;
     }
 

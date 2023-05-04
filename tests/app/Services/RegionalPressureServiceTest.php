@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\BaseFunctionalTestCase;
 use App\Events\RegionalPressuresUpdatedEvent;
+use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
 use App\Models\AltimeterSettingRegions\RegionalPressureSetting;
 use App\Models\Metars\Metar;
 use Illuminate\Support\Facades\Event;
@@ -21,6 +22,8 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
 
     public function testItGeneratesNewRegionalPressures()
     {
+        // Change the adjustment
+        AltimeterSettingRegion::find(1)->update(['adjustment' => -2]);
         $metars = collect(
             [
                 new Metar(['airfield_id' => 1, 'parsed' => ['qnh' => 1015]]),
@@ -35,7 +38,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
             'regional_pressure_settings',
             [
                 'altimeter_setting_region_id' => 1,
-                'value' => 1012,
+                'value' => 1011,
             ],
         );
         $this->assertDatabaseHas(
@@ -49,7 +52,7 @@ class RegionalPressureServiceTest extends BaseFunctionalTestCase
         Event::assertDispatched(
             RegionalPressuresUpdatedEvent::class,
             function ($event) {
-                return $event->pressures === ['ASR_BOBBINGTON' => 1012, 'ASR_TOPPINGTON' => 1013];
+                return $event->pressures === ['ASR_BOBBINGTON' => 1011, 'ASR_TOPPINGTON' => 1013];
             }
         );
     }
