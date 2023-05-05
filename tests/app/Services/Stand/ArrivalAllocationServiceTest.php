@@ -21,6 +21,7 @@ use App\Allocator\Stand\CidReservedArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\OriginAirfieldStandAllocator;
+use App\Allocator\Stand\UserRequestedArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
@@ -162,6 +163,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         $this->assertEquals(
             [
                 CidReservedArrivalStandAllocator::class,
+                UserRequestedArrivalStandAllocator::class,
                 CallsignFlightplanReservedArrivalStandAllocator::class,
                 CargoFlightPreferredArrivalStandAllocator::class,
                 CargoFlightArrivalStandAllocator::class,
