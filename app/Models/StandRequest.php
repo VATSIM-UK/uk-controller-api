@@ -11,6 +11,7 @@ class StandRequest extends Model
 
     protected $fillable = [
         'user_id',
+        'stand_id',
         'callsign',
         'from',
         'to',

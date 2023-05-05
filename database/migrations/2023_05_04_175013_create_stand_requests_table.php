@@ -14,11 +14,17 @@ return new class extends Migration
         Schema::create('stand_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('stand_id');
             $table->string('callsign');
             $table->timestamp('from');
             $table->timestamp('to');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('stand_id')
+                ->references('id')
+                ->on('stands')
+                ->cascadeOnDelete();
 
             $table->foreign('user_id')
                 ->references('id')
