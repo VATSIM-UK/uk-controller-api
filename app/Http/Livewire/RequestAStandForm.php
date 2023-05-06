@@ -47,7 +47,7 @@ class RequestAStandForm extends Component
                     'required',
                     'integer',
                     function (string $attribute, mixed $value, Closure $fail) {
-                        if (!Stand::where('id', $value)->exists()){
+                        if (!Stand::where('id', $value)->exists()) {
                             $fail('Invalid stand.');
                         }
                     },
