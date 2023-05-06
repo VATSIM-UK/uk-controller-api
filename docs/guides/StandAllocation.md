@@ -67,7 +67,9 @@ where stand reservations are necessary.
 
 ### User Requested
 
-This rule matches flights for a particular user, if they have requested a stand between particular times.
+This rule matches flights for a particular user, if they have requested a stand.
+
+The requested stand will be eligible for assignment from 40 minutes before, until 20 minutes after the requested time.
 
 ### Cargo Flight (Airline Specific)
 

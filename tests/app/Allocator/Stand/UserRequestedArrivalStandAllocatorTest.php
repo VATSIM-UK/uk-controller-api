@@ -76,6 +76,16 @@ class UserRequestedArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $request = StandRequest::factory()->create(
             ['callsign' => $this->aircraft->callsign, 'user_id' => $this->user->id, 'stand_id' => $this->stand->id]
         );
+        $request->forceDelete();
+
+        $this->assertNull($this->allocator->allocate($request->aircraft));
+    }
+
+    public function testItDoesntReturnDeletedRequests()
+    {
+        $request = StandRequest::factory()->create(
+            ['callsign' => $this->aircraft->callsign, 'user_id' => $this->user->id, 'stand_id' => $this->stand->id]
+        );
         $request->delete();
 
         $this->assertNull($this->allocator->allocate($request->aircraft));
