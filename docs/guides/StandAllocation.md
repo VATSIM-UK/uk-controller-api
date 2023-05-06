@@ -65,6 +65,10 @@ where stand reservations are necessary.
 This rule matches flights for a particular arrival airfield and a specific callsign. It is only used in organised events
 where stand reservations are necessary.
 
+### User Requested
+
+This rule matches flights for a particular user, if they have requested a stand between particular times.
+
 ### Cargo Flight (Airline Specific)
 
 This rule only applies to flights that have `RMK/CARGO` in their flightplan remarks.

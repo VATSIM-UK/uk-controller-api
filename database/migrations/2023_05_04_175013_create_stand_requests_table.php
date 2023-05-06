@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,8 +15,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedBigInteger('stand_id');
             $table->string('callsign');
-            $table->timestamp('from');
-            $table->timestamp('to');
+            $table->timestamp('requested_time');
             $table->timestamps();
             $table->softDeletes();
 
@@ -31,7 +29,7 @@ return new class extends Migration
                 ->on('user')
                 ->cascadeOnDelete();
 
-            $table->index(['user_id', 'from', 'to']);
+            $table->index(['user_id', 'requested_time']);
         });
     }
 
