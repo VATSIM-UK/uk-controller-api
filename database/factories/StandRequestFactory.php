@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\StandRequest>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Stand\StandRequest>
  */
 class StandRequestFactory extends Factory
 {

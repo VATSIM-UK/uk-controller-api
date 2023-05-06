@@ -2,7 +2,7 @@
 
 namespace App\Allocator\Stand;
 
-use App\Models\StandRequest;
+use App\Models\Stand\StandRequest;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;

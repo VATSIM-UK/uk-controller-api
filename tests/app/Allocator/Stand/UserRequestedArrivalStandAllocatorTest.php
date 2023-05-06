@@ -5,7 +5,7 @@ namespace App\Allocator\Stand;
 use App\BaseFunctionalTestCase;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
-use App\Models\StandRequest;
+use App\Models\Stand\StandRequest;
 use App\Models\User\User;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;

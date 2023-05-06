@@ -29,6 +29,11 @@ return new class extends Migration {
                 ->on('user')
                 ->cascadeOnDelete();
 
+            $table->foreign('callsign')
+                ->references('callsign')
+                ->on('network_aircraft')
+                ->cascadeOnDelete();
+
             $table->index(['user_id', 'requested_time']);
         });
     }

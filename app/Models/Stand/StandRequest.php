@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Stand;
 
-use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

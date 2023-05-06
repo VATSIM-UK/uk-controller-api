@@ -154,6 +154,8 @@ class DatabaseSeeder extends Seeder
         'network_controller_positions',
         'controller_position_alternative_callsigns',
         'acars_messages',
+        'stand_requests',
+        'stand_request_history',
     ];
 
 
