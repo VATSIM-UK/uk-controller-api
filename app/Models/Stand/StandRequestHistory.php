@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class StandRequestHistory extends Model
 {
+    protected $table = 'stand_request_history';
+
     use MassPrunable;
 
     protected $fillable = [
@@ -16,6 +18,7 @@ class StandRequestHistory extends Model
         'stand_id',
         'callsign',
         'requested_time',
+        'deleted_at',
     ];
 
     protected $casts = [

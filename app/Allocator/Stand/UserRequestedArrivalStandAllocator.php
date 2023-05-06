@@ -15,8 +15,7 @@ class UserRequestedArrivalStandAllocator extends AbstractArrivalStandAllocator
             ->whereHas('stand.airfield', function (Builder $airfield) use ($aircraft) {
                 $airfield->where('code', $aircraft->planned_destairport);
             })
-            ->where('requested_time', '<', Carbon::now()->addMinutes(40))
-            ->where('requested_time', '>', Carbon::now()->subMinutes(20))
+            ->current()
             ->get();
 
         if ($requestedStands->isEmpty()) {

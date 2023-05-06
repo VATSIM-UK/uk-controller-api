@@ -16,8 +16,9 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedBigInteger('stand_id');
             $table->string('callsign');
-            $table->timestamp('requested_time');
+            $table->dateTime('requested_time');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
