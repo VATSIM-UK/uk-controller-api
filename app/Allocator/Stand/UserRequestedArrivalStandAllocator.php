@@ -25,4 +25,9 @@ class UserRequestedArrivalStandAllocator extends AbstractArrivalStandAllocator
 
         return $stands->whereIn('stands.id', $requestedStands->pluck('stand_id'));
     }
+
+    protected function prefersNonRequestedStands(): bool
+    {
+        return false;
+    }
 }

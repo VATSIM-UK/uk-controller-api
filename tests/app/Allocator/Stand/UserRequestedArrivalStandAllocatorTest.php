@@ -24,8 +24,8 @@ class UserRequestedArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->allocator = $this->app->make(UserRequestedArrivalStandAllocator::class);
         $this->user = User::factory()->create();
         $airfield = Airfield::factory()->create();
-        $this->aircraft = NetworkAircraft::factory()->create(
-            ['callsign' => 'BAW242', 'cid' => $this->user->id, 'planned_destairport' => $airfield->code]
+        $this->aircraft = NetworkAircraft::factory()->asUser($this->user->id)->create(
+            ['callsign' => 'BAW242', 'planned_destairport' => $airfield->code]
         );
         $this->stand = Stand::factory()->create(['airfield_id' => $airfield->id]);
     }
@@ -37,6 +37,17 @@ class UserRequestedArrivalStandAllocatorTest extends BaseFunctionalTestCase
         );
 
         $this->assertEquals($this->stand->id, $this->allocator->allocate($request->aircraft));
+    }
+
+    public function testItDoesntReturnStandAtWrongAirport()
+    {
+        $secondStand = Stand::factory()->create(['airfield_id' => 1]);
+
+        $request = StandRequest::factory()->create(
+            ['callsign' => $this->aircraft->callsign, 'user_id' => $this->user->id, 'stand_id' => $secondStand->id]
+        );
+
+        $this->assertNull($this->allocator->allocate($request->aircraft));
     }
 
     public function testItDoesntReturnUnavailableStands()

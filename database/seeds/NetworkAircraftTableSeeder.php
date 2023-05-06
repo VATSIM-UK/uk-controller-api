@@ -12,6 +12,7 @@ class NetworkAircraftTableSeeder extends Seeder
             [
                 [
                     'callsign' => 'BAW123',
+                    'cid' => 1203533,
                     'latitude' => 54.66,
                     'longitude'=> -6.21,
                     'altitude' => '35123',
@@ -30,6 +31,7 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'BAW456',
+                    'cid' => 1203534,
                     'latitude' => 54.66,
                     'longitude'=> -6.21,
                     'altitude' => '35123',
@@ -48,6 +50,7 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'BAW789',
+                    'cid' => 1203535,
                     'latitude' => 54.66,
                     'longitude'=> -6.21,
                     'altitude' => '35123',
@@ -66,6 +69,7 @@ class NetworkAircraftTableSeeder extends Seeder
                 ],
                 [
                     'callsign' => 'RYR824',
+                    'cid' => 1203536,
                     'latitude' => 54.66,
                     'longitude'=> -6.21,
                     'altitude' => '35123',

@@ -176,6 +176,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = NetworkAircraft::create(
             [
                 'callsign' => 'BAW898',
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => '',
@@ -199,6 +200,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
+                'cid' => 1234,
                 'planned_aircraft' => $type,
                 'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
