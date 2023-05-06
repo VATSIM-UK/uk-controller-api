@@ -39,7 +39,7 @@ class StandStatusService
         return $standStatuses;
     }
 
-    private static function getStandStatus(Stand $stand): array
+    public static function getStandStatus(Stand $stand): array
     {
         $standData = [
             'identifier' => $stand->identifier,
@@ -51,7 +51,7 @@ class StandStatusService
                     return $airline->pivot->destination;
                 });
             })->toArray(),
-            'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code: null,
+            'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code : null,
             'max_aircraft_type' => $stand->maxAircraft ? $stand->maxAircraft->code : null,
         ];
 
@@ -78,6 +78,9 @@ class StandStatusService
             })->isEmpty()
         ) {
             $standData['status'] = 'unavailable';
+        } elseif ($stand->requests()->hasNotExpired()->exists()) {
+            $standData['status'] = 'requested';
+            $standData['requested_by'] = $stand->requests()->hasNotExpired()->pluck('callsign');
         } else {
             $standData['status'] = 'available';
         }

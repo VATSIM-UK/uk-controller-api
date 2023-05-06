@@ -18,10 +18,19 @@
             <p><b>{{$aircraft->callsign}} ({{$aircraft->planned_depairport}} - {{$aircraft->planned_destairport}})</b></p>
 
             @if($aircraft->destinationAirfield)
-                <h1>Assigned Arrival Stand:</h1>
-                @if($aircraft->destinationAirfield->code === $aircraft?->assignedStand?->stand->airfield->code)
-                    <p><b>{{$aircraft->assignedStand->stand->identifier}}</b></p>
+                @if($aircraft?->assignedStand)
+                    <h1>Assigned Arrival Stand:</h1>
+                    @if($aircraft->destinationAirfield->code === $aircraft?->assignedStand?->stand->airfield->code)
+                        <p><b>{{$aircraft->assignedStand->stand->airfieldIdentifier}}</b></p>
+                    @else
+                        <p>--</p>
+                    @endif
+                @elseif($standRequest)
+                        <h1>Assigned Arrival Stand:</h1>
+                        <p>You have requested <b>{{$standRequest->stand->airfieldIdentifier}}</b>.</p>
+                        <p>This will be confirmed when you are closer to your destination.</p>
                 @else
+                    <h1>Assigned Arrival Stand:</h1>
                     <p>--</p>
                 @endif
             @endif
