@@ -11,6 +11,8 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\IntentionCode\FirExitPoint;
 use App\Models\Runway\Runway;
+use App\Models\Stand\Stand;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -838,5 +840,79 @@ class SelectOptionsTest extends BaseFunctionalTestCase
         FirExitPoint::where('id', $point2->id)->firstOrFail()->update(['exit_point' => 'LOL']);
         $this->assertEquals($expected, SelectOptions::firExitPoints());
         $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_FIR_EXIT_POINTS'));
+    }
+
+    public function testItGetsAndCachesStands()
+    {
+        // Stand is closed, shouldn't show
+        Stand::factory()->create(['airfield_id' => 1, 'closed_at' => Carbon::now()]);
+        $expected = collect([
+            1 => 'EGLL/1L',
+            2 => 'EGLL/251',
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::standsForAirfield(Airfield::find(1)));
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_STANDS_EGLL'));
+    }
+
+    public function testItGetsCachedStandsWithoutQuerying()
+    {
+        $expected = collect([
+            1 => 'EGLL/1L',
+            2 => 'EGLL/251',
+        ]);
+
+        Cache::forever('SELECT_OPTIONS_STANDS_EGLL', $expected);
+        Stand::withoutEvents(function ()
+        {
+            Stand::where('id', 1)->firstOrFail()->update(['identifier' => '23']);
+        });
+
+        $this->assertEquals($expected, SelectOptions::standsForAirfield(Airfield::find(1)));
+    }
+
+    public function testDeletingAStandRebuildsTheCache()
+    {
+        // Get options to build the cache.
+        SelectOptions::standsForAirfield(Airfield::find(1));
+
+        $expected = collect([
+            1 => 'EGLL/1L',
+        ]);
+
+        Stand::findOrFail(2)->delete();
+        $this->assertEquals($expected, SelectOptions::standsForAirfield(Airfield::find(1)));
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_STANDS_EGLL'));
+    }
+
+    public function testCreatingAStandRebuildsTheCache()
+    {
+        // Get options to build the cache.
+        SelectOptions::standsForAirfield(Airfield::find(1));
+
+        $newStand = Stand::factory()->create(['airfield_id' => 1]);
+
+        $expected = collect([
+            1 => 'EGLL/1L',
+            2 => 'EGLL/251',
+            $newStand->id => 'EGLL/' . $newStand->identifier,
+        ]);
+
+        $this->assertEquals($expected, SelectOptions::standsForAirfield(Airfield::find(1)));
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_STANDS_EGLL'));
+    }
+
+    public function testUpdatingAStandRebuildsTheCache()
+    {
+        // Get options to build the cache.
+        SelectOptions::standsForAirfield(Airfield::find(1));
+        $expected = collect([
+            1 => 'EGLL/1R',
+            2 => 'EGLL/251',
+        ]);
+
+        Stand::where('id', 1)->firstOrFail()->update(['identifier' => '1R']);
+        $this->assertEquals($expected, SelectOptions::standsForAirfield(Airfield::find(1)));
+        $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_STANDS_EGLL'));
     }
 }
