@@ -26,8 +26,7 @@ class AltimeterSettingRegion extends Model
     protected $fillable = [
         'name',
         'key',
-        'station',
-        'variation',
+        'adjustment',
     ];
 
     public function airfields() : BelongsToMany
