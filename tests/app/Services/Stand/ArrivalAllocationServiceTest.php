@@ -53,6 +53,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_depairport' => 'EGKK',
@@ -76,6 +77,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_depairport' => 'EGKK',
@@ -101,6 +103,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -123,6 +126,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_depairport' => 'EGBB',
@@ -144,6 +148,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -205,6 +210,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -226,6 +232,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -249,6 +256,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -270,6 +278,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -291,6 +300,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -318,6 +328,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -339,6 +350,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',
@@ -366,6 +378,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGXX',
@@ -387,6 +400,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B736',
                 'planned_aircraft_short' => 'B736',
                 'planned_destairport' => 'EGLL',
@@ -410,6 +424,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
             [
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => 'EGLL',

@@ -160,7 +160,7 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
             ['user_id' => self::ACTIVE_USER_CID, 'callsign' => 'BAW123', 'requested_time' => Carbon::now()]
         );
 
-        // Stand 11 is but too far in the future
+        // Stand 12 has had its request pass
         $stand12 = Stand::create(
             [
                 'airfield_id' => 1,
@@ -170,7 +170,7 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
             ]
         );
         $stand12->requests()->create(
-            ['user_id' => self::ACTIVE_USER_CID, 'callsign' => 'BAW123', 'requested_time' => Carbon::now()->addHour()]
+            ['user_id' => self::ACTIVE_USER_CID, 'callsign' => 'BAW123', 'requested_time' => Carbon::now()->subHours(2)]
         );
 
         $this->assertEquals(
@@ -269,7 +269,7 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'airlines' => [],
                     'max_wake_category' => 'LM',
                     'max_aircraft_type' => null,
-                    'requested_by' => ['BAW123'],
+                    'requested_by' => collect(['BAW123']),
                 ],
                 [
                     'identifier' => 'TEST12',
