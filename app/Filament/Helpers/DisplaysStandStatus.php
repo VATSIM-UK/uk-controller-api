@@ -1,37 +1,14 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Filament\Helpers;
 
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\Stand\StandStatusService;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 
-class StandStatus extends Component
+trait DisplaysStandStatus
 {
-    public ?Stand $stand;
-
-    public array $standStatus = ['available' => null, 'statusString' => ''];
-
-    protected $listeners = [
-        'updateStandStatus',
-    ];
-
-    public function mount(): void
-    {
-        $this->updateStandStatus($this->stand);
-    }
-
-    public function updateStandStatus(Stand $stand): void
-    {
-        $this->stand = $stand;
-        $this->standStatus = $this->getStandStatus(
-            $this->stand,
-            $this->getUserAircraft()
-        );
-    }
-
     private function getStandStatus(Stand $stand, NetworkAircraft $userAircraft): array
     {
         $standStatus = StandStatusService::getStandStatus(Stand::findOrFail($stand->id));
@@ -121,9 +98,9 @@ class StandStatus extends Component
         return ['available' => true, 'statusString' => $message];
     }
 
-    private function getUserAircraft(): NetworkAircraft
+    private function getUserAircraft(): ?NetworkAircraft
     {
         return NetworkAircraft::where('cid', Auth::id())
-            ->firstOrFail();
+            ->first();
     }
 }

@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Http\Livewire\CurrentStandRequest;
 use App\Http\Livewire\RequestAStandForm;
-use App\Http\Livewire\StandStatus;
 use App\SocialiteProviders\CoreProvider;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
@@ -93,7 +92,6 @@ class AppServiceProvider extends ServiceProvider
 
         // Livewire
         Livewire::component('request-a-stand-form', RequestAStandForm::class);
-        Livewire::component('stand-status', StandStatus::class);
         Livewire::component('current-stand-request', CurrentStandRequest::class);
     }
 }

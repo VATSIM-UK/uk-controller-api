@@ -58,7 +58,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
         );
         Livewire::test(PilotRequestAStand::class)
             ->assertOk()
-            ->assertSeeHtml('Stand Request For:')
+            ->assertSeeHtml('Stand request for')
             ->assertSeeHtml('BAW123 at EGLL');
     }
 
@@ -76,7 +76,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
         // Check we have the form
         $test = Livewire::test(PilotRequestAStand::class)
             ->assertOk()
-            ->assertSeeHtml('Stand Request For:')
+            ->assertSeeHtml('Stand request for')
             ->assertSeeHtml('BAW123 at EGLL');
 
         // Create the request
@@ -112,7 +112,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
         // Delete the request (emitting the delete event) and check we now see the form
         $request->delete();
         $test->emit('currentStandRequestRelinquished')
-            ->assertSeeHtml('Stand Request For:')
+            ->assertSeeHtml('Stand request for')
             ->assertSeeHtml('BAW123 at EGLL');
     }
 }

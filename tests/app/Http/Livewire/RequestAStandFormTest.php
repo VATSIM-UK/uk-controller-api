@@ -38,10 +38,8 @@ class RequestAStandFormTest extends BaseFilamentTestCase
     {
         Livewire::test(RequestAStandForm::class)
             ->assertOk()
-            ->assertSeeHtml('Stand Request For:')
-            ->assertSeeHtml('BAW123 at EGLL')
-            ->assertSeeHtml('EGLL / 1L')
-            ->assertSeeHtml('EGLL / 251');
+            ->assertSeeHtml('Stand request for')
+            ->assertSeeHtml('BAW123 at EGLL');
     }
 
     public function testItDisplaysTheStandStatusWhenAStandIsSelected()
@@ -52,10 +50,9 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->assertSeeHtml('This stand is currently available.');
     }
 
-    public function testItDisplaysAValidationErrorIfStandInvalid()
+    public function testItDisplaysAValidationErrorIfNoStandSelected()
     {
         Livewire::test(RequestAStandForm::class)
-            ->set('requestedStand', 55)
             ->call('submit')
             ->assertOk()
             ->assertHasErrors('requestedStand');
