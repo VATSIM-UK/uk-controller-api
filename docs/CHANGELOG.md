@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.42.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.41.0...6.42.0) (2023-05-07)
+
+
+### Features
+
+* allow flexible regional pressures ([4a8d683](https://github.com/VATSIM-UK/uk-controller-api/commit/4a8d68349855d7b21dccb786b7fbb51f12514a58))
+
+
+### Data Updates
+
+* update adjustment for tmas ([6636bae](https://github.com/VATSIM-UK/uk-controller-api/commit/6636baeffc59e38f4f552d73eda9c6ea58719696)), closes [#1310](https://github.com/VATSIM-UK/uk-controller-api/issues/1310)
+
 ## [6.41.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.40.0...6.41.0) (2023-05-01)
 
 
