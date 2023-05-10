@@ -9,7 +9,7 @@ use App\Models\User\User;
  * Class for creating configuration files that users
  * can use to run the plugin.
  */
-class UserConfigService
+class UserConfigService implements UserConfigCreatorInterface
 {
     /**
      * Manages user tokens

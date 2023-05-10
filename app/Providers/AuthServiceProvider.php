@@ -36,6 +36,8 @@ use App\Policies\PluginEditableDataPolicy;
 use App\Policies\PluginVersionPolicy;
 use App\Policies\ReadOnlyPolicy;
 use App\Policies\UserPolicy;
+use App\Services\UserConfigCreatorInterface;
+use App\Services\UserConfigService;
 use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
@@ -115,5 +117,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
         Passport::personalAccessTokensExpireIn(Carbon::now()->addDecade());
         Passport::tokensCan(self::AUTH_SCOPES);
+        $this->app->singleton(UserConfigCreatorInterface::class, UserConfigService::class);
     }
 }

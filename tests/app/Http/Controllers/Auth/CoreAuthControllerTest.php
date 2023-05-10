@@ -82,4 +82,19 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
             ]
         );
     }
+
+    public function testItRedirectsUserToIntendedIfPresent()
+    {
+        $socialiteUser = Mockery::mock(User::class);
+        $socialiteUser->shouldReceive('getId')
+            ->andReturn(1234)
+            ->andSet('first_name', 'Test')
+            ->andSet('last_name', 'User');
+        Socialite::shouldReceive('driver->user')->andReturn($socialiteUser);
+
+        \redirect()->setIntendedUrl('admin/airlines');
+
+        $this->get('auth/callback')
+            ->assertRedirect('admin/airlines');
+    }
 }
