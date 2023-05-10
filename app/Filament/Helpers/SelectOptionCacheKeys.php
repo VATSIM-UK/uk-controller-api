@@ -14,4 +14,5 @@ enum SelectOptionCacheKeys: string
     case WakeSchemes = 'SELECT_OPTIONS_WAKE_SCHEMES';
 
     case FirExitPoints = 'SELECT_OPTIONS_FIR_EXIT_POINTS';
+    case Stands = 'SELECT_OPTIONS_STANDS';
 }

@@ -317,4 +317,9 @@ class Stand extends Model
     {
         return sprintf('%s / %s', $this->airfield->code, $this->identifier);
     }
+
+    public function requests(): HasMany
+    {
+        return $this->hasMany(StandRequest::class);
+    }
 }

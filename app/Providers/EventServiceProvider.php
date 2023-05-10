@@ -84,6 +84,7 @@ class EventServiceProvider extends ServiceProvider
         FirExitPoint::class => SelectOptionsObserver::class,
         Handoff::class => SelectOptionsObserver::class,
         Runway::class => SelectOptionsObserver::class,
+        Stand::class => StandObserver::class,
         WakeCategoryScheme::class => SelectOptionsObserver::class,
     ];
 

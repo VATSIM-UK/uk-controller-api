@@ -127,6 +127,7 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
+                'cid' => 1234,
                 'planned_aircraft' => 'B744',
                 'planned_aircraft_short' => 'B744',
                 'planned_destairport' => $arrivalAirport,

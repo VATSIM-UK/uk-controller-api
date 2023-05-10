@@ -480,6 +480,7 @@ class AirlineCallsignSlugStandAllocatorTest extends BaseFunctionalTestCase
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
+                'cid' => 1234,
                 'planned_aircraft' => 'B738',
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => $arrivalAirport,

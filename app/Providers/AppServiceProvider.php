@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Livewire\CurrentStandRequest;
+use App\Http\Livewire\RequestAStandForm;
 use App\SocialiteProviders\CoreProvider;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
@@ -11,6 +13,7 @@ use Illuminate\Validation\Rule;
 use App\Services\SectorfileService;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Contracts\Factory;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -86,5 +89,9 @@ class AppServiceProvider extends ServiceProvider
                 ]
             );
         });
+
+        // Livewire
+        Livewire::component('request-a-stand-form', RequestAStandForm::class);
+        Livewire::component('current-stand-request', CurrentStandRequest::class);
     }
 }

@@ -240,6 +240,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
+                'cid' => 1234,
                 'planned_aircraft' => $type,
                 'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,

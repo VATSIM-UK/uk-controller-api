@@ -5,6 +5,7 @@ namespace App\Services\Stand;
 use App\BaseFunctionalTestCase;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
@@ -146,6 +147,32 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
         );
         $stand10->close();
 
+        // Stand 11 is requested
+        $stand11 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST11',
+                'latitude' => 54.658828,
+                'longitude' => -6.222070,
+            ]
+        );
+        $stand11->requests()->create(
+            ['user_id' => self::ACTIVE_USER_CID, 'callsign' => 'BAW123', 'requested_time' => Carbon::now()]
+        );
+
+        // Stand 12 has had its request pass
+        $stand12 = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TEST12',
+                'latitude' => 54.658828,
+                'longitude' => -6.222070,
+            ]
+        );
+        $stand12->requests()->create(
+            ['user_id' => self::ACTIVE_USER_CID, 'callsign' => 'BAW123', 'requested_time' => Carbon::now()->subHours(2)]
+        );
+
         $this->assertEquals(
             [
                 [
@@ -231,6 +258,23 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'identifier' => 'TEST10',
                     'type' => null,
                     'status' => 'closed',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                ],
+                [
+                    'identifier' => 'TEST11',
+                    'type' => null,
+                    'status' => 'requested',
+                    'airlines' => [],
+                    'max_wake_category' => 'LM',
+                    'max_aircraft_type' => null,
+                    'requested_by' => collect(['BAW123']),
+                ],
+                [
+                    'identifier' => 'TEST12',
+                    'type' => null,
+                    'status' => 'available',
                     'airlines' => [],
                     'max_wake_category' => 'LM',
                     'max_aircraft_type' => null,

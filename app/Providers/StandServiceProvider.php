@@ -12,6 +12,7 @@ use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\CidReservedArrivalStandAllocator;
+use App\Allocator\Stand\UserRequestedArrivalStandAllocator;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\ArrivalAllocationService;
 use App\Services\Stand\StandAssignmentsService;
@@ -39,6 +40,7 @@ class StandServiceProvider extends ServiceProvider
                 $application->make(StandAssignmentsService::class),
                 [
                     $application->make(CidReservedArrivalStandAllocator::class),
+                    $application->make(UserRequestedArrivalStandAllocator::class),
                     $application->make(CallsignFlightplanReservedArrivalStandAllocator::class),
                     $application->make(CargoFlightPreferredArrivalStandAllocator::class),
                     $application->make(CargoFlightArrivalStandAllocator::class),

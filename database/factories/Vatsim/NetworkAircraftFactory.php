@@ -24,6 +24,8 @@ class NetworkAircraftFactory extends Factory
     {
         return [
             'callsign' => $this->faker->unique()->word,
+            'cid' => $this->faker->numberBetween(800000, 1900000),
+            'planned_aircraft_short' => 'B738',
             'transponder_last_updated_at' => null,
         ];
     }

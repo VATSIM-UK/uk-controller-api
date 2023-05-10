@@ -7,10 +7,18 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Models\Vatsim\NetworkControllerPosition;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 class MyStatusTest extends BaseFilamentTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        DB::table('network_aircraft')->delete();
+        DB::table('network_controller_positions')->delete();
+    }
+
     public function testDisplaysNotTracked()
     {
         Livewire::test(MyStatus::class)

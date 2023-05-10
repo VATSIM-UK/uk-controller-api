@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Stand\StandRequest;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Models\Vatsim\NetworkControllerPosition;
 use Filament\Widgets\Widget;
@@ -17,6 +18,9 @@ class MyStatus extends Widget
             'controller' => NetworkControllerPosition::firstWhere('cid', Auth::id()),
             'aircraft' => NetworkAircraft::with('destinationAirfield', 'assignedStand', 'assignedStand.stand.airfield')
                 ->firstWhere('cid', Auth::id()),
+            'standRequest' => StandRequest::where('user_id', Auth::id())
+                ->current()
+                ->first(),
         ];
     }
 }

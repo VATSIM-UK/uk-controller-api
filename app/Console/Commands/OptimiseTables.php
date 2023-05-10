@@ -30,6 +30,8 @@ class OptimiseTables extends Command
         'navaid_network_aircraft',
         'monitored_scheduled_task_log_items',
         'acars_messages',
+        'stand_requests',
+        'stand_request_history',
     ];
 
     protected $signature = 'tables:optimise';

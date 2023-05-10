@@ -7,6 +7,7 @@ use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\JoinClause;
 
 abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInterface
 {
@@ -40,7 +41,7 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
         $orderedQuery = $this->getOrderedStandsQuery($this->getArrivalAirfieldStandQuery($aircraft), $aircraft);
         return $orderedQuery === null
             ? new Collection()
-            : $this->applyBaseOrderingToStandsQuery($orderedQuery)->get();
+            : $this->applyBaseOrderingToStandsQuery($orderedQuery, $aircraft)->get();
     }
 
     /**
@@ -51,11 +52,25 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      * @param Builder $query
      * @return Builder
      */
-    private function applyBaseOrderingToStandsQuery(Builder $query): Builder
+    private function applyBaseOrderingToStandsQuery(Builder $query, NetworkAircraft $aircraft): Builder
     {
         return $query->orderByWeight()
             ->orderByAssignmentPriority()
+            ->leftJoin('stand_requests as other_stand_requests', function (JoinClause $join) use ($aircraft) {
+                // Prefer stands that haven't been requested by someone else
+                $join->on('stands.id', '=', 'other_stand_requests.stand_id')
+                    ->on('other_stand_requests.user_id', '<>', $join->raw($aircraft->cid));
+            })
+            ->orderByRaw('other_stand_requests.id IS NULL')
             ->inRandomOrder();
+    }
+
+    /**
+     * If true, will prefer stands that haven't been requsted by the user;
+     */
+    protected function prefersNonRequestedStands(): bool
+    {
+        return true;
     }
 
     abstract protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder;

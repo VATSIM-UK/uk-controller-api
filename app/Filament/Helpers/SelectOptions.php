@@ -10,6 +10,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\IntentionCode\FirExitPoint;
 use App\Models\Runway\Runway;
+use App\Models\Stand\Stand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use LogicException;
@@ -107,8 +108,8 @@ class SelectOptions
                 ->get()
                 ->mapWithKeys(
                     fn (Runway $runway) => [
-                    $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
-                ]
+                        $runway->id => sprintf('%s - %s', $runway->airfield->code, $runway->identifier),
+                    ]
                 )->toBase()
         );
     }
@@ -120,12 +121,12 @@ class SelectOptions
             fn (): Collection => FirExitPoint::all()
                 ->mapWithKeys(
                     fn (FirExitPoint $exitPoint) => [
-                    $exitPoint->id => sprintf(
-                        '%s%s',
-                        $exitPoint->exit_point,
-                        $exitPoint->internal ? ' (Internal)' : ''
-                    ),
-                ]
+                        $exitPoint->id => sprintf(
+                            '%s%s',
+                            $exitPoint->exit_point,
+                            $exitPoint->internal ? ' (Internal)' : ''
+                        ),
+                    ]
                 )->toBase()
         );
     }
@@ -159,5 +160,31 @@ class SelectOptions
         foreach (self::MODEL_CACHE_KEYS as $keys) {
             self::clearKeysForModel($keys);
         }
+
+        Airfield::all()
+            ->each(function (Airfield $airfield) {
+                self::clearStandsForAirfieldCache($airfield);
+            });
+    }
+
+    public static function standsForAirfield(Airfield $airfield): Collection
+    {
+        return Cache::rememberForever(
+            self::airfieldStandsCacheKey($airfield),
+            fn (): Collection => Stand::where('airfield_id', $airfield->id)
+                ->notClosed()
+                ->get()
+                ->mapWithKeys(fn (Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])
+        );
+    }
+
+    public static function clearStandsForAirfieldCache(Airfield $airfield): void
+    {
+        Cache::forget(self::airfieldStandsCacheKey($airfield));
+    }
+
+    private static function airfieldStandsCacheKey(Airfield $airfield): string
+    {
+        return sprintf('%s_%s', SelectOptionCacheKeys::Stands->value, $airfield->code);
     }
 }
