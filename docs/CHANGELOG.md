@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.43.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.42.0...6.43.0) (2023-05-10)
+
+
+### Features
+
+* add filament page for requesting a stand ([e0f99cd](https://github.com/VATSIM-UK/uk-controller-api/commit/e0f99cd07aa18690a13e077c2e5853ceee773e43))
+* allow users to create tokens and redirect to plugin with key ([685eb91](https://github.com/VATSIM-UK/uk-controller-api/commit/685eb91dc73d9935acee4e64eb71cad5ab93c4c4))
+
 ## [6.42.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.41.0...6.42.0) (2023-05-07)
 
 
