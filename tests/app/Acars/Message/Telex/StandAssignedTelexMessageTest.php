@@ -30,15 +30,7 @@ class StandAssignedTelexMessageTest extends BaseFunctionalTestCase
 
     public function testItHasAMessage()
     {
-        $expected = <<<END
-You have been provisionally assigned stand EGLL/251.
-
-Safe landings.
-
-VATSIM UK
-END;
-
-        $expected = Str::replace("\r\n", "\n", $expected);
+        $expected = 'You have been provisionally assigned stand EGLL/251. Safe landings. VATSIM UK.';
         $this->assertEquals($expected, $this->message->getBody());
     }
 }

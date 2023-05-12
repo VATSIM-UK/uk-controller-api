@@ -21,9 +21,7 @@ class StandAssignedTelexMessage implements TelexMessageInterface
     public function getBody(): string
     {
         return sprintf(
-            "You have been provisionally assigned stand %s.\n\n" .
-            "Safe landings.\n\n" .
-            "VATSIM UK",
+            'You have been provisionally assigned stand %s. Safe landings. VATSIM UK.',
             $this->getStandAssignmentString()
         );
     }
