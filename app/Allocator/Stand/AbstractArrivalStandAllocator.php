@@ -5,6 +5,7 @@ namespace App\Allocator\Stand;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\JoinClause;
@@ -59,7 +60,17 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
             ->leftJoin('stand_requests as other_stand_requests', function (JoinClause $join) use ($aircraft) {
                 // Prefer stands that haven't been requested by someone else
                 $join->on('stands.id', '=', 'other_stand_requests.stand_id')
-                    ->on('other_stand_requests.user_id', '<>', $join->raw($aircraft->cid));
+                    ->on('other_stand_requests.user_id', '<>', $join->raw($aircraft->cid))
+                    ->on(
+                        'other_stand_requests.requested_time',
+                        '>',
+                        $join->raw(
+                            sprintf(
+                                '\'%s\'',
+                                Carbon::now()
+                            )
+                        )
+                    );
             })
             ->orderByRaw('other_stand_requests.id IS NULL')
             ->inRandomOrder();
