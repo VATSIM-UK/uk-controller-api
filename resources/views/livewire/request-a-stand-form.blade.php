@@ -1,6 +1,6 @@
 <div>
     @if(!$userAircraft)
-        You must be flying on the VATSIM network to be able to reserve a stand.
+        You must be flying on the VATSIM network to be able to request a stand.
     @elseif(empty($stands))
         There are no stands available for assignment at your destination airfield.
     @else

@@ -23,7 +23,7 @@ class RequestAStandFormTest extends BaseFilamentTestCase
         NetworkAircraft::find('BAW123')->delete();
         Livewire::test(RequestAStandForm::class)
             ->assertOk()
-            ->assertSeeHtml('You must be flying on the VATSIM network to be able to reserve a stand.');
+            ->assertSeeHtml('You must be flying on the VATSIM network to be able to request a stand.');
     }
 
     public function testItRendersNoStands()
