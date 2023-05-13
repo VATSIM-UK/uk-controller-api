@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 
 abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
+    private readonly array $nonAssignableCodes;
+
     final public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         // Check if the allocator can actually allocate a squawk
@@ -50,7 +52,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
 
     private function tryAssignSquawk($callsign, $code): ?SquawkAssignmentInterface
     {
-        if (NonAssignableSquawkCode::where('code', $code)->exists()) {
+        if ($this->codeIsNotAssignable($code)) {
             return null;
         }
 
@@ -76,6 +78,23 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
     {
         // By default, don't apply any filtering
         return $ranges;
+    }
+
+    /**
+     * Check if the code is non-assignable.
+     *
+     * There are only a small handful of non-assignable codes (and they won't change much), so we can
+     * load them into memory once.
+     */
+    private function codeIsNotAssignable(string $code): bool
+    {
+        if (!$this->nonAssignableCodes) {
+            $this->nonAssignableCodes = NonAssignableSquawkCode::all()
+                ->pluck('code')
+                ->mapWithKeys(fn(string $code) => [$code => $code]);
+        }
+
+        return array_key_exists($code, $this->nonAssignableCodes);
     }
 
     /**
