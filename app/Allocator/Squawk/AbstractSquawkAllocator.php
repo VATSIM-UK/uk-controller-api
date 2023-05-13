@@ -91,7 +91,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
         if (!$this->nonAssignableCodes) {
             $this->nonAssignableCodes = NonAssignableSquawkCode::all()
                 ->pluck('code')
-                ->mapWithKeys(fn(string $code) => [$code => $code]);
+                ->mapWithKeys(fn (string $code) => [$code => $code]);
         }
 
         return array_key_exists($code, $this->nonAssignableCodes);
@@ -104,7 +104,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
     abstract protected function getOrderedSquawkRangesQuery(array $details): Builder;
 
     /**
-     * Returns whether or not the particular allocator can allocate a squawk, given details
+     * Returns whether the particular allocator can allocate a squawk, given details
      * provided.
      */
     abstract protected function canAllocateSquawk(array $details): bool;
