@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.44.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.43.0...6.44.0) (2023-05-13)
+
+
+### Features
+
+* show a message when allocations cannot be made ([e6070fd](https://github.com/VATSIM-UK/uk-controller-api/commit/e6070fdc2d2d8edcf429120db932cd5977e7cc8e))
+* show times in request a stand ([bab9d3f](https://github.com/VATSIM-UK/uk-controller-api/commit/bab9d3fed25b67c0cee13ee1105827479de1e632))
+
 ## [6.43.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.42.0...6.43.0) (2023-05-10)
 
 
