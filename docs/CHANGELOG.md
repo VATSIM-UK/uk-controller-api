@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.44.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.0...6.44.1) (2023-05-13)
+
+
+### Bug Fixes
+
+* consider request time for stand requests ([898cf73](https://github.com/VATSIM-UK/uk-controller-api/commit/898cf73af88694cd32f57269619faa82d88be623))
+* query escaping ([0a88bcb](https://github.com/VATSIM-UK/uk-controller-api/commit/0a88bcb8b6eb35c172d8d84e8c077a8431eb3429))
+* query escaping ([ef6747f](https://github.com/VATSIM-UK/uk-controller-api/commit/ef6747f93e3a0320d76fe37660963244b1b9b403))
+
 ## [6.44.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.43.0...6.44.0) (2023-05-13)
 
 
