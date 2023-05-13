@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\BaseFilamentTestCase;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\StandRequest;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
@@ -13,7 +14,12 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
     public function setUp(): void
     {
         parent::setUp();
-        NetworkAircraft::find('BAW123')->update(['cid' => self::ACTIVE_USER_CID, 'planned_destairport' => 'EGLL']);
+        NetworkAircraft::find('BAW123')->update(
+            [
+                'cid' => self::ACTIVE_USER_CID,
+                'planned_destairport' => 'EGLL',
+            ]
+        );
     }
 
     public function testItRenders()

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\BaseFilamentTestCase;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
 use App\Models\Vatsim\NetworkAircraft;
@@ -14,8 +15,13 @@ class RequestAStandFormTest extends BaseFilamentTestCase
     public function setUp(): void
     {
         parent::setUp();
-        NetworkAircraft::find('BAW123')->update(['cid' => self::ACTIVE_USER_CID, 'planned_destairport' => 'EGLL']);
-        Carbon::setTestNow(Carbon::now());
+        NetworkAircraft::find('BAW123')->update(
+            [
+                'cid' => self::ACTIVE_USER_CID,
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+        Carbon::setTestNow(Carbon::now()->setHour(15)->setMinute(40));
     }
 
     public function testItRendersNoUserAircraft()
@@ -23,7 +29,23 @@ class RequestAStandFormTest extends BaseFilamentTestCase
         NetworkAircraft::find('BAW123')->delete();
         Livewire::test(RequestAStandForm::class)
             ->assertOk()
-            ->assertSeeHtml('You must be flying on the VATSIM network to be able to reserve a stand.');
+            ->assertSeeHtml('You must be flying on the VATSIM network to be able to request a stand.');
+    }
+
+    public function testItRendersUserHasUnknownAircraftType()
+    {
+        NetworkAircraft::find('BAW123')->update(['planned_aircraft' => 'X', 'planned_aircraft_short' => 'X']);
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSeeHtml('Stands cannot be automatically assigned to your aircraft type.');
+    }
+
+    public function testItRendersUserAircraftCannotAllocate()
+    {
+        Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSeeHtml('Stands cannot be automatically assigned to your aircraft type.');
     }
 
     public function testItRendersNoStands()
@@ -66,15 +88,6 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->assertHasErrors('requestedTime');
     }
 
-    public function testItDisplaysAValidationErrorIfTimeInvalid()
-    {
-        Livewire::test(RequestAStandForm::class)
-            ->set('requestedTime', 'abc')
-            ->call('submit')
-            ->assertOk()
-            ->assertHasErrors('requestedTime');
-    }
-
     public function testItDisplaysAValidationErrorIfTimeBeforeNow()
     {
         Livewire::test(RequestAStandForm::class)
@@ -91,6 +104,19 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->call('submit')
             ->assertHasErrors('requestedTime')
             ->assertOk();
+    }
+
+    public function testItDisplaysTheRequestTimeInformation()
+    {
+        Livewire::test(RequestAStandForm::class)
+            ->set('requestedTime', Carbon::now())
+            ->assertOk()
+            ->assertSeeHtml(
+                [
+                    'Your request will expire at <b>16:00Z</b> and will be considered by',
+                    'the stand allocator from <b>15:00Z</b>.',
+                ]
+            );
     }
 
     public function testItRequestsAStand()

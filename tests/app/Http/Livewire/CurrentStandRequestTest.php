@@ -17,13 +17,14 @@ class CurrentStandRequestTest extends BaseFilamentTestCase
     public function setUp(): void
     {
         parent::setUp();
+        Carbon::setTestNow(Carbon::now()->setHour(17)->setMinute(23));
         NetworkAircraft::find('BAW123')->update(['cid' => self::ACTIVE_USER_CID, 'planned_destairport' => 'EGLL']);
         $this->standRequest = StandRequest::create(
             [
                 'stand_id' => 1,
                 'user_id' => self::ACTIVE_USER_CID,
                 'callsign' => 'BAW123',
-                'requested_time' => Carbon::now(),
+                'requested_time' => Carbon::now()->addHour(),
             ]
         );
 
@@ -32,11 +33,28 @@ class CurrentStandRequestTest extends BaseFilamentTestCase
         $this->history->save();
     }
 
-    public function testItRenders()
+    public function testItRendersTheCurrentStand()
     {
         Livewire::test(CurrentStandRequest::class, ['standRequest' => $this->standRequest])
             ->assertOk()
-            ->assertSeeHtml('You have currently requested Stand <b>EGLL / 1L</b>');
+            ->assertSeeHtml(
+                [
+                    'You have currently requested Stand <b>EGLL / 1L</b> at',
+                    '<b>18:23Z</b>.',
+                ]
+            );
+    }
+
+    public function testItRendersTheTimeInformation()
+    {
+        Livewire::test(CurrentStandRequest::class, ['standRequest' => $this->standRequest])
+            ->assertOk()
+            ->assertSeeHtml(
+                [
+                    'Your request will expire at <b>18:43Z</b> and will be considered by',
+                    'the stand allocator from <b>17:43Z</b>.',
+                ]
+            );
     }
 
     public function testItShowsCurrentStandStatus()

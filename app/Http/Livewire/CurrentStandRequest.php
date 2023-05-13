@@ -13,6 +13,7 @@ use Livewire\Component;
 class CurrentStandRequest extends Component
 {
     use DisplaysStandStatus;
+    use ShowsRequestTimeInformation;
 
     public StandRequest $standRequest;
 
@@ -37,5 +38,10 @@ class CurrentStandRequest extends Component
     public function getStandStatusProperty(): array
     {
         return $this->getStandStatus($this->standRequest->stand, $this->getUserAircraft());
+    }
+
+    public function getRequestedTimeProperty(): array
+    {
+        return $this->getRequestTimeViewData($this->standRequest->requested_time);
     }
 }
