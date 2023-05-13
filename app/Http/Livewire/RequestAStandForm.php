@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Filament\Helpers\DisplaysStandStatus;
 use App\Filament\Helpers\SelectOptions;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandRequest;
@@ -23,8 +24,10 @@ class RequestAStandForm extends Component implements HasForms
 {
     use DisplaysStandStatus;
     use InteractsWithForms;
+    use ShowsRequestTimeInformation;
 
     public ?NetworkAircraft $userAircraft;
+    public ?Aircraft $userAircraftType;
     public array $stands = [];
     public ?int $requestedStand = null;
     public ?string $requestedTime = null;
@@ -37,6 +40,9 @@ class RequestAStandForm extends Component implements HasForms
     public function mount(): void
     {
         $this->userAircraft = $this->getUserAircraft();
+        $this->userAircraftType = $this->userAircraft
+            ? Aircraft::where('code', $this->userAircraft->planned_aircraft_short)->first()
+            : null;
         $userDestinationAirfield = $this->userAircraft ? Airfield::where(
             'code',
             $this->userAircraft->planned_destairport
@@ -68,7 +74,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->searchable()
                 ->required(),
             View::make('livewire.stand-status')
-                ->hidden(fn () => $this->requestedStand === null)
+                ->hidden(fn() => $this->requestedStand === null)
                 ->viewData(
                     [
                         'standStatus' => $this->requestedStand ? $this->getStandStatus(
@@ -86,6 +92,9 @@ class RequestAStandForm extends Component implements HasForms
                 ->placeholder(Carbon::now()->addMinutes(5)->toDateTimeString('minute'))
                 ->helperText('Can be up to 12 hours in advance.')
                 ->required(),
+            View::make('livewire.stand-booking-applicability')
+                ->hidden(fn() => $this->requestedTime === null)
+                ->viewData($this->getRequestTimeViewData(Carbon::parse($this->requestedTime))),
         ];
     }
 
