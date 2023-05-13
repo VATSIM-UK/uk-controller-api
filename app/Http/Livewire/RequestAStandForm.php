@@ -49,8 +49,14 @@ class RequestAStandForm extends Component implements HasForms
         )
             ->first()
             : null;
-        $this->stands = $userDestinationAirfield
-            ? SelectOptions::standsForAirfield($userDestinationAirfield)->toArray()
+
+        $this->stands = $userDestinationAirfield && $this->userAircraftType
+            ? Stand::where('airfield_id', $userDestinationAirfield->id)
+                ->notClosed()
+                ->sizeAppropriate($this->userAircraftType)
+                ->get()
+                ->mapWithKeys(fn (Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])
+                ->toArray()
             : [];
     }
 
@@ -67,6 +73,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->disabled(),
             Select::make('requestedStand')
                 ->label('Stand')
+                ->helperText('Only stands that can accommodate your aircraft type are shown.')
                 ->maxWidth('sm')
                 ->columnSpan(0.25)
                 ->options($this->stands)
@@ -91,6 +98,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->maxDate(Carbon::now()->addHours(12))
                 ->placeholder(Carbon::now()->addMinutes(5)->toDateTimeString('minute'))
                 ->helperText('Can be up to 12 hours in advance.')
+                ->reactive()
                 ->required(),
             View::make('livewire.stand-booking-applicability')
                 ->hidden(fn() => $this->requestedTime === null)
