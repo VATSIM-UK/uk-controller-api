@@ -81,7 +81,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->searchable()
                 ->required(),
             View::make('livewire.stand-status')
-                ->hidden(fn() => $this->requestedStand === null)
+                ->hidden(fn () => $this->requestedStand === null)
                 ->viewData(
                     [
                         'standStatus' => $this->requestedStand ? $this->getStandStatus(
@@ -101,7 +101,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->reactive()
                 ->required(),
             View::make('livewire.stand-booking-applicability')
-                ->hidden(fn() => $this->requestedTime === null)
+                ->hidden(fn () => $this->requestedTime === null)
                 ->viewData($this->getRequestTimeViewData(Carbon::parse($this->requestedTime))),
         ];
     }
