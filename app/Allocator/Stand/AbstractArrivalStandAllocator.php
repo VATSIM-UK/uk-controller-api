@@ -61,7 +61,16 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
                 // Prefer stands that haven't been requested by someone else
                 $join->on('stands.id', '=', 'other_stand_requests.stand_id')
                     ->on('other_stand_requests.user_id', '<>', $join->raw($aircraft->cid))
-                    ->on('other_stand_requests.requested_time', '>', $join->raw(Carbon::now()));
+                    ->on(
+                        'other_stand_requests.requested_time',
+                        '>',
+                        $join->raw(
+                            sprintf(
+                                '\'%s\'',
+                                Carbon::now()
+                            )
+                        )
+                    );
             })
             ->orderByRaw('other_stand_requests.id IS NULL')
             ->inRandomOrder();
