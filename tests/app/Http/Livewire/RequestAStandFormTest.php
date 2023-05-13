@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\BaseFilamentTestCase;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
 use App\Models\Vatsim\NetworkAircraft;
@@ -24,6 +25,14 @@ class RequestAStandFormTest extends BaseFilamentTestCase
         Livewire::test(RequestAStandForm::class)
             ->assertOk()
             ->assertSeeHtml('You must be flying on the VATSIM network to be able to request a stand.');
+    }
+
+    public function testItRendersUserAircraftCannotAllocate()
+    {
+        Aircraft::where('code', 'B738')->update(['allocate_stands' => false]);
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSeeHtml('Stands cannot be automatically assigned to your aircraft type.');
     }
 
     public function testItRendersNoStands()

@@ -1,6 +1,8 @@
 <div>
     @if(!$userAircraft)
         You must be flying on the VATSIM network to be able to request a stand.
+    @if(!$userAircraft->allocate_stands)
+        Stands cannot be automatically assigned to your aircraft type.
     @elseif(empty($stands))
         There are no stands available for assignment at your destination airfield.
     @else
