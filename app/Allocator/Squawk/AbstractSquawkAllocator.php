@@ -91,7 +91,8 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
         if (empty($this->nonAssignableCodes)) {
             $this->nonAssignableCodes = NonAssignableSquawkCode::all()
                 ->pluck('code')
-                ->mapWithKeys(fn (string $code) => [$code => $code]);
+                ->mapWithKeys(fn (string $code) => [$code => $code])
+                ->toArray();
         }
 
         return array_key_exists($code, $this->nonAssignableCodes);
