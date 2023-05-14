@@ -171,7 +171,8 @@ class SelectOptions
     {
         return Cache::rememberForever(
             self::airfieldStandsCacheKey($airfield),
-            fn (): Collection => Stand::where('airfield_id', $airfield->id)
+            fn (): Collection => Stand::with('airfield')
+                ->where('airfield_id', $airfield->id)
                 ->notClosed()
                 ->get()
                 ->mapWithKeys(fn (Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])
