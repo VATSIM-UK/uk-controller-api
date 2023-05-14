@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 
 abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
-    private readonly array $nonAssignableCodes;
+    private array $nonAssignableCodes = [];
 
     final public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
@@ -88,7 +88,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
      */
     private function codeIsNotAssignable(string $code): bool
     {
-        if (!$this->nonAssignableCodes) {
+        if (empty($this->nonAssignableCodes)) {
             $this->nonAssignableCodes = NonAssignableSquawkCode::all()
                 ->pluck('code')
                 ->mapWithKeys(fn (string $code) => [$code => $code]);
