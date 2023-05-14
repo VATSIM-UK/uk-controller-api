@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.44.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.2...6.44.3) (2023-05-14)
+
+
+### Performance Improvements
+
+* fix n+1 query for non-assignable squawk codes ([a969db2](https://github.com/VATSIM-UK/uk-controller-api/commit/a969db2a6b5c00a6be2e322c579ac1e309969b7e))
+
 ## [6.44.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.1...6.44.2) (2023-05-14)
 
 
