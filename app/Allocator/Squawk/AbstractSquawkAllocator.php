@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 
 abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
 {
+    private array $nonAssignableCodes = [];
+
     final public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         // Check if the allocator can actually allocate a squawk
@@ -50,7 +52,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
 
     private function tryAssignSquawk($callsign, $code): ?SquawkAssignmentInterface
     {
-        if (NonAssignableSquawkCode::where('code', $code)->exists()) {
+        if ($this->codeIsNotAssignable($code)) {
             return null;
         }
 
@@ -79,13 +81,31 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
     }
 
     /**
+     * Check if the code is non-assignable.
+     *
+     * There are only a small handful of non-assignable codes (and they won't change much), so we can
+     * load them into memory once.
+     */
+    private function codeIsNotAssignable(string $code): bool
+    {
+        if (empty($this->nonAssignableCodes)) {
+            $this->nonAssignableCodes = NonAssignableSquawkCode::all()
+                ->pluck('code')
+                ->mapWithKeys(fn (string $code) => [$code => $code])
+                ->toArray();
+        }
+
+        return array_key_exists($code, $this->nonAssignableCodes);
+    }
+
+    /**
      * Returns a query builder object, with ordering where applicable, that when executed
      * will return a collection of possible ranges that the squawk can be assigned from.
      */
     abstract protected function getOrderedSquawkRangesQuery(array $details): Builder;
 
     /**
-     * Returns whether or not the particular allocator can allocate a squawk, given details
+     * Returns whether the particular allocator can allocate a squawk, given details
      * provided.
      */
     abstract protected function canAllocateSquawk(array $details): bool;
