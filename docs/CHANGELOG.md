@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.44.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.1...6.44.2) (2023-05-14)
+
+
+### Performance Improvements
+
+* fix n+1 query for stand select options ([4fc20a3](https://github.com/VATSIM-UK/uk-controller-api/commit/4fc20a32b51340c119921135fdc90b77da12557f))
+
 ## [6.44.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.0...6.44.1) (2023-05-13)
 
 
