@@ -27,7 +27,7 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 'airfield_id' => 1,
                 'type_id' => 3,
                 'identifier' => 'TEST1',
-                'latitude' => 54.658828,
+                'latitude' => 54.658827,
                 'longitude' => -6.222070,
             ]
         );
@@ -177,6 +177,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
             [
                 [
                     'identifier' => 'TEST1',
+                    'latitude' => 54.658827,
+                    'longitude' => -6.222070,
                     'type' => 'CARGO',
                     'status' => 'available',
                     'airlines' => [
@@ -187,6 +189,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST2',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'assigned',
                     'callsign' => 'ASSIGNMENT',
@@ -196,6 +200,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST3',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'reserved',
                     'callsign' => 'RESERVATION',
@@ -205,6 +211,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST4',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'occupied',
                     'callsign' => 'OCCUPIED',
@@ -214,6 +222,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST5',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'unavailable',
                     'airlines' => [],
@@ -222,6 +232,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST6',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'unavailable',
                     'airlines' => [],
@@ -230,6 +242,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST7',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'unavailable',
                     'airlines' => [],
@@ -238,6 +252,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST8',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'available',
                     'airlines' => [],
@@ -246,6 +262,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST9',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'reserved_soon',
                     'callsign' => null,
@@ -256,6 +274,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST10',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'closed',
                     'airlines' => [],
@@ -264,6 +284,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST11',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'requested',
                     'airlines' => [],
@@ -273,6 +295,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 ],
                 [
                     'identifier' => 'TEST12',
+                    'latitude' => 54.658828,
+                    'longitude' => -6.222070,
                     'type' => null,
                     'status' => 'available',
                     'airlines' => [],

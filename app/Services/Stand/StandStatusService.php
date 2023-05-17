@@ -44,6 +44,8 @@ class StandStatusService
         $standData = [
             'identifier' => $stand->identifier,
             'type' => $stand->type ? $stand->type->key : null,
+            'latitude' => $stand->latitude,
+            'longitude' => $stand->longitude,
             'airlines' => $stand->airlines->groupBy('icao_code')->map(function (Collection $airlineDestination) {
                 return $airlineDestination->filter(function (Airline $airline) {
                     return $airline->pivot->destination;
