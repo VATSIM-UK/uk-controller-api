@@ -215,8 +215,8 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'identifier' => '1L',
                     'status' => 'available',
-                    'latitude' => 51.47436111, // 501 at LL
-                    'longitude' => -0.48953611,
+                    'latitude' => '51.47436111', // 501 at LL
+                    'longitude' => '-0.48953611',
                     'type' => null,
                     'airlines' => [],
                     'max_wake_category' => 'LM',
@@ -225,8 +225,8 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'identifier' => '251',
                     'status' => 'available',
-                    'latitude' => 51.47187222, // 512 at LL
-                    'longitude' => -0.48601389,
+                    'latitude' => '51.47187222', // 512 at LL
+                    'longitude' => '-0.48601389',
                     'type' => null,
                     'airlines' => [],
                     'max_wake_category' => 'LM',

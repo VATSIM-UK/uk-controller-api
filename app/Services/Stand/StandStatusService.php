@@ -26,6 +26,7 @@ class StandStatusService
             'pairedStands.activeReservations'
         )
             ->airfield($airfield)
+            ->withCasts(['latitude' => 'decimal:8', 'longitude' => 'decimal:8'])
             ->get();
 
         $stands->sortBy('identifier', SORT_NATURAL);
