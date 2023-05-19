@@ -21,6 +21,7 @@ class AircraftTableSeeder extends Seeder
             [
                 'code' => 'B738',
                 'allocate_stands' => true,
+                'aerodrome_reference_code' => 'C',
                 'wingspan' => 117.83,
                 'length' => 129.50,
             ]
@@ -36,6 +37,7 @@ class AircraftTableSeeder extends Seeder
             [
                 'code' => 'A333',
                 'allocate_stands' => true,
+                'aerodrome_reference_code' => 'E',
                 'wingspan' => 197.83,
                 'length' => 208.99
             ],

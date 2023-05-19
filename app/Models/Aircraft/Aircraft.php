@@ -12,6 +12,7 @@ class Aircraft extends Model
 
     protected $fillable = [
         'code',
+        'aerodrome_reference_code',
         'wingspan',
         'length',
         'wake_category_id',
