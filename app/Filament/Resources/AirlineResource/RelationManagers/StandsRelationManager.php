@@ -38,7 +38,7 @@ class StandsRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.stand'))
                     ->sortable()
                     ->searchable(),
-                ...self::commonPairingTableColumns(),
+                ...self::airlineStandPairingTableColumns(),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-stand')
@@ -48,12 +48,12 @@ class StandsRelationManager extends RelationManager
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
-                        ...self::commonPairingFormFields(),
+                        ...self::airlineStandPairingFormFields(),
                     ])
             ])
             ->actions([
                 EditAction::make('edit-stand-pairing')
-                    ->form(self::commonPairingFormFields()),
+                    ->form(self::airlineStandPairingFormFields()),
                 DetachAction::make('unpair-stand')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())

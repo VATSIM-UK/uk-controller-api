@@ -34,7 +34,7 @@ class AirlinesRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
-                ...self::commonPairingTableColumns(),
+                ...self::airlineStandPairingTableColumns(),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-airline')
@@ -42,12 +42,12 @@ class AirlinesRelationManager extends RelationManager
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
-                        ...self::commonPairingFormFields(),
+                        ...self::airlineStandPairingFormFields(),
                     ])
             ])
             ->actions([
                 Tables\Actions\EditAction::make('edit-airline-pairing')
-                    ->form(self::commonPairingFormFields()),
+                    ->form(self::airlineStandPairingFormFields()),
                 Tables\Actions\DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())

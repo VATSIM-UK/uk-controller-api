@@ -52,7 +52,7 @@ class TerminalsRelationManager extends RelationManager
                                 Airfield::where('code', 'like', '%' . $search . '%')->pluck('id')
                             )
                     ),
-                ...self::commonPairingTableColumns(),
+                ...self::airlineTerminalPairingTableColumns(),
             ])
             ->headerActions([
                 AttachAction::make('pair-terminal')
@@ -62,12 +62,12 @@ class TerminalsRelationManager extends RelationManager
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
-                        ...self::commonPairingFormFields(),
+                        ...self::airlineTerminalPairingFormFields(),
                     ]),
             ])
             ->actions([
                 EditAction::make('edit-terminal-pairing')
-                    ->form(self::commonPairingFormFields()),
+                    ->form(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
