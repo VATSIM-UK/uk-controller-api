@@ -28,14 +28,14 @@ class StandFactory extends Factory
             'identifier' => $this->standIdentifier(),
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
-            'wake_category_id' => 6, // Jumbo
+            'aerodrome_reference_code' => 'F', // A380
             'assignment_priority' => $this->faker->numberBetween(0, 1000),
         ];
     }
 
     public function withTerminal(int|Terminal $terminal): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'airfield_id' => $terminal->airfield_id,
             'terminal_id' => is_int($terminal) ? $terminal : $terminal->id,
         ]);

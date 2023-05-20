@@ -55,7 +55,7 @@ abstract class AbstractArrivalStandAllocator implements ArrivalStandAllocatorInt
      */
     private function applyBaseOrderingToStandsQuery(Builder $query, NetworkAircraft $aircraft): Builder
     {
-        return $query->orderByWeight()
+        return $query->orderByAerodromeReferenceCode()
             ->orderByAssignmentPriority()
             ->leftJoin('stand_requests as other_stand_requests', function (JoinClause $join) use ($aircraft) {
                 // Prefer stands that haven't been requested by someone else
