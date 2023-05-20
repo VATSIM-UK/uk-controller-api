@@ -10,6 +10,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Actions\EditAction;
 
 class StandsRelationManager extends RelationManager
 {
@@ -51,6 +52,8 @@ class StandsRelationManager extends RelationManager
                     ])
             ])
             ->actions([
+                EditAction::make('edit-stand-pairing')
+                    ->form(self::commonPairingFormFields()),
                 DetachAction::make('unpair-stand')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())

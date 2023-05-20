@@ -973,10 +973,12 @@ class AirlineResourceTest extends BaseFilamentTestCase
             TerminalsRelationManager::class => [
                 'pair-terminal',
                 'unpair-terminal',
+                'edit-terminal-pairing',
             ],
             StandsRelationManager::class => [
                 'pair-stand',
                 'unpair-stand',
+                'edit-stand-pairing',
             ],
         ];
     }

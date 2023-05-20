@@ -405,6 +405,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
             AirlinesRelationManager::class => [
                 'pair-airline',
                 'unpair-airline',
+                'edit-airline-pairing',
             ],
         ];
     }

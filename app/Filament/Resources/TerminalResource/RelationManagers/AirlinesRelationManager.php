@@ -9,6 +9,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 
 class AirlinesRelationManager extends RelationManager
@@ -47,6 +48,8 @@ class AirlinesRelationManager extends RelationManager
                     ])
             ])
             ->actions([
+                EditAction::make('edit-airline-pairing')
+                    ->form(self::commonPairingFormFields()),
                 DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())

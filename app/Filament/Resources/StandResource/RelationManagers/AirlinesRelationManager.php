@@ -46,6 +46,8 @@ class AirlinesRelationManager extends RelationManager
                     ])
             ])
             ->actions([
+                Tables\Actions\EditAction::make('edit-airline-pairing')
+                    ->form(self::commonPairingFormFields()),
                 Tables\Actions\DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())

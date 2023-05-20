@@ -11,6 +11,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -65,6 +66,8 @@ class TerminalsRelationManager extends RelationManager
                     ]),
             ])
             ->actions([
+                EditAction::make('edit-terminal-pairing')
+                    ->form(self::commonPairingFormFields()),
                 DetachAction::make('unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
