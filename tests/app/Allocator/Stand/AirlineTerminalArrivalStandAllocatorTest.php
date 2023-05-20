@@ -73,7 +73,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    public function testItAssignsStandsWithSpecificCallsigns()
+    public function testItAssignsStandsWithSpecificFullCallsigns()
     {
         Stand::query()->update(['terminal_id' => null]);
         $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
@@ -83,7 +83,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '333',
+                    'full_callsign' => '333',
                 ],
             ]
         );
