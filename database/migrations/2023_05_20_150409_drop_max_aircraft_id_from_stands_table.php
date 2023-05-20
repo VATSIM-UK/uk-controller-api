@@ -11,6 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('stands', function (Blueprint $table) {
+            $table->dropForeign('stands_max_aircraft_id_foreign');
             $table->dropColumn('max_aircraft_id');
         });
     }
