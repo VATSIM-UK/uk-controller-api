@@ -130,10 +130,20 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-scale')
                             ->options(['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F'])
                             ->required(),
-                        Select::make('max_aircraft_id')
-                            ->label(self::translateFormPath('aircraft_type.label'))
-                            ->helperText(self::translateFormPath('aircraft_type.helper'))
+                        Select::make('max_aircraft_id_wingspan')
+                            ->label(self::translateFormPath('aircraft_type_wingspan.label'))
+                            ->helperText(self::translateFormPath('aircraft_type_wingspan.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
+                            ->reactive()
+                            ->required(fn (Closure $get) => $get('max_aircraft_id_length') !== null)
+                            ->options(SelectOptions::aircraftTypes())
+                            ->searchable(!App::runningUnitTests()),
+                        Select::make('max_aircraft_id_length')
+                            ->label(self::translateFormPath('aircraft_type_length.label'))
+                            ->helperText(self::translateFormPath('aircraft_type_length.helper'))
+                            ->hintIcon('heroicon-o-paper-airplane')
+                            ->reactive()
+                            ->required(fn (Closure $get) => $get('max_aircraft_id_wingspan') !== null)
                             ->options(SelectOptions::aircraftTypes())
                             ->searchable(!App::runningUnitTests()),
                         Toggle::make('closed_at')
@@ -176,8 +186,11 @@ class StandResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('aerodrome_reference_code')
                     ->label(self::translateTablePath('columns.aerodrome_reference_code')),
-                Tables\Columns\TextColumn::make('maxAircraft.code')
-                    ->label(self::translateTablePath('columns.max_size'))
+                Tables\Columns\TextColumn::make('maxAircraftWingspan.code')
+                    ->label(self::translateTablePath('columns.max_size_wingspan'))
+                    ->default(self::DEFAULT_COLUMN_VALUE),
+                Tables\Columns\TextColumn::make('maxAircraftLength.code')
+                    ->label(self::translateTablePath('columns.max_size_length'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
                     ->label(self::translateTablePath('columns.airlines'))

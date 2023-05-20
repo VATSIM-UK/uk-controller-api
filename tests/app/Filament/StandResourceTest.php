@@ -53,7 +53,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 [
                     'terminal_id' => 1,
                     'type_id' => 1,
-                    'max_aircraft_id' => 1,
+                    'max_aircraft_id_wingspan' => 1,
+                    'max_aircraft_id_length' => 2,
                     'origin_slug' => 'EGL',
                 ]
             );
@@ -68,7 +69,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.type_id', 1)
             ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
-            ->assertSet('data.max_aircraft_id', 1)
+            ->assertSet('data.max_aircraft_id_wingspan', 1)
+            ->assertSet('data.max_aircraft_id_length', 2)
             ->assertSet('data.closed_at', true);
     }
 
@@ -80,7 +82,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 [
                     'terminal_id' => 1,
                     'type_id' => 1,
-                    'max_aircraft_id' => 1,
+                    'max_aircraft_id_wingspan' => 1,
+                    'max_aircraft_id_length' => 2,
                 ]
             );
         Stand::findOrFail(1)->close();
@@ -95,7 +98,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.origin_slug', null)
             ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
-            ->assertSet('data.max_aircraft_id', 1)
+            ->assertSet('data.max_aircraft_id_wingspan', 1)
+            ->assertSet('data.max_aircraft_id_length', 2)
             ->assertSet('data.closed_at', false);
     }
 
@@ -121,7 +125,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 'type_id' => null,
                 'origin_slug' => null,
                 'aerodrome_reference_code' => 'D',
-                'max_aircraft_id' => null,
+                'max_aircraft_id_wingspan' => null,
+                'max_aircraft_id_length' => null,
                 'assignment_priority' => 100,
                 'closed_at' => Carbon::now(),
             ]
@@ -151,7 +156,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 'type_id' => null,
                 'origin_slug' => null,
                 'aerodrome_reference_code' => 'D',
-                'max_aircraft_id' => null,
+                'max_aircraft_id_wingspan' => null,
+                'max_aircraft_id_length' => null,
                 'assignment_priority' => 100,
                 'closed_at' => Carbon::now(),
             ]
@@ -169,7 +175,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EHA')
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
+            ->set('data.max_aircraft_id_wingspan', 1)
+            ->set('data.max_aircraft_id_length', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
@@ -186,7 +193,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 'type_id' => 3,
                 'origin_slug' => 'EHA',
                 'aerodrome_reference_code' => 'D',
-                'max_aircraft_id' => 2,
+                'max_aircraft_id_wingspan' => 1,
+                'max_aircraft_id_length' => 2,
                 'assignment_priority' => 100,
                 'closed_at' => null,
             ]
@@ -202,7 +210,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
@@ -218,7 +225,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
@@ -235,7 +241,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
@@ -252,7 +257,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
@@ -269,7 +273,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
@@ -286,7 +289,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 'abc')
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('create')
@@ -303,7 +305,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 'abc')
             ->set('data.closed_at', true)
             ->call('create')
@@ -320,7 +321,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 0)
             ->set('data.closed_at', true)
             ->call('create')
@@ -337,7 +337,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 99999)
             ->set('data.closed_at', true)
             ->call('create')
@@ -355,11 +354,46 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EGLLLL')
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 100)
             ->set('data.closed_at', true)
             ->call('create')
             ->assertHasErrors(['data.origin_slug']);
+    }
+
+    public function testCreateFailsWithValidationErrorsIfMaxAircraftLengthProvidedButNotWingspan()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EGLLLL')
+            ->set('data.aerodrome_reference_code', 'D')
+            ->set('data.assignment_priority', 100)
+            ->set('data.max_aircraft_id_length', 1)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.max_aircraft_id_wingspan']);
+    }
+
+    public function testCreateFailsWithValidationErrorsIfMaxAircraftWingspanProvidedButNotLength()
+    {
+        Livewire::test(StandResource\Pages\CreateStand::class)
+            ->set('data.airfield_id', 2)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EGLLLL')
+            ->set('data.aerodrome_reference_code', 'D')
+            ->set('data.assignment_priority', 100)
+            ->set('data.max_aircraft_id_wingspan', 1)
+            ->set('data.closed_at', true)
+            ->call('create')
+            ->assertHasErrors(['data.max_aircraft_id_length']);
     }
 
     public function testItRetrievesDataForEdit()
@@ -369,7 +403,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 [
                     'terminal_id' => 1,
                     'type_id' => 1,
-                    'max_aircraft_id' => 1,
+                    'max_aircraft_id_wingspan' => 1,
+                    'max_aircraft_id_length' => 2,
                     'origin_slug' => 'EGGD',
                 ]
             );
@@ -384,7 +419,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.origin_slug', 'EGGD')
             ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
-            ->assertSet('data.max_aircraft_id', 1)
+            ->assertSet('data.max_aircraft_id_wingspan', 1)
+            ->assertSet('data.max_aircraft_id_length', 2)
             ->assertSet('data.closed_at', true);
     }
 
@@ -396,7 +432,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 [
                     'terminal_id' => 1,
                     'type_id' => 1,
-                    'max_aircraft_id' => 1,
+                    'max_aircraft_id_wingspan' => 1,
+                    'max_aircraft_id_length' => 2,
                     'origin_slug' => 'EGGD',
                 ]
             );
@@ -412,7 +449,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.origin_slug', 'EGGD')
             ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
-            ->assertSet('data.max_aircraft_id', 1)
+            ->assertSet('data.max_aircraft_id_wingspan', 1)
+            ->assertSet('data.max_aircraft_id_length', 2)
             ->assertSet('data.closed_at', false);
     }
 
@@ -439,7 +477,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 'type_id' => null,
                 'origin_slug' => null,
                 'aerodrome_reference_code' => 'C',
-                'max_aircraft_id' => null,
+                'max_aircraft_id_wingspan' => null,
+                'max_aircraft_id_length' => null,
                 'assignment_priority' => 100,
                 'closed_at' => null,
             ]
@@ -469,7 +508,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 'type_id' => null,
                 'origin_slug' => null,
                 'aerodrome_reference_code' => 'D',
-                'max_aircraft_id' => null,
+                'max_aircraft_id_wingspan' => null,
+                'max_aircraft_id_length' => null,
                 'assignment_priority' => 100,
                 'closed_at' => null,
             ]
@@ -487,7 +527,8 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EGGD')
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
+            ->set('data.max_aircraft_id_wingspan', 1)
+            ->set('data.max_aircraft_id_length', 2)
             ->set('data.assigment_priority', 99)
             ->call('save')
             ->assertHasNoErrors();
@@ -504,7 +545,8 @@ class StandResourceTest extends BaseFilamentTestCase
                 'type_id' => 3,
                 'origin_slug' => 'EGGD',
                 'aerodrome_reference_code' => 'D',
-                'max_aircraft_id' => 2,
+                'max_aircraft_id_wingspan' => 1,
+                'max_aircraft_id_length' => 2,
                 'assignment_priority' => 100,
                 'closed_at' => null,
             ]
@@ -521,7 +563,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('save')
@@ -538,7 +579,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('save')
@@ -555,7 +595,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('save')
@@ -572,7 +611,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 'abc')
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
             ->call('save')
@@ -589,7 +627,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 'abc')
             ->set('data.closed_at', true)
             ->call('save')
@@ -606,7 +643,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 0)
             ->set('data.closed_at', true)
             ->call('save')
@@ -623,7 +659,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 99999)
             ->set('data.closed_at', true)
             ->call('save')
@@ -641,11 +676,46 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EGGGG')
             ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 100)
             ->set('data.closed_at', true)
             ->call('save')
             ->assertHasErrors(['data.origin_slug']);
+    }
+
+    public function testEditFailsWithValidationErrorsIfMaxAircraftLengthProvidedButNotWingspan()
+    {
+        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EGGGG')
+            ->set('data.aerodrome_reference_code', 'D')
+            ->set('data.assignment_priority', 100)
+            ->set('data.max_aircraft_id_length', 1)
+            ->set('data.closed_at', true)
+            ->call('save')
+            ->assertHasErrors(['data.max_aircraft_id_wingspan']);
+    }
+
+    public function testEditFailsWithValidationErrorsIfMaxAircraftWingspanProvidedButNotLength()
+    {
+        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.terminal_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.type_id', 3)
+            ->set('data.origin_slug', 'EGGGG')
+            ->set('data.aerodrome_reference_code', 'D')
+            ->set('data.assignment_priority', 100)
+            ->set('data.max_aircraft_id_wingspan', 1)
+            ->set('data.closed_at', true)
+            ->call('save')
+            ->assertHasErrors(['data.max_aircraft_id_length']);
     }
 
     public function testItOnlyAllowsSelectionOfTerminalsAtTheRightAirfield()

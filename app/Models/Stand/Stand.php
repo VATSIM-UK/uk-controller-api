@@ -32,7 +32,8 @@ class Stand extends Model
         'type_id',
         'origin_slug',
         'aerodrome_reference_code',
-        'max_aircraft_id',
+        'max_aircraft_id_length',
+        'max_aircraft_id_wingspan',
         'assignment_priority',
         'closed_at',
         'isOpen',
@@ -227,18 +228,29 @@ class Stand extends Model
         return $builder->where('aerodrome_reference_code', '>=', $aircraftType->aerodrome_reference_code);
     }
 
-    public function maxAircraft(): BelongsTo
+    public function maxAircraftWingspan(): BelongsTo
     {
-        return $this->belongsTo(Aircraft::class, 'max_aircraft_id');
+        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_wingspan');
+    }
+
+    public function maxAircraftLength(): BelongsTo
+    {
+        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_length');
     }
 
     public function scopeAppropriateDimensions(Builder $builder, Aircraft $aircraftType): Builder
     {
-        return $builder->whereHas('maxAircraft', function (Builder $aircraftQuery) use ($aircraftType) {
-            $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan)
-                ->where('length', '>=', $aircraftType->length);
-        })
-            ->orWhereDoesntHave('maxAircraft');
+        return $builder->where(function (Builder $wingspan) use ($aircraftType) {
+            $wingspan->whereHas('maxAircraftWingspan', function (Builder $aircraftQuery) use ($aircraftType) {
+                $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan);
+            })
+                ->orWhereDoesntHave('maxAircraftWingspan');
+        })->where(function (Builder $length) use ($aircraftType) {
+            $length->whereHas('maxAircraftLength', function (Builder $aircraftQuery) use ($aircraftType) {
+                $aircraftQuery->where('length', '>=', $aircraftType->length);
+            })
+                ->orWhereDoesntHave('maxAircraftLength');
+        });
     }
 
     public function scopeSizeAppropriate(Builder $builder, Aircraft $aircraftType): Builder
