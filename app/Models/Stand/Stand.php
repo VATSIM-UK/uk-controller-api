@@ -80,7 +80,7 @@ class Stand extends Model
                 'priority',
                 'not_before',
                 'callsign_slug',
-                'callsign',
+                'full_callsign',
                 'aircraft_id'
             )->withTimestamps();
     }

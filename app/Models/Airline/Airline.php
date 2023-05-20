@@ -23,14 +23,14 @@ class Airline extends Model
     public function terminals(): BelongsToMany
     {
         return $this->belongsToMany(Terminal::class)
-            ->withPivot('id', 'destination', 'priority', 'callsign_slug', 'callsign', 'aircraft_id')
+            ->withPivot('id', 'destination', 'priority', 'callsign_slug', 'full_callsign', 'aircraft_id')
             ->withTimestamps();
     }
 
     public function stands(): BelongsToMany
     {
         return $this->belongsToMany(Stand::class)
-            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug', 'callsign', 'aircraft_id')
+            ->withPivot('id', 'destination', 'priority', 'not_before', 'callsign_slug', 'full_callsign', 'aircraft_id')
             ->withTimestamps();
     }
 }
