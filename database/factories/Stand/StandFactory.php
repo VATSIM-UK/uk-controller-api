@@ -35,7 +35,7 @@ class StandFactory extends Factory
 
     public function withTerminal(int|Terminal $terminal): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'airfield_id' => $terminal->airfield_id,
             'terminal_id' => is_int($terminal) ? $terminal : $terminal->id,
         ]);
