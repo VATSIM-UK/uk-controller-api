@@ -23,7 +23,7 @@ trait HasAirlinePairingCommonFields
             TextColumn::make('aircraft_id')
                 ->default(self::$defaultColumnValue)
                 ->label(self::translateTablePath('columns.aircraft'))
-                ->formatStateUsing(fn(int|string $state) => is_int($state) ? Aircraft::find($state)->code : '')
+                ->formatStateUsing(fn (int|string $state) => is_int($state) ? Aircraft::find($state)->code : '')
                 ->sortable()
                 ->searchable(),
             TextColumn::make('destination')
