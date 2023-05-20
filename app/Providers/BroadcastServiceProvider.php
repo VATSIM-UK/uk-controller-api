@@ -22,6 +22,6 @@ class BroadcastServiceProvider extends ServiceProvider
         );
 
         Broadcast::routes(['middleware' => 'auth.api:api']);
-        require_once(__DIR__ . '/../../routes/channels.php');
+        require_once __DIR__ . '/../../routes/channels.php';
     }
 }

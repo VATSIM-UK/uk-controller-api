@@ -196,7 +196,7 @@ class StandOccupationService
      */
     private function occupiedStandShouldBeRemoved(?Stand $currentStand, ?Stand $selectedStand): bool
     {
-        return ($currentStand && !$selectedStand);
+        return $currentStand && !$selectedStand;
     }
 
     /**

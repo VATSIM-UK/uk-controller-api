@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.45.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.3...6.45.0) (2023-05-19)
+
+
+### Features
+
+* give lat lon in stand status response ([bbcd9b0](https://github.com/VATSIM-UK/uk-controller-api/commit/bbcd9b05eaf9af8afa5a94a25a1dcc5cc80bd2c0))
+
 ## [6.44.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.2...6.44.3) (2023-05-14)
 
 
