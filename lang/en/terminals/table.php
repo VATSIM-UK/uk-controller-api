@@ -13,7 +13,7 @@ return [
             'icao' => 'ICAO Code',
             'aircraft' => 'Aircraft Type',
             'destination' => 'Origin',
-            'callsign' => 'Callsign',
+            'full_callsign' => 'Callsign',
             'callsign_slug' => 'Partial Callsign',
             'priority' => 'Allocation Priority',
         ],
