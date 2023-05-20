@@ -5,8 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandResource\Pages;
 use App\Filament\Resources\StandResource\RelationManagers;
-use App\Models\Aircraft\WakeCategory;
-use App\Models\Aircraft\WakeCategoryScheme;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
@@ -65,28 +63,28 @@ class StandResource extends Resource
                                 $set('terminal_id', null);
                             })
                             ->searchable(!App::runningUnitTests())
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                            ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
+                            ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                            ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
                             ->label(self::translateFormPath('terminal.label'))
                             ->helperText(self::translateFormPath('terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
-                                ->get()
-                                ->mapWithKeys(
-                                    fn (Terminal $terminal) => [$terminal->id => $terminal->description]
-                                )
+                                fn(Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                    ->get()
+                                    ->mapWithKeys(
+                                        fn(Terminal $terminal) => [$terminal->id => $terminal->description]
+                                    )
                             )
                             ->disabled(
-                                fn (Page $livewire, Closure $get) => !Terminal::where(
+                                fn(Page $livewire, Closure $get) => !Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
                             )
                             ->dehydrated(
-                                fn (Page $livewire, Closure $get) => Terminal::where(
+                                fn(Page $livewire, Closure $get) => Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
@@ -97,19 +95,19 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (Closure $get, ? Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                fn(Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
                                 ),
-                                fn (Closure $get) => $get('airfield_id')
+                                fn(Closure $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
                             ->label(self::translateFormPath('type.label'))
                             ->helperText(self::translateFormPath('type.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn () => StandType::all()->mapWithKeys(
-                                    fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
+                                fn() => StandType::all()->mapWithKeys(
+                                    fn(StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
                                 )
                             ),
                         TextInput::make('latitude')
@@ -126,26 +124,11 @@ class StandResource extends Resource
                 ),
                 Fieldset::make('Allocation')->schema(
                     [
-                        Select::make('wake_category_id')
-                            ->label(self::translateFormPath('wake_category.label'))
-                            ->helperText(self::translateFormPath('wake_category.helper'))
+                        Select::make('aerodrome_reference_code')
+                            ->label(self::translateFormPath('aerodrome_reference_code.label'))
+                            ->helperText(self::translateFormPath('aerodrome_reference_code.helper'))
                             ->hintIcon('heroicon-o-scale')
-                            ->options(
-                                fn () => WakeCategoryScheme::with('categories')
-                                        ->uk()
-                                        ->firstOrFail()
-                                ->categories
-                                    ->sortBy('relative_weighting')
-                                ->mapWithKeys(
-                                    fn (WakeCategory $category) => [
-                                    $category->id => sprintf(
-                                        '%s (%s)',
-                                        $category->description,
-                                        $category->code
-                                    ),
-                                ]
-                                )
-                            )
+                            ->options(['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F'])
                             ->required(),
                         Select::make('max_aircraft_id')
                             ->label(self::translateFormPath('aircraft_type.label'))
@@ -191,8 +174,8 @@ class StandResource extends Resource
                 Tables\Columns\TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('wakeCategory.code')
-                    ->label(self::translateTablePath('columns.max_wtc')),
+                Tables\Columns\TextColumn::make('aerodrome_reference_code')
+                    ->label(self::translateTablePath('columns.aerodrome_reference_code')),
                 Tables\Columns\TextColumn::make('maxAircraft.code')
                     ->label(self::translateTablePath('columns.max_size'))
                     ->default(self::DEFAULT_COLUMN_VALUE),

@@ -5,7 +5,7 @@ return [
         'airfield' => 'Airfield',
         'terminal' => 'Terminal',
         'identifier' => 'Identifier',
-        'max_wtc' => 'Max UK WTC',
+        'aerodrome_reference_code' => 'Max Aerodrome Reference Code',
         'max_size' => 'Max Aircraft Size',
         'airlines' => 'Airlines',
         'used' => 'Used for Allocation',

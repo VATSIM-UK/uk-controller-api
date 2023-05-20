@@ -26,14 +26,13 @@ return [
         'label' => 'Longitude',
         'helper' => 'The decimal longitude of the stand.',
     ],
-    'wake_category' => [
-        'label' => 'Maximum UK Wake Category',
-        'helper' => 'Maximum UK WTC that can be assigned to this stand. Used as a fallback if no specific ' .
-            'aircraft type if specified.',
+    'aerodrome_reference_code' => [
+        'label' => 'Maximum Aerodrome Reference Code',
+        'helper' => 'Maximum aerodrome reference code that can be assigned to the stand.',
     ],
     'aircraft_type' => [
         'label' => 'Maximum Aircraft Type',
-        'helper' => 'Maximum aircraft size that can be assigned to the stand. Overrides Max WTC.',
+        'helper' => 'Maximum aircraft size that can be assigned to the stand. Overrides maximum aerodrome reference code.',
     ],
     'used_for_allocation' => [
         'label' => 'Used for Allocation',

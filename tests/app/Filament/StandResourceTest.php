@@ -66,7 +66,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.origin_slug', 'EGL')
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
-            ->assertSet('data.wake_category_id', 3)
+            ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_id', 1)
             ->assertSet('data.closed_at', true);
@@ -93,7 +93,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.origin_slug', null)
-            ->assertSet('data.wake_category_id', 3)
+            ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_id', 1)
             ->assertSet('data.closed_at', false);
@@ -106,7 +106,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.identifier', '33L')
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->call('create')
             ->assertHasNoErrors();
 
@@ -120,7 +120,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'longitude' => 5.6,
                 'type_id' => null,
                 'origin_slug' => null,
-                'wake_category_id' => 5,
+                'aerodrome_reference_code' => 'D',
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
                 'closed_at' => Carbon::now(),
@@ -136,7 +136,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.identifier', '1L')
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->call('create')
             ->assertHasNoErrors();
 
@@ -150,7 +150,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'longitude' => 5.6,
                 'type_id' => null,
                 'origin_slug' => null,
-                'wake_category_id' => 5,
+                'aerodrome_reference_code' => 'D',
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
                 'closed_at' => Carbon::now(),
@@ -168,7 +168,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EHA')
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -185,7 +185,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'longitude' => 5.6,
                 'type_id' => 3,
                 'origin_slug' => 'EHA',
-                'wake_category_id' => 5,
+                'aerodrome_reference_code' => 'D',
                 'max_aircraft_id' => 2,
                 'assignment_priority' => 100,
                 'closed_at' => null,
@@ -201,7 +201,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -217,7 +217,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -234,7 +234,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -251,7 +251,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -268,7 +268,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 'abc')
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -285,7 +285,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 'abc')
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -302,7 +302,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 'abc')
             ->set('data.closed_at', true)
@@ -319,7 +319,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 0)
             ->set('data.closed_at', true)
@@ -336,7 +336,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 99999)
             ->set('data.closed_at', true)
@@ -354,7 +354,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EGLLLL')
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 100)
             ->set('data.closed_at', true)
@@ -382,7 +382,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.origin_slug', 'EGGD')
-            ->assertSet('data.wake_category_id', 3)
+            ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_id', 1)
             ->assertSet('data.closed_at', true);
@@ -410,7 +410,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.terminal_id', 1)
             ->assertSet('data.type_id', 1)
             ->assertSet('data.origin_slug', 'EGGD')
-            ->assertSet('data.wake_category_id', 3)
+            ->assertSet('data.aerodrome_reference_code', 'C')
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_id', 1)
             ->assertSet('data.closed_at', false);
@@ -423,7 +423,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.identifier', '33R')
             ->set('data.latitude', 1.2)
             ->set('data.longitude', 3.4)
-            ->set('data.wake_category_id', 4)
+            ->set('data.aerodrome_reference_code', 'C')
             ->call('save')
             ->assertHasNoErrors();
 
@@ -438,7 +438,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'longitude' => 3.4,
                 'type_id' => null,
                 'origin_slug' => null,
-                'wake_category_id' => 4,
+                'aerodrome_reference_code' => 'C',
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
                 'closed_at' => null,
@@ -453,7 +453,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.identifier', '1L')
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->call('save')
             ->assertHasNoErrors();
 
@@ -468,7 +468,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'longitude' => 5.6,
                 'type_id' => null,
                 'origin_slug' => null,
-                'wake_category_id' => 5,
+                'aerodrome_reference_code' => 'D',
                 'max_aircraft_id' => null,
                 'assignment_priority' => 100,
                 'closed_at' => null,
@@ -486,7 +486,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EGGD')
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->call('save')
@@ -503,7 +503,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'longitude' => 5.6,
                 'type_id' => 3,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => 5,
+                'aerodrome_reference_code' => 'D',
                 'max_aircraft_id' => 2,
                 'assignment_priority' => 100,
                 'closed_at' => null,
@@ -520,7 +520,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -537,7 +537,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -554,7 +554,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 'abc')
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -571,7 +571,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 'abc')
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assigment_priority', 99)
             ->set('data.closed_at', true)
@@ -588,7 +588,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 'abc')
             ->set('data.closed_at', true)
@@ -605,7 +605,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 0)
             ->set('data.closed_at', true)
@@ -622,7 +622,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.latitude', 4.5)
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 99999)
             ->set('data.closed_at', true)
@@ -640,7 +640,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.longitude', 5.6)
             ->set('data.type_id', 3)
             ->set('data.origin_slug', 'EGGGG')
-            ->set('data.wake_category_id', 5)
+            ->set('data.aerodrome_reference_code', 'D')
             ->set('data.max_aircraft_id', 2)
             ->set('data.assignment_priority', 100)
             ->set('data.closed_at', true)
@@ -674,11 +674,11 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSeeHtml(['Domestic', 'International', 'Cargo']);
     }
 
-    public function testItHasWakeCategoryOptions()
+    public function testItHasAerodromeReferenceCodeOptions()
     {
         Livewire::test(StandResource\Pages\CreateStand::class)
             ->assertSeeHtmlInOrder(
-                ['Light (L)', 'Small (S)', 'Lower Medium (LM)', 'Upper Medium (UM)', 'Heavy (H)', 'Jumbo (J)']
+                ['A', 'B', 'C', 'D', 'E', 'F']
             );
     }
 
@@ -776,8 +776,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-            data:
-                [
+                data: [
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
@@ -812,8 +811,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-            data:
-                [
+                data: [
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
@@ -863,8 +861,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-            data:
-                [
+                data: [
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => -1,
@@ -882,8 +879,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-            data:
-                [
+                data: [
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 99999,
@@ -901,8 +897,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-            data:
-                [
+                data: [
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
@@ -920,8 +915,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-                data:
-                [
+                data: [
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
@@ -939,8 +933,7 @@ class StandResourceTest extends BaseFilamentTestCase
         )
             ->callTableAction(
                 'pair-airline',
-            data:
-                [
+                data: [
                     'recordId' => 1,
                     'destination' => 'EGKKS',
                     'priority' => 55,
