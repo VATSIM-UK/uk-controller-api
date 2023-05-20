@@ -16,17 +16,18 @@ class StandStatusService
     public static function getAirfieldStandStatus(string $airfield): array
     {
         $stands = Stand::with(
-            'wakeCategory',
-            'maxAircraft',
+            'maxAircraftWingspan',
+            'maxAircraftLength',
             'assignment',
             'occupier',
             'activeReservations',
             'pairedStands.assignment',
             'pairedStands.occupier',
-            'pairedStands.activeReservations'
+            'pairedStands.activeReservations',
+            'requests',
         )
-            ->airfield($airfield)
             ->withCasts(['latitude' => 'decimal:8', 'longitude' => 'decimal:8'])
+            ->airfield($airfield)
             ->get();
 
         $stands->sortBy('identifier', SORT_NATURAL);
@@ -54,8 +55,11 @@ class StandStatusService
                     return $airline->pivot->destination;
                 });
             })->toArray(),
-            'max_wake_category' => $stand->wakeCategory ? $stand->wakeCategory->code : null,
-            'max_aircraft_type' => $stand->maxAircraft ? $stand->maxAircraft->code : null,
+            'aerodrome_reference_code' => $stand->aerodrome_reference_code,
+            'max_aircraft' => $stand->maxAircraftWingspan && $stand->maxAircraftLength ? [
+                'wingspan' => $stand->maxAircraftWingspan->code,
+                'length' => $stand->maxAircraftLength->code,
+            ] : null,
         ];
 
         if ($stand->isClosed()) {
