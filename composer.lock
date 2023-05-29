@@ -7366,16 +7366,16 @@
         },
         {
             "name": "spatie/laravel-schedule-monitor",
-            "version": "3.2.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-schedule-monitor.git",
-                "reference": "9291e272ec3134caa7b4c2e38ade6dde4b2069f6"
+                "reference": "125190175b6ebb6a437c766a479be3440bf19699"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-schedule-monitor/zipball/9291e272ec3134caa7b4c2e38ade6dde4b2069f6",
-                "reference": "9291e272ec3134caa7b4c2e38ade6dde4b2069f6",
+                "url": "https://api.github.com/repos/spatie/laravel-schedule-monitor/zipball/125190175b6ebb6a437c766a479be3440bf19699",
+                "reference": "125190175b6ebb6a437c766a479be3440bf19699",
                 "shasum": ""
             },
             "require": {
@@ -7432,7 +7432,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-schedule-monitor/issues",
-                "source": "https://github.com/spatie/laravel-schedule-monitor/tree/3.2.1"
+                "source": "https://github.com/spatie/laravel-schedule-monitor/tree/3.3.0"
             },
             "funding": [
                 {
@@ -7440,7 +7440,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-01T19:24:32+00:00"
+            "time": "2023-05-24T11:57:18+00:00"
         },
         {
             "name": "spatie/shiki-php",
