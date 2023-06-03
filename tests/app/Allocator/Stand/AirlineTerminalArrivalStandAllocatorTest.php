@@ -54,7 +54,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    public function testItAssignsStandsWithSpecificCallsignSlugs()
+    public function testItDoesntAssignTerminalsWithSpecificCallsignSlugs()
     {
         Stand::query()->update(['terminal_id' => null]);
         $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
@@ -73,7 +73,7 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    public function testItAssignsStandsWithSpecificCallsigns()
+    public function testItDoesntAssignTerminalsWithSpecificCallsigns()
     {
         Stand::query()->update(['terminal_id' => null]);
         $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
@@ -91,6 +91,26 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $aircraft = $this->createAircraft('BAW23451', 'EGLL');
         $this->assertNull($this->allocator->allocate($aircraft));
     }
+
+    public function testItDoesntAssignTerminalsWithSpecificAircraftTypes()
+    {
+        Stand::query()->update(['terminal_id' => null]);
+        $terminal1 = Terminal::factory()->create(['airfield_id' => 1]);
+        Stand::factory()->withTerminal($terminal1)->create(['airfield_id' => 1, 'identifier' => '1A']);
+        DB::table('airline_terminal')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'terminal_id' => $terminal1->id,
+                    'aircraft_id' => 1,
+                ],
+            ]
+        );
+
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL');
+        $this->assertNull($this->allocator->allocate($aircraft));
+    }
+
 
     public function testItAPrefersStandsWithNoSpecificCallsignSlugs()
     {
