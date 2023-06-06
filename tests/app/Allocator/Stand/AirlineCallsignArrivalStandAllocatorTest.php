@@ -25,22 +25,22 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -55,25 +55,25 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 100,
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 3,
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 2,
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 1,
                 ],
             ]
@@ -99,27 +99,27 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => $weightAppropriateStand->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -144,27 +144,27 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => $weightAppropriateStand->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -179,12 +179,12 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => '2'
+                    'full_callsign' => '2'
                 ],
             ]
         );
@@ -199,22 +199,22 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -232,17 +232,17 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -257,12 +257,12 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -277,7 +277,7 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '5'
+                    'full_callsign' => '5'
                 ],
             ]
         );
@@ -292,12 +292,12 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -314,12 +314,12 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 3,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );

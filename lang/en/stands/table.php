@@ -19,7 +19,7 @@ return [
             'icao' => 'ICAO Code',
             'aircraft' => 'Aircraft Type',
             'destination' => 'Origin',
-            'callsign' => 'Callsign',
+            'full_callsign' => 'Callsign',
             'callsign_slug' => 'Callsign Slug',
             'priority' => 'Allocation Priority',
             'not_before' => 'Not Before [UTC]',

@@ -85,7 +85,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'destination' => 'LF',
                     'aircraft_id' => 1,
                     'callsign_slug' => '23',
-                    'callsign' => 'abc',
+                    'full_callsign' => 'abc',
                     'not_before' => '09:00:00',
                 ],
                 2 => [
@@ -109,7 +109,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'aircraft_id' => 2,
                     'destination' => 'ED',
                     'callsign_slug' => '55',
-                    'callsign' => 'def',
+                    'full_callsign' => 'def',
                 ]
             ]);
 
@@ -134,7 +134,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 50,
                 'destination' => 'LF',
                 'callsign_slug' => '23',
-                'callsign' => 'abc',
+                'full_callsign' => 'abc',
                 'not_before' => '09:00:00',
                 'aircraft_id' => 1,
             ]
@@ -148,7 +148,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'priority' => 33,
                 'destination' => 'KJ',
                 'callsign_slug' => null,
-                'callsign' => null,
+                'full_callsign' => null,
                 'not_before' => null,
                 'aircraft_id' => null,
             ]
@@ -163,7 +163,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'aircraft_id' => null,
                 'destination' => 'EB',
                 'callsign_slug' => null,
-                'callsign' => null,
+                'full_callsign' => null,
             ]
         );
 
@@ -176,7 +176,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'aircraft_id' => 2,
                 'destination' => 'ED',
                 'callsign_slug' => '55',
-                'callsign' => 'def',
+                'full_callsign' => 'def',
             ]
         );
     }
@@ -501,7 +501,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'aircraft_id' => null,
                 'destination' => null,
                 'priority' => 100,
-                'callsign' => null,
+                'full_callsign' => null,
                 'callsign_slug' => null,
             ]
         );
@@ -520,7 +520,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'aircraft_id' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
-                    'callsign' => 'abcd',
+                    'full_callsign' => 'abcd',
                     'callsign_slug' => '1234',
                 ]
             )->assertHasNoTableActionErrors();
@@ -533,7 +533,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'aircraft_id' => 1,
                 'destination' => 'EGKK',
                 'priority' => 55,
-                'callsign' => 'abcd',
+                'full_callsign' => 'abcd',
                 'callsign_slug' => '1234',
             ]
         );
@@ -634,9 +634,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
-                    'callsign' => '12345',
+                    'full_callsign' => '12345',
                 ]
-            )->assertHasTableActionErrors(['callsign']);
+            )->assertHasTableActionErrors(['full_callsign']);
     }
 
     public function testItFailsTerminalPairingCallsignSlugTooLong()
@@ -705,7 +705,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'destination' => null,
                 'priority' => 100,
                 'aircraft_id' => null,
-                'callsign' => null,
+                'full_callsign' => null,
                 'callsign_slug' => null,
                 'not_before' => null,
             ]
@@ -726,7 +726,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'destination' => 'EGKK',
                     'priority' => 55,
                     'aircraft_id' => 1,
-                    'callsign' => 'abcd',
+                    'full_callsign' => 'abcd',
                     'callsign_slug' => '1234',
                     'not_before' => '20:00:00',
                 ]
@@ -740,7 +740,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'destination' => 'EGKK',
                 'priority' => 55,
                 'aircraft_id' => 1,
-                'callsign' => 'abcd',
+                'full_callsign' => 'abcd',
                 'callsign_slug' => '1234',
                 'not_before' => '20:00:00',
             ]
@@ -869,10 +869,10 @@ class AirlineResourceTest extends BaseFilamentTestCase
                     'recordId' => 1,
                     'destination' => 'EGKK',
                     'priority' => 55,
-                    'callsign' => '12345',
+                    'full_callsign' => '12345',
                     'not_before' => '20:00:00',
                 ]
-            )->assertHasTableActionErrors(['callsign']);
+            )->assertHasTableActionErrors(['full_callsign']);
     }
 
     public function testItAllowsFailsStandPairingDestinationTooLong()
@@ -973,10 +973,12 @@ class AirlineResourceTest extends BaseFilamentTestCase
             TerminalsRelationManager::class => [
                 'pair-terminal',
                 'unpair-terminal',
+                'edit-terminal-pairing',
             ],
             StandsRelationManager::class => [
                 'pair-stand',
                 'unpair-stand',
+                'edit-stand-pairing',
             ],
         ];
     }

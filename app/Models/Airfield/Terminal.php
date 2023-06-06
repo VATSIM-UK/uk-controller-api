@@ -32,7 +32,7 @@ class Terminal extends Model
                 'id',
                 'priority',
                 'destination',
-                'callsign',
+                'full_callsign',
                 'callsign_slug',
                 'aircraft_id',
             ])

@@ -26,7 +26,7 @@ class AirlineTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
             ->where('airline_terminal.airline_id', $airline->id)
             ->whereNull('airline_terminal.destination')
             ->whereNull('airline_terminal.callsign_slug')
-            ->whereNull('airline_terminal.callsign')
+            ->whereNull('airline_terminal.full_callsign')
             ->whereNull('airline_terminal.aircraft_id')
             ->orderBy('airline_terminal.priority');
     }

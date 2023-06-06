@@ -11,6 +11,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -51,7 +52,7 @@ class TerminalsRelationManager extends RelationManager
                                 Airfield::where('code', 'like', '%' . $search . '%')->pluck('id')
                             )
                     ),
-                ...self::commonPairingTableColumns(),
+                ...self::airlineTerminalPairingTableColumns(),
             ])
             ->headerActions([
                 AttachAction::make('pair-terminal')
@@ -61,10 +62,12 @@ class TerminalsRelationManager extends RelationManager
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
-                        ...self::commonPairingFormFields(),
+                        ...self::airlineTerminalPairingFormFields(),
                     ]),
             ])
             ->actions([
+                EditAction::make('edit-terminal-pairing')
+                    ->form(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),

@@ -41,25 +41,25 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 // Will be picked, matches callsign
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 // Not picked, wrong airport
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal2->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 // Not picked, wrong airline
                 [
                     'airline_id' => 2,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -91,25 +91,25 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 100,
                 ],
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal2->id,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 3,
                 ],
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal3->id,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 2,
                 ],
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal3->id,
-                    'callsign' => '23451',
+                    'full_callsign' => '23451',
                     'priority' => 2,
                 ],
             ]
@@ -151,7 +151,7 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -191,7 +191,7 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -210,7 +210,7 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '2'
+                    'full_callsign' => '2'
                 ],
             ]
         );
@@ -234,7 +234,7 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -258,12 +258,12 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => null
+                    'full_callsign' => null
                 ],
                 [
                     'airline_id' => 2,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -282,7 +282,7 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -301,7 +301,7 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '5'
+                    'full_callsign' => '5'
                 ],
             ]
         );
@@ -322,7 +322,7 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );
@@ -341,12 +341,12 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 [
                     'airline_id' => 1,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
                 [
                     'airline_id' => 2,
                     'terminal_id' => $terminal1->id,
-                    'callsign' => '23451'
+                    'full_callsign' => '23451'
                 ],
             ]
         );

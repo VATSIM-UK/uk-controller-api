@@ -63,7 +63,7 @@ return [
             'label' => 'Destination',
             'helper' => 'The destination used for this allocation. Can be partial matches, for example, "EGJ".',
         ],
-        'callsign' => [
+        'full_callsign' => [
             'label' => 'Callsign',
             'helper' => 'The part of the callsign after the ICAO code for this allocation. Must be an exact match.'
         ],

@@ -101,14 +101,14 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    public function testItDoesntAssignStandsWithSpecificCallsigns()
+    public function testItDoesntAssignStandsWithSpecificFullCallsigns()
     {
         DB::table('airline_stand')->insert(
             [
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign' => '4444'
+                    'full_callsign' => '4444'
                 ],
             ]
         );

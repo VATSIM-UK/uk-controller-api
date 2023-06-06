@@ -2,24 +2,18 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
-use App\Filament\Helpers\SelectOptions;
+use App\Filament\Helpers\PairsAirlinesWithStands;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
-use App\Models\Aircraft\Aircraft;
-use Carbon\Carbon;
-use Closure;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Support\Facades\DB;
 
 class AirlinesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
     use TranslatesStrings;
+    use PairsAirlinesWithStands;
     
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'airlines';
@@ -40,23 +34,7 @@ class AirlinesRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('aircraft_id')
-                    ->label(self::translateTablePath('columns.aircraft'))
-                    ->formatStateUsing(fn (?int $state) => isset($state) ? Aircraft::find($state)->code : '')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('destination')
-                    ->label(self::translateTablePath('columns.destination'))
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('callsign')
-                    ->label(self::translateTablePath('columns.callsign')),
-                Tables\Columns\TextColumn::make('callsign_slug')
-                    ->label(self::translateTablePath('columns.callsign_slug')),
-                Tables\Columns\TextColumn::make('priority')
-                    ->label(self::translateTablePath('columns.priority')),
-                Tables\Columns\TextColumn::make('not_before')
-                    ->label(self::translateTablePath('columns.not_before'))
-                    ->date('H:i'),
+                ...self::airlineStandPairingTableColumns(),
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make('pair-airline')
@@ -64,53 +42,15 @@ class AirlinesRelationManager extends RelationManager
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
-                        Select::make('aircraft_id')
-                            ->options(SelectOptions::aircraftTypes())
-                            ->searchable()
-                            ->label(self::translateFormPath('aircraft.label'))
-                            ->helperText(self::translateFormPath('aircraft.helper')),
-                        TextInput::make('destination')
-                            ->label(self::translateFormPath('destination.label'))
-                            ->helperText(self::translateFormPath('destination.helper'))
-                            ->maxLength(4),
-                        TextInput::make('callsign')
-                            ->label(self::translateFormPath('callsign.label'))
-                            ->helperText(self::translateFormPath('callsign.helper'))
-                            ->maxLength(4),
-                        TextInput::make('callsign_slug')
-                            ->label(self::translateFormPath('callsign_slug.label'))
-                            ->helperText(self::translateFormPath('callsign_slug.helper'))
-                            ->maxLength(4),
-                        TextInput::make('priority')
-                            ->label(self::translateFormPath('priority.label'))
-                            ->helperText(self::translateFormPath('priority.helper'))
-                            ->default(100)
-                            ->numeric()
-                            ->minValue(1)
-                            ->maxValue(9999)
-                            ->required(),
-                        TimePicker::make('not_before')
-                            ->label(self::translateFormPath('not_before.label'))
-                            ->helperText(self::translateFormPath('not_before.helper'))
-                            ->displayFormat('H:i')
-                            ->afterStateUpdated(function (Closure $get, Closure $set) {
-                                if ($get('not_before') !== null) {
-                                    $set(
-                                        'not_before',
-                                        Carbon::parse($get('not_before'))->startOfMinute()->toDateTimeString()
-                                    );
-                                }
-                            }),
+                        ...self::airlineStandPairingFormFields(),
                     ])
             ])
             ->actions([
+                Tables\Actions\EditAction::make('edit-airline-pairing')
+                    ->form(self::airlineStandPairingFormFields()),
                 Tables\Actions\DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
-                    ->using(function (Tables\Actions\DetachAction $action) {
-                        DB::table('airline_stand')
-                            ->where('id', $action->getRecord()->pivot_id)
-                            ->delete();
-                    })
+                    ->using(self::unpairingClosure())
             ]);
     }
 

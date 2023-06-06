@@ -9,6 +9,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 
 class AirlinesRelationManager extends RelationManager
@@ -35,7 +36,7 @@ class AirlinesRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
-                ...self::commonPairingTableColumns(),
+                ...self::airlineTerminalPairingTableColumns(),
             ])
             ->headerActions([
                 AttachAction::make('pair-airline')
@@ -43,10 +44,12 @@ class AirlinesRelationManager extends RelationManager
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
-                        ...self::commonPairingFormFields(),
+                        ...self::airlineTerminalPairingFormFields(),
                     ])
             ])
             ->actions([
+                EditAction::make('edit-airline-pairing')
+                    ->form(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())
