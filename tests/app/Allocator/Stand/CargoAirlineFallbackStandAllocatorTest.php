@@ -4,18 +4,14 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
-use util\Traits\WithWakeCategories;
 
 class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
 {
-    use WithWakeCategories;
-
     private CargoAirlineFallbackStandAllocator $allocator;
 
     private Stand $cargoStand;
@@ -32,7 +28,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+                'aerodrome_reference_code' => 'B',
                 'type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
@@ -42,7 +38,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '601',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
                 'type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
@@ -52,9 +48,9 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 2.2,
+                'aerodrome_reference_code' => 'E',
             ]
         );
-        $this->setWakeCategoryForAircraft('B744', 'H');
     }
 
     public function testItAllocatesCargoStandsOnly()
@@ -66,7 +62,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '602',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
                 'type_id' => StandType::where('key', 'DOMESTIC')->first()->id,
             ]
         );
@@ -78,7 +74,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItAllocatesCargoStandsAboveItsWeight()
     {
-        $this->cargoStand->update(['wake_category_id' => WakeCategory::where('code', 'J')->first()->id]);
+        $this->cargoStand->update(['aerodrome_reference_code' => 'F']);
         Airline::where('icao_code', 'VIR')->update(['is_cargo' => true]);
 
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));

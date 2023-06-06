@@ -3,17 +3,14 @@
 namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
-use App\Models\Aircraft\WakeCategory;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
-use util\Traits\WithWakeCategories;
 
 class AirlineDestinationTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    use WithWakeCategories;
-
     private readonly AirlineDestinationTerminalArrivalStandAllocator $allocator;
 
     public function setUp(): void
@@ -122,18 +119,18 @@ class AirlineDestinationTerminalArrivalStandAllocatorTest extends BaseFunctional
         $this->assertEquals($stand3->id, $this->allocator->allocate($aircraft));
     }
 
-    public function testItAllocatesAStandWithAnAppropriateWeight()
+    public function testItAllocatesAStandWithAnAppropriateAerodromeReferenceCode()
     {
         $terminal = Terminal::factory()->create(['airfield_id' => 1]);
-        $this->setWakeCategoryForAircraft('B738', 'UM');
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'E']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
-                'terminal_id' => $terminal->id,
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
+                'aerodrome_reference_code' => 'E',
+                'terminal_id' => $terminal->id,
             ]
         );
 
@@ -145,7 +142,7 @@ class AirlineDestinationTerminalArrivalStandAllocatorTest extends BaseFunctional
                 'identifier' => '503',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'LM')->first()->id,
+                'aerodrome_reference_code' => 'B',
             ]
         );
 
@@ -162,18 +159,18 @@ class AirlineDestinationTerminalArrivalStandAllocatorTest extends BaseFunctional
         $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft));
     }
 
-    public function testItAllocatesAStandInWeightAscendingOrder()
+    public function testItAllocatesAStandInAerodromeReferenceAscendingOrder()
     {
         $terminal = Terminal::factory()->create(['airfield_id' => 1]);
-        $this->setWakeCategoryForAircraft('B738', 'S');
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'B']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
-                'terminal_id' => $terminal->id,
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+                'aerodrome_reference_code' => 'B',
+                'terminal_id' => $terminal->id,
             ]
         );
 
@@ -185,7 +182,7 @@ class AirlineDestinationTerminalArrivalStandAllocatorTest extends BaseFunctional
                 'identifier' => '503',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'LM')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 

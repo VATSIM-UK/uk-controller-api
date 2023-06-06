@@ -3,16 +3,13 @@
 namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
-use App\Models\Aircraft\WakeCategory;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
-use util\Traits\WithWakeCategories;
 
 class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    use WithWakeCategories;
-
     private AirlineArrivalStandAllocator $allocator;
 
     public function setUp(): void
@@ -134,16 +131,16 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    public function testItAllocatesStandsAtAppropriateWeight()
+    public function testItAllocatesStandsAtAppropriateReferenceCode()
     {
-        $this->setWakeCategoryForAircraft('B738', 'UM');
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'E']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id
+                'aerodrome_reference_code' => 'E',
             ]
         );
         DB::table('airline_stand')->insert(
@@ -174,16 +171,16 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft));
     }
 
-    public function testItAllocatesStandsInWeightAscendingOrder()
+    public function testItAllocatesStandsInAerodromeReferenceAscendingOrder()
     {
-        $this->setWakeCategoryForAircraft('B738', 'S');
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'B']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id
+                'aerodrome_reference_code' => 'B',
             ]
         );
         DB::table('airline_stand')->insert(

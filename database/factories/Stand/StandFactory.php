@@ -28,7 +28,7 @@ class StandFactory extends Factory
             'identifier' => $this->standIdentifier(),
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
-            'wake_category_id' => 6, // Jumbo
+            'aerodrome_reference_code' => 'F', // A380
             'assignment_priority' => $this->faker->numberBetween(0, 1000),
         ];
     }

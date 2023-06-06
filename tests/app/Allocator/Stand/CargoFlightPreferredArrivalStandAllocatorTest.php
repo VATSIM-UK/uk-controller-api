@@ -4,19 +4,15 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
-use util\Traits\WithWakeCategories;
 
 class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    use WithWakeCategories;
-
     private CargoFlightPreferredArrivalStandAllocator $allocator;
 
     private Stand $cargoStand;
@@ -33,7 +29,7 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
                 'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+                'aerodrome_reference_code' => 'B',
                 'type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
@@ -43,7 +39,7 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
                 'identifier' => '601',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
                 'type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
@@ -55,7 +51,7 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
                 'identifier' => '602',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
                 'type_id' => StandType::where('key', 'CARGO')->first()->id,
             ]
         );
@@ -65,6 +61,7 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 2.2,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -73,7 +70,6 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
         DB::table('airline_stand')->insert(
             ['airline_id' => Airline::where('icao_code', 'VIR')->first()->id, 'stand_id' => $this->cargoStand->id]
         );
-        $this->setWakeCategoryForAircraft('B744', 'H');
     }
 
     public function testItAllocatesAirlinePreferredCargoStandsOnly()
@@ -92,7 +88,7 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
 
     public function testItAllocatesCargoStandsAboveItsWeight()
     {
-        $this->cargoStand->update(['wake_category_id' => WakeCategory::where('code', 'J')->first()->id]);
+        $this->cargoStand->update(['aerodrome_reference_code' => 'E']);
 
         $allocation = $this->allocator->allocate($this->createAircraft('VIR22F', 'EGLL'));
         $this->assertEquals($this->cargoStand->id, $allocation);

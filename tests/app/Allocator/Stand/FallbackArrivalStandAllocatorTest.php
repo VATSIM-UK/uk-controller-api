@@ -4,17 +4,12 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
-use util\Traits\WithWakeCategories;
 
 class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    use WithWakeCategories;
-
     /**
      * @var FallbackArrivalStandAllocator
      */
@@ -32,14 +27,12 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $stand = Stand::create(
             [
                 'airfield_id' => 1,
-                'identifier' => '55L',
+                'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
-                'assignment_priority' => 1,
+                'aerodrome_reference_code' => 'F',
             ]
         );
-        $stand->refresh();
 
         Aircraft::create(
             [
@@ -47,9 +40,9 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 1.0,
+                'aerodrome_reference_code' => 'F',
             ]
         );
-        $this->setWakeCategoryForAircraft('A388', 'J');
 
         $aircraft = $this->createAircraft('AEU252', 'A388', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
@@ -57,22 +50,20 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($stand->id, $assignment);
     }
 
-    public function testItAssignsInWeightAscendingOrder()
+    public function testItAssignsInAerodromeReferenceAscendingOrder()
     {
         // Create a stand that can only accept an A380 and create the aircraft
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'B']);
         $stand = Stand::create(
             [
                 'airfield_id' => 1,
-                'identifier' => '55L',
+                'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
-                'assignment_priority' => 1,
+                'aerodrome_reference_code' => 'B',
             ]
         );
-        $stand->refresh();
 
-        $this->setWakeCategoryForAircraft('B738', 'S');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
 
@@ -88,7 +79,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'assignment_priority' => 1,
             ]
         );
@@ -100,9 +91,9 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 1.0,
+                'aerodrome_reference_code' => 'E',
             ]
         );
-        $this->setWakeCategoryForAircraft('B744', 'H');
 
         $aircraft = $this->createAircraft('AEU252', 'B744', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
@@ -119,7 +110,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55C',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'assignment_priority' => 100,
             ]
         );
@@ -131,7 +122,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'assignment_priority' => 1,
             ]
         );
@@ -142,9 +133,9 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 1.0,
+                'aerodrome_reference_code' => 'F',
             ]
         );
-        $this->setWakeCategoryForAircraft('A388', 'J');
 
         $aircraft = $this->createAircraft('AEU252', 'A388', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
@@ -161,7 +152,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55C',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'assignment_priority' => 1,
                 'type_id' => StandType::cargo()->first()->id,
             ]
@@ -174,7 +165,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'assignment_priority' => 1,
             ]
         );
@@ -186,9 +177,9 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 1.0,
+                'aerodrome_reference_code' => 'F',
             ]
         );
-        $this->setWakeCategoryForAircraft('A388', 'J');
 
         $aircraft = $this->createAircraft('AEU252', 'A388', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
@@ -205,7 +196,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'assignment_priority' => 1,
             ]
         );
@@ -219,9 +210,9 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'allocate_stands' => true,
                 'wingspan' => 1.0,
                 'length' => 1.0,
+                'aerodrome_reference_code' => 'E',
             ]
         );
-        $this->setWakeCategoryForAircraft('B744', 'H');
 
         $aircraft = $this->createAircraft('AEU252', 'B744', 'EGLL');
         $this->assertNull($this->allocator->allocate($aircraft));

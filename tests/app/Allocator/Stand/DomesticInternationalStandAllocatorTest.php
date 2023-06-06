@@ -4,17 +4,13 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
-use util\Traits\WithWakeCategories;
 
 class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    use WithWakeCategories;
-
     /**
      * @var DomesticInternationalStandAllocator
      */
@@ -40,7 +36,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55L',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
                 'type_id' => StandType::domestic()->first()->id,
                 'assignment_priority' => 1,
             ]
@@ -52,7 +48,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55R',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
                 'type_id' => StandType::international()->first()->id,
                 'assignment_priority' => 1,
             ]
@@ -83,40 +79,38 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($this->internationalStand->id, $assignment);
     }
 
-    public function testItAssignsWeightAppropriateStands()
+    public function testItAssignsAerodromeReferenceCodeAppropriateStands()
     {
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'F']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
-                'identifier' => '55C',
+                'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'type_id' => StandType::domestic()->first()->id,
-                'assignment_priority' => 55,
             ]
         );
-        $this->setWakeCategoryForAircraft('B738', 'J');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
 
         $this->assertEquals($weightAppropriateStand->id, $assignment);
     }
 
-    public function testItAssignsInWeightAscendingOrder()
+    public function testItAssignsInAerodromeReferenceAscendingOrder()
     {
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'B']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 1,
-                'identifier' => '55C',
+                'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
                 'type_id' => StandType::domestic()->first()->id,
-                'assignment_priority' => 55,
+                'aerodrome_reference_code' => 'B',
             ]
         );
-        $this->setWakeCategoryForAircraft('B738', 'S');
         $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
         $assignment = $this->allocator->allocate($aircraft);
 
@@ -132,7 +126,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55C',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'assignment_priority' => 2,
             ]
         );
@@ -152,7 +146,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'identifier' => '55C',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
-                'wake_category_id' => WakeCategory::where('code', 'J')->first()->id,
+                'aerodrome_reference_code' => 'F',
                 'type_id' => StandType::domestic()->first()->id,
                 'assignment_priority' => 1,
             ]

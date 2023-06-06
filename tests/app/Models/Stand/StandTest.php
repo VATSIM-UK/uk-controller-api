@@ -67,7 +67,7 @@ class StandTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'destination' => 'EGGD',
                 ],
                 [
                     'airline_id' => 1,
@@ -77,7 +77,7 @@ class StandTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'destination' => 'EGGD',
                 ],
             ]
         );
@@ -127,17 +127,17 @@ class StandTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'destination' => 'EGGD',
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'destination' => 'EGFF'
+                    'destination' => 'EGFF',
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'destination' => 'EGGD'
+                    'destination' => 'EGGD',
                 ],
             ]
         );
@@ -189,17 +189,17 @@ class StandTest extends BaseFunctionalTestCase
                 [
                     'airline_id' => 1,
                     'stand_id' => 1,
-                    'callsign_slug' => '123'
+                    'callsign_slug' => '123',
                 ],
                 [
                     'airline_id' => 1,
                     'stand_id' => 2,
-                    'callsign_slug' => '456'
+                    'callsign_slug' => '456',
                 ],
                 [
                     'airline_id' => 2,
                     'stand_id' => 1,
-                    'callsign_slug' => '123'
+                    'callsign_slug' => '123',
                 ],
             ]
         );
@@ -248,18 +248,67 @@ class StandTest extends BaseFunctionalTestCase
     {
         $a330 = Aircraft::where('code', 'A333')->first();
         $b738 = Aircraft::where('code', 'B738')->first();
-        Stand::find(1)->update(['max_aircraft_id' => $a330->id, 'wake_category_id' => 5]);
-        Stand::find(2)->update(['max_aircraft_id' => $b738->id, 'wake_category_id' => 5]);
-        Stand::find(3)->update(['max_aircraft_id' => $a330->id, 'wake_category_id' => 5]);
+        Stand::find(1)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $b738->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(2)->update(
+            [
+                'max_aircraft_id_length' => $b738->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(3)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
 
         $stands = Stand::appropriateDimensions($a330)->get()->pluck('id')->toArray();
 
-        $this->assertEquals([1, 3], $stands);
+        $this->assertEquals([3], $stands);
     }
 
-    public function testAppropriateDimensionsReturnsStandsWithNoMaxSize()
+    public function testAppropriateDimensionsReturnsStandsWithNoMaxWingspan()
     {
         $a330 = Aircraft::where('code', 'A333')->first();
+        Stand::find(1)->update(['max_aircraft_id_length' => $a330->id, 'aerodrome_reference_code' => 'E']);
+        Stand::find(2)->update(['max_aircraft_id_length' => $a330->id, 'aerodrome_reference_code' => 'E']);
+        Stand::find(3)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        $stands = Stand::appropriateDimensions($a330)->get()->pluck('id')->toArray();
+        $this->assertEquals([1, 2, 3], $stands);
+    }
+
+    public function testAppropriateDimensionsReturnsStandsWithNoMaxLength()
+    {
+        $a330 = Aircraft::where('code', 'A333')->first();
+        Stand::find(1)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(2)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(3)->update(['max_aircraft_id_wingspan' => $a330->id, 'aerodrome_reference_code' => 'E']);
         $stands = Stand::appropriateDimensions($a330)->get()->pluck('id')->toArray();
         $this->assertEquals([1, 2, 3], $stands);
     }
@@ -270,9 +319,27 @@ class StandTest extends BaseFunctionalTestCase
         $b738 = Aircraft::where('code', 'B738')->first();
         $b738->update(['wingspan' => 999.99]);
 
-        Stand::find(1)->update(['max_aircraft_id' => $a330->id, 'wake_category_id' => 5]);
-        Stand::find(2)->update(['max_aircraft_id' => $b738->id, 'wake_category_id' => 5]);
-        Stand::find(3)->update(['max_aircraft_id' => $a330->id, 'wake_category_id' => 5]);
+        Stand::find(1)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(2)->update(
+            [
+                'max_aircraft_id_length' => $b738->id,
+                'max_aircraft_id_wingspan' => $b738->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(3)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
 
         $stands = Stand::appropriateDimensions($a330)->get()->pluck('id')->toArray();
 
@@ -285,56 +352,66 @@ class StandTest extends BaseFunctionalTestCase
         $b738 = Aircraft::where('code', 'B738')->first();
         $b738->update(['length' => 999.99]);
 
-        Stand::find(1)->update(['max_aircraft_id' => $a330->id, 'wake_category_id' => 5]);
-        Stand::find(2)->update(['max_aircraft_id' => $b738->id, 'wake_category_id' => 5]);
-        Stand::find(3)->update(['max_aircraft_id' => $a330->id, 'wake_category_id' => 5]);
+        Stand::find(1)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(2)->update(
+            [
+                'max_aircraft_id_length' => $b738->id,
+                'max_aircraft_id_wingspan' => $b738->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
+        Stand::find(3)->update(
+            [
+                'max_aircraft_id_length' => $a330->id,
+                'max_aircraft_id_wingspan' => $a330->id,
+                'aerodrome_reference_code' => 'E',
+            ]
+        );
 
         $stands = Stand::appropriateDimensions($a330)->get()->pluck('id')->toArray();
 
         $this->assertEquals([1, 3], $stands);
     }
 
-    public function testAppropriateWakeCategoryOnlyReturnsLargeEnoughStands()
+    public function testAppropriateAerodromeReferenceCodeOnlyReturnsLargeEnoughStands()
     {
         $a330 = Aircraft::where('code', 'A333')->first();
-        Stand::find(1)->update(['wake_category_id' => 6]);
-        Stand::find(2)->update(['wake_category_id' => 4]);
-        Stand::find(3)->update(['wake_category_id' => 5]);
+        Stand::find(1)->update(['aerodrome_reference_code' => 'F']);
+        Stand::find(2)->update(['aerodrome_reference_code' => 'D']);
+        Stand::find(3)->update(['aerodrome_reference_code' => 'E']);
 
-        $stands = Stand::appropriateWakeCategory($a330)->get()->pluck('id')->toArray();
+        $stands = Stand::appropriateAerodromeReferenceCode($a330)->get()->pluck('id')->toArray();
         sort($stands);
 
         $this->assertEquals([1, 3], $stands);
-    }
-
-    public function testAppropriateWakeCategoryAssumesA380IfNoCategoryExists()
-    {
-        $a330 = Aircraft::where('code', 'A333')->first();
-        $a330->wakeCategories()->sync([]);
-
-        Stand::find(1)->update(['wake_category_id' => 6]);
-        Stand::find(2)->update(['wake_category_id' => 4]);
-        Stand::find(3)->update(['wake_category_id' => 5]);
-
-        $stands = Stand::appropriateWakeCategory($a330)->get()->pluck('id')->toArray();
-        sort($stands);
-
-        $this->assertEquals([1], $stands);
     }
 
     public function testSizeAppropriateOnlyReturnsStandsThatAreBigEnough()
     {
         $a330 = Aircraft::where('code', 'A333')->first();
 
-        // Make this stand too small wake-wise
-        Stand::find(2)->update(['wake_category_id' => 4]);
+        // Make this stand too small
+        Stand::find(2)->update(['aerodrome_reference_code' => 'D']);
 
         // Make this stand too small by max aircraft size
         $b738 = Aircraft::where('code', 'B738')->first();
         $b738->update(['length' => 999.99]);
+        Stand::find(1)->update(
+            [
+                'max_aircraft_id_length' => $b738->id,
+                'max_aircraft_id_wingspan' => $b738->id,
+                'aerodrome_reference_code' => 'F',
+            ]
+        );
 
         // Make this stand allowable
-        Stand::find(3)->update(['wake_category_id' => 5]);
+        Stand::find(3)->update(['aerodrome_reference_code' => 'E']);
 
         $stands = Stand::sizeAppropriate($a330)->get()->pluck('id')->toArray();
 
@@ -397,5 +474,25 @@ class StandTest extends BaseFunctionalTestCase
 
         $stands = Stand::orderByAssignmentPriority('desc')->get()->pluck('id')->toArray();
         $this->assertEquals([2, 1, 3], $stands);
+    }
+
+    public function testOrderByAerodromeReferenceCodeAscending()
+    {
+        Stand::find(1)->update(['aerodrome_reference_code' => 'F']);
+        Stand::find(2)->update(['aerodrome_reference_code' => 'D']);
+        Stand::find(3)->update(['aerodrome_reference_code' => 'E']);
+
+        $stands = Stand::orderByAerodromeReferenceCode()->get()->pluck('id')->toArray();
+        $this->assertEquals([2, 3, 1], $stands);
+    }
+
+    public function testOrderByAerodromeReferenceCodeDescending()
+    {
+        Stand::find(1)->update(['aerodrome_reference_code' => 'F']);
+        Stand::find(2)->update(['aerodrome_reference_code' => 'D']);
+        Stand::find(3)->update(['aerodrome_reference_code' => 'E']);
+
+        $stands = Stand::orderByAerodromeReferenceCode('desc')->get()->pluck('id')->toArray();
+        $this->assertEquals([1, 3, 2], $stands);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Models\Stand;
 
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
@@ -32,8 +31,9 @@ class Stand extends Model
         'terminal_id',
         'type_id',
         'origin_slug',
-        'wake_category_id',
-        'max_aircraft_id',
+        'aerodrome_reference_code',
+        'max_aircraft_id_length',
+        'max_aircraft_id_wingspan',
         'assignment_priority',
         'closed_at',
         'isOpen',
@@ -150,11 +150,6 @@ class Stand extends Model
         return $this->scopeAirline($builder, $airline)->whereIn('callsign_slug', $slugs);
     }
 
-    public function wakeCategory(): BelongsTo
-    {
-        return $this->belongsTo(WakeCategory::class);
-    }
-
     public function type(): BelongsTo
     {
         return $this->belongsTo(StandType::class);
@@ -215,10 +210,9 @@ class Stand extends Model
         });
     }
 
-    public function scopeOrderByWeight(Builder $builder, string $direction = 'asc'): Builder
+    public function scopeOrderByAerodromeReferenceCode(Builder $builder, string $direction = 'asc'): Builder
     {
-        return $builder->join('wake_categories', 'wake_categories.id', 'stands.wake_category_id')
-            ->orderBy('wake_categories.relative_weighting', $direction);
+        return $builder->orderBy('aerodrome_reference_code', $direction);
     }
 
     public function scopeOrderByAssignmentPriority(Builder $builder, string $direction = 'asc'): Builder
@@ -227,45 +221,41 @@ class Stand extends Model
     }
 
     /**
-     * Pick a stand that has a wake category compatible with the aircraft. If the aircraft doesn't
-     * have a WTC, assume the worst.
+     * Pick a stand that has a ARC suitable for the aircraft.
      */
-    public function scopeAppropriateWakeCategory(Builder $builder, Aircraft $aircraftType): Builder
+    public function scopeAppropriateAerodromeReferenceCode(Builder $builder, Aircraft $aircraftType): Builder
     {
-        return $builder->whereHas('wakeCategory', function (Builder $query) use ($aircraftType) {
-            $query->greaterRelativeWeighting(
-                $aircraftType->wakeCategories()->whereHas(
-                    'scheme',
-                    function (Builder $scheme) {
-                        $scheme->uk();
-                    }
-                )->first() ?? WakeCategory::whereHas(
-                    'scheme',
-                    function (Builder $scheme) {
-                        $scheme->uk();
-                    }
-                )->where('code', 'J')->first()
-            );
-        });
+        return $builder->where('aerodrome_reference_code', '>=', $aircraftType->aerodrome_reference_code);
     }
 
-    public function maxAircraft(): BelongsTo
+    public function maxAircraftWingspan(): BelongsTo
     {
-        return $this->belongsTo(Aircraft::class, 'max_aircraft_id');
+        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_wingspan');
+    }
+
+    public function maxAircraftLength(): BelongsTo
+    {
+        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_length');
     }
 
     public function scopeAppropriateDimensions(Builder $builder, Aircraft $aircraftType): Builder
     {
-        return $builder->whereHas('maxAircraft', function (Builder $aircraftQuery) use ($aircraftType) {
-            $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan)
-                ->where('length', '>=', $aircraftType->length);
-        })
-            ->orWhereDoesntHave('maxAircraft');
+        return $builder->where(function (Builder $wingspan) use ($aircraftType) {
+            $wingspan->whereHas('maxAircraftWingspan', function (Builder $aircraftQuery) use ($aircraftType) {
+                $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan);
+            })
+                ->orWhereDoesntHave('maxAircraftWingspan');
+        })->where(function (Builder $length) use ($aircraftType) {
+            $length->whereHas('maxAircraftLength', function (Builder $aircraftQuery) use ($aircraftType) {
+                $aircraftQuery->where('length', '>=', $aircraftType->length);
+            })
+                ->orWhereDoesntHave('maxAircraftLength');
+        });
     }
 
     public function scopeSizeAppropriate(Builder $builder, Aircraft $aircraftType): Builder
     {
-        return $builder->appropriateWakeCategory($aircraftType)
+        return $builder->appropriateAerodromeReferenceCode($aircraftType)
             ->appropriateDimensions($aircraftType);
     }
 

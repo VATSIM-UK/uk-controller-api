@@ -3,16 +3,12 @@
 namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
-use App\Models\Aircraft\WakeCategory;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
-use Illuminate\Support\Facades\DB;
-use util\Traits\WithWakeCategories;
 
 class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
 {
-    use WithWakeCategories;
-
     private readonly OriginAirfieldStandAllocator $allocator;
 
     public function setUp(): void
@@ -21,17 +17,17 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
         $this->allocator = $this->app->make(OriginAirfieldStandAllocator::class);
     }
 
-    public function testItAllocatesAStandWithAnAppropriateWeight()
+    public function testItAllocatesAStandWithAnAppropriateAerodromeReferenceCode()
     {
-        $this->setWakeCategoryForAircraft('B738', 'UM');
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'E']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 3,
-                'identifier' => '15',
+                'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -42,7 +38,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => WakeCategory::where('code', 'L')->first()->id,
+                'aerodrome_reference_code' => 'D',
             ]
         );
 
@@ -50,17 +46,17 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($weightAppropriateStand->id, $this->allocator->allocate($aircraft));
     }
 
-    public function testItAllocatesAStandInWeightAscendingOrder()
+    public function testItAllocatesAStandInAerodromeReferenceAscendingOrder()
     {
-        $this->setWakeCategoryForAircraft('B738', 'S');
+        Aircraft::where('code', 'B738')->update(['aerodrome_reference_code' => 'B']);
         $weightAppropriateStand = Stand::create(
             [
                 'airfield_id' => 3,
-                'identifier' => '15',
+                'identifier' => '502',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => WakeCategory::where('code', 'S')->first()->id,
+                'aerodrome_reference_code' => 'B',
             ]
         );
 
@@ -71,7 +67,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'D',
             ]
         );
 
@@ -88,7 +84,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'E',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGKR', 'EGGD');
@@ -104,7 +100,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'E',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aeordrome_reference_code' => 'E',
             ]
         );
 
@@ -115,7 +111,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EG',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGKR', 'EGGD');
@@ -131,7 +127,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'E',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -142,7 +138,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EG',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -153,7 +149,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGG',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGKR', 'EGGD');
@@ -169,7 +165,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'E',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -180,7 +176,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EG',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -191,7 +187,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGG',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -202,7 +198,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
         $aircraft = $this->createAircraft('BAW23451', 'EGKR', 'EGGD');
@@ -218,7 +214,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -229,7 +225,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => 'EGGD',
-                'wake_category_id' => WakeCategory::where('code', 'UM')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 
@@ -248,7 +244,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
                 'origin_slug' => null,
-                'wake_category_id' => WakeCategory::where('code', 'H')->first()->id,
+                'aerodrome_reference_code' => 'E',
             ]
         );
 

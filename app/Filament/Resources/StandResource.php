@@ -5,8 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandResource\Pages;
 use App\Filament\Resources\StandResource\RelationManagers;
-use App\Models\Aircraft\WakeCategory;
-use App\Models\Aircraft\WakeCategoryScheme;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
@@ -74,10 +72,10 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(
                                 fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
-                                ->get()
-                                ->mapWithKeys(
-                                    fn (Terminal $terminal) => [$terminal->id => $terminal->description]
-                                )
+                                    ->get()
+                                    ->mapWithKeys(
+                                        fn (Terminal $terminal) => [$terminal->id => $terminal->description]
+                                    )
                             )
                             ->disabled(
                                 fn (Page $livewire, Closure $get) => !Terminal::where(
@@ -97,7 +95,7 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (Closure $get, ? Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                fn (Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
                                 ),
@@ -126,31 +124,26 @@ class StandResource extends Resource
                 ),
                 Fieldset::make('Allocation')->schema(
                     [
-                        Select::make('wake_category_id')
-                            ->label(self::translateFormPath('wake_category.label'))
-                            ->helperText(self::translateFormPath('wake_category.helper'))
+                        Select::make('aerodrome_reference_code')
+                            ->label(self::translateFormPath('aerodrome_reference_code.label'))
+                            ->helperText(self::translateFormPath('aerodrome_reference_code.helper'))
                             ->hintIcon('heroicon-o-scale')
-                            ->options(
-                                fn () => WakeCategoryScheme::with('categories')
-                                        ->uk()
-                                        ->firstOrFail()
-                                ->categories
-                                    ->sortBy('relative_weighting')
-                                ->mapWithKeys(
-                                    fn (WakeCategory $category) => [
-                                    $category->id => sprintf(
-                                        '%s (%s)',
-                                        $category->description,
-                                        $category->code
-                                    ),
-                                ]
-                                )
-                            )
+                            ->options(['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F'])
                             ->required(),
-                        Select::make('max_aircraft_id')
-                            ->label(self::translateFormPath('aircraft_type.label'))
-                            ->helperText(self::translateFormPath('aircraft_type.helper'))
+                        Select::make('max_aircraft_id_wingspan')
+                            ->label(self::translateFormPath('aircraft_type_wingspan.label'))
+                            ->helperText(self::translateFormPath('aircraft_type_wingspan.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
+                            ->reactive()
+                            ->required(fn (Closure $get) => $get('max_aircraft_id_length') !== null)
+                            ->options(SelectOptions::aircraftTypes())
+                            ->searchable(!App::runningUnitTests()),
+                        Select::make('max_aircraft_id_length')
+                            ->label(self::translateFormPath('aircraft_type_length.label'))
+                            ->helperText(self::translateFormPath('aircraft_type_length.helper'))
+                            ->hintIcon('heroicon-o-paper-airplane')
+                            ->reactive()
+                            ->required(fn (Closure $get) => $get('max_aircraft_id_wingspan') !== null)
                             ->options(SelectOptions::aircraftTypes())
                             ->searchable(!App::runningUnitTests()),
                         Toggle::make('closed_at')
@@ -191,10 +184,13 @@ class StandResource extends Resource
                 Tables\Columns\TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('wakeCategory.code')
-                    ->label(self::translateTablePath('columns.max_wtc')),
-                Tables\Columns\TextColumn::make('maxAircraft.code')
-                    ->label(self::translateTablePath('columns.max_size'))
+                Tables\Columns\TextColumn::make('aerodrome_reference_code')
+                    ->label(self::translateTablePath('columns.aerodrome_reference_code')),
+                Tables\Columns\TextColumn::make('maxAircraftWingspan.code')
+                    ->label(self::translateTablePath('columns.max_size_wingspan'))
+                    ->default(self::DEFAULT_COLUMN_VALUE),
+                Tables\Columns\TextColumn::make('maxAircraftLength.code')
+                    ->label(self::translateTablePath('columns.max_size_length'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
                 Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
                     ->label(self::translateTablePath('columns.airlines'))
