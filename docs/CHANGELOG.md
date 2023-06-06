@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.45.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.45.0...6.45.1) (2023-06-03)
+
+
+### Bug Fixes
+
+* dont assign terminals with specific aircraft id in general rule ([c099e8b](https://github.com/VATSIM-UK/uk-controller-api/commit/c099e8b89de072ba02e08378c743047c2f2531cf))
+
 ## [6.45.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.44.3...6.45.0) (2023-05-19)
 
 
