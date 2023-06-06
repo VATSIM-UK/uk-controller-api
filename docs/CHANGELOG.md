@@ -1,5 +1,28 @@
 # UK Controller Plugin API Changelog
 
+## [6.46.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.45.1...6.46.0) (2023-06-06)
+
+
+### Features
+
+* allocate stands considering aerodrome reference code ([9c78ab7](https://github.com/VATSIM-UK/uk-controller-api/commit/9c78ab740cd975b2d7e9be7cf3fab7eb9a179cc8))
+* allow airline stand and terminal relations to be edited ([f86900f](https://github.com/VATSIM-UK/uk-controller-api/commit/f86900f7c6a7bdbe0423b2476bda6026842f0d70)), closes [#1323](https://github.com/VATSIM-UK/uk-controller-api/issues/1323)
+* allow arcs to be set on stands ([408b711](https://github.com/VATSIM-UK/uk-controller-api/commit/408b71154b5a0d1b7677729992a6a8e6a59223c3))
+* allow stands to have max aircraft wingpsan and length specified ([90a4da6](https://github.com/VATSIM-UK/uk-controller-api/commit/90a4da6380bb128df041ab2058fd63e9a6b0b88c))
+
+
+### Bug Fixes
+
+* fix patch ([8569873](https://github.com/VATSIM-UK/uk-controller-api/commit/8569873e3ab248e177c526bad3994d09cfd6d49e))
+* fix stand status ([58f4cb0](https://github.com/VATSIM-UK/uk-controller-api/commit/58f4cb07c591518fd1feaba477498c9c1f574538))
+
+
+### Data Updates
+
+* add aerodrome reference codes to aircraft ([e227f94](https://github.com/VATSIM-UK/uk-controller-api/commit/e227f94ef96508c0e80b43a563447afcaa95a0a1))
+* assign aerodrome reference codes to stands ([fe9f4e2](https://github.com/VATSIM-UK/uk-controller-api/commit/fe9f4e2b692447211f0fbd39ce9e2b5e4aff509b))
+* remove wake categories from stands ([8bbc59f](https://github.com/VATSIM-UK/uk-controller-api/commit/8bbc59f6757a338c4a851a359681e2e04267ce7e))
+
 ## [6.45.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.45.0...6.45.1) (2023-06-03)
 
 
