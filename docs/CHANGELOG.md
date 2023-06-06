@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.46.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.46.0...6.46.1) (2023-06-06)
+
+
+### Bug Fixes
+
+* update table columns to prevent wrapping ([f813ad7](https://github.com/VATSIM-UK/uk-controller-api/commit/f813ad7e8e4cc1acd0ea60ac5582d30f64132db9))
+
 ## [6.46.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.45.1...6.46.0) (2023-06-06)
 
 
