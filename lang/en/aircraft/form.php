@@ -19,4 +19,9 @@ return [
         'label' => 'Stand allocation',
         'helper' => 'If enabled, stands will be allocated to this aircraft type on arrival.',
     ],
+    'wake_categories' => [
+        'category' => [
+            'label' => 'Category',
+        ]
+    ]
 ];

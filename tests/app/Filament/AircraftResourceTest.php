@@ -6,9 +6,13 @@ use App\BaseFilamentTestCase;
 use App\Filament\Resources\AircraftResource;
 use App\Filament\Resources\AircraftResource\Pages\CreateAircraft;
 use App\Filament\Resources\AircraftResource\Pages\EditAircraft;
+use App\Filament\Resources\AircraftResource\Pages\ListAircraft;
 use App\Filament\Resources\AircraftResource\Pages\ViewAircraft;
+use App\Filament\Resources\AircraftResource\RelationManagers\WakeCategoriesRelationManager;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Aircraft\WakeCategory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 class AircraftResourceTest extends BaseFilamentTestCase
@@ -275,6 +279,54 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->assertHasErrors('data.length');
     }
 
+    public function testItAllowsWakeCategoryAssociation()
+    {
+        Livewire::test(
+            WakeCategoriesRelationManager::class,
+            ['ownerRecord' => Aircraft::findOrFail(1)]
+        )
+            ->callTableAction(
+                'attach',
+                data: [
+                    'recordId' => 2,
+                ]
+            )->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas('aircraft_wake_category', [
+            'aircraft_id' => 1,
+            'wake_category_id' => 2,
+        ]);
+    }
+
+    public function testItAllowsWakeCategoryDisassociation()
+    {
+        $rowToUnpair = DB::table('aircraft_wake_category')->insertGetId([
+            'aircraft_id' => 1,
+            'wake_category_id' => 9,
+        ]);
+
+        $rowToKeep = DB::table('aircraft_wake_category')->insert([
+            'aircraft_id' => 1,
+            'wake_category_id' => 5,
+        ]);
+
+        Livewire::test(
+            WakeCategoriesRelationManager::class,
+            ['ownerRecord' => Aircraft::findOrFail(1)]
+        )
+            ->callTableAction('detach', 9)
+            ->assertSuccessful()
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseMissing('aircraft_wake_category', [
+            'id' => $rowToUnpair,
+        ]);
+
+        $this->assertDatabaseHas('aircraft_wake_category', [
+            'id' => $rowToKeep,
+        ]);
+    }
+
     protected function getCreateText(): string
     {
         return 'Create Aircraft';
@@ -308,5 +360,63 @@ class AircraftResourceTest extends BaseFilamentTestCase
     protected function resourceClass(): string
     {
         return AircraftResource::class;
+    }
+
+    protected static function resourceRecordClass(): string
+    {
+        return Aircraft::class;
+    }
+
+    protected static function resourceId(): int|string
+    {
+        return 1;
+    }
+
+    protected static function writeResourcePageActions(): array
+    {
+        return [
+            'create',
+        ];
+    }
+
+    protected static function resourceListingClass(): string
+    {
+        return ListAircraft::class;
+    }
+
+    protected static function tableActionRecordClass(): array
+    {
+        return [
+            WakeCategoriesRelationManager::class => WakeCategory::class,
+        ];
+    }
+
+    protected static function tableActionRecordId(): array
+    {
+        return [
+            WakeCategoriesRelationManager::class => 1,
+        ];
+    }
+
+    protected static function writeTableActions(): array
+    {
+        return [
+            WakeCategoriesRelationManager::class => [
+                'attach',
+                'detach',
+            ],
+        ];
+    }
+
+    protected static function writeResourceTableActions(): array
+    {
+        return [
+            'edit',
+        ];
+    }
+
+    protected static function readOnlyResourceTableActions(): array
+    {
+        return ['view'];
     }
 }

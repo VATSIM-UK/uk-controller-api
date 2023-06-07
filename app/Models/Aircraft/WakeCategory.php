@@ -3,6 +3,7 @@
 namespace App\Models\Aircraft;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -94,5 +95,13 @@ class WakeCategory extends Model
     public function scheme(): BelongsTo
     {
         return $this->belongsTo(WakeCategoryScheme::class, 'wake_category_scheme_id');
+    }
+
+    public function aircraft() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            Aircraft::class,
+            'aircraft_wake_category',
+        );
     }
 }

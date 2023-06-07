@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AircraftResource\Pages;
+use App\Filament\Resources\AircraftResource\RelationManagers\WakeCategoriesRelationManager;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use Filament\Forms\Components\Select;
@@ -106,6 +107,13 @@ class AircraftResource extends Resource
                 Tables\Actions\DeleteAction::make(),
             ])
             ->defaultSort('code');
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            WakeCategoriesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
