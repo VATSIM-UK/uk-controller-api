@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AircraftResource\RelationManagers;
 
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Aircraft\WakeCategoryScheme;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class WakeCategoriesRelationManager extends RelationManager
 {
+    use LimitsTableRecordListingOptions;
     use TranslatesStrings;
 
     protected static string $relationship = 'wakeCategories';
