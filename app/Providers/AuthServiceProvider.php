@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
@@ -62,6 +63,7 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         // The defaults
+        Aircraft::class => OperationsContributorPolicy::class,
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
         Airline::class => OperationsContributorPolicy::class,

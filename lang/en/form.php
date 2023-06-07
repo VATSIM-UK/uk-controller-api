@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'aircraft' => require_once __DIR__ . '/aircraft/form.php',
     'airfields' => require_once __DIR__ . '/airfields/form.php',
     'airlines' => require_once __DIR__ . '/airlines/form.php',
     'fir_exit_points' => require_once __DIR__ . '/fir_exit_points/form.php',

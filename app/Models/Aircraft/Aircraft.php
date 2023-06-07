@@ -15,8 +15,6 @@ class Aircraft extends Model
         'aerodrome_reference_code',
         'wingspan',
         'length',
-        'wake_category_id',
-        'recat_category_id',
         'allocate_stands',
     ];
 
