@@ -35,7 +35,7 @@ class WakeCategoriesRelationManager extends RelationManager
                 AttachAction::make()
                     ->preloadRecordSelect()
                     ->form(
-                        fn(RelationManager $livewire) => [
+                        fn (RelationManager $livewire) => [
                             Forms\Components\Select::make('recordId')
                                 ->label(self::translateFormPath('category.label'))
                                 ->required()
