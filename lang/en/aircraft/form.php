@@ -10,10 +10,10 @@ return [
         'helper' => 'Used to determine which stands this aircraft type can use.'
     ],
     'wingspan' => [
-        'label' => 'Wingspan (m)',
+        'label' => 'Wingspan (ft)',
     ],
     'length' => [
-        'label' => 'Length (m)',
+        'label' => 'Length (ft)',
     ],
     'allocate_stands' => [
         'label' => 'Stand allocation',
