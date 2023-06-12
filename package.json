@@ -16,7 +16,7 @@
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "commitizen": "^4.3.0",
-    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "conventional-changelog-conventionalcommits": "^6.0.0",
     "cz-conventional-changelog": "3.3.0",
     "laravel-mix": "^6.0.34",
     "lodash": "^4.17.21",
