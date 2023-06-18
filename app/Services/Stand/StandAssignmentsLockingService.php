@@ -10,7 +10,7 @@ class StandAssignmentsLockingService
 
     public static function performActionWithLock(callable $action): void
     {
-        Cache::lock(self::STAND_ASSIGNMENTS_CACHE_LOCK)
+        Cache::lock(self::STAND_ASSIGNMENTS_CACHE_LOCK, 6)
             ->block(7, $action);
     }
 }
