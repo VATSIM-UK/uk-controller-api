@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.46.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.46.1...6.46.2) (2023-06-18)
+
+
+### Bug Fixes
+
+* maximum lock time for stand assignments ([f6e9104](https://github.com/VATSIM-UK/uk-controller-api/commit/f6e9104f783be69d0246211feb01853de5c92fe3))
+
 ## [6.46.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.46.0...6.46.1) (2023-06-06)
 
 
