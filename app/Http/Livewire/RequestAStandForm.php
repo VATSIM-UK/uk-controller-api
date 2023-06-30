@@ -56,7 +56,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->notClosed()
                 ->sizeAppropriate($this->userAircraftType)
                 ->get()
-                ->mapWithKeys(fn(Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])
+                ->mapWithKeys(fn (Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])
                 ->toArray()
             : [];
     }
@@ -86,7 +86,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->searchable()
                 ->required(),
             View::make('livewire.stand-status')
-                ->hidden(fn() => $this->requestedStand === null)
+                ->hidden(fn () => $this->requestedStand === null)
                 ->viewData(
                     [
                         'standStatus' => $this->requestedStand ? $this->getStandStatus(
