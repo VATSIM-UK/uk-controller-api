@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Filament\Helpers\DisplaysStandStatus;
-use App\Filament\Helpers\SelectOptions;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
@@ -11,9 +10,11 @@ use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
-use Filament\Forms\Components\DateTimePicker;
+use Closure;
+use Exception;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\View;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -34,7 +35,7 @@ class RequestAStandForm extends Component implements HasForms
 
     protected $messages = [
         'requestedStand' => 'You must select a valid stand.',
-        'requestedTime' => 'You must select a valid time.',
+        'requestedTime' => 'Please enter a valid time.',
     ];
 
     public function mount(): void
@@ -62,6 +63,10 @@ class RequestAStandForm extends Component implements HasForms
 
     public function getFormSchema(): array
     {
+        $requestedTime = $this->requestedTimeValid()
+            ? $this->getRequestedTime()
+            : $this->getMinimumRequestableTime();
+
         return [
             Placeholder::make('')
                 ->content($this->getFirstPlaceholderText()),
@@ -90,19 +95,31 @@ class RequestAStandForm extends Component implements HasForms
                         ) : null,
                     ]
                 ),
-            DateTimePicker::make('requestedTime')
+            TextInput::make('requestedTime')
                 ->label('Arrival time (Zulu)')
                 ->maxWidth('sm')
-                ->withoutSeconds()
-                ->minDate(Carbon::now())
-                ->maxDate(Carbon::now()->addHours(12))
-                ->placeholder(Carbon::now()->addMinutes(5)->toDateTimeString('minute'))
-                ->helperText('Can be up to 12 hours in advance.')
+                ->numeric()
+                ->rule(fn () => function (string $attribute, $value, Closure $fail) {
+                    if (empty($value)) {
+                        return;
+                    }
+
+                    // If the time is not valid, fail.
+                    if (!$this->requestedTimeValid()) {
+                        $fail('');
+                    }
+                })
+                ->placeholder($this->getMinimumRequestableTime()->format('Hi'))
+                ->helperText(sprintf(
+                    'Stands may be requested up to 12 hours in advance. Please enter a time between %s and %s.',
+                    $this->getMinimumRequestableTime()->format('Hi'),
+                    $this->getMaximumRequestableTime()->format('Hi')
+                ))
                 ->reactive()
                 ->required(),
             View::make('livewire.stand-booking-applicability')
-                ->hidden(fn () => $this->requestedTime === null)
-                ->viewData($this->getRequestTimeViewData(Carbon::parse($this->requestedTime))),
+                ->hidden(!$this->requestedTimeValid())
+                ->viewData($this->getRequestTimeViewData($requestedTime)),
         ];
     }
 
@@ -114,7 +131,7 @@ class RequestAStandForm extends Component implements HasForms
             $userAircraft = $this->getUserAircraft();
             $requestData = [
                 'stand_id' => $this->requestedStand,
-                'requested_time' => $this->requestedTime,
+                'requested_time' => $this->getRequestedTime(),
                 'user_id' => $userAircraft->cid,
                 'callsign' => $userAircraft->callsign,
             ];
@@ -152,5 +169,39 @@ class RequestAStandForm extends Component implements HasForms
     {
         return 'Disconnecting from the VATSIM network for an extended period of time will cause your stand request to be
                 automatically relinquished.';
+    }
+
+    private function getRequestedTime(): Carbon
+    {
+        $selectedTime = Carbon::parse($this->requestedTime)
+            ->startOfMinute();
+
+        return $selectedTime->lt($this->getMinimumRequestableTime()) ? $selectedTime->addDay() : $selectedTime;
+    }
+
+    private function requestedTimeValid(): bool
+    {
+        if (!$this->requestedTime) {
+            return false;
+        }
+
+        try {
+            Carbon::parse($this->requestedTime);
+        } catch (Exception) {
+            return false;
+        }
+
+        return $this->getRequestedTime()->gte($this->getMinimumRequestableTime()) &&
+            $this->getRequestedTime()->lte($this->getMaximumRequestableTime());
+    }
+
+    private function getMinimumRequestableTime(): Carbon
+    {
+        return Carbon::now()->startOfMinute();
+    }
+
+    private function getMaximumRequestableTime(): Carbon
+    {
+        return Carbon::now()->addHours(12)->startOfMinute();
     }
 }
