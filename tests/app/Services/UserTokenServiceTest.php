@@ -36,14 +36,15 @@ class UserTokenServiceTest extends BaseApiTestCase
         $this->service->create(999);
     }
 
-    public function testItOnlyAllowsMultipleActiveTokens()
+    public function testItAllowsMultipleActiveTokens()
     {
+        // One token is created pre-test
         $this->service->create(1203533);
         $this->service->create(1203533);
         $this->service->create(1203533);
         $this->service->create(1203533);
 
-        $this->assertEquals(4, Token::where('user_id', 1203533)->where('revoked', false)->get()->count());
+        $this->assertEquals(5, Token::where('user_id', 1203533)->where('revoked', false)->get()->count());
     }
 
     public function testItCreatesAUserToken()
