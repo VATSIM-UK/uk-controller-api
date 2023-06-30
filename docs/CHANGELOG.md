@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.48.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.47.0...6.48.0) (2023-06-30)
+
+
+### Features
+
+* easier to use date picker for request a stand ([95611b0](https://github.com/VATSIM-UK/uk-controller-api/commit/95611b05ebbd7437398ff96a9f59ccf881b8354b))
+
+
+### Bug Fixes
+
+* dont revoke tokens when a new one is created ([fcb5de6](https://github.com/VATSIM-UK/uk-controller-api/commit/fcb5de694c5c83317ed58a1a2628a14067e5d125))
+
 ## [6.47.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.46.2...6.47.0) (2023-06-30)
 
 
