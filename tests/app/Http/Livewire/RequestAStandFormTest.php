@@ -88,19 +88,28 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->assertHasErrors('requestedTime');
     }
 
-    public function testItDisplaysAValidationErrorIfTimeBeforeNow()
+    public function testItDisplaysAValidationErrorIfNonNumericTimeEntered()
     {
         Livewire::test(RequestAStandForm::class)
-            ->set('requestedTime', Carbon::now()->subMinute()->toDateTimeString())
+            ->set('requestedTime', 'abc')
             ->call('submit')
             ->assertHasErrors('requestedTime')
             ->assertOk();
     }
 
-    public function testItDisplaysAValidationErrorIfTimeAfter24Hours()
+    public function testItDisplaysAValidationErrorIfTimeBeforeNow()
     {
         Livewire::test(RequestAStandForm::class)
-            ->set('requestedTime', Carbon::now()->addDay()->addMinute()->toDateTimeString())
+            ->set('requestedTime', Carbon::now()->subMinute()->format('Hi'))
+            ->call('submit')
+            ->assertHasErrors('requestedTime')
+            ->assertOk();
+    }
+
+    public function testItDisplaysAValidationErrorIfTimeGreaterThan12HoursInAdvance()
+    {
+        Livewire::test(RequestAStandForm::class)
+            ->set('requestedTime', Carbon::now()->addHours(12)->addMinute()->format('Hi'))
             ->call('submit')
             ->assertHasErrors('requestedTime')
             ->assertOk();
@@ -109,7 +118,7 @@ class RequestAStandFormTest extends BaseFilamentTestCase
     public function testItDisplaysTheRequestTimeInformation()
     {
         Livewire::test(RequestAStandForm::class)
-            ->set('requestedTime', Carbon::now())
+            ->set('requestedTime', Carbon::now()->format('Hi'))
             ->assertOk()
             ->assertSeeHtml(
                 [
@@ -119,11 +128,22 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             );
     }
 
+    public function testItDisplaysValidTimeInformation()
+    {
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSeeHtml(
+                [
+                    'Stands may be requested up to 12 hours in advance. Please enter a time between 1540 and 0340.',
+                ]
+            );
+    }
+
     public function testItRequestsAStand()
     {
         Livewire::test(RequestAStandForm::class)
             ->set('requestedStand', 1)
-            ->set('requestedTime', Carbon::now()->addMinute()->startOfMinute())
+            ->set('requestedTime', '1541')
             ->call('submit')
             ->assertHasNoErrors()
             ->assertOk();
@@ -137,14 +157,49 @@ class RequestAStandFormTest extends BaseFilamentTestCase
         $this->assertEquals('BAW123', $request->callsign);
         $this->assertEquals(self::ACTIVE_USER_CID, $request->user_id);
         $this->assertEquals(1, $request->stand_id);
-        $this->assertEquals(Carbon::now()->addMinute()->startOfMinute(), $request->requested_time);
+        $this->assertEquals(Carbon::now()->setMinutes(41)->startOfMinute(), $request->requested_time);
         $this->assertNull($request->deleted_at);
 
         $this->assertEquals($request->id, $history->id);
         $this->assertEquals('BAW123', $history->callsign);
         $this->assertEquals(self::ACTIVE_USER_CID, $history->user_id);
         $this->assertEquals(1, $history->stand_id);
-        $this->assertEquals(Carbon::now()->addMinute()->startOfMinute(), $history->requested_time);
+        $this->assertEquals(Carbon::now()->setMinutes(41)->startOfMinute(), $history->requested_time);
+        $this->assertNull($history->deleted_at);
+    }
+
+    public function testItRequestsAStandTomorrow()
+    {
+        Livewire::test(RequestAStandForm::class)
+            ->set('requestedStand', 1)
+            ->set('requestedTime', '0240')
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertOk();
+
+        $this->assertDatabaseCount('stand_requests', 1);
+        $this->assertDatabaseCount('stand_request_history', 1);
+
+        $request = StandRequest::latest()->firstOrFail();
+        $history = StandRequestHistory::latest()->firstOrFail();
+
+        $this->assertEquals('BAW123', $request->callsign);
+        $this->assertEquals(self::ACTIVE_USER_CID, $request->user_id);
+        $this->assertEquals(1, $request->stand_id);
+        $this->assertEquals(
+            Carbon::now()->addDay()->setHour(2)->setMinutes(40)->startOfMinute(),
+            $request->requested_time
+        );
+        $this->assertNull($request->deleted_at);
+
+        $this->assertEquals($request->id, $history->id);
+        $this->assertEquals('BAW123', $history->callsign);
+        $this->assertEquals(self::ACTIVE_USER_CID, $history->user_id);
+        $this->assertEquals(1, $history->stand_id);
+        $this->assertEquals(
+            Carbon::now()->addDay()->setHour(2)->setMinutes(40)->startOfMinute(),
+            $history->requested_time
+        );
         $this->assertNull($history->deleted_at);
     }
 
@@ -152,7 +207,7 @@ class RequestAStandFormTest extends BaseFilamentTestCase
     {
         Livewire::test(RequestAStandForm::class)
             ->set('requestedStand', 1)
-            ->set('requestedTime', Carbon::now()->addMinute())
+            ->set('requestedTime', '1940')
             ->call('submit')
             ->assertHasNoErrors()
             ->assertOk()
