@@ -10,8 +10,7 @@ use Laravel\Passport\Token;
 class UserTokenService
 {
     /**
-     * Creates an access token for the given user and revokes
-     * any existing.
+     * Creates an access token for the given user.
      *
      * @param integer $userCid
      * @throws ModelNotFoundException
@@ -20,13 +19,6 @@ class UserTokenService
     public function create(int $userCid) : string
     {
         $user = User::findOrFail($userCid);
-
-        // Revoke existing tokens
-        if ($user->tokens) {
-            foreach ($user->tokens as $token) {
-                $token->revoke();
-            }
-        }
 
         return $user->createToken('access', [AuthServiceProvider::SCOPE_USER])->accessToken;
     }
