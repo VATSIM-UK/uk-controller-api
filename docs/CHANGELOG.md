@@ -1,5 +1,18 @@
 # UK Controller Plugin API Changelog
 
+## [6.47.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.46.2...6.47.0) (2023-06-30)
+
+
+### Features
+
+* allow aircraft types to be edited ([1e15019](https://github.com/VATSIM-UK/uk-controller-api/commit/1e150197958a869e1f50b0ed13deb0a3f5a064ea))
+* allow wake categories to be assigned to aircraft ([8157335](https://github.com/VATSIM-UK/uk-controller-api/commit/8157335dbf7f6eccdf74140b75d6946dc95390dc))
+
+
+### Bug Fixes
+
+* limit record listings ([2b6149f](https://github.com/VATSIM-UK/uk-controller-api/commit/2b6149f53f1d002440fc4f72257ee99cff3c9565))
+
 ## [6.46.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.46.1...6.46.2) (2023-06-18)
 
 
