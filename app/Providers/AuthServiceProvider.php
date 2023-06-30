@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Aircraft\Aircraft;
+use App\Models\Aircraft\WakeCategory;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
@@ -62,6 +64,7 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         // The defaults
+        Aircraft::class => OperationsContributorPolicy::class,
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
         Airline::class => OperationsContributorPolicy::class,
@@ -83,6 +86,7 @@ class AuthServiceProvider extends ServiceProvider
         UnitConspicuitySquawkCode::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRange::class => DefaultFilamentPolicy::class,
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
+        WakeCategory::class => OperationsContributorPolicy::class,
 
         // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,

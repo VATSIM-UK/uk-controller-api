@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'aircraft' => require_once __DIR__ . '/aircraft/table.php',
     'airfields' => require_once __DIR__ . '/airfields/table.php',
     'airlines' => require_once __DIR__ . '/airlines/table.php',
     'dependencies' => require_once __DIR__ . '/dependencies/table.php',
