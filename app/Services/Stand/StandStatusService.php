@@ -16,6 +16,7 @@ class StandStatusService
     public static function getAirfieldStandStatus(string $airfield): array
     {
         $stands = Stand::with(
+            'airlines',
             'type',
             'maxAircraftWingspan',
             'maxAircraftLength',
