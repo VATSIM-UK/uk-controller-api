@@ -312,4 +312,9 @@ class Stand extends Model
     {
         return $this->hasMany(StandRequest::class);
     }
+
+    public function activeRequests(): HasMany
+    {
+        return $this->hasMany(StandRequest::class)->hasNotExpired();
+    }
 }
