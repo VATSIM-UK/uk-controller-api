@@ -52,7 +52,8 @@ class RequestAStandForm extends Component implements HasForms
             : null;
 
         $this->stands = $userDestinationAirfield && $this->userAircraftType
-            ? Stand::where('airfield_id', $userDestinationAirfield->id)
+            ? Stand::with('airfield')
+                ->where('airfield_id', $userDestinationAirfield->id)
                 ->notClosed()
                 ->sizeAppropriate($this->userAircraftType)
                 ->get()

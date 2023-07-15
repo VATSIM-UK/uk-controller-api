@@ -16,6 +16,8 @@ class StandStatusService
     public static function getAirfieldStandStatus(string $airfield): array
     {
         $stands = Stand::with(
+            'airlines',
+            'type',
             'maxAircraftWingspan',
             'maxAircraftLength',
             'assignment',
@@ -24,7 +26,11 @@ class StandStatusService
             'pairedStands.assignment',
             'pairedStands.occupier',
             'pairedStands.activeReservations',
+            'pairedStands.reservationsInNextHour',
             'requests',
+            'activeRequests',
+            'reservations',
+            'reservationsInNextHour'
         )
             ->withCasts(['latitude' => 'decimal:8', 'longitude' => 'decimal:8'])
             ->airfield($airfield)
@@ -85,9 +91,9 @@ class StandStatusService
             })->isEmpty()
         ) {
             $standData['status'] = 'unavailable';
-        } elseif ($stand->requests()->hasNotExpired()->exists()) {
+        } elseif (!$stand->activeRequests->isEmpty()) {
             $standData['status'] = 'requested';
-            $standData['requested_by'] = $stand->requests()->hasNotExpired()->pluck('callsign');
+            $standData['requested_by'] = $stand->activeRequests->pluck('callsign');
         } else {
             $standData['status'] = 'available';
         }
