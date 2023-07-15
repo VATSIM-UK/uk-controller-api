@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.48.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.0...6.48.1) (2023-07-15)
+
+
+### Performance Improvements
+
+* avoid n+1 queries in stand status ([b2a6d30](https://github.com/VATSIM-UK/uk-controller-api/commit/b2a6d3053f64aaea8769fd36a23b344f20004f9a))
+* n+1 query in request a stand form ([c3c843b](https://github.com/VATSIM-UK/uk-controller-api/commit/c3c843b2c340a489fe9a8d7964338d523d37c555))
+* n+1 query in stand status api ([8b5121a](https://github.com/VATSIM-UK/uk-controller-api/commit/8b5121a4fdf9b0d599a5e5c184d09db041026606))
+
 ## [6.48.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.47.0...6.48.0) (2023-06-30)
 
 
