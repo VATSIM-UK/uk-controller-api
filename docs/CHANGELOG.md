@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.48.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.1...6.48.2) (2023-07-23)
+
+
+### Performance Improvements
+
+* remove stand allocation locking ([e8ea86c](https://github.com/VATSIM-UK/uk-controller-api/commit/e8ea86cd0b3a7e90b6e944a28e619140801cde2e))
+
 ## [6.48.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.0...6.48.1) (2023-07-15)
 
 
