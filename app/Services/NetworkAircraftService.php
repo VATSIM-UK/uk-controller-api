@@ -161,6 +161,10 @@ class NetworkAircraftService
      */
     public static function createPlaceholderAircraft(string $callsign): void
     {
+        if (NetworkAircraft::where('callsign', $callsign)->exists()) {
+            return;
+        }
+
         NetworkAircraft::upsert(
             [
                 'callsign' => $callsign,
