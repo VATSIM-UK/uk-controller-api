@@ -9,7 +9,6 @@ use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Rules\VatsimCallsign;
 use App\Services\Stand\AirfieldStandService;
-use App\Services\Stand\StandAssignmentsLockingService;
 use App\Services\Stand\StandAssignmentsService;
 use App\Services\Stand\StandStatusService;
 use Carbon\Carbon;
@@ -80,12 +79,10 @@ class StandController extends BaseController
         }
 
         try {
-            StandAssignmentsLockingService::performActionWithLock(function () use ($request) {
-                $this->assignmentsService->createStandAssignment(
-                    $request->json('callsign'),
-                    (int)$request->json('stand_id')
-                );
-            });
+            $this->assignmentsService->createStandAssignment(
+                $request->json('callsign'),
+                (int)$request->json('stand_id')
+            );
             return response()->json([], 201);
         } catch (StandNotFoundException) {
             return response()->json([], 404);

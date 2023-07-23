@@ -169,14 +169,12 @@ class StandOccupationService
      */
     private function deleteConflictingAssignmentsFollowingOccupation(Collection $newOccupations): void
     {
-        StandAssignmentsLockingService::performActionWithLock(function () use ($newOccupations) {
-            StandAssignment::whereNotIn('callsign', $newOccupations->pluck('callsign'))
-                ->whereIn('stand_id', $newOccupations->pluck('stand_id'))
-                ->get()
-                ->each(function (StandAssignment $assignment) {
-                    $this->assignmentsService->deleteStandAssignment($assignment);
-                });
-        });
+        StandAssignment::whereNotIn('callsign', $newOccupations->pluck('callsign'))
+            ->whereIn('stand_id', $newOccupations->pluck('stand_id'))
+            ->get()
+            ->each(function (StandAssignment $assignment) {
+                $this->assignmentsService->deleteStandAssignment($assignment);
+            });
     }
 
     /**
