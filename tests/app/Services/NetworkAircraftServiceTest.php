@@ -293,7 +293,8 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesPlaceholderAircraft()
     {
-        $actual = NetworkAircraftService::createPlaceholderAircraft('AAL123');
+        NetworkAircraftService::createPlaceholderAircraft('AAL123');
+        $actual = NetworkAircraft::find('AAL123');
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
@@ -315,9 +316,11 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
         $expected->updated_at = Carbon::now()->subMinutes(5);
         $expected->save();
         $expected->refresh();
+        NetworkAircraftService::createPlaceholderAircraft('AAL123');
+        $placeholder = NetworkAircraft::find('AAL123');
         $this->assertEquals(
             $expected->toArray(),
-            NetworkAircraftService::createPlaceholderAircraft('AAL123')->toArray()
+            $placeholder->toArray()
         );
 
         $this->assertDatabaseHas(

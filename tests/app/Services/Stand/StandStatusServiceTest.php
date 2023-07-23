@@ -7,6 +7,7 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
+use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 
@@ -68,7 +69,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 'longitude' => -'6.22207000',
             ]
         );
-        $occupier = NetworkAircraftService::createPlaceholderAircraft('OCCUPIED');
+        NetworkAircraftService::createPlaceholderAircraft('OCCUPIED');
+        $occupier = NetworkAircraft::find('OCCUPIED');
         $occupier->occupiedStand()->sync($stand4);
 
         // Stand 5 is paired with stand 2 which is assigned
