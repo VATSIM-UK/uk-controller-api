@@ -155,9 +155,19 @@ class NetworkAircraftService
         return NetworkAircraft::find($callsign);
     }
 
-    public static function createPlaceholderAircraft(string $callsign): NetworkAircraft
+    /**
+     * This method should not be used in a transaction, as we can't guarantee
+     * that the row won't be created by someone else.
+     */
+    public static function createPlaceholderAircraft(string $callsign): void
     {
-        return NetworkAircraft::find($callsign) ?? self::createOrUpdateNetworkAircraft($callsign);
+        NetworkAircraft::upsert(
+            [
+                'callsign' => $callsign,
+            ],
+            ['callsign'],
+            ['callsign'],
+        );
     }
 
     private function pilotValid(array $pilot): bool

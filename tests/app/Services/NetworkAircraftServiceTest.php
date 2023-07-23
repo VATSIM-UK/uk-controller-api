@@ -293,7 +293,8 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesPlaceholderAircraft()
     {
-        $actual = NetworkAircraftService::createPlaceholderAircraft('AAL123');
+        NetworkAircraftService::createPlaceholderAircraft('AAL123');
+        $actual = NetworkAircraft::find('AAL123');
         $actual->refresh();
         $expected = NetworkAircraft::find('AAL123');
         $this->assertEquals($expected->toArray(), $actual->toArray());
