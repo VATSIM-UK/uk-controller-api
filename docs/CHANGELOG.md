@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.48.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.2...6.48.3) (2023-07-23)
+
+
+### Bug Fixes
+
+* typerror in NetworkAircraftService ([b3f8ea3](https://github.com/VATSIM-UK/uk-controller-api/commit/b3f8ea3e073b12af8252b5fa89fa1929376e99de))
+
 ## [6.48.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.1...6.48.2) (2023-07-23)
 
 
