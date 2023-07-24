@@ -69,11 +69,4 @@ class MarkAssignmentDeletedOnUnassignmentTest extends BaseFunctionalTestCase
             ]
         );
     }
-
-    public function testItContinuesPropagation()
-    {
-        $this->assertTrue(
-            $this->listener->handle(new SquawkUnassignedEvent('BAW123'))
-        );
-    }
 }

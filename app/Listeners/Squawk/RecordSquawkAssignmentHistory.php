@@ -14,7 +14,7 @@ class RecordSquawkAssignmentHistory
      * @param SquawkAssignmentEvent $allocationEvent
      * @return bool
      */
-    public function handle(SquawkAssignmentEvent $allocationEvent) : bool
+    public function handle(SquawkAssignmentEvent $allocationEvent) : void
     {
         SquawkAssignmentsHistory::create(
             [
@@ -24,6 +24,5 @@ class RecordSquawkAssignmentHistory
                 'user_id' => !is_null(Auth::user()) ? Auth::user()->id : null,
             ]
         );
-        return true;
     }
 }

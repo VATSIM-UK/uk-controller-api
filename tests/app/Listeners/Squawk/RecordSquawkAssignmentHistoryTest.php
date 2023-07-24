@@ -70,19 +70,4 @@ class RecordSquawkAssignmentHistoryTest extends BaseFunctionalTestCase
             ]
         );
     }
-
-    public function testItContinuesPropagation()
-    {
-        $this->actingAs(User::find(self::ACTIVE_USER_CID));
-        $assignment = new SquawkAssignmentEvent(
-            new SquawkAssignment(
-                [
-                    'callsign' => 'BAW123',
-                    'code' => '0001',
-                    'assignment_type' => 'CCAMS',
-                ]
-            )
-        );
-        $this->assertTrue($this->listener->handle($assignment));
-    }
 }
