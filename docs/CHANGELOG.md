@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.48.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.4...6.48.5) (2023-07-24)
+
+
+### Performance Improvements
+
+* avoid duplicate squawk histories ([637ec60](https://github.com/VATSIM-UK/uk-controller-api/commit/637ec600e64ae3906404ed221d4d6a7f22cc498e))
+
 ## [6.48.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.3...6.48.4) (2023-07-24)
 
 
