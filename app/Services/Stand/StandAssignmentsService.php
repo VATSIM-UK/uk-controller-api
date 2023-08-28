@@ -76,7 +76,7 @@ class StandAssignmentsService
                 ]
             );
 
-            $assignmentContext = new StandAssignmentContext($assignment, $assignmentType, $existingAssignments);
+            $assignmentContext = new StandAssignmentContext($assignment, $assignmentType, $existingAssignments, $assignment->aircraft);
             $this->historyService->createHistoryItem($assignmentContext);
 
             return [$assignment, $existingAssignments];

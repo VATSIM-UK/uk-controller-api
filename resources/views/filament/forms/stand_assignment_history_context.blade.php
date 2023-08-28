@@ -2,6 +2,21 @@
     <h1><b>Callsign</b></h1>
     <p>{{ $this->record->callsign }}</p>
     <br />
+    @if (isset($this->record->context['aircraft_type']))
+        <h1><b>Aircraft Type</b></h1>
+        <p>{{ $this->record->context['aircraft_type'] }}</p>
+        <br />
+    @endif
+    @if (isset($this->record->context['aircraft_departure_airfield']))
+        <h1><b>Departure Airfield</b></h1>
+        <p>{{ $this->record->context['aircraft_departure_airfield'] }}</p>
+        <br />
+    @endif
+    @if (isset($this->record->context['aircraft_arrival_airfield']))
+        <h1><b>Arrival Airfield</b></h1>
+        <p>{{ $this->record->context['aircraft_arrival_airfield'] }}</p>
+        <br />
+    @endif
     <h1><b>Stand</b></h1>
     <p>{{ $this->record->stand->airfieldIdentifier }}</p>
     <br />
@@ -26,9 +41,8 @@
                 @endforeach
             </ol>
         @endif
-
+        <br/>
     @endif
-    </br>
     {{-- All the stands that were occupied at assignment time --}}
     @if (isset($this->record->context['occupied_stands']))
         <h2><b>Occupied Stands</b></h2>
@@ -41,9 +55,8 @@
                 @endforeach
             </ol>
         @endif
-
+        <br/><br/>
     @endif
-        </br>
     {{-- All the stands that were unassigned as a result --}}
     @if (isset($this->record->context['removed_assignments']))
         <h2><b>Assignments Removed</b></h2>
@@ -56,6 +69,6 @@
                 @endforeach
             </ol>
         @endif
-
+        <br/>
     @endif
 </div>

@@ -63,6 +63,9 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
         );
 
         $expectedContext = [
+            'aircraft_type' => 'B738',
+            'aircraft_departure_airfield' => 'EGKK',
+            'aircraft_arrival_airfield' => 'EGLL',
             'removed_assignments' => [],
             'occupied_stands' => [],
             'assigned_stands' => [],
@@ -130,6 +133,9 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
 
 
         $expectedContext = [
+            'aircraft_type' => 'B738',
+            'aircraft_departure_airfield' => 'EGKK',
+            'aircraft_arrival_airfield' => 'EGLL',
             'removed_assignments' => [
                 [
                     'callsign' => 'BAW999',
@@ -174,6 +180,9 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
         );
 
         $expectedContext = [
+            'aircraft_type' => 'B738',
+            'aircraft_departure_airfield' => 'EGKK',
+            'aircraft_arrival_airfield' => 'EGLL',
             'removed_assignments' => [],
             'occupied_stands' => [],
             'assigned_stands' => [],

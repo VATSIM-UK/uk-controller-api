@@ -36,9 +36,6 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
         });
     }
 
-    // TODO: Add aircraft type to context
-    // TODO: Add origin airfield to context
-    // TODO: Add destination airfield to context
     // TODO: Add user request to context
     // TODO: Add other active requests to context
     // TODO: Add reservations to context
@@ -46,6 +43,9 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
     private function generateContext(StandAssignmentContext $context): array
     {
         return [
+            'aircraft_departure_airfield' => $context->aircraft->planned_depairport,
+            'aircraft_arrival_airfield' => $context->aircraft->planned_destairport,
+            'aircraft_type' => $context->aircraft->planned_aircraft_short,
             'removed_assignments' => $context->removedAssignments->map(
                 function (StandAssignment $assignment)
                 {

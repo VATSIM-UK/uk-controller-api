@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::table('stand_assignments_history', function (Blueprint $table)
         {
             $table->json('context')
-                ->default('{}')
                 ->nullable()
                 ->after('user_id')
                 ->comment('Contextual information about the assignment');

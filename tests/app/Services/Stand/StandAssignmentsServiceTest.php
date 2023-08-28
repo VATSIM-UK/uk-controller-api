@@ -8,7 +8,6 @@ use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
-use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\Event;
 use Mockery;
@@ -153,7 +152,8 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                     $context->assignment->stand_id === 2 &&
                     $context->assignment->user_id === null &&
                     $context->assignmentType === 'test' &&
-                    $context->removedAssignments->isEmpty()
+                    $context->removedAssignments->isEmpty() &&
+                    $context->aircraft->callsign === 'BAW123'
                 )
             )
             ->once();
@@ -192,7 +192,8 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                     $context->removedAssignments->isNotEmpty() &&
                     $context->removedAssignments->count() === 1 &&
                     $context->removedAssignments->first()->callsign === 'BAW456' &&
-                    $context->removedAssignments->first()->stand_id === 2
+                    $context->removedAssignments->first()->stand_id === 2 &&
+                    $context->aircraft->callsign === 'BAW123'
                 )
             )
             ->once();
@@ -257,7 +258,8 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                     $context->removedAssignments->first()->callsign === 'BAW456' &&
                     $context->removedAssignments->first()->stand_id === 2 &&
                     $context->removedAssignments->last()->callsign === 'BAW789' &&
-                    $context->removedAssignments->last()->stand_id === 3
+                    $context->removedAssignments->last()->stand_id === 3 &&
+                    $context->aircraft->callsign === 'BAW123'
                 )
             )
             ->once();
@@ -265,7 +267,7 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->mockHistoryService->shouldReceive('deleteHistoryFor')
             ->with(Mockery::on(fn(StandAssignment $assignment): bool => $assignment->callsign === 'BAW456' && $assignment->stand_id === 2))
             ->once();
-            
+
         $this->mockHistoryService->shouldReceive('deleteHistoryFor')
             ->with(Mockery::on(fn(StandAssignment $assignment): bool => $assignment->callsign === 'BAW789' && $assignment->stand_id === 3))
             ->once();
@@ -320,7 +322,8 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                     $context->assignment->stand_id === 2 &&
                     $context->assignment->user_id === null &&
                     $context->assignmentType === 'test' &&
-                    $context->removedAssignments->isEmpty()
+                    $context->removedAssignments->isEmpty() &&
+                    $context->aircraft->callsign === 'BAW123'
                 )
             )
             ->once();
