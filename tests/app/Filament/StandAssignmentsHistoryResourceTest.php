@@ -101,7 +101,50 @@ class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
         // Test filter before and after
         Livewire::test(ListStandAssignmentsHistories::class)
             ->assertCanSeeTableRecords([$item1, $item2, $item3])
-            ->filterTable('airfield', $airfield1->id)
+            ->filterTable('airfield_and_stand', ['airfield' => $airfield1->id])
+            ->assertCanSeeTableRecords([$item1, $item3])
+            ->assertCanNotSeeTableRecords([$item2]);
+    }
+
+    public function testItAllowsFilteredResultsByStand()
+    {
+        $stand1 = Stand::factory()->create(['airfield_id' => 1]);
+        $stand2 = Stand::factory()->create(['airfield_id' => 1]);
+
+        $item1 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW123',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => $stand1->id,
+            ]
+        );
+
+        $item2 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW999',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => $stand2->id,
+            ]
+        );
+
+        $item3 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW777',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => $stand1->id,
+            ]
+        );
+
+        // Test filter before and after
+        Livewire::test(ListStandAssignmentsHistories::class)
+            ->assertCanSeeTableRecords([$item1, $item2, $item3])
+            ->filterTable('airfield_and_stand', ['airfield' => 1, 'stand' => $stand1->id])
             ->assertCanSeeTableRecords([$item1, $item3])
             ->assertCanNotSeeTableRecords([$item2]);
     }

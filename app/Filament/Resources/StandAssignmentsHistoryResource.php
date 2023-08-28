@@ -4,7 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandAssignmentsHistoryResource\Pages;
+use App\Models\Airfield\Airfield;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignmentsHistory;
+use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
@@ -78,13 +81,42 @@ class StandAssignmentsHistoryResource extends Resource
                         ? $query->where('callsign', $data['isActive'])
                         : $query
                     ),
-                SelectFilter::make('airfield')
-                    ->options(SelectOptions::airfields())
-                    ->query(
-                        fn(Builder $query, array $data) => isset($data['value'])
-                        ? $query->whereHas('stand.airfield', fn(Builder $query) => $query->where('id', $data['value']))
-                        : $query
-                    ),
+                Filter::make('airfield_and_stand')
+                    ->form([
+                        Select::make('airfield')
+                            ->options(SelectOptions::airfields())
+                            ->reactive()
+                            ->searchable()
+                            ->label('Airfield'),
+                        Select::make('stand')
+                        ->options(fn (Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield'))))
+                            ->searchable()
+                            ->label('Stand')
+                            ->hidden(fn(Closure $get) => !$get('airfield')),
+                    ])
+                    ->indicateUsing(function (array $data) {
+                        if (isset($data['stand'])) {
+                            return 'Stand: ' . Stand::find($data['stand'])->airfieldIdentifier;
+                        }
+
+                        if (isset($data['airfield'])) {
+                            return 'Airfield: ' . Airfield::find($data['airfield'])->code;
+                        }
+
+                        return null;
+                    })
+                    ->query(function (Builder $query, array $data)
+                    {
+                        if (isset($data['airfield'])) {
+                            $query->whereHas('stand.airfield', fn(Builder $query) => $query->where('id', $data['airfield']));
+                        }
+
+                        if (isset($data['stand'])) {
+                            $query->where('stand_id', $data['stand']);
+                        }
+
+                        return $query;
+                    }),
             ]);
     }
 
