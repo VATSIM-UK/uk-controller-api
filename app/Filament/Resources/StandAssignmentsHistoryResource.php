@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandAssignmentsHistoryResource\Pages;
 use App\Models\Stand\StandAssignmentsHistory;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Resources\Form;
@@ -12,6 +14,7 @@ use Filament\Resources\Table;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 class StandAssignmentsHistoryResource extends Resource
@@ -73,6 +76,13 @@ class StandAssignmentsHistoryResource extends Resource
                     ->query(
                         fn(Builder $query, array $data) => isset($data['isActive'])
                         ? $query->where('callsign', $data['isActive'])
+                        : $query
+                    ),
+                SelectFilter::make('airfield')
+                    ->options(SelectOptions::airfields())
+                    ->query(
+                        fn(Builder $query, array $data) => isset($data['value'])
+                        ? $query->whereHas('stand.airfield', fn(Builder $query) => $query->where('id', $data['value']))
                         : $query
                     ),
             ]);

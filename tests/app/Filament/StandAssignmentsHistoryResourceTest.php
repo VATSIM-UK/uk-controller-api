@@ -6,6 +6,7 @@ use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\Resources\StandAssignmentsHistoryResource;
 use App\Filament\Resources\StandAssignmentsHistoryResource\Pages\ListStandAssignmentsHistories;
+use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignmentsHistory;
 use Carbon\Carbon;
@@ -58,6 +59,49 @@ class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
         Livewire::test(ListStandAssignmentsHistories::class)
             ->assertCanSeeTableRecords([$item1, $item2, $item3])
             ->filterTable('callsign', ['isActive' => 'BAW123'])
+            ->assertCanSeeTableRecords([$item1, $item3])
+            ->assertCanNotSeeTableRecords([$item2]);
+    }
+
+    public function testItAllowsFilteredResultsByAirfield()
+    {
+        $airfield1 = Airfield::factory()->create();
+        $airfield2 = Airfield::factory()->create();
+
+        $item1 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW123',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => Stand::factory()->create(['airfield_id' => $airfield1->id])->id,
+            ]
+        );
+
+        $item2 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW999',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => Stand::factory()->create(['airfield_id' => $airfield2->id])->id,
+            ]
+        );
+
+        $item3 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW777',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => Stand::factory()->create(['airfield_id' => $airfield1->id])->id,
+            ]
+        );
+
+        // Test filter before and after
+        Livewire::test(ListStandAssignmentsHistories::class)
+            ->assertCanSeeTableRecords([$item1, $item2, $item3])
+            ->filterTable('airfield', $airfield1->id)
             ->assertCanSeeTableRecords([$item1, $item3])
             ->assertCanNotSeeTableRecords([$item2]);
     }
