@@ -36,6 +36,13 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
         });
     }
 
+    // TODO: Add aircraft type to context
+    // TODO: Add origin airfield to context
+    // TODO: Add destination airfield to context
+    // TODO: Add user request to context
+    // TODO: Add other active requests to context
+    // TODO: Add reservations to context
+    // TODO: Add fp remarks to context
     private function generateContext(StandAssignmentContext $context): array
     {
         return [
