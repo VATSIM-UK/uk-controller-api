@@ -22,13 +22,13 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
     {
         DB::transaction(function () use ($context)
         {
-            $assignment = $context->assignment();
+            $assignment = $context->assignment;
             $this->deleteHistoryFor($assignment);
             StandAssignmentsHistory::create(
                 [
                     'callsign' => $assignment->callsign,
                     'stand_id' => $assignment->stand_id,
-                    'type' => $context->assignmentType(),
+                    'type' => $context->assignmentType,
                     'user_id' => !is_null(Auth::user()) ? Auth::user()->id : null,
                     'context' => $this->generateContext($context),
                 ]
@@ -46,7 +46,7 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
     private function generateContext(StandAssignmentContext $context): array
     {
         return [
-            'removed_assignments' => $context->removedAssignments()->map(
+            'removed_assignments' => $context->removedAssignments->map(
                 function (StandAssignment $assignment)
                 {
                     return [
@@ -55,14 +55,14 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
                     ];
                 }
             ),
-            'occupied_stands' => Stand::where('airfield_id', $context->assignment()->stand->airfield_id)
-                ->where('id', '<>', $context->assignment()->stand_id)
+            'occupied_stands' => Stand::where('airfield_id', $context->assignment->stand->airfield_id)
+                ->where('id', '<>', $context->assignment->stand_id)
                 ->whereHas('occupier')
                 ->orderBy('stands.id')
                 ->get()
                 ->map(fn(Stand $stand) => $stand->identifier),
-            'assigned_stands' => Stand::where('airfield_id', $context->assignment()->stand->airfield_id)
-                ->where('id', '<>', $context->assignment()->stand_id)
+            'assigned_stands' => Stand::where('airfield_id', $context->assignment->stand->airfield_id)
+                ->where('id', '<>', $context->assignment->stand_id)
                 ->whereHas('assignment')
                 ->orderBy('stands.id')
                 ->get()

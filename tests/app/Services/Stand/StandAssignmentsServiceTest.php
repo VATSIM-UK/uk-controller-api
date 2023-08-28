@@ -113,11 +113,11 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->mockHistoryService->shouldReceive('createHistoryItem')
             ->with(
                 Mockery::on(
-                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
-                    $context->assignment()->stand_id === 2 &&
-                    $context->assignment()->user_id === null &&
-                    $context->assignmentType() === 'test' &&
-                    $context->removedAssignments()->isEmpty()
+                    fn(StandAssignmentContext $context): bool => $context->assignment->callsign === 'BAW123' &&
+                    $context->assignment->stand_id === 2 &&
+                    $context->assignment->user_id === null &&
+                    $context->assignmentType === 'test' &&
+                    $context->removedAssignments->isEmpty()
                 )
             )
             ->once();
@@ -149,11 +149,11 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->mockHistoryService->shouldReceive('createHistoryItem')
             ->with(
                 Mockery::on(
-                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
-                    $context->assignment()->stand_id === 2 &&
-                    $context->assignment()->user_id === null &&
-                    $context->assignmentType() === 'test' &&
-                    $context->removedAssignments()->isEmpty()
+                    fn(StandAssignmentContext $context): bool => $context->assignment->callsign === 'BAW123' &&
+                    $context->assignment->stand_id === 2 &&
+                    $context->assignment->user_id === null &&
+                    $context->assignmentType === 'test' &&
+                    $context->removedAssignments->isEmpty()
                 )
             )
             ->once();
@@ -185,14 +185,14 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->mockHistoryService->shouldReceive('createHistoryItem')
             ->with(
                 Mockery::on(
-                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
-                    $context->assignment()->stand_id === 2 &&
-                    $context->assignment()->user_id === null &&
-                    $context->assignmentType() === 'test' &&
-                    $context->removedAssignments()->isNotEmpty() &&
-                    $context->removedAssignments()->count() === 1 &&
-                    $context->removedAssignments()->first()->callsign === 'BAW456' &&
-                    $context->removedAssignments()->first()->stand_id === 2
+                    fn(StandAssignmentContext $context): bool => $context->assignment->callsign === 'BAW123' &&
+                    $context->assignment->stand_id === 2 &&
+                    $context->assignment->user_id === null &&
+                    $context->assignmentType === 'test' &&
+                    $context->removedAssignments->isNotEmpty() &&
+                    $context->removedAssignments->count() === 1 &&
+                    $context->removedAssignments->first()->callsign === 'BAW456' &&
+                    $context->removedAssignments->first()->stand_id === 2
                 )
             )
             ->once();
@@ -248,16 +248,16 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->mockHistoryService->shouldReceive('createHistoryItem')
             ->with(
                 Mockery::on(
-                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
-                    $context->assignment()->stand_id === 2 &&
-                    $context->assignment()->user_id === null &&
-                    $context->assignmentType() === 'test' &&
-                    $context->removedAssignments()->isNotEmpty() &&
-                    $context->removedAssignments()->count() === 2 &&
-                    $context->removedAssignments()->first()->callsign === 'BAW456' &&
-                    $context->removedAssignments()->first()->stand_id === 2 &&
-                    $context->removedAssignments()->last()->callsign === 'BAW789' &&
-                    $context->removedAssignments()->last()->stand_id === 3
+                    fn(StandAssignmentContext $context): bool => $context->assignment->callsign === 'BAW123' &&
+                    $context->assignment->stand_id === 2 &&
+                    $context->assignment->user_id === null &&
+                    $context->assignmentType === 'test' &&
+                    $context->removedAssignments->isNotEmpty() &&
+                    $context->removedAssignments->count() === 2 &&
+                    $context->removedAssignments->first()->callsign === 'BAW456' &&
+                    $context->removedAssignments->first()->stand_id === 2 &&
+                    $context->removedAssignments->last()->callsign === 'BAW789' &&
+                    $context->removedAssignments->last()->stand_id === 3
                 )
             )
             ->once();
@@ -316,11 +316,11 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->mockHistoryService->shouldReceive('createHistoryItem')
             ->with(
                 Mockery::on(
-                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
-                    $context->assignment()->stand_id === 2 &&
-                    $context->assignment()->user_id === null &&
-                    $context->assignmentType() === 'test' &&
-                    $context->removedAssignments()->isEmpty()
+                    fn(StandAssignmentContext $context): bool => $context->assignment->callsign === 'BAW123' &&
+                    $context->assignment->stand_id === 2 &&
+                    $context->assignment->user_id === null &&
+                    $context->assignmentType === 'test' &&
+                    $context->removedAssignments->isEmpty()
                 )
             )
             ->once();
