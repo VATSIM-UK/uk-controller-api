@@ -29,6 +29,7 @@ use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\User\User;
 use App\Models\Version\Version;
 use App\Policies\ActivityLogPolicy;
@@ -90,6 +91,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,
+        StandAssignmentsHistory::class => PluginEditableDataPolicy::class,
 
         // Things that can only be updated by external processes
         SrdNote::class => ReadOnlyPolicy::class,

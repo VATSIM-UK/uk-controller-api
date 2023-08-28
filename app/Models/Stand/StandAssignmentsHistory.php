@@ -26,4 +26,9 @@ class StandAssignmentsHistory extends Model
     protected $casts = [
         'context' => 'array',
     ];
+
+    public function stand()
+    {
+        return $this->belongsTo(Stand::class);
+    }
 }

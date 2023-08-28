@@ -8,6 +8,7 @@ return [
     'fir_exit_points' => require_once __DIR__ . '/fir_exit_points/table.php',
     'intention' => require_once __DIR__ . '/intention/table.php',
     'stands' => require_once __DIR__ . '/stands/table.php',
+    'stand_assignments_history' => require_once __DIR__ . '/stand_assignments_history/table.php',
     'users' => require_once __DIR__ . '/users/table.php',
     'sids' => require_once __DIR__ . '/sids/table.php',
     'handoffs' => require_once __DIR__ . '/handoffs/table.php',
