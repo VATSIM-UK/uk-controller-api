@@ -9,14 +9,13 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class StandAssignmentsService
 {
-    private readonly StandAssignmentsHistoryService $historyService;
+    private readonly RecordsAssignmentHistory $historyService;
 
-    public function __construct(StandAssignmentsHistoryService $historyService)
+    public function __construct(RecordsAssignmentHistory $historyService)
     {
         $this->historyService = $historyService;
     }
@@ -43,15 +42,17 @@ class StandAssignmentsService
      * Create a stand assignment, removing any existing assignments for the stand and moving the aircraft to the
      * "new" stand if already assigned.
      */
-    public function createStandAssignment(string $callsign, int $standId): void
+    public function createStandAssignment(string $callsign, int $standId, string $assignmentType): void
     {
         if (!($stand = Stand::with('pairedStands')->find($standId))) {
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
-        [$assignment, $existingAssignments] = DB::transaction(function () use ($callsign, $stand) {
+        [$assignment, $existingAssignments] = DB::transaction(function () use ($callsign, $stand, $assignmentType)
+        {
             // Remove assignments for this and paired stands
-            $existingAssignments = StandAssignment::where('stand_id', $stand->id)
+            $existingAssignments = StandAssignment::with('stand')
+                ->where('stand_id', $stand->id)
                 ->where('callsign', '<>', $callsign)
                 ->union(
                     StandAssignment::whereIn(
@@ -61,7 +62,8 @@ class StandAssignmentsService
                 )
                 ->get();
 
-            $existingAssignments->each(function (StandAssignment $assignment) {
+            $existingAssignments->each(function (StandAssignment $assignment)
+            {
                 $this->deleteAssignmentAndHistoryData($assignment);
             });
 
@@ -73,12 +75,15 @@ class StandAssignmentsService
                     'stand_id' => $stand->id,
                 ]
             );
-            $this->historyService->createHistoryItem($assignment);
+
+            $assignmentContext = new StandAssignmentContext($assignment, $assignmentType, $existingAssignments);
+            $this->historyService->createHistoryItem($assignmentContext);
 
             return [$assignment, $existingAssignments];
         });
 
-        $existingAssignments->each(function (StandAssignment $assignment) {
+        $existingAssignments->each(function (StandAssignment $assignment)
+        {
             $this->unassignedEvent($assignment);
         });
         event(new StandAssignedEvent($assignment));
@@ -91,7 +96,8 @@ class StandAssignmentsService
 
     private function deleteAssignmentAndHistoryData(StandAssignment $assignment): void
     {
-        DB::transaction(function () use ($assignment) {
+        DB::transaction(function () use ($assignment)
+        {
             $assignment->delete();
             $this->historyService->deleteHistoryFor($assignment);
         });

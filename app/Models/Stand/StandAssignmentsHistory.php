@@ -18,6 +18,12 @@ class StandAssignmentsHistory extends Model
     protected $fillable = [
         'callsign',
         'stand_id',
-        'user_id'
+        'user_id',
+        'type',
+        'context',
+    ];
+
+    protected $casts = [
+        'context' => 'array',
     ];
 }

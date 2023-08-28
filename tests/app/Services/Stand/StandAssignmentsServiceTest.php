@@ -11,15 +11,21 @@ use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\Event;
+use Mockery;
+use Mockery\MockInterface;
 
 class StandAssignmentsServiceTest extends BaseFunctionalTestCase
 {
     private readonly StandAssignmentsService $service;
 
+    private readonly MockInterface $mockHistoryService;
+
     public function setUp(): void
     {
         parent::setUp();
         Event::fake();
+        $this->mockHistoryService = Mockery::mock(RecordsAssignmentHistory::class);
+        $this->app->instance(RecordsAssignmentHistory::class, $this->mockHistoryService);
         $this->service = $this->app->make(StandAssignmentsService::class);
     }
 
@@ -47,10 +53,6 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
 
     public function testItDeletesAnAssignment()
     {
-        $history = StandAssignmentsHistory::create([
-            'callsign' => 'BAW123',
-            'stand_id' => 1,
-        ]);
         $assignment = StandAssignment::create(
             [
                 'callsign' => 'BAW123',
@@ -58,18 +60,17 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockHistoryService->shouldReceive('deleteHistoryFor')
+            ->with($assignment)
+            ->once();
+
         $this->service->deleteStandAssignment($assignment);
         $this->assertDatabaseMissing($assignment, ['callsign' => 'BAW123']);
-        $this->assertSoftDeleted($history->refresh());
         Event::assertDispatched(fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW123');
     }
 
     public function testItDeletesAnAssignmentIfExistsForAircraft()
     {
-        $history = StandAssignmentsHistory::create([
-            'callsign' => 'BAW123',
-            'stand_id' => 1,
-        ]);
         $assignment = StandAssignment::create(
             [
                 'callsign' => 'BAW123',
@@ -77,14 +78,24 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
             ]
         );
 
+        $this->mockHistoryService->shouldReceive('deleteHistoryFor')
+            ->with(
+                Mockery::on(
+                    fn(StandAssignment $assignment): bool => $assignment->callsign === 'BAW123' &&
+                    $assignment->stand_id === 1
+                )
+            )
+            ->once();
+
         $this->service->deleteAssignmentIfExists(NetworkAircraft::find('BAW123'));
         $this->assertDatabaseMissing($assignment, ['callsign' => 'BAW123']);
-        $this->assertSoftDeleted($history->refresh());
         Event::assertDispatched(fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW123');
     }
 
     public function testItDoesntDeleteAnAssignmentIfDoesntExistForAircraft()
     {
+        $this->mockHistoryService->shouldReceive('deleteHistoryFor')
+            ->never();
         $this->service->deleteAssignmentIfExists(NetworkAircraft::find('BAW123'));
         Event::assertNotDispatched(fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW123');
     }
@@ -92,21 +103,28 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
     public function testCreatingAStandAssignmentThrowsExceptionIfStandDoesntExist()
     {
         $this->expectException(StandNotFoundException::class);
-        $this->service->createStandAssignment('BAW123', 999);
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->never();
+        $this->service->createStandAssignment('BAW123', 999, 'test');
     }
 
     public function testItCreatesAnAssignment()
     {
-        $this->service->createStandAssignment('BAW123', 2);
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->with(
+                Mockery::on(
+                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
+                    $context->assignment()->stand_id === 2 &&
+                    $context->assignment()->user_id === null &&
+                    $context->assignmentType() === 'test' &&
+                    $context->removedAssignments()->isEmpty()
+                )
+            )
+            ->once();
+
+        $this->service->createStandAssignment('BAW123', 2, 'test');
         $this->assertDatabaseHas(
             'stand_assignments',
-            [
-                'callsign' => 'BAW123',
-                'stand_id' => 2,
-            ]
-        );
-        $this->assertDatabaseHas(
-            'stand_assignments_history',
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 2,
@@ -115,7 +133,7 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
 
         Event::assertDispatched(
             fn(StandAssignedEvent $event): bool => $event->getStandAssignment()->callsign === 'BAW123' &&
-                $event->getStandAssignment()->stand_id === 2
+            $event->getStandAssignment()->stand_id === 2
         );
     }
 
@@ -127,16 +145,22 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
             ]
         );
-        $this->service->createStandAssignment('BAW123', 2);
+
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->with(
+                Mockery::on(
+                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
+                    $context->assignment()->stand_id === 2 &&
+                    $context->assignment()->user_id === null &&
+                    $context->assignmentType() === 'test' &&
+                    $context->removedAssignments()->isEmpty()
+                )
+            )
+            ->once();
+
+        $this->service->createStandAssignment('BAW123', 2, 'test');
         $this->assertDatabaseHas(
             'stand_assignments',
-            [
-                'callsign' => 'BAW123',
-                'stand_id' => 2,
-            ]
-        );
-        $this->assertDatabaseHas(
-            'stand_assignments_history',
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 2,
@@ -145,7 +169,7 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
 
         Event::assertDispatched(
             fn(StandAssignedEvent $event): bool => $event->getStandAssignment()->callsign === 'BAW123' &&
-                $event->getStandAssignment()->stand_id === 2
+            $event->getStandAssignment()->stand_id === 2
         );
     }
 
@@ -157,7 +181,27 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 2,
             ]
         );
-        $this->service->createStandAssignment('BAW123', 2);
+
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->with(
+                Mockery::on(
+                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
+                    $context->assignment()->stand_id === 2 &&
+                    $context->assignment()->user_id === null &&
+                    $context->assignmentType() === 'test' &&
+                    $context->removedAssignments()->isNotEmpty() &&
+                    $context->removedAssignments()->count() === 1 &&
+                    $context->removedAssignments()->first()->callsign === 'BAW456' &&
+                    $context->removedAssignments()->first()->stand_id === 2
+                )
+            )
+            ->once();
+
+        $this->mockHistoryService->shouldReceive('deleteHistoryFor')
+            ->with(Mockery::on(fn(StandAssignment $assignment): bool => $assignment->callsign === 'BAW456' && $assignment->stand_id === 2))
+            ->once();
+
+        $this->service->createStandAssignment('BAW123', 2, 'test');
         $this->assertDatabaseHas(
             'stand_assignments',
             [
@@ -172,9 +216,10 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 2,
             ]
         );
+
         Event::assertDispatched(
             fn(StandAssignedEvent $event): bool => $event->getStandAssignment()->callsign === 'BAW123' &&
-                $event->getStandAssignment()->stand_id === 2
+            $event->getStandAssignment()->stand_id === 2
         );
         Event::assertDispatched(
             fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW456'
@@ -200,7 +245,32 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         Stand::findOrFail(3)->pairedStands()->sync([2]);
         Stand::findOrFail(2)->pairedStands()->sync([3]);
 
-        $this->service->createStandAssignment('BAW123', 2);
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->with(
+                Mockery::on(
+                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
+                    $context->assignment()->stand_id === 2 &&
+                    $context->assignment()->user_id === null &&
+                    $context->assignmentType() === 'test' &&
+                    $context->removedAssignments()->isNotEmpty() &&
+                    $context->removedAssignments()->count() === 2 &&
+                    $context->removedAssignments()->first()->callsign === 'BAW456' &&
+                    $context->removedAssignments()->first()->stand_id === 2 &&
+                    $context->removedAssignments()->last()->callsign === 'BAW789' &&
+                    $context->removedAssignments()->last()->stand_id === 3
+                )
+            )
+            ->once();
+
+        $this->mockHistoryService->shouldReceive('deleteHistoryFor')
+            ->with(Mockery::on(fn(StandAssignment $assignment): bool => $assignment->callsign === 'BAW456' && $assignment->stand_id === 2))
+            ->once();
+            
+        $this->mockHistoryService->shouldReceive('deleteHistoryFor')
+            ->with(Mockery::on(fn(StandAssignment $assignment): bool => $assignment->callsign === 'BAW789' && $assignment->stand_id === 3))
+            ->once();
+
+        $this->service->createStandAssignment('BAW123', 2, 'test');
         $this->assertDatabaseHas(
             'stand_assignments',
             [
@@ -224,7 +294,7 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         );
         Event::assertDispatched(
             fn(StandAssignedEvent $event): bool => $event->getStandAssignment()->callsign === 'BAW123' &&
-                $event->getStandAssignment()->stand_id === 2
+            $event->getStandAssignment()->stand_id === 2
         );
         Event::assertDispatched(
             fn(StandUnassignedEvent $event): bool => $event->getCallsign() === 'BAW456'
@@ -242,7 +312,20 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
             ]
         );
-        $this->service->createStandAssignment('BAW123', 2);
+
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->with(
+                Mockery::on(
+                    fn(StandAssignmentContext $context): bool => $context->assignment()->callsign === 'BAW123' &&
+                    $context->assignment()->stand_id === 2 &&
+                    $context->assignment()->user_id === null &&
+                    $context->assignmentType() === 'test' &&
+                    $context->removedAssignments()->isEmpty()
+                )
+            )
+            ->once();
+
+        $this->service->createStandAssignment('BAW123', 2, 'test');
         $this->assertDatabaseHas(
             'stand_assignments',
             [
@@ -259,7 +342,7 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         );
         Event::assertDispatched(
             fn(StandAssignedEvent $event): bool => $event->getStandAssignment()->callsign === 'BAW123' &&
-                $event->getStandAssignment()->stand_id === 2
+            $event->getStandAssignment()->stand_id === 2
         );
     }
 }
