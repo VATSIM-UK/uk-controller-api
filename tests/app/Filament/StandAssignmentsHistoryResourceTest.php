@@ -9,6 +9,7 @@ use App\Filament\Resources\StandAssignmentsHistoryResource\Pages\ListStandAssign
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignmentsHistory;
 use Carbon\Carbon;
+use Livewire\Livewire;
 
 class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
 {
@@ -21,6 +22,45 @@ class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
         Carbon::setTestNow(Carbon::now()->startOfSecond());
     }
 
+    public function testItAllowsFilteredResultsByCallsign()
+    {
+        $item1 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW123',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => Stand::factory()->create()->id,
+            ]
+        );
+
+        $item2 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW999',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => Stand::factory()->create()->id,
+            ]
+        );
+
+        $item3 = StandAssignmentsHistory::create(
+            [
+                'callsign' => 'BAW123',
+                'assigned_at' => Carbon::now()->subDays(1),
+                'type' => 'TEST',
+                'context' => [],
+                'stand_id' => Stand::factory()->create()->id,
+            ]
+        );
+
+        // Test filter before and after
+        Livewire::test(ListStandAssignmentsHistories::class)
+            ->assertCanSeeTableRecords([$item1, $item2, $item3])
+            ->filterTable('callsign', ['isActive' => 'BAW123'])
+            ->assertCanSeeTableRecords([$item1, $item3])
+            ->assertCanNotSeeTableRecords([$item2]);
+    }
 
     protected function getIndexText(): array
     {

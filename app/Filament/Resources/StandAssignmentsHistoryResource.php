@@ -4,12 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StandAssignmentsHistoryResource\Pages;
 use App\Models\Stand\StandAssignmentsHistory;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
 class StandAssignmentsHistoryResource extends Resource
@@ -66,7 +68,13 @@ class StandAssignmentsHistoryResource extends Resource
                     ->label('View Context'),
             ])
             ->filters([
-                //
+                Filter::make('callsign')
+                    ->formComponent(TextInput::class)
+                    ->query(
+                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        ? $query->where('callsign', $data['isActive'])
+                        : $query
+                    ),
             ]);
     }
 
