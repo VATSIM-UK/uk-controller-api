@@ -1,0 +1,15 @@
+// https://aka.ms/devcontainer.json
+{
+    "name": "UKCP PHP Dev",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "web",
+    "workspaceFolder": "/var/www/ukcp",
+    "settings": {},
+    "extensions": [],
+    "remoteUser": "www"
+    // "forwardPorts": [],
+    // "runServices": [],
+    // "shutdownAction": "none",
+}
