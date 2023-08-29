@@ -39,7 +39,6 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
     // TODO: Add user request to context
     // TODO: Add other active requests to context
     // TODO: Add reservations to context
-    // TODO: Add fp remarks to context
     private function generateContext(StandAssignmentContext $context): array
     {
         return [
@@ -67,6 +66,7 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
                 ->orderBy('stands.id')
                 ->get()
                 ->map(fn(Stand $stand) => $stand->identifier),
+            'flightplan_remarks' => $context->aircraft->remarks,
         ];
     }
 }

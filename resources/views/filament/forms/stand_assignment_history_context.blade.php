@@ -17,6 +17,11 @@
         <p>{{ $this->record->context['aircraft_arrival_airfield'] }}</p>
         <br />
     @endif
+    @if (isset($this->record->context['flightplan_remarks']))
+        <h1><b>Flightplan Remarks</b></h1>
+        <p>{{ $this->record->context['flightplan_remarks'] }}</p>
+        <br />
+    @endif
     <h1><b>Stand</b></h1>
     <p>{{ $this->record->stand->airfieldIdentifier }}</p>
     <br />

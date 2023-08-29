@@ -7,6 +7,7 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\User\User;
+use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
 
 class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
@@ -51,7 +52,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
             ]
         );
-        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', collect()));
+        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', collect(), NetworkAircraft::find('BAW123')));
         $this->assertDatabaseHas(
             'stand_assignments_history',
             [
@@ -69,6 +70,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
             'removed_assignments' => [],
             'occupied_stands' => [],
             'assigned_stands' => [],
+            'flightplan_remarks' => 'BAW123 Remarks',
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
@@ -110,7 +112,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
         $occupiedStand2 = Stand::factory()->create(['airfield_id' => 1]);
         $occupiedStand2->occupier()->sync(['BAW1002']);
 
-        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', $removedAssignments));
+        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', $removedAssignments, NetworkAircraft::find('BAW123')));
         $this->assertDatabaseHas(
             'stand_assignments_history',
             [
@@ -154,6 +156,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
                 '1L',
                 '251',
             ],
+            'flightplan_remarks' => 'BAW123 Remarks',
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
@@ -168,7 +171,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
             ]
         );
-        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', collect()));
+        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', collect(), NetworkAircraft::find('BAW123')));
         $this->assertDatabaseHas(
             'stand_assignments_history',
             [
@@ -186,6 +189,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
             'removed_assignments' => [],
             'occupied_stands' => [],
             'assigned_stands' => [],
+            'flightplan_remarks' => 'BAW123 Remarks',
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
@@ -209,7 +213,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
             ]
         );
-        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', collect()));
+        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', collect(), NetworkAircraft::find('BAW123')));
 
         $this->assertSoftDeleted($history->refresh());
         $this->assertSoftDeleted($history2->refresh());

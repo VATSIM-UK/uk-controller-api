@@ -28,6 +28,7 @@ class NetworkAircraftTableSeeder extends Seeder
                     'planned_route' => 'DIRECT',
                     'created_at' => '2020-05-30 17:30:00',
                     'updated_at' => Carbon::now()->subMinutes(9),
+                    'remarks' => 'BAW123 Remarks',
                 ],
                 [
                     'callsign' => 'BAW456',
@@ -47,6 +48,7 @@ class NetworkAircraftTableSeeder extends Seeder
                     'planned_route' => 'DIRECT',
                     'created_at' => Carbon::now()->subMinutes(31),
                     'updated_at' => Carbon::now(),
+                    'remarks' => 'BAW456 Remarks',
                 ],
                 [
                     'callsign' => 'BAW789',
@@ -66,6 +68,7 @@ class NetworkAircraftTableSeeder extends Seeder
                     'planned_route' => 'DIRECT',
                     'created_at' => Carbon::now()->subMinutes(31),
                     'updated_at' => Carbon::now()->subMinutes(21),
+                    'remarks' => 'BAW789 Remarks',
                 ],
                 [
                     'callsign' => 'RYR824',
@@ -85,6 +88,7 @@ class NetworkAircraftTableSeeder extends Seeder
                     'planned_route' => 'DIRECT',
                     'created_at' => '2020-05-30 17:30:00',
                     'updated_at' => Carbon::now()->subMinutes(10),
+                    'remarks' => 'RYR824 Remarks',
                 ],
             ]
         );

@@ -71,7 +71,8 @@ class StandAssignmentsHistoryResource extends Resource
             ])
             ->actions([
                 ViewAction::make('view_context')
-                    ->label('View Context'),
+                    ->label('View Context')
+                    ->hidden(fn(StandAssignmentsHistory $record) => is_null($record->context) || empty($record->context)),
             ])
             ->filters([
                 Filter::make('callsign')
