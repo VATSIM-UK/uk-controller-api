@@ -6,7 +6,6 @@ use App\Models\Stand\StandAssignment;
 
 interface RecordsAssignmentHistory
 {
-
     /**
      * Deletes any history items for the given assignment.
      */

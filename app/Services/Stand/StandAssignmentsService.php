@@ -48,8 +48,7 @@ class StandAssignmentsService
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
-        [$assignment, $existingAssignments] = DB::transaction(function () use ($callsign, $stand, $assignmentType)
-        {
+        [$assignment, $existingAssignments] = DB::transaction(function () use ($callsign, $stand, $assignmentType) {
             // Remove assignments for this and paired stands
             $existingAssignments = StandAssignment::with('stand')
                 ->where('stand_id', $stand->id)
@@ -62,8 +61,7 @@ class StandAssignmentsService
                 )
                 ->get();
 
-            $existingAssignments->each(function (StandAssignment $assignment)
-            {
+            $existingAssignments->each(function (StandAssignment $assignment) {
                 $this->deleteAssignmentAndHistoryData($assignment);
             });
 
@@ -82,8 +80,7 @@ class StandAssignmentsService
             return [$assignment, $existingAssignments];
         });
 
-        $existingAssignments->each(function (StandAssignment $assignment)
-        {
+        $existingAssignments->each(function (StandAssignment $assignment) {
             $this->unassignedEvent($assignment);
         });
         event(new StandAssignedEvent($assignment));
@@ -96,8 +93,7 @@ class StandAssignmentsService
 
     private function deleteAssignmentAndHistoryData(StandAssignment $assignment): void
     {
-        DB::transaction(function () use ($assignment)
-        {
+        DB::transaction(function () use ($assignment) {
             $assignment->delete();
             $this->historyService->deleteHistoryFor($assignment);
         });

@@ -37,8 +37,7 @@ class StandServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(ArrivalAllocationService::class, function (Application $application)
-        {
+        $this->app->singleton(ArrivalAllocationService::class, function (Application $application) {
             return new ArrivalAllocationService(
                 $application->make(StandAssignmentsService::class),
                 [
@@ -68,7 +67,7 @@ class StandServiceProvider extends ServiceProvider
         $this->app->singleton(AirfieldStandService::class);
         $this->app->singleton(
             RecordsAssignmentHistory::class,
-            fn(Application $application) => $application->make(StandAssignmentsHistoryService::class)
+            fn (Application $application) => $application->make(StandAssignmentsHistoryService::class)
         );
     }
 }

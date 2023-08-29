@@ -25,8 +25,7 @@ class StandRequestService
     {
         return StandRequest::with('stand')
             ->current()
-            ->whereHas('stand.airfield', function ($query) use ($airfield)
-            {
+            ->whereHas('stand.airfield', function ($query) use ($airfield) {
                 $query->where('code', $airfield);
             })
             ->orderBy('id')

@@ -88,7 +88,7 @@ class StandAssignmentsHistoryResource extends Resource
                     ->label(static::translateTablePath('columns.callsign'))
                     ->searchable(),
                 TextColumn::make('identifier')
-                    ->getStateUsing(fn(StandAssignmentsHistory $record) => $record->stand->airfieldIdentifier)
+                    ->getStateUsing(fn (StandAssignmentsHistory $record) => $record->stand->airfieldIdentifier)
                     ->label(static::translateTablePath('columns.identifier'))
                     ->searchable(),
                 TextColumn::make('assigned_at')
@@ -104,13 +104,13 @@ class StandAssignmentsHistoryResource extends Resource
             ->actions([
                 ViewAction::make('view_context')
                     ->label('View Context')
-                    ->hidden(fn(StandAssignmentsHistory $record) => is_null($record->context) || empty($record->context)),
+                    ->hidden(fn (StandAssignmentsHistory $record) => is_null($record->context) || empty($record->context)),
             ])
             ->filters([
                 Filter::make('callsign')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        fn (Builder $query, array $data) => isset($data['isActive'])
                         ? $query->where('callsign', $data['isActive'])
                         : $query
                     ),
@@ -122,13 +122,12 @@ class StandAssignmentsHistoryResource extends Resource
                             ->searchable()
                             ->label('Airfield'),
                         Select::make('stand')
-                            ->options(fn(Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield'))))
+                            ->options(fn (Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield'))))
                             ->searchable()
                             ->label('Stand')
-                            ->hidden(fn(Closure $get) => !$get('airfield')),
+                            ->hidden(fn (Closure $get) => !$get('airfield')),
                     ])
-                    ->indicateUsing(function (array $data)
-                    {
+                    ->indicateUsing(function (array $data) {
                         if (isset($data['stand'])) {
                             return 'Stand: ' . Stand::find($data['stand'])->airfieldIdentifier;
                         }
@@ -139,10 +138,9 @@ class StandAssignmentsHistoryResource extends Resource
 
                         return null;
                     })
-                    ->query(function (Builder $query, array $data)
-                    {
+                    ->query(function (Builder $query, array $data) {
                         if (isset($data['airfield'])) {
-                            $query->whereHas('stand.airfield', fn(Builder $query) => $query->where('id', $data['airfield']));
+                            $query->whereHas('stand.airfield', fn (Builder $query) => $query->where('id', $data['airfield']));
                         }
 
                         if (isset($data['stand'])) {
