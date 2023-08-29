@@ -41,7 +41,7 @@
     @else
         No stand requested.
     @endif
-    <br />
+    <br /><br />
     {{-- All the stands that were assigned at assignment time --}}
     @if (isset($this->record->context['assigned_stands']))
         <h2><b>Assigned Stands</b></h2>
@@ -54,7 +54,7 @@
                 @endforeach
             </ol>
         @endif
-        <br />
+        <br /><br />
     @endif
     {{-- All the stands that were occupied at assignment time --}}
     @if (isset($this->record->context['occupied_stands']))
@@ -68,7 +68,7 @@
                 @endforeach
             </ol>
         @endif
-        <br /><br />
+        <br />
     @endif
     {{-- All the stands that were requested assignment time --}}
     @if (isset($this->record->context['other_requested_stands']))
@@ -82,7 +82,7 @@
                 @endforeach
             </ol>
         @endif
-        <br /><br />
+        <br />
     @endif
     {{-- All the stands that were unassigned as a result --}}
     @if (isset($this->record->context['removed_assignments']))

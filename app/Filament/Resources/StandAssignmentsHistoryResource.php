@@ -43,6 +43,7 @@ class StandAssignmentsHistoryResource extends Resource
             ->disabled()
             ->schema([
                 ViewField::make('context')
+                    ->columnSpanFull()
                     ->view('filament.forms.stand_assignment_history_context')
                     ->label(static::translateFormPath('columns.context')),
             ]);

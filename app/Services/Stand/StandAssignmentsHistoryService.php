@@ -44,7 +44,6 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
         });
     }
 
-    // TODO: Add reservations to context
     private function generateContext(StandAssignmentContext $context): array
     {
         return [
