@@ -70,6 +70,20 @@
         @endif
         <br /><br />
     @endif
+    {{-- All the stands that were requested assignment time --}}
+    @if (isset($this->record->context['other_requested_stands']))
+        <h2><b>Other Requested Stands</b></h2>
+        @if (count($this->record->context['other_requested_stands']) === 0)
+            No stands requested.
+        @else
+            <ol>
+                @foreach ($this->record->context['other_requested_stands'] as $stand)
+                    <li>{{ $stand }}</li>
+                @endforeach
+            </ol>
+        @endif
+        <br /><br />
+    @endif
     {{-- All the stands that were unassigned as a result --}}
     @if (isset($this->record->context['removed_assignments']))
         <h2><b>Assignments Removed</b></h2>

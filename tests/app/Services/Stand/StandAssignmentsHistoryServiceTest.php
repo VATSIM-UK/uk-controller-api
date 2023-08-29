@@ -73,6 +73,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
             'assigned_stands' => [],
             'flightplan_remarks' => 'BAW123 Remarks',
             'requested_stand' => null,
+            'other_requested_stands' => [],
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
@@ -124,8 +125,11 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createPlaceholderAircraft('BAW1004');
         $standAtAnotherAirfield2->occupier()->sync(['BAW1004']);
 
-        // Create a stand request
+        // Create a stand request for us
         $standRequest = StandRequest::factory()->create(['user_id' => self::ACTIVE_USER_CID, 'callsign' => 'BAW123', 'stand_id' => $newStand->id]);
+
+        // Create another stand request for another user
+        StandRequest::factory()->create(['user_id' => 1203534, 'callsign' => 'BAW456', 'stand_id' => 1]);
 
         $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', $removedAssignments, NetworkAircraft::find('BAW123')));
         $this->assertDatabaseHas(
@@ -162,6 +166,9 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
             ],
             'flightplan_remarks' => 'BAW123 Remarks',
             'requested_stand' => $standRequest->stand->identifier,
+            'other_requested_stands' => [
+                '1L',
+            ],
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
@@ -196,6 +203,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
             'assigned_stands' => [],
             'flightplan_remarks' => 'BAW123 Remarks',
             'requested_stand' => null,
+            'other_requested_stands' => [],
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);

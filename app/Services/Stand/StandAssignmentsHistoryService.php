@@ -13,7 +13,8 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
 {
     private readonly StandRequestService $standRequestService;
 
-    public function __construct(StandRequestService $standRequestService) {
+    public function __construct(StandRequestService $standRequestService)
+    {
         $this->standRequestService = $standRequestService;
     }
 
@@ -43,7 +44,6 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
         });
     }
 
-    // TODO: Add other active requests to context
     // TODO: Add reservations to context
     private function generateContext(StandAssignmentContext $context): array
     {
@@ -74,6 +74,11 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
                 ->map(fn(Stand $stand) => $stand->identifier),
             'flightplan_remarks' => $context->aircraft->remarks,
             'requested_stand' => $this->standRequestService->activeRequestForAircraft($context->aircraft)?->stand->identifier,
+            'other_requested_stands' => $this->standRequestService->allActiveStandRequestsForAirfield($context->assignment->stand->airfield->code)
+                ->filter(fn(StandRequest $request) => $request->stand_id !== $context->assignment->stand_id)
+                ->map(fn(StandRequest $request) => $request->stand->identifier)
+                ->values()
+                ->toArray(),
         ];
     }
 }
