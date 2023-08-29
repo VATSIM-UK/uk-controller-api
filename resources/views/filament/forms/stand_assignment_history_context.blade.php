@@ -34,6 +34,14 @@
     <h1><b>Assignment Type</b></h1>
     <p>{{ $this->record->type }}</p>
     <br />
+    {{-- The stand the user had requested at assignment time --}}
+    <h2><b>User Requested Stand</b></h2>
+    @if (isset($this->record->context['requested_stand']))
+        {{ $this->record->context['requested_stand'] }}
+    @else
+        No stand requested.
+    @endif
+    <br />
     {{-- All the stands that were assigned at assignment time --}}
     @if (isset($this->record->context['assigned_stands']))
         <h2><b>Assigned Stands</b></h2>
@@ -46,7 +54,7 @@
                 @endforeach
             </ol>
         @endif
-        <br/>
+        <br />
     @endif
     {{-- All the stands that were occupied at assignment time --}}
     @if (isset($this->record->context['occupied_stands']))
@@ -60,7 +68,7 @@
                 @endforeach
             </ol>
         @endif
-        <br/><br/>
+        <br /><br />
     @endif
     {{-- All the stands that were unassigned as a result --}}
     @if (isset($this->record->context['removed_assignments']))
@@ -74,6 +82,6 @@
                 @endforeach
             </ol>
         @endif
-        <br/>
+        <br />
     @endif
 </div>

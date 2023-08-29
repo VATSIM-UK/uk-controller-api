@@ -5,11 +5,18 @@ namespace App\Services\Stand;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandAssignmentsHistory;
+use App\Models\Stand\StandRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StandAssignmentsHistoryService implements RecordsAssignmentHistory
 {
+    private readonly StandRequestService $standRequestService;
+
+    public function __construct(StandRequestService $standRequestService) {
+        $this->standRequestService = $standRequestService;
+    }
+
     public function deleteHistoryFor(StandAssignment $target): void
     {
         StandAssignmentsHistory::where(
@@ -36,7 +43,6 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
         });
     }
 
-    // TODO: Add user request to context
     // TODO: Add other active requests to context
     // TODO: Add reservations to context
     private function generateContext(StandAssignmentContext $context): array
@@ -67,6 +73,7 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
                 ->get()
                 ->map(fn(Stand $stand) => $stand->identifier),
             'flightplan_remarks' => $context->aircraft->remarks,
+            'requested_stand' => $this->standRequestService->activeRequestForAircraft($context->aircraft)?->stand->identifier,
         ];
     }
 }

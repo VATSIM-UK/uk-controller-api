@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandAssignmentsHistory;
+use App\Models\Stand\StandRequest;
 use App\Models\User\User;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
@@ -71,6 +72,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
             'occupied_stands' => [],
             'assigned_stands' => [],
             'flightplan_remarks' => 'BAW123 Remarks',
+            'requested_stand' => null,
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
@@ -112,17 +114,6 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
         $occupiedStand2 = Stand::factory()->create(['airfield_id' => 1]);
         $occupiedStand2->occupier()->sync(['BAW1002']);
 
-        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', $removedAssignments, NetworkAircraft::find('BAW123')));
-        $this->assertDatabaseHas(
-            'stand_assignments_history',
-            [
-                'callsign' => 'BAW123',
-                'stand_id' => $newStand->id,
-                'type' => 'test',
-                'user_id' => null,
-            ],
-        );
-
         // Assign a stand at another airfield to test this isn't in the response
         $standAtAnotherAirfield = Stand::factory()->create();
         NetworkAircraftService::createPlaceholderAircraft('BAW1003');
@@ -133,6 +124,19 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
         NetworkAircraftService::createPlaceholderAircraft('BAW1004');
         $standAtAnotherAirfield2->occupier()->sync(['BAW1004']);
 
+        // Create a stand request
+        $standRequest = StandRequest::factory()->create(['user_id' => self::ACTIVE_USER_CID, 'callsign' => 'BAW123', 'stand_id' => $newStand->id]);
+
+        $this->service->createHistoryItem(new StandAssignmentContext($assignment, 'test', $removedAssignments, NetworkAircraft::find('BAW123')));
+        $this->assertDatabaseHas(
+            'stand_assignments_history',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => $newStand->id,
+                'type' => 'test',
+                'user_id' => null,
+            ],
+        );
 
         $expectedContext = [
             'aircraft_type' => 'B738',
@@ -157,6 +161,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
                 '251',
             ],
             'flightplan_remarks' => 'BAW123 Remarks',
+            'requested_stand' => $standRequest->stand->identifier,
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
@@ -190,6 +195,7 @@ class StandAssignmentsHistoryServiceTest extends BaseFunctionalTestCase
             'occupied_stands' => [],
             'assigned_stands' => [],
             'flightplan_remarks' => 'BAW123 Remarks',
+            'requested_stand' => null,
         ];
         $context = StandAssignmentsHistory::latest()->first()->context;
         $this->assertEquals($expectedContext, $context);
