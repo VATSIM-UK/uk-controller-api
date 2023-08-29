@@ -59,7 +59,11 @@ class ArrivalAllocationService
             ->each(function (NetworkAircraft $aircraft) {
                 foreach ($this->allocators as $allocator) {
                     if ($allocation = $allocator->allocate($aircraft)) {
-                        $this->assignmentsService->createStandAssignment($aircraft->callsign, $allocation, get_class($allocator));
+                        $this->assignmentsService->createStandAssignment(
+                            $aircraft->callsign,
+                            $allocation,
+                            get_class($allocator)
+                        );
                         return;
                     }
                 }
