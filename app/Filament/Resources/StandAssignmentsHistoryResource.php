@@ -7,6 +7,8 @@ use App\Filament\Resources\StandAssignmentsHistoryResource\Pages;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignmentsHistory;
+use App\Models\User\RoleKeys;
+use App\Policies\ChecksUserRoles;
 use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -17,12 +19,12 @@ use Filament\Resources\Table;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 class StandAssignmentsHistoryResource extends Resource
 {
     use TranslatesStrings;
+    use ChecksUserRoles;
 
     protected static ?string $model = StandAssignmentsHistory::class;
 
@@ -35,6 +37,35 @@ class StandAssignmentsHistoryResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return StandAssignmentsHistory::with('stand', 'stand.airfield');
+    }
+
+    public static function canGloballySearch(): bool
+    {
+        return false;
+    }
+
+    protected static function userCanAccess(): bool
+    {
+        return self::checkUserHasRole(
+            auth()->user(),
+            [
+                RoleKeys::OPERATIONS_CONTRIBUTOR,
+                RoleKeys::OPERATIONS_TEAM,
+                RoleKeys::WEB_TEAM,
+                RoleKeys::DIVISION_STAFF_GROUP,
+            ]
+        );
+    }
+
+    protected static function shouldRegisterNavigation(): bool
+    {
+        return self::userCanAccess();
+    }
+
+    public function mount(): void
+    {
+        dd(self::userCanAccess());
+        abort_unless(self::userCanAccess(), 403);
     }
 
     public static function form(Form $form): Form
@@ -91,12 +122,13 @@ class StandAssignmentsHistoryResource extends Resource
                             ->searchable()
                             ->label('Airfield'),
                         Select::make('stand')
-                        ->options(fn (Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield'))))
+                            ->options(fn(Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield'))))
                             ->searchable()
                             ->label('Stand')
                             ->hidden(fn(Closure $get) => !$get('airfield')),
                     ])
-                    ->indicateUsing(function (array $data) {
+                    ->indicateUsing(function (array $data)
+                    {
                         if (isset($data['stand'])) {
                             return 'Stand: ' . Stand::find($data['stand'])->airfieldIdentifier;
                         }

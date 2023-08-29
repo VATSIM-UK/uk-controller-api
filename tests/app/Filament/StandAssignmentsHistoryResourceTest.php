@@ -9,13 +9,14 @@ use App\Filament\Resources\StandAssignmentsHistoryResource\Pages\ListStandAssign
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignmentsHistory;
+use App\Models\User\RoleKeys;
 use Carbon\Carbon;
 use Livewire\Livewire;
 
 class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
 {
     use ChecksListingFilamentAccess;
-    use ChecksDefaultFilamentActionVisibility;
+    use ChecksHasRoleFilamentActionVisibility;
 
     public function setUp(): void
     {
@@ -182,7 +183,7 @@ class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
                 'callsign' => 'BAW123',
                 'assigned_at' => Carbon::now(),
                 'type' => 'TEST',
-                'context' => [],
+                'context' => ['abc'],
             ]
         )->id;
     }
@@ -195,8 +196,19 @@ class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
                 'callsign' => 'BAW123',
                 'assigned_at' => Carbon::now(),
                 'type' => 'TEST',
-                'context' => [],
+                'context' => ['abc'],
             ]
         );
+    }
+
+    public static function indexRoleProvider(): array
+    {
+        return [
+            'None' => [null, false],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, true],
+            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
+            'Web' => [RoleKeys::WEB_TEAM, true],
+            'Operations' => [RoleKeys::OPERATIONS_TEAM, true],
+        ];
     }
 }
