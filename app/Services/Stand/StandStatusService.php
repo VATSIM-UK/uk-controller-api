@@ -38,8 +38,7 @@ class StandStatusService
 
         return $stands->sortBy('identifier', SORT_NATURAL)
             ->values()
-            ->map(function (Stand $stand)
-            {
+            ->map(function (Stand $stand) {
                 return self::getStandStatus($stand);
             })
             ->toArray();
@@ -52,13 +51,10 @@ class StandStatusService
             'type' => $stand->type ? $stand->type->key : null,
             'latitude' => $stand->latitude,
             'longitude' => $stand->longitude,
-            'airlines' => $stand->airlines->groupBy('icao_code')->map(function (Collection $airlineDestination)
-            {
-                return $airlineDestination->filter(function (Airline $airline)
-                {
+            'airlines' => $stand->airlines->groupBy('icao_code')->map(function (Collection $airlineDestination) {
+                return $airlineDestination->filter(function (Airline $airline) {
                     return $airline->pivot->destination;
-                })->map(function (Airline $airline)
-                {
+                })->map(function (Airline $airline) {
                     return $airline->pivot->destination;
                 });
             })->toArray(),
@@ -85,8 +81,7 @@ class StandStatusService
             $standData['reserved_at'] = $stand->reservationsInNextHour->first()->start;
             $standData['callsign'] = $stand->reservationsInNextHour->first()->callsign;
         } elseif (
-            !$stand->pairedStands->filter(function (Stand $stand)
-            {
+            !$stand->pairedStands->filter(function (Stand $stand) {
                 return $stand->assignment ||
                     !$stand->occupier->isEmpty() ||
                     !$stand->activeReservations->isEmpty();
