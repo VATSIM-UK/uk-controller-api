@@ -28,8 +28,7 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
 
     public function createHistoryItem(StandAssignmentContext $context): void
     {
-        DB::transaction(function () use ($context)
-        {
+        DB::transaction(function () use ($context) {
             $assignment = $context->assignment;
             $this->deleteHistoryFor($assignment);
             StandAssignmentsHistory::create(
@@ -51,8 +50,7 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
             'aircraft_arrival_airfield' => $context->aircraft->planned_destairport,
             'aircraft_type' => $context->aircraft->planned_aircraft_short,
             'removed_assignments' => $context->removedAssignments->map(
-                function (StandAssignment $assignment)
-                {
+                function (StandAssignment $assignment) {
                     return [
                         'callsign' => $assignment->callsign,
                         'stand' => $assignment->stand->identifier,
@@ -64,21 +62,21 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
                 ->whereHas('occupier')
                 ->orderBy('stands.id')
                 ->get()
-                ->map(fn(Stand $stand) => $stand->identifier),
+                ->map(fn (Stand $stand) => $stand->identifier),
             'assigned_stands' => Stand::where('airfield_id', $context->assignment->stand->airfield_id)
                 ->where('id', '<>', $context->assignment->stand_id)
                 ->whereHas('assignment')
                 ->orderBy('stands.id')
                 ->get()
-                ->map(fn(Stand $stand) => $stand->identifier),
+                ->map(fn (Stand $stand) => $stand->identifier),
             'flightplan_remarks' => $context->aircraft->remarks,
             'requested_stand' => $this->standRequestService->activeRequestForAircraft($context->aircraft)
                 ?->stand->identifier,
             'other_requested_stands' => $this->standRequestService->allActiveStandRequestsForAirfield(
                 $context->assignment->stand->airfield->code
             )
-                ->filter(fn(StandRequest $request) => $request->stand_id !== $context->assignment->stand_id)
-                ->map(fn(StandRequest $request) => $request->stand->identifier)
+                ->filter(fn (StandRequest $request) => $request->stand_id !== $context->assignment->stand_id)
+                ->map(fn (StandRequest $request) => $request->stand->identifier)
                 ->values()
                 ->toArray(),
         ];
