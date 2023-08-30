@@ -48,6 +48,7 @@ class NetworkAircraft extends Model
         'transponder',
         'planned_flighttype',
         'planned_route',
+        'aircraft_id',
         'remarks',
     ];
 

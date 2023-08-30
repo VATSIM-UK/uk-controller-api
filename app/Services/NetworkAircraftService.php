@@ -21,15 +21,22 @@ class NetworkAircraftService
     private NetworkDataService $dataService;
     private Collection $allAircraftBeforeUpdate;
 
-    public function __construct(NetworkDataService $dataService, Collection $measuringPoints)
-    {
+    private readonly AircraftService $aircraftService;
+
+    public function __construct(
+        NetworkDataService $dataService,
+        AircraftService $aircraftService,
+        Collection $measuringPoints
+    ) {
         $this->measuringPoints = $measuringPoints;
+        $this->aircraftService = $aircraftService;
         $this->dataService = $dataService;
     }
 
     public function updateNetworkData(): void
     {
-        $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft) {
+        $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft)
+        {
             return [$aircraft->callsign => $aircraft];
         });
 
@@ -46,14 +53,16 @@ class NetworkAircraftService
 
     private function mapPilotData(Collection $pilotData): Collection
     {
-        return $pilotData->map(function (array $pilot) {
+        return $pilotData->map(function (array $pilot)
+        {
             return $this->formatPilot($pilot);
         });
     }
 
     private function filterPilotData(Collection $pilotData): Collection
     {
-        return $pilotData->filter(function (array $pilot) {
+        return $pilotData->filter(function (array $pilot)
+        {
             return $this->shouldProcessPilot($pilot) &&
                 $this->pilotValid($pilot);
         });
@@ -72,7 +81,8 @@ class NetworkAircraftService
 
     private function shouldProcessPilot(array $pilot): bool
     {
-        return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
+        return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot)
+        {
             return LocationService::metersToNauticalMiles(
                 $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
             ) < self::MAX_PROCESSING_DISTANCE;
@@ -84,6 +94,8 @@ class NetworkAircraftService
      */
     private function formatPilot(array $pilot): array
     {
+        $shortAircraftCode = $this->getFlightplanDataElement($pilot, 'aircraft_short');
+
         return [
             'callsign' => $pilot['callsign'],
             'cid' => $pilot['cid'],
@@ -93,7 +105,7 @@ class NetworkAircraftService
             'groundspeed' => $pilot['groundspeed'],
             'transponder' => $pilot['transponder'],
             'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
-            'planned_aircraft_short' => $this->getFlightplanDataElement($pilot, 'aircraft_short'),
+            'planned_aircraft_short' => $shortAircraftCode,
             'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
             'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),
             'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),
@@ -101,6 +113,9 @@ class NetworkAircraftService
             'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
             'remarks' => $this->getFlightplanDataElement($pilot, 'remarks'),
             'transponder_last_updated_at' => $this->getTransponderUpdatedAtTime($pilot),
+            'aircraft_id' => $shortAircraftCode 
+                ? $this->aircraftService->getAircraftIdFromCode($shortAircraftCode)
+                : null,
         ];
     }
 
@@ -111,7 +126,7 @@ class NetworkAircraftService
     private function getTransponderUpdatedAtTime(array $pilot): Carbon
     {
         return $this->allAircraftBeforeUpdate->has($pilot['callsign']) &&
-        $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder === $pilot['transponder']
+            $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder === $pilot['transponder']
             ? $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder_last_updated_at
             : Carbon::now();
     }
@@ -132,7 +147,8 @@ class NetworkAircraftService
         NetworkAircraft::timedOut()
             ->get()
             ->each(
-                function (NetworkAircraft $aircraft): void {
+                function (NetworkAircraft $aircraft): void
+                {
                     AircraftDisconnected::dispatchSync($aircraft);
                 }
             );
