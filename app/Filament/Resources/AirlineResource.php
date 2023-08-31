@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Events\Airline\AirlinesUpdatedEvent;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\AirlineResource\Pages;
 use App\Filament\Resources\AirlineResource\RelationManagers\StandsRelationManager;
@@ -63,9 +64,9 @@ class AirlineResource extends Resource
                                 ->helperText(self::translateFormPath('copy_stand_assignments.helper'))
                         ]
                     )
-                    ->hidden(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
+                    ->hidden(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord),
             ]);
     }
 
@@ -88,7 +89,12 @@ class AirlineResource extends Resource
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->after(function ()
+                    {
+                        dd('hi');
+                        event(new AirlinesUpdatedEvent);
+                    }),
             ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AircraftResource\Pages;
 
+use App\Events\Aircraft\AircraftDataUpdatedEvent;
 use App\Filament\Resources\AircraftResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -10,10 +11,13 @@ class EditAircraft extends EditRecord
 {
     protected static string $resource = AircraftResource::class;
 
-    protected function getActions(): array
+    protected function afterSave(): void
     {
-        return [
-            Actions\DeleteAction::make(),
-        ];
+        event(new AircraftDataUpdatedEvent);
+    }
+
+    protected function afterDelete(): void
+    {
+        event(new AircraftDataUpdatedEvent);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
+use App\Events\Aircraft\AircraftDataUpdatedEvent;
 use App\Filament\Resources\AircraftResource;
 use App\Filament\Resources\AircraftResource\Pages\CreateAircraft;
 use App\Filament\Resources\AircraftResource\Pages\EditAircraft;
@@ -13,12 +14,19 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 
 class AircraftResourceTest extends BaseFilamentTestCase
 {
     use ChecksOperationsContributorActionVisibility;
     use ChecksOperationsContributorAccess;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        Event::fake();
+    }
 
     public function testItLoadsDataForView()
     {
@@ -48,6 +56,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             'length' => 208.99,
             'allocate_stands' => true,
         ]);
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithNoCode()
@@ -59,6 +70,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.code');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithEmptyCode()
@@ -71,6 +85,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.code');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithClashingCode()
@@ -83,6 +100,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.code');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithNoAerodromeReferenceCode()
@@ -94,6 +114,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.aerodrome_reference_code');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithNoWingspan()
@@ -105,6 +128,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.wingspan');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithNegativeWingspan()
@@ -117,6 +143,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.wingspan');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithNoLength()
@@ -128,6 +157,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.length');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAircraftWithNegativeLength()
@@ -140,6 +172,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', true)
             ->call('create')
             ->assertHasErrors('data.length');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItLoadsDataForEdit()
@@ -171,6 +206,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             'length' => 129.50,
             'allocate_stands' => false,
         ]);
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItEditsAnAircraftAndDoesntErrorWithExistingCode()
@@ -192,6 +230,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             'length' => 129.50,
             'allocate_stands' => false,
         ]);
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAircraftWithNoCode()
@@ -204,6 +245,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', false)
             ->call('save')
             ->assertHasErrors('data.code');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAircraftWithEmptyCode()
@@ -216,6 +260,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', false)
             ->call('save')
             ->assertHasErrors('data.code');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAircraftWithClashingCode()
@@ -228,11 +275,14 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', false)
             ->call('save')
             ->assertHasErrors('data.code');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAircraftWithNoWingspan
-    ()
-    {
+    (
+    ) {
         Livewire::test(EditAircraft::class, ['record' => 1])
             ->set('data.code', 'B738')
             ->set('data.aerodrome_reference_code', 'F')
@@ -241,6 +291,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', false)
             ->call('save')
             ->assertHasErrors('data.wingspan');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAircraftWithNegativeWingspan()
@@ -253,6 +306,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', false)
             ->call('save')
             ->assertHasErrors('data.wingspan');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAircraftWithNoLength()
@@ -265,6 +321,9 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', false)
             ->call('save')
             ->assertHasErrors('data.length');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAircraftWithNegativeLength()
@@ -277,6 +336,37 @@ class AircraftResourceTest extends BaseFilamentTestCase
             ->set('data.allocate_stands', false)
             ->call('save')
             ->assertHasErrors('data.length');
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AircraftDataUpdatedEvent::class);
+    }
+
+    public function testItDeletesAircraftFromTheListingPage()
+    {
+        Livewire::test(ListAircraft::class)
+            ->callTableAction('delete', 1)
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseMissing('aircraft', [
+            'id' => 1,
+        ]);
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AircraftDataUpdatedEvent::class);
+    }
+
+    public function testItDeletesAircraftFromTheEditPage()
+    {
+        Livewire::test(EditAircraft::class, ['record' => 1])
+            ->callPageAction('delete')
+            ->assertHasNoPageActionErrors();
+
+        $this->assertDatabaseMissing('aircraft', [
+            'id' => 1,
+        ]);
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AircraftDataUpdatedEvent::class);
     }
 
     public function testItAllowsWakeCategoryAssociation()
