@@ -23,13 +23,17 @@ class NetworkAircraftService
 
     private readonly AircraftService $aircraftService;
 
+    private readonly AirlineService $airlineService;
+
     public function __construct(
         NetworkDataService $dataService,
         AircraftService $aircraftService,
+        AirlineService $airlineService,
         Collection $measuringPoints
     ) {
         $this->measuringPoints = $measuringPoints;
         $this->aircraftService = $aircraftService;
+        $this->airlineService = $airlineService;
         $this->dataService = $dataService;
     }
 
@@ -116,6 +120,7 @@ class NetworkAircraftService
             'aircraft_id' => $shortAircraftCode 
                 ? $this->aircraftService->getAircraftIdFromCode($shortAircraftCode)
                 : null,
+            'airline_id' => $this->airlineService->airlineIdForCallsign($pilot['callsign']),
         ];
     }
 

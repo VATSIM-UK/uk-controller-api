@@ -49,6 +49,7 @@ class NetworkAircraft extends Model
         'planned_flighttype',
         'planned_route',
         'aircraft_id',
+        'airline_id',
         'remarks',
     ];
 
@@ -155,5 +156,10 @@ class NetworkAircraft extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'cid');
+    }
+
+    public function aircraft(): BelongsTo
+    {
+        return $this->belongsTo(Aircraft::class);
     }
 }

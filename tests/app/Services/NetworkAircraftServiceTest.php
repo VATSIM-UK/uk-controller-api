@@ -76,7 +76,10 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas(
             'network_aircraft',
             array_merge(
-                $this->getTransformedPilotData('BAW999', aircraftType: 'XYZ'),
+                $this->getTransformedPilotData(
+                    'BAW999',
+                    aircraftType: 'XYZ'
+                ),
                 [
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
@@ -361,8 +364,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
         float $longitude = null,
         string $transponder = null,
         string $aircraftType = 'B738',
-    ): array
-    {
+    ): array {
         return [
             'callsign' => $callsign,
             'cid' => self::ACTIVE_USER_CID,
@@ -391,8 +393,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
         bool $hasFlightplan = true,
         string $transponder = null,
         string $aircraftType = 'B738'
-    ): array
-    {
+    ): array {
         $pilot = $this->getPilotData($callsign, $hasFlightplan, null, null, $transponder, $aircraftType);
         $baseData = [
             'callsign' => $pilot['callsign'],
@@ -417,6 +418,12 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
                     'planned_route' => $pilot['flight_plan']['route'],
                     'remarks' => $pilot['flight_plan']['remarks'],
                     'aircraft_id' => $pilot['flight_plan']['aircraft_short'] === 'B738' ? 1 : null,
+                    'airline_id' => match (Str::substr($pilot['callsign'], 0, 3)) {
+                        'BAW' => 2,
+                        'SHT' => 2,
+                        'VIR' => 3,
+                        default => null,
+                    },
                 ]
             );
         }
