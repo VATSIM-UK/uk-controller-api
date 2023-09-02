@@ -86,7 +86,7 @@ class ArrivalAllocationService
     private function getAircraftThatCanHaveArrivalStandsAllocated(): Collection
     {
         return NetworkAircraft::join('airfield', 'airfield.code', '=', 'network_aircraft.planned_destairport')
-            ->join('aircraft', 'aircraft.code', '=', 'network_aircraft.planned_aircraft_short')
+            ->join('aircraft', 'network_aircraft.aircraft_id', '=', 'aircraft.id')
             ->leftJoin('stand_assignments', 'stand_assignments.callsign', '=', 'network_aircraft.callsign')
             ->whereRaw('network_aircraft.planned_destairport <> network_aircraft.planned_depairport')
             ->where('aircraft.allocate_stands', '<>', 0)
