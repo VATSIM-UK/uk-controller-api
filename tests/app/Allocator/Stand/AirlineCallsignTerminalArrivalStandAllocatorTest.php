@@ -357,16 +357,22 @@ class AirlineCallsignTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
     private function createAircraft(
         string $callsign,
         string $arrivalAirport,
-        string $departureAirport
+        string $departureAirport,
+        string $aircraftType = 'B738'
     ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
                 'cid' => 1234,
-                'planned_aircraft' => 'B738',
-                'planned_aircraft_short' => 'B738',
+                'planned_aircraft' => $aircraftType,
+                'planned_aircraft_short' => $aircraftType,
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
+                'aircraft_id' => $aircraftType === 'B738' ? 1 : null,
+                'airline_id' => match ($callsign) {
+                    'BAW23451' => 1,
+                    default => null,
+                },
             ]
         );
     }

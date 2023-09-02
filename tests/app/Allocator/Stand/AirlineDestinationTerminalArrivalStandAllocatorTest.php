@@ -8,6 +8,7 @@ use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AirlineDestinationTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
@@ -514,6 +515,8 @@ class AirlineDestinationTerminalArrivalStandAllocatorTest extends BaseFunctional
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
+                'airline_id' => Str::substr($callsign, 0, 3) === 'BAW' ? 1 : null,
+                'aircraft_id' => 1,
             ]
         );
     }

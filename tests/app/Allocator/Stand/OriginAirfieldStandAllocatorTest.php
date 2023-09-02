@@ -266,6 +266,7 @@ class OriginAirfieldStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
+                'aircraft_id' => 1,
             ]
         );
     }

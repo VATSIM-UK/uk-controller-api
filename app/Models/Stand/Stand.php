@@ -126,10 +126,10 @@ class Stand extends Model
         return $this->scopeNotClosed($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
     }
 
-    public function scopeAirline(Builder $builder, Airline $airline): Builder
+    public function scopeAirline(Builder $builder, Airline|int $airline): Builder
     {
         return $builder->join('airline_stand', 'stands.id', '=', 'airline_stand.stand_id')
-            ->where('airline_stand.airline_id', $airline->id)
+            ->where('airline_stand.airline_id', is_int($airline) ? $airline : $airline->id)
             ->where(
                 function (Builder $query) {
                     // Timezones here should be local because Heathrow.
@@ -140,7 +140,7 @@ class Stand extends Model
             );
     }
 
-    public function scopeAirlineDestination(Builder $builder, Airline $airline, array $destinationStrings): Builder
+    public function scopeAirlineDestination(Builder $builder, Airline|int $airline, array $destinationStrings): Builder
     {
         return $this->scopeAirline($builder, $airline)->whereIn('destination', $destinationStrings);
     }

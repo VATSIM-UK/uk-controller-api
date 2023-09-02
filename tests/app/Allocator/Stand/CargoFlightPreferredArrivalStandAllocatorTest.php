@@ -102,7 +102,7 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
 
     public function testItDoesntAllocateOccupiedStands()
     {
-         StandAssignment::create(
+        StandAssignment::create(
             [
                 'callsign' => 'BAW123',
                 'stand_id' => $this->cargoStand->id
@@ -137,6 +137,8 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
                 'planned_aircraft' => 'B744',
                 'planned_aircraft_short' => 'B744',
                 'planned_destairport' => $arrivalAirport,
+                'airline_id' => Airline::where('icao_code', 'VIR')->first()->id,
+                'aircraft_id' => Aircraft::where('code', 'B744')->first()->id,
             ]
         );
     }

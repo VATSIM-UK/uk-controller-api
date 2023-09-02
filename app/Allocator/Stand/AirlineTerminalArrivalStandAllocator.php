@@ -3,31 +3,56 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
 use Illuminate\Database\Eloquent\Builder;
 
-class AirlineTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
+class AirlineTerminalArrivalStandAllocator implements ArrivalStandAllocator
 {
-    private AirlineService $airlineService;
+    use AppliesOrdering;
+    use SelectsFirstApplicableStand;
+    use SelectsStandsFromAirlineTerminals;
+    use SelectsFromSizeAppropriateAvailableStands;
+    use OrdersStandsByCommonConditions;
 
-    public function __construct(AirlineService $airlineService)
-    {
-        $this->airlineService = $airlineService;
-    }
+    private const ORDER_BYS = [
+        'airline_terminal.priority ASC',
+    ];
 
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    /**
+     * This allocator:
+     * 
+     * - Selects stands that are size appropriate and available
+     * - Filters these to stands that are at terminals specifically selected for the airline
+     * - Filters stands to those that dont have specific conditions
+     * - Orders these stands by the airline's priority for the stand
+     * - Orders these stands by the common conditions, minus the general allocation priority
+     * (see OrdersStandsByCommonConditions)
+     * - Selects the first stand that pops up
+     */
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
-        if (($airline = $this->airlineService->getAirlineForAircraft($aircraft)) === null) {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
+        if ($aircraft->airline_id === null) {
             return null;
         }
 
-        return $stands->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
-            ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
-            ->where('airline_terminal.airline_id', $airline->id)
-            ->whereNull('airline_terminal.destination')
-            ->whereNull('airline_terminal.callsign_slug')
-            ->whereNull('airline_terminal.full_callsign')
-            ->whereNull('airline_terminal.aircraft_id')
-            ->orderBy('airline_terminal.priority');
+        return $this->selectFirstStand(
+            $this->applyOrderingToStandsQuery(
+                $this->joinOtherStandRequests(
+                    $this->standsAtAirlineTerminals(
+                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
+                            ->whereNull('airline_terminal.destination')
+                            ->whereNull('airline_terminal.callsign_slug')
+                            ->whereNull('airline_terminal.full_callsign')
+                            ->whereNull('airline_terminal.aircraft_id'),
+                        $aircraft
+                    ),
+                    $aircraft
+                ),
+                array_merge(
+                    self::ORDER_BYS,
+                    $this->commonOrderByConditionsWithoutAssignmentPriority
+                )
+            )
+        );
     }
 }

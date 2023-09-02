@@ -4,29 +4,56 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
-use Illuminate\Database\Eloquent\Builder;
 
-class AirlineCallsignArrivalStandAllocator extends AbstractArrivalStandAllocator
+class AirlineCallsignArrivalStandAllocator implements ArrivalStandAllocator
 {
+    use AppliesOrdering;
     use UsesCallsignSlugs;
+    use SelectsFirstApplicableStand;
+    use SelectsFromSizeAppropriateAvailableStands;
+    use OrdersStandsByCommonConditions;
 
-    private AirlineService $airlineService;
+    private const ORDER_BYS = [
+        'airline_stand.priority ASC',
+    ];
+
+    private readonly AirlineService $airlineService;
 
     public function __construct(AirlineService $airlineService)
     {
         $this->airlineService = $airlineService;
     }
 
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    /**
+     * This allocator:
+     * 
+     * - Selects stands that are size appropriate and available
+     * - Filters these to stands that are specifically selected for the airline and a specific callsign
+     * - Orders these stands by the airline's priority for the stand
+     * - Orders these stands by the common conditions, minus the general allocation priority
+     * (see OrdersStandsByCommonConditions)
+     * - Selects the first stand that pops up
+     */
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
-        $airline = $this->airlineService->getAirlineForAircraft($aircraft);
-        if ($airline === null) {
+        // We can only allocate a stand if we know the airline
+        if ($aircraft->airline_id === null) {
             return null;
         }
 
-        return $stands->with('airlines')
-            ->airline($airline)
-            ->where('airline_stand.full_callsign', $this->getFullCallsignSlug($aircraft))
-            ->orderBy('airline_stand.priority');
+        return $this->selectFirstStand(
+            $this->applyOrderingToStandsQuery(
+                $this->joinOtherStandRequests(
+                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
+                        ->airline($aircraft->airline_id)
+                        ->where('airline_stand.full_callsign', $this->getFullCallsignSlug($aircraft)),
+                    $aircraft
+                ),
+                array_merge(
+                    self::ORDER_BYS,
+                    $this->commonOrderByConditionsWithoutAssignmentPriority
+                )
+            )
+        );
     }
 }

@@ -6,15 +6,32 @@ use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
-class DomesticInternationalStandAllocator extends AbstractArrivalStandAllocator
+class DomesticInternationalStandAllocator implements ArrivalStandAllocator
 {
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    use AppliesOrdering;
+    use OrdersStandsByCommonConditions;
+    use SelectsFromSizeAppropriateAvailableStands;
+    use SelectsFirstApplicableStand;
+    use ConsidersStandRequests;
+
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
         if (!$aircraft->planned_depairport) {
             return null;
         }
 
-        return $this->getDomesticInternationalScope($aircraft, $stands);
+        return $this->selectFirstStand(
+            $this->applyOrderingToStandsQuery(
+                $this->joinOtherStandRequests(
+                    $this->getDomesticInternationalScope(
+                        $aircraft,
+                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
+                    ),
+                    $aircraft
+                ),
+                $this->commonOrderByConditions
+            )
+        );
     }
 
     protected function getDomesticInternationalScope(NetworkAircraft $aircraft, Builder $builder): Builder

@@ -218,7 +218,8 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReturnsNullOnNoStandAllocated()
     {
-        Stand::all()->each(function (Stand $stand) {
+        Stand::all()->each(function (Stand $stand)
+        {
             $stand->delete();
         });
         $aircraft = $this->createAircraft('BAW999', 'EGLL');
@@ -238,6 +239,8 @@ class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
+                'airline_id' => $callsign === 'BAW23451' ? 1 : null,
+                'aircraft_id' => 1,
             ]
         );
     }

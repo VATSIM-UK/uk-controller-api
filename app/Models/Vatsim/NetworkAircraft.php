@@ -2,6 +2,7 @@
 
 namespace App\Models\Vatsim;
 
+use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Hold\NavaidNetworkAircraft;
 use App\Models\Navigation\Navaid;

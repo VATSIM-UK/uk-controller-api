@@ -2,36 +2,52 @@
 
 namespace App\Allocator\Stand;
 
-use App\Models\Aircraft\Aircraft;
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
-use Illuminate\Database\Eloquent\Builder;
 
-class AirlineAircraftTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
+class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAllocator
 {
-    private AirlineService $airlineService;
+    use OrdersStandsByCommonConditions;
+    use SelectsFirstApplicableStand;
+    use SelectsFromSizeAppropriateAvailableStands;
+    use SelectsStandsFromAirlineTerminals;
+    use AppliesOrdering;
 
-    public function __construct(AirlineService $airlineService)
-    {
-        $this->airlineService = $airlineService;
-    }
+    private const ORDER_BYS = [
+        'airline_terminal.priority ASC',
+    ];
 
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    /**
+     * This allocator:
+     * 
+     * - Selects stands that are size appropriate and available
+     * - Filters these to stands at terminals that are specifically selected for the airline AND a given aircraft type
+     * - Orders these stands by the airline's priority for the stand
+     * - Orders these stands by the common conditions, minus the general allocation priority
+     * (see OrdersStandsByCommonConditions)
+     * - Selects the first stand that pops up
+     */
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
-        $airline = $this->airlineService->getAirlineForAircraft($aircraft);
-        if ($airline === null) {
+        // We can only allocate a stand if we know the airline and aircraft type
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
             return null;
         }
 
-        $aircraftType = Aircraft::where('code', $aircraft->planned_aircraft)->first();
-        if (!$aircraftType) {
-            return null;
-        }
-
-        return $stands->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
-            ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
-            ->where('airline_terminal.airline_id', $airline->id)
-            ->where('airline_terminal.aircraft_id', $aircraftType->id)
-            ->orderBy('airline_terminal.priority');
+        return $this->selectFirstStand(
+            $this->applyOrderingToStandsQuery(
+                $this->joinOtherStandRequests(
+                    $this->standsAtAirlineTerminals(
+                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
+                            ->where('airline_terminal.aircraft_id', $aircraft->aircraft_id),
+                        $aircraft
+                    ),
+                    $aircraft
+                ),
+                array_merge(
+                    self::ORDER_BYS,
+                    $this->commonOrderByConditionsWithoutAssignmentPriority
+                )
+            )
+        );
     }
 }

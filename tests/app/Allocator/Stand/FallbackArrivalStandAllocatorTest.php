@@ -235,6 +235,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft' => $type,
                 'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
+                'aircraft_id' => Aircraft::where('code', $type)->first()?->id,
             ]
         );
     }

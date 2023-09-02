@@ -167,16 +167,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItReturnsNothingOnNoDestinationAirport()
     {
-        $aircraft = NetworkAircraft::create(
-            [
-                'callsign' => 'BAW898',
-                'cid' => 1234,
-                'planned_aircraft' => 'B738',
-                'planned_aircraft_short' => 'B738',
-                'planned_destairport' => '',
-                'planned_depairport' => 'EIDW',
-            ]
-        );
+        $aircraft = $this->createAircraft('BAW898', 'B738', '');
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
@@ -199,6 +190,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
+                'aircraft_id' => Aircraft::where('code', $type)->first()->id,
             ]
         );
     }

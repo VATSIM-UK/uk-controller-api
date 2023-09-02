@@ -4,6 +4,7 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->allocator = $this->app->make(AirlineArrivalStandAllocator::class);
+        Airline::factory()->create(['icao_code' => 'EZY']);
     }
 
     public function testItAllocatesAStandForTheAirline()
@@ -317,15 +319,29 @@ class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($aircraft));
     }
 
-    private function createAircraft(string $callsign, string $arrivalAirport): NetworkAircraft
-    {
+    private function createAircraft(
+        string $callsign,
+        string $arrivalAirport,
+        string $aircraftType = 'B738'
+    ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
                 'cid' => 1234,
-                'planned_aircraft' => 'B738',
-                'planned_aircraft_short' => 'B738',
-                'planned_destairport' => $arrivalAirport]
+                'planned_aircraft' => $aircraftType,
+                'planned_aircraft_short' => $aircraftType,
+                'planned_destairport' => $arrivalAirport,
+                'planned_depairport' => 'EGGD',
+                'airline_id' => match ($callsign) {
+                    'BAW23451' => 1,
+                    'EZY7823' => Airline::where('icao_code', 'EZY')->first()->id,
+                    default => null,
+                },
+                'aircraft_id' => match ($aircraftType) {
+                    'B738' => 1,
+                    default => null,
+                },
+            ]
         );
     }
 }

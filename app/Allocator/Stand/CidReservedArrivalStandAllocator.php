@@ -10,12 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * Matches the network aircraft with a stand reservation based on the pilots CID.
  */
-class CidReservedArrivalStandAllocator extends AbstractArrivalStandAllocator
+class CidReservedArrivalStandAllocator implements ArrivalStandAllocator
 {
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
         $reservation = StandReservation::with('stand')
-            ->whereHas('stand', function (Builder $standQuery) {
+            ->whereHas('stand', function (Builder $standQuery)
+            {
                 $standQuery->unoccupied()->unassigned();
             })
             ->where('cid', $aircraft->cid)
@@ -24,7 +25,7 @@ class CidReservedArrivalStandAllocator extends AbstractArrivalStandAllocator
             ->first();
 
         return $reservation
-            ? Stand::where('stands.id', $reservation->stand_id)->select('stands.*')
+            ? Stand::where('stands.id', $reservation->stand_id)->first()->id
             : null;
     }
 }

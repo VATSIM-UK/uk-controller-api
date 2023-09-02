@@ -125,6 +125,7 @@ class CargoFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft' => 'B744',
                 'planned_aircraft_short' => 'B744',
                 'planned_destairport' => $arrivalAirport,
+                'aircraft_id' => Aircraft::where('code', 'B744')->first()->id,
             ]
         );
     }

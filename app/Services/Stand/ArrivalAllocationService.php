@@ -2,6 +2,7 @@
 
 namespace App\Services\Stand;
 
+use App\Allocator\Stand\ArrivalStandAllocator;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
@@ -19,7 +20,7 @@ class ArrivalAllocationService
     private readonly StandAssignmentsService $assignmentsService;
 
     /**
-     * @var ArrivalStandAllocatorInterface[]
+     * @var ArrivalStandAllocator[]
      */
     private readonly array $allocators;
 
@@ -44,7 +45,8 @@ class ArrivalAllocationService
             ->whereRaw('airfield.code <> network_aircraft.planned_depairport')
             ->select('stand_assignments.*')
             ->get()
-            ->each(function (StandAssignment $standAssignment) {
+            ->each(function (StandAssignment $standAssignment)
+            {
                 $this->assignmentsService->deleteStandAssignment($standAssignment);
             });
     }
@@ -55,11 +57,16 @@ class ArrivalAllocationService
     private function allocateStandsForArrivingAircraft(): void
     {
         $this->getAircraftThatCanHaveArrivalStandsAllocated()
-            ->filter(fn (NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
-            ->each(function (NetworkAircraft $aircraft) {
+            ->filter(fn(NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
+            ->each(function (NetworkAircraft $aircraft)
+            {
                 foreach ($this->allocators as $allocator) {
                     if ($allocation = $allocator->allocate($aircraft)) {
-                        $this->assignmentsService->createStandAssignment($aircraft->callsign, $allocation, get_class($allocator));
+                        $this->assignmentsService->createStandAssignment(
+                            $aircraft->callsign,
+                            $allocation,
+                            get_class($allocator)
+                        );
                         return;
                     }
                 }
@@ -114,7 +121,7 @@ class ArrivalAllocationService
         );
         $groundspeed = $aircraft->groundspeed === 0 ? 1 : $aircraft->groundspeed;
 
-        return (float)($distanceToAirfieldInNm / $groundspeed) * 60.0;
+        return (float) ($distanceToAirfieldInNm / $groundspeed) * 60.0;
     }
 
     public function getAllocators(): array

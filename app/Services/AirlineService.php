@@ -21,15 +21,23 @@ class AirlineService
 
     public function airlineIdForCallsign(string $callsign): ?int
     {
-        return $this->airlineCodeIdMap()[Str::substr($callsign, 0, 3)] ?? null;
+        return $this->airlineCodeIdMap()[$this->airlineCodeForCallsign($callsign)] ?? null;
     }
 
-    public function getCallsignSlugForAircraft(NetworkAircraft $aircraft): string
+    public function getCallsignSlugForAircraft(NetworkAircraft|string $aircraft): string
     {
-        $airline = $this->getAirlineForAircraft($aircraft);
-        return $airline
-            ? Str::substr($aircraft->callsign, 3)
-            : $aircraft->callsign;
+        $callsign = $aircraft instanceof NetworkAircraft
+            ? $aircraft->callsign
+            : $aircraft;
+
+        return $this->airlineIdForCallsign($callsign) === null
+            ? $callsign
+            : Str::substr($callsign, 3);
+    }
+
+    private function airlineCodeForCallsign(string $callsign): string
+    {
+        return Str::substr($callsign, 0, 3);
     }
 
     public function airlinesUpdated()

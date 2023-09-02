@@ -4,16 +4,20 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\DB;
 
-class AirlineCallsignSlugStandAllocatorTest extends BaseFunctionalTestCase
+class AirlineCallsignSlugArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
+    private readonly AirlineCallsignSlugArrivalStandAllocator $allocator;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->allocator = $this->app->make(AirlineCallsignSlugArrivalStandAllocator::class);
+        Airline::factory()->create(['icao_code' => 'EZY']);
     }
 
     public function testItAllocatesAStandWithAFixedCallsignSlug()
@@ -478,16 +482,23 @@ class AirlineCallsignSlugStandAllocatorTest extends BaseFunctionalTestCase
     private function createAircraft(
         string $callsign,
         string $arrivalAirport,
-        string $departureAirport
+        string $departureAirport,
+        string $aircraftType = 'B738'
     ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
                 'cid' => 1234,
-                'planned_aircraft' => 'B738',
-                'planned_aircraft_short' => 'B738',
+                'planned_aircraft' => $aircraftType,
+                'planned_aircraft_short' => $aircraftType,
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
+                'aircraft_id' => $aircraftType === 'B738' ? 1 : null,
+                'airline_id' => match ($callsign) {
+                    'BAW23451' => 1,
+                    'EZY7823' => Airline::where('icao_code', 'EZY')->first()->id,
+                    default => null,
+                },
             ]
         );
     }

@@ -484,8 +484,7 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
         string $callsign,
         string $arrivalAirport,
         string $departureAirport
-    ): NetworkAircraft
-    {
+    ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
@@ -494,6 +493,8 @@ class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft_short' => 'B738',
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
+                'airline_id' => 1,
+                'aircraft_id' => 1,
             ]
         );
     }

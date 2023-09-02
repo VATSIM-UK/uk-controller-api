@@ -4,7 +4,6 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * The primary arrival stand allocator for cargo. Looks for either a cargo airline
@@ -13,9 +12,18 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * This allows airlines that also handle passengers to have stands for their cargo operation.
  */
-class CargoFlightPreferredArrivalStandAllocator extends AbstractArrivalStandAllocator
+class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
 {
     use ChecksForCargoAirlines;
+    use AppliesOrdering;
+    use OrdersStandsByCommonConditions;
+    use SelectsFromSizeAppropriateAvailableStands;
+    use SelectsFirstApplicableStand;
+    use ConsidersStandRequests;
+
+    private const ORDER_BYS = [
+        'airline_stand.priority ASC',
+    ];
 
     private AirlineService $airlineService;
 
@@ -24,18 +32,27 @@ class CargoFlightPreferredArrivalStandAllocator extends AbstractArrivalStandAllo
         $this->airlineService = $airlineService;
     }
 
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
+
+        // If the aircraft doesnt have an airline, we cant allocate a stand
         if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
             return null;
         }
 
-        if (!($airline = $this->airlineService->getAirlineForAircraft($aircraft))) {
-            return null;
-        }
+        return $this->selectFirstStand(
+            $this->applyOrderingToStandsQuery(
+                $this->joinOtherStandRequests(
+                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
+                    ->airline($aircraft->airline_id),
+                    $aircraft
+                )->cargo(),
+                array_merge(
+                    self::ORDER_BYS,
+                    $this->commonOrderByConditions
+                )
+            )
+        );
 
-        return $stands->cargo()
-            ->airline($airline)
-            ->orderBy('airline_stand.priority');
     }
 }
