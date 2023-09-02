@@ -12,7 +12,7 @@ use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
-use App\Allocator\Stand\ArrivalStandAllocatorInterface;
+use App\Allocator\Stand\ArrivalStandAllocator;
 use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
@@ -188,7 +188,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 FallbackArrivalStandAllocator::class,
             ],
             array_map(
-                fn(ArrivalStandAllocatorInterface $allocator) => get_class($allocator),
+                fn(ArrivalStandAllocator $allocator) => get_class($allocator),
                 $this->service->getAllocators()
             )
         );

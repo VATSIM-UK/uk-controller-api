@@ -7,15 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class AirlineTerminalArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use AppliesOrdering;
-    use SelectsFirstApplicableStand;
-    use SelectsStandsFromAirlineTerminals;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use OrdersStandsByCommonConditions;
-
-    private const ORDER_BYS = [
-        'airline_terminal.priority ASC',
-    ];
+    use SelectsStandsFromAirlineSpecificTerminals;
 
     /**
      * This allocator:
@@ -35,24 +27,12 @@ class AirlineTerminalArrivalStandAllocator implements ArrivalStandAllocator
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->standsAtAirlineTerminals(
-                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                            ->whereNull('airline_terminal.destination')
-                            ->whereNull('airline_terminal.callsign_slug')
-                            ->whereNull('airline_terminal.full_callsign')
-                            ->whereNull('airline_terminal.aircraft_id'),
-                        $aircraft
-                    ),
-                    $aircraft
-                ),
-                array_merge(
-                    self::ORDER_BYS,
-                    $this->commonOrderByConditionsWithoutAssignmentPriority
-                )
-            )
+        return $this->selectStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            fn(Builder $query) => $query->whereNull('airline_terminal.destination')
+                ->whereNull('airline_terminal.callsign_slug')
+                ->whereNull('airline_terminal.full_callsign')
+                ->whereNull('airline_terminal.aircraft_id')
         );
     }
 }

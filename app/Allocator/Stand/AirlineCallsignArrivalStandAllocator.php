@@ -4,18 +4,12 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
+use Illuminate\Database\Eloquent\Builder;
 
 class AirlineCallsignArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use AppliesOrdering;
+    use SelectsFromAirlineSpecificStands;
     use UsesCallsignSlugs;
-    use SelectsFirstApplicableStand;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use OrdersStandsByCommonConditions;
-
-    private const ORDER_BYS = [
-        'airline_stand.priority ASC',
-    ];
 
     private readonly AirlineService $airlineService;
 
@@ -41,19 +35,9 @@ class AirlineCallsignArrivalStandAllocator implements ArrivalStandAllocator
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                        ->airline($aircraft->airline_id)
-                        ->where('airline_stand.full_callsign', $this->getFullCallsignSlug($aircraft)),
-                    $aircraft
-                ),
-                array_merge(
-                    self::ORDER_BYS,
-                    $this->commonOrderByConditionsWithoutAssignmentPriority
-                )
-            )
+        return $this->selectAirlineSpecificStands(
+            $aircraft,
+            fn(Builder $query) => $query->where('airline_stand.full_callsign', $this->getFullCallsignSlug($aircraft)),
         );
     }
 }

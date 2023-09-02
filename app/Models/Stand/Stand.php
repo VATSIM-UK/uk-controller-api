@@ -140,11 +140,6 @@ class Stand extends Model
             );
     }
 
-    public function scopeAirlineDestination(Builder $builder, Airline|int $airline, array $destinationStrings): Builder
-    {
-        return $this->scopeAirline($builder, $airline)->whereIn('destination', $destinationStrings);
-    }
-
     public function scopeAirlineCallsign(Builder $builder, Airline $airline, array $slugs): Builder
     {
         return $this->scopeAirline($builder, $airline)->whereIn('callsign_slug', $slugs);

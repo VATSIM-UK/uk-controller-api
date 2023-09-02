@@ -8,11 +8,7 @@ use Illuminate\Support\Str;
 
 class DomesticInternationalStandAllocator implements ArrivalStandAllocator
 {
-    use AppliesOrdering;
-    use OrdersStandsByCommonConditions;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use SelectsFirstApplicableStand;
-    use ConsidersStandRequests;
+    use SelectsStandsUsingStandardConditions;
 
     public function allocate(NetworkAircraft $aircraft): ?int
     {
@@ -20,17 +16,9 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->getDomesticInternationalScope(
-                        $aircraft,
-                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                    ),
-                    $aircraft
-                ),
-                $this->commonOrderByConditions
-            )
+        return $this->selectStandsUsingStandardConditions(
+            $aircraft,
+            fn(Builder $query) => $this->getDomesticInternationalScope($aircraft, $query)
         );
     }
 

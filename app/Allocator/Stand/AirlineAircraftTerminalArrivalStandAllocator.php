@@ -3,20 +3,13 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Database\Eloquent\Builder;
 
 class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use OrdersStandsByCommonConditions;
-    use SelectsFirstApplicableStand;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use SelectsStandsFromAirlineTerminals;
-    use AppliesOrdering;
+    use SelectsStandsFromAirlineSpecificTerminals;
 
-    private const ORDER_BYS = [
-        'airline_terminal.priority ASC',
-    ];
-
-    /**
+    /*
      * This allocator:
      * 
      * - Selects stands that are size appropriate and available
@@ -33,21 +26,9 @@ class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAlloca
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->standsAtAirlineTerminals(
-                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                            ->where('airline_terminal.aircraft_id', $aircraft->aircraft_id),
-                        $aircraft
-                    ),
-                    $aircraft
-                ),
-                array_merge(
-                    self::ORDER_BYS,
-                    $this->commonOrderByConditionsWithoutAssignmentPriority
-                )
-            )
+        return $this->selectStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            fn(Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id)
         );
     }
 }

@@ -3,27 +3,15 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Database\Eloquent\Builder;
 
 class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use SelectsFromSizeAppropriateAvailableStands;
-    use SelectsFirstApplicableStand;
-    use OrdersStandsByCommonConditions;
-    use AppliesOrdering;
-
-    private const ORDER_BYS = [
-        'airline_stand.priority ASC',
-    ];
+    use SelectsFromAirlineSpecificStands;
 
     /**
-     * This allocator:
-     * 
-     * - Selects stands that are size appropriate and available
-     * - Filters these to stands that are specifically selected for the airline AND a given aircraft type
-     * - Orders these stands by the airline's priority for the stand
-     * - Orders these stands by the common conditions, minus the general allocation priority
-     * (see OrdersStandsByCommonConditions)
-     * - Selects the first stand that pops up
+     * This allocator uses the standard SelectsFromAirlineSpecificStands trait to generate a stand query,
+     * with additional filters that only stands for a specific aircraft type are selected.
      */
     public function allocate(NetworkAircraft $aircraft): ?int
     {
@@ -32,20 +20,9 @@ class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator
             return null;
         }
 
-
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                        ->airline($aircraft->airline_id)
-                        ->where('airline_stand.aircraft_id', $aircraft->aircraft_id),
-                    $aircraft
-                ),
-                array_merge(
-                    self::ORDER_BYS,
-                    $this->commonOrderByConditionsWithoutAssignmentPriority
-                )
-            )
+        return $this->selectAirlineSpecificStands(
+            $aircraft,
+            fn(Builder $query) => $query->where('airline_stand.aircraft_id', $aircraft->aircraft_id),
         );
     }
 }

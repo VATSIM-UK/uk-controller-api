@@ -4,6 +4,7 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * A fallback allocator for cargo airlines. Will allocate any
@@ -12,11 +13,7 @@ use App\Services\AirlineService;
 class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator
 {
     use ChecksForCargoAirlines;
-    use AppliesOrdering;
-    use OrdersStandsByCommonConditions;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use SelectsFirstApplicableStand;
-    use ConsidersStandRequests;
+    use SelectsStandsUsingStandardConditions;
 
     private AirlineService $airlineService;
 
@@ -38,14 +35,9 @@ class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft),
-                    $aircraft
-                )->cargo(),
-                $this->commonOrderByConditions
-            )
+        return $this->selectStandsUsingStandardConditions(
+            $aircraft,
+            fn(Builder $query) => $query->cargo(),
         );
     }
 }

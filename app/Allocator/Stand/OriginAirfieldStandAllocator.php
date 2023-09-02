@@ -8,12 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class OriginAirfieldStandAllocator implements ArrivalStandAllocator
 {
+    use SelectsStandsUsingStandardConditions;
     use UsesDestinationStrings;
-    use AppliesOrdering;
-    use OrdersStandsByCommonConditions;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use SelectsFirstApplicableStand;
-    use ConsidersStandRequests;
 
     private const ORDER_BYS = [
         'origin_slug IS NOT NULL',
@@ -26,16 +22,11 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                        ->whereIn('origin_slug', $this->getDestinationStrings($aircraft))
-                        ->notCargo(),
-                    $aircraft
-                ),
-                array_merge(self::ORDER_BYS, $this->commonOrderByConditions)
-            )
+        return $this->selectStandsUsingStandardConditions(
+            $aircraft,
+            fn(Builder $query) => $query->whereIn('origin_slug', $this->getDestinationStrings($aircraft))
+                ->notCargo(),
+            self::ORDER_BYS,
         );
     }
 }

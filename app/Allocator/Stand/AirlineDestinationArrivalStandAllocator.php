@@ -4,19 +4,16 @@ namespace App\Allocator\Stand;
 
 use App\Allocator\UsesDestinationStrings;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Database\Eloquent\Builder;
 
-class AirlineDestinationArrivalStandAllocator implements ArrivalStandAllocatorInterface
+class AirlineDestinationArrivalStandAllocator implements ArrivalStandAllocator
 {
     use UsesDestinationStrings;
-    use OrdersStandsByCommonConditions;
-    use SelectsFirstApplicableStand;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use AppliesOrdering;
+    use SelectsFromAirlineSpecificStands;
 
     private const ORDER_BYS = [
         'airline_stand.destination IS NOT NULL',
         'LENGTH(airline_stand.destination) DESC',
-        'airline_stand.priority ASC',
     ];
 
     /**
@@ -37,22 +34,13 @@ class AirlineDestinationArrivalStandAllocator implements ArrivalStandAllocatorIn
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                        ->with('airlines')
-                        ->airlineDestination(
-                            $aircraft->airline_id,
-                            $this->getDestinationStrings($aircraft)
-                        ),
-                    $aircraft
-                ),
-                array_merge(
-                    self::ORDER_BYS,
-                    $this->commonOrderByConditionsWithoutAssignmentPriority
-                )
-            )
+        return $this->selectAirlineSpecificStands(
+            $aircraft,
+            fn(Builder $query) => $query->whereIn(
+                'airline_stand.destination',
+                $this->getDestinationStrings($aircraft)
+            ),
+            self::ORDER_BYS
         );
     }
 }

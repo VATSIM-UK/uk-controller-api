@@ -3,14 +3,11 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Database\Eloquent\Builder;
 
 class FallbackArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use AppliesOrdering;
-    use OrdersStandsByCommonConditions;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use SelectsFirstApplicableStand;
-    use ConsidersStandRequests;
+    use SelectsStandsUsingStandardConditions;
 
     /**
      * This allocator:
@@ -24,14 +21,10 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator
      */
     public function allocate(NetworkAircraft $aircraft): ?int
     {
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)->notCargo(),
-                    $aircraft
-                ),
-                $this->commonOrderByConditions
-            )
+        return $this->selectStandsUsingStandardConditions(
+            $aircraft,
+            fn(Builder $query) => $query->notCargo(),
+            $this->commonOrderByConditions
         );
     }
 }

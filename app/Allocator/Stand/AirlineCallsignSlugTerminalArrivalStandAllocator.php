@@ -4,20 +4,16 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
+use Illuminate\Database\Eloquent\Builder;
 
 class AirlineCallsignSlugTerminalArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use AppliesOrdering;
     use UsesCallsignSlugs;
-    use SelectsFirstApplicableStand;
-    use SelectsStandsFromAirlineTerminals;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use OrdersStandsByCommonConditions;
+    use SelectsStandsFromAirlineSpecificTerminals;
 
     private const ORDER_BYS = [
         'airline_terminal.callsign_slug IS NOT NULL',
         'LENGTH(airline_terminal.callsign_slug) DESC',
-        'airline_terminal.priority',
     ];
 
     private AirlineService $airlineService;
@@ -39,27 +35,17 @@ class AirlineCallsignSlugTerminalArrivalStandAllocator implements ArrivalStandAl
      * (see OrdersStandsByCommonConditions)
      * - Selects the first stand that pops up
      */
-    public function allocate(NetworkAircraft $aircraft): ?int {
+    public function allocate(NetworkAircraft $aircraft): ?int
+    {
         // If the aircraft doesnt have an airline, we cant allocate a stand
         if ($aircraft->airline_id === null) {
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->standsAtAirlineTerminals(
-                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                            ->whereIn('airline_terminal.callsign_slug', $this->getCallsignSlugs($aircraft)),
-                        $aircraft
-                    ),
-                    $aircraft
-                ),
-                array_merge(
-                    self::ORDER_BYS,
-                    $this->commonOrderByConditionsWithoutAssignmentPriority
-                )
-            )
+        return $this->selectStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            fn(Builder $query) => $query->whereIn('airline_terminal.callsign_slug', $this->getCallsignSlugs($aircraft)),
+            self::ORDER_BYS
         );
     }
 }

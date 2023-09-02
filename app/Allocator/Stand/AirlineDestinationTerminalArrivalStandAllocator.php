@@ -4,27 +4,24 @@ namespace App\Allocator\Stand;
 
 use App\Allocator\UsesDestinationStrings;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Database\Eloquent\Builder;
 
 class AirlineDestinationTerminalArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use AppliesOrdering;
     use UsesDestinationStrings;
-    use SelectsFirstApplicableStand;
-    use SelectsStandsFromAirlineTerminals;
-    use SelectsFromSizeAppropriateAvailableStands;
-    use OrdersStandsByCommonConditions;
+    use SelectsStandsFromAirlineSpecificTerminals;
 
     private const ORDER_BYS = [
         'airline_terminal.destination IS NOT NULL',
         'LENGTH(airline_terminal.destination) DESC',
-        'airline_terminal.priority ASC',
     ];
 
     /**
      * This allocator:
      * 
      * - Selects stands that are size appropriate and available
-     * - Filters these to stands that are at terminals specifically selected for the airline and a specific set of destinations
+     * - Filters these to stands that are at terminals specifically selected for the airline and a
+     * specific set of destinations
      * - Orders these by the most specific destination first
      * - Orders these stands by the airline's priority for the stand
      * - Orders these stands by the common conditions, minus the general allocation priority
@@ -38,21 +35,13 @@ class AirlineDestinationTerminalArrivalStandAllocator implements ArrivalStandAll
             return null;
         }
 
-        return $this->selectFirstStand(
-            $this->applyOrderingToStandsQuery(
-                $this->joinOtherStandRequests(
-                    $this->standsAtAirlineTerminals(
-                        $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
-                            ->whereIn('airline_terminal.destination', $this->getDestinationStrings($aircraft)),
-                        $aircraft
-                    ),
-                    $aircraft
-                ),
-                array_merge(
-                    self::ORDER_BYS,
-                    $this->commonOrderByConditionsWithoutAssignmentPriority
-                )
-            )
+        return $this->selectStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            fn(Builder $query) => $query->whereIn(
+                'airline_terminal.destination',
+                $this->getDestinationStrings($aircraft)
+            ),
+            self::ORDER_BYS
         );
     }
 }
