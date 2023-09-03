@@ -8,6 +8,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Carbon;
@@ -370,7 +371,7 @@ class AirlineAircraftTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
         );
 
         // Should be ranked first - it has the highest priority. Both stands on the terminal should be
-        // included. Stand A1 gets a reservation so that we show its not considered.
+        // included. Stand A1 gets a reservation and a request so that we show its not considered.
         $terminalA1 = Terminal::factory()->create(['airfield_id' => $airfieldId]);
         $terminalA1->airlines()->sync([1 => ['aircraft_id' => 1, 'priority' => 100]]);
         $standA1 = Stand::factory()->create(
@@ -394,8 +395,9 @@ class AirlineAircraftTerminalArrivalStandAllocatorTest extends BaseFunctionalTes
                 'end' => Carbon::now()->addMinutes(1),
             ]
         );
+        StandRequest::factory()->create(['requested_time' => Carbon::now(), 'stand_id' => $standA1->id]);
 
-        // Should be ranked joint second, lower priority than A1
+        // Should be ranked joint second, lower priority than A1.
         $terminalB1 = Terminal::factory()->create(['airfield_id' => $airfieldId]);
         $terminalB1->airlines()->sync([1 => ['aircraft_id' => 1, 'priority' => 101]]);
         $standB1 = Stand::factory()->create(

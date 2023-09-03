@@ -7,6 +7,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Carbon;
@@ -378,7 +379,8 @@ class AirlineAircraftArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
 
-        // Should be ranked joint second, lower priority than A1
+        // Should be ranked joint second, lower priority than A1. B1 has a request, to show that requests arent considered
+        // when ranking.
         $standB1 = Stand::factory()->create(
             [
                 'airfield_id' => $airfieldId,
@@ -386,6 +388,7 @@ class AirlineAircraftArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'aerodrome_reference_code' => 'C'
             ]
         );
+        StandRequest::factory()->create(['requested_time' => Carbon::now(), 'stand_id' => $standB1->id]);
         $standB2 = Stand::factory()->create(
             [
                 'airfield_id' => $airfieldId,

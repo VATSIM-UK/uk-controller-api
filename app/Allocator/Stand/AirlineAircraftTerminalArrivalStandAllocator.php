@@ -3,6 +3,7 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -29,7 +30,7 @@ class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAlloca
 
         return $this->selectStandsAtAirlineSpecificTerminals(
             $aircraft,
-            fn(Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id)
+            $this->queryFilter($aircraft)
         );
     }
 
@@ -42,7 +43,12 @@ class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAlloca
 
         return $this->selectRankedStandsAtAirlineSpecificTerminals(
             $aircraft,
-            fn(Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id)
+            $this->queryFilter($aircraft)
         );
+    }
+
+    private function queryFilter(NetworkAircraft $aircraft): Closure
+    {
+        return fn(Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id);
     }
 }

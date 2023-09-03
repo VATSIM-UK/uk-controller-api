@@ -3,6 +3,7 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -23,7 +24,7 @@ class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator, Ran
 
         return $this->selectAirlineSpecificStands(
             $aircraft,
-            fn(Builder $query) => $query->where('airline_stand.aircraft_id', $aircraft->aircraft_id),
+            $this->queryFilter($aircraft)
         );
     }
 
@@ -37,7 +38,12 @@ class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator, Ran
 
         return $this->selectRankedAirlineSpecificStands(
             $aircraft,
-            fn(Builder $query) => $query->where('airline_stand.aircraft_id', $aircraft->aircraft_id)
+            $this->queryFilter($aircraft)
         );
+    }
+
+    private function queryFilter(NetworkAircraft $aircraft): Closure
+    {
+        return fn(Builder $query) => $query->where('airline_stand.aircraft_id', $aircraft->aircraft_id);
     }
 }
