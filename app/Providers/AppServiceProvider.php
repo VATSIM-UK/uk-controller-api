@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Livewire\CurrentStandRequest;
 use App\Http\Livewire\RequestAStandForm;
+use App\Http\Livewire\StandPredictorForm;
 use App\SocialiteProviders\CoreProvider;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
@@ -40,22 +41,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Bugsnag::registerCallback(function ($report) {
+        Bugsnag::registerCallback(function ($report)
+        {
             if (Auth::check()) {
                 $user = Auth::user();
 
                 $report->setUser([
-                     'id' => $user->id,
-                     'name' => $user->name
-                 ]);
+                    'id' => $user->id,
+                    'name' => $user->name
+                ]);
             }
         });
 
-        Rule::macro('latitudeString', function () {
+        Rule::macro('latitudeString', function ()
+        {
             return 'regex:' . SectorfileService::SECTORFILE_LATITUDE_REGEX;
         });
 
-        Rule::macro('longitudeString', function () {
+        Rule::macro('longitudeString', function ()
+        {
             return 'regex:' . SectorfileService::SECTORFILE_LONGITUDE_REGEX;
         });
 
@@ -63,7 +67,8 @@ class AppServiceProvider extends ServiceProvider
         $socialite = $this->app->make(Factory::class);
         $socialite->extend(
             'vatsimuk',
-            function ($app) use ($socialite) {
+            function ($app) use ($socialite)
+            {
                 $config = $app['config']['services.vatsim_uk_core'];
                 $config['redirect'] = route('auth.login.callback');
 
@@ -72,7 +77,8 @@ class AppServiceProvider extends ServiceProvider
         );
 
         // Filament styling
-        Filament::serving(function () {
+        Filament::serving(function ()
+        {
             Filament::registerTheme(mix('css/vatukfilament.css'));
             Filament::registerNavigationGroups(
                 [
@@ -93,5 +99,6 @@ class AppServiceProvider extends ServiceProvider
         // Livewire
         Livewire::component('request-a-stand-form', RequestAStandForm::class);
         Livewire::component('current-stand-request', CurrentStandRequest::class);
+        Livewire::component('stand-predictor-form', StandPredictorForm::class);
     }
 }

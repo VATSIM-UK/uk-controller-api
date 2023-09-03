@@ -3,7 +3,9 @@
 namespace App\Services\Stand;
 
 use App\Allocator\Stand\ArrivalStandAllocator;
+use App\Allocator\Stand\RankableArrivalStandAllocator;
 use App\Models\Airfield\Airfield;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\LocationService;
@@ -127,5 +129,27 @@ class ArrivalAllocationService
     public function getAllocators(): array
     {
         return $this->allocators;
+    }
+
+    public function getAllocationRankingForAircraft(NetworkAircraft $aircraft): array
+    {
+        $ranking = [];
+
+        foreach ($this->allocators as $allocator) {
+            if (!$allocator instanceof RankableArrivalStandAllocator) {
+                continue;
+            }
+
+            $ranking[get_class($allocator)] = $allocator->getRankedStandAllocation($aircraft)
+                ->groupBy('rank')
+                ->map(
+                    fn(Collection $stands) =>
+                    $stands->sortBy('identifier', SORT_NATURAL)->map(fn(Stand $stand) => $stand->identifier)->values()
+                )
+                ->values()
+                ->toArray();
+        }
+        
+        return $ranking;
     }
 }
