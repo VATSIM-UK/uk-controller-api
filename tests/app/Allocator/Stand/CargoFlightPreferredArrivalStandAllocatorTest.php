@@ -4,12 +4,17 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandRequest;
+use App\Models\Stand\StandReservation;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
@@ -126,19 +131,187 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
         $this->assertNull($allocation);
     }
 
+    public function testItDoesntRankStandsIfUnknownAircraft()
+    {
+        $aircraft = $this->newAircraft('BAW1234', 'EGLL', 'C172');
+        $this->assertEquals(collect(), $this->allocator->getRankedStandAllocation($aircraft));
+    }
+
+    public function testItDoesntRankStandsIfUnknownAirline()
+    {
+        $aircraft = $this->newAircraft('XXX123', 'EGLL');
+        $this->assertEquals(collect(), $this->allocator->getRankedStandAllocation($aircraft));
+    }
+
+    public function testItGetsRankedStandAllocation()
+    {
+        // Create an airfield that we dont have so we know its a clean test
+        $airfield = Airfield::factory()->create(['code' => 'EXXX']);
+        $airfieldId = $airfield->id;
+
+        // Create a small aircraft type to test stand size ranking
+        $cessna = Aircraft::create(
+            [
+                'code' => 'C172',
+                'allocate_stands' => true,
+                'aerodrome_reference_code' => 'A',
+                'wingspan' => 0.5,
+                'length' => 0.6,
+            ]
+        );
+
+        // Should be ranked first - its the smallest stand that's applicable
+        $standA1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'A1',
+                'assignment_priority' => 100,
+                'aerodrome_reference_code' => 'E',
+                'type_id' => 3,
+            ]
+        );
+        $standA1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+        StandReservation::create(
+            [
+                'stand_id' => $standA1->id,
+                'start' => Carbon::now()->subMinutes(1),
+                'end' => Carbon::now()->addMinutes(1),
+            ]
+        );
+
+        // Should be ranked joint second, bigger than A1, but same priority
+        $standB1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'B1',
+                'assignment_priority' => 100,
+                'type_id' => 3,
+            ]
+        );
+        $standB1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+        StandRequest::factory()->create(['requested_time' => Carbon::now(), 'stand_id' => $standB1->id]);
+        $standB2 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'B2',
+                'assignment_priority' => 100,
+                'type_id' => 3,
+            ]
+        );
+        $standB2->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+
+        // Should be ranked joint third, same size as B1 and B2, but lower priority
+        $standC1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'C1',
+                'assignment_priority' => 101,
+                'type_id' => 3,
+            ]
+        );
+        $standC2 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'C2',
+                'assignment_priority' => 101,
+                'type_id' => 3,
+            ]
+        );
+        $standC1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 101]]);
+        $standC2->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 101]]);
+
+        // Should not appear in rankings - wrong airfield
+        $standD1 = Stand::factory()->create(['airfield_id' => 2, 'identifier' => 'D1', 'type_id' => 3]);
+        $standD1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+
+        // Should not appear in rankings - not cargo
+        $standE1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'E1',
+                'type_id' => 2,
+            ]
+        );
+        $standE1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+
+        // Should not appear in rankings - too small ARC
+        $standF1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'F1',
+                'aerodrome_reference_code' => 'A',
+                'type_id' => 3,
+            ]
+        );
+        $standF1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+
+        // Should not appear in rankings - too small max aircraft size
+        $standG1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'G1',
+                'max_aircraft_id_length' => $cessna->id,
+                'max_aircraft_id_wingspan' => $cessna->id,
+                'type_id' => 3,
+            ]
+        );
+        $standG1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+
+        // Should not appear in rankings - closed
+        $standH1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'H1',
+                'aerodrome_reference_code' => 'E',
+                'closed_at' => Carbon::now(),
+                'type_id' => 3,
+            ]
+        );
+        $standH1->airlines()->sync([Airline::where('icao_code', 'VIR')->first()->id => ['priority' => 100]]);
+
+        $expectedRanks = [
+            $standA1->id => 1,
+            $standB1->id => 2,
+            $standB2->id => 2,
+            $standC1->id => 3,
+            $standC2->id => 3,
+        ];
+
+        $actualRanks = $this->allocator->getRankedStandAllocation(
+            $this->newAircraft('VIR22F', $airfield->code)
+        )->mapWithKeys(
+                fn($stand) => [$stand->id => $stand->rank]
+            )
+            ->toArray();
+
+        $this->assertEquals($expectedRanks, $actualRanks);
+    }
+
     private function createAircraft(
         string $callsign,
-        string $arrivalAirport
+        string $arrivalAirport,
+        string $aircraftType = 'B744'
     ): NetworkAircraft {
-        return NetworkAircraft::create(
+        return tap(
+            $this->newAircraft($callsign, $arrivalAirport, $aircraftType),
+            fn(NetworkAircraft $aircraft) => $aircraft->save()
+        );
+    }
+
+    private function newAircraft(
+        string $callsign,
+        string $arrivalAirport,
+        string $aircraftType = 'B744'
+    ): NetworkAircraft {
+        return new NetworkAircraft(
             [
                 'callsign' => $callsign,
                 'cid' => 1234,
-                'planned_aircraft' => 'B744',
-                'planned_aircraft_short' => 'B744',
+                'planned_aircraft' => $aircraftType,
+                'planned_aircraft_short' => $aircraftType,
                 'planned_destairport' => $arrivalAirport,
-                'airline_id' => Airline::where('icao_code', 'VIR')->first()->id,
-                'aircraft_id' => Aircraft::where('code', 'B744')->first()->id,
+                'airline_id' => Airline::where('icao_code', Str::substr($callsign, 0, 3))->first()?->id,
+                'aircraft_id' => Aircraft::where('code', $aircraftType)->first()?->id,
             ]
         );
     }

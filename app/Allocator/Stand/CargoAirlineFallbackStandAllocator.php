@@ -4,13 +4,15 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 /**
  * A fallback allocator for cargo airlines. Will allocate any
  * cargo stand to any airline that is type cargo.
  */
-class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator
+class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
     use ChecksForCargoAirlines;
     use SelectsStandsUsingStandardConditions;
@@ -31,13 +33,30 @@ class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator
      */
     public function allocate(NetworkAircraft $aircraft): ?int
     {
-        if (!$this->isCargoAirline($aircraft)) {
+        if ($aircraft->aircraft_id === null || !$this->isCargoAirline($aircraft)) {
             return null;
         }
 
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            fn(Builder $query) => $query->cargo(),
+            $this->queryFilter()
         );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        if ($aircraft->aircraft_id === null || !$this->isCargoAirline($aircraft)) {
+            return collect();
+        }
+
+        return $this->selectRankedStandsUsingStandardConditions(
+            $aircraft,
+            $this->queryFilter()
+        );
+    }
+
+    private function queryFilter(): Closure
+    {
+        return fn(Builder $query) => $query->cargo();
     }
 }

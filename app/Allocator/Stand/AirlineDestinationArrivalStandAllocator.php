@@ -4,7 +4,9 @@ namespace App\Allocator\Stand;
 
 use App\Allocator\UsesDestinationStrings;
 use App\Models\Vatsim\NetworkAircraft;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class AirlineDestinationArrivalStandAllocator implements ArrivalStandAllocator
 {
@@ -30,17 +32,36 @@ class AirlineDestinationArrivalStandAllocator implements ArrivalStandAllocator
     public function allocate(NetworkAircraft $aircraft): ?int
     {
         // We cant allocate a stand if we don't know the airline
-        if ($aircraft->airline_id === null) {
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
             return null;
         }
 
         return $this->selectAirlineSpecificStands(
             $aircraft,
-            fn(Builder $query) => $query->whereIn(
-                'airline_stand.destination',
-                $this->getDestinationStrings($aircraft)
-            ),
+            $this->queryFilter($aircraft),
             self::ORDER_BYS
+        );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        // We can only allocate a stand if we know the airline
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
+            return collect();
+        }
+
+        return $this->selectRankedAirlineSpecificStands(
+            $aircraft,
+            $this->queryFilter($aircraft),
+            self::ORDER_BYS
+        );
+    }
+
+    private function queryFilter(NetworkAircraft $aircraft): Closure
+    {
+        return fn(Builder $query) => $query->whereIn(
+            'airline_stand.destination',
+            $this->getDestinationStrings($aircraft)
         );
     }
 }

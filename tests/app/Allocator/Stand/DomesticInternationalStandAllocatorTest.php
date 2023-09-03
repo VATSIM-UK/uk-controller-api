@@ -4,10 +4,14 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandRequest;
+use App\Models\Stand\StandReservation;
 use App\Models\Stand\StandType;
 use App\Models\Vatsim\NetworkAircraft;
+use Illuminate\Support\Carbon;
 
 class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
 {
@@ -176,13 +180,299 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate($this->createAircraft('BAW898', 'B738', 'XXXX')));
     }
 
+    public function testItDoesntRankStandsIfUnknownAircraft()
+    {
+        $aircraft = $this->newAircraft('BAW123', 'XXX', 'EGLL', 'EIDW');
+        $this->assertEquals(collect(), $this->allocator->getRankedStandAllocation($aircraft));
+    }
+
+    public function testItGetsRankedStandAllocationForDomestic()
+    {
+        // Create an airfield that we dont have so we know its a clean test
+        $airfield = Airfield::factory()->create(['code' => 'EXXX']);
+        $airfieldId = $airfield->id;
+
+        // Create a small aircraft type to test stand size ranking
+        $cessna = Aircraft::create(
+            [
+                'code' => 'C172',
+                'allocate_stands' => true,
+                'aerodrome_reference_code' => 'A',
+                'wingspan' => 1,
+                'length' => 12,
+            ]
+        );
+
+        // Should be ranked first - its the smallest stand that's applicable
+        $standA1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'A1',
+                'assignment_priority' => 100,
+                'aerodrome_reference_code' => 'E',
+                'type_id' => 1,
+            ]
+        );
+        StandReservation::create(
+            [
+                'stand_id' => $standA1->id,
+                'start' => Carbon::now()->subMinutes(1),
+                'end' => Carbon::now()->addMinutes(1),
+            ]
+        );
+
+        // Should be ranked joint second, bigger than A1, but same priority
+        $standB1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'B1',
+                'assignment_priority' => 100,
+                'type_id' => 1,
+            ]
+        );
+        StandRequest::factory()->create(['requested_time' => Carbon::now(), 'stand_id' => $standB1->id]);
+        $standB2 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'B2',
+                'assignment_priority' => 100,
+                'type_id' => 1,
+            ]
+        );
+
+        // Should be ranked joint third, same size as B1 and B2, but lower priority
+        $standC1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'C1',
+                'assignment_priority' => 101,
+                'type_id' => 1,
+            ]
+        );
+        $standC2 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'C2',
+                'assignment_priority' => 101,
+                'type_id' => 1,
+            ]
+        );
+
+        // Should not appear in rankings - wrong airfield
+        Stand::factory()->create(['airfield_id' => 2, 'identifier' => 'D1', 'type_id' => 1]);
+
+        // Should not appear in rankings - not domestic
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'E1',
+                'type_id' => 2,
+            ]
+        );
+
+        // Should not appear in rankings - too small ARC
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'F1',
+                'aerodrome_reference_code' => 'A',
+                'type_id' => 1,
+            ]
+        );
+
+        // Should not appear in rankings - too small max aircraft size
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'G1',
+                'max_aircraft_id_length' => $cessna->id,
+                'max_aircraft_id_wingspan' => $cessna->id,
+                'type_id' => 1,
+            ]
+        );
+
+        // Should not appear in rankings - closed
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'H1',
+                'aerodrome_reference_code' => 'E',
+                'closed_at' => Carbon::now(),
+                'type_id' => 1,
+            ]
+        );
+
+        $expectedRanks = [
+            $standA1->id => 1,
+            $standB1->id => 2,
+            $standB2->id => 2,
+            $standC1->id => 3,
+            $standC2->id => 3,
+        ];
+
+        $actualRanks = $this->allocator->getRankedStandAllocation(
+            $this->newAircraft('VIR22F', 'B738', $airfield->code, 'EGLL')
+        )->mapWithKeys(
+                fn($stand) => [$stand->id => $stand->rank]
+            )
+            ->toArray();
+
+        $this->assertEquals($expectedRanks, $actualRanks);
+    }
+
+    public function testItGetsRankedStandAllocationForInternational()
+    {
+        // Create an airfield that we dont have so we know its a clean test
+        $airfield = Airfield::factory()->create(['code' => 'EXXX']);
+        $airfieldId = $airfield->id;
+
+        // Create a small aircraft type to test stand size ranking
+        $cessna = Aircraft::create(
+            [
+                'code' => 'C172',
+                'allocate_stands' => true,
+                'aerodrome_reference_code' => 'A',
+                'wingspan' => 1,
+                'length' => 12,
+            ]
+        );
+
+        // Should be ranked first - its the smallest stand that's applicable
+        $standA1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'A1',
+                'assignment_priority' => 100,
+                'aerodrome_reference_code' => 'E',
+                'type_id' => 2,
+            ]
+        );
+        StandReservation::create(
+            [
+                'stand_id' => $standA1->id,
+                'start' => Carbon::now()->subMinutes(1),
+                'end' => Carbon::now()->addMinutes(1),
+            ]
+        );
+
+        // Should be ranked joint second, bigger than A1, but same priority
+        $standB1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'B1',
+                'assignment_priority' => 100,
+                'type_id' => 2,
+            ]
+        );
+        StandRequest::factory()->create(['requested_time' => Carbon::now(), 'stand_id' => $standB1->id]);
+        $standB2 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'B2',
+                'assignment_priority' => 100,
+                'type_id' => 2,
+            ]
+        );
+
+        // Should be ranked joint third, same size as B1 and B2, but lower priority
+        $standC1 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'C1',
+                'assignment_priority' => 101,
+                'type_id' => 2,
+            ]
+        );
+        $standC2 = Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'C2',
+                'assignment_priority' => 101,
+                'type_id' => 2,
+            ]
+        );
+
+        // Should not appear in rankings - wrong airfield
+        Stand::factory()->create(['airfield_id' => 2, 'identifier' => 'D1', 'type_id' => 1]);
+
+        // Should not appear in rankings - is domestic
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'E1',
+                'type_id' => 1,
+            ]
+        );
+
+        // Should not appear in rankings - too small ARC
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'F1',
+                'aerodrome_reference_code' => 'A',
+                'type_id' => 1,
+            ]
+        );
+
+        // Should not appear in rankings - too small max aircraft size
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'G1',
+                'max_aircraft_id_length' => $cessna->id,
+                'max_aircraft_id_wingspan' => $cessna->id,
+                'type_id' => 1,
+            ]
+        );
+
+        // Should not appear in rankings - closed
+        Stand::factory()->create(
+            [
+                'airfield_id' => $airfieldId,
+                'identifier' => 'H1',
+                'aerodrome_reference_code' => 'E',
+                'closed_at' => Carbon::now(),
+                'type_id' => 1,
+            ]
+        );
+
+        $expectedRanks = [
+            $standA1->id => 1,
+            $standB1->id => 2,
+            $standB2->id => 2,
+            $standC1->id => 3,
+            $standC2->id => 3,
+        ];
+
+        $actualRanks = $this->allocator->getRankedStandAllocation(
+            $this->newAircraft('VIR22F', 'B738', $airfield->code, 'KJFK')
+        )->mapWithKeys(
+                fn($stand) => [$stand->id => $stand->rank]
+            )
+            ->toArray();
+
+        $this->assertEquals($expectedRanks, $actualRanks);
+    }
+
     private function createAircraft(
         string $callsign,
         string $type,
         string $arrivalAirport,
         string $departureAirport = 'EGKK'
     ): NetworkAircraft {
-        return NetworkAircraft::create(
+        return tap(
+            $this->newAircraft($callsign, $type, $arrivalAirport, $departureAirport),
+            fn(NetworkAircraft $aircraft) => $aircraft->save()
+        );
+    }
+
+    private function newAircraft(
+        string $callsign,
+        string $type,
+        string $arrivalAirport,
+        string $departureAirport = 'EGKK'
+    ): NetworkAircraft {
+        return new NetworkAircraft(
             [
                 'callsign' => $callsign,
                 'cid' => 1234,
@@ -190,7 +480,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,
                 'planned_depairport' => $departureAirport,
-                'aircraft_id' => Aircraft::where('code', $type)->first()->id,
+                'aircraft_id' => Aircraft::where('code', $type)->first()?->id,
             ]
         );
     }

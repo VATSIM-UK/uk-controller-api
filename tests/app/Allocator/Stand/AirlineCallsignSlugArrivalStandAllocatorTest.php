@@ -4,6 +4,7 @@ namespace App\Allocator\Stand;
 
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandRequest;
@@ -488,6 +489,12 @@ class AirlineCallsignSlugArrivalStandAllocatorTest extends BaseFunctionalTestCas
         $this->assertEquals(collect(), $this->allocator->getRankedStandAllocation($aircraft));
     }
 
+    public function testItDoesntRankStandsIfUnknownAircraft()
+    {
+        $aircraft = $this->newAircraft('BAW1234', 'EGLL', 'EGGD', 'C172');
+        $this->assertEquals(collect(), $this->allocator->getRankedStandAllocation($aircraft));
+    }
+
     public function testItGetsRankedStandAllocation()
     {
         // Create an airfield that we dont have so we know its a clean test
@@ -579,15 +586,6 @@ class AirlineCallsignSlugArrivalStandAllocatorTest extends BaseFunctionalTestCas
         );
         $standE2->airlines()->sync([1]);
 
-        // Should not appear in rankings - no callsign
-        $standE2 = Stand::factory()->create(
-            [
-                'airfield_id' => $airfieldId,
-                'identifier' => 'E2',
-            ]
-        );
-        $standE2->airlines()->sync([1]);
-
         // Should not appear in rankings - too small ARC
         $standF1 = Stand::factory()->create(
             [
@@ -641,7 +639,8 @@ class AirlineCallsignSlugArrivalStandAllocatorTest extends BaseFunctionalTestCas
 
         $this->assertEquals($expectedRanks, $actualRanks);
     }
-    private function newAircraft(
+
+    private function createAircraft(
         string $callsign,
         string $arrivalAirport,
         string $departureAirport,
@@ -653,13 +652,13 @@ class AirlineCallsignSlugArrivalStandAllocatorTest extends BaseFunctionalTestCas
         );
     }
 
-    private function createAircraft(
+    private function newAircraft(
         string $callsign,
         string $arrivalAirport,
         string $departureAirport,
         string $aircraftType = 'B738'
     ): NetworkAircraft {
-        return NetworkAircraft::create(
+        return new NetworkAircraft(
             [
                 'callsign' => $callsign,
                 'cid' => 1234,

@@ -4,7 +4,9 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 /**
  * The primary arrival stand allocator for cargo. Looks for either a cargo airline
@@ -34,7 +36,25 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
 
         return $this->selectAirlineSpecificStands(
             $aircraft,
-            fn(Builder $query) => $query->cargo()
+            $this->queryFilter()
         );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
+        if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
+            return collect();
+        }
+        
+        return $this->selectRankedAirlineSpecificStands(
+            $aircraft,
+            $this->queryFilter()
+        );
+    }
+
+    private function queryFilter(): Closure
+    {
+        return fn(Builder $query) => $query->cargo();
     }
 }

@@ -462,7 +462,7 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($expectedRanks, $actualRanks);
     }
 
-    private function newAircraft(
+    private function createAircraft(
         string $callsign,
         string $arrivalAirport,
         string $departureAirport,
@@ -474,7 +474,7 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
         );
     }
 
-    private function createAircraft(
+    private function newAircraft(
         string $callsign,
         string $arrivalAirport,
         string $departureAirport,

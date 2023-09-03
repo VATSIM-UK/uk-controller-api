@@ -3,9 +3,11 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class FallbackArrivalStandAllocator implements ArrivalStandAllocator
+class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
     use SelectsStandsUsingStandardConditions;
 
@@ -21,10 +23,30 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator
      */
     public function allocate(NetworkAircraft $aircraft): ?int
     {
+        if ($aircraft->aircraft_id === null) {
+            return null;
+        }
+
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            fn(Builder $query) => $query->notCargo(),
-            $this->commonOrderByConditions
+            $this->filterQuery(),
         );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        if ($aircraft->aircraft_id === null) {
+            return collect();
+        }
+
+        return $this->selectRankedStandsUsingStandardConditions(
+            $aircraft,
+            $this->filterQuery(),
+        );
+    }
+
+    private function filterQuery(): Closure
+    {
+        return fn(Builder $query) => $query->notCargo();
     }
 }

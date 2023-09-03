@@ -4,9 +4,11 @@ namespace App\Allocator\Stand;
 
 use App\Allocator\UsesDestinationStrings;
 use App\Models\Vatsim\NetworkAircraft;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class OriginAirfieldStandAllocator implements ArrivalStandAllocator
+class OriginAirfieldStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
     use SelectsStandsUsingStandardConditions;
     use UsesDestinationStrings;
@@ -24,9 +26,27 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator
 
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            fn(Builder $query) => $query->whereIn('origin_slug', $this->getDestinationStrings($aircraft))
-                ->notCargo(),
+            $this->filterQuery($aircraft),
             self::ORDER_BYS,
         );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        if (!$aircraft->planned_depairport) {
+            return collect();
+        }
+
+        return $this->selectRankedStandsUsingStandardConditions(
+            $aircraft,
+            $this->filterQuery($aircraft),
+            self::ORDER_BYS,
+        );
+    }
+
+    private function filterQuery(NetworkAircraft $aircraft): Closure
+    {
+        return fn(Builder $query)
+            => $query->notCargo()->whereIn('origin_slug', $this->getDestinationStrings($aircraft));
     }
 }
