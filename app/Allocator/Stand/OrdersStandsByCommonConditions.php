@@ -25,4 +25,13 @@ trait OrdersStandsByCommonConditions
         'other_stand_requests.id ASC',
         'RAND() ASC',
     ];
+
+    private array $commonOrderByConditionsForRanking = [
+        'aerodrome_reference_code ASC',
+        'assignment_priority ASC',
+    ];
+
+    private array $commonOrderByConditionsWithoutAssignmentPriorityForRanking = [
+        'aerodrome_reference_code ASC',
+    ];
 }

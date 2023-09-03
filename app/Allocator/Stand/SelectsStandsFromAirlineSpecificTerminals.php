@@ -5,6 +5,7 @@ namespace App\Allocator\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 /**
  * A trait that can be used by any allocator that needs to select stands from
@@ -44,9 +45,16 @@ trait SelectsStandsFromAirlineSpecificTerminals
         );
     }
 
-    private function orderByForAirlineStandQuery(array $specificOrders): array
-    {
-        return $this->orderByForStandsQuery(
+    private function selectRankedStandsAtAirlineSpecificTerminals(
+        NetworkAircraft $aircraft,
+        Closure $specificFilters,
+        array $specificOrders = []
+    ): Collection {
+        return $this->selectRankedStandsUsingStandardConditions(
+            $aircraft,
+            fn(Builder $query) => $specificFilters($query->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
+                ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
+                ->where('airline_terminal.airline_id', $aircraft->airline_id)),
             array_merge(
                 $specificOrders,
                 ['airline_terminal.priority ASC'],

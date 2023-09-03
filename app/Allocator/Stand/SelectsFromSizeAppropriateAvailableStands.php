@@ -6,7 +6,8 @@ use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
 
-trait SelectsFromSizeAppropriateAvailableStands {
+trait SelectsFromSizeAppropriateAvailableStands
+{
     /*
      * Base query for stands at the arrival airfield, which are of a suitable
      * size (or max size if no type) for the aircraft and not occupied.
@@ -19,6 +20,17 @@ trait SelectsFromSizeAppropriateAvailableStands {
         })
             ->sizeAppropriate($aircraft->aircraft)
             ->available()
+            ->select('stands.*');
+    }
+
+    private function sizeAppropriateAvailableStandsAtAirfieldForRanking(NetworkAircraft $aircraft): Builder
+    {
+        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft)
+        {
+            $query->where('code', $aircraft->planned_destairport);
+        })
+            ->sizeAppropriate($aircraft->aircraft)
+            ->notClosed()
             ->select('stands.*');
     }
 }

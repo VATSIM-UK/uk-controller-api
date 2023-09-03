@@ -4,8 +4,9 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAllocator
+class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
     use SelectsStandsFromAirlineSpecificTerminals;
 
@@ -27,6 +28,19 @@ class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAlloca
         }
 
         return $this->selectStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            fn(Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id)
+        );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        // We cant allocate a stand if we don't know the airline or aircraft type
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
+            return collect();
+        }
+
+        return $this->selectRankedStandsAtAirlineSpecificTerminals(
             $aircraft,
             fn(Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id)
         );
