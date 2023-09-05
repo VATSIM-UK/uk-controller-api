@@ -131,9 +131,9 @@ class ArrivalAllocationService
         return $this->allocators;
     }
 
-    public function getAllocationRankingForAircraft(NetworkAircraft $aircraft): array
+    public function getAllocationRankingForAircraft(NetworkAircraft $aircraft): Collection
     {
-        $ranking = [];
+        $ranking = collect();
 
         foreach ($this->allocators as $allocator) {
             if (!$allocator instanceof RankableArrivalStandAllocator) {
@@ -142,14 +142,9 @@ class ArrivalAllocationService
 
             $ranking[get_class($allocator)] = $allocator->getRankedStandAllocation($aircraft)
                 ->groupBy('rank')
-                ->map(
-                    fn(Collection $stands) =>
-                    $stands->sortBy('identifier', SORT_NATURAL)->map(fn(Stand $stand) => $stand->identifier)->values()
-                )
-                ->values()
-                ->toArray();
+                ->values();
         }
-        
+
         return $ranking;
     }
 }

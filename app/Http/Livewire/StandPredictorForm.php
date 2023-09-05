@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use App\Filament\Helpers\SelectOptions;
 use App\Models\Airfield\Airfield;
-use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;

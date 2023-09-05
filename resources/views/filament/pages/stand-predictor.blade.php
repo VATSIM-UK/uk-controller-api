@@ -14,7 +14,7 @@
             @endphp
             @while ($rank < count($groups))
                 <h3><b>Rank {{ $rank + 1 }}</b></h3>
-                {{ implode(',', $groups[$rank]) }}
+                <div style="overflow-wrap: break-word">{{ implode(',', $groups[$rank]) }}</div>
                 @php
                     $rank++;
                 @endphp
