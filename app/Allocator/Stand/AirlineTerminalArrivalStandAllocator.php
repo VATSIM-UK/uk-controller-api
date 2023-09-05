@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class AirlineTerminalArrivalStandAllocator implements ArrivalStandAllocator
+class AirlineTerminalArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
     use SelectsStandsFromAirlineSpecificTerminals;
 
