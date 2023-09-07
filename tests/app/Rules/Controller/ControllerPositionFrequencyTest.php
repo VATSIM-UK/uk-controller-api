@@ -39,7 +39,6 @@ class ControllerPositionFrequencyTest extends BaseUnitTestCase
             'Only two DP' => ['123.12', false],
             'Too long' => ['129.4200', false],
             'Too long two' => ['129.4205', false],
-            'Old frequencies' => ['129.420', false],
             'Not 25KHz Spaced' => ['129.133', false],
             '25KHz Zero' => ['129.000', true],
             '25KHz 25' => ['129.025', true],
@@ -49,6 +48,11 @@ class ControllerPositionFrequencyTest extends BaseUnitTestCase
             '25KHz 25 Two' => ['118.425', true],
             '25KHz 50 Two' => ['118.450', true],
             '25KHz 75 Two' => ['118.475', true],
+            '8.33KHz Zero' => ['129.000', true],
+            '8.33KHz LON_W' => ['118.480', true],
+            '8.33KHz EGLL_N_APP' => ['119.730', true],
+            '8.33KHz EGSS_APP' => ['123.805', true],
+            '8.33KHz EGGP_TWR' => ['126.355', true],
         ];
     }
 }
