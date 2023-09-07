@@ -19,3 +19,4 @@ bootstrap/cache/
 /public/mix-manifest.json
 yarn-error.log
 .phpunit.cache
+DEVSENSE/
