@@ -80,6 +80,33 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
         );
     }
 
+    public function testItCreatesAControllerPositionWith8Point33Spacing()
+    {
+        Livewire::test(ControllerPositionResource\Pages\CreateControllerPosition::class)
+            ->set('data.callsign', 'LON_W_CTR')
+            ->set('data.description', 'London West (Bandbox)')
+            ->set('data.frequency', '126.080')
+            ->set('data.requests_departure_releases', true)
+            ->set('data.receives_departure_releases', true)
+            ->set('data.sends_prenotes', false)
+            ->set('data.receives_prenotes', true)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'controller_positions',
+            [
+                'callsign' => 'LON_W_CTR',
+                'description' => 'London West (Bandbox)',
+                'frequency' => '126.080',
+                'requests_departure_releases' => 1,
+                'receives_departure_releases' => 1,
+                'sends_prenotes' => 0,
+                'receives_prenotes' => 1,
+            ]
+        );
+    }
+
     public function testItDoesntCreateAPositionDuplicateCallsign()
     {
         Livewire::test(ControllerPositionResource\Pages\CreateControllerPosition::class)

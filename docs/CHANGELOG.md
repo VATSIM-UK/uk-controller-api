@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.49.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.5...6.49.0) (2023-09-07)
+
+
+### Features
+
+* 8.33KHz controller frequencies ([d3d75f8](https://github.com/VATSIM-UK/uk-controller-api/commit/d3d75f82e9834cf1015a628e82fac2a9fa1b0ecf))
+
 ## [6.48.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.4...6.48.5) (2023-07-24)
 
 
