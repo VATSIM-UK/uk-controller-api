@@ -4,14 +4,14 @@ namespace App\Services\Stand;
 
 use App\Allocator\Stand\AirlineAircraftArrivalStandAllocator;
 use App\Allocator\Stand\AirlineAircraftTerminalArrivalStandAllocator;
-use App\Allocator\Stand\AirlineArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
-use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator;
 use App\Allocator\Stand\ArrivalStandAllocator;
 use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
@@ -178,12 +178,12 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 AirlineCallsignSlugArrivalStandAllocator::class,
                 AirlineAircraftArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
-                AirlineArrivalStandAllocator::class,
+                AirlineGeneralArrivalStandAllocator::class,
                 AirlineCallsignTerminalArrivalStandAllocator::class,
                 AirlineCallsignSlugTerminalArrivalStandAllocator::class,
                 AirlineAircraftTerminalArrivalStandAllocator::class,
                 AirlineDestinationTerminalArrivalStandAllocator::class,
-                AirlineTerminalArrivalStandAllocator::class,
+                AirlineGeneralTerminalArrivalStandAllocator::class,
                 CargoAirlineFallbackStandAllocator::class,
                 OriginAirfieldStandAllocator::class,
                 DomesticInternationalStandAllocator::class,
@@ -503,7 +503,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             AirlineCallsignSlugArrivalStandAllocator::class => [],
             AirlineAircraftArrivalStandAllocator::class => [],
             AirlineDestinationArrivalStandAllocator::class => [],
-            AirlineArrivalStandAllocator::class => [
+            AirlineGeneralArrivalStandAllocator::class => [
                 0 => [
                     $stand4->id,
                 ],
@@ -512,7 +512,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             AirlineCallsignSlugTerminalArrivalStandAllocator::class => [],
             AirlineAircraftTerminalArrivalStandAllocator::class => [],
             AirlineDestinationTerminalArrivalStandAllocator::class => [],
-            AirlineTerminalArrivalStandAllocator::class => [],
+            AirlineGeneralTerminalArrivalStandAllocator::class => [],
             CargoAirlineFallbackStandAllocator::class => [],
             OriginAirfieldStandAllocator::class => [],
             DomesticInternationalStandAllocator::class => [],

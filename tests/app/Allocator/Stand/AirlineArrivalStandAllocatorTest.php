@@ -13,14 +13,14 @@ use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class AirlineArrivalStandAllocatorTest extends BaseFunctionalTestCase
+class AirlineGeneralArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    private AirlineArrivalStandAllocator $allocator;
+    private AirlineGeneralArrivalStandAllocator $allocator;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(AirlineArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(AirlineGeneralArrivalStandAllocator::class);
         Airline::factory()->create(['icao_code' => 'EZY']);
     }
 

@@ -15,10 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class AirlineDestinationArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var AirlineArrivalStandAllocator
-     */
-    private $allocator;
+    private readonly AirlineDestinationArrivalStandAllocator $allocator;
 
     public function setUp(): void
     {

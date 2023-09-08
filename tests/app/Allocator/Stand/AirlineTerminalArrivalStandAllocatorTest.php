@@ -14,17 +14,14 @@ use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class AirlineTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
+class AirlineGeneralTerminalArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    /**
-     * @var AirlineArrivalStandAllocator
-     */
-    private $allocator;
+    private readonly AirlineGeneralTerminalArrivalStandAllocator $allocator;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->allocator = $this->app->make(AirlineTerminalArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(AirlineGeneralTerminalArrivalStandAllocator::class);
         Airline::where('icao_code', 'BAW')->first()->terminals()->attach(2);
         Stand::find(1)->update(['terminal_id' => 1]);
         Stand::find(2)->update(['terminal_id' => 2]);
