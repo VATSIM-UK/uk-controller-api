@@ -2,7 +2,8 @@
 
 namespace App\Policies;
 
-trait ReadOnlyPolicyMethods {
+trait ReadOnlyPolicyMethods
+{
     public function attach(): bool
     {
         return false;
