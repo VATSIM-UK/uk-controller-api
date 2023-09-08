@@ -46,7 +46,7 @@ class StandPredictorForm extends Component implements HasForms
                         ->searchable(),
                     Select::make('departureAirfield')
                         ->label('Departure Airfield')
-                        ->options(Airfield::all()->mapWithKeys(fn($airfield) => [$airfield->code => $airfield->code]))
+                        ->options(Airfield::all()->mapWithKeys(fn ($airfield) => [$airfield->code => $airfield->code]))
                         ->required()
                         ->searchable(),
                     Select::make('arrivalAirfield')

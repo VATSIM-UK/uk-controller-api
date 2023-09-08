@@ -55,6 +55,6 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
 
     private function queryFilter(): Closure
     {
-        return fn(Builder $query) => $query->cargo();
+        return fn (Builder $query) => $query->cargo();
     }
 }

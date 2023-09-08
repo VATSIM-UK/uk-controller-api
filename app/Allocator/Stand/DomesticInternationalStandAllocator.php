@@ -38,7 +38,7 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn(Builder $query) => $this->getDomesticInternationalScope($aircraft, $query);
+        return fn (Builder $query) => $this->getDomesticInternationalScope($aircraft, $query);
     }
 
     protected function getDomesticInternationalScope(NetworkAircraft $aircraft, Builder $builder): Builder

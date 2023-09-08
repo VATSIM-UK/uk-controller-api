@@ -11,8 +11,7 @@ trait ConsidersStandRequests
 {
     private function joinOtherStandRequests(Builder $query, NetworkAircraft $aircraft): Builder
     {
-        return $query->leftJoin('stand_requests as other_stand_requests', function (JoinClause $join) use ($aircraft)
-        {
+        return $query->leftJoin('stand_requests as other_stand_requests', function (JoinClause $join) use ($aircraft) {
             // Prefer stands that haven't been requested by someone else
             $join->on('stands.id', '=', 'other_stand_requests.stand_id')
                 ->on('other_stand_requests.user_id', '<>', $join->raw($aircraft->cid))

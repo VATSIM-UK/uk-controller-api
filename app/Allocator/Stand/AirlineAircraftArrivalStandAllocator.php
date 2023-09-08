@@ -44,6 +44,6 @@ class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator, Ran
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn(Builder $query) => $query->where('airline_stand.aircraft_id', $aircraft->aircraft_id);
+        return fn (Builder $query) => $query->where('airline_stand.aircraft_id', $aircraft->aircraft_id);
     }
 }

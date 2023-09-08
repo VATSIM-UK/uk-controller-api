@@ -13,7 +13,7 @@ class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAlloca
 
     /*
      * This allocator:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands at terminals that are specifically selected for the airline AND a given aircraft type
      * - Orders these stands by the airline's priority for the stand
@@ -49,6 +49,6 @@ class AirlineAircraftTerminalArrivalStandAllocator implements ArrivalStandAlloca
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn(Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id);
+        return fn (Builder $query) => $query->where('airline_terminal.aircraft_id', $aircraft->aircraft_id);
     }
 }

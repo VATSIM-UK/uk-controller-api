@@ -49,8 +49,7 @@ class AirlineService
     {
         return Cache::rememberForever(
             self::AIRLINE_CODE_ID_CACHE_MAP,
-            fn() => Airline::all(['id', 'icao_code'])->mapWithKeys(function (Airline $airline)
-            {
+            fn () => Airline::all(['id', 'icao_code'])->mapWithKeys(function (Airline $airline) {
                 return [$airline->icao_code => $airline->id];
             })->toArray()
         );

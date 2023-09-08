@@ -47,8 +47,7 @@ class ArrivalAllocationService
             ->whereRaw('airfield.code <> network_aircraft.planned_depairport')
             ->select('stand_assignments.*')
             ->get()
-            ->each(function (StandAssignment $standAssignment)
-            {
+            ->each(function (StandAssignment $standAssignment) {
                 $this->assignmentsService->deleteStandAssignment($standAssignment);
             });
     }
@@ -59,9 +58,8 @@ class ArrivalAllocationService
     private function allocateStandsForArrivingAircraft(): void
     {
         $this->getAircraftThatCanHaveArrivalStandsAllocated()
-            ->filter(fn(NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
-            ->each(function (NetworkAircraft $aircraft)
-            {
+            ->filter(fn (NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
+            ->each(function (NetworkAircraft $aircraft) {
                 foreach ($this->allocators as $allocator) {
                     if ($allocation = $allocator->allocate($aircraft)) {
                         $this->assignmentsService->createStandAssignment(

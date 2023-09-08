@@ -17,7 +17,7 @@ trait SelectsStandsFromAirlineSpecificTerminals
 
     /**
      * This method generates a stand query that:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands that are at terminals specifically selected for the airline AND a given aircraft type
      * - Applies situational specific filters to the query
@@ -34,7 +34,7 @@ trait SelectsStandsFromAirlineSpecificTerminals
     ): ?int {
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            fn(Builder $query) => $specificFilters($query->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
+            fn (Builder $query) => $specificFilters($query->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
                 ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
                 ->where('airline_terminal.airline_id', $aircraft->airline_id)),
             array_merge(
@@ -52,7 +52,7 @@ trait SelectsStandsFromAirlineSpecificTerminals
     ): Collection {
         return $this->selectRankedStandsUsingStandardConditions(
             $aircraft,
-            fn(Builder $query) => $specificFilters($query->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
+            fn (Builder $query) => $specificFilters($query->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
                 ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
                 ->where('airline_terminal.airline_id', $aircraft->airline_id)),
             array_merge(

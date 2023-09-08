@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Allocator\Stand;
+
 use Illuminate\Database\Eloquent\Builder;
 
 trait AppliesOrdering
@@ -9,7 +10,7 @@ trait AppliesOrdering
     {
         return array_reduce(
             $orderBys,
-            fn(Builder $query, string $orderBy) => $query->orderByRaw($orderBy),
+            fn (Builder $query, string $orderBy) => $query->orderByRaw($orderBy),
             $stands
         );
     }

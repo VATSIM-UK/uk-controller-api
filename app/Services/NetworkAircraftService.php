@@ -39,8 +39,7 @@ class NetworkAircraftService
 
     public function updateNetworkData(): void
     {
-        $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft)
-        {
+        $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft) {
             return [$aircraft->callsign => $aircraft];
         });
 
@@ -57,16 +56,14 @@ class NetworkAircraftService
 
     private function mapPilotData(Collection $pilotData): Collection
     {
-        return $pilotData->map(function (array $pilot)
-        {
+        return $pilotData->map(function (array $pilot) {
             return $this->formatPilot($pilot);
         });
     }
 
     private function filterPilotData(Collection $pilotData): Collection
     {
-        return $pilotData->filter(function (array $pilot)
-        {
+        return $pilotData->filter(function (array $pilot) {
             return $this->shouldProcessPilot($pilot) &&
                 $this->pilotValid($pilot);
         });
@@ -85,8 +82,7 @@ class NetworkAircraftService
 
     private function shouldProcessPilot(array $pilot): bool
     {
-        return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot)
-        {
+        return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
             return LocationService::metersToNauticalMiles(
                 $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
             ) < self::MAX_PROCESSING_DISTANCE;
@@ -117,7 +113,7 @@ class NetworkAircraftService
             'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
             'remarks' => $this->getFlightplanDataElement($pilot, 'remarks'),
             'transponder_last_updated_at' => $this->getTransponderUpdatedAtTime($pilot),
-            'aircraft_id' => $shortAircraftCode 
+            'aircraft_id' => $shortAircraftCode
                 ? $this->aircraftService->getAircraftIdFromCode($shortAircraftCode)
                 : null,
             'airline_id' => $this->airlineService->airlineIdForCallsign($pilot['callsign']),
@@ -152,8 +148,7 @@ class NetworkAircraftService
         NetworkAircraft::timedOut()
             ->get()
             ->each(
-                function (NetworkAircraft $aircraft): void
-                {
+                function (NetworkAircraft $aircraft): void {
                     AircraftDisconnected::dispatchSync($aircraft);
                 }
             );

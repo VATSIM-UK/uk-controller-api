@@ -20,7 +20,7 @@ class AirlineDestinationArrivalStandAllocator implements ArrivalStandAllocator, 
 
     /**
      * This allocator:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands that are specifically selected for the airline and a specific set of destinations
      * - Orders these by the most specific destination first
@@ -59,7 +59,7 @@ class AirlineDestinationArrivalStandAllocator implements ArrivalStandAllocator, 
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn(Builder $query) => $query->whereIn(
+        return fn (Builder $query) => $query->whereIn(
             'airline_stand.destination',
             $this->getDestinationStrings($aircraft)
         );

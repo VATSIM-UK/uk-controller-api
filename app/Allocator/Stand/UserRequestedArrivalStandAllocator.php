@@ -14,12 +14,10 @@ class UserRequestedArrivalStandAllocator implements ArrivalStandAllocator
     public function allocate(NetworkAircraft $aircraft): ?int
     {
         $requestedStands = StandRequest::where('user_id', $aircraft->cid)
-            ->whereHas('stand.airfield', function (Builder $airfield) use ($aircraft)
-            {
+            ->whereHas('stand.airfield', function (Builder $airfield) use ($aircraft) {
                 $airfield->where('code', $aircraft->planned_destairport);
             })
-            ->whereHas('stand', function (Builder $standQuery)
-            {
+            ->whereHas('stand', function (Builder $standQuery) {
                 $standQuery->unoccupied()->unassigned();
             })
             ->current()

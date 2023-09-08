@@ -64,9 +64,9 @@ class AirlineResource extends Resource
                                 ->helperText(self::translateFormPath('copy_stand_assignments.helper'))
                         ]
                     )
-                    ->hidden(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord),
+                    ->hidden(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
             ]);
     }
 
@@ -90,8 +90,7 @@ class AirlineResource extends Resource
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
-                    ->after(function ()
-                    {
+                    ->after(function () {
                         dd('hi');
                         event(new AirlinesUpdatedEvent);
                     }),

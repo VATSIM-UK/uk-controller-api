@@ -14,8 +14,7 @@ trait SelectsFromSizeAppropriateAvailableStands
      */
     private function sizeAppropriateAvailableStandsAtAirfield(NetworkAircraft $aircraft): Builder
     {
-        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft)
-        {
+        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
             $query->where('code', $aircraft->planned_destairport);
         })
             ->sizeAppropriate($aircraft->aircraft)
@@ -25,8 +24,7 @@ trait SelectsFromSizeAppropriateAvailableStands
 
     private function sizeAppropriateAvailableStandsAtAirfieldForRanking(NetworkAircraft $aircraft): Builder
     {
-        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft)
-        {
+        return Stand::whereHas('airfield', function (Builder $query) use ($aircraft) {
             $query->where('code', $aircraft->planned_destairport);
         })
             ->sizeAppropriate($aircraft->aircraft)

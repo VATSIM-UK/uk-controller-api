@@ -13,7 +13,7 @@ class AirlineGeneralTerminalArrivalStandAllocator implements ArrivalStandAllocat
 
     /**
      * This allocator:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands that are at terminals specifically selected for the airline
      * - Filters stands to those that dont have specific conditions
@@ -50,7 +50,7 @@ class AirlineGeneralTerminalArrivalStandAllocator implements ArrivalStandAllocat
 
     private function queryFilter(): Closure
     {
-        return fn(Builder $query) => $query->whereNull('airline_terminal.destination')
+        return fn (Builder $query) => $query->whereNull('airline_terminal.destination')
             ->whereNull('airline_terminal.callsign_slug')
             ->whereNull('airline_terminal.full_callsign')
             ->whereNull('airline_terminal.aircraft_id');

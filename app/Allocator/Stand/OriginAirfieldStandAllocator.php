@@ -46,7 +46,7 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator, RankableArr
 
     private function filterQuery(NetworkAircraft $aircraft): Closure
     {
-        return fn(Builder $query)
+        return fn (Builder $query)
             => $query->notCargo()->whereIn('origin_slug', $this->getDestinationStrings($aircraft));
     }
 }

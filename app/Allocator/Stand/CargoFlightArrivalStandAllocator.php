@@ -26,7 +26,7 @@ class CargoFlightArrivalStandAllocator implements ArrivalStandAllocator
 
     /**
      * This allocator:
-     * 
+     *
      * - Only allocates cargo stands to cargo airlines
      * - Orders by common conditions (see OrdersStandsByCommonConditions)
      * - Selects the first available stand (see SelectsFirstApplicableStand)
@@ -57,6 +57,6 @@ class CargoFlightArrivalStandAllocator implements ArrivalStandAllocator
 
     private function queryFilter(): Closure
     {
-        return fn(Builder $query) => $query->cargo();
+        return fn (Builder $query) => $query->cargo();
     }
 }

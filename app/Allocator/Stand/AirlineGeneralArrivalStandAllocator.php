@@ -13,7 +13,7 @@ class AirlineGeneralArrivalStandAllocator implements ArrivalStandAllocator, Rank
 
     /**
      * This allocator:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands that are specifically selected for the airline and do not have any specific conditions
      * - Orders these stands by the airline's priority for the stand
@@ -49,7 +49,7 @@ class AirlineGeneralArrivalStandAllocator implements ArrivalStandAllocator, Rank
 
     private function queryFilter(): Closure
     {
-        return fn(Builder $query) => $query->whereNull('airline_stand.destination')
+        return fn (Builder $query) => $query->whereNull('airline_stand.destination')
             ->whereNull('airline_stand.callsign_slug')
             ->whereNull('airline_stand.full_callsign')
             ->whereNull('airline_stand.aircraft_id');

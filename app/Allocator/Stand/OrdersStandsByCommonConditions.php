@@ -4,7 +4,7 @@ namespace App\Allocator\Stand;
 
 /**
  * Specifies the common conditions for ordering stands.
- * 
+ *
  * Any class that uses this trait must also use the ConsidersStandRequests trait and call
  * joinOtherStandRequests() on the query before applying the ordering.
  *

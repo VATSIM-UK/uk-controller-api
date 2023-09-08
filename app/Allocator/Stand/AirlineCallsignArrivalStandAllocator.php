@@ -22,7 +22,7 @@ class AirlineCallsignArrivalStandAllocator implements ArrivalStandAllocator, Ran
 
     /**
      * This allocator:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands that are specifically selected for the airline and a specific callsign
      * - Orders these stands by the airline's priority for the stand
@@ -58,7 +58,7 @@ class AirlineCallsignArrivalStandAllocator implements ArrivalStandAllocator, Ran
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn(Builder $query) =>
+        return fn (Builder $query) =>
             $query->where('airline_stand.full_callsign', $this->getFullCallsignSlug($aircraft));
     }
 }

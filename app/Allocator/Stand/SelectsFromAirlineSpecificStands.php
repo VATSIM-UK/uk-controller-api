@@ -13,7 +13,7 @@ trait SelectsFromAirlineSpecificStands
 
     /**
      * This method generates a stand query that:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands that are specifically selected for the airline AND a given aircraft type
      * - Applies situational specific filters to the query
@@ -30,7 +30,7 @@ trait SelectsFromAirlineSpecificStands
     ): ?int {
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            fn(Builder $query) => $specificFilters($query->airline($aircraft->airline_id)),
+            fn (Builder $query) => $specificFilters($query->airline($aircraft->airline_id)),
             array_merge(
                 $specificOrders,
                 ['airline_stand.priority ASC'],
@@ -46,7 +46,7 @@ trait SelectsFromAirlineSpecificStands
     ): Collection {
         return $this->selectRankedStandsUsingStandardConditions(
             $aircraft,
-            fn(Builder $query) => $specificFilters($query->airline($aircraft->airline_id)),
+            fn (Builder $query) => $specificFilters($query->airline($aircraft->airline_id)),
             array_merge(
                 $specificOrders,
                 ['airline_stand.priority ASC'],

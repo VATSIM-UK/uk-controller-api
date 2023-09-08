@@ -47,11 +47,11 @@ class StandPredictor extends Page
         $this->currentPrediction = app()->make(ArrivalAllocationService::class)
             ->getAllocationRankingForAircraft(new NetworkAircraft($data))
             ->map(
-                fn(Collection $stands) =>
+                fn (Collection $stands) =>
                 $stands->map(
-                    fn(Collection $standsForRank) =>
+                    fn (Collection $standsForRank) =>
                     $standsForRank->sortBy('identifier', SORT_NATURAL)
-                        ->map(fn(Stand $stand) => $stand->identifier)->values()
+                        ->map(fn (Stand $stand) => $stand->identifier)->values()
                 )
             )->toArray();
     }

@@ -27,7 +27,7 @@ class AirlineCallsignSlugTerminalArrivalStandAllocator implements ArrivalStandAl
 
     /**
      * This allocator:
-     * 
+     *
      * - Selects stands that are size appropriate and available
      * - Filters these to stands at a terminal that is specifically selected for the airline and
      * a set of callsign slugs
@@ -67,7 +67,7 @@ class AirlineCallsignSlugTerminalArrivalStandAllocator implements ArrivalStandAl
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn(Builder $query)
+        return fn (Builder $query)
             => $query->whereIn('airline_terminal.callsign_slug', $this->getCallsignSlugs($aircraft));
     }
 }

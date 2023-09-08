@@ -15,8 +15,7 @@ class CidReservedArrivalStandAllocator implements ArrivalStandAllocator
     public function allocate(NetworkAircraft $aircraft): ?int
     {
         $reservation = StandReservation::with('stand')
-            ->whereHas('stand', function (Builder $standQuery)
-            {
+            ->whereHas('stand', function (Builder $standQuery) {
                 $standQuery->unoccupied()->unassigned();
             })
             ->where('cid', $aircraft->cid)

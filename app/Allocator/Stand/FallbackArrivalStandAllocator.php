@@ -13,7 +13,7 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableAr
 
     /**
      * This allocator:
-     * 
+     *
      * - Only allocates stands that are not cargo
      * - Orders by common conditions (see OrdersStandsByCommonConditions)
      * - Selects the first available stand (see SelectsFirstApplicableStand)
@@ -47,6 +47,6 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableAr
 
     private function filterQuery(): Closure
     {
-        return fn(Builder $query) => $query->notCargo();
+        return fn (Builder $query) => $query->notCargo();
     }
 }
