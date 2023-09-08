@@ -70,8 +70,11 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
                 ->get()
                 ->map(fn (Stand $stand) => $stand->identifier),
             'flightplan_remarks' => $context->aircraft->remarks,
-            'requested_stand' => $this->standRequestService->activeRequestForAircraft($context->aircraft)?->stand->identifier,
-            'other_requested_stands' => $this->standRequestService->allActiveStandRequestsForAirfield($context->assignment->stand->airfield->code)
+            'requested_stand' => $this->standRequestService->activeRequestForAircraft($context->aircraft)
+                ?->stand->identifier,
+            'other_requested_stands' => $this->standRequestService->allActiveStandRequestsForAirfield(
+                $context->assignment->stand->airfield->code
+            )
                 ->filter(fn (StandRequest $request) => $request->stand_id !== $context->assignment->stand_id)
                 ->map(fn (StandRequest $request) => $request->stand->identifier)
                 ->values()

@@ -28,7 +28,6 @@ class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator, Ran
         );
     }
 
-    // TODO: Move airline and aircraft checks into a separate class
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
         // We cant allocate a stand if we don't know the airline or aircraft type

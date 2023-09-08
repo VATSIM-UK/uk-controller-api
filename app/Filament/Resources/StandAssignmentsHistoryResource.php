@@ -98,7 +98,9 @@ class StandAssignmentsHistoryResource extends Resource
             ->actions([
                 ViewAction::make('view_context')
                     ->label('View Context')
-                    ->hidden(fn (StandAssignmentsHistory $record) => is_null($record->context) || empty($record->context)),
+                    ->hidden(
+                        fn (StandAssignmentsHistory $record) => is_null($record->context) || empty($record->context)
+                    ),
             ])
             ->filters([
                 Filter::make('callsign')
@@ -116,7 +118,9 @@ class StandAssignmentsHistoryResource extends Resource
                             ->searchable()
                             ->label('Airfield'),
                         Select::make('stand')
-                            ->options(fn (Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield'))))
+                            ->options(
+                                fn (Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield')))
+                            )
                             ->searchable()
                             ->label('Stand')
                             ->hidden(fn (Closure $get) => !$get('airfield')),
@@ -134,7 +138,10 @@ class StandAssignmentsHistoryResource extends Resource
                     })
                     ->query(function (Builder $query, array $data) {
                         if (isset($data['airfield'])) {
-                            $query->whereHas('stand.airfield', fn (Builder $query) => $query->where('id', $data['airfield']));
+                            $query->whereHas(
+                                'stand.airfield',
+                                fn (Builder $query) => $query->where('id', $data['airfield'])
+                            );
                         }
 
                         if (isset($data['stand'])) {

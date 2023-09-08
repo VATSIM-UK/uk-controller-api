@@ -86,7 +86,6 @@ class AirlineServiceTest extends BaseFunctionalTestCase
         $this->assertNull($this->service->airlineIdForCallsign('XXX123'));
     }
 
-    // TODO: Add events to filament
 
     #[DataProvider('aircraftProvider')]
     public function testItReturnsAirlinesForAircraft(string $callsign, string $expectedAirline)

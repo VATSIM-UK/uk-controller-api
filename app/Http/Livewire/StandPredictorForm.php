@@ -23,8 +23,6 @@ class StandPredictorForm extends Component implements HasForms
     public ?string $departureAirfield = null;
     public ?int $aircraftType = null;
 
-    private readonly AirlineService $airlineService;
-
     protected $messages = [
         'requestedStand' => 'You must select a valid stand.',
         'requestedTime' => 'Please enter a valid time.',

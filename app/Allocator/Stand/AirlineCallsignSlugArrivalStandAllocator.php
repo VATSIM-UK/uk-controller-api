@@ -65,6 +65,7 @@ class AirlineCallsignSlugArrivalStandAllocator implements ArrivalStandAllocator,
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn (Builder $query) => $query->whereIn('airline_stand.callsign_slug', $this->getCallsignSlugs($aircraft));
+        return fn (Builder $query) =>
+            $query->whereIn('airline_stand.callsign_slug', $this->getCallsignSlugs($aircraft));
     }
 }
