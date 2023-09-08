@@ -91,7 +91,6 @@ class AirlineResource extends Resource
                 EditAction::make(),
                 DeleteAction::make()
                     ->after(function () {
-                        dd('hi');
                         event(new AirlinesUpdatedEvent);
                     }),
             ]);
