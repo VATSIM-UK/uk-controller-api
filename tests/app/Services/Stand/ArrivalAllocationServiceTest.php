@@ -26,6 +26,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
@@ -40,12 +41,15 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 {
     private readonly ArrivalAllocationService $service;
 
+    private readonly Airline $bmi;
+
     public function setUp(): void
     {
         parent::setUp();
         Event::fake();
         $this->service = $this->app->make(ArrivalAllocationService::class);
         DB::table('network_aircraft')->delete();
+        $this->bmi = Airline::factory()->create(['icao_code' => 'BMI']);
     }
 
     public function testItDeallocatesStandForDivertingAircraft()
@@ -64,6 +68,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -88,6 +94,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -113,6 +121,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -137,6 +147,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -158,6 +170,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -221,6 +235,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -243,6 +259,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
         $aircraft->updated_at = Carbon::now()->subMinutes(30);
@@ -267,6 +285,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -289,6 +309,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -311,6 +333,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -339,6 +363,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -361,6 +387,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
         StandAssignment::create(
@@ -389,6 +417,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -411,6 +441,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => null,
             ]
         );
 
@@ -435,6 +467,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 

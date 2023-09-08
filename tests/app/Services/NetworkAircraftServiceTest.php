@@ -419,7 +419,7 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
                     'remarks' => $pilot['flight_plan']['remarks'],
                     'aircraft_id' => $pilot['flight_plan']['aircraft_short'] === 'B738' ? 1 : null,
                     'airline_id' => match (Str::substr($pilot['callsign'], 0, 3)) {
-                        'BAW' => 2,
+                        'BAW' => 1,
                         'SHT' => 2,
                         'VIR' => 3,
                         default => null,

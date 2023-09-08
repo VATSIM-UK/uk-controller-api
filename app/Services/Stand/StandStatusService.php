@@ -15,7 +15,7 @@ class StandStatusService
      */
     public static function getAirfieldStandStatus(string $airfield): array
     {
-        $stands = Stand::with(
+        return Stand::with(
             'airlines',
             'type',
             'maxAircraftWingspan',
@@ -34,17 +34,11 @@ class StandStatusService
         )
             ->withCasts(['latitude' => 'decimal:8', 'longitude' => 'decimal:8'])
             ->airfield($airfield)
-            ->get();
-
-        $stands->sortBy('identifier', SORT_NATURAL);
-
-        $standStatuses = [];
-
-        foreach ($stands as $stand) {
-            $standStatuses[] = self::getStandStatus($stand);
-        }
-
-        return $standStatuses;
+            ->get()
+            ->sortBy('identifier', SORT_NATURAL)
+            ->values()
+            ->map(fn (Stand $stand) => self::getStandStatus($stand))
+            ->toArray();
     }
 
     public static function getStandStatus(Stand $stand): array
