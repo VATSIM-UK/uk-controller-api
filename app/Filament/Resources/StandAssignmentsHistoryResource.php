@@ -36,7 +36,10 @@ class StandAssignmentsHistoryResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return StandAssignmentsHistory::with('stand', 'stand.airfield');
+        return StandAssignmentsHistory::with('stand', 'stand.airfield')
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
     public static function canGloballySearch(): bool
@@ -101,6 +104,7 @@ class StandAssignmentsHistoryResource extends Resource
                 TextColumn::make('type')
                     ->label(static::translateTablePath('columns.type')),
             ])
+            ->defaultSort('id', 'desc')
             ->actions([
                 ViewAction::make('view_context')
                     ->label('View Context')
