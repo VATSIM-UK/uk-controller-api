@@ -12,7 +12,7 @@ class ReadOnlyWithRolePolicy
 {
     use HandlesAuthorization;
     use ChecksUserRoles;
-    use ReadOnlyPolicyMethods;
+    use RejectsNonReadOnlyActions;
 
     public function view(?User $user): bool
     {

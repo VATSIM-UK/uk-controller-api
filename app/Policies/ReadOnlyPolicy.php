@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\User\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
@@ -11,7 +10,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ReadOnlyPolicy
 {
     use HandlesAuthorization;
-    use ReadOnlyPolicyMethods;
+    use RejectsNonReadOnlyActions;
 
     public function view(): bool
     {
