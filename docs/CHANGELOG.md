@@ -1,5 +1,26 @@
 # UK Controller Plugin API Changelog
 
+## [6.50.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.49.0...6.50.0) (2023-09-13)
+
+
+### Features
+
+* allow stand history filtering by stand ([ed3150e](https://github.com/VATSIM-UK/uk-controller-api/commit/ed3150e5fc959faf0febad2cb834eb87bdf6906e))
+* current user stand request in context ([fbf099c](https://github.com/VATSIM-UK/uk-controller-api/commit/fbf099ceffa7f6602d6d48f3eb4279724d08b676))
+* filter stand assignment history by airfield ([a3dd53c](https://github.com/VATSIM-UK/uk-controller-api/commit/a3dd53c42959429d46e51c51b5d5dc069cc5e293))
+* filter stand history by callsign ([848b282](https://github.com/VATSIM-UK/uk-controller-api/commit/848b282663fd74d9bdb758c30a0332448e2dec83))
+* include aircraft type and arr/dep airport in context ([1c30604](https://github.com/VATSIM-UK/uk-controller-api/commit/1c30604755b8cea1c56a21c96a3fbf8e8ce3cc08))
+* limit stand assignment history to ops contributors and above ([dea718b](https://github.com/VATSIM-UK/uk-controller-api/commit/dea718b9dc7e828f59a80f7154c03e901fd2a52b))
+* list stand assignment history in admin panel ([c0c54ae](https://github.com/VATSIM-UK/uk-controller-api/commit/c0c54aebbe835846693d842e6bbba97ddaed5398))
+* other stand requests in history context ([f4b7f2e](https://github.com/VATSIM-UK/uk-controller-api/commit/f4b7f2eda26fb1ab300c51b0e9b2c5a944f412c6))
+* remarks in history context ([107bba8](https://github.com/VATSIM-UK/uk-controller-api/commit/107bba8a08233bfd5b72714d350249a678afdd39))
+* store context of stand assignment in history ([5dc6b0e](https://github.com/VATSIM-UK/uk-controller-api/commit/5dc6b0e35ee66411d793b9bccec0a846a59d1924))
+
+
+### Bug Fixes
+
+* view tweaks ([03a13e7](https://github.com/VATSIM-UK/uk-controller-api/commit/03a13e77402920d5dda258b5a3ff61a4989a9c60))
+
 ## [6.49.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.5...6.49.0) (2023-09-07)
 
 
