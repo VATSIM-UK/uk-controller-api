@@ -29,6 +29,7 @@ use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\User\User;
 use App\Models\Version\Version;
 use App\Policies\ActivityLogPolicy;
@@ -37,6 +38,7 @@ use App\Policies\OperationsContributorPolicy;
 use App\Policies\PluginEditableDataPolicy;
 use App\Policies\PluginVersionPolicy;
 use App\Policies\ReadOnlyPolicy;
+use App\Policies\ReadOnlyWithRolePolicy;
 use App\Policies\UserPolicy;
 use App\Services\UserConfigCreatorInterface;
 use App\Services\UserConfigService;
@@ -62,8 +64,9 @@ class AuthServiceProvider extends ServiceProvider
         self::SCOPE_DATA_ADMIN => 'Can administer live data stored in the system',
     ];
 
+    // These policies are used by filament to determine resource and action access.
     protected $policies = [
-        // The defaults
+            // The defaults
         Aircraft::class => OperationsContributorPolicy::class,
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
@@ -88,15 +91,18 @@ class AuthServiceProvider extends ServiceProvider
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
         WakeCategory::class => OperationsContributorPolicy::class,
 
-        // Things the plugin can assign
+            // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,
 
-        // Things that can only be updated by external processes
+            // Things that can only be updated by external processes
         SrdNote::class => ReadOnlyPolicy::class,
         SrdRoute::class => ReadOnlyPolicy::class,
         Dependency::class => ReadOnlyPolicy::class,
 
-        // Special policies
+            // Things that can only be viewed by users with a role
+        StandAssignmentsHistory::class => ReadOnlyWithRolePolicy::class,
+
+            // Special policies
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
         Version::class => PluginVersionPolicy::class,

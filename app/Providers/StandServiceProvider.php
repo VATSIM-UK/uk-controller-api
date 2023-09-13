@@ -15,6 +15,8 @@ use App\Allocator\Stand\CidReservedArrivalStandAllocator;
 use App\Allocator\Stand\UserRequestedArrivalStandAllocator;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\ArrivalAllocationService;
+use App\Services\Stand\RecordsAssignmentHistory;
+use App\Services\Stand\StandAssignmentsHistoryService;
 use App\Services\Stand\StandAssignmentsService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -63,5 +65,9 @@ class StandServiceProvider extends ServiceProvider
         });
         $this->app->singleton(StandReservationsImport::class);
         $this->app->singleton(AirfieldStandService::class);
+        $this->app->singleton(
+            RecordsAssignmentHistory::class,
+            fn (Application $application) => $application->make(StandAssignmentsHistoryService::class)
+        );
     }
 }

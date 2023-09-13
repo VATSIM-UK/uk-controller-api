@@ -27,7 +27,7 @@ class DepartureAllocationService
         });
 
         $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
-            $this->assignmentsService->createStandAssignment($aircraft->callsign, $aircraft->stand_id);
+            $this->assignmentsService->createStandAssignment($aircraft->callsign, $aircraft->stand_id, 'Departure');
         });
     }
 

@@ -36,15 +36,12 @@ class StandStatusService
             ->airfield($airfield)
             ->get();
 
-        $stands->sortBy('identifier', SORT_NATURAL);
-
-        $standStatuses = [];
-
-        foreach ($stands as $stand) {
-            $standStatuses[] = self::getStandStatus($stand);
-        }
-
-        return $standStatuses;
+        return $stands->sortBy('identifier', SORT_NATURAL)
+            ->values()
+            ->map(function (Stand $stand) {
+                return self::getStandStatus($stand);
+            })
+            ->toArray();
     }
 
     public static function getStandStatus(Stand $stand): array
