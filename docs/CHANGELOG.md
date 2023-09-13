@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.50.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.50.0...6.50.1) (2023-09-13)
+
+
+### Bug Fixes
+
+* show soft deleted stand assignments and sort ([12e374a](https://github.com/VATSIM-UK/uk-controller-api/commit/12e374a04d728215ec4fec8a341446ab66e4319a))
+
 ## [6.50.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.49.0...6.50.0) (2023-09-13)
 
 
