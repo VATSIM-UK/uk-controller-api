@@ -16,6 +16,7 @@ class StandPredictor extends Page
     protected static ?string $navigationLabel = 'Stand Predictor';
     protected static ?string $slug = 'stand-predictor';
     protected static string $view = 'filament.pages.stand-predictor';
+    protected static ?string $navigationGroup = 'Airfield';
 
     protected $listeners = ['standPredictorFormSubmitted'];
 
