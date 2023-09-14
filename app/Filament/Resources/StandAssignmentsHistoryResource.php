@@ -37,9 +37,7 @@ class StandAssignmentsHistoryResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return StandAssignmentsHistory::with('stand', 'stand.airfield')
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+            ->withTrashed();
     }
 
     public static function canGloballySearch(): bool
