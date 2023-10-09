@@ -13,10 +13,10 @@ trait OrdersStandsByCommonConditions
 {
     use ConsidersStandRequests;
 
-    private readonly AERODROME_REFERENCE_CODE = 'aerodrome_reference_code ASC';
-    private readonly ASSIGNMENT_PRIORITY = 'assignment_priority ASC';
-    private readonly OTHER_STAND_REQUESTS = 'other_stand_requests.id ASC';
-    private readonly RANDOM = 'RAND() ASC';
+    private string $AERODROME_REFERENCE_CODE = 'aerodrome_reference_code ASC';
+    private string $ASSIGNMENT_PRIORITY = 'assignment_priority ASC';
+    private string $OTHER_STAND_REQUESTS = 'other_stand_requests.id ASC';
+    private string $RANDOM = 'RAND() ASC';
 
     private array $commonOrderByConditions = [
         $this->AERODROME_REFERENCE_CODE,
