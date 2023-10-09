@@ -18,25 +18,37 @@ trait OrdersStandsByCommonConditions
     private string $otherStandRequests = 'other_stand_requests.id ASC';
     private string $random = 'RAND() ASC';
 
-    private array $commonOrderByConditions = [
-        $this->aerodromeReferenceCode,
-        $this->assignmentPriority,
-        $this->otherStandRequests,
-        $this->random,
-    ];
+    private function commonOrderByConditions(): array
+    {
+        return [
+            $this->aerodromeReferenceCode,
+            $this->assignmentPriority,
+            $this->otherStandRequests,
+            $this->random,
+        ];
+    }
 
-    private array $commonOrderByConditionsWithoutAssignmentPriority = [
-        $this->aerodromeReferenceCode,
-        $this->otherStandRequests,
-        $this->random,
-    ];
+    private function commonOrderByConditionsWithoutAssignmentPriority(): array
+    {
+        return [
+            $this->aerodromeReferenceCode,
+            $this->otherStandRequests,
+            $this->random,
+        ];
+    }
 
-    private array $commonOrderByConditionsForRanking = [
-        $this->aerodromeReferenceCode,
-        $this->assignmentPriority,
-    ];
+    private function commonOrderByConditionsForRanking(): array
+    {
+        return [
+            $this->aerodromeReferenceCode,
+            $this->assignmentPriority,
+        ];
+    }
 
-    private array $commonOrderByConditionsWithoutAssignmentPriorityForRanking = [
-        $this->aerodromeReferenceCode,
-    ];
+    private function commonOrderByConditionsWithoutAssignmentPriorityForRanking(): array
+    {
+        return [
+            $this->aerodromeReferenceCode,
+        ];
+    }
 }

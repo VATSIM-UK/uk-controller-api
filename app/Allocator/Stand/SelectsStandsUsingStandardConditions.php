@@ -81,12 +81,12 @@ trait SelectsStandsUsingStandardConditions
          */
         if ($includeAssignmentPriority) {
             $commonConditions = $isRanking
-                ? $this->commonOrderByConditionsForRanking
-                : $this->commonOrderByConditions;
+                ? $this->commonOrderByConditionsForRanking()
+                : $this->commonOrderByConditions();
         } else {
             $commonConditions = $isRanking
-                ? $this->commonOrderByConditionsWithoutAssignmentPriorityForRanking
-                : $this->commonOrderByConditionsWithoutAssignmentPriority;
+                ? $this->commonOrderByConditionsWithoutAssignmentPriorityForRanking()
+                : $this->commonOrderByConditionsWithoutAssignmentPriority();
         }
 
         return array_merge(
