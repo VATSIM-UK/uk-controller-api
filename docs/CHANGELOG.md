@@ -1,5 +1,21 @@
 # UK Controller Plugin API Changelog
 
+## [6.51.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.50.2...6.51.0) (2023-10-09)
+
+
+### Features
+
+* stand prediction form ([d518cd9](https://github.com/VATSIM-UK/uk-controller-api/commit/d518cd9e209040b65da6fbd274590424148b3f1d))
+* store resolved aircraft type with network aircraft ([4ef262e](https://github.com/VATSIM-UK/uk-controller-api/commit/4ef262ed5929b13814b62ac9f85fb18280dd1b41))
+
+
+### Bug Fixes
+
+* join aircraft table on id ([ea53500](https://github.com/VATSIM-UK/uk-controller-api/commit/ea535006d7b9f27b039281b4544f2b06e1fd45eb))
+* rankable allocators ([f37e4c0](https://github.com/VATSIM-UK/uk-controller-api/commit/f37e4c0650dce86593ce1dd9710fc446a583f04d))
+* remove dump ([d82a1a7](https://github.com/VATSIM-UK/uk-controller-api/commit/d82a1a7deef2c810e892481f512cee478e987a6e))
+* trigger events on page saves ([fd04dba](https://github.com/VATSIM-UK/uk-controller-api/commit/fd04dba8dfbb25cfa27e669e8676d20b2141f266))
+
 ## [6.50.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.50.1...6.50.2) (2023-09-14)
 
 
