@@ -13,30 +13,30 @@ trait OrdersStandsByCommonConditions
 {
     use ConsidersStandRequests;
 
-    private string $AERODROME_REFERENCE_CODE = 'aerodrome_reference_code ASC';
-    private string $ASSIGNMENT_PRIORITY = 'assignment_priority ASC';
-    private string $OTHER_STAND_REQUESTS = 'other_stand_requests.id ASC';
-    private string $RANDOM = 'RAND() ASC';
+    private string $aerodromeReferenceCode = 'aerodrome_reference_code ASC';
+    private string $assignmentPriority = 'assignment_priority ASC';
+    private string $otherStandRequests = 'other_stand_requests.id ASC';
+    private string $random = 'RAND() ASC';
 
     private array $commonOrderByConditions = [
-        $this->AERODROME_REFERENCE_CODE,
-        $this->ASSIGNMENT_PRIORITY,
-        $this->OTHER_STAND_REQUESTS,
-        $this->RANDOM,
+        $this->aerodromeReferenceCode,
+        $this->assignmentPriority,
+        $this->otherStandRequests,
+        $this->random,
     ];
 
     private array $commonOrderByConditionsWithoutAssignmentPriority = [
-        $this->AERODROME_REFERENCE_CODE,
-        $this->OTHER_STAND_REQUESTS,
-        $this->RANDOM,
+        $this->aerodromeReferenceCode,
+        $this->otherStandRequests,
+        $this->random,
     ];
 
     private array $commonOrderByConditionsForRanking = [
-        $this->AERODROME_REFERENCE_CODE,
-        $this->ASSIGNMENT_PRIORITY,
+        $this->aerodromeReferenceCode,
+        $this->assignmentPriority,
     ];
 
     private array $commonOrderByConditionsWithoutAssignmentPriorityForRanking = [
-        $this->AERODROME_REFERENCE_CODE,
+        $this->aerodromeReferenceCode,
     ];
 }
