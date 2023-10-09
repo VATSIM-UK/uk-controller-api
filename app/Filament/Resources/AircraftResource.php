@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Events\Aircraft\AircraftDataUpdatedEvent;
 use App\Filament\Resources\AircraftResource\Pages;
 use App\Filament\Resources\AircraftResource\RelationManagers\WakeCategoriesRelationManager;
 use App\Models\Aircraft\Aircraft;
@@ -104,7 +105,10 @@ class AircraftResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function () {
+                        event(new AircraftDataUpdatedEvent);
+                    }),
             ])
             ->defaultSort('code');
     }

@@ -4,11 +4,14 @@ namespace App\Models\Airline;
 
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Airline extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'icao_code',
         'name',

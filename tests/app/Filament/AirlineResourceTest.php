@@ -3,6 +3,7 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
+use App\Events\Airline\AirlinesUpdatedEvent;
 use App\Filament\Resources\AirlineResource;
 use App\Filament\Resources\AirlineResource\Pages\CreateAirline;
 use App\Filament\Resources\AirlineResource\Pages\EditAirline;
@@ -15,6 +16,7 @@ use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -22,6 +24,12 @@ class AirlineResourceTest extends BaseFilamentTestCase
 {
     use ChecksOperationsContributorActionVisibility;
     use ChecksOperationsContributorAccess;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        Event::fake();
+    }
 
     public function testItLoadsDataForView()
     {
@@ -51,6 +59,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'is_cargo' => false,
             ]
         );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItCreatesACargoAirline()
@@ -72,6 +83,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'is_cargo' => true,
             ]
         );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItCreatesAnAirlineAndCopiesStandAndTerminalAssignments()
@@ -179,6 +193,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'full_callsign' => 'def',
             ]
         );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItCreatesAnAirlineAndDoesntCopyStandAndTerminalAssignments()
@@ -234,6 +251,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'airline_id' => $airline->id,
             ]
         );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineNoIcaoCode()
@@ -244,6 +264,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.icao_code']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineIcaoCodeEmpty()
@@ -255,6 +278,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.icao_code']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineIcaoCodeTooLong()
@@ -266,6 +292,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.icao_code']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineNoName()
@@ -276,6 +305,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.name']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineNameEmpty()
@@ -287,6 +319,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.name']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineNameTooLong()
@@ -298,6 +333,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.name']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineNoCallsign()
@@ -308,6 +346,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.callsign']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineCallsignEmpty()
@@ -319,6 +360,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.callsign']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntCreateAnAirlineCallsignTooLong()
@@ -330,6 +374,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('create')
             ->assertHasErrors(['data.callsign']);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItLoadsDataForEdit()
@@ -339,6 +386,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->assertSet('data.name', 'British Airways')
             ->assertSet('data.callsign', 'SPEEDBIRD')
             ->assertSet('data.is_cargo', false);
+
+        // Check that the event was not dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItEditsAnAirline()
@@ -361,6 +411,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'is_cargo' => false,
             ]
         );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItEditsACargoAirline()
@@ -383,6 +436,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
                 'is_cargo' => true,
             ]
         );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineNoIcaoCode()
@@ -394,6 +450,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.icao_code']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineIcaoCodeEmpty()
@@ -405,6 +464,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.icao_code']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineIcaoCodeTooLong()
@@ -416,6 +478,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.icao_code']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineNoName()
@@ -427,6 +492,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.name']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineNameEmpty()
@@ -438,6 +506,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.name']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineNameTooLong()
@@ -449,6 +520,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.name']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineNoCallsign()
@@ -460,6 +534,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.callsign']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineCallsignEmpty()
@@ -471,6 +548,9 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.callsign']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItDoesntEditAnAirlineCallsignTooLong()
@@ -482,6 +562,43 @@ class AirlineResourceTest extends BaseFilamentTestCase
             ->set('data.is_cargo', false)
             ->call('save')
             ->assertHasErrors(['data.callsign']);
+
+        // Check that the event was nmot dispatched
+        Event::assertNotDispatched(AirlinesUpdatedEvent::class);
+    }
+
+    public function testAirlinesCanBeDeletedFromTheEditPage()
+    {
+        Livewire::test(EditAirline::class, ['record' => 1])
+            ->callPageAction('delete')
+            ->assertHasNoPageActionErrors();
+
+        $this->assertDatabaseMissing(
+            'airlines',
+            [
+                'id' => 1,
+            ]
+        );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
+    }
+
+    public function testAirlinesCanBeDeletedFromTheListingPage()
+    {
+        Livewire::test(ListAirlines::class)
+            ->callTableAction('delete', 1)
+            ->assertHasNoPageActionErrors();
+
+        $this->assertDatabaseMissing(
+            'airlines',
+            [
+                'id' => 1,
+            ]
+        );
+
+        // Check that the event was dispatched
+        Event::assertDispatched(AirlinesUpdatedEvent::class);
     }
 
     public function testItAllowsTerminalPairingWithMinimalData()

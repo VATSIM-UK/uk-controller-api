@@ -10,6 +10,8 @@ use App\Jobs\Release\Departure\CancelOutstandingDepartureReleaseRequests;
 use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Jobs\Stand\TriggerUnassignmentOnDisconnect;
 use App\Models\FlightInformationRegion\FlightInformationRegion;
+use App\Services\AircraftService;
+use App\Services\AirlineService;
 use App\Services\NetworkAircraftService;
 use App\Services\NetworkDataDownloadService;
 use App\Services\NetworkDataService;
@@ -30,6 +32,8 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
         $this->app->singleton(NetworkAircraftService::class, function (Application $application) {
             return new NetworkAircraftService(
                 $application->make(NetworkDataService::class),
+                $application->make(AircraftService::class),
+                $application->make(AirlineService::class),
                 FlightInformationRegion::with('proximityMeasuringPoints')
                     ->get()
                     ->pluck('proximityMeasuringPoints')

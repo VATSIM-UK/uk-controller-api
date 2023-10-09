@@ -4,33 +4,65 @@ namespace App\Allocator\Stand;
 
 use App\Allocator\UsesDestinationStrings;
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class AirlineDestinationTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
+class AirlineDestinationTerminalArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
     use UsesDestinationStrings;
+    use SelectsStandsFromAirlineSpecificTerminals;
 
-    private AirlineService $airlineService;
+    private const ORDER_BYS = [
+        'airline_terminal.destination IS NOT NULL',
+        'LENGTH(airline_terminal.destination) DESC',
+    ];
 
-    public function __construct(AirlineService $airlineService)
+    /**
+     * This allocator:
+     *
+     * - Selects stands that are size appropriate and available
+     * - Filters these to stands that are at terminals specifically selected for the airline and a
+     * specific set of destinations
+     * - Orders these by the most specific destination first
+     * - Orders these stands by the airline's priority for the stand
+     * - Orders these stands by the common conditions, minus the general allocation priority
+     * (see OrdersStandsByCommonConditions)
+     * - Selects the first stand that pops up
+     */
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
-        $this->airlineService = $airlineService;
-    }
-
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
-    {
-        $airline = $this->airlineService->getAirlineForAircraft($aircraft);
-        if ($airline === null) {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
             return null;
         }
 
-        return $stands->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
-            ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
-            ->where('airline_terminal.airline_id', $airline->id)
-            ->whereIn('airline_terminal.destination', $this->getDestinationStrings($aircraft))
-            ->orderByRaw('airline_terminal.destination IS NOT NULL')
-            ->orderByRaw('LENGTH(airline_terminal.destination) DESC')
-            ->orderBy('airline_terminal.priority');
+        return $this->selectStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            $this->queryFilter($aircraft),
+            self::ORDER_BYS
+        );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
+            return collect();
+        }
+
+        return $this->selectRankedStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            $this->queryFilter($aircraft),
+            self::ORDER_BYS
+        );
+    }
+
+    public function queryFilter(NetworkAircraft $aircraft): Closure
+    {
+        return fn (Builder $query) => $query->whereIn(
+            'airline_terminal.destination',
+            $this->getDestinationStrings($aircraft)
+        );
     }
 }

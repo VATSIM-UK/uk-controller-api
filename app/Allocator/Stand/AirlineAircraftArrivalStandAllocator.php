@@ -2,35 +2,47 @@
 
 namespace App\Allocator\Stand;
 
-use App\Models\Aircraft\Aircraft;
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class AirlineAircraftArrivalStandAllocator extends AbstractArrivalStandAllocator
+class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
-    private AirlineService $airlineService;
+    use SelectsFromAirlineSpecificStands;
 
-    public function __construct(AirlineService $airlineService)
+    /**
+     * This allocator uses the standard SelectsFromAirlineSpecificStands trait to generate a stand query,
+     * with additional filters that only stands for a specific aircraft type are selected.
+     */
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
-        $this->airlineService = $airlineService;
+        // We cant allocate a stand if we don't know the airline or aircraft type
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
+            return null;
+        }
+
+        return $this->selectAirlineSpecificStands(
+            $aircraft,
+            $this->queryFilter($aircraft)
+        );
     }
 
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
-        $airline = $this->airlineService->getAirlineForAircraft($aircraft);
-        if ($airline === null) {
-            return null;
+        // We cant allocate a stand if we don't know the airline or aircraft type
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
+            return collect();
         }
 
-        $aircraftType = Aircraft::where('code', $aircraft->planned_aircraft)->first();
-        if (!$aircraftType) {
-            return null;
-        }
+        return $this->selectRankedAirlineSpecificStands(
+            $aircraft,
+            $this->queryFilter($aircraft)
+        );
+    }
 
-        return $stands->with('airlines')
-            ->airline($airline)
-            ->where('airline_stand.aircraft_id', $aircraftType->id)
-            ->orderBy('airline_stand.priority');
+    private function queryFilter(NetworkAircraft $aircraft): Closure
+    {
+        return fn (Builder $query) => $query->where('airline_stand.aircraft_id', $aircraft->aircraft_id);
     }
 }

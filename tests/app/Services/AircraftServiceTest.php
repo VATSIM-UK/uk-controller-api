@@ -3,8 +3,11 @@
 namespace App\Services;
 
 use App\BaseFunctionalTestCase;
+use App\Events\Aircraft\AircraftDataUpdatedEvent;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use App\Models\Aircraft\WakeCategoryScheme;
+use Illuminate\Support\Facades\Cache;
 
 class AircraftServiceTest extends BaseFunctionalTestCase
 {
@@ -14,6 +17,9 @@ class AircraftServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(AircraftService::class);
+
+        // Call this to ensure the cache is cleared before each test
+        $this->service->aircraftDataUpdated();
     }
 
     public function testItGeneratesDependency()
@@ -46,5 +52,49 @@ class AircraftServiceTest extends BaseFunctionalTestCase
         ];
 
         $this->assertEquals($expected, $this->service->getAircraftDependency());
+    }
+
+    public function testItGetsAircraftIdFromCode()
+    {
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B738'));
+        $this->assertEquals(2, $this->service->getAircraftIdFromCode('A333'));
+        $this->assertNull($this->service->getAircraftIdFromCode('A332'));
+    }
+
+    public function testAircraftIfFromCodeIsCached()
+    {
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B738'));
+        Aircraft::withoutEvents(function ()
+        {
+            Aircraft::where('code', 'B738')->update(['code' => 'B799']);
+        });
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B738'));
+        $this->assertNull($this->service->getAircraftIdFromCode('B799'));
+    }
+
+    public function testItClearsAircraftCodeCacheOnAircraftUpdated()
+    {
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B738'));
+        Aircraft::withoutEvents(function ()
+        {
+            Aircraft::where('code', 'B738')->update(['code' => 'B799']);
+        });
+        $this->service->aircraftDataUpdated();
+
+        $this->assertNull($this->service->getAircraftIdFromCode('B738'));
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B799'));
+    }
+
+    public function testItClearsAircraftCodeCacheOnEvent()
+    {
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B738'));
+        Aircraft::where('code', 'B738')->update(['code' => 'B799']);
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B738'));
+        $this->assertNull($this->service->getAircraftIdFromCode('B799'));
+
+        event(new AircraftDataUpdatedEvent);
+
+        $this->assertNull($this->service->getAircraftIdFromCode('B738'));
+        $this->assertEquals(1, $this->service->getAircraftIdFromCode('B799'));
     }
 }

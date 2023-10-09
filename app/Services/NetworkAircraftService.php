@@ -21,9 +21,19 @@ class NetworkAircraftService
     private NetworkDataService $dataService;
     private Collection $allAircraftBeforeUpdate;
 
-    public function __construct(NetworkDataService $dataService, Collection $measuringPoints)
-    {
+    private readonly AircraftService $aircraftService;
+
+    private readonly AirlineService $airlineService;
+
+    public function __construct(
+        NetworkDataService $dataService,
+        AircraftService $aircraftService,
+        AirlineService $airlineService,
+        Collection $measuringPoints
+    ) {
         $this->measuringPoints = $measuringPoints;
+        $this->aircraftService = $aircraftService;
+        $this->airlineService = $airlineService;
         $this->dataService = $dataService;
     }
 
@@ -84,6 +94,8 @@ class NetworkAircraftService
      */
     private function formatPilot(array $pilot): array
     {
+        $shortAircraftCode = $this->getFlightplanDataElement($pilot, 'aircraft_short');
+
         return [
             'callsign' => $pilot['callsign'],
             'cid' => $pilot['cid'],
@@ -93,7 +105,7 @@ class NetworkAircraftService
             'groundspeed' => $pilot['groundspeed'],
             'transponder' => $pilot['transponder'],
             'planned_aircraft' => $this->getFlightplanDataElement($pilot, 'aircraft'),
-            'planned_aircraft_short' => $this->getFlightplanDataElement($pilot, 'aircraft_short'),
+            'planned_aircraft_short' => $shortAircraftCode,
             'planned_depairport' => $this->getFlightplanDataElement($pilot, 'departure'),
             'planned_destairport' => $this->getFlightplanDataElement($pilot, 'arrival'),
             'planned_altitude' => $this->getFlightplanDataElement($pilot, 'altitude'),
@@ -101,6 +113,10 @@ class NetworkAircraftService
             'planned_route' => $this->getFlightplanDataElement($pilot, 'route'),
             'remarks' => $this->getFlightplanDataElement($pilot, 'remarks'),
             'transponder_last_updated_at' => $this->getTransponderUpdatedAtTime($pilot),
+            'aircraft_id' => $shortAircraftCode
+                ? $this->aircraftService->getAircraftIdFromCode($shortAircraftCode)
+                : null,
+            'airline_id' => $this->airlineService->airlineIdForCallsign($pilot['callsign']),
         ];
     }
 
@@ -111,7 +127,7 @@ class NetworkAircraftService
     private function getTransponderUpdatedAtTime(array $pilot): Carbon
     {
         return $this->allAircraftBeforeUpdate->has($pilot['callsign']) &&
-        $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder === $pilot['transponder']
+            $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder === $pilot['transponder']
             ? $this->allAircraftBeforeUpdate->get($pilot['callsign'])->transponder_last_updated_at
             : Carbon::now();
     }

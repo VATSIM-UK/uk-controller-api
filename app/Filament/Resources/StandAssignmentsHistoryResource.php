@@ -63,12 +63,6 @@ class StandAssignmentsHistoryResource extends Resource
         return self::userCanAccess();
     }
 
-    public function mount(): void
-    {
-        dd(self::userCanAccess());
-        abort_unless(self::userCanAccess(), 403);
-    }
-
     public static function form(Form $form): Form
     {
         return $form

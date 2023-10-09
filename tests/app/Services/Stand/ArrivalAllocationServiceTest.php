@@ -4,15 +4,15 @@ namespace App\Services\Stand;
 
 use App\Allocator\Stand\AirlineAircraftArrivalStandAllocator;
 use App\Allocator\Stand\AirlineAircraftTerminalArrivalStandAllocator;
-use App\Allocator\Stand\AirlineArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
-use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
-use App\Allocator\Stand\ArrivalStandAllocatorInterface;
+use App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator;
+use App\Allocator\Stand\ArrivalStandAllocator;
 use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
@@ -26,11 +26,14 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
+use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
@@ -38,12 +41,15 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
 {
     private readonly ArrivalAllocationService $service;
 
+    private readonly Airline $bmi;
+
     public function setUp(): void
     {
         parent::setUp();
         Event::fake();
         $this->service = $this->app->make(ArrivalAllocationService::class);
         DB::table('network_aircraft')->delete();
+        $this->bmi = Airline::factory()->create(['icao_code' => 'BMI']);
     }
 
     public function testItDeallocatesStandForDivertingAircraft()
@@ -62,6 +68,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -86,6 +94,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -111,6 +121,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -135,6 +147,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -156,6 +170,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -176,19 +192,19 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 AirlineCallsignSlugArrivalStandAllocator::class,
                 AirlineAircraftArrivalStandAllocator::class,
                 AirlineDestinationArrivalStandAllocator::class,
-                AirlineArrivalStandAllocator::class,
+                AirlineGeneralArrivalStandAllocator::class,
                 AirlineCallsignTerminalArrivalStandAllocator::class,
                 AirlineCallsignSlugTerminalArrivalStandAllocator::class,
                 AirlineAircraftTerminalArrivalStandAllocator::class,
                 AirlineDestinationTerminalArrivalStandAllocator::class,
-                AirlineTerminalArrivalStandAllocator::class,
+                AirlineGeneralTerminalArrivalStandAllocator::class,
                 CargoAirlineFallbackStandAllocator::class,
                 OriginAirfieldStandAllocator::class,
                 DomesticInternationalStandAllocator::class,
                 FallbackArrivalStandAllocator::class,
             ],
             array_map(
-                fn(ArrivalStandAllocatorInterface $allocator) => get_class($allocator),
+                fn(ArrivalStandAllocator $allocator) => get_class($allocator),
                 $this->service->getAllocators()
             )
         );
@@ -219,6 +235,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -241,6 +259,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
         $aircraft->updated_at = Carbon::now()->subMinutes(30);
@@ -265,6 +285,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // London
                 'latitude' => 51.487202,
                 'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -287,6 +309,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -309,6 +333,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -337,6 +363,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -359,6 +387,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
         StandAssignment::create(
@@ -387,6 +417,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -409,6 +441,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => null,
             ]
         );
 
@@ -433,6 +467,8 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 // Lambourne
                 'latitude' => 51.646099,
                 'longitude' => 0.151667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
             ]
         );
 
@@ -449,6 +485,97 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 'callsign' => $callsign,
                 'stand_id' => $standId,
             ]
+        );
+    }
+
+    public function testItReturnsRankedStandAllocations()
+    {
+        // Delete other stand
+        DB::table('stands')->delete();
+
+        $aircraft = new NetworkAircraft(
+            [
+                'callsign' => 'BAW221',
+                'cid' => 1234,
+                'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+                'airline_id' => 1,
+                'aircraft_id' => 1,
+            ]
+        );
+
+        // Callsign specific
+        $stand1 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand1->airlines()->sync([1 => ['full_callsign' => '221']]);
+        $stand2 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand2->airlines()->sync([1 => ['full_callsign' => '221']]);
+
+        // Callsign specfic, but with a lower priorityy
+        $stand3 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 2]);
+        $stand3->airlines()->sync([1 => ['full_callsign' => '221', 'priority' => 101]]);
+
+        // Generic
+        $stand4 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 3]);
+        $stand4->airlines()->sync([1]);
+
+        $expected = [
+            AirlineCallsignArrivalStandAllocator::class => [
+                0 => [
+                    $stand1->id,
+                    $stand2->id,
+                ],
+                1 => [
+                    $stand3->id,
+                ],
+            ],
+            AirlineCallsignSlugArrivalStandAllocator::class => [],
+            AirlineAircraftArrivalStandAllocator::class => [],
+            AirlineDestinationArrivalStandAllocator::class => [],
+            AirlineGeneralArrivalStandAllocator::class => [
+                0 => [
+                    $stand4->id,
+                ],
+            ],
+            AirlineCallsignTerminalArrivalStandAllocator::class => [],
+            AirlineCallsignSlugTerminalArrivalStandAllocator::class => [],
+            AirlineAircraftTerminalArrivalStandAllocator::class => [],
+            AirlineDestinationTerminalArrivalStandAllocator::class => [],
+            AirlineGeneralTerminalArrivalStandAllocator::class => [],
+            CargoAirlineFallbackStandAllocator::class => [],
+            OriginAirfieldStandAllocator::class => [],
+            DomesticInternationalStandAllocator::class => [],
+            FallbackArrivalStandAllocator::class => [
+                0 => [
+                    $stand1->id,
+                    $stand2->id,
+                ],
+                1 => [
+                    $stand3->id,
+                ],
+                2 => [
+                    $stand4->id,
+                ],
+            ],
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $this->service->getAllocationRankingForAircraft($aircraft)
+                ->map(
+                    fn(Collection $stands) =>
+                    $stands->map(
+                        fn(Collection $standsForRank) =>
+                        $standsForRank->sortBy('id')
+                            ->map(fn(Stand $stand) => $stand->id)->values()
+                    )
+                )
+                ->toArray()
         );
     }
 }

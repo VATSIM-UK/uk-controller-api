@@ -4,11 +4,14 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class AirlineCallsignTerminalArrivalStandAllocator extends AbstractArrivalStandAllocator
+class AirlineCallsignTerminalArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
     use UsesCallsignSlugs;
+    use SelectsStandsFromAirlineSpecificTerminals;
 
     private AirlineService $airlineService;
 
@@ -17,17 +20,46 @@ class AirlineCallsignTerminalArrivalStandAllocator extends AbstractArrivalStandA
         $this->airlineService = $airlineService;
     }
 
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    /**
+     * This allocator:
+     *
+     * - Selects stands that are size appropriate and available
+     * - Filters these to stands at a terminal that is specifically selected for the airline and
+     * a specific callsign
+     * - Orders these stands by the airline's priority for the stand
+     * - Orders these stands by the common conditions, minus the general allocation priority
+     * (see OrdersStandsByCommonConditions)`
+     * - Selects the first stand that pops up
+     */
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
-        $airline = $this->airlineService->getAirlineForAircraft($aircraft);
-        if ($airline === null) {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
             return null;
         }
 
-        return $stands->join('terminals', 'terminals.id', '=', 'stands.terminal_id')
-            ->join('airline_terminal', 'terminals.id', '=', 'airline_terminal.terminal_id')
-            ->where('airline_terminal.airline_id', $airline->id)
-            ->where('airline_terminal.full_callsign', $this->getFullCallsignSlug($aircraft))
-            ->orderBy('airline_terminal.priority');
+        return $this->selectStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            $this->queryFilter($aircraft)
+        );
+    }
+
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
+        if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
+            return collect();
+        }
+
+        return $this->selectRankedStandsAtAirlineSpecificTerminals(
+            $aircraft,
+            $this->queryFilter($aircraft)
+        );
+    }
+
+    private function queryFilter(NetworkAircraft $aircraft): Closure
+    {
+        return fn (Builder $query)
+            => $query->where('airline_terminal.full_callsign', $this->getFullCallsignSlug($aircraft));
     }
 }

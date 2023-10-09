@@ -2,7 +2,10 @@
 
 namespace App\Services\Stand;
 
+use App\Allocator\Stand\ArrivalStandAllocator;
+use App\Allocator\Stand\RankableArrivalStandAllocator;
 use App\Models\Airfield\Airfield;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\LocationService;
@@ -19,7 +22,7 @@ class ArrivalAllocationService
     private readonly StandAssignmentsService $assignmentsService;
 
     /**
-     * @var ArrivalStandAllocatorInterface[]
+     * @var ArrivalStandAllocator[]
      */
     private readonly array $allocators;
 
@@ -83,7 +86,7 @@ class ArrivalAllocationService
     private function getAircraftThatCanHaveArrivalStandsAllocated(): Collection
     {
         return NetworkAircraft::join('airfield', 'airfield.code', '=', 'network_aircraft.planned_destairport')
-            ->join('aircraft', 'aircraft.code', '=', 'network_aircraft.planned_aircraft_short')
+            ->join('aircraft', 'network_aircraft.aircraft_id', '=', 'aircraft.id')
             ->leftJoin('stand_assignments', 'stand_assignments.callsign', '=', 'network_aircraft.callsign')
             ->whereRaw('network_aircraft.planned_destairport <> network_aircraft.planned_depairport')
             ->where('aircraft.allocate_stands', '<>', 0)
@@ -118,11 +121,28 @@ class ArrivalAllocationService
         );
         $groundspeed = $aircraft->groundspeed === 0 ? 1 : $aircraft->groundspeed;
 
-        return (float)($distanceToAirfieldInNm / $groundspeed) * 60.0;
+        return (float) ($distanceToAirfieldInNm / $groundspeed) * 60.0;
     }
 
     public function getAllocators(): array
     {
         return $this->allocators;
+    }
+
+    public function getAllocationRankingForAircraft(NetworkAircraft $aircraft): Collection
+    {
+        $ranking = collect();
+
+        foreach ($this->allocators as $allocator) {
+            if (!$allocator instanceof RankableArrivalStandAllocator) {
+                continue;
+            }
+
+            $ranking[get_class($allocator)] = $allocator->getRankedStandAllocation($aircraft)
+                ->groupBy('rank')
+                ->values();
+        }
+
+        return $ranking;
     }
 }

@@ -4,7 +4,9 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AirlineService;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 /**
  * The primary arrival stand allocator for cargo. Looks for either a cargo airline
@@ -13,8 +15,9 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * This allows airlines that also handle passengers to have stands for their cargo operation.
  */
-class CargoFlightPreferredArrivalStandAllocator extends AbstractArrivalStandAllocator
+class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
 {
+    use SelectsFromAirlineSpecificStands;
     use ChecksForCargoAirlines;
 
     private AirlineService $airlineService;
@@ -24,18 +27,34 @@ class CargoFlightPreferredArrivalStandAllocator extends AbstractArrivalStandAllo
         $this->airlineService = $airlineService;
     }
 
-    protected function getOrderedStandsQuery(Builder $stands, NetworkAircraft $aircraft): ?Builder
+    public function allocate(NetworkAircraft $aircraft): ?int
     {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
         if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
             return null;
         }
 
-        if (!($airline = $this->airlineService->getAirlineForAircraft($aircraft))) {
-            return null;
-        }
+        return $this->selectAirlineSpecificStands(
+            $aircraft,
+            $this->queryFilter()
+        );
+    }
 
-        return $stands->cargo()
-            ->airline($airline)
-            ->orderBy('airline_stand.priority');
+    public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
+    {
+        // If the aircraft doesnt have an airline, we cant allocate a stand
+        if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
+            return collect();
+        }
+        
+        return $this->selectRankedAirlineSpecificStands(
+            $aircraft,
+            $this->queryFilter()
+        );
+    }
+
+    private function queryFilter(): Closure
+    {
+        return fn (Builder $query) => $query->cargo();
     }
 }
