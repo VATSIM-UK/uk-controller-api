@@ -13,30 +13,30 @@ trait OrdersStandsByCommonConditions
 {
     use ConsidersStandRequests;
 
-    const AERODROME_REFERENCE_CODE = 'aerodrome_reference_code ASC';
-    const ASSIGNMENT_PRIORITY = 'assignment_priority ASC';
-    const OTHER_STAND_REQUESTS = 'other_stand_requests.id ASC';
-    const RANDOM = 'RAND() ASC';
+    private readonly AERODROME_REFERENCE_CODE = 'aerodrome_reference_code ASC';
+    private readonly ASSIGNMENT_PRIORITY = 'assignment_priority ASC';
+    private readonly OTHER_STAND_REQUESTS = 'other_stand_requests.id ASC';
+    private readonly RANDOM = 'RAND() ASC';
 
     private array $commonOrderByConditions = [
-        self::AERODROME_REFERENCE_CODE,
-        self::ASSIGNMENT_PRIORITY,
-        self::OTHER_STAND_REQUESTS,
-        self::RANDOM,
+        $this->AERODROME_REFERENCE_CODE,
+        $this->ASSIGNMENT_PRIORITY,
+        $this->OTHER_STAND_REQUESTS,
+        $this->RANDOM,
     ];
 
     private array $commonOrderByConditionsWithoutAssignmentPriority = [
-        self::AERODROME_REFERENCE_CODE,
-        self::OTHER_STAND_REQUESTS,
-        self::RANDOM,
+        $this->AERODROME_REFERENCE_CODE,
+        $this->OTHER_STAND_REQUESTS,
+        $this->RANDOM,
     ];
 
     private array $commonOrderByConditionsForRanking = [
-        self::AERODROME_REFERENCE_CODE,
-        self::ASSIGNMENT_PRIORITY,
+        $this->AERODROME_REFERENCE_CODE,
+        $this->ASSIGNMENT_PRIORITY,
     ];
 
     private array $commonOrderByConditionsWithoutAssignmentPriorityForRanking = [
-        self::AERODROME_REFERENCE_CODE,
+        $this->AERODROME_REFERENCE_CODE,
     ];
 }
