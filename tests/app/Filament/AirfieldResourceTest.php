@@ -13,6 +13,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Services\ControllerPositionHierarchyService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
 class AirfieldResourceTest extends BaseFilamentTestCase
@@ -444,6 +445,25 @@ class AirfieldResourceTest extends BaseFilamentTestCase
             ->set('data.standard_high', true)
             ->call('save')
             ->assertHasErrors(['data.transition_altitude']);
+    }
+
+    public function testAirfieldsCanBeDeletedFromTheEditPage()
+    {
+        // Create a record in the msl_airfield table to prove that it is deleted
+        DB::table('msl_airfield')->insert(
+            [
+                'airfield_id' => 1,
+                'msl' => 123,
+            ]
+        );
+
+        Livewire::test(EditAirfield::class, ['record' => 1])
+            ->call('delete')
+            ->assertHasNoErrors()
+            ->assertRedirect(AirfieldResource::getUrl('index'));
+
+        $this->assertDatabaseMissing('airfield', ['id' => 1]);
+        $this->assertDatabaseMissing('msl_airfield', ['airfield_id' => 1]);
     }
 
     public function testItDisplaysControllers()
