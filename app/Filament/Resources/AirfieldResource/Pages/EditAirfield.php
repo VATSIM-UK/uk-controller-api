@@ -16,10 +16,8 @@ class EditAirfield extends EditRecord
     {
         return [
             DeleteAction::make()
-                ->using(function (DeleteAction $action)
-                {
-                    DB::transaction(function () use ($action)
-                    {
+                ->using(function (DeleteAction $action) {
+                    DB::transaction(function () use ($action) {
                         DB::table('msl_airfield')->where('airfield_id', $action->getRecord()->id)->delete();
                         $action->getRecord()->delete();
                     });
