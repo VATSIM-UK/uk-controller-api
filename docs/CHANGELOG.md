@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.51.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.0...6.51.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* syntax ([44c469f](https://github.com/VATSIM-UK/uk-controller-api/commit/44c469f2ed9cc8dacd828033f2c2770a4c549491))
+* traits cant have arrays as default ([0096424](https://github.com/VATSIM-UK/uk-controller-api/commit/0096424bdb1f678a769b1ba94a3f767e91808d58))
+* traits with constants ([d0039e0](https://github.com/VATSIM-UK/uk-controller-api/commit/d0039e0b92e753d53e4394f623729230d05b1152))
+
 ## [6.51.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.50.2...6.51.0) (2023-10-09)
 
 
