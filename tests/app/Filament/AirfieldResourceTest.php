@@ -449,13 +449,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
 
     public function testAirfieldsCanBeDeletedFromTheEditPage()
     {
-        // Create a record in the msl_airfield table to prove that it is deleted
-        DB::table('msl_airfield')->insert(
-            [
-                'airfield_id' => 1,
-                'msl' => 123,
-            ]
-        );
+        $this->assertDatabaseHas('msl_airfield', ['airfield_id' => 1]);
 
         Livewire::test(EditAirfield::class, ['record' => 1])
             ->call('delete')
