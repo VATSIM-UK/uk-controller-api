@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Filament\Helpers\SelectOptions;
 use App\Models\Airfield\Airfield;
+use App\Rules\Airfield\AirfieldIcao;
 use App\Services\AirlineService;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
@@ -42,11 +43,11 @@ class StandPredictorForm extends Component implements HasForms
                         ->options(SelectOptions::aircraftTypes())
                         ->required()
                         ->searchable(),
-                    Select::make('departureAirfield')
+                    TextInput::make('departureAirfield')
                         ->label('Departure Airfield')
-                        ->options(Airfield::all()->mapWithKeys(fn ($airfield) => [$airfield->code => $airfield->code]))
-                        ->required()
-                        ->searchable(),
+                        ->rule(new AirfieldIcao())
+                        ->alpha()
+                        ->required(),
                     Select::make('arrivalAirfield')
                         ->label('Arrival Airfield')
                         ->options(Airfield::all()->mapWithKeys(fn ($airfield) => [$airfield->code => $airfield->code]))
@@ -58,6 +59,9 @@ class StandPredictorForm extends Component implements HasForms
 
     public function submit(): void
     {
+        // Convert the callsign to uppercase before validating it.
+        $this->departureAirfield = strtoupper($this->departureAirfield);
+
         $this->form->validate();
         $this->emit('standPredictorFormSubmitted', [
             'callsign' => $this->callsign,
