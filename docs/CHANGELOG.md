@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.51.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.1...6.51.2) (2023-10-10)
+
+
+### Bug Fixes
+
+* arbitary stand predictor departure airfield ([8fa333b](https://github.com/VATSIM-UK/uk-controller-api/commit/8fa333b8cd048e5fa6ee2427a3eebe69c9fffc25)), closes [#1412](https://github.com/VATSIM-UK/uk-controller-api/issues/1412)
+
 ## [6.51.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.0...6.51.1) (2023-10-10)
 
 
