@@ -60,7 +60,7 @@ class StandPredictorForm extends Component implements HasForms
     public function submit(): void
     {
         // Convert the callsign to uppercase before validating it.
-        $this->callsign = strtoupper($this->callsign);
+        $this->departureAirfield = strtoupper($this->departureAirfield);
 
         $this->form->validate();
         $this->emit('standPredictorFormSubmitted', [
