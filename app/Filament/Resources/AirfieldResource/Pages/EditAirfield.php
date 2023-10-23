@@ -3,8 +3,9 @@
 namespace App\Filament\Resources\AirfieldResource\Pages;
 
 use App\Filament\Resources\AirfieldResource;
-use Filament\Pages\Actions;
+use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\DB;
 
 class EditAirfield extends EditRecord
 {
@@ -13,7 +14,7 @@ class EditAirfield extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make()
         ];
     }
 }
