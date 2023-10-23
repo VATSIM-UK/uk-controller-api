@@ -28,7 +28,8 @@ class GithubController
 
     public function processGithubWebhook(Request $request)
     {
-        if (!$request->json()->get('issue')) {
+        $allValues = $request->json()->all();
+        if (!isset($allValues['issue'])) {
             return response('', 422);
         }
 
@@ -38,8 +39,8 @@ class GithubController
         }
 
         // Check for the presence of a valid label and only process if there's a label to work with
-        $labelNames = isset($request->json()->get('issue')['labels'])
-            ? array_column($request->json()->get('issue')['labels'], 'name')
+        $labelNames = isset($allValues['issue']['labels'])
+            ? array_column($allValues['issue']['labels'], 'name')
             : [];
 
         $response = null;
@@ -48,7 +49,7 @@ class GithubController
                 $labelName === config(self::CONFIG_KEY_PLUGIN_LABEL) ||
                 $labelName === config(self::CONFIG_KEY_API_LABEL)
             ) {
-                $response = $this->handleEvent($request->json()->get('issue'));
+                $response = $this->handleEvent($allValues['issue']);
                 break;
             }
         }
