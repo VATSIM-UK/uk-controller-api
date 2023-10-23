@@ -449,15 +449,17 @@ class AirfieldResourceTest extends BaseFilamentTestCase
 
     public function testAirfieldsCanBeDeletedFromTheEditPage()
     {
-        $this->assertDatabaseHas('msl_airfield', ['airfield_id' => 1]);
+        $airfield = Airfield::factory()->create();
+        $airfield->msl()->create(['msl' => 123]);
+        $this->assertDatabaseHas('msl_airfield', ['airfield_id' => $airfield->id]);
 
-        Livewire::test(EditAirfield::class, ['record' => 1])
-            ->call('delete')
+        Livewire::test(EditAirfield::class, ['record' => $airfield->id])
+            ->callPageAction('delete')
             ->assertHasNoErrors()
             ->assertRedirect(AirfieldResource::getUrl('index'));
 
-        $this->assertDatabaseMissing('airfield', ['id' => 1]);
-        $this->assertDatabaseMissing('msl_airfield', ['airfield_id' => 1]);
+        $this->assertDatabaseMissing('airfield', ['id' => $airfield->id]);
+        $this->assertDatabaseMissing('msl_airfield', ['airfield_id' => $airfield->id]);
     }
 
     public function testItDisplaysControllers()
