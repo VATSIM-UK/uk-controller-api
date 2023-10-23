@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.51.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.2...6.51.3) (2023-10-23)
+
+
+### Bug Fixes
+
+* allow airfield deletions where airfield has msl ([d1223f4](https://github.com/VATSIM-UK/uk-controller-api/commit/d1223f47bccc267d12d7b516a2ad0b8e145341f6)), closes [#1312](https://github.com/VATSIM-UK/uk-controller-api/issues/1312)
+* cascading indexes ([958807a](https://github.com/VATSIM-UK/uk-controller-api/commit/958807a0d945fb16cff9d5f5361796ef48e20c19))
+
 ## [6.51.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.1...6.51.2) (2023-10-10)
 
 
