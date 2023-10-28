@@ -6,6 +6,7 @@ use App\Filament\Helpers\DisplaysStandStatus;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
 use App\Models\Vatsim\NetworkAircraft;
@@ -32,6 +33,7 @@ class RequestAStandForm extends Component implements HasForms
     public array $stands = [];
     public ?int $requestedStand = null;
     public ?string $requestedTime = null;
+    public ?StandAssignment $existingAssignment = null;
 
     protected $messages = [
         'requestedStand' => 'You must select a valid stand.',
@@ -49,6 +51,14 @@ class RequestAStandForm extends Component implements HasForms
             $this->userAircraft->planned_destairport
         )
             ->first()
+            : null;
+        $this->existingAssignment = $userDestinationAirfield
+            ? StandAssignment::where('callsign', $this->userAircraft->callsign)
+                ->whereHas(
+                    'stand.airfield',
+                    fn ($query) => $query->where('code', $this->userAircraft->planned_destairport)
+                )
+                ->first()
             : null;
 
         $this->stands = $userDestinationAirfield && $this->userAircraftType

@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\BaseFilamentTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
 use App\Models\Vatsim\NetworkAircraft;
@@ -212,5 +213,24 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->assertHasNoErrors()
             ->assertOk()
             ->assertEmitted('requestAStandFormSubmitted');
+    }
+
+    public function testItRendersWarningIfExistingAssignmentAtAirfield()
+    {
+        StandAssignment::create(['callsign' => 'BAW123', 'stand_id' => 1]);
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSeeHtml(
+                'You cannot request a stand, as you already have a stand assigned. ' .
+                    'Stands are assigned approximately 20 minutes prior to arrival.'
+            );
+    }
+
+    public function testItRendersFormIfExistingAssignmentAtAnotherAirfield()
+    {
+        StandAssignment::create(['callsign' => 'BAW123', 'stand_id' => 3]);
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSeeHtml('Request Stand');
     }
 }
