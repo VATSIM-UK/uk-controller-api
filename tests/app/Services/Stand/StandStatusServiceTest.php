@@ -3,6 +3,7 @@
 namespace App\Services\Stand;
 
 use App\BaseFunctionalTestCase;
+use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
@@ -42,8 +43,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 'identifier' => 'TEST2',
                 'latitude' => '54.65882800',
                 'longitude' => -'6.22207000',
-                'max_aircraft_id_wingspan' => 1,
-                'max_aircraft_id_length' => 2,
+                'max_aircraft_wingspan' => Aircraft::where('code', 'B738')->first()->wingspan,
+                'max_aircraft_length' => Aircraft::where('code', 'A333')->first()->length
             ]
         );
         $this->addStandAssignment('ASSIGNMENT', $stand2->id);

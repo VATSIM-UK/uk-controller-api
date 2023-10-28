@@ -216,12 +216,12 @@ class StandTest extends BaseFunctionalTestCase
     public function testAppropriateDimensionsReturnsStandsWithNoMaxWingspan()
     {
         $a330 = Aircraft::where('code', 'A333')->first();
-        Stand::find(1)->update(['max_aircraft_id_length' => $a330->id, 'aerodrome_reference_code' => 'E']);
-        Stand::find(2)->update(['max_aircraft_id_length' => $a330->id, 'aerodrome_reference_code' => 'E']);
+        Stand::find(1)->update(['max_aircraft_length' => $a330->length, 'aerodrome_reference_code' => 'E']);
+        Stand::find(2)->update(['max_aircraft_length' => $a330->length, 'aerodrome_reference_code' => 'E']);
         Stand::find(3)->update(
             [
-                'max_aircraft_id_length' => $a330->id,
-                'max_aircraft_id_wingspan' => $a330->id,
+                'max_aircraft_length' => $a330->length,
+                'max_aircraft_wingspan' => $a330->wingspan,
                 'aerodrome_reference_code' => 'E',
             ]
         );
@@ -234,19 +234,19 @@ class StandTest extends BaseFunctionalTestCase
         $a330 = Aircraft::where('code', 'A333')->first();
         Stand::find(1)->update(
             [
-                'max_aircraft_id_length' => $a330->id,
-                'max_aircraft_id_wingspan' => $a330->id,
+                'max_aircraft_length' => $a330->length,
+                'max_aircraft_wingspan' => $a330->wingspan,
                 'aerodrome_reference_code' => 'E',
             ]
         );
         Stand::find(2)->update(
             [
-                'max_aircraft_id_length' => $a330->id,
-                'max_aircraft_id_wingspan' => $a330->id,
+                'max_aircraft_length' => $a330->length,
+                'max_aircraft_wingspan' => $a330->wingspawn,
                 'aerodrome_reference_code' => 'E',
             ]
         );
-        Stand::find(3)->update(['max_aircraft_id_wingspan' => $a330->id, 'aerodrome_reference_code' => 'E']);
+        Stand::find(3)->update(['max_aircraft_wingspan' => $a330->wingspan, 'aerodrome_reference_code' => 'E']);
         $stands = Stand::appropriateDimensions($a330)->get()->pluck('id')->toArray();
         $this->assertEquals([1, 2, 3], $stands);
     }

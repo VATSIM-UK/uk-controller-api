@@ -32,8 +32,6 @@ class Stand extends Model
         'type_id',
         'origin_slug',
         'aerodrome_reference_code',
-        'max_aircraft_id_length',
-        'max_aircraft_id_wingspan',
         'max_aircraft_length',
         'max_aircraft_wingspan',
         'assignment_priority',
@@ -225,16 +223,6 @@ class Stand extends Model
     public function scopeAppropriateAerodromeReferenceCode(Builder $builder, Aircraft $aircraftType): Builder
     {
         return $builder->where('aerodrome_reference_code', '>=', $aircraftType->aerodrome_reference_code);
-    }
-
-    public function maxAircraftWingspan(): BelongsTo
-    {
-        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_wingspan');
-    }
-
-    public function maxAircraftLength(): BelongsTo
-    {
-        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_length');
     }
 
     public function scopeAppropriateDimensions(Builder $builder, Aircraft $aircraftType): Builder

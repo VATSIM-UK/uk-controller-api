@@ -696,8 +696,8 @@ class AirlineCallsignSlugTerminalArrivalStandAllocatorTest extends BaseFunctiona
             [
                 'airfield_id' => $airfieldId,
                 'identifier' => 'G1',
-                'max_aircraft_id_length' => $cessna->id,
-                'max_aircraft_id_wingspan' => $cessna->id
+                'max_aircraft_length' => $cessna->length,
+                'max_aircraft_wingspan' => $cessna->wingspan
             ]
         );
 
