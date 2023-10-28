@@ -188,7 +188,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                         'BAW' => ['EDDM', 'EDDF'],
                     ],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST2',
@@ -200,8 +203,8 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
                     'max_aircraft' => [
-                        'wingspan' => 'B738',
-                        'length' => 'A333',
+                        'wingspan' => '117.83',
+                        'length' => '208.99',
                     ],
                 ],
                 [
@@ -213,7 +216,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'callsign' => 'RESERVATION',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST4',
@@ -224,7 +230,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'callsign' => 'OCCUPIED',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST5',
@@ -234,7 +243,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'status' => 'unavailable',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST6',
@@ -244,7 +256,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'status' => 'unavailable',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST7',
@@ -254,7 +269,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'status' => 'unavailable',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST8',
@@ -264,7 +282,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'status' => 'available',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST9',
@@ -276,7 +297,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'reserved_at' => Carbon::now()->addMinutes(59)->startOfSecond(),
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST10',
@@ -286,7 +310,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'status' => 'closed',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => 'TEST11',
@@ -296,7 +323,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'status' => 'requested',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                     'requested_by' => collect(['BAW123']),
                 ],
                 [
@@ -307,7 +337,10 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                     'status' => 'available',
                     'airlines' => [],
                     'aerodrome_reference_code' => 'A',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
             ],
             StandStatusService::getAirfieldStandStatus('EGLL')
