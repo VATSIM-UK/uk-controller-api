@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Events\Airline\AirlinesUpdatedEvent;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\AirlineResource\Pages;
 use App\Filament\Resources\AirlineResource\RelationManagers\StandsRelationManager;
@@ -88,7 +89,10 @@ class AirlineResource extends Resource
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->after(function () {
+                        event(new AirlinesUpdatedEvent);
+                    }),
             ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AirlineResource\Pages;
 
+use App\Events\Airline\AirlinesUpdatedEvent;
 use App\Filament\Resources\AirlineResource;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
@@ -74,5 +75,10 @@ class CreateAirline extends CreateRecord
             fn (mixed $value, string $key) => !in_array($key, $keysToRemove),
             ARRAY_FILTER_USE_BOTH
         );
+    }
+
+    protected function afterCreate(): void
+    {
+        event(new AirlinesUpdatedEvent);
     }
 }

@@ -20,4 +20,14 @@ abstract class BaseFilamentTestCase extends BaseFunctionalTestCase
     {
         return User::findOrFail(self::ACTIVE_USER_CID);
     }
+
+    protected function assumeRole(RoleKeys $role): void
+    {
+        $this->filamentUser()->roles()->sync([Role::idFromKey($role)]);
+    }
+
+    protected function noRole(): void
+    {
+        $this->filamentUser()->roles()->sync([]);
+    }
 }

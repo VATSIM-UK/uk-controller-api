@@ -5,7 +5,6 @@ namespace App\Services\Stand;
 use App\BaseFunctionalTestCase;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
-use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;

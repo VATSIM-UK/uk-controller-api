@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Livewire\CurrentStandRequest;
 use App\Http\Livewire\RequestAStandForm;
+use App\Http\Livewire\StandPredictorForm;
 use App\SocialiteProviders\CoreProvider;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
@@ -45,9 +46,9 @@ class AppServiceProvider extends ServiceProvider
                 $user = Auth::user();
 
                 $report->setUser([
-                     'id' => $user->id,
-                     'name' => $user->name
-                 ]);
+                    'id' => $user->id,
+                    'name' => $user->name
+                ]);
             }
         });
 
@@ -93,5 +94,6 @@ class AppServiceProvider extends ServiceProvider
         // Livewire
         Livewire::component('request-a-stand-form', RequestAStandForm::class);
         Livewire::component('current-stand-request', CurrentStandRequest::class);
+        Livewire::component('stand-predictor-form', StandPredictorForm::class);
     }
 }

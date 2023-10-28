@@ -1,5 +1,87 @@
 # UK Controller Plugin API Changelog
 
+## [6.51.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.2...6.51.3) (2023-10-23)
+
+
+### Bug Fixes
+
+* allow airfield deletions where airfield has msl ([d1223f4](https://github.com/VATSIM-UK/uk-controller-api/commit/d1223f47bccc267d12d7b516a2ad0b8e145341f6)), closes [#1312](https://github.com/VATSIM-UK/uk-controller-api/issues/1312)
+* cascading indexes ([958807a](https://github.com/VATSIM-UK/uk-controller-api/commit/958807a0d945fb16cff9d5f5361796ef48e20c19))
+
+## [6.51.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.1...6.51.2) (2023-10-10)
+
+
+### Bug Fixes
+
+* arbitary stand predictor departure airfield ([8fa333b](https://github.com/VATSIM-UK/uk-controller-api/commit/8fa333b8cd048e5fa6ee2427a3eebe69c9fffc25)), closes [#1412](https://github.com/VATSIM-UK/uk-controller-api/issues/1412)
+
+## [6.51.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.0...6.51.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* syntax ([44c469f](https://github.com/VATSIM-UK/uk-controller-api/commit/44c469f2ed9cc8dacd828033f2c2770a4c549491))
+* traits cant have arrays as default ([0096424](https://github.com/VATSIM-UK/uk-controller-api/commit/0096424bdb1f678a769b1ba94a3f767e91808d58))
+* traits with constants ([d0039e0](https://github.com/VATSIM-UK/uk-controller-api/commit/d0039e0b92e753d53e4394f623729230d05b1152))
+
+## [6.51.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.50.2...6.51.0) (2023-10-09)
+
+
+### Features
+
+* stand prediction form ([d518cd9](https://github.com/VATSIM-UK/uk-controller-api/commit/d518cd9e209040b65da6fbd274590424148b3f1d))
+* store resolved aircraft type with network aircraft ([4ef262e](https://github.com/VATSIM-UK/uk-controller-api/commit/4ef262ed5929b13814b62ac9f85fb18280dd1b41))
+
+
+### Bug Fixes
+
+* join aircraft table on id ([ea53500](https://github.com/VATSIM-UK/uk-controller-api/commit/ea535006d7b9f27b039281b4544f2b06e1fd45eb))
+* rankable allocators ([f37e4c0](https://github.com/VATSIM-UK/uk-controller-api/commit/f37e4c0650dce86593ce1dd9710fc446a583f04d))
+* remove dump ([d82a1a7](https://github.com/VATSIM-UK/uk-controller-api/commit/d82a1a7deef2c810e892481f512cee478e987a6e))
+* trigger events on page saves ([fd04dba](https://github.com/VATSIM-UK/uk-controller-api/commit/fd04dba8dfbb25cfa27e669e8676d20b2141f266))
+
+## [6.50.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.50.1...6.50.2) (2023-09-14)
+
+
+### Bug Fixes
+
+* withTrashed ([081fa3c](https://github.com/VATSIM-UK/uk-controller-api/commit/081fa3c89bea47f633c1d365177368748d9a80e0))
+
+## [6.50.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.50.0...6.50.1) (2023-09-13)
+
+
+### Bug Fixes
+
+* show soft deleted stand assignments and sort ([12e374a](https://github.com/VATSIM-UK/uk-controller-api/commit/12e374a04d728215ec4fec8a341446ab66e4319a))
+
+## [6.50.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.49.0...6.50.0) (2023-09-13)
+
+
+### Features
+
+* allow stand history filtering by stand ([ed3150e](https://github.com/VATSIM-UK/uk-controller-api/commit/ed3150e5fc959faf0febad2cb834eb87bdf6906e))
+* current user stand request in context ([fbf099c](https://github.com/VATSIM-UK/uk-controller-api/commit/fbf099ceffa7f6602d6d48f3eb4279724d08b676))
+* filter stand assignment history by airfield ([a3dd53c](https://github.com/VATSIM-UK/uk-controller-api/commit/a3dd53c42959429d46e51c51b5d5dc069cc5e293))
+* filter stand history by callsign ([848b282](https://github.com/VATSIM-UK/uk-controller-api/commit/848b282663fd74d9bdb758c30a0332448e2dec83))
+* include aircraft type and arr/dep airport in context ([1c30604](https://github.com/VATSIM-UK/uk-controller-api/commit/1c30604755b8cea1c56a21c96a3fbf8e8ce3cc08))
+* limit stand assignment history to ops contributors and above ([dea718b](https://github.com/VATSIM-UK/uk-controller-api/commit/dea718b9dc7e828f59a80f7154c03e901fd2a52b))
+* list stand assignment history in admin panel ([c0c54ae](https://github.com/VATSIM-UK/uk-controller-api/commit/c0c54aebbe835846693d842e6bbba97ddaed5398))
+* other stand requests in history context ([f4b7f2e](https://github.com/VATSIM-UK/uk-controller-api/commit/f4b7f2eda26fb1ab300c51b0e9b2c5a944f412c6))
+* remarks in history context ([107bba8](https://github.com/VATSIM-UK/uk-controller-api/commit/107bba8a08233bfd5b72714d350249a678afdd39))
+* store context of stand assignment in history ([5dc6b0e](https://github.com/VATSIM-UK/uk-controller-api/commit/5dc6b0e35ee66411d793b9bccec0a846a59d1924))
+
+
+### Bug Fixes
+
+* view tweaks ([03a13e7](https://github.com/VATSIM-UK/uk-controller-api/commit/03a13e77402920d5dda258b5a3ff61a4989a9c60))
+
+## [6.49.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.5...6.49.0) (2023-09-07)
+
+
+### Features
+
+* 8.33KHz controller frequencies ([d3d75f8](https://github.com/VATSIM-UK/uk-controller-api/commit/d3d75f82e9834cf1015a628e82fac2a9fa1b0ecf))
+
 ## [6.48.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.48.4...6.48.5) (2023-07-24)
 
 

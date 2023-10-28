@@ -81,7 +81,8 @@ class StandController extends BaseController
         try {
             $this->assignmentsService->createStandAssignment(
                 $request->json('callsign'),
-                (int)$request->json('stand_id')
+                (int)$request->json('stand_id'),
+                'User'
             );
             return response()->json([], 201);
         } catch (StandNotFoundException) {

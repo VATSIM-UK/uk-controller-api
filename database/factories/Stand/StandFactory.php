@@ -45,7 +45,7 @@ class StandFactory extends Factory
     {
         return sprintf(
             '%d%s',
-            $this->faker->numberBetween(0, 500),
+            $this->faker->unique()->numberBetween(0, 500),
             $this->faker->randomElement(['L', 'R', '', 'A']),
         );
     }

@@ -15,16 +15,18 @@ use App\Allocator\Stand\CidReservedArrivalStandAllocator;
 use App\Allocator\Stand\UserRequestedArrivalStandAllocator;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\ArrivalAllocationService;
+use App\Services\Stand\RecordsAssignmentHistory;
+use App\Services\Stand\StandAssignmentsHistoryService;
 use App\Services\Stand\StandAssignmentsService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use App\Imports\Stand\StandReservationsImport;
 use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
-use App\Allocator\Stand\AirlineArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralArrivalStandAllocator;
 use App\Allocator\Stand\FallbackArrivalStandAllocator;
 use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\Allocator\Stand\DomesticInternationalStandAllocator;
-use App\Allocator\Stand\AirlineTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\OriginAirfieldStandAllocator;
 
@@ -48,12 +50,12 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(AirlineCallsignSlugArrivalStandAllocator::class),
                     $application->make(AirlineAircraftArrivalStandAllocator::class),
                     $application->make(AirlineDestinationArrivalStandAllocator::class),
-                    $application->make(AirlineArrivalStandAllocator::class),
+                    $application->make(AirlineGeneralArrivalStandAllocator::class),
                     $application->make(AirlineCallsignTerminalArrivalStandAllocator::class),
                     $application->make(AirlineCallsignSlugTerminalArrivalStandAllocator::class),
                     $application->make(AirlineAircraftTerminalArrivalStandAllocator::class),
                     $application->make(AirlineDestinationTerminalArrivalStandAllocator::class),
-                    $application->make(AirlineTerminalArrivalStandAllocator::class),
+                    $application->make(AirlineGeneralTerminalArrivalStandAllocator::class),
                     $application->make(CargoAirlineFallbackStandAllocator::class),
                     $application->make(OriginAirfieldStandAllocator::class),
                     $application->make(DomesticInternationalStandAllocator::class),
@@ -63,5 +65,9 @@ class StandServiceProvider extends ServiceProvider
         });
         $this->app->singleton(StandReservationsImport::class);
         $this->app->singleton(AirfieldStandService::class);
+        $this->app->singleton(
+            RecordsAssignmentHistory::class,
+            fn (Application $application) => $application->make(StandAssignmentsHistoryService::class)
+        );
     }
 }

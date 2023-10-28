@@ -81,7 +81,7 @@ trait BaseChecksActionVisibility
                                     $relationManager,
                                     static::relationManagerLivewireParams(
                                         static::resourceRecordClass(),
-                                        static::resourceId(),
+                                        static::getResourceIdFromTest(),
                                     )
                                 );
 
@@ -124,13 +124,13 @@ trait BaseChecksActionVisibility
                         {
                             $livewire = Livewire::test(
                                 static::resourceListingClass(),
-                                static::resourceLivewireParams(static::resourceId())
+                                static::resourceLivewireParams(static::getResourceIdFromTest())
                             );
 
                             static::assertTableActionVisibility(
                                 $livewire,
                                 static::resourceRecordClass(),
-                                static::resourceId(),
+                                static::getResourceIdFromTest(),
                                 $action,
                                 in_array(
                                     $role,
@@ -165,7 +165,7 @@ trait BaseChecksActionVisibility
                         {
                             $livewire = Livewire::test(
                                 static::resourceListingClass(),
-                                static::resourceLivewireParams(static::resourceId())
+                                static::resourceLivewireParams(static::getResourceIdFromTest())
                             );
 
                             /*
@@ -229,6 +229,13 @@ trait BaseChecksActionVisibility
         ];
     }
 
+    private static function getResourceIdFromTest(): int|string
+    {
+        return is_callable(static::resourceId())
+            ? call_user_func(static::resourceId())
+            : static::resourceId();
+    }
+
     protected static function tableActionRecordClass(): array
     {
         return [];
@@ -239,7 +246,7 @@ trait BaseChecksActionVisibility
         return [];
     }
 
-    protected static function resourceId(): int|string
+    protected static function resourceId(): int|string|callable
     {
         return '';
     }
