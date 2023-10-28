@@ -9,9 +9,11 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\Stand\ArrivalAllocationService;
 use Carbon\Carbon;
 use Closure;
 use Exception;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -30,6 +32,7 @@ class RequestAStandForm extends Component implements HasForms
     public ?NetworkAircraft $userAircraft;
     public ?Aircraft $userAircraftType;
     public array $stands = [];
+    public array $recommendedStands = [];
     public ?int $requestedStand = null;
     public ?string $requestedTime = null;
 
@@ -60,6 +63,11 @@ class RequestAStandForm extends Component implements HasForms
                 ->mapWithKeys(fn (Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])
                 ->toArray()
             : [];
+
+        $this->recommendedStands = !empty($this->stands)
+            ? app()->make(ArrivalAllocationService::class)
+                ->recommendStand(5, $this->userAircraft)
+            : [];
     }
 
     public function getFormSchema(): array
@@ -73,6 +81,16 @@ class RequestAStandForm extends Component implements HasForms
                 ->content($this->getFirstPlaceholderText()),
             Placeholder::make('')
                 ->content($this->getSecondPlaceholderText()),
+            Fieldset::make('Recommendations')
+                ->schema([
+                    Placeholder::make('')
+                        ->columnSpanFull()
+                        ->content($this->getRecommendationText()),
+                    Placeholder::make('')
+                        ->columnSpanFull()
+                        ->content(implode(', ', $this->recommendedStands)),
+                ])
+                ->hidden(empty($this->recommendedStands)),
             Placeholder::make('Stand request for')
                 ->maxWidth('sm')
                 ->content(sprintf('%s at %s', $this->userAircraft->callsign, $this->userAircraft->planned_destairport))
@@ -170,6 +188,11 @@ class RequestAStandForm extends Component implements HasForms
     {
         return 'Disconnecting from the VATSIM network for an extended period of time will cause your stand request to be
                 automatically relinquished.';
+    }
+
+    private function getRecommendationText(): string
+    {
+        return 'Based on your flightplan, we recommend requesting one of the following stands:';
     }
 
     private function getRequestedTime(): Carbon

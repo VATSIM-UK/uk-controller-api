@@ -145,4 +145,36 @@ class ArrivalAllocationService
 
         return $ranking;
     }
+
+    /**
+     * Recommends stands for a given aircraft from the first ranking group, up to the number requested.
+     */
+    public function recommendStand(int $number, NetworkAircraft $aircraft): array
+    {
+        $rankedStands = $this->getAllocationRankingForAircraft($aircraft);
+        $recommendations = collect();
+
+        // Go through each allocator
+        foreach ($rankedStands as $standsForAllocator) {
+            if (empty($standsForAllocator)) {
+                continue;
+            }
+
+            // Go through the ranks, select at most the right number of stands to get to our target in random order
+            foreach ($standsForAllocator as $stands) {
+                if (count($recommendations) === $number) {
+                    break;
+                }
+
+                $recommendations = $recommendations->merge(
+                    $stands->shuffle()
+                        ->filter(fn (Stand $stand) => !$recommendations->contains($stand->identifier))
+                        ->take($number - count($recommendations))
+                        ->pluck('identifier')
+                );
+            }
+        }
+
+        return $recommendations->toArray();
+    }
 }
