@@ -240,15 +240,11 @@ class Stand extends Model
     public function scopeAppropriateDimensions(Builder $builder, Aircraft $aircraftType): Builder
     {
         return $builder->where(function (Builder $wingspan) use ($aircraftType) {
-            $wingspan->whereHas('maxAircraftWingspan', function (Builder $aircraftQuery) use ($aircraftType) {
-                $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan);
-            })
-                ->orWhereDoesntHave('maxAircraftWingspan');
+            $wingspan->where('max_aircraft_wingspan', '>=', $aircraftType->wingspan)
+                ->orWhereNull('max_aircraft_wingspan');
         })->where(function (Builder $length) use ($aircraftType) {
-            $length->whereHas('maxAircraftLength', function (Builder $aircraftQuery) use ($aircraftType) {
-                $aircraftQuery->where('length', '>=', $aircraftType->length);
-            })
-                ->orWhereDoesntHave('maxAircraftLength');
+            $length->where('max_aircraft_length', '>=', $aircraftType->length)
+                ->orWhereNull('max_aircraft_length');
         });
     }
 
