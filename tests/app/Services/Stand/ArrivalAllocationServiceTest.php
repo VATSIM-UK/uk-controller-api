@@ -714,7 +714,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             $recommendation
         );
         $this->assertEquals(
-            collect([$stand1->identifier, $stand2->identifier])->sort()->toArray(),
+            collect([$stand1->identifier, $stand2->identifier])->sort()->values()->toArray(),
             collect($recommendation)->sort()->values()->toArray()
         );
     }
@@ -764,7 +764,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             $recommendation
         );
         $this->assertEquals(
-            collect([$stand1->identifier, $stand2->identifier, $stand3->identifier])->sort()->toArray(),
+            collect([$stand1->identifier, $stand2->identifier, $stand3->identifier])->sort()->values()->toArray(),
             collect($recommendation)->sort()->values()->toArray()
         );
     }

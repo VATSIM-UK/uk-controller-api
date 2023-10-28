@@ -18,6 +18,8 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
             [
                 'cid' => self::ACTIVE_USER_CID,
                 'planned_destairport' => 'EGLL',
+                'aircraft_id' => 1,
+                'airline_id' => 1,
             ]
         );
     }
