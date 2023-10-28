@@ -286,7 +286,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'airfield_id' => $airfieldId,
                 'identifier' => 'G1',
                 'max_aircraft_length' => $cessna->length,
-                'max_aircraft_wingspan' => $cessna->wingspan
+                'max_aircraft_wingspan' => $cessna->wingspan,
                 'type_id' => 1,
             ]
         );
@@ -420,7 +420,7 @@ class DomesticInternationalStandAllocatorTest extends BaseFunctionalTestCase
                 'airfield_id' => $airfieldId,
                 'identifier' => 'G1',
                 'max_aircraft_length' => $cessna->length,
-                'max_aircraft_wingspan' => $cessna->wingspan
+                'max_aircraft_wingspan' => $cessna->wingspan,
                 'type_id' => 1,
             ]
         );
