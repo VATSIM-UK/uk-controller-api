@@ -2,8 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     const DATA = [
         ["code" => "CRJ1", "wingspan" => "21.23", "length" => "26.77"],
         ["code" => "CRJ2", "wingspan" => "21.23", "length" => "26.77"],
