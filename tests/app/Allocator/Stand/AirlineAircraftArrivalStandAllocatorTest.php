@@ -429,7 +429,7 @@ class AirlineAircraftArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'airfield_id' => $airfieldId,
                 'identifier' => 'G1',
                 'max_aircraft_length' => $cessna->length,
-                'max_aircraft_wingspan' => $cessna->wingspan
+                'max_aircraft_wingspan' => $cessna->wingspan,
             ]
         );
         $standG1->airlines()->sync([1 => ['aircraft_id' => 1]]);
