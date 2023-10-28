@@ -30,12 +30,12 @@ return [
         'label' => 'Maximum Aerodrome Reference Code',
         'helper' => 'Maximum aerodrome reference code that can be assigned to the stand.',
     ],
-    'aircraft_type_length' => [
-        'label' => 'Maximum Aircraft Type (Length)',
+    'aircraft_length' => [
+        'label' => 'Maximum Aircraft Length',
         'helper' => 'Maximum aircraft size that can be assigned to the stand. Overrides maximum aerodrome reference code.',
     ],
-    'aircraft_type_wingspan' => [
-        'label' => 'Maximum Aircraft Type (Wingspan)',
+    'aircraft_wingspan' => [
+        'label' => 'Maximum Aircraft Wingspan',
         'helper' => 'Maximum aircraft size that can be assigned to the stand. Overrides maximum aerodrome reference code.',
     ],
     'used_for_allocation' => [

@@ -130,22 +130,22 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-scale')
                             ->options(['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F'])
                             ->required(),
-                        Select::make('max_aircraft_id_wingspan')
+                        TextInput::make('max_aircraft_wingspan')
                             ->label(self::translateFormPath('aircraft_type_wingspan.label'))
                             ->helperText(self::translateFormPath('aircraft_type_wingspan.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->reactive()
-                            ->required(fn (Closure $get) => $get('max_aircraft_id_length') !== null)
-                            ->options(SelectOptions::aircraftTypes())
-                            ->searchable(!App::runningUnitTests()),
-                        Select::make('max_aircraft_id_length')
+                            ->required(fn (Closure $get) => $get('max_aircraft_length') !== null)
+                            ->numeric()
+                            ->minValue(1),
+                        TextInput::make('max_aircraft_length')
                             ->label(self::translateFormPath('aircraft_type_length.label'))
                             ->helperText(self::translateFormPath('aircraft_type_length.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->reactive()
-                            ->required(fn (Closure $get) => $get('max_aircraft_id_wingspan') !== null)
-                            ->options(SelectOptions::aircraftTypes())
-                            ->searchable(!App::runningUnitTests()),
+                            ->required(fn (Closure $get) => $get('max_aircraft_wingspan') !== null)
+                            ->numeric()
+                            ->minValue(1),
                         Toggle::make('closed_at')
                             ->label(self::translateFormPath('used_for_allocation.label'))
                             ->helperText(self::translateFormPath('used_for_allocation.helper'))
