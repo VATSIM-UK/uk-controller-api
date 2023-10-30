@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.51.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.3...6.51.4) (2023-10-30)
+
+
+### Bug Fixes
+
+* constrain larevel framework to fix bug ([4a83015](https://github.com/VATSIM-UK/uk-controller-api/commit/4a83015fe7096fc1f180759536898e7a61956f78))
+
 ## [6.51.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.2...6.51.3) (2023-10-23)
 
 
