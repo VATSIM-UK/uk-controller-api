@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.51.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.4...6.51.5) (2023-11-02)
+
+
+### Bug Fixes
+
+* limit hoppie acars calls ([7033e59](https://github.com/VATSIM-UK/uk-controller-api/commit/7033e5912b7686e8fa43c452680322004fde8bcc))
+
 ## [6.51.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.3...6.51.4) (2023-10-30)
 
 
