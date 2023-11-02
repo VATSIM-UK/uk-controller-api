@@ -23,7 +23,7 @@ class SendTelex implements ShouldQueue
 
     public function handle(HoppieAcarsProvider $hoppie): void
     {
-        $hoppie->makeRequest('telex', $this->telex->getTarget(), $this->telex->getBody());
+        $hoppie->sendTelexMessage($this->telex);
     }
 
     public function middleware(): array

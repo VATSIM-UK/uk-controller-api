@@ -143,14 +143,14 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
         Http::fake(
             [
                 config('acars.hoppie.url') => Http::response(
-                    'ok {callsigns=BAW123,BAW456}'
+                    'ok {BAW123 BAW456}'
                 ),
             ]
         );
 
         $this->provider->setOnlineCallsigns();
         $this->assertEquals(
-            ['BAW123', 'BAW456'],
+            collect(['BAW123', 'BAW456']),
             Cache::get(self::CACHE_KEY)
         );
     }
@@ -161,14 +161,14 @@ class HoppieAcarsProviderTest extends BaseFunctionalTestCase
         Http::fake(
             [
                 config('acars.hoppie.url') => Http::response(
-                    'ok {callsigns=BAW123,BAW456}'
+                    'ok {BAW123 BAW456}'
                 ),
             ]
         );
 
         $this->provider->setOnlineCallsigns();
         $this->assertEquals(
-            ['BAW123', 'BAW456'],
+            collect(['BAW123', 'BAW456']),
             Cache::get(self::CACHE_KEY)
         );
     }

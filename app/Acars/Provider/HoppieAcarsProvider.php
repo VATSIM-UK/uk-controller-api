@@ -55,7 +55,7 @@ class HoppieAcarsProvider implements AcarsProviderInterface
     {
         Cache::forever(
             self::ONLINE_CALLSIGNS_CACHE_KEY,
-            fn() => $this->fetchOnlineCallsigns()
+            $this->fetchOnlineCallsigns()
         );
     }
 

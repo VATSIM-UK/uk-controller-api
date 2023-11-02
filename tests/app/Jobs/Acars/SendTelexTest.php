@@ -5,6 +5,7 @@ namespace App\Jobs\Acars;
 use App\Acars\Message\Telex\TelexMessageInterface;
 use App\Acars\Provider\HoppieAcarsProvider;
 use App\BaseUnitTestCase;
+use Illuminate\Queue\Middleware\RateLimited;
 use Mockery;
 
 class SendTelexTest extends BaseUnitTestCase
