@@ -22,6 +22,7 @@ use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
 use App\Console\Commands\UserCreate;
 use App\Console\Commands\WakeCategoriesImport;
+use App\Jobs\Acars\UpdateOnlineCallsigns;
 use Bugsnag\BugsnagLaravel\Commands\DeployCommand as BugsnagDeployCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -99,6 +100,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('plugin-events:clean')->everyTenMinutes()->doNotMonitor();
         $schedule->command('metars:update')->everyMinute();
         $schedule->command('database:check-table-updates')->everyMinute();
+        $schedule->job(UpdateOnlineCallsigns::class)->everyTwoMinutes()->doNotMonitor();
     }
 
     protected function bootstrappers()
