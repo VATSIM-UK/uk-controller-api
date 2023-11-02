@@ -8,7 +8,9 @@ use App\Http\Livewire\StandPredictorForm;
 use App\SocialiteProviders\CoreProvider;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Passport\Passport;
 use Illuminate\Validation\Rule;
 use App\Services\SectorfileService;
@@ -95,5 +97,8 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('request-a-stand-form', RequestAStandForm::class);
         Livewire::component('current-stand-request', CurrentStandRequest::class);
         Livewire::component('stand-predictor-form', StandPredictorForm::class);
+
+        // Hoppie ACARS must limit requests to 1 every 10+ seconds
+        RateLimiter::for('hoppie', fn () => Limit::perMinute(5));
     }
 }

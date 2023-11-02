@@ -4,6 +4,7 @@ namespace App\Acars\Provider;
 
 use App\Acars\Exception\AcarsRequestException;
 use App\Acars\Message\Telex\TelexMessageInterface;
+use App\Jobs\Acars\SendTelex;
 use App\Models\Acars\AcarsMessage;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
@@ -15,29 +16,46 @@ use Illuminate\Support\Str;
 class HoppieAcarsProvider implements AcarsProviderInterface
 {
     private const ONLINE_CALLSIGNS_CACHE_KEY = 'HOPPIE_ACARS_ONLINE_CALLSIGNS';
-    private const ONLINE_CALLSIGNS_CACHE_DURATION_SECONDS = 120;
     private const VATUK_STATION_IDENTIFIER = 'VATSIMUK';
 
+    /**
+     * Dispatches a job to send a telex message. We dispatch a job because we need to avoid
+     * Hoppie rate limiting.
+     *
+     * @param TelexMessageInterface $message
+     * @return void
+     */
     public function sendTelex(TelexMessageInterface $message): void
     {
-        if ($this->getOnlineCallsigns()->doesntContain($message->getTarget())) {
+        if (!$this->getOnlineCallsigns()->contains($message->getTarget())) {
             return;
         }
 
+        SendTelex::dispatch($message);
+    }
+
+    /**
+     * Used by the SendTelex job to send a telex message. This method is intended for internal use and
+     * is not exposed on the interface.
+     */
+    public function sendTelexMessage(TelexMessageInterface $message): void
+    {
         $this->makeRequest('telex', $message->getTarget(), $message->getBody());
     }
 
     private function getOnlineCallsigns(): Collection
     {
-        return Cache::remember(
+        return Cache::get(
             self::ONLINE_CALLSIGNS_CACHE_KEY,
-            self::ONLINE_CALLSIGNS_CACHE_DURATION_SECONDS,
-            function () {
-                $responseBody = $this->getResponseBody(
-                    $this->makeRequest('ping', self::VATUK_STATION_IDENTIFIER, 'ALL-CALLSIGNS')
-                );
-                return collect($responseBody === '' ? [] : explode(' ', $responseBody));
-            }
+            collect()
+        );
+    }
+
+    public function setOnlineCallsigns(): void
+    {
+        Cache::forever(
+            self::ONLINE_CALLSIGNS_CACHE_KEY,
+            $this->fetchOnlineCallsigns()
         );
     }
 
@@ -92,5 +110,13 @@ class HoppieAcarsProvider implements AcarsProviderInterface
     private function responseSuccessful(Response $response): bool
     {
         return $response->successful() && Str::substr($response, 0, 2) === 'ok';
+    }
+
+    private function fetchOnlineCallsigns(): Collection
+    {
+        $responseBody = $this->getResponseBody(
+            $this->makeRequest('ping', self::VATUK_STATION_IDENTIFIER, 'ALL-CALLSIGNS')
+        );
+        return collect($responseBody === '' ? [] : explode(' ', $responseBody));
     }
 }
