@@ -67,12 +67,11 @@ class HoppieAcarsProvider implements AcarsProviderInterface
                 config('acars.hoppie.url'),
                 $message
             ),
-            function (Response $response) use ($message)
-            {
+            function (Response $response) use ($message) {
                 $success = $this->responseSuccessful($response);
                 $messageWithoutLogon = array_filter(
                     $message,
-                    fn(string $key) => $key !== 'logon',
+                    fn (string $key) => $key !== 'logon',
                     ARRAY_FILTER_USE_KEY
                 );
 
