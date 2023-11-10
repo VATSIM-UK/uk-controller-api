@@ -4,8 +4,8 @@ return [
     'columns' => [
         'code' => 'ICAO Code',
         'aerodrome_reference_code' => 'Aerodrome Reference',
-        'wingspan' => 'Wingspan (ft)',
-        'length' => 'Length (ft)',
+        'wingspan' => 'Wingspan (m)',
+        'length' => 'Length (m)',
         'wake_categories' => 'Wake Categories',
         'allocate_stands' => 'Stand allocation',
     ],
