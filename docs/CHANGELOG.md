@@ -1,5 +1,15 @@
 # UK Controller Plugin API Changelog
 
+## [6.52.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.5...6.52.0) (2023-11-10)
+
+
+### Features
+
+* convert aircraft wingspans to meters ([17ef130](https://github.com/VATSIM-UK/uk-controller-api/commit/17ef130e35d2e17654b89840d4c2a6066f7a3887))
+* dont show stand request form if already assigned a stand ([7cc3cd0](https://github.com/VATSIM-UK/uk-controller-api/commit/7cc3cd07c2b44220206d1d042e44efa9b50c3cd6))
+* update aircraft size data ([1876465](https://github.com/VATSIM-UK/uk-controller-api/commit/1876465bab9c3076d634409f1d310c4fb188f17b))
+* update wingspan labels ([6ba8d3f](https://github.com/VATSIM-UK/uk-controller-api/commit/6ba8d3f98cc4000097ff7920b03579d6c6a39bd2))
+
 ## [6.51.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.4...6.51.5) (2023-11-02)
 
 
