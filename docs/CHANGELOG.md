@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.53.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.53.0...6.53.1) (2023-11-11)
+
+
+### Bug Fixes
+
+* stand dimensions in tables ([cd941be](https://github.com/VATSIM-UK/uk-controller-api/commit/cd941be42e0ea6e41255425bb52deb66f9e849b4))
+* stand form dimension labels ([93db660](https://github.com/VATSIM-UK/uk-controller-api/commit/93db6608ea695db48849ac871ee7b14e3842b4ad))
+* table header labels ([469095f](https://github.com/VATSIM-UK/uk-controller-api/commit/469095f03b34a453e0c67443c129035ab1b38551))
+
 ## [6.53.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.52.0...6.53.0) (2023-11-11)
 
 
