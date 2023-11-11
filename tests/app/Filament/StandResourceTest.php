@@ -398,42 +398,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.max_aircraft_length']);
     }
 
-    public function testCreateFailsWithValidationErrorsIfMaxAircraftLengthProvidedButNotWingspan()
-    {
-        Livewire::test(StandResource\Pages\CreateStand::class)
-            ->set('data.airfield_id', 2)
-            ->set('data.terminal_id', 1)
-            ->set('data.identifier', '33L')
-            ->set('data.latitude', 4.5)
-            ->set('data.longitude', 5.6)
-            ->set('data.type_id', 3)
-            ->set('data.origin_slug', 'EGLLLL')
-            ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.assignment_priority', 100)
-            ->set('data.max_aircraft_length', 1)
-            ->set('data.closed_at', true)
-            ->call('create')
-            ->assertHasErrors(['data.max_aircraft_wingspan']);
-    }
-
-    public function testCreateFailsWithValidationErrorsIfMaxAircraftWingspanProvidedButNotLength()
-    {
-        Livewire::test(StandResource\Pages\CreateStand::class)
-            ->set('data.airfield_id', 2)
-            ->set('data.terminal_id', 1)
-            ->set('data.identifier', '33L')
-            ->set('data.latitude', 4.5)
-            ->set('data.longitude', 5.6)
-            ->set('data.type_id', 3)
-            ->set('data.origin_slug', 'EGLLLL')
-            ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.assignment_priority', 100)
-            ->set('data.max_aircraft_wingspan', 1)
-            ->set('data.closed_at', true)
-            ->call('create')
-            ->assertHasErrors(['data.max_aircraft_length']);
-    }
-
     public function testItRetrievesDataForEdit()
     {
         Stand::findOrFail(1)
@@ -794,42 +758,6 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.closed_at', true)
             ->call('save')
             ->assertHasErrors(['data.max_aircraft_wingspan']);
-    }
-
-    public function testEditFailsWithValidationErrorsIfMaxAircraftLengthProvidedButNotWingspan()
-    {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
-            ->set('data.airfield_id', 1)
-            ->set('data.terminal_id', 1)
-            ->set('data.identifier', '33L')
-            ->set('data.latitude', 4.5)
-            ->set('data.longitude', 5.6)
-            ->set('data.type_id', 3)
-            ->set('data.origin_slug', 'EGGGG')
-            ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.assignment_priority', 100)
-            ->set('data.max_aircraft_length', 1)
-            ->set('data.closed_at', true)
-            ->call('save')
-            ->assertHasErrors(['data.max_aircraft_wingspan']);
-    }
-
-    public function testEditFailsWithValidationErrorsIfMaxAircraftWingspanProvidedButNotLength()
-    {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
-            ->set('data.airfield_id', 1)
-            ->set('data.terminal_id', 1)
-            ->set('data.identifier', '33L')
-            ->set('data.latitude', 4.5)
-            ->set('data.longitude', 5.6)
-            ->set('data.type_id', 3)
-            ->set('data.origin_slug', 'EGGGG')
-            ->set('data.aerodrome_reference_code', 'D')
-            ->set('data.assignment_priority', 100)
-            ->set('data.max_aircraft_wingspan', 1)
-            ->set('data.closed_at', true)
-            ->call('save')
-            ->assertHasErrors(['data.max_aircraft_length']);
     }
 
     public function testItOnlyAllowsSelectionOfTerminalsAtTheRightAirfield()

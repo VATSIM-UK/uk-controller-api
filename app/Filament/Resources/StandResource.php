@@ -135,7 +135,6 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('aircraft_type_wingspan.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->reactive()
-                            ->required(fn (Closure $get) => $get('max_aircraft_length') !== null)
                             ->numeric()
                             ->minValue(1),
                         TextInput::make('max_aircraft_length')
@@ -143,7 +142,6 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('aircraft_type_length.helper'))
                             ->hintIcon('heroicon-o-paper-airplane')
                             ->reactive()
-                            ->required(fn (Closure $get) => $get('max_aircraft_wingspan') !== null)
                             ->numeric()
                             ->minValue(1),
                         Toggle::make('closed_at')
