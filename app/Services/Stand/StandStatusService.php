@@ -18,8 +18,6 @@ class StandStatusService
         return Stand::with(
             'airlines',
             'type',
-            'maxAircraftWingspan',
-            'maxAircraftLength',
             'assignment',
             'occupier',
             'activeReservations',
@@ -56,10 +54,10 @@ class StandStatusService
                 });
             })->toArray(),
             'aerodrome_reference_code' => $stand->aerodrome_reference_code,
-            'max_aircraft' => $stand->maxAircraftWingspan && $stand->maxAircraftLength ? [
-                'wingspan' => $stand->maxAircraftWingspan->code,
-                'length' => $stand->maxAircraftLength->code,
-            ] : null,
+            'max_aircraft' => [
+                'wingspan' => $stand->max_aircraft_wingspan,
+                'length' => $stand->max_aircraft_length,
+            ],
         ];
 
         if ($stand->isClosed()) {

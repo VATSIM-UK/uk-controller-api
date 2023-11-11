@@ -220,7 +220,10 @@ class StandControllerTest extends BaseApiTestCase
                     'type' => null,
                     'airlines' => [],
                     'aerodrome_reference_code' => 'C',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
                 [
                     'identifier' => '251',
@@ -230,7 +233,10 @@ class StandControllerTest extends BaseApiTestCase
                     'type' => null,
                     'airlines' => [],
                     'aerodrome_reference_code' => 'C',
-                    'max_aircraft' => null,
+                    'max_aircraft' => [
+                        'wingspan' => null,
+                        'length' => null,
+                    ],
                 ],
             ],
             'generated_at' => Carbon::now()->toIso8601String(),

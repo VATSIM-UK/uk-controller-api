@@ -32,8 +32,8 @@ class Stand extends Model
         'type_id',
         'origin_slug',
         'aerodrome_reference_code',
-        'max_aircraft_id_length',
-        'max_aircraft_id_wingspan',
+        'max_aircraft_length',
+        'max_aircraft_wingspan',
         'assignment_priority',
         'closed_at',
         'isOpen',
@@ -43,6 +43,8 @@ class Stand extends Model
         'type_id' => 'integer',
         'latitude' => 'double',
         'longitude' => 'double',
+        'max_aircraft_length' => 'double',
+        'max_aircraft_wingspan' => 'double',
         'assignment_priority' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -223,28 +225,14 @@ class Stand extends Model
         return $builder->where('aerodrome_reference_code', '>=', $aircraftType->aerodrome_reference_code);
     }
 
-    public function maxAircraftWingspan(): BelongsTo
-    {
-        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_wingspan');
-    }
-
-    public function maxAircraftLength(): BelongsTo
-    {
-        return $this->belongsTo(Aircraft::class, 'max_aircraft_id_length');
-    }
-
     public function scopeAppropriateDimensions(Builder $builder, Aircraft $aircraftType): Builder
     {
         return $builder->where(function (Builder $wingspan) use ($aircraftType) {
-            $wingspan->whereHas('maxAircraftWingspan', function (Builder $aircraftQuery) use ($aircraftType) {
-                $aircraftQuery->where('wingspan', '>=', $aircraftType->wingspan);
-            })
-                ->orWhereDoesntHave('maxAircraftWingspan');
+            $wingspan->where('max_aircraft_wingspan', '>=', $aircraftType->wingspan)
+                ->orWhereNull('max_aircraft_wingspan');
         })->where(function (Builder $length) use ($aircraftType) {
-            $length->whereHas('maxAircraftLength', function (Builder $aircraftQuery) use ($aircraftType) {
-                $aircraftQuery->where('length', '>=', $aircraftType->length);
-            })
-                ->orWhereDoesntHave('maxAircraftLength');
+            $length->where('max_aircraft_length', '>=', $aircraftType->length)
+                ->orWhereNull('max_aircraft_length');
         });
     }
 
