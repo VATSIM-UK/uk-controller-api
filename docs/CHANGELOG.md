@@ -1,5 +1,23 @@
 # UK Controller Plugin API Changelog
 
+## [6.53.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.52.0...6.53.0) (2023-11-11)
+
+
+### Features
+
+* check aircraft suitability by simple size comparision ([4015ef1](https://github.com/VATSIM-UK/uk-controller-api/commit/4015ef13b9b9913c81b6e85a539c4bc082b868c4))
+* do not enforce all stand dimensions ([278526c](https://github.com/VATSIM-UK/uk-controller-api/commit/278526c8c9e94f8f1d2eb7f70670663a30dc7222))
+* stand recommendations on form ([db863ad](https://github.com/VATSIM-UK/uk-controller-api/commit/db863adcf6d9139214a18a6fd64564e0f5c88111))
+* stands have specific sizes ([a66f8bf](https://github.com/VATSIM-UK/uk-controller-api/commit/a66f8bf129ba1e3d0c6c07e8f7cf5c60deff7def))
+
+
+### Data Updates
+
+* set stand dimensions from aircraft type ([4200901](https://github.com/VATSIM-UK/uk-controller-api/commit/4200901e9d53d7ab2a08123cb56827e4b9e53949))
+* update gatwick stand sizes ([6ff295d](https://github.com/VATSIM-UK/uk-controller-api/commit/6ff295d642f7ce203328f079bd8ed09536448cbe))
+* update luton stand sizes ([9a339fd](https://github.com/VATSIM-UK/uk-controller-api/commit/9a339fd75fa4700ce073bd3877a3ae49440b7d3e))
+* update manchester stand sizes ([f6e1b60](https://github.com/VATSIM-UK/uk-controller-api/commit/f6e1b60338f6f69c05a0f880852b0918221fa55e))
+
 ## [6.52.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.51.5...6.52.0) (2023-11-10)
 
 
