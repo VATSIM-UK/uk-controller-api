@@ -51,7 +51,7 @@ class StandFactory extends Factory
             );
 
             // These stands are in our seeders, so avoid them, there's bound to be another.
-            if (!in_array($stand, ['1L', '251', '32')) {
+            if (!in_array($stand, ['1L', '251', '32'])) {
                 return $stand;
             }
         }
