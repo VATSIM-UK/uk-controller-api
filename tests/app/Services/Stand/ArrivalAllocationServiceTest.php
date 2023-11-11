@@ -578,4 +578,194 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 ->toArray()
         );
     }
+
+    public function testItReturnsRecommendedStandsWithoutDuplicates()
+    {
+        // Delete other stand
+        DB::table('stands')->delete();
+
+        $aircraft = new NetworkAircraft(
+            [
+                'callsign' => 'BAW221',
+                'cid' => 1234,
+                'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+                'airline_id' => 1,
+                'aircraft_id' => 1,
+            ]
+        );
+
+        // Callsign specific
+        $stand1 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand1->airlines()->sync([1 => ['full_callsign' => '221']]);
+        $stand2 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand2->airlines()->sync([1 => ['full_callsign' => '221']]);
+
+        // Callsign specfic, but with a lower priorityy
+        $stand3 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 2]);
+        $stand3->airlines()->sync([1 => ['full_callsign' => '221', 'priority' => 101]]);
+
+        // Generic
+        $stand4 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 3]);
+        $stand4->airlines()->sync([1]);
+
+        // Check the recommendation
+        $recommendation = $this->service->recommendStand(55, $aircraft);
+
+        $this->assertEquals(
+            collect([$stand1->identifier, $stand2->identifier, $stand3->identifier, $stand4->identifier])->sort()->values()->toArray(),
+            collect($recommendation)->sort()->values()->toArray()
+        );
+    }
+
+    public function testItLimitsRecommendationsWithinSingleRankings()
+    {
+        // Delete other stand
+        DB::table('stands')->delete();
+
+        $aircraft = new NetworkAircraft(
+            [
+                'callsign' => 'BAW221',
+                'cid' => 1234,
+                'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+                'airline_id' => 1,
+                'aircraft_id' => 1,
+            ]
+        );
+
+        // Callsign specific
+        $stand1 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand1->airlines()->sync([1 => ['full_callsign' => '221']]);
+        $stand2 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand2->airlines()->sync([1 => ['full_callsign' => '221']]);
+
+        // Callsign specfic, but with a lower priorityy
+        $stand3 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 2]);
+        $stand3->airlines()->sync([1 => ['full_callsign' => '221', 'priority' => 101]]);
+
+        // Generic
+        $stand4 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 3]);
+        $stand4->airlines()->sync([1]);
+
+        // Check the recommendation
+        $recommendation = $this->service->recommendStand(1, $aircraft);
+
+        $this->assertCount(
+            1,
+            $recommendation
+        );
+        $this->assertTrue($recommendation[0] === $stand1->identifier || $recommendation[0] === $stand2->identifier);
+    }
+
+    public function testItLimitsRecommendationsWithinRankings()
+    {
+        // Delete other stand
+        DB::table('stands')->delete();
+
+        $aircraft = new NetworkAircraft(
+            [
+                'callsign' => 'BAW221',
+                'cid' => 1234,
+                'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+                'airline_id' => 1,
+                'aircraft_id' => 1,
+            ]
+        );
+
+        // Callsign specific
+        $stand1 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand1->airlines()->sync([1 => ['full_callsign' => '221']]);
+        $stand2 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand2->airlines()->sync([1 => ['full_callsign' => '221']]);
+
+        // Callsign specfic, but with a lower priorityy
+        $stand3 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 2]);
+        $stand3->airlines()->sync([1 => ['full_callsign' => '221', 'priority' => 101]]);
+
+        // Generic
+        $stand4 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 3]);
+        $stand4->airlines()->sync([1]);
+
+        // Check the recommendation
+        $recommendation = $this->service->recommendStand(2, $aircraft);
+
+        $this->assertCount(
+            2,
+            $recommendation
+        );
+        $this->assertEquals(
+            collect([$stand1->identifier, $stand2->identifier])->sort()->values()->toArray(),
+            collect($recommendation)->sort()->values()->toArray()
+        );
+    }
+
+    public function testItLimitsRecommendationsAcrossRankings()
+    {
+        // Delete other stand
+        DB::table('stands')->delete();
+
+        $aircraft = new NetworkAircraft(
+            [
+                'callsign' => 'BAW221',
+                'cid' => 1234,
+                'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'LFPG',
+                'groundspeed' => 150,
+                // Lambourne
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+                'airline_id' => 1,
+                'aircraft_id' => 1,
+            ]
+        );
+
+        // Callsign specific
+        $stand1 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand1->airlines()->sync([1 => ['full_callsign' => '221']]);
+        $stand2 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 1]);
+        $stand2->airlines()->sync([1 => ['full_callsign' => '221']]);
+
+        // Callsign specfic, but with a lower priorityy
+        $stand3 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 2]);
+        $stand3->airlines()->sync([1 => ['full_callsign' => '221', 'priority' => 101]]);
+
+        // Generic
+        $stand4 = Stand::factory()->create(['airfield_id' => 1, 'assignment_priority' => 3]);
+        $stand4->airlines()->sync([1]);
+
+        // Check the recommendation
+        $recommendation = $this->service->recommendStand(3, $aircraft);
+        sort($recommendation);
+
+        $this->assertCount(
+            3,
+            $recommendation
+        );
+        $this->assertEquals(
+            collect([$stand1->identifier, $stand2->identifier, $stand3->identifier])->sort()->values()->toArray(),
+            collect($recommendation)->sort()->values()->toArray()
+        );
+    }
 }

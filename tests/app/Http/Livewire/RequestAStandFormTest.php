@@ -8,8 +8,10 @@ use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Services\Stand\ArrivalAllocationService;
 use Carbon\Carbon;
 use Livewire\Livewire;
+use Mockery;
 
 class RequestAStandFormTest extends BaseFilamentTestCase
 {
@@ -20,6 +22,8 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             [
                 'cid' => self::ACTIVE_USER_CID,
                 'planned_destairport' => 'EGLL',
+                'aircraft_id' => 1,
+                'airline_id' => 1,
             ]
         );
         Carbon::setTestNow(Carbon::now()->setHour(15)->setMinute(40));
@@ -63,6 +67,26 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->assertOk()
             ->assertSeeHtml('Stand request for')
             ->assertSeeHtml('BAW123 at EGLL');
+    }
+
+    public function testItRecommendsStands()
+    {
+        $allocationService = Mockery::mock(ArrivalAllocationService::class);
+
+        $allocationService->shouldReceive('recommendStand')
+            ->once()
+            ->with(5, Mockery::type(NetworkAircraft::class))
+            ->andReturn(['1L', '1R', '2L', '2R', '3L']);
+        $this->app->instance(ArrivalAllocationService::class, $allocationService);
+
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSeeHtmlInOrder(
+                [
+                    'Based on your flightplan, we recommend requesting one of the following stands:',
+                    '1L, 1R, 2L, 2R, 3L',
+                ]
+            );
     }
 
     public function testItDisplaysTheStandStatusWhenAStandIsSelected()
