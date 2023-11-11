@@ -43,10 +43,17 @@ class StandFactory extends Factory
 
     private function standIdentifier(): string
     {
-        return sprintf(
-            '%d%s',
-            $this->faker->unique()->numberBetween(0, 500),
-            $this->faker->randomElement(['L', 'R', '', 'A']),
-        );
+        while (true) {
+            $stand = sprintf(
+                '%d%s',
+                $this->faker->unique()->numberBetween(0, 500),
+                $this->faker->randomElement(['L', 'R', '', 'A']),
+            );
+
+            // These stands are in our seeders, so avoid them, there's bound to be another.
+            if (!in_array($stand, ['1L', '251', '32')) {
+                return $stand;
+            }
+        }
     }
 }
