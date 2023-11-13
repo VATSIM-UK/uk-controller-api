@@ -4974,16 +4974,16 @@
         },
         {
             "name": "ohdearapp/ohdear-php-sdk",
-            "version": "3.6.3",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ohdearapp/ohdear-php-sdk.git",
-                "reference": "93b797382c33c2ca0e8b084ab34bf2f21dc734c8"
+                "reference": "c94f2fa286504479f41d3eb9d2c2bd21dfbf0ba3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ohdearapp/ohdear-php-sdk/zipball/93b797382c33c2ca0e8b084ab34bf2f21dc734c8",
-                "reference": "93b797382c33c2ca0e8b084ab34bf2f21dc734c8",
+                "url": "https://api.github.com/repos/ohdearapp/ohdear-php-sdk/zipball/c94f2fa286504479f41d3eb9d2c2bd21dfbf0ba3",
+                "reference": "c94f2fa286504479f41d3eb9d2c2bd21dfbf0ba3",
                 "shasum": ""
             },
             "require": {
@@ -4992,6 +4992,7 @@
                 "php": "^8.1"
             },
             "require-dev": {
+                "laravel/pint": "^1.13",
                 "pestphp/pest": "^2.8.3",
                 "psalm/plugin-laravel": "^2.5",
                 "vlucas/phpdotenv": "^5.5"
@@ -5024,9 +5025,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ohdearapp/ohdear-php-sdk/issues",
-                "source": "https://github.com/ohdearapp/ohdear-php-sdk/tree/3.6.3"
+                "source": "https://github.com/ohdearapp/ohdear-php-sdk/tree/3.7.0"
             },
-            "time": "2023-09-04T07:54:53+00:00"
+            "time": "2023-09-25T06:51:31+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
