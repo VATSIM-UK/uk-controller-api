@@ -26,13 +26,11 @@ class DepartureAllocationService
      */
     public function assignStandsForDeparture(): void
     {
-        $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment)
-        {
+        $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
             $this->assignmentsService->deleteStandAssignment($assignment);
         });
 
-        $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft)
-        {
+        $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
             $this->assignmentsService->createStandAssignment($aircraft->callsign, $aircraft->stand_id, 'Departure');
         });
     }
@@ -60,8 +58,7 @@ class DepartureAllocationService
             ->orderBy('aircraft_stand.id')
             ->select('network_aircraft.*')
             ->get()
-            ->unique(function (NetworkAircraft $aircraft)
-            {
+            ->unique(function (NetworkAircraft $aircraft) {
                 return $aircraft->occupiedStand->first()->id;
             });
 
@@ -69,8 +66,7 @@ class DepartureAllocationService
             ->join('stands', 'aircraft_stand.stand_id', '=', 'stands.id')
             ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
             ->leftJoin('stand_assignments', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
-            ->where(function (Builder $subquery): void
-            {
+            ->where(function (Builder $subquery): void {
                 $subquery->whereRaw('aircraft_stand.stand_id <> stand_assignments.stand_id')
                     ->orWhereNull('stand_assignments.stand_id');
             })

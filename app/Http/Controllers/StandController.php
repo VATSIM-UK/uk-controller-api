@@ -53,13 +53,12 @@ class StandController extends BaseController
         return response()->json(
             $this->airfieldStandService->getAllStandsByAirfield()
                 ->mapWithKeys(
-                    function (Airfield $airfield)
-                    {
+                    function (Airfield $airfield) {
                         return [
                             $airfield->code => $airfield->stands
-                                ->reject(fn(Stand $stand) => $stand->closed_at !== null)
+                                ->reject(fn (Stand $stand) => $stand->closed_at !== null)
                                 ->values()
-                                ->map(fn(Stand $stand) => [
+                                ->map(fn (Stand $stand) => [
                                     'id' => $stand->id,
                                     'identifier' => $stand->identifier,
                                 ]),
@@ -73,8 +72,7 @@ class StandController extends BaseController
     {
         return response()->json(
             StandAssignment::all()->map(
-                function (StandAssignment $assignment)
-                {
+                function (StandAssignment $assignment) {
                     return [
                         'callsign' => $assignment->callsign,
                         'stand_id' => $assignment->stand_id,
@@ -131,8 +129,7 @@ class StandController extends BaseController
         return Cache::remember(
             $this->getStandStatusCacheKey($airfield),
             $cacheRefreshTime,
-            function () use ($airfield, $cacheRefreshTime)
-            {
+            function () use ($airfield, $cacheRefreshTime) {
                 $standStatuses = StandStatusService::getAirfieldStandStatus($airfield->code);
                 return [
                     'stands' => $standStatuses,
