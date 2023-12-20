@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.54.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.53.1...6.54.0) (2023-12-20)
+
+
+### Features
+
+* stand auto assignment api ([35436be](https://github.com/VATSIM-UK/uk-controller-api/commit/35436be7b09f2cd888d1df460d98a1d657eb4e88))
+
 ## [6.53.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.53.0...6.53.1) (2023-11-11)
 
 
