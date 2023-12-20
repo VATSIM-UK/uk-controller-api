@@ -73,8 +73,12 @@ trait SelectsStandsUsingStandardConditions
         );
     }
 
-    private function orderByForStandsQuery(NetworkAircraft $aircraft, array $customOrders, bool $includeAssignmentPriority, bool $isRanking): array
-    {
+    private function orderByForStandsQuery(
+        NetworkAircraft $aircraft,
+        array $customOrders,
+        bool $includeAssignmentPriority,
+        bool $isRanking
+    ): array {
         /**
          * If we are doing ranking, we don't need to consider stand requests in the priority, nor do we need
          * a random order.
@@ -82,16 +86,30 @@ trait SelectsStandsUsingStandardConditions
         if ($includeAssignmentPriority) {
             $commonConditions = $isRanking
                 ? $this->commonOrderByConditionsForRanking()
-                : ($aircraft->cid === null ? $this->commonOrderByConditionsWithoutRequests() : $this->commonOrderByConditions());
+                : $this->commonOrderByConditionsForAircraft($aircraft);
         } else {
             $commonConditions = $isRanking
                 ? $this->commonOrderByConditionsWithoutAssignmentPriorityForRanking()
-                : ($aircraft->cid === null ? $this->commonOrderByConditionsWithoutRequestsOrAssignmentPriority() : $this->commonOrderByConditionsWithoutAssignmentPriority());
+                : $this->commonOrderByConditionsWithoutAssignmentPriorityForAircraft($aircraft);
         }
 
         return array_merge(
             $customOrders,
             $commonConditions
         );
+    }
+
+    private function commonOrderByConditionsForAircraft(NetworkAircraft $aircraft): array
+    {
+        return $aircraft->cid === null
+            ? $this->commonOrderByConditionsWithoutRequests()
+            : $this->commonOrderByConditions();
+    }
+
+    private function commonOrderByConditionsWithoutAssignmentPriorityForAircraft(NetworkAircraft $aircraft): array
+    {
+        return $aircraft->cid === null
+            ? $this->commonOrderByConditionsWithoutRequestsOrAssignmentPriority()
+            : $this->commonOrderByConditionsWithoutAssignmentPriority();
     }
 }
