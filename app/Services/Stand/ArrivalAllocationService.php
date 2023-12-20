@@ -53,6 +53,25 @@ class ArrivalAllocationService
     }
 
     /**
+     * Allocate a stand for a given aircraft using the stand assignment rules.
+     */
+    public function autoAllocateArrivalStandForAircraft(NetworkAircraft $aircraft): ?int
+    {
+        foreach ($this->allocators as $allocator) {
+            if ($allocation = $allocator->allocate($aircraft)) {
+                $this->assignmentsService->createStandAssignment(
+                    $aircraft->callsign,
+                    $allocation,
+                    get_class($allocator)
+                );
+                return $allocation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Use the stand assignment rules to allocate a stand for a given aircraft
      */
     private function allocateStandsForArrivingAircraft(): void
@@ -60,16 +79,7 @@ class ArrivalAllocationService
         $this->getAircraftThatCanHaveArrivalStandsAllocated()
             ->filter(fn (NetworkAircraft $aircraft) => $this->aircraftWithAssignmentDistance($aircraft))
             ->each(function (NetworkAircraft $aircraft) {
-                foreach ($this->allocators as $allocator) {
-                    if ($allocation = $allocator->allocate($aircraft)) {
-                        $this->assignmentsService->createStandAssignment(
-                            $aircraft->callsign,
-                            $allocation,
-                            get_class($allocator)
-                        );
-                        return;
-                    }
-                }
+                $this->autoAllocateArrivalStandForAircraft($aircraft);
             });
     }
 

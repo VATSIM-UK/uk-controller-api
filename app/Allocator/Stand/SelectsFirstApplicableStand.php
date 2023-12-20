@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 trait SelectsFirstApplicableStand
 {
     private function selectFirstStand(Builder $query): ?int
-    {
-        return $query->first()?->id;
+    {        return $query->first()?->id;
     }
 }

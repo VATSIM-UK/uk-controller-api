@@ -39,7 +39,7 @@ trait SelectsStandsUsingStandardConditions
     ): Collection {
         $orderByForRankQuery = implode(
             ',',
-            $this->orderByForStandsQuery($specificOrders, $includeAssignmentPriority, true)
+            $this->orderByForStandsQuery($aircraft, $specificOrders, $includeAssignmentPriority, true)
         );
 
         return $this->standardConditionsStandQuery(
@@ -69,11 +69,11 @@ trait SelectsStandsUsingStandardConditions
                 ),
                 $aircraft
             ),
-            $this->orderByForStandsQuery($specificOrders, $includeAssignmentPriority, $isRanking)
+            $this->orderByForStandsQuery($aircraft, $specificOrders, $includeAssignmentPriority, $isRanking)
         );
     }
 
-    private function orderByForStandsQuery(array $customOrders, bool $includeAssignmentPriority, bool $isRanking): array
+    private function orderByForStandsQuery(NetworkAircraft $aircraft, array $customOrders, bool $includeAssignmentPriority, bool $isRanking): array
     {
         /**
          * If we are doing ranking, we don't need to consider stand requests in the priority, nor do we need
@@ -82,11 +82,11 @@ trait SelectsStandsUsingStandardConditions
         if ($includeAssignmentPriority) {
             $commonConditions = $isRanking
                 ? $this->commonOrderByConditionsForRanking()
-                : $this->commonOrderByConditions();
+                : ($aircraft->cid === null ? $this->commonOrderByConditionsWithoutRequests() : $this->commonOrderByConditions());
         } else {
             $commonConditions = $isRanking
                 ? $this->commonOrderByConditionsWithoutAssignmentPriorityForRanking()
-                : $this->commonOrderByConditionsWithoutAssignmentPriority();
+                : ($aircraft->cid === null ? $this->commonOrderByConditionsWithoutRequestsOrAssignmentPriority() : $this->commonOrderByConditionsWithoutAssignmentPriority());
         }
 
         return array_merge(

@@ -768,4 +768,39 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             collect($recommendation)->sort()->values()->toArray()
         );
     }
+
+    public function testItAutoAllocatesAStandForAGivenAircraftFromAllocators()
+    {
+        StandReservation::create(
+            [
+                'callsign' => 'BMI221',
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addMinute(),
+                'destination' => 'EGLL',
+                'origin' => 'EGSS',
+            ]
+        );
+
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BMI221',
+            [
+                'cid' => 1234,
+                'planned_aircraft' => 'B738',
+                'planned_aircraft_short' => 'B738',
+                'planned_destairport' => 'EGLL',
+                'planned_depairport' => 'EGSS',
+                'groundspeed' => 150,
+                // London
+                'latitude' => 51.487202,
+                'longitude' => -0.466667,
+                'airline_id' => $this->bmi->id,
+                'aircraft_id' => 1,
+            ]
+        );
+
+        $this->service->autoAllocateArrivalStandForAircraft($aircraft);
+        $this->assertEquals(1, StandAssignment::find('BMI221')->stand_id);
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
 }

@@ -200,7 +200,7 @@ class StandOccupationService
     /**
      * Get the stand that the aircraft is closest to, within occupation parameters.
      */
-    private function getOccupiedStand(NetworkAircraft $aircraft): ?Stand
+    public function getOccupiedStand(NetworkAircraft $aircraft): ?Stand
     {
         $selectedStand = null;
         $selectedStandDistance = PHP_INT_MAX;

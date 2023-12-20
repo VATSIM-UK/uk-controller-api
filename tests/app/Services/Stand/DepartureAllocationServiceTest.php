@@ -5,17 +5,23 @@ namespace App\Services\Stand;
 use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
+use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Illuminate\Support\Facades\Event;
+use Mockery;
+use Mockery\Mock;
 
 class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 {
     private readonly DepartureAllocationService $service;
+    private readonly StandOccupationService $occupationService;
 
     public function setUp(): void
     {
         parent::setUp();
+        $this->occupationService = Mockery::mock(StandOccupationService::class);
+        $this->app->instance(StandOccupationService::class, $this->occupationService);
         $this->service = $this->app->make(DepartureAllocationService::class);
         Event::fake();
     }
@@ -151,6 +157,52 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
         $this->service->assignStandsForDeparture();
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->exists());
         Event::assertNotDispatched(StandUnassignedEvent::class);
+    }
+
+    public function testItDoesntAssignStandsToDepartingAircraftIfNotOccupying()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGBB',
+            ]
+        );
+
+        $this->occupationService->shouldReceive('getOccupiedStand')->with($aircraft)->andReturn(null);
+        $this->service->assignStandToDepartingAircraft($aircraft);
+
+        Event::assertNotDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItAssignsOccupiedStandToDepartingAircraft()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGBB',
+            ]
+        );
+
+        $this->occupationService->shouldReceive('getOccupiedStand')->with($aircraft)->andReturn(Stand::find(1));
+        $this->service->assignStandToDepartingAircraft($aircraft);
+
+        $this->assertDatabaseHas
+        (
+            'stand_assignments',
+            [
+                'callsign' => 'RYR787',
+                'stand_id' => 1,
+            ]
+        );
+        Event::assertDispatched(StandAssignedEvent::class);
     }
 
     private function addStandAssignment(string $callsign, int $standId): void

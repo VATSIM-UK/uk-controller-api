@@ -10,10 +10,14 @@ use Illuminate\Support\Collection;
 class DepartureAllocationService
 {
     private readonly StandAssignmentsService $assignmentsService;
+    private readonly StandOccupationService $standOccupationService;
 
-    public function __construct(StandAssignmentsService $assignmentsService)
-    {
+    public function __construct(
+        StandAssignmentsService $assignmentsService,
+        StandOccupationService $standOccupationService
+    ) {
         $this->assignmentsService = $assignmentsService;
+        $this->standOccupationService = $standOccupationService;
     }
 
     /**
@@ -22,13 +26,26 @@ class DepartureAllocationService
      */
     public function assignStandsForDeparture(): void
     {
-        $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment) {
+        $this->getDepartureStandsToUnassign()->each(function (StandAssignment $assignment)
+        {
             $this->assignmentsService->deleteStandAssignment($assignment);
         });
 
-        $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
+        $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft)
+        {
             $this->assignmentsService->createStandAssignment($aircraft->callsign, $aircraft->stand_id, 'Departure');
         });
+    }
+
+    public function assignStandToDepartingAircraft(NetworkAircraft $aircraft): ?int
+    {
+        $occupiedStand = $this->standOccupationService->getOccupiedStand($aircraft);
+        if ($occupiedStand === null) {
+            return null;
+        }
+
+        $this->assignmentsService->createStandAssignment($aircraft->callsign, $occupiedStand->id, 'Departure');
+        return $occupiedStand->id;
     }
 
     /**
@@ -43,7 +60,8 @@ class DepartureAllocationService
             ->orderBy('aircraft_stand.id')
             ->select('network_aircraft.*')
             ->get()
-            ->unique(function (NetworkAircraft $aircraft) {
+            ->unique(function (NetworkAircraft $aircraft)
+            {
                 return $aircraft->occupiedStand->first()->id;
             });
 
@@ -51,7 +69,8 @@ class DepartureAllocationService
             ->join('stands', 'aircraft_stand.stand_id', '=', 'stands.id')
             ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
             ->leftJoin('stand_assignments', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
-            ->where(function (Builder $subquery): void {
+            ->where(function (Builder $subquery): void
+            {
                 $subquery->whereRaw('aircraft_stand.stand_id <> stand_assignments.stand_id')
                     ->orWhereNull('stand_assignments.stand_id');
             })

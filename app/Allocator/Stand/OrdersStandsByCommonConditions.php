@@ -28,11 +28,29 @@ trait OrdersStandsByCommonConditions
         ];
     }
 
+    private function commonOrderByConditionsWithoutRequests(): array
+    {
+        return [
+            $this->aerodromeReferenceCode,
+            $this->assignmentPriority,
+            $this->random,
+        ];
+    }
+
     private function commonOrderByConditionsWithoutAssignmentPriority(): array
     {
         return [
             $this->aerodromeReferenceCode,
             $this->otherStandRequests,
+            $this->random,
+        ];
+    }
+
+
+    private function commonOrderByConditionsWithoutRequestsOrAssignmentPriority(): array
+    {
+        return [
+            $this->aerodromeReferenceCode,
             $this->random,
         ];
     }
