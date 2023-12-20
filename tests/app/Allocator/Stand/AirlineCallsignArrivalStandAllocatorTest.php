@@ -54,6 +54,36 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals(2, $this->allocator->allocate($aircraft));
     }
 
+    public function testItAllocatesAStandWithAFixedCallsignNoCid()
+    {
+        DB::table('airline_stand')->insert(
+            [
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 1,
+                    'full_callsign' => null
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 2,
+                    'full_callsign' => '23451'
+                ],
+                [
+                    'airline_id' => 1,
+                    'stand_id' => 3,
+                    'full_callsign' => null
+                ],
+                [
+                    'airline_id' => 2,
+                    'stand_id' => 1,
+                    'full_callsign' => '23451'
+                ],
+            ]
+        );
+        $aircraft = $this->createAircraft('BAW23451', 'EGLL', 'EGGD', 'B738', null);
+        $this->assertEquals(2, $this->allocator->allocate($aircraft));
+    }
+
     public function testItConsidersAirlinePreferences()
     {
         DB::table('airline_stand')->insert(
@@ -466,10 +496,11 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
         string $callsign,
         string $arrivalAirport,
         string $departureAirport,
-        string $aircraftType = 'B738'
+        string $aircraftType = 'B738',
+        ?int $cid = 1234
     ): NetworkAircraft {
         return tap(
-            $this->newAircraft($callsign, $arrivalAirport, $departureAirport, $aircraftType),
+            $this->newAircraft($callsign, $arrivalAirport, $departureAirport, $aircraftType, $cid),
             fn(NetworkAircraft $aircraft) => $aircraft->save()
         );
     }
@@ -478,12 +509,13 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
         string $callsign,
         string $arrivalAirport,
         string $departureAirport,
-        string $aircraftType = 'B738'
+        string $aircraftType = 'B738',
+        ?int $cid = 1234
     ): NetworkAircraft {
         return NetworkAircraft::create(
             [
                 'callsign' => $callsign,
-                'cid' => 1234,
+                'cid' => $cid,
                 'planned_aircraft' => $aircraftType,
                 'planned_aircraft_short' => $aircraftType,
                 'planned_destairport' => $arrivalAirport,

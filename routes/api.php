@@ -78,6 +78,7 @@ Route::middleware('api')
 
                         // Stands
                         Route::put('stand/assignment', 'StandController@createStandAssignment');
+                        Route::post('stand/assignment/requestauto', 'StandController@requestAutomaticStandAssignment');
                         Route::delete('stand/assignment/{callsign}', 'StandController@deleteStandAssignment')
                             ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 

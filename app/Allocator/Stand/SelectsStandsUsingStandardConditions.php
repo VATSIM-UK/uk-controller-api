@@ -39,7 +39,7 @@ trait SelectsStandsUsingStandardConditions
     ): Collection {
         $orderByForRankQuery = implode(
             ',',
-            $this->orderByForStandsQuery($specificOrders, $includeAssignmentPriority, true)
+            $this->orderByForStandsQuery($aircraft, $specificOrders, $includeAssignmentPriority, true)
         );
 
         return $this->standardConditionsStandQuery(
@@ -69,12 +69,16 @@ trait SelectsStandsUsingStandardConditions
                 ),
                 $aircraft
             ),
-            $this->orderByForStandsQuery($specificOrders, $includeAssignmentPriority, $isRanking)
+            $this->orderByForStandsQuery($aircraft, $specificOrders, $includeAssignmentPriority, $isRanking)
         );
     }
 
-    private function orderByForStandsQuery(array $customOrders, bool $includeAssignmentPriority, bool $isRanking): array
-    {
+    private function orderByForStandsQuery(
+        NetworkAircraft $aircraft,
+        array $customOrders,
+        bool $includeAssignmentPriority,
+        bool $isRanking
+    ): array {
         /**
          * If we are doing ranking, we don't need to consider stand requests in the priority, nor do we need
          * a random order.
@@ -82,16 +86,30 @@ trait SelectsStandsUsingStandardConditions
         if ($includeAssignmentPriority) {
             $commonConditions = $isRanking
                 ? $this->commonOrderByConditionsForRanking()
-                : $this->commonOrderByConditions();
+                : $this->commonOrderByConditionsForAircraft($aircraft);
         } else {
             $commonConditions = $isRanking
                 ? $this->commonOrderByConditionsWithoutAssignmentPriorityForRanking()
-                : $this->commonOrderByConditionsWithoutAssignmentPriority();
+                : $this->commonOrderByConditionsWithoutAssignmentPriorityForAircraft($aircraft);
         }
 
         return array_merge(
             $customOrders,
             $commonConditions
         );
+    }
+
+    private function commonOrderByConditionsForAircraft(NetworkAircraft $aircraft): array
+    {
+        return $aircraft->cid === null
+            ? $this->commonOrderByConditionsWithoutRequests()
+            : $this->commonOrderByConditions();
+    }
+
+    private function commonOrderByConditionsWithoutAssignmentPriorityForAircraft(NetworkAircraft $aircraft): array
+    {
+        return $aircraft->cid === null
+            ? $this->commonOrderByConditionsWithoutRequestsOrAssignmentPriority()
+            : $this->commonOrderByConditionsWithoutAssignmentPriority();
     }
 }

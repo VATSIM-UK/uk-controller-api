@@ -54,6 +54,35 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($stand->id, $assignment);
     }
 
+    public function testItAssignsAnAppropriatelySizedNoCid()
+    {
+        // Create a stand that can only accept an A380 and create the aircraft
+        $stand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => '502',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'aerodrome_reference_code' => 'F',
+            ]
+        );
+
+        Aircraft::create(
+            [
+                'code' => 'A388',
+                'allocate_stands' => true,
+                'wingspan' => 1.0,
+                'length' => 1.0,
+                'aerodrome_reference_code' => 'F',
+            ]
+        );
+
+        $aircraft = $this->createAircraft('AEU252', 'A388', 'EGLL', null);
+        $assignment = $this->allocator->allocate($aircraft);
+
+        $this->assertEquals($stand->id, $assignment);
+    }
+
     public function testItAssignsInAerodromeReferenceAscendingOrder()
     {
         // Create a stand that can only accept an A380 and create the aircraft
@@ -229,7 +258,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItDoesntRankStandsIfUnknownAircraft()
     {
-        $aircraft = $this->newAircraft('BAW123', 'XXX', 'EGLL', 'EIDW');
+        $aircraft = $this->newAircraft('BAW123', 'XXX', 'EGLL');
         $this->assertEquals(collect(), $this->allocator->getRankedStandAllocation($aircraft));
     }
 
@@ -362,10 +391,11 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
     private function createAircraft(
         string $callsign,
         string $type,
-        string $arrivalAirport
+        string $arrivalAirport,
+        ?int $cid = 1234
     ): NetworkAircraft {
         return tap(
-            $this->newAircraft($callsign, $type, $arrivalAirport),
+            $this->newAircraft($callsign, $type, $arrivalAirport, $cid),
             fn(NetworkAircraft $aircraft) =>
             $aircraft->save()
         );
@@ -374,12 +404,13 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
     private function newAircraft(
         string $callsign,
         string $type,
-        string $arrivalAirport
+        string $arrivalAirport,
+        ?int $cid = 1234
     ): NetworkAircraft {
         return new NetworkAircraft(
             [
                 'callsign' => $callsign,
-                'cid' => 1234,
+                'cid' => $cid,
                 'planned_aircraft' => $type,
                 'planned_aircraft_short' => $type,
                 'planned_destairport' => $arrivalAirport,

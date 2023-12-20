@@ -6,7 +6,7 @@ use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandAssignment;;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -290,6 +290,371 @@ class StandControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment/BAW123')
             ->assertStatus(200)
             ->assertJson($expected);
+    }
+
+    public function testItAutoAssignsDepartureStand()
+    {
+
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'departure',
+                'departure_airfield' => 'EGLL',
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+            ]
+        )
+            ->assertJson(['stand_id' => 2])
+            ->assertStatus(201);
+
+        $this->assertTrue(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 2)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItReturns404NoDepartureStandAvailable()
+    {
+
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'departure',
+                'departure_airfield' => 'EGLL',
+                'latitude' => 0,
+                'longitude' => -0.48601389,
+            ]
+        )
+            ->assertNotFound();
+
+        $this->assertFalse(StandAssignment::where('callsign', 'BAW9232')->exists());
+    }
+
+    public function testItAutoAssignsArrivalStand()
+    {
+        $response = $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW2932',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGGW',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )
+            ->assertJsonStructure(['stand_id'])
+            ->assertStatus(201);
+
+        $this->assertTrue(in_array($response->json('stand_id'), [1, 2]));
+        $this->assertTrue(in_array(StandAssignment::where('callsign', 'BAW2932')->first()?->stand_id, [1, 2]));
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItAutoAssignsArrivalStandExistingAircraft()
+    {
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW2932',
+            [
+                'cid' => 123,
+            ]
+        );
+
+        $response = $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW2932',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGGW',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )
+            ->assertJsonStructure(['stand_id'])
+            ->assertStatus(201);
+
+        $this->assertTrue(in_array($response->json('stand_id'), [1, 2]));
+        $this->assertTrue(in_array(StandAssignment::where('callsign', 'BAW2932')->first()?->stand_id, [1, 2]));
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+
+    public function testItAutoAssignsArrivalStandExistingAircraftUnknownAirline()
+    {
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW2932',
+            [
+                'cid' => 123,
+            ]
+        );
+
+        $response = $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'XYZ2932',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGGW',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )
+            ->assertJsonStructure(['stand_id'])
+            ->assertStatus(201);
+
+        $this->assertTrue(in_array($response->json('stand_id'), [1, 2]));
+        $this->assertTrue(in_array(StandAssignment::where('callsign', 'XYZ2932')->first()?->stand_id, [1, 2]));
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItReturns404ForAutoAssignArrivalStandNotAvailable()
+    {
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW2932',
+            [
+                'cid' => 123,
+            ]
+        );
+
+        $response = $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'XYZ2932',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGGW',
+                'arrival_airfield' => 'EGXY',
+                'aircraft_type' => 'B738',
+            ]
+        )
+        ->assertNotFound();
+
+        $this->assertFalse(StandAssignment::where('callsign', 'XYZ2932')->exists());
+    }
+
+    #[DataProvider('badAutoAssignmentDataProvider')]
+    public function testItReturnsBadRequestForAutoAssignmentRequestOnBadData(array $data)
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, 'stand/assignment/requestauto', $data)
+            ->assertUnprocessable();
+    }
+
+    public static function badAutoAssignmentDataProvider(): array
+    {
+        return [
+            'Missing assignment type' => [
+                [
+                    'callsign' => 'BAW123',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Unknown assignment type' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'foo',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure no callsign' => [
+                [
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure callsign not string' => [
+                [
+                    'callsign' => 123,
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure callsign not valid' => [
+                [
+                    'callsign' => 'BAW1234567890123456789',
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure no departure airfield' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'departure',
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure departure airfield not string' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 123,
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure departure airfield not valid' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'XXXXY',
+                    'latitude' => 51.47187222,
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure no latitude' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'EGLL',
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure latitude not float' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 'foo',
+                    'longitude' => -0.48601389,
+                ]
+            ],
+            'Departure no longitude' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 51.47187222,
+                ]
+            ],
+            'Departure longitude not float' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'departure',
+                    'departure_airfield' => 'EGLL',
+                    'latitude' => 51.47187222,
+                    'longitude' => 'foo',
+                ]
+            ],
+            'Arrival no callsign' => [
+                [
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival callsign not string' => [
+                [
+                    'callsign' => 123,
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival callsign not valid' => [
+                [
+                    'callsign' => 'BAW1234567890123456789',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival no departure airfield' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival departure airfield not string' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 123,
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival departure airfield not valid' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'XXXXY',
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival no arrival airfield' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival arrival airfield not string' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 123,
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival arrival airfield not valid' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 'XXXXY',
+                    'aircraft_type' => 'B738',
+                ]
+            ],
+            'Arrival no aircraft type' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 'EGGW',
+                ]
+            ],
+            'Arrival aircraft type not string' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 123,
+                ]
+            ],
+            'Arrival aircraft type not valid' => [
+                [
+                    'callsign' => 'BAW123',
+                    'assignment_type' => 'arrival',
+                    'departure_airfield' => 'EGLL',
+                    'arrival_airfield' => 'EGGW',
+                    'aircraft_type' => 'XXXXY',
+                ]
+            ],
+        ];
     }
 
     private function addStandAssignment(string $callsign, int $standId)

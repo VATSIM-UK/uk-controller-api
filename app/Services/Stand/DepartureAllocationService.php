@@ -10,10 +10,14 @@ use Illuminate\Support\Collection;
 class DepartureAllocationService
 {
     private readonly StandAssignmentsService $assignmentsService;
+    private readonly StandOccupationService $standOccupationService;
 
-    public function __construct(StandAssignmentsService $assignmentsService)
-    {
+    public function __construct(
+        StandAssignmentsService $assignmentsService,
+        StandOccupationService $standOccupationService
+    ) {
         $this->assignmentsService = $assignmentsService;
+        $this->standOccupationService = $standOccupationService;
     }
 
     /**
@@ -29,6 +33,17 @@ class DepartureAllocationService
         $this->getDepartureStandsToAssign()->each(function (NetworkAircraft $aircraft) {
             $this->assignmentsService->createStandAssignment($aircraft->callsign, $aircraft->stand_id, 'Departure');
         });
+    }
+
+    public function assignStandToDepartingAircraft(NetworkAircraft $aircraft): ?int
+    {
+        $occupiedStand = $this->standOccupationService->getOccupiedStand($aircraft);
+        if ($occupiedStand === null) {
+            return null;
+        }
+
+        $this->assignmentsService->createStandAssignment($aircraft->callsign, $occupiedStand->id, 'Departure');
+        return $occupiedStand->id;
     }
 
     /**
