@@ -18,6 +18,8 @@ class Runway extends Model
         'threshold_latitude',
         'threshold_longitude',
         'heading',
+        'glideslope_angle',
+        'threshold_elevation',
     ];
 
     protected $casts = [
@@ -27,6 +29,8 @@ class Runway extends Model
         'heading' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'glideslope_angle' => 'double',
+        'threshold_elevation' => 'integer',
     ];
 
     public function airfield(): BelongsTo

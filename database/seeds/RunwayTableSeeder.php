@@ -21,6 +21,8 @@ class RunwayTableSeeder extends Seeder
                     'threshold_latitude' => 1,
                     'threshold_longitude' => 2,
                     'heading' => 270,
+                    'glideslope_angle' => 3,
+                    'threshold_elevation' => 4,
                 ],
                 [
                     'id' => 2,
@@ -29,6 +31,8 @@ class RunwayTableSeeder extends Seeder
                     'threshold_latitude' => 3,
                     'threshold_longitude' => 4,
                     'heading' => 90,
+                    'glideslope_angle' => 4,
+                    'threshold_elevation' => 5,
                 ],
                 [
                     'id' => 3,
@@ -37,6 +41,8 @@ class RunwayTableSeeder extends Seeder
                     'threshold_latitude' => 5,
                     'threshold_longitude' => 6,
                     'heading' => 330,
+                    'glideslope_angle' => 5,
+                    'threshold_elevation' => 6,
                 ],
             ]
         );
