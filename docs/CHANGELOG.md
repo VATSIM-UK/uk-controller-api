@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.55.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.54.0...6.55.0) (2023-12-28)
+
+
+### Features
+
+* runway threshold elevation and glideslope angle ([6da468d](https://github.com/VATSIM-UK/uk-controller-api/commit/6da468d44b212d08a76576b97fc1efe972eb9187))
+
 ## [6.54.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.53.1...6.54.0) (2023-12-20)
 
 
