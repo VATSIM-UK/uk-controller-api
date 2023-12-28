@@ -45,11 +45,23 @@ class RunwayResource extends Resource
                     ->required()
                     ->rule(new RunwayIdentifier()),
                 ...self::coordinateInputs('threshold_latitude', 'threshold_longitude'),
+                TextInput::make('threshold_elevation')
+                    ->label(self::translateFormPath('threshold_elevation.label'))
+                    ->helperText(self::translateFormPath('threshold_elevation.helper'))
+                    ->numeric()
+                    ->integer()
+                    ->required(),
                 TextInput::make('heading')
                     ->label(self::translateFormPath('heading.label'))
                     ->helperText(self::translateFormPath('heading.helper'))
                     ->required()
                     ->rule(new ValidHeading()),
+                TextInput::make('glideslope_angle')
+                    ->label(self::translateFormPath('glideslope_angle.label'))
+                    ->helperText(self::translateFormPath('glideslope_angle.helper'))
+                    ->numeric()
+                    ->minValue(1)
+                    ->required(),
             ]);
     }
 

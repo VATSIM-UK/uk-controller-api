@@ -263,6 +263,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
                 'threshold_latitude' => 1,
                 'threshold_longitude' => 2,
                 'inverse_runway_id' => 2,
+                'threshold_elevation' => 4,
+                'glideslope_angle' => 3,
             ],
             [
                 'id' => 2,
@@ -272,6 +274,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
                 'threshold_latitude' => 3,
                 'threshold_longitude' => 4,
                 'inverse_runway_id' => 1,
+                'threshold_elevation' => 5,
+                'glideslope_angle' => 4,
             ],
             [
                 'id' => 3,
@@ -281,6 +285,8 @@ class RunwayServiceTest extends BaseFunctionalTestCase
                 'threshold_latitude' => 5,
                 'threshold_longitude' => 6,
                 'inverse_runway_id' => null,
+                'threshold_elevation' => 6,
+                'glideslope_angle' => 5,
             ],
         ];
 

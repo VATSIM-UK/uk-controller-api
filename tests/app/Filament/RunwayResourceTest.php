@@ -32,7 +32,9 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->assertSet('data.identifier', '27L')
             ->assertSet('data.threshold_latitude', 1)
             ->assertSet('data.threshold_longitude', 2)
-            ->assertSet('data.heading', 270);
+            ->assertSet('data.heading', 270)
+            ->assertSet('data.glideslope_angle', 3)
+            ->assertSet('data.threshold_elevation', 4);
     }
 
     public function testItCreatesARunway()
@@ -43,6 +45,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasNoErrors();
 
@@ -54,6 +58,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
                 'threshold_latitude' => 4,
                 'threshold_longitude' => 5,
                 'heading' => 271,
+                'glideslope_angle' => 5.4,
+                'threshold_elevation' => 101,
             ]
         );
     }
@@ -66,6 +72,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 155)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasNoErrors();
 
@@ -93,6 +101,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.airfield_id']);
     }
@@ -104,6 +114,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.identifier']);
     }
@@ -116,6 +128,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.identifier']);
     }
@@ -127,6 +141,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.identifier', '27R')
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.threshold_latitude']);
     }
@@ -139,6 +155,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 'abc')
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.threshold_latitude']);
     }
@@ -150,6 +168,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.threshold_longitude']);
     }
@@ -162,6 +182,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 'abc')
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.threshold_longitude']);
     }
@@ -173,6 +195,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.heading']);
     }
@@ -185,8 +209,78 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 2222)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('create')
             ->assertHasErrors(['data.heading']);
+    }
+
+    public function testItDoesntCreateARunwayNoGlideslopeAngle()
+    {
+        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 222)
+            ->set('data.threshold_elevation', 101)
+            ->call('create')
+            ->assertHasErrors(['data.glideslope_angle']);
+    }
+
+    public function testItDoesntCreateARunwayGlideslopeAngleInvalid()
+    {
+        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 123)
+            ->set('data.glideslope_angle', 'abc')
+            ->set('data.threshold_elevation', 101)
+            ->call('create')
+            ->assertHasErrors(['data.glideslope_angle']);
+    }
+
+    public function testItDoesntCreateARunwayGlideslopeAngleTooSmall()
+    {
+        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 222)
+            ->set('data.glideslope_angle', 0)
+            ->set('data.threshold_elevation', 101)
+            ->call('create')
+            ->assertHasErrors(['data.glideslope_angle']);
+    }
+
+    public function testItDoesntCreateARunwayNoThresholdElevation()
+    {
+        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 222)
+            ->set('data.glideslope_angle', 5.4)
+            ->call('create')
+            ->assertHasErrors(['data.threshold_elevation']);
+    }
+
+    public function testItDoesntCreateARunwayThresholdElevationInvalid()
+    {
+        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 222)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 'abc')
+            ->call('create')
+            ->assertHasErrors(['data.threshold_elevation']);
     }
 
     public function testItLoadsDataForEdit()
@@ -196,6 +290,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->assertSet('data.identifier', '27L')
             ->assertSet('data.threshold_latitude', 1)
             ->assertSet('data.threshold_longitude', 2)
+            ->assertSet('data.glideslope_angle', 3)
+            ->assertSet('data.threshold_elevation', 4)
             ->assertSet('data.heading', 270);
     }
 
@@ -207,6 +303,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 78)
             ->set('data.threshold_longitude', 89)
             ->set('data.heading', 85)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasNoErrors();
 
@@ -219,6 +317,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
                 'threshold_latitude' => 78,
                 'threshold_longitude' => 89,
                 'heading' => 85,
+                'glideslope_angle' => 5.4,
+                'threshold_elevation' => 101,
             ]
         );
     }
@@ -232,6 +332,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
                 'heading' => 91,
                 'threshold_latitude' => 1,
                 'threshold_longitude' => 2,
+                'glideslope_angle' => 5.4,
+                'threshold_elevation' => 101,
             ]
         );
 
@@ -266,6 +368,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.airfield_id']);
     }
@@ -277,6 +381,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.identifier']);
     }
@@ -288,6 +394,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.identifier']);
     }
@@ -299,6 +407,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude')
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.threshold_latitude']);
     }
@@ -310,6 +420,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 'abc')
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.threshold_latitude']);
     }
@@ -321,6 +433,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_longitude')
             ->set('data.threshold_latitude', 4)
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.threshold_longitude']);
     }
@@ -332,6 +446,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 'abc')
             ->set('data.heading', 271)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.threshold_longitude']);
     }
@@ -344,6 +460,8 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading')
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.heading']);
     }
@@ -356,8 +474,66 @@ class RunwayResourceTest extends BaseFilamentTestCase
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
             ->set('data.heading', 2222)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 101)
             ->call('save')
             ->assertHasErrors(['data.heading']);
+    }
+
+    public function testItDoesntEditARunwayNoThresholdElevation()
+    {
+        Livewire::test(EditRunway::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 123)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation')
+            ->call('save')
+            ->assertHasErrors(['data.threshold_elevation']);
+    }
+
+    public function testItDoesntEditARunwayThresholdElevationInvalid()
+    {
+        Livewire::test(EditRunway::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 123)
+            ->set('data.glideslope_angle', 5.4)
+            ->set('data.threshold_elevation', 'abc')
+            ->call('save')
+            ->assertHasErrors(['data.threshold_elevation']);
+    }
+
+    public function testItDoesntEditARunwayNoGlideslopeAngle()
+    {
+        Livewire::test(EditRunway::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 123)
+            ->set('data.glideslope_angle')
+            ->set('data.threshold_elevation', 101)
+            ->call('save')
+            ->assertHasErrors(['data.glideslope_angle']);
+    }
+
+    public function testItDoesntEditARunwayGlideslopeAngleInvalid()
+    {
+        Livewire::test(EditRunway::class, ['record' => 1])
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '27R')
+            ->set('data.threshold_latitude', 4)
+            ->set('data.threshold_longitude', 5)
+            ->set('data.heading', 123)
+            ->set('data.glideslope_angle', -0.1)
+            ->set('data.threshold_elevation', 101)
+            ->call('save')
+            ->assertHasErrors(['data.glideslope_angle']);
     }
 
     protected function getCreateText(): string

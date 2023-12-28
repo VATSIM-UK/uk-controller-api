@@ -131,7 +131,9 @@ class RunwayService
             'heading' => $runway->heading,
             'threshold_latitude' => $runway->threshold_latitude,
             'threshold_longitude' => $runway->threshold_longitude,
+            'threshold_elevation' => $runway->threshold_elevation,
             'inverse_runway_id' => $runway->inverses()->first() ? $runway->inverses()->first()->id : null,
+            'glideslope_angle' => $runway->glideslope_angle,
         ])->toArray();
     }
 
