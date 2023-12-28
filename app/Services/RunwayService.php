@@ -118,6 +118,8 @@ class RunwayService
                 'heading' => $heading,
                 'threshold_latitude' => $coordinate->getLat(),
                 'threshold_longitude' => $coordinate->getLng(),
+                'threshold_elevation' => $airfield->elevation,
+                'glideslope_angle' => 3,
             ]
         );
     }
