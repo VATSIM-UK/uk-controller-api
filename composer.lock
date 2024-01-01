@@ -1300,20 +1300,20 @@
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "v4.16.0",
+            "version": "v4.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8"
+                "reference": "bbc513d79acf6691fa9cf10f192c90dd2957f18c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/523407fb06eb9e5f3d59889b3978d5bfe94299c8",
-                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/bbc513d79acf6691fa9cf10f192c90dd2957f18c",
+                "reference": "bbc513d79acf6691fa9cf10f192c90dd2957f18c",
                 "shasum": ""
             },
             "require": {
-                "php": "~5.6.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0"
+                "php": "~5.6.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0"
             },
             "require-dev": {
                 "cerdic/css-tidy": "^1.7 || ^2.0",
@@ -1355,9 +1355,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ezyang/htmlpurifier/issues",
-                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.16.0"
+                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.17.0"
             },
-            "time": "2022-09-18T07:06:19+00:00"
+            "time": "2023-11-17T15:01:25+00:00"
         },
         {
             "name": "filament/filament",
@@ -4125,16 +4125,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.50",
+            "version": "3.1.51",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SpartnerNL/Laravel-Excel.git",
-                "reference": "d79e66391aa306983bb7e234503f5605c3e33348"
+                "reference": "6d3c78ce6645abada32e03b40dc7f3c561878bc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/d79e66391aa306983bb7e234503f5605c3e33348",
-                "reference": "d79e66391aa306983bb7e234503f5605c3e33348",
+                "url": "https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/6d3c78ce6645abada32e03b40dc7f3c561878bc3",
+                "reference": "6d3c78ce6645abada32e03b40dc7f3c561878bc3",
                 "shasum": ""
             },
             "require": {
@@ -4189,7 +4189,7 @@
             ],
             "support": {
                 "issues": "https://github.com/SpartnerNL/Laravel-Excel/issues",
-                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/3.1.50"
+                "source": "https://github.com/SpartnerNL/Laravel-Excel/tree/3.1.51"
             },
             "funding": [
                 {
@@ -4201,7 +4201,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-06T11:29:48+00:00"
+            "time": "2023-12-08T12:44:49+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
