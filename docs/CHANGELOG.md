@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.56.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.55.0...6.56.0) (2024-02-28)
+
+
+### Features
+
+* add user scope to admin user ([3c025e4](https://github.com/VATSIM-UK/uk-controller-api/commit/3c025e475b382bffff750e47ae20ea50c89c13e0))
+* add user scope to admin user ([8a49188](https://github.com/VATSIM-UK/uk-controller-api/commit/8a49188a5f46e36a2535f0c50565ced8568260e9))
+
 ## [6.55.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.54.0...6.55.0) (2023-12-28)
 
 
