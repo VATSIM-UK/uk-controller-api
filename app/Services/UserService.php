@@ -103,6 +103,7 @@ class UserService
             [
                 AuthServiceProvider::SCOPE_USER_ADMIN,
                 AuthServiceProvider::SCOPE_VERSION_ADMIN,
+                AuthServiceProvider::SCOPE_USER
             ]
         )->accessToken;
     }
