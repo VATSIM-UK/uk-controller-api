@@ -201,6 +201,48 @@ class UserController extends BaseController
         }
     }
 
+    /**
+     * Get the unread notifications for the given user
+     *
+     * @param integer $cid
+     * @return JsonResponse
+     */
+    public function getUnreadNotificationsForUser(int $cid)
+    {
+        try {
+            return response()->json($this->userService->getUnreadNotificationsForUser($cid, request()->get('inactive', false)));
+        } catch (ModelNotFoundException $e) {
+            Log::error('Unable to reactivate user with CID ' . $cid . ', does not exists');
+            return response()->json(
+                [
+                    'message' => $this->getNotExistsMessage($cid),
+                ]
+            )->setStatusCode(404);
+        }
+    }
+
+    /**
+     * Marks a notification as read for the given user
+     *
+     * @param integer $cid
+     * @param integer $notificationId
+     * @return JsonResponse
+     */
+    public function markNotificationAsReadForUser(int $cid, int $notificationId)
+    {
+        try {
+            $this->userService->markNotificationAsReadForUser($cid, $notificationId);
+            return response()->json(['message' => 'ok']);
+        } catch (ModelNotFoundException $e) {
+            Log::error('Unable to mark notification id ' . $notificationId . ' as read for CID ' . $cid . ', one does not exists');
+            return response()->json(
+                [
+                    'message' => 'Either the user or notification does not exist.',
+                ]
+            )->setStatusCode(404);
+        }
+    }
+
     private function getNotExistsMessage(int $userId): string
     {
         return sprintf('User with CID %d does not exist', $userId);

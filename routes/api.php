@@ -180,6 +180,24 @@ Route::middleware('api')
                             'uses' => 'UserController@deleteUserToken',
                         ]
                     );
+
+                    // Get unread notifications for a user
+                    Route::get(
+                        'user/{cid}/notifications/unread',
+                        [
+                            'middleware' => MiddlewareKeys::VATSIM_CID,
+                            'uses' => 'UserController@getUnreadNotificationsForUser',
+                        ]
+                    )->where('cid', '[0-9]+');
+
+                    // Mark a notification as ready for a user
+                    Route::put(
+                        'user/{cid}/notifications/read/{notificationId}',
+                        [
+                            'middleware' => MiddlewareKeys::VATSIM_CID,
+                            'uses' => 'UserController@markNotificationAsReadForUser',
+                        ]
+                    )->where('cid', '[0-9]+')->where('notificationId', '[0-9]+');;
                 }
             );
 

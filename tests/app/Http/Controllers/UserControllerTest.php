@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\BaseApiTestCase;
+use App\Models\Notification\Notification;
 use App\Models\User\Admin;
 use App\Models\User\User;
 use App\Providers\AuthServiceProvider;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class UserControllerTest extends BaseApiTestCase
 {
@@ -130,5 +133,95 @@ class UserControllerTest extends BaseApiTestCase
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_DELETE, 'token/abc')
             ->assertStatus(404);
+    }
+
+    public function testItGetsNotificationsForAUser()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533/notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                [
+                    "id",
+                    "title",
+                    "body",
+                    "link",
+                    "valid_from",
+                    "valid_to",
+                    "deleted_at",
+                    "controllers"
+                ]
+            ]);
+    }
+
+    public function testItHandlesNoModelsFoundCorrectly()
+    {
+        // Unknown CID
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1500000/notifications/unread')
+            ->assertStatus(404);
+
+        // Unknown Notification Id
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'user/1203533/notifications/read/123456')
+            ->assertStatus(404);
+
+        // Unknown CID and Notification Id
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'user/1500000/notifications/read/123456')
+            ->assertStatus(404);
+    }
+
+    public function testItHandlesReadingNotificationsCorrectly()
+    {
+        DB::table('notifications')->delete();
+
+        $read = Notification::create([
+            'title' => 'My Read Notification',
+            'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
+            'valid_from' => Carbon::now()->subMonth(),
+            'valid_to' => Carbon::now()->addYear()
+        ]);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533/notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "user/1203533/notifications/read/{$read->id}")
+            ->assertStatus(200)
+            ->assertJson(['message' => 'ok']);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533/notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(0)
+            ->assertJson([]);
+    }
+
+    public function testItReturnsInactiveUnreadNotificationsIfRequested()
+    {
+        DB::table('notifications')->delete();
+
+        $read = Notification::create([
+            'title' => 'My Read Notification',
+            'body' => 'This is some contents for my notification.',
+            'link' => 'https://www.vatsim.uk',
+            'valid_from' => Carbon::now()->subMonth(),
+            'valid_to' => Carbon::now()->addYear()
+        ]);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533/notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(1);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PUT, "user/1203533/notifications/read/{$read->id}")
+            ->assertStatus(200)
+            ->assertJson(['message' => 'ok']);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533/notifications/unread')
+            ->assertStatus(200)
+            ->assertJsonCount(0)
+            ->assertJson([]);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1203533/notifications/unread', ['inactive' => true])
+            ->assertStatus(200)
+            ->assertJsonCount(0)
+            ->assertJson([]);
     }
 }
