@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Exceptions\UserAlreadyExistsException;
 use App\Helpers\User\UserConfig;
+use App\Models\Notification\Notification;
 use App\Models\User\User;
 use App\Models\User\UserStatus;
 use App\Providers\AuthServiceProvider;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Service for handling user administration.
@@ -134,6 +136,47 @@ class UserService
     public function getUser(int $userCid) : User
     {
         return User::findOrFail($userCid);
+    }
+
+    /**
+     * Retrieves the user's unread notifications from the database
+     *
+     * @param int $userCid
+     * @throws ModelNotFoundException
+     * @return Collection
+     */
+    public function getUnreadNotificationsForUser(int $userCid, bool $includeInactive = false)
+    {
+        $query = Notification::orderBy('valid_from', 'desc')
+            ->with('controllers')
+            ->unreadBy(User::findOrFail($userCid));
+
+        if ($includeInactive) {
+            $query->active();
+        }
+
+        return $query->get()
+            ->map(fn (Notification $notification) => array_merge(
+                $notification->toArray(),
+                [
+                    'valid_from' => $notification->valid_from->toDateTimeString(),
+                    'valid_to' => $notification->valid_to->toDateTimeString(),
+                ]
+            ));
+    }
+
+    /**
+     * Marks a notification as read for the given user
+     *
+     * @param int $userCid
+     * @throws ModelNotFoundException
+     * @return void
+     */
+    public function markNotificationAsReadForUser(int $userCid, int $notificationId)
+    {
+        Notification::findOrFail($notificationId)
+            ->readBy()
+            ->attach(User::findOrFail($userCid));
     }
 
     /**
