@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.57.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.56.0...6.57.0) (2024-02-29)
+
+
+### Features
+
+* admin endpoint for a users notifications ([ca7cf83](https://github.com/VATSIM-UK/uk-controller-api/commit/ca7cf83d3f676483fbd724a582323cea92173088))
+
 ## [6.56.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.55.0...6.56.0) (2024-02-28)
 
 
