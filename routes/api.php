@@ -197,7 +197,8 @@ Route::middleware('api')
                             'middleware' => MiddlewareKeys::VATSIM_CID,
                             'uses' => 'UserController@markNotificationAsReadForUser',
                         ]
-                    )->where('cid', '[0-9]+')->where('notificationId', '[0-9]+');;
+                    )->where('cid', '[0-9]+')->where('notificationId', '[0-9]+');
+                    ;
                 }
             );
 
