@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.58.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.58.0...6.58.1) (2024-04-14)
+
+
+### Bug Fixes
+
+* plugin log orders ([5254901](https://github.com/VATSIM-UK/uk-controller-api/commit/5254901af83eb8512bb3964df4835f0c92741a8c))
+
 ## [6.58.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.57.0...6.58.0) (2024-04-14)
 
 
