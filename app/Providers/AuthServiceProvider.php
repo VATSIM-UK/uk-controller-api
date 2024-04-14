@@ -16,6 +16,7 @@ use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use App\Models\Navigation\Navaid;
 use App\Models\Notification\Notification;
+use App\Models\Plugin\PluginLog;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
@@ -66,7 +67,7 @@ class AuthServiceProvider extends ServiceProvider
 
     // These policies are used by filament to determine resource and action access.
     protected $policies = [
-            // The defaults
+        // The defaults
         Aircraft::class => OperationsContributorPolicy::class,
         Airfield::class => DefaultFilamentPolicy::class,
         AirfieldPairingSquawkRange::class => DefaultFilamentPolicy::class,
@@ -91,21 +92,22 @@ class AuthServiceProvider extends ServiceProvider
         UnitDiscreteSquawkRangeGuest::class => DefaultFilamentPolicy::class,
         WakeCategory::class => OperationsContributorPolicy::class,
 
-            // Things the plugin can assign
+        // Things the plugin can assign
         SquawkAssignment::class => PluginEditableDataPolicy::class,
 
-            // Things that can only be updated by external processes
+        // Things that can only be updated by external processes
         SrdNote::class => ReadOnlyPolicy::class,
         SrdRoute::class => ReadOnlyPolicy::class,
         Dependency::class => ReadOnlyPolicy::class,
 
-            // Things that can only be viewed by users with a role
+        // Things that can only be viewed by users with a role
         StandAssignmentsHistory::class => ReadOnlyWithRolePolicy::class,
 
-            // Special policies
+        // Special policies
         Activity::class => ActivityLogPolicy::class,
         User::class => UserPolicy::class,
         Version::class => PluginVersionPolicy::class,
+        PluginLog::class => ActivityLogPolicy::class,
     ];
 
     /**
