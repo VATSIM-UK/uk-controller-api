@@ -18,7 +18,7 @@ class PluginLogResource extends Resource
     protected static ?string $model = PluginLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rss';
-    protected static ?string $navigationGroup = 'Administration'; 
+    protected static ?string $navigationGroup = 'Administration';
 
     public static function form(Form $form): Form
     {
