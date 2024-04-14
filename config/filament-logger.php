@@ -2,6 +2,7 @@
 
 use App\Filament\Resources\ActivityResource;
 use App\Filament\Resources\DependencyResource;
+use App\Filament\Resources\PluginLogResource;
 use App\Filament\Resources\SquawkAssignmentResource;
 
 return [
@@ -15,6 +16,7 @@ return [
         'exclude' => [
             SquawkAssignmentResource::class,
             DependencyResource::class,
+            PluginLogResource::class,
         ],
     ],
 

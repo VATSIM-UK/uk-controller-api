@@ -13,6 +13,7 @@ return [
     'sids' => require_once __DIR__ . '/sids/table.php',
     'handoffs' => require_once __DIR__ . '/handoffs/table.php',
     'holds' => require_once __DIR__ . '/holds/table.php',
+    'plugin' => require_once __DIR__ . '/plugin/table.php',
     'prenotes' => require_once __DIR__ . '/prenotes/table.php',
     'controllers' => require_once __DIR__ . '/controllers/table.php',
     'navaids' => require_once __DIR__ . '/navaids/table.php',

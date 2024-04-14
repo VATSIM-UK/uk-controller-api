@@ -127,6 +127,9 @@ class DatabaseSeeder extends Seeder
         PluginEventTableSeeder::class => [
             'plugin_events',
         ],
+        PluginLogTableSeeder::class => [
+            'plugin_logs',
+        ],
         DepartureReleaseTableSeeder::class => [
             'departure_release_requests',
         ],

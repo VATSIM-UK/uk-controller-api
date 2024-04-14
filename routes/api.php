@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MissedApproachController;
+use App\Http\Controllers\PluginLogController;
 use App\Http\Controllers\PrenoteMessageController;
 use App\Rules\VatsimCallsign;
 use Illuminate\Support\Facades\Route;
@@ -59,6 +60,17 @@ Route::middleware('api')
                         // Events
                         Route::get('plugin-events/sync', 'PluginEventsController@getLatestPluginEventId');
                         Route::get('plugin-events/recent', 'PluginEventsController@getRecentPluginEvents');
+
+                        // Logs
+                        Route::prefix('plugin')->group(
+                            function () {
+                                Route::prefix('logs')->controller(PluginLogController::class)->group(
+                                    function () {
+                                        Route::post('', 'createPluginLogEntry');
+                                    }
+                                );
+                            }
+                        );
 
                         // Holds
                         Route::put('hold/assigned', 'HoldController@assignHold');

@@ -11,6 +11,7 @@ return [
     'sids' => require_once __DIR__ . '/sids/form.php',
     'handoffs' => require_once __DIR__ . '/handoffs/form.php',
     'holds' => require_once __DIR__ . '/holds/form.php',
+    'plugin' => require_once __DIR__ . '/plugin/form.php',
     'prenotes' => require_once __DIR__ . '/prenotes/form.php',
     'runways' => require_once __DIR__ . '/runways/form.php',
     'controllers' => require_once __DIR__ . '/controllers/form.php',
