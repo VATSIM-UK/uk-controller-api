@@ -51,7 +51,7 @@ class PluginLogResource extends Resource
                     ->label(self::translateTablePath('columns.type')),
                 TextColumn::make('created_at')
                     ->label(self::translateTablePath('columns.created_at')),
-            ]);
+            ])->defaultSort('id', 'desc');
     }
     
     public static function getPages(): array
