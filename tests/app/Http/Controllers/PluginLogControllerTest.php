@@ -31,7 +31,7 @@ class PluginLogControllerTest extends BaseApiTestCase
         $this->assertDatabaseHas('plugin_logs', $expectedData);
     }
 
-    public function createSuccessProvider()
+    public static function createSuccessProvider()
     {
         return [
             'minimal' => [
@@ -53,7 +53,7 @@ class PluginLogControllerTest extends BaseApiTestCase
             ->assertStatus(422);
     }
 
-    public function createFailureProvider()
+    public static function createFailureProvider()
     {
         return [
             'missing type' => [
