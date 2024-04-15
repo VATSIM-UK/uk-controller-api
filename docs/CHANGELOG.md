@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.58.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.58.1...6.58.2) (2024-04-15)
+
+
+### Bug Fixes
+
+* domestic international stand warning ([4982fb1](https://github.com/VATSIM-UK/uk-controller-api/commit/4982fb102296e45078a485b9712ca48a52166ef0))
+
+
+### Documentation
+
+* Update stand allocator guide ([bc837a8](https://github.com/VATSIM-UK/uk-controller-api/commit/bc837a8573a06777fb4595a05d0bb7dee937cf10))
+
 ## [6.58.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.58.0...6.58.1) (2024-04-14)
 
 
