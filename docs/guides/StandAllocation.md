@@ -202,6 +202,9 @@ This rule will assign any stand that has a specified `DOMESTIC` / `INTERNATIONAL
 
 For the purpose of this rule, `DOMESTIC` is deemed to mean airfields with ICAOs starting `EG` or `EI`.
 
+**PLEASE NOTE**: You should only set `DOMESTIC` / `INTERNATIONAL` for a stand at an airfield if you plan to do this for all non-cargo stands. Failure to
+do this will result in unusual stands being allocated, as this allocator will not consider "more desirable" stands that have not been marked as such.
+
 ### Fallback
 
 If everything else has failed, then this allocator will pick a random stand.

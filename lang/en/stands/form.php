@@ -16,7 +16,8 @@ return [
     'type' => [
         'label' => 'Type',
         'helper' => 'At airfields where certain stands are designated for only domestic or international flights, ' .
-            'this option can be selected to designate the type of stand.',
+            'this option can be selected to designate the type of stand. It can also be used to designate stands as Cargo only. ' .
+            'NOTE that you should only set this to "domestic" or "international" if you plan to do this for all stands at an airfield.',
     ],
     'latitude' => [
         'label' => 'Latitude',
