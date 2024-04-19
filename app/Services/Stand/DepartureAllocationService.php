@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 class DepartureAllocationService
 {
+    private const DEPARTURE_DISCONNECTION_TIMEOUT_MINUTES = 5;
     private readonly StandAssignmentsService $assignmentsService;
     private readonly StandOccupationService $standOccupationService;
 
@@ -72,19 +73,30 @@ class DepartureAllocationService
             })
             ->whereRaw('airfield.code = network_aircraft.planned_depairport')
             ->whereIn('network_aircraft.callsign', $aircraftOnStands->pluck('callsign'))
+            ->where('network_aircraft.updated_at', '>', now()->subMinutes(self::DEPARTURE_DISCONNECTION_TIMEOUT_MINUTES))
             ->select(['network_aircraft.*', 'aircraft_stand.stand_id'])
             ->get();
     }
 
     private function getDepartureStandsToUnassign(): Collection
     {
-        return StandAssignment::join('network_aircraft', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
+        // We want to remove assignments for aircraft that are no longer occupying their departure stand
+        $baseQuery = StandAssignment::join('network_aircraft', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
             ->join('stands', 'stand_assignments.stand_id', '=', 'stands.id')
             ->join('airfield', 'stands.airfield_id', '=', 'airfield.id')
             ->leftJoin('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
             ->whereRaw('airfield.code = network_aircraft.planned_depairport')
             ->whereNull('aircraft_stand.callsign')
-            ->select('stand_assignments.*')
-            ->get();
+            ->select('stand_assignments.*');
+
+        // But also remove assignments for aircraft that haven't been seen for 5 minutes
+        $disconnectQuery = StandAssignment::join('network_aircraft', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
+            ->join('stands', 'stand_assignments.stand_id', '=', 'stands.id')
+            ->join('airfield', 'stands.airfield_id', '=', 'airfield.id')
+            ->where('network_aircraft.updated_at', '<', now()->subMinutes(self::DEPARTURE_DISCONNECTION_TIMEOUT_MINUTES))
+            ->whereRaw('airfield.code = network_aircraft.planned_depairport')
+            ->select('stand_assignments.*');
+
+        return $baseQuery->union($disconnectQuery)->get();
     }
 }

@@ -8,9 +8,9 @@ use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Mockery;
-use Mockery\Mock;
 
 class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 {
@@ -43,6 +43,28 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
 
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
         Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItDoesntAssignOccupiedStandsAtDepartureAirfieldsIfAircraftDisconnectedForMoreThan5Minutes()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft->updated_at = now()->subMinutes(6);
+        $aircraft->save();
+
+        $aircraft->occupiedStand()->sync([2]);
+        $this->service->assignStandsForDeparture();
+
+        $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
     }
 
     public function testItUpdatesAssignedOccupiedStandsAtDepartureAirfields()
@@ -203,6 +225,73 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
             ]
         );
         Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItUnassignsStandsForAircraftDisconnectedMoreThan5MinutesAgo()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft->updated_at = now()->subMinutes(6);
+        $aircraft->save();
+        $this->addStandAssignment('RYR787', 1);
+        Stand::find(1)->occupier()->sync(['RYR787' => ['latitude' => 51.47187222, 'longitude' => -0.48601389]]);
+
+        $this->service->assignStandsForDeparture();
+        $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertDispatched(StandUnassignedEvent::class);
+    }
+
+    public function testItDoesntUnassignsStandsForAircraftDisconnectedLessThan5MinutesAgo()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft->updated_at = now()->subMinutes(4);
+        $aircraft->save();
+        $this->addStandAssignment('RYR787', 1);
+        Stand::find(1)->occupier()->sync(['RYR787' => ['latitude' => 51.47187222, 'longitude' => -0.48601389]]);
+
+        $this->service->assignStandsForDeparture();
+        $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandUnassignedEvent::class);
+    }
+
+    public function testItDoesntUnassignsStandsForAircraftDisconnectedMoreThan5MinutesAgoAtArrivalAirfield()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGBB',
+                'planned_destairport' => 'EGLL',
+            ]
+        );
+        $aircraft->updated_at = now()->subMinutes(6);
+        $aircraft->save();
+        $this->addStandAssignment('RYR787', 1);
+        Stand::find(1)->occupier()->sync(['RYR787' => ['latitude' => 51.47187222, 'longitude' => -0.48601389]]);
+
+        $this->service->assignStandsForDeparture();
+        $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandUnassignedEvent::class);
     }
 
     private function addStandAssignment(string $callsign, int $standId): void
