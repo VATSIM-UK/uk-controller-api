@@ -22,7 +22,6 @@ class NetworkAircraftFactory extends Factory
      */
     public function definition()
     {
-       
         return [
             'callsign' => strtoupper(fake()->unique()->bothify('???####')),
             'cid' => fake()->numberBetween(800000, 1900000),
