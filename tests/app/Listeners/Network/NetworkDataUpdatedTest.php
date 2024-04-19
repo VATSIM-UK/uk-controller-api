@@ -11,6 +11,7 @@ use App\Jobs\Squawk\ReserveActiveSquawks;
 use App\Jobs\Stand\AssignStandsForArrival;
 use App\Jobs\Stand\AssignStandsForDeparture;
 use App\Jobs\Stand\OccupyStands;
+use App\Jobs\Stand\RemoveDisconnectedArrivalStands;
 use Illuminate\Foundation\Bus\PendingChain;
 use Illuminate\Support\Facades\Bus;
 use Mockery;
@@ -32,6 +33,7 @@ class NetworkDataUpdatedTest extends BaseUnitTestCase
             [
                 new OccupyStands(),
                 new AssignStandsForDeparture(),
+                new RemoveDisconnectedArrivalStands(),
                 new AssignStandsForArrival(),
                 new ReserveActiveSquawks(),
                 new RemoveAssignmentsForAircraftLeavingHold(),

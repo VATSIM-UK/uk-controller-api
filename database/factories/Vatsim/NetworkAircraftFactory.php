@@ -22,9 +22,10 @@ class NetworkAircraftFactory extends Factory
      */
     public function definition()
     {
+       
         return [
-            'callsign' => $this->faker->unique()->word,
-            'cid' => $this->faker->numberBetween(800000, 1900000),
+            'callsign' => strtoupper(fake()->unique()->bothify('???####')),
+            'cid' => fake()->numberBetween(800000, 1900000),
             'planned_aircraft_short' => 'B738',
             'transponder_last_updated_at' => null,
         ];

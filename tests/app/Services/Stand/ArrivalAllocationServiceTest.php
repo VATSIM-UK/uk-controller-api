@@ -26,6 +26,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
@@ -33,6 +34,7 @@ use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -802,5 +804,76 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         $this->service->autoAllocateArrivalStandForAircraft($aircraft);
         $this->assertEquals(1, StandAssignment::find('BMI221')->stand_id);
         Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItRemovesArrivalStandsFromDisconnectedAircraft()
+    {
+        $airfield = Airfield::factory()->create();
+
+        $createdAircraftUpdatedAt = function (Carbon $time) use ($airfield): NetworkAircraft {
+            $aircraft = NetworkAircraft::factory()->create();
+            $aircraft->updated_at = $time;
+            $aircraft->planned_destairport = $airfield->code;
+            $aircraft->save();
+
+            return $aircraft;
+        };
+
+        $createStandAssignmentForAircraft = function (NetworkAircraft $aircraft) use ($airfield): Stand {
+            $stand = Stand::factory()->create(['airfield_id' => $airfield->id]);
+            StandAssignment::create(
+                [
+                    'callsign' => $aircraft->callsign,
+                    'stand_id' => $stand->id,
+                ]
+            );
+
+            return $stand;
+        };
+
+        $occupyStandForAircraft = function (NetworkAircraft $aircraft, Stand $stand) {
+            $stand->occupier()->sync(['callsign' => $aircraft->callsign]);
+        };
+
+        // This aircraft is connected - it should be left alone
+        $aircraft1 = $createdAircraftUpdatedAt(Carbon::now());
+        $createStandAssignmentForAircraft($aircraft1);
+
+        // This aircraft is disconnected and not on its stand, but it's not timed out, so it should be left alone
+        $aircraft2 = $createdAircraftUpdatedAt(Carbon::now()->subMinutes(4));
+        $createStandAssignmentForAircraft($aircraft2);
+
+        // This aircraft is disconnected and on its stand, but not timed out for occupancy, so it should be left alone
+        $aircraft3 = $createdAircraftUpdatedAt(Carbon::now()->subMinutes(1));
+        $stand3 = $createStandAssignmentForAircraft($aircraft3);
+        $occupyStandForAircraft($aircraft3, $stand3);
+
+        // This aircraft is disconnected and on its stand, but timed out for occupancy, so it should be removed
+        $aircraft4 = $createdAircraftUpdatedAt(Carbon::now()->subMinutes(3));
+        $stand4 = $createStandAssignmentForAircraft($aircraft4);
+        $occupyStandForAircraft($aircraft4, $stand4);
+
+        // This aircraft is disconnected and not on its stand, and timed out, so it should be removed
+        $aircraft5 = $createdAircraftUpdatedAt(Carbon::now()->subMinutes(6));
+        $createStandAssignmentForAircraft($aircraft5);
+
+        // This aircraft is disconnected and on its stand, but its been disconnected for more than 5 minutes
+        // so it should be removed
+        $aircraft6 = $createdAircraftUpdatedAt(Carbon::now()->subMinutes(6));
+        $stand6 = $createStandAssignmentForAircraft($aircraft6);
+        $occupyStandForAircraft($aircraft6, $stand6);
+
+        // Run it
+        $this->service->removeArrivalStandsFromDisconnectedAircraft();
+
+        // Check there are no stand assignments for aircraft 4 and 5 and 6
+        $this->assertNull(StandAssignment::find($aircraft4->callsign));
+        $this->assertNull(StandAssignment::find($aircraft5->callsign));
+        $this->assertNull(StandAssignment::find($aircraft6->callsign));
+
+        // Check there are stand assignments for aircraft 1, 2 and 3
+        $this->assertNotNull(StandAssignment::find($aircraft1->callsign));
+        $this->assertNotNull(StandAssignment::find($aircraft2->callsign));
+        $this->assertNotNull(StandAssignment::find($aircraft3->callsign));
     }
 }
