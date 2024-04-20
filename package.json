@@ -20,7 +20,6 @@
     "commitizen": "^4.3.0",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "cz-conventional-changelog": "3.3.0",
-    "laravel-mix": "^6.0.34",
     "laravel-vite-plugin": "^1.0.2",
     "lodash": "^4.17.21",
     "postcss": "^8.4.38",
@@ -33,12 +32,12 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "npm run development",
+    "dev": "yarn run development",
     "development": "vite",
     "watch": "vite watch",
     "watch-poll": "vite watch -- --watch-options-poll=1000",
     "hot": "vite watch --hot",
-    "prod": "npm run production",
+    "prod": "yarn run production",
     "production": "vite --production",
     "commit": "cz"
   },
