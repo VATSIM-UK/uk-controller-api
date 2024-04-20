@@ -2,6 +2,14 @@
 
 @config 'tailwind.config.js';
 
-.fi-sidebar {
-    @apply bg-gray-50 dark:bg-gray-50;
+.fi-simple-layout {
+    @apply dark:bg-gradient-to-b dark:from-vatuk-darkblue-400 dark:to-vatuk-darkblue-900 !important;
+}
+
+.fi-main-ctn {
+    @apply dark:bg-gradient-to-b dark:from-vatuk-darkblue-400 dark:to-vatuk-darkblue-900 !important;
+}
+
+.fi-sidebar-nav {
+    @apply dark:bg-gray-900 !important
 }
