@@ -155,7 +155,7 @@ class StandAssignmentsHistoryResourceTest extends BaseFilamentTestCase
         return ['Stand Assignment Histories'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return StandAssignmentsHistoryResource::class;
     }

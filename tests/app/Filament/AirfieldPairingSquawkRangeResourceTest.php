@@ -22,7 +22,7 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRange()
     {
         Livewire::test(ManageAirfieldPairingSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -47,7 +47,7 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateARangeIfFirstInvalid()
     {
         Livewire::test(ManageAirfieldPairingSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '123a',
@@ -56,13 +56,13 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                     'destination' => 'EGLL',
                 ]
             )
-            ->assertHasPageActionErrors(['first']);
+            ->assertHasActionErrors(['first']);
     }
 
     public function testItDoesntCreateARangeIfLastInvalid()
     {
         Livewire::test(ManageAirfieldPairingSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -71,13 +71,13 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                     'destination' => 'EGLL',
                 ]
             )
-            ->assertHasPageActionErrors(['last']);
+            ->assertHasActionErrors(['last']);
     }
 
     public function testItDoesntCreateARangeIfOriginMissing()
     {
         Livewire::test(ManageAirfieldPairingSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -85,13 +85,13 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                     'destination' => 'EGLL',
                 ]
             )
-            ->assertHasPageActionErrors(['origin']);
+            ->assertHasActionErrors(['origin']);
     }
 
     public function testItDoesntCreateARangeIfOriginInvalid()
     {
         Livewire::test(ManageAirfieldPairingSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -100,13 +100,13 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                     'destination' => 'EGLL',
                 ]
             )
-            ->assertHasPageActionErrors(['origin']);
+            ->assertHasActionErrors(['origin']);
     }
 
     public function testItDoesntCreateARangeIfDestinationMissing()
     {
         Livewire::test(ManageAirfieldPairingSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -114,13 +114,13 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                     'origin' => 'EGLL',
                 ]
             )
-            ->assertHasPageActionErrors(['destination']);
+            ->assertHasActionErrors(['destination']);
     }
 
     public function testItDoesntCreateARangeIfDestinationInvalid()
     {
         Livewire::test(ManageAirfieldPairingSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -129,7 +129,7 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                     'destination' => 'EG1.',
                 ]
             )
-            ->assertHasPageActionErrors(['destination']);
+            ->assertHasActionErrors(['destination']);
     }
 
     public function testItEditsASquawkRange()
@@ -263,7 +263,7 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
         return ['Airfield Pairing Squawk Ranges'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return AirfieldPairingSquawkRangeResource::class;
     }

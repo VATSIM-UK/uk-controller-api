@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class HoldsRelationManager extends RelationManager
 {
@@ -192,10 +193,8 @@ class HoldsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('maximum_altitude')
                     ->label(self::translateTablePath('columns.maximum_altitude')),
                 Tables\Columns\TextColumn::make('turn_direction')
-                    ->enum([
-                        'left' => 'Left',
-                        'right' => 'Right',
-                    ])
+                    ->formatStateUsing(
+                        fn (string $state) => Str::ucfirst($state))
                     ->label(self::translateTablePath('columns.turn_direction')),
                 TextColumn::make('outbound_leg')
                     ->label(self::translateTablePath('columns.outbound_leg'))

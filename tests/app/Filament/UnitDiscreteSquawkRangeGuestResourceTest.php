@@ -18,7 +18,7 @@ class UnitDiscreteSquawkRangeGuestResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRangeGuest()
     {
         Livewire::test(ManageUnitDiscreteSquawkRangeGuests::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'primary_unit' => 'LON',
@@ -39,77 +39,77 @@ class UnitDiscreteSquawkRangeGuestResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateAGuestIfPrimaryUnitEmpty()
     {
         Livewire::test(ManageUnitDiscreteSquawkRangeGuests::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'guest_unit' => 'LTC',
                 ]
             )
-            ->assertHasPageActionErrors(['primary_unit']);
+            ->assertHasActionErrors(['primary_unit']);
     }
 
     public function testItDoesntCreateAGuestIfPrimaryUnitTooShort()
     {
         Livewire::test(ManageUnitDiscreteSquawkRangeGuests::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'primary_unit' => '',
                     'guest_unit' => 'LTC',
                 ]
             )
-            ->assertHasPageActionErrors(['primary_unit']);
+            ->assertHasActionErrors(['primary_unit']);
     }
 
     public function testItDoesntCreateAGuestIfPrimaryUnitTooLong()
     {
         Livewire::test(ManageUnitDiscreteSquawkRangeGuests::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'primary_unit' => Str::padLeft('', 256, 'a'),
                     'guest_unit' => 'LTC',
                 ]
             )
-            ->assertHasPageActionErrors(['primary_unit']);
+            ->assertHasActionErrors(['primary_unit']);
     }
 
     public function testItDoesntCreateAGuestIfGuestUnitEmpty()
     {
         Livewire::test(ManageUnitDiscreteSquawkRangeGuests::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'primary_unit' => 'LON',
                 ]
             )
-            ->assertHasPageActionErrors(['guest_unit']);
+            ->assertHasActionErrors(['guest_unit']);
     }
 
     public function testItDoesntCreateAGuestIfGuestUnitTooShort()
     {
         Livewire::test(ManageUnitDiscreteSquawkRangeGuests::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'primary_unit' => 'LON',
                     'guest_unit' => 'LT',
                 ]
             )
-            ->assertHasPageActionErrors(['guest_unit']);
+            ->assertHasActionErrors(['guest_unit']);
     }
 
     public function testItDoesntCreateAGuestIfGuestUnitTooLong()
     {
         Livewire::test(ManageUnitDiscreteSquawkRangeGuests::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'primary_unit' => 'LON',
                     'guest_unit' => Str::padRight('', 256, 'a'),
                 ]
             )
-            ->assertHasPageActionErrors(['guest_unit']);
+            ->assertHasActionErrors(['guest_unit']);
     }
 
     public function testItEditsASquawkRangeGuest()
@@ -227,7 +227,7 @@ class UnitDiscreteSquawkRangeGuestResourceTest extends BaseFilamentTestCase
         return ['Unit Discrete Squawk Range Guests'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return UnitDiscreteSquawkRangeGuestResource::class;
     }

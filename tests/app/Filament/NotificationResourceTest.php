@@ -626,7 +626,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ->assertHasTableActionErrors(['controllers']);
     }
 
-    protected function getResourceClass(): string
+    protected static function resourceClass(): string
     {
         return NotificationResource::class;
     }
@@ -715,10 +715,5 @@ class NotificationResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Notification::findOrFail(1);
-    }
-
-    protected function resourceClass(): string
-    {
-        return NotificationResource::class;
     }
 }

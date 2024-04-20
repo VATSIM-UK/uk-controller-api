@@ -12,6 +12,7 @@ use App\Services\ControllerPositionHierarchyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
+use App\Filament\Resources\PrenoteResource\Pages\EditPrenote;
 
 class PrenoteResourceTest extends BaseFilamentTestCase
 {
@@ -96,7 +97,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )->assertCanSeeTableRecords([1, 2]);
     }
 
@@ -104,7 +105,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('attach', data: ['recordId' => 3])
             ->assertHasNoTableActionErrors();
@@ -126,7 +127,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('attach', data: ['recordId' => 3, 'insert_after' => 1])
             ->assertHasNoTableActionErrors();
@@ -157,7 +158,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -188,7 +189,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(4))
             ->assertHasNoTableActionErrors();
@@ -219,7 +220,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -251,7 +252,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(1))
             ->assertHasNoTableActionErrors();
@@ -283,7 +284,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -315,7 +316,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             PrenoteResource\RelationManagers\ControllersRelationManager::class,
-            ['ownerRecord' => Prenote::findOrFail(1)]
+            ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(4))
             ->assertHasNoTableActionErrors();
@@ -334,7 +335,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
         );
     }
 
-    protected function getResourceClass(): string
+    protected static function resourceClass(): string
     {
         return PrenoteResource::class;
     }
@@ -425,10 +426,5 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Prenote::findOrFail(1);
-    }
-
-    protected function resourceClass(): string
-    {
-        return PrenoteResource::class;
     }
 }

@@ -18,7 +18,7 @@ class UnitConspicuitySquawkCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRange()
     {
         Livewire::test(ManageUnitConspicuitySquawkCodes::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '1234',
@@ -39,7 +39,7 @@ class UnitConspicuitySquawkCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRangeWithRules()
     {
         Livewire::test(ManageUnitConspicuitySquawkCodes::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '1234',
@@ -71,64 +71,64 @@ class UnitConspicuitySquawkCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateARangeIfCodeInvalid()
     {
         Livewire::test(ManageUnitConspicuitySquawkCodes::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '123a',
                     'unit' => 'EGKK',
                 ]
             )
-            ->assertHasPageActionErrors(['code']);
+            ->assertHasActionErrors(['code']);
     }
 
     public function testItDoesntCreateARangeIfCodeMissing()
     {
         Livewire::test(ManageUnitConspicuitySquawkCodes::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'unit' => 'EGKK',
                 ]
             )
-            ->assertHasPageActionErrors(['code']);
+            ->assertHasActionErrors(['code']);
     }
 
     public function testItDoesntCreateARangeIfUnitEmpty()
     {
         Livewire::test(ManageUnitConspicuitySquawkCodes::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '1234',
                 ]
             )
-            ->assertHasPageActionErrors(['unit']);
+            ->assertHasActionErrors(['unit']);
     }
 
     public function testItDoesntCreateARangeIfUnitTooShort()
     {
         Livewire::test(ManageUnitConspicuitySquawkCodes::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '1234',
                     'unit' => '',
                 ]
             )
-            ->assertHasPageActionErrors(['unit']);
+            ->assertHasActionErrors(['unit']);
     }
 
     public function testItDoesntCreateARangeIfUnitTooLong()
     {
         Livewire::test(ManageUnitConspicuitySquawkCodes::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '1234',
                     'unit' => Str::padRight('', 256, 'a'),
                 ]
             )
-            ->assertHasPageActionErrors(['unit']);
+            ->assertHasActionErrors(['unit']);
     }
 
     public function testItLoadsARangeWithRulesForEdit()
@@ -280,7 +280,7 @@ class UnitConspicuitySquawkCodeResourceTest extends BaseFilamentTestCase
         return ['Unit Conspicuity Squawk Codes'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return UnitConspicuitySquawkCodeResource::class;
     }

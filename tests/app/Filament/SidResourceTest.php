@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
+use App\Filament\Resources\SidResource\Pages\EditSid;
 
 class SidResourceTest extends BaseFilamentTestCase
 {
@@ -398,7 +399,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
         Livewire::test(
             PrenotesRelationManager::class,
-            ['ownerRecord' => Sid::findOrFail(1)]
+            ['ownerRecord' => Sid::findOrFail(1), 'pageClass' => EditSid::class]
         )
             ->assertCanSeeTableRecords([$rowToExpect]);
     }
@@ -407,7 +408,7 @@ class SidResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             PrenotesRelationManager::class,
-            ['ownerRecord' => Sid::findOrFail(1)]
+            ['ownerRecord' => Sid::findOrFail(1), 'pageClass' => EditSid::class]
         )
             ->callTableAction('attach', data: ['recordId' => 2, 'priority' => 100])
             ->assertHasNoTableActionErrors();
@@ -433,7 +434,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
         Livewire::test(
             PrenotesRelationManager::class,
-            ['ownerRecord' => Sid::findOrFail(1)]
+            ['ownerRecord' => Sid::findOrFail(1), 'pageClass' => EditSid::class]
         )
             ->callTableAction('detach', $prenote4)
             ->assertHasNoTableActionErrors();
@@ -444,7 +445,7 @@ class SidResourceTest extends BaseFilamentTestCase
         );
     }
 
-    protected function getResourceClass(): string
+    protected static function resourceClass(): string
     {
         return SidResource::class;
     }
@@ -533,10 +534,5 @@ class SidResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return Sid::find(1);
-    }
-
-    protected function resourceClass(): string
-    {
-        return SidResource::class;
     }
 }

@@ -100,4 +100,9 @@ class UserResource extends Resource
     {
         return 'users';
     }
+
+    protected static function resourceClass(): string
+    {
+        return UserResource::class;
+    }
 }

@@ -37,7 +37,7 @@ class DependencyResourceTest extends BaseFilamentTestCase
         return ['Dependencies', 'DEPENDENCY_ONE', 'DEPENDENCY_TWO'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return DependencyResource::class;
     }

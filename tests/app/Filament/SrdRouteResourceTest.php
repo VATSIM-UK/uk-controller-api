@@ -76,7 +76,7 @@ class SrdRouteResourceTest extends BaseFilamentTestCase
         return SrdRoute::findOrFail(1);
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return SrdRouteResource::class;
     }

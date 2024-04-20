@@ -570,8 +570,8 @@ class AirlineResourceTest extends BaseFilamentTestCase
     public function testAirlinesCanBeDeletedFromTheEditPage()
     {
         Livewire::test(EditAirline::class, ['record' => 1])
-            ->callPageAction('delete')
-            ->assertHasNoPageActionErrors();
+            ->callAction('delete')
+            ->assertHasNoActionErrors();
 
         $this->assertDatabaseMissing(
             'airlines',
@@ -588,7 +588,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(ListAirlines::class)
             ->callTableAction('delete', 1)
-            ->assertHasNoPageActionErrors();
+            ->assertHasNoActionErrors();
 
         $this->assertDatabaseMissing(
             'airlines',
@@ -1041,7 +1041,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
         return $this->getEditRecord();
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return AirlineResource::class;
     }

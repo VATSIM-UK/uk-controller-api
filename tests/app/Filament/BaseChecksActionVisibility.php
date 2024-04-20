@@ -6,8 +6,8 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Filament\Resources\Pages\ManageRecords;
+use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
-use Livewire\Testing\TestableLivewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 trait BaseChecksActionVisibility
@@ -176,11 +176,11 @@ trait BaseChecksActionVisibility
                             $checkToPerform = in_array(
                                 $role,
                                 $rolesThatCanPerformAction
-                            ) ? 'assertPageActionVisible'
+                            ) ? 'assertActionVisible'
                                 : (
                                     get_parent_class(
                                         static::resourceListingClass()
-                                    ) === ManageRecords::class ? 'assertPageActionDoesNotExist' : 'assertPageActionHidden');
+                                    ) === ManageRecords::class ? 'assertActionDoesNotExist' : 'assertActionHidden');
 
                             $livewire->$checkToPerform($action);
                         },
@@ -193,7 +193,7 @@ trait BaseChecksActionVisibility
     }
 
     private static function assertTableActionVisibility(
-        TestableLivewire $livewire,
+        Testable $livewire,
         string $recordClass,
         string $recordId,
         string $action,
@@ -219,6 +219,7 @@ trait BaseChecksActionVisibility
                 $ownerRecordClass . '::findOrFail',
                 $ownerRecordId
             ),
+            'pageClass' => call_user_func(static::resourceClass() . '::getPages')['edit']->getPage(),
         ];
     }
 

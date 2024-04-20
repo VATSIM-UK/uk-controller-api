@@ -17,7 +17,7 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRange()
     {
         Livewire::test(ManageOrcamSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -40,7 +40,7 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateARangeIfFirstInvalid()
     {
         Livewire::test(ManageOrcamSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '123a',
@@ -48,13 +48,13 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
                     'origin' => 'EG',
                 ]
             )
-            ->assertHasPageActionErrors(['first']);
+            ->assertHasActionErrors(['first']);
     }
 
     public function testItDoesntCreateARangeIfLastInvalid()
     {
         Livewire::test(ManageOrcamSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -62,26 +62,26 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
                     'origin' => 'EG',
                 ]
             )
-            ->assertHasPageActionErrors(['last']);
+            ->assertHasActionErrors(['last']);
     }
 
     public function testItDoesntCreateARangeIfOriginMissing()
     {
         Livewire::test(ManageOrcamSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
                     'last' => '2345',
                 ]
             )
-            ->assertHasPageActionErrors(['origin']);
+            ->assertHasActionErrors(['origin']);
     }
 
     public function testItDoesntCreateARangeIfOriginInvalid()
     {
         Livewire::test(ManageOrcamSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -89,7 +89,7 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
                     'origin' => 'EGA,',
                 ]
             )
-            ->assertHasPageActionErrors(['origin']);
+            ->assertHasActionErrors(['origin']);
     }
 
     public function testItEditsASquawkRange()
@@ -186,7 +186,7 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
         return ['Orcam Squawk Ranges', '0101', '0101', 'KJ'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return OrcamSquawkRangeResource::class;
     }
