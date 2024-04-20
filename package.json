@@ -38,7 +38,7 @@
     "watch-poll": "vite watch -- --watch-options-poll=1000",
     "hot": "vite watch --hot",
     "prod": "yarn run production",
-    "production": "vite --production",
+    "production": "vite build",
     "commit": "cz"
   },
   "repository": {
