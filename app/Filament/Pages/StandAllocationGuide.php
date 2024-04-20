@@ -16,7 +16,7 @@ class StandAllocationGuide extends Page
 
     protected static ?string $slug = 'stand-allocation';
 
-    protected function getHeader(): View
+    public function getHeader(): View
     {
         return view('empty');
     }

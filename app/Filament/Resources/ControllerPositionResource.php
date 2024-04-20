@@ -7,9 +7,9 @@ use App\Models\Controller\ControllerPosition;
 use App\Rules\Controller\ControllerPositionCallsign;
 use App\Rules\Controller\ControllerPositionFrequency;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class ControllerPositionResource extends Resource

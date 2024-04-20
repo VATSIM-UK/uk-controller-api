@@ -13,9 +13,9 @@ use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -28,7 +28,7 @@ class StandAssignmentsHistoryResource extends Resource
 
     protected static ?string $model = StandAssignmentsHistory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Stand Assignment History';
     protected static ?string $label = 'Stand Assignment History';
 
@@ -58,7 +58,7 @@ class StandAssignmentsHistoryResource extends Resource
         );
     }
 
-    protected static function shouldRegisterNavigation(): bool
+    public static function shouldRegisterNavigation(): bool
     {
         return self::userCanAccess();
     }
@@ -121,11 +121,11 @@ class StandAssignmentsHistoryResource extends Resource
                             ->label('Airfield'),
                         Select::make('stand')
                             ->options(
-                                fn (Closure $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield')))
+                                fn (\Filament\Forms\Get $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield')))
                             )
                             ->searchable()
                             ->label('Stand')
-                            ->hidden(fn (Closure $get) => !$get('airfield')),
+                            ->hidden(fn (\Filament\Forms\Get $get) => !$get('airfield')),
                     ])
                     ->indicateUsing(function (array $data) {
                         if (isset($data['stand'])) {

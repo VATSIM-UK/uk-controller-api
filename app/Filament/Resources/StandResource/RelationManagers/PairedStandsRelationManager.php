@@ -7,7 +7,7 @@ use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
@@ -28,7 +28,7 @@ class PairedStandsRelationManager extends RelationManager
         return self::translateTablePath('description');
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         $attachAction = Tables\Actions\AttachAction::make('pair-stand');
         $detachAction = Tables\Actions\DetachAction::make('unpair-stand');

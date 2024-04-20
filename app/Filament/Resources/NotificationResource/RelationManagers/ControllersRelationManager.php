@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -24,7 +24,7 @@ class ControllersRelationManager extends RelationManager
     protected static string $relationship = 'controllers';
     protected static ?string $recordTitleAttribute = 'callsign';
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -45,7 +45,7 @@ class ControllersRelationManager extends RelationManager
                             ->label(self::translateTablePath('attach_form.global.label'))
                             ->helperText(self::translateTablePath('attach_form.global.helper'))
                             ->reactive()
-                            ->afterStateUpdated(function (Closure $set) {
+                            ->afterStateUpdated(function (\Filament\Forms\Set $set) {
                                 $set('controllers', null);
                             }),
                         Forms\Components\MultiSelect::make('position_level')
@@ -59,7 +59,7 @@ class ControllersRelationManager extends RelationManager
                                 ]
                             )
                             ->reactive()
-                            ->hidden(fn (Closure $get) => $get('global')),
+                            ->hidden(fn (\Filament\Forms\Get $get) => $get('global')),
                         Forms\Components\MultiSelect::make('controllers')
                             ->searchable()
                             ->options(
@@ -74,8 +74,8 @@ class ControllersRelationManager extends RelationManager
                                         ) => [$controllerPosition->id => $controllerPosition->callsign]
                                     )
                             )
-                            ->hidden(fn (Closure $get) => $get('global') || $get('position_level'))
-                            ->required(fn (Closure $get) => !$get('global') && !$get('position_level')),
+                            ->hidden(fn (\Filament\Forms\Get $get) => $get('global') || $get('position_level'))
+                            ->required(fn (\Filament\Forms\Get $get) => !$get('global') && !$get('position_level')),
                     ])
                     ->using(function (ControllersRelationManager $livewire, array $data) {
                         DB::transaction(function () use ($livewire, $data) {

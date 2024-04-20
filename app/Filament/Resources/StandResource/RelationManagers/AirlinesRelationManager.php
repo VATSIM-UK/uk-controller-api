@@ -6,7 +6,7 @@ use App\Filament\Helpers\PairsAirlinesWithStands;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class AirlinesRelationManager extends RelationManager
@@ -26,7 +26,7 @@ class AirlinesRelationManager extends RelationManager
         return self::translateTablePath('description');
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

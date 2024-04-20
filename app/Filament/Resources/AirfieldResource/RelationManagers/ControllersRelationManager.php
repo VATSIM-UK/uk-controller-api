@@ -19,7 +19,7 @@ class ControllersRelationManager extends AbstractControllersRelationManager
         return self::translateTablePath('table.description');
     }
 
-    public static function getTitle(): string
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return self::translateTablePath('table.title');
     }

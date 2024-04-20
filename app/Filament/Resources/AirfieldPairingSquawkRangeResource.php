@@ -7,9 +7,9 @@ use App\Filament\Resources\AirfieldPairingSquawkRangeResource\Pages;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class AirfieldPairingSquawkRangeResource extends Resource

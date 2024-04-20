@@ -8,7 +8,7 @@ use App\Models\Aircraft\WakeCategory;
 use App\Models\Aircraft\WakeCategoryScheme;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +22,7 @@ class WakeCategoriesRelationManager extends RelationManager
     protected static ?string $inverseRelationship = 'aircraft';
     protected static ?string $recordTitleAttribute = 'description';
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

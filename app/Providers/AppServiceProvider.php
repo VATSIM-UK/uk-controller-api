@@ -60,7 +60,6 @@ class AppServiceProvider extends ServiceProvider
 
         // Filament styling
         Filament::serving(function () {
-            Filament::registerTheme(mix('css/vatukfilament.css'));
             Filament::registerNavigationGroups(
                 [
                     'Preferences',

@@ -8,7 +8,7 @@ use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
 use Filament\Tables\Actions\EditAction;
@@ -31,7 +31,7 @@ class TerminalsRelationManager extends RelationManager
         return self::translateTablePath('description');
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

@@ -6,7 +6,7 @@ use App\Filament\Resources\DependencyResource\Pages;
 use App\Models\Dependency\Dependency;
 use App\Services\DependencyService;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 
@@ -16,7 +16,7 @@ class DependencyResource extends Resource
 
     protected static ?string $model = Dependency::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Plugin';
 
     public static function table(Table $table): Table
@@ -45,7 +45,7 @@ class DependencyResource extends Resource
                             )
                     )
                     ->tooltip(self::translateTablePath('actions.download.tooltip'))
-                    ->icon('heroicon-s-download')
+                    ->icon('heroicon-m-arrow-down-tray')
                     ->color('primary'),
             ]);
     }

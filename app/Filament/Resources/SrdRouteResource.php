@@ -7,9 +7,9 @@ use App\Filament\Resources\SrdRouteResource\RelationManagers\NotesRelationManage
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
