@@ -70,8 +70,8 @@ class AdminPanelProvider extends PanelProvider
                 'success' => Color::Green,
                 'warning' => Color::Amber,
             ])
-            ->darkModeBrandLogo('/images/logo-bright.png')
-            ->brandLogo('/images/logo-dark.png')
+            ->darkModeBrandLogo(asset('images/logo-bright.png'))
+            ->brandLogo(asset('images/logo-dark.png'))
             ->defaultThemeMode(ThemeMode::Dark)
             ->favicon(asset('images/favicon.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
