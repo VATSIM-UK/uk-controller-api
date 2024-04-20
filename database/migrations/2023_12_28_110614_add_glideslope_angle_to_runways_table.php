@@ -11,7 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('runways', function (Blueprint $table) {
-            $table->unsignedDouble('glideslope_angle')
+            $table->double('glideslope_angle')
+                ->unsigned()
                 ->after('heading');
         });
     }
