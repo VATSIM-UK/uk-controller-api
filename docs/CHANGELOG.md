@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.59.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.58.2...6.59.0) (2024-04-20)
+
+
+### Features
+
+* clear arrival stands more aggressively after disconnect ([19e7b82](https://github.com/VATSIM-UK/uk-controller-api/commit/19e7b82a9bfe904ab3f22330e04073dc2ae09259))
+* remove departure stands after 5 minutes disconnected ([e16fb89](https://github.com/VATSIM-UK/uk-controller-api/commit/e16fb89495708df239d3829e265c54a8288c7715))
+
 ## [6.58.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.58.1...6.58.2) (2024-04-15)
 
 
