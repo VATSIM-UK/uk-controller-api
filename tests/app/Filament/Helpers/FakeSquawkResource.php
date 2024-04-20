@@ -3,7 +3,7 @@
 namespace App\Filament\Helpers;
 
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
 
 class FakeSquawkResource extends Resource

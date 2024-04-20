@@ -15,6 +15,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentColor;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -27,7 +28,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 class AdminPanelProvider extends PanelProvider
 {
     private const VATSIM_UK_DARK_BLUE = [
-        'DEFAULT' => '#17375E',
         50 => '#3378cd',
         100 => '#2c6ab6',
         200 => '#265d9f',
@@ -37,11 +37,10 @@ class AdminPanelProvider extends PanelProvider
         600 => '#022b50',
         700 => '#001f43',
         800 => '#001436',
-        900 => '#000000'
+        900 => '#000000',
     ];
 
     private const VATSIM_UK_LIGHT_BLUE = [
-        'DEFAULT' => '#25ADE3',
         50 => '#8dd8f6',
         100 => '#78cdf1',
         200 => '#62c3ec',
@@ -51,7 +50,7 @@ class AdminPanelProvider extends PanelProvider
         600 => '#007aab',
         700 => '#005888',
         800 => '#00325e',
-        900 => '#000000'
+        900 => '#000000',
     ];
 
     public function panel(Panel $panel): Panel
