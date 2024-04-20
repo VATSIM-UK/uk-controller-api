@@ -19,6 +19,17 @@ class ArrivalAllocationService
      */
     private const ASSIGN_STAND_MINUTES_BEFORE = 15.0;
 
+    /**
+     * How many minutes before we remove the stand assignment for an aircraft that has disconnected.
+     */
+    private const DISCONNECTED_AIRCRAFT_TIMEOUT_MINUTES = 5;
+
+    /**
+     * How many minutes before we remove the stand assignment for an aircraft
+     * that has disconnected but is occupying the stand.
+     */
+    private const DISCONNECTED_AIRCRAFT_OCCUPIED_TIMEOUT_MINUTES = 2;
+
     private readonly StandAssignmentsService $assignmentsService;
 
     /**
@@ -186,5 +197,35 @@ class ArrivalAllocationService
         }
 
         return $recommendations->toArray();
+    }
+
+    public function removeArrivalStandsFromDisconnectedAircraft(): void
+    {
+        // First of all, remove any arrival stands from aircraft that have been disconnected for more than 5 minutes
+        StandAssignment::join('network_aircraft', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
+            ->join('stands', 'stands.id', '=', 'stand_assignments.stand_id')
+            ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
+            ->whereRaw('airfield.code = network_aircraft.planned_destairport')
+            ->where('network_aircraft.updated_at', '<', now()->subMinutes(self::DISCONNECTED_AIRCRAFT_TIMEOUT_MINUTES))
+            ->select('stand_assignments.*')
+            ->get()
+            ->each(function (StandAssignment $standAssignment) {
+                $this->assignmentsService->deleteStandAssignment($standAssignment);
+            });
+
+        // Now remove any arrival stands from aircraft that have been disconnected for more than 2 minutes
+        // But they actually arrived on the stand and are occupying it
+        StandAssignment::join('network_aircraft', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
+            ->join('stands', 'stands.id', '=', 'stand_assignments.stand_id')
+            ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
+            ->join('aircraft_stand', 'aircraft_stand.callsign', '=', 'stand_assignments.callsign')
+            ->whereRaw('airfield.code = network_aircraft.planned_destairport')
+            ->where('network_aircraft.updated_at', '<', now()->subMinutes(self::DISCONNECTED_AIRCRAFT_OCCUPIED_TIMEOUT_MINUTES))
+            ->whereRaw('aircraft_stand.stand_id = stand_assignments.stand_id')
+            ->select('stand_assignments.*')
+            ->get()
+            ->each(function (StandAssignment $standAssignment) {
+                $this->assignmentsService->deleteStandAssignment($standAssignment);
+            });
     }
 }
