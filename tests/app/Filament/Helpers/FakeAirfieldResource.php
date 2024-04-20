@@ -3,7 +3,7 @@
 namespace App\Filament\Helpers;
 
 use App\Models\Airfield\Airfield;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
 
 class FakeAirfieldResource extends Resource
