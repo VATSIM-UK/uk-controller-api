@@ -200,6 +200,7 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                 [
                     'first' => '3456',
                     'last' => '4567',
+                    'origin' => '',
                     'destination' => 'EGLL',
                 ]
             )
@@ -232,6 +233,7 @@ class AirfieldPairingSquawkRangeResourceTest extends BaseFilamentTestCase
                     'first' => '3456',
                     'last' => '4567',
                     'origin' => 'EGLL',
+                    'destination' => '',
                 ]
             )
             ->assertHasTableActionErrors(['destination']);

@@ -63,6 +63,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_point' => 'BOO',
                     'exit_direction_start' => 123,
                     'exit_direction_end' => 345,
+                    'internal' => null,
                 ]
             )
             ->assertHasActionErrors(['internal']);
@@ -208,6 +209,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'internal' => true,
                     'exit_direction_start' => 123,
                     'exit_direction_end' => 345,
+                    'exit_point' => null,
                 ]
             )
             ->assertHasTableActionErrors(['exit_point']);
@@ -223,6 +225,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_point' => 'TEST',
                     'exit_direction_start' => 123,
                     'exit_direction_end' => 345,
+                    'internal' => null,
                 ]
             )
             ->assertHasTableActionErrors(['internal']);
@@ -254,6 +257,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_point' => 'BOO',
                     'internal' => true,
                     'exit_direction_end' => 345,
+                    'exit_direction_start' => null,
                 ]
             )
             ->assertHasTableActionErrors(['exit_direction_start']);
@@ -302,6 +306,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_point' => 'BOO',
                     'internal' => true,
                     'exit_direction_start' => 123,
+                    'exit_direction_end' => null,
                 ]
             )
             ->assertHasTableActionErrors(['exit_direction_end']);

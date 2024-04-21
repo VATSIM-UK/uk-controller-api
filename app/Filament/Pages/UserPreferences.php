@@ -7,10 +7,12 @@ use App\Models\User\User;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 
-class UserPreferences extends Page
+class UserPreferences extends Page implements HasForms
 {
     use InteractsWithForms;
     use TranslatesStrings;
@@ -23,20 +25,18 @@ class UserPreferences extends Page
 
     protected static string $view = 'filament.pages.user-preferences';
 
-    protected User $user;
+    public ?array $data = [];
 
-    public function mount(): void
+    public function mount(User $user): void
     {
-        $this->form->fill([
-            'send_stand_acars_messages' => $this->user->send_stand_acars_messages,
-            'stand_acars_messages_uncontrolled_airfield' => $this->user->stand_acars_messages_uncontrolled_airfield,
-        ]);
+        $this->form->fill(Auth::user()->toArray());
     }
-
-    protected function getFormSchema(): array
+    
+    public function form(Form $form): Form
     {
-        return [
+        return $form->schema([
             Fieldset::make('stand_acars')
+                ->model(fn() => Auth::user())
                 ->label(self::translateFormPath('user_preferences.acars_heading.label'))
                 ->schema([
                     Toggle::make('send_stand_acars_messages')
@@ -54,22 +54,11 @@ class UserPreferences extends Page
                             $this->submit();
                         }),
                 ]),
-        ];
+        ])->statePath('data');
     }
-
-    public function submit(): void
-    {
-        $this->getFormModel()->update($this->form->getState());
-    }
-
-    protected function getFormModel(): User
-    {
-        return tap(
-            Auth::user(),
-            function (User $user) {
-                $this->user = $user;
-            }
-        );
+    
+    protected function submit() : void {
+        Auth::user()->update($this->form->getState());
     }
 
     protected static function translationPathRoot(): string

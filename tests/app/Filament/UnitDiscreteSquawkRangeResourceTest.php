@@ -7,6 +7,7 @@ use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Pages\ManageUnitDiscreteSquawkRanges;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 

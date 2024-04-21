@@ -78,8 +78,8 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ->assertSet('data.title', $notification->title)
             ->assertSet('data.body', $notification->body)
             ->assertSet('data.link', $notification->link)
-            ->assertSet('data.valid_from', $notification->valid_from)
-            ->assertSet('data.valid_to', $notification->valid_to);
+            ->assertSet('data.valid_from', $notification->valid_from->format('Y-m-d H:i'))
+            ->assertSet('data.valid_to', $notification->valid_to->format('Y-m-d H:i'));
     }
 
     public function testViewingTheNotificationMarksItAsReadByTheUser()
@@ -201,8 +201,8 @@ class NotificationResourceTest extends BaseFilamentTestCase
             ->assertSet('data.title', $notification->title)
             ->assertSet('data.body', $notification->body)
             ->assertSet('data.link', $notification->link)
-            ->assertSet('data.valid_from', $notification->valid_from)
-            ->assertSet('data.valid_to', $notification->valid_to);
+            ->assertSet('data.valid_from', $notification->valid_from->format('Y-m-d H:i'))
+            ->assertSet('data.valid_to', $notification->valid_to->format('Y-m-d H:i'));
     }
 
     public function testItEditsANotification()
@@ -321,7 +321,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         $notification = Notification::factory()->create();
         $notification->controllers()->sync([1, 2]);
 
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->assertCountTableRecords(2)
             ->assertCanSeeTableRecords([ControllerPosition::find(1), ControllerPosition::find(2)])
             ->assertHasNoTableActionErrors();
@@ -330,9 +330,10 @@ class NotificationResourceTest extends BaseFilamentTestCase
     public function testItAddsAllControllersIfGlobalSelected()
     {
         $notification = Notification::factory()->create();
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->callTableAction(
                 AttachAction::class,
+                null,
             data: [
                     'global' => true,
                 ],
@@ -377,7 +378,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         $notification = Notification::factory()->create();
         $notification->controllers()->sync([1, 2]);
 
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->callTableAction(
                 AttachAction::class,
             data: [
@@ -422,7 +423,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
     public function testItAddsAllControllersByPositionLevel()
     {
         $notification = Notification::factory()->create();
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->callTableAction(
                 AttachAction::class,
             data: [
@@ -469,7 +470,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         $notification = Notification::factory()->create();
         $notification->controllers()->sync([1, 2]);
 
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->callTableAction(
                 AttachAction::class,
             data: [
@@ -514,7 +515,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
     public function testItAddsControllers()
     {
         $notification = Notification::factory()->create();
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->callTableAction(
                 AttachAction::class,
             data: [
@@ -565,7 +566,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         $notification = Notification::factory()->create();
         $notification->controllers()->sync([2]);
 
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->callTableAction(
                 AttachAction::class,
             data: [
@@ -615,7 +616,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
     {
         $notification = Notification::factory()->create();
 
-        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification])
+        Livewire::test(ControllersRelationManager::class, ['ownerRecord' => $notification, 'pageClass' => EditNotification::class])
             ->callTableAction(
                 AttachAction::class,
             data: [

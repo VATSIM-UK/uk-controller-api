@@ -2,6 +2,7 @@
 
 namespace App\Filament;
 
+use App\Filament\AccessCheckingHelpers\HasResourceClass;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
@@ -12,6 +13,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 trait BaseChecksActionVisibility
 {
+    use HasResourceClass;
+
     #[DataProvider('tableActionProvider')]
     public function testItControlsActionVisibility(
         callable $testCase,
@@ -177,10 +180,7 @@ trait BaseChecksActionVisibility
                                 $role,
                                 $rolesThatCanPerformAction
                             ) ? 'assertActionVisible'
-                                : (
-                                    get_parent_class(
-                                        static::resourceListingClass()
-                                    ) === ManageRecords::class ? 'assertActionDoesNotExist' : 'assertActionHidden');
+                                : 'assertActionHidden';
 
                             $livewire->$checkToPerform($action);
                         },

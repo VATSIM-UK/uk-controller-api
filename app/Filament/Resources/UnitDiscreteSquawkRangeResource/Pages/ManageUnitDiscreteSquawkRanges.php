@@ -6,6 +6,7 @@ use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Traits\MutatesRuleData;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Actions\CreateAction;
 
 class ManageUnitDiscreteSquawkRanges extends ManageRecords
 {
@@ -14,8 +15,11 @@ class ManageUnitDiscreteSquawkRanges extends ManageRecords
 
     protected static string $resource = UnitDiscreteSquawkRangeResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
+    protected function getHeaderActions(): array
     {
-        return self::mutateFormData()($data);
+        return [
+            CreateAction::make()
+                ->mutateFormDataUsing(fn (array $data) => self::mutateFormData()($data)),
+        ];
     }
 }

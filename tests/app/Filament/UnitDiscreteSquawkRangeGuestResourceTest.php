@@ -142,6 +142,7 @@ class UnitDiscreteSquawkRangeGuestResourceTest extends BaseFilamentTestCase
                 'edit',
                 UnitDiscreteSquawkRangeGuest::findOrFail(1),
                 [
+                    'primary_unit' => '',
                     'guest_unit' => 'LTC',
                 ]
             )
@@ -184,6 +185,7 @@ class UnitDiscreteSquawkRangeGuestResourceTest extends BaseFilamentTestCase
                 UnitDiscreteSquawkRangeGuest::findOrFail(1),
                 [
                     'primary_unit' => 'LON',
+                    'guest_unit' => '',
                 ]
             )
             ->assertHasTableActionErrors(['guest_unit']);

@@ -7,6 +7,7 @@ use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
 use App\Filament\Resources\SrdRouteResource;
 use App\Filament\Resources\SrdRouteResource\Pages\ListSrdRoutes;
+use App\Filament\Resources\SrdRouteResource\Pages\ViewSrdRoute;
 use App\Filament\Resources\SrdRouteResource\RelationManagers\NotesRelationManager;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
@@ -56,7 +57,7 @@ class SrdRouteResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             NotesRelationManager::class,
-            ['ownerRecord' => SrdRoute::findOrFail(5)]
+            ['ownerRecord' => SrdRoute::findOrFail(5), 'pageClass' => ViewSrdRoute::class]
         )
             ->assertCanSeeTableRecords([SrdNote::find(1), SrdNote::find(2), SrdNote::find(3)]);
     }

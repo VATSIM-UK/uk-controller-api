@@ -87,6 +87,7 @@ class UnitConspicuitySquawkCodeResourceTest extends BaseFilamentTestCase
             ->callAction(
                 'create',
                 [
+                    'code' => null,
                     'unit' => 'EGKK',
                 ]
             )

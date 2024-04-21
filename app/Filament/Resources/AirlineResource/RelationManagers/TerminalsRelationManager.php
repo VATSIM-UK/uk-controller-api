@@ -35,7 +35,7 @@ class TerminalsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('terminal')
+                TextColumn::make('terminal_id')
                     ->formatStateUsing(
                         fn (Terminal $record) => sprintf('%s / %s', $record->airfield->code, $record->description)
                     )

@@ -25,6 +25,7 @@ class FakeAirfieldResource extends Resource
     public static function getPages(): array
     {
         return [
+            'index' => ListFakeAirfield::route('/'),
             'create' => CreateFakeAirfield::route('/create'),
         ];
     }

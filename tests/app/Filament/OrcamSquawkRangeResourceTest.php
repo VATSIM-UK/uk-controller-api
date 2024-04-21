@@ -156,6 +156,7 @@ class OrcamSquawkRangeResourceTest extends BaseFilamentTestCase
                 [
                     'first' => '3456',
                     'last' => '4567',
+                    'origin' => null,
                 ]
             )
             ->assertHasTableActionErrors(['origin']);

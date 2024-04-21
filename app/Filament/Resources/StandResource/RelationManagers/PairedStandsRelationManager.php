@@ -49,7 +49,8 @@ class PairedStandsRelationManager extends RelationManager
                     Select::make('recordId')
                         ->required()
                         ->options(
-                            $attachAction->getRelationship()
+                            $attachAction->getTable()
+                                ->getRelationship()
                                 ->getRelated()
                                 ->newModelQuery()
                                 ->where('airfield_id', $attachAction->getRelationship()->getParent()->airfield_id)

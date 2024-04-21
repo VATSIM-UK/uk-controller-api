@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
@@ -77,6 +78,13 @@ class ControllersRelationManager extends RelationManager
                             ->hidden(fn (\Filament\Forms\Get $get) => $get('global') || $get('position_level'))
                             ->required(fn (\Filament\Forms\Get $get) => !$get('global') && !$get('position_level')),
                     ])
+                    ->action(function (AttachAction $action) {
+                        $action->process(
+                            function() {
+                            }
+                        );
+                        $action->success();
+                    })
                     ->using(function (ControllersRelationManager $livewire, array $data) {
                         DB::transaction(function () use ($livewire, $data) {
                             $positionsToInsert = self::controllersForNotification($data)

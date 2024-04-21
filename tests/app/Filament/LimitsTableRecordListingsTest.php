@@ -12,7 +12,7 @@ class LimitsTableRecordListingsTest extends BaseUnitTestCase
     {
         $testCases = [];
         foreach (Filament::getResources() as $resource) {
-            $testCases[$resource] = call_user_func($resource . '::getPages')['index']['class'];
+            $testCases[$resource] = call_user_func($resource . '::getPages')['index']->getPage();
 
             foreach (call_user_func($resource . '::getRelations') as $resourceManager) {
                 $testCases[$resourceManager] = $resourceManager;

@@ -182,6 +182,7 @@ class NonAssignableSquawkCodeResourceTest extends BaseFilamentTestCase
                 NonAssignableSquawkCode::findOrFail(1),
                 [
                     'code' => '7231',
+                    'description' => null,
                 ]
             )
             ->assertHasTableActionErrors(['description']);
