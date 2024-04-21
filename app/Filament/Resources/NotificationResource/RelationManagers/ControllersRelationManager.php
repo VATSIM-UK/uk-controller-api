@@ -81,6 +81,7 @@ class ControllersRelationManager extends RelationManager
                     ->action(function (AttachAction $action) {
                         $action->process(
                             function () {
+                                return;
                             }
                         );
                         $action->success();
