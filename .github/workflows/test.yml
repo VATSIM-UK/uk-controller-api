@@ -14,7 +14,7 @@ jobs:
     name: PHP ${{ matrix.php }} / Composer ${{ matrix.composer }}
     runs-on: ubuntu-latest
     concurrency:
-      group: ukcp-api-test-${{ github.ref }}
+      group: ukcp-api-test-${{ github.ref }}-php-${{ matrix.php }}
       cancel-in-progress: true
     continue-on-error: ${{ matrix.experimental }}
     strategy:
