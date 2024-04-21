@@ -2,8 +2,6 @@
 
 namespace App;
 
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
 
 abstract class BaseTestCase extends TestCase
