@@ -80,7 +80,7 @@ class ControllersRelationManager extends RelationManager
                     ])
                     ->action(function (AttachAction $action) {
                         $action->process(
-                            function() {
+                            function () {
                             }
                         );
                         $action->success();

@@ -36,7 +36,7 @@ class UserPreferences extends Page implements HasForms
     {
         return $form->schema([
             Fieldset::make('stand_acars')
-                ->model(fn() => Auth::user())
+                ->model(fn () => Auth::user())
                 ->label(self::translateFormPath('user_preferences.acars_heading.label'))
                 ->schema([
                     Toggle::make('send_stand_acars_messages')
@@ -57,7 +57,8 @@ class UserPreferences extends Page implements HasForms
         ])->statePath('data');
     }
     
-    protected function submit() : void {
+    protected function submit() : void
+    {
         Auth::user()->update($this->form->getState());
     }
 

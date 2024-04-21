@@ -194,7 +194,8 @@ class HoldsRelationManager extends RelationManager
                     ->label(self::translateTablePath('columns.maximum_altitude')),
                 Tables\Columns\TextColumn::make('turn_direction')
                     ->formatStateUsing(
-                        fn (string $state) => Str::ucfirst($state))
+                        fn (string $state) => Str::ucfirst($state)
+                    )
                     ->label(self::translateTablePath('columns.turn_direction')),
                 TextColumn::make('outbound_leg')
                     ->label(self::translateTablePath('columns.outbound_leg'))
