@@ -63,11 +63,8 @@ class SrdRouteResource extends Resource
                 Tables\Columns\TextColumn::make('route_segment')
                     ->label(self::translateTablePath('columns.route_segment'))
                     ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record)),
-                Tables\Columns\TextColumn::make('notes')
+                Tables\Columns\TextColumn::make('notes.id')
                     ->label(self::translateTablePath('columns.notes'))
-                    ->formatStateUsing(
-                        fn (Collection $state): string => $state->map(fn (SrdNote $note) => $note->id)->join(',')
-                    ),
             ])
             ->filters([
                 Tables\Filters\Filter::make('origin')

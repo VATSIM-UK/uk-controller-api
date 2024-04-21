@@ -238,6 +238,7 @@ class UnitConspicuitySquawkCodeResourceTest extends BaseFilamentTestCase
                 UnitConspicuitySquawkCode::findOrFail(1),
                 [
                     'unit' => 'EGKK',
+                    'code' => null,
                 ]
             )
             ->assertHasTableActionErrors(['code']);

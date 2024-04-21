@@ -53,18 +53,18 @@ class PairedStandsRelationManager extends RelationManager
                                 ->getRelationship()
                                 ->getRelated()
                                 ->newModelQuery()
-                                ->where('airfield_id', $attachAction->getRelationship()->getParent()->airfield_id)
-                                ->where('id', '<>', $attachAction->getRelationship()->getParent()->id)
+                                ->where('airfield_id', $attachAction->getTable()->getRelationship()->getParent()->airfield_id)
+                                ->where('id', '<>', $attachAction->getTable()->getRelationship()->getParent()->id)
                                 ->whereDoesntHave('pairedStands', function (Builder $pairedStand) use ($attachAction) {
                                     $pairedStand->where(
                                         'stand_pairs.paired_stand_id',
-                                        $attachAction->getRelationship()->getParent()->id
+                                        $attachAction->getTable()->getRelationship()->getParent()->id
                                     );
                                 })
                                 ->get()
                                 ->mapWithKeys(
                                     fn (Stand $stand) => [
-                                        $stand->{$attachAction->getRelationship()->getRelatedKeyName(
+                                        $stand->{$attachAction->getTable()->getRelationship()->getRelatedKeyName(
                                         )} => $attachAction->getRecordTitle($stand),
                                     ]
                                 )
@@ -76,7 +76,7 @@ class PairedStandsRelationManager extends RelationManager
                 ])
                     ->using(function (array $data) use ($attachAction) {
                         DB::transaction(function () use ($attachAction, $data) {
-                            $stand = $attachAction->getRelationship()->getParent();
+                            $stand = $attachAction->getTable()->getRelationship()->getParent();
                             $pairedStand = Stand::findOrFail($data['recordId']);
                             $stand->pairedStands()->attach($pairedStand, ['stand_id' => $stand->id]);
                             $pairedStand->pairedStands()->attach($stand, ['stand_id' => $pairedStand->id]);
@@ -90,8 +90,8 @@ class PairedStandsRelationManager extends RelationManager
                 $detachAction->using(
                     function (Stand $record) use ($detachAction): void {
                         DB::transaction(function () use ($record, $detachAction) {
-                            $detachAction->getRelationship()->detach($record);
-                            $record->pairedStands()->detach($detachAction->getRelationship()->getParent());
+                            $detachAction->getTable()->getRelationship()->detach($record);
+                            $record->pairedStands()->detach($detachAction->getTable()->getRelationship()->getParent());
                         });
                     }
                 )

@@ -226,21 +226,20 @@ class TerminalResourceTest extends BaseFilamentTestCase
 
     public function testItAllowsAirlineUnpairing()
     {
-        Terminal::findOrFail(1)->airlines()->sync([3, 2, 1]);
-        $rowToUnpair = DB::table('airline_terminal')
-            ->where('terminal_id', 1)
-            ->where('airline_id', 3)
-            ->first()
-            ->id;
+        $newAirline = Airline::factory()->makeOne();
+        $newAirline->id = 999;
+        $newAirline->save();
+
+        Terminal::findOrFail(1)->airlines()->sync([3, 2, 1, $newAirline->id]);
 
         Livewire::test(
             AirlinesRelationManager::class,
             ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
-            ->callTableAction('unpair-airline', $rowToUnpair)
+            ->callTableAction('unpair-airline', $newAirline->id)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
-        $this->assertEquals([1, 2], Terminal::findOrFail(1)->airlines->pluck('id')->sort()->values()->toArray());
+        $this->assertEquals([1, 2, 3], Terminal::findOrFail(1)->airlines->pluck('id')->sort()->values()->toArray());
     }
 
     public function testItFailsAirlinePairingPriorityTooLow()
