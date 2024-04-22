@@ -64,7 +64,7 @@ class SrdRouteResourceTest extends BaseFilamentTestCase
 
     protected function getIndexText(): array
     {
-        return ['Srd Routes', 'EGLL', 'VEULE', '24500', '66000', 'MID UL612', '1,2,3'];
+        return ['Srd Routes', 'EGLL', 'VEULE', '24500', '66000', 'MID UL612', '1, 2, 3'];
     }
 
     protected function getViewText(): string
