@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.59.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.59.0...6.59.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* cargo allocator crash when cargo flight but no airline ([0cb27ff](https://github.com/VATSIM-UK/uk-controller-api/commit/0cb27ffa108aabe5c9a20ab9365f6896a31efeb2))
+
 ## [6.59.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.58.2...6.59.0) (2024-04-20)
 
 
