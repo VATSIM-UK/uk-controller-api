@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c3358cf24eda89694f2c75793031919",
+    "content-hash": "3b8691c30e4b75e7a32a4bdc58bf32b1",
     "packages": [
         {
             "name": "akaunting/laravel-money",
@@ -2247,75 +2247,17 @@
             "time": "2023-12-03T19:50:20+00:00"
         },
         {
-            "name": "http-interop/http-factory-guzzle",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/http-interop/http-factory-guzzle.git",
-                "reference": "8f06e92b95405216b237521cc64c804dd44c4a81"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/http-interop/http-factory-guzzle/zipball/8f06e92b95405216b237521cc64c804dd44c4a81",
-                "reference": "8f06e92b95405216b237521cc64c804dd44c4a81",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/psr7": "^1.7||^2.0",
-                "php": ">=7.3",
-                "psr/http-factory": "^1.0"
-            },
-            "provide": {
-                "psr/http-factory-implementation": "^1.0"
-            },
-            "require-dev": {
-                "http-interop/http-factory-tests": "^0.9",
-                "phpunit/phpunit": "^9.5"
-            },
-            "suggest": {
-                "guzzlehttp/psr7": "Includes an HTTP factory starting in version 2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Http\\Factory\\Guzzle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "An HTTP Factory using Guzzle PSR7",
-            "keywords": [
-                "factory",
-                "http",
-                "psr-17",
-                "psr-7"
-            ],
-            "support": {
-                "issues": "https://github.com/http-interop/http-factory-guzzle/issues",
-                "source": "https://github.com/http-interop/http-factory-guzzle/tree/1.2.0"
-            },
-            "time": "2021-07-21T13:50:14+00:00"
-        },
-        {
             "name": "jean85/pretty-package-versions",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jean85/pretty-package-versions.git",
-                "reference": "ae547e455a3d8babd07b96966b17d7fd21d9c6af"
+                "reference": "f9fdd29ad8e6d024f52678b570e5593759b550b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jean85/pretty-package-versions/zipball/ae547e455a3d8babd07b96966b17d7fd21d9c6af",
-                "reference": "ae547e455a3d8babd07b96966b17d7fd21d9c6af",
+                "url": "https://api.github.com/repos/Jean85/pretty-package-versions/zipball/f9fdd29ad8e6d024f52678b570e5593759b550b4",
+                "reference": "f9fdd29ad8e6d024f52678b570e5593759b550b4",
                 "shasum": ""
             },
             "require": {
@@ -2323,9 +2265,9 @@
                 "php": "^7.1|^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.17",
+                "friendsofphp/php-cs-fixer": "^3.2",
                 "jean85/composer-provided-replaced-stub-package": "^1.0",
-                "phpstan/phpstan": "^0.12.66",
+                "phpstan/phpstan": "^1.4",
                 "phpunit/phpunit": "^7.5|^8.5|^9.4",
                 "vimeo/psalm": "^4.3"
             },
@@ -2359,9 +2301,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Jean85/pretty-package-versions/issues",
-                "source": "https://github.com/Jean85/pretty-package-versions/tree/2.0.5"
+                "source": "https://github.com/Jean85/pretty-package-versions/tree/2.0.6"
             },
-            "time": "2021-10-08T21:21:46+00:00"
+            "time": "2024-03-08T09:58:59+00:00"
         },
         {
             "name": "knplabs/github-api",
@@ -2453,16 +2395,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.48.4",
+            "version": "v10.48.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7e0701bf59cb76a51f7c1f7bea51c0c0c29c0b72"
+                "reference": "8e9ab6da362f268170fe815127aed5ec7d303697"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7e0701bf59cb76a51f7c1f7bea51c0c0c29c0b72",
-                "reference": "7e0701bf59cb76a51f7c1f7bea51c0c0c29c0b72",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/8e9ab6da362f268170fe815127aed5ec7d303697",
+                "reference": "8e9ab6da362f268170fe815127aed5ec7d303697",
                 "shasum": ""
             },
             "require": {
@@ -2656,7 +2598,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-03-21T13:36:36+00:00"
+            "time": "2024-04-16T14:26:04+00:00"
         },
         {
             "name": "laravel/horizon",
@@ -2816,16 +2758,16 @@
         },
         {
             "name": "laravel/prompts",
-            "version": "v0.1.17",
+            "version": "v0.1.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/prompts.git",
-                "reference": "8ee9f87f7f9eadcbe21e9e72cd4176b2f06cd5b5"
+                "reference": "0ab75ac3434d9f610c5691758a6146a3d1940c18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/prompts/zipball/8ee9f87f7f9eadcbe21e9e72cd4176b2f06cd5b5",
-                "reference": "8ee9f87f7f9eadcbe21e9e72cd4176b2f06cd5b5",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/0ab75ac3434d9f610c5691758a6146a3d1940c18",
+                "reference": "0ab75ac3434d9f610c5691758a6146a3d1940c18",
                 "shasum": ""
             },
             "require": {
@@ -2867,9 +2809,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/prompts/issues",
-                "source": "https://github.com/laravel/prompts/tree/v0.1.17"
+                "source": "https://github.com/laravel/prompts/tree/v0.1.19"
             },
-            "time": "2024-03-13T16:05:43+00:00"
+            "time": "2024-04-16T14:20:35+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -4543,16 +4485,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "3.5.0",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "c915e2634718dbc8a4a15c61b0e62e7a44e14448"
+                "reference": "4b18b21a5527a3d5ffdac2fd35d3ab25a9597654"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c915e2634718dbc8a4a15c61b0e62e7a44e14448",
-                "reference": "c915e2634718dbc8a4a15c61b0e62e7a44e14448",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/4b18b21a5527a3d5ffdac2fd35d3ab25a9597654",
+                "reference": "4b18b21a5527a3d5ffdac2fd35d3ab25a9597654",
                 "shasum": ""
             },
             "require": {
@@ -4575,7 +4517,7 @@
                 "phpstan/phpstan": "^1.9",
                 "phpstan/phpstan-deprecation-rules": "^1.0",
                 "phpstan/phpstan-strict-rules": "^1.4",
-                "phpunit/phpunit": "^10.1",
+                "phpunit/phpunit": "^10.5.17",
                 "predis/predis": "^1.1 || ^2",
                 "ruflin/elastica": "^7",
                 "symfony/mailer": "^5.4 || ^6",
@@ -4628,7 +4570,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/3.5.0"
+                "source": "https://github.com/Seldaek/monolog/tree/3.6.0"
             },
             "funding": [
                 {
@@ -4640,7 +4582,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-10-27T15:32:31+00:00"
+            "time": "2024-04-12T21:02:21+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -5562,61 +5504,6 @@
                 "source": "https://github.com/php-http/message/tree/1.16.1"
             },
             "time": "2024-03-07T13:22:09+00:00"
-        },
-        {
-            "name": "php-http/message-factory",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/message-factory.git",
-                "reference": "4d8778e1c7d405cbb471574821c1ff5b68cc8f57"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message-factory/zipball/4d8778e1c7d405cbb471574821c1ff5b68cc8f57",
-                "reference": "4d8778e1c7d405cbb471574821c1ff5b68cc8f57",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4",
-                "psr/http-message": "^1.0 || ^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "Factory interfaces for PSR-7 HTTP Message",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "stream",
-                "uri"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/message-factory/issues",
-                "source": "https://github.com/php-http/message-factory/tree/1.1.0"
-            },
-            "abandoned": "psr/http-factory",
-            "time": "2023-04-14T14:16:17+00:00"
         },
         {
             "name": "php-http/multipart-stream-builder",
@@ -6842,111 +6729,41 @@
             "time": "2023-02-14T16:54:54+00:00"
         },
         {
-            "name": "sentry/sdk",
-            "version": "3.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/getsentry/sentry-php-sdk.git",
-                "reference": "cd91b752f07c4bab9fb3b173f81af68a78a78d6d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php-sdk/zipball/cd91b752f07c4bab9fb3b173f81af68a78a78d6d",
-                "reference": "cd91b752f07c4bab9fb3b173f81af68a78a78d6d",
-                "shasum": ""
-            },
-            "require": {
-                "http-interop/http-factory-guzzle": "^1.0",
-                "sentry/sentry": "^3.19",
-                "symfony/http-client": "^4.3|^5.0|^6.0"
-            },
-            "type": "metapackage",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sentry",
-                    "email": "accounts@sentry.io"
-                }
-            ],
-            "description": "This is a metapackage shipping sentry/sentry with a recommended HTTP client.",
-            "homepage": "http://sentry.io",
-            "keywords": [
-                "crash-reporting",
-                "crash-reports",
-                "error-handler",
-                "error-monitoring",
-                "log",
-                "logging",
-                "sentry"
-            ],
-            "support": {
-                "issues": "https://github.com/getsentry/sentry-php-sdk/issues",
-                "source": "https://github.com/getsentry/sentry-php-sdk/tree/3.5.0"
-            },
-            "funding": [
-                {
-                    "url": "https://sentry.io/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://sentry.io/pricing/",
-                    "type": "custom"
-                }
-            ],
-            "time": "2023-06-12T17:50:36+00:00"
-        },
-        {
             "name": "sentry/sentry",
-            "version": "3.22.0",
+            "version": "4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "c0e3df5a5c1d133cd9461e7672568ff07042c19d"
+                "reference": "d6769b2a5e6bf19ed3bbfbf52328ceaf8e6fcb1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/c0e3df5a5c1d133cd9461e7672568ff07042c19d",
-                "reference": "c0e3df5a5c1d133cd9461e7672568ff07042c19d",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/d6769b2a5e6bf19ed3bbfbf52328ceaf8e6fcb1f",
+                "reference": "d6769b2a5e6bf19ed3bbfbf52328ceaf8e6fcb1f",
                 "shasum": ""
             },
             "require": {
+                "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "guzzlehttp/promises": "^1.5.3|^2.0",
+                "guzzlehttp/psr7": "^1.8.4|^2.1.1",
                 "jean85/pretty-package-versions": "^1.5|^2.0.4",
                 "php": "^7.2|^8.0",
-                "php-http/async-client-implementation": "^1.0",
-                "php-http/client-common": "^1.5|^2.0",
-                "php-http/discovery": "^1.15",
-                "php-http/httplug": "^1.1|^2.0",
-                "php-http/message": "^1.5",
-                "php-http/message-factory": "^1.1",
-                "psr/http-factory": "^1.0",
-                "psr/http-factory-implementation": "^1.0",
                 "psr/log": "^1.0|^2.0|^3.0",
-                "symfony/options-resolver": "^3.4.43|^4.4.30|^5.0.11|^6.0|^7.0",
-                "symfony/polyfill-php80": "^1.17"
+                "symfony/options-resolver": "^4.4.30|^5.0.11|^6.0|^7.0"
             },
             "conflict": {
-                "php-http/client-common": "1.8.0",
                 "raven/raven": "*"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.19|3.4.*",
+                "friendsofphp/php-cs-fixer": "^3.4",
+                "guzzlehttp/promises": "^1.0|^2.0",
                 "guzzlehttp/psr7": "^1.8.4|^2.1.1",
-                "http-interop/http-factory-guzzle": "^1.0",
                 "monolog/monolog": "^1.6|^2.0|^3.0",
-                "nikic/php-parser": "^4.10.3",
-                "php-http/mock-client": "^1.3",
                 "phpbench/phpbench": "^1.0",
-                "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^1.3",
-                "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^8.5.14|^9.4",
-                "symfony/phpunit-bridge": "^5.2|^6.0",
+                "symfony/phpunit-bridge": "^5.2|^6.0|^7.0",
                 "vimeo/psalm": "^4.17"
             },
             "suggest": {
@@ -6971,7 +6788,7 @@
                     "email": "accounts@sentry.io"
                 }
             ],
-            "description": "A PHP SDK for Sentry (http://sentry.io)",
+            "description": "PHP SDK for Sentry (http://sentry.io)",
             "homepage": "http://sentry.io",
             "keywords": [
                 "crash-reporting",
@@ -6980,11 +6797,13 @@
                 "error-monitoring",
                 "log",
                 "logging",
-                "sentry"
+                "profiling",
+                "sentry",
+                "tracing"
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/3.22.0"
+                "source": "https://github.com/getsentry/sentry-php/tree/4.7.0"
             },
             "funding": [
                 {
@@ -6996,47 +6815,42 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-10-23T20:34:53+00:00"
+            "time": "2024-04-10T13:22:13+00:00"
         },
         {
             "name": "sentry/sentry-laravel",
-            "version": "3.8.2",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-laravel.git",
-                "reference": "1293e5732f8405e12f000cdf5dee78c927a18de0"
+                "reference": "cdcd362f0c6bc342e87be8b7c20276844ff378bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-laravel/zipball/1293e5732f8405e12f000cdf5dee78c927a18de0",
-                "reference": "1293e5732f8405e12f000cdf5dee78c927a18de0",
+                "url": "https://api.github.com/repos/getsentry/sentry-laravel/zipball/cdcd362f0c6bc342e87be8b7c20276844ff378bd",
+                "reference": "cdcd362f0c6bc342e87be8b7c20276844ff378bd",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0",
+                "illuminate/support": "^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0 | ^11.0",
                 "nyholm/psr7": "^1.0",
                 "php": "^7.2 | ^8.0",
-                "sentry/sdk": "^3.4",
-                "sentry/sentry": "^3.20.1",
-                "symfony/psr-http-message-bridge": "^1.0 | ^2.0"
+                "sentry/sentry": "^4.7",
+                "symfony/psr-http-message-bridge": "^1.0 | ^2.0 | ^6.0 | ^7.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.11",
-                "laravel/folio": "^1.0",
-                "laravel/framework": "^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0",
+                "guzzlehttp/guzzle": "^7.2",
+                "laravel/folio": "^1.1",
+                "laravel/framework": "^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0 | ^11.0",
+                "livewire/livewire": "^2.0 | ^3.0",
                 "mockery/mockery": "^1.3",
-                "orchestra/testbench": "^4.7 | ^5.1 | ^6.0 | ^7.0 | ^8.0",
+                "orchestra/testbench": "^4.7 | ^5.1 | ^6.0 | ^7.0 | ^8.0 | ^9.0",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^8.4 | ^9.3"
+                "phpunit/phpunit": "^8.4 | ^9.3 | ^10.4"
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev",
-                    "dev-2.x": "2.x-dev",
-                    "dev-1.x": "1.x-dev",
-                    "dev-0.x": "0.x-dev"
-                },
                 "laravel": {
                     "providers": [
                         "Sentry\\Laravel\\ServiceProvider",
@@ -7072,11 +6886,13 @@
                 "laravel",
                 "log",
                 "logging",
-                "sentry"
+                "profiling",
+                "sentry",
+                "tracing"
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-laravel/issues",
-                "source": "https://github.com/getsentry/sentry-laravel/tree/3.8.2"
+                "source": "https://github.com/getsentry/sentry-laravel/tree/4.5.0"
             },
             "funding": [
                 {
@@ -7088,7 +6904,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-10-12T14:38:46+00:00"
+            "time": "2024-04-22T11:24:05+00:00"
         },
         {
             "name": "spatie/commonmark-shiki-highlighter",
@@ -8106,176 +7922,6 @@
                 }
             ],
             "time": "2023-10-31T17:30:12+00:00"
-        },
-        {
-            "name": "symfony/http-client",
-            "version": "v6.3.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-client.git",
-                "reference": "cd67fcaf4524ec6ae5d9b2d9497682d7ad3ce57d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/cd67fcaf4524ec6ae5d9b2d9497682d7ad3ce57d",
-                "reference": "cd67fcaf4524ec6ae5d9b2d9497682d7ad3ce57d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1",
-                "psr/log": "^1|^2|^3",
-                "symfony/deprecation-contracts": "^2.5|^3",
-                "symfony/http-client-contracts": "^3",
-                "symfony/service-contracts": "^2.5|^3"
-            },
-            "conflict": {
-                "php-http/discovery": "<1.15",
-                "symfony/http-foundation": "<6.3"
-            },
-            "provide": {
-                "php-http/async-client-implementation": "*",
-                "php-http/client-implementation": "*",
-                "psr/http-client-implementation": "1.0",
-                "symfony/http-client-implementation": "3.0"
-            },
-            "require-dev": {
-                "amphp/amp": "^2.5",
-                "amphp/http-client": "^4.2.1",
-                "amphp/http-tunnel": "^1.0",
-                "amphp/socket": "^1.1",
-                "guzzlehttp/promises": "^1.4",
-                "nyholm/psr7": "^1.0",
-                "php-http/httplug": "^1.0|^2.0",
-                "psr/http-client": "^1.0",
-                "symfony/dependency-injection": "^5.4|^6.0",
-                "symfony/http-kernel": "^5.4|^6.0",
-                "symfony/process": "^5.4|^6.0",
-                "symfony/stopwatch": "^5.4|^6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\HttpClient\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Provides powerful methods to fetch HTTP resources synchronously or asynchronously",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "http"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/http-client/tree/v6.3.7"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2023-10-29T12:41:36+00:00"
-        },
-        {
-            "name": "symfony/http-client-contracts",
-            "version": "v3.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "b6b5c876b3a4ed74460e2c5ac53bbce2f12e2a7e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/b6b5c876b3a4ed74460e2c5ac53bbce2f12e2a7e",
-                "reference": "b6b5c876b3a4ed74460e2c5ac53bbce2f12e2a7e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "3.4-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\HttpClient\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Test/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to HTTP clients",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/http-client-contracts/tree/v3.4.2"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-04-01T18:51:09+00:00"
         },
         {
             "name": "symfony/http-foundation",
