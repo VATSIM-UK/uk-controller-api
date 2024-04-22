@@ -5,6 +5,8 @@ namespace App\Models\User;
 use App\BaseFunctionalTestCase;
 use Carbon\Carbon;
 use App\Providers\AuthServiceProvider;
+use Filament\Facades\Filament;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Collection;
 use TestingUtils\Traits\WithSeedUsers;
 
@@ -62,9 +64,14 @@ class UserTest extends BaseFunctionalTestCase
         $this->assertEquals($token, $jsonData['tokens']->first()->id);
     }
 
-    public function testItCanAccessFilament()
+    public function testItCanAccessDefaultFilamentPanel()
     {
-        $this->assertTrue((new User(['id' => 1234]))->canAccessFilament());
+        $this->assertTrue((new User(['id' => 1234]))->canAccessPanel(Filament::getPanel('admin')));
+    }
+
+    public function testItCantAccessOtherFilamentPanels()
+    {
+        $this->assertFalse((new User(['id' => 1234]))->canAccessPanel(Panel::make()->id('foo')));
     }
 
     public function testItHasAFilamentName()
