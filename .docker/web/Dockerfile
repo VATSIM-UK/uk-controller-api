@@ -19,10 +19,14 @@ RUN apt-get update && apt-get install -y \
     nginx \
     npm \
     libicu-dev \
+    libjudy-dev\
     default-mysql-client
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install memprof using pecl
+RUN pecl install memprof
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd intl
