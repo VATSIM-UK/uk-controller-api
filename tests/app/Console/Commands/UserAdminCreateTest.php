@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\BaseFunctionalTestCase;
 use App\Models\User\User;
 use Illuminate\Support\Facades\Artisan;
+use Laravel\Passport\PersonalAccessClient;
 
 class UserAdminCreateTest extends BaseFunctionalTestCase
 {
@@ -23,13 +24,15 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
 
     public function testItCreatesAUser()
     {
+        $personalAccessClientId = PersonalAccessClient::latest()->firstOrFail()->client_id;
+
         Artisan::call(self::ARTISAN_COMMAND);
         $userId = User::where('id', 2)->first()->id;
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => $userId,
-                'client_id' => 1,
+                'client_id' => $personalAccessClientId,
                 'revoked' => 0,
             ]
         );

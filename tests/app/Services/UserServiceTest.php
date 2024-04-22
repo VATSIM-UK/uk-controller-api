@@ -7,6 +7,7 @@ use App\BaseFunctionalTestCase;
 use App\Exceptions\UserAlreadyExistsException;
 use App\Models\User\UserStatus;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Laravel\Passport\PersonalAccessClient;
 use TestingUtils\Traits\WithSeedUsers;
 
 class UserServiceTest extends BaseFunctionalTestCase
@@ -20,10 +21,13 @@ class UserServiceTest extends BaseFunctionalTestCase
      */
     private $service;
 
+    private readonly int $personalAccessClientId;
+
     public function setUp() : void
     {
         parent::setUp();
         $this->service = $this->app->make(UserService::class);
+        $this->personalAccessClientId = PersonalAccessClient::latest()->firstOrFail()->client_id;
     }
 
     public function testItConstructs()
@@ -51,7 +55,7 @@ class UserServiceTest extends BaseFunctionalTestCase
             'oauth_access_tokens',
             [
                 'user_id' => 1402313,
-                'client_id' => 1,
+                'client_id' => $this->personalAccessClientId,
                 'revoked' => 0,
             ]
         );
@@ -79,7 +83,7 @@ class UserServiceTest extends BaseFunctionalTestCase
             'oauth_access_tokens',
             [
                 'user_id' => 2,
-                'client_id' => 1,
+                'client_id' => $this->personalAccessClientId,
                 'revoked' => 0,
             ]
         );
@@ -93,7 +97,7 @@ class UserServiceTest extends BaseFunctionalTestCase
             'oauth_access_tokens',
             [
                 'user_id' => 3,
-                'client_id' => 1,
+                'client_id' => $this->personalAccessClientId,
                 'revoked' => 0,
             ]
         );
