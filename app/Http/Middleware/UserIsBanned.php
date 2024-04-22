@@ -29,7 +29,7 @@ class UserIsBanned
                 'Banned user ' . $request->user()->id . " attempted access but was blocked.",
                 [
                     'route' => $request->getRequestUri(),
-                    'type' => $request->getContentType(),
+                    'type' => $request->header('Content-Type'),
                     'data' => $request->getContent(),
                 ]
             );
