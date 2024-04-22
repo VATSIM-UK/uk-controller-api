@@ -106,7 +106,7 @@ class Kernel extends ConsoleKernel
     protected function bootstrappers()
     {
         return array_merge(
-            [\Bugsnag\BugsnagLaravel\OomBootstrapper::class],
+            env('APP_ENV') === 'testing' ? [] : [\Bugsnag\BugsnagLaravel\OomBootstrapper::class],
             parent::bootstrappers(),
         );
     }
