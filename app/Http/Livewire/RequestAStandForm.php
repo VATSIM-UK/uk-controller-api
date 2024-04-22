@@ -171,13 +171,13 @@ class RequestAStandForm extends Component implements HasForms
             $historyItem->save();
         });
 
-        $this->emit('requestAStandFormSubmitted');
+        $this->dispatch('requestAStandFormSubmitted');
     }
 
     public function updatedRequestedStand(): void
     {
         if (($stand = $this->getStandRequested())) {
-            $this->emitTo('stand-status', 'updateStandStatus', ['stand' => $stand]);
+            $this->dispatch('stand-status', 'updateStandStatus', ['stand' => $stand]);
         }
     }
 
