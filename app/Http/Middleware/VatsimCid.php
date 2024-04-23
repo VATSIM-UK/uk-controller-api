@@ -15,23 +15,6 @@ class VatsimCid
     const FAILURE_MESSAGE = 'Invalid VATSIM Certificate ID provided';
 
     /**
-     * Validates VATSIM CIDs
-     *
-     * @var VatsimCidValidator
-     */
-    private $cidValidator;
-
-    /**
-     * Constructor
-     *
-     * @param VatsimCidValidator $cidValidator
-     */
-    public function __construct(VatsimCidValidator $cidValidator)
-    {
-        $this->cidValidator = $cidValidator;
-    }
-
-    /**
      * Handles the request
      *
      * @param Request $request The request
@@ -40,7 +23,7 @@ class VatsimCid
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$this->cidValidator->isValid($request->route('cid'))) {
+        if (!VatsimCidValidator::isValid($request->route('cid'))) {
             return response()->json(
                 [
                     'message' => self::FAILURE_MESSAGE,
