@@ -91,7 +91,7 @@ class UserService
         $user->save();
     }
 
-      /**
+    /**
      * Creates a user and generates their access tokens.
      *
      * @param int $userId The VATSIM CID of the user

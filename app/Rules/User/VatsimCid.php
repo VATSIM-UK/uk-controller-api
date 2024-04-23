@@ -6,7 +6,8 @@ use App\Helpers\Vatsim\VatsimCidValidator;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Closure;
 
-class VatsimCid implements ValidationRule {
+class VatsimCid implements ValidationRule
+{
     /**
      * Run the validation rule.
      *
