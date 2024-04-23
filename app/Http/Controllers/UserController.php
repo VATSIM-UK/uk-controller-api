@@ -77,12 +77,13 @@ class UserController extends BaseController
     }
 
     /**
-     * Creates a user with the given CID
+     * Creates a user with the given CID and also
+     * returns their plugin config.
      *
      * @param integer $cid
      * @return JsonResponse
      */
-    public function createUser(int $cid) : JsonResponse
+    public function createUserWithPluginConfig(int $cid) : JsonResponse
     {
         try {
             return response()->json(

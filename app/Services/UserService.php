@@ -78,7 +78,7 @@ class UserService
      * @return UserConfig The users personal configuration for their plugin instance
      * @throws UserAlreadyExistsException
      */
-    public function createUser(int $userCid) : UserConfig
+    public function createUser(int $userCid) : void
     {
         if (User::find($userCid)) {
             throw new UserAlreadyExistsException('User with VATSIM CID ' . $userCid . ' already exists');
@@ -89,7 +89,18 @@ class UserService
         $user->id = $userCid;
         $user->status = UserStatus::ACTIVE;
         $user->save();
+    }
 
+      /**
+     * Creates a user and generates their access tokens.
+     *
+     * @param int $userId The VATSIM CID of the user
+     * @return UserConfig The users personal configuration for their plugin instance
+     * @throws UserAlreadyExistsException
+     */
+    public function createUserWithConfig(int $userCid)
+    {
+        $this->createUser($userCid);
         return $this->userConfig->create($userCid);
     }
 
