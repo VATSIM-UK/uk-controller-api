@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\TooManyTokensException;
 use App\Exceptions\UserAlreadyExistsException;
+use App\Http\Requests\User\CreateUser;
 use App\Models\User\Admin;
 use App\Providers\AuthServiceProvider;
 use App\Services\UserConfigService;
@@ -85,6 +86,30 @@ class UserController extends BaseController
      */
     public function createUserWithPluginConfig(int $cid) : JsonResponse
     {
+        try {
+            return response()->json(
+                $this->userService->createUserWithConfig($cid)
+            )->setStatusCode(201);
+        } catch (UserAlreadyExistsException $e) {
+            Log::error('Unable to create user with CID ' . $cid . ', already exists');
+            return response()->json(
+                [
+                    'message' => 'User with CID ' . $cid . ' already exists',
+                ]
+            )->setStatusCode(422);
+        }
+    }
+
+    /**
+     * Creates a user with the given CID and also
+     * returns their plugin config.
+     *
+     * @param integer $cid
+     * @return JsonResponse
+     */
+    public function createUser(CreateUser $request) : JsonResponse
+    {
+        $cid = $request->validated('cid');
         try {
             return response()->json(
                 $this->userService->createUser($cid)
