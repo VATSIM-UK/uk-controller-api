@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.59.1...6.60.0) (2024-04-27)
+
+
+### Features
+
+* add user creation without config endpoint ([04eb65c](https://github.com/VATSIM-UK/uk-controller-api/commit/04eb65ccdf337fce3deb4b3b2ba7ad5636728bda))
+
 ## [6.59.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.59.0...6.59.1) (2024-04-22)
 
 
