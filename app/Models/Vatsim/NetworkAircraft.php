@@ -145,6 +145,11 @@ class NetworkAircraft extends Model
         return $builder->where('network_aircraft.updated_at', '>', Carbon::now()->subMinutes(self::TIME_OUT_MINUTES));
     }
 
+    public function scopeSeenSince(Builder $builder, Carbon $time): Builder
+    {
+        return $builder->where('network_aircraft.updated_at', '>', $time);
+    }
+
     public function destinationAirfield(): BelongsTo
     {
         return $this->belongsTo(
