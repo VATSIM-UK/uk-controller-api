@@ -48,9 +48,22 @@ class UserServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas('user', ['id' => 1402313, 'status' => UserStatus::ACTIVE]);
     }
 
-    public function testItCreatesAnAccessToken()
+    public function testItThrowsAnExceptionWithConfigIfUserAlreadyExists()
     {
-        $this->service->createUser(1402313);
+        $this->expectException(UserAlreadyExistsException::class);
+        $this->expectExceptionMessage('User with VATSIM CID 1203533 already exists');
+        $this->service->createUserWithConfig(1203533);
+    }
+
+    public function testItCreatesANewActiveUserWithConfig()
+    {
+        $this->service->createUserWithConfig(1402313);
+        $this->assertDatabaseHas('user', ['id' => 1402313, 'status' => UserStatus::ACTIVE]);
+    }
+
+    public function testItCreatesAnAccessTokenWithConfig()
+    {
+        $this->service->createUserWithConfig(1402313);
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
@@ -63,7 +76,7 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testCreatingAUserReturnsAConfig()
     {
-        $actual = $this->service->createUser(1402313);
+        $actual = $this->service->createUserWithConfig(1402313);
 
         $expectedApiUrl = config('app.url');
         $this->assertEquals($expectedApiUrl, $actual->apiUrl());
@@ -72,7 +85,7 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testTheCreatedTokenWorks()
     {
-        $accessToken = $this->service->createUser(1402313)->apiKey();
+        $accessToken = $this->service->createUserWithConfig(1402313)->apiKey();
         $this->makeTestRequest('/authorise', $accessToken);
     }
 

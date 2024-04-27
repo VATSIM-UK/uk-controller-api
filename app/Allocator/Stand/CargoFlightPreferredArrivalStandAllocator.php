@@ -29,8 +29,13 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
 
     public function allocate(NetworkAircraft $aircraft): ?int
     {
-        // If the aircraft doesnt have an airline, we cant allocate a stand
+        // If the aircraft isn't a cargo airline or a cargo flight, this rule doesn't apply
         if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
+            return null;
+        }
+
+        // If the aircarft has no airline at all, there's nothing we can do
+        if ($aircraft->airline_id === null) {
             return null;
         }
 
