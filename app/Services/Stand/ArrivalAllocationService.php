@@ -9,6 +9,7 @@ use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\LocationService;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Location\Distance\Haversine;
 
@@ -18,6 +19,11 @@ class ArrivalAllocationService
      * How many minutes before arrival the stand should be assigned
      */
     private const ASSIGN_STAND_MINUTES_BEFORE = 15.0;
+    
+    /**
+     * How recently an aircraft should have been seen to be considered for stand assignment.
+     */
+    private const ASSIGN_STAND_IF_SEEN_WITHIN_MINUTES = 1;
 
     /**
      * How many minutes before we remove the stand assignment for an aircraft that has disconnected.
@@ -113,7 +119,7 @@ class ArrivalAllocationService
             ->where('aircraft.allocate_stands', '<>', 0)
             ->where('network_aircraft.groundspeed', '>', 0)
             ->whereNull('stand_assignments.callsign')
-            ->notTimedOut()
+            ->seenSince(Carbon::now()->subMinutes(self::ASSIGN_STAND_IF_SEEN_WITHIN_MINUTES))
             ->select('network_aircraft.*')
             ->get();
     }
