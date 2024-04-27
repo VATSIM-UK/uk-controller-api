@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.1...6.60.2) (2024-04-27)
+
+
+### Bug Fixes
+
+* dont assign arrival stands if aircraft not seen in last minute ([e496a16](https://github.com/VATSIM-UK/uk-controller-api/commit/e496a16da86c137a992fe8af80e2bc469b93d6d6))
+
 ## [6.60.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.0...6.60.1) (2024-04-27)
 
 
