@@ -7,6 +7,7 @@ use App\BaseFunctionalTestCase;
 use App\Exceptions\UserAlreadyExistsException;
 use App\Models\User\UserStatus;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Laravel\Passport\PersonalAccessClient;
 use TestingUtils\Traits\WithSeedUsers;
 
 class UserServiceTest extends BaseFunctionalTestCase
@@ -44,14 +45,29 @@ class UserServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas('user', ['id' => 1402313, 'status' => UserStatus::ACTIVE]);
     }
 
-    public function testItCreatesAnAccessToken()
+    public function testItThrowsAnExceptionWithConfigIfUserAlreadyExists()
     {
-        $this->service->createUser(1402313);
+        $this->expectException(UserAlreadyExistsException::class);
+        $this->expectExceptionMessage('User with VATSIM CID 1203533 already exists');
+        $this->service->createUserWithConfig(1203533);
+    }
+
+    public function testItCreatesANewActiveUserWithConfig()
+    {
+        $this->service->createUserWithConfig(1402313);
+        $this->assertDatabaseHas('user', ['id' => 1402313, 'status' => UserStatus::ACTIVE]);
+    }
+
+    public function testItCreatesAnAccessTokenWithConfig()
+    {
+        $latestPassportClient = PersonalAccessClient::latest()->first()->client_id;
+
+        $this->service->createUserWithConfig(1402313);
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 1402313,
-                'client_id' => 1,
+                'client_id' => $latestPassportClient,
                 'revoked' => 0,
             ]
         );
@@ -59,7 +75,7 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testCreatingAUserReturnsAConfig()
     {
-        $actual = $this->service->createUser(1402313);
+        $actual = $this->service->createUserWithConfig(1402313);
 
         $expectedApiUrl = config('app.url');
         $this->assertEquals($expectedApiUrl, $actual->apiUrl());
@@ -68,18 +84,20 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testTheCreatedTokenWorks()
     {
-        $accessToken = $this->service->createUser(1402313)->apiKey();
+        $accessToken = $this->service->createUserWithConfig(1402313)->apiKey();
         $this->makeTestRequest('/authorise', $accessToken);
     }
 
     public function testItCreatesAnAdminUser()
     {
+        $latestPassportClient = PersonalAccessClient::latest()->first()->client_id;
+
         $this->service->createAdminUser();
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 2,
-                'client_id' => 1,
+                'client_id' => $latestPassportClient,
                 'revoked' => 0,
             ]
         );
@@ -87,13 +105,15 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAdminUsersSequentially()
     {
+        $latestPassportClient = PersonalAccessClient::latest()->first()->client_id;
+
         $this->service->createAdminUser();
         $this->service->createAdminUser();
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 3,
-                'client_id' => 1,
+                'client_id' => $latestPassportClient,
                 'revoked' => 0,
             ]
         );
