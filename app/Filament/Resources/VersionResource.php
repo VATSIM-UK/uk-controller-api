@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VersionResource\Pages;
 use App\Models\Version\Version;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\RestoreAction;
@@ -17,7 +17,7 @@ class VersionResource extends Resource
 
     protected static ?string $model = Version::class;
     protected static ?string $navigationLabel = 'Plugin Versions';
-    protected static ?string $navigationIcon = 'heroicon-o-puzzle';
+    protected static ?string $navigationIcon = 'heroicon-o-puzzle-piece';
     protected static ?string $navigationGroup = 'Plugin';
 
     public static function getEloquentQuery(): Builder

@@ -6,9 +6,9 @@ use App\Filament\Resources\PrenoteResource\Pages;
 use App\Filament\Resources\PrenoteResource\RelationManagers;
 use App\Models\Controller\Prenote;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class PrenoteResource extends Resource
@@ -16,7 +16,7 @@ class PrenoteResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Prenote::class;
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'description';
     protected static ?string $navigationGroup = 'Airfield';
 

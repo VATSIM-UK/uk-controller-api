@@ -21,10 +21,13 @@ class UserServiceTest extends BaseFunctionalTestCase
      */
     private $service;
 
+    private readonly int $personalAccessClientId;
+
     public function setUp() : void
     {
         parent::setUp();
         $this->service = $this->app->make(UserService::class);
+        $this->personalAccessClientId = PersonalAccessClient::latest()->firstOrFail()->client_id;
     }
 
     public function testItConstructs()
@@ -60,14 +63,12 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAnAccessTokenWithConfig()
     {
-        $latestPassportClient = PersonalAccessClient::latest()->first()->client_id;
-
         $this->service->createUserWithConfig(1402313);
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 1402313,
-                'client_id' => $latestPassportClient,
+                'client_id' => $this->personalAccessClientId,
                 'revoked' => 0,
             ]
         );
@@ -90,14 +91,12 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAnAdminUser()
     {
-        $latestPassportClient = PersonalAccessClient::latest()->first()->client_id;
-
         $this->service->createAdminUser();
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 2,
-                'client_id' => $latestPassportClient,
+                'client_id' => $this->personalAccessClientId,
                 'revoked' => 0,
             ]
         );
@@ -105,15 +104,13 @@ class UserServiceTest extends BaseFunctionalTestCase
 
     public function testItCreatesAdminUsersSequentially()
     {
-        $latestPassportClient = PersonalAccessClient::latest()->first()->client_id;
-
         $this->service->createAdminUser();
         $this->service->createAdminUser();
         $this->assertDatabaseHas(
             'oauth_access_tokens',
             [
                 'user_id' => 3,
-                'client_id' => $latestPassportClient,
+                'client_id' => $this->personalAccessClientId,
                 'revoked' => 0,
             ]
         );

@@ -10,7 +10,7 @@ class UserPreferencesTest extends BaseFilamentTestCase
     public function testItTogglesStandAcarsMessages()
     {
         Livewire::test(UserPreferences::class)
-            ->set('send_stand_acars_messages', true);
+            ->set('data.send_stand_acars_messages', true);
 
         $this->assertDatabaseHas(
             'user',
@@ -21,7 +21,7 @@ class UserPreferencesTest extends BaseFilamentTestCase
         );
 
         Livewire::test(UserPreferences::class)
-            ->set('send_stand_acars_messages', false);
+            ->set('data.send_stand_acars_messages', false);
 
         $this->assertDatabaseHas(
             'user',
@@ -35,7 +35,7 @@ class UserPreferencesTest extends BaseFilamentTestCase
     public function testItTogglesStandAcarsMessagesAtUncontrolledAirfields()
     {
         Livewire::test(UserPreferences::class)
-            ->set('stand_acars_messages_uncontrolled_airfield', true);
+            ->set('data.stand_acars_messages_uncontrolled_airfield', true);
 
         $this->assertDatabaseHas(
             'user',
@@ -46,7 +46,7 @@ class UserPreferencesTest extends BaseFilamentTestCase
         );
 
         Livewire::test(UserPreferences::class)
-            ->set('stand_acars_messages_uncontrolled_airfield', false);
+            ->set('data.stand_acars_messages_uncontrolled_airfield', false);
 
         $this->assertDatabaseHas(
             'user',

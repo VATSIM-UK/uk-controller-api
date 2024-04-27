@@ -13,7 +13,7 @@ class ListNavaids extends ListRecords
 
     protected static string $resource = NavaidResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

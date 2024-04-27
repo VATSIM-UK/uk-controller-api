@@ -114,7 +114,7 @@ class UserResourceTest extends BaseFilamentTestCase
 
         Livewire::test(
             UserResource\RelationManagers\RolesRelationManager::class,
-            ['ownerRecord' => $this->bannedUser()]
+            ['ownerRecord' => $this->bannedUser(), 'pageClass' => EditUser::class]
         )
             ->assertCanSeeTableRecords([$rowToExpect]);
     }
@@ -125,7 +125,7 @@ class UserResourceTest extends BaseFilamentTestCase
 
         Livewire::test(
             UserResource\RelationManagers\RolesRelationManager::class,
-            ['ownerRecord' => $this->bannedUser()]
+            ['ownerRecord' => $this->bannedUser(), 'pageClass' => EditUser::class]
         )
             ->callTableAction('attach', data: ['recordId' => $rowToExpect])
             ->assertHasNoTableActionErrors();
@@ -140,7 +140,7 @@ class UserResourceTest extends BaseFilamentTestCase
 
         Livewire::test(
             UserResource\RelationManagers\RolesRelationManager::class,
-            ['ownerRecord' => $this->bannedUser()]
+            ['ownerRecord' => $this->bannedUser(), 'pageClass' => EditUser::class]
         )
             ->callTableAction('detach', Role::fromKey(RoleKeys::DIVISION_STAFF_GROUP))
             ->assertHasNoTableActionErrors();
@@ -163,7 +163,7 @@ class UserResourceTest extends BaseFilamentTestCase
         return User::findOrFail(self::BANNED_USER_CID);
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return UserResource::class;
     }

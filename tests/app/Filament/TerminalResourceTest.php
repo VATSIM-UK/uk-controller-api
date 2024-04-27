@@ -143,7 +143,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction('pair-airline', data: ['recordId' => 1, 'priority' => 100])
             ->assertHasNoTableActionErrors();
@@ -166,7 +166,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction(
                 'pair-airline',
@@ -199,7 +199,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
         Terminal::findOrFail(1)->airlines()->sync([1]);
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction(
                 'pair-airline',
@@ -226,28 +226,27 @@ class TerminalResourceTest extends BaseFilamentTestCase
 
     public function testItAllowsAirlineUnpairing()
     {
-        Terminal::findOrFail(1)->airlines()->sync([3, 2, 1]);
-        $rowToUnpair = DB::table('airline_terminal')
-            ->where('terminal_id', 1)
-            ->where('airline_id', 3)
-            ->first()
-            ->id;
+        $newAirline = Airline::factory()->makeOne();
+        $newAirline->id = 999;
+        $newAirline->save();
+
+        Terminal::findOrFail(1)->airlines()->sync([3, 2, 1, $newAirline->id]);
 
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
-            ->callTableAction('unpair-airline', $rowToUnpair)
+            ->callTableAction('unpair-airline', $newAirline->id)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
-        $this->assertEquals([1, 2], Terminal::findOrFail(1)->airlines->pluck('id')->sort()->values()->toArray());
+        $this->assertEquals([1, 2, 3], Terminal::findOrFail(1)->airlines->pluck('id')->sort()->values()->toArray());
     }
 
     public function testItFailsAirlinePairingPriorityTooLow()
     {
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction(
                 'pair-airline',
@@ -264,7 +263,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction(
                 'pair-airline',
@@ -281,7 +280,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction(
                 'pair-airline',
@@ -298,7 +297,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction(
                 'pair-airline',
@@ -315,7 +314,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             AirlinesRelationManager::class,
-            ['ownerRecord' => Terminal::findOrFail(1)]
+            ['ownerRecord' => Terminal::findOrFail(1), 'pageClass' => EditTerminal::class]
         )
             ->callTableAction(
                 'pair-airline',
@@ -358,7 +357,7 @@ class TerminalResourceTest extends BaseFilamentTestCase
         return $this->getEditRecord();
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return TerminalResource::class;
     }

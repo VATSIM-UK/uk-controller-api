@@ -63,7 +63,7 @@ class StandPredictorForm extends Component implements HasForms
         $this->departureAirfield = strtoupper($this->departureAirfield);
 
         $this->form->validate();
-        $this->emit('standPredictorFormSubmitted', [
+        $this->dispatch('standPredictorFormSubmitted', [
             'callsign' => $this->callsign,
             'cid' => Auth::id(),
             'aircraft_id' => $this->aircraftType,

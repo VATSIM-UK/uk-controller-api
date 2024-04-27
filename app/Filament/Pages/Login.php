@@ -2,19 +2,21 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Actions\Action;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Illuminate\Contracts\View\View;
-use Livewire\Component;
+use Filament\Pages\Auth\Login as BaseLogin;
 
 /**
  * @property ComponentContainer $form
  */
-class Login extends Component implements HasForms
+class Login extends BaseLogin
 {
     use InteractsWithForms;
+
+    protected static string $view = 'filament.pages.core-login';
 
     public function authenticate(): ?LoginResponse
     {
@@ -22,11 +24,14 @@ class Login extends Component implements HasForms
         return null;
     }
 
-    public function render(): View
+    protected function getAuthenticateFormAction(): Action
     {
-        return view('login')
-            ->layout('filament::components.layouts.base', [
-                'title' => __('filament::login.title'),
-            ]);
+        return parent::getAuthenticateFormAction()
+            ->label('Sign in via VATSIM UK Core');
+    }
+
+    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return 'UK Controller Plugin';
     }
 }

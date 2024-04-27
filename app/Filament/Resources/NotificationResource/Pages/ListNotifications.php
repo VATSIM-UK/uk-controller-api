@@ -13,7 +13,7 @@ class ListNotifications extends ListRecords
 
     protected static string $resource = NotificationResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

@@ -16,11 +16,11 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -33,11 +33,11 @@ class StandResource extends Resource
     private const DEFAULT_COLUMN_VALUE = '--';
 
     protected static ?string $model = Stand::class;
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'identifier';
     protected static ?string $navigationGroup = 'Airfield';
 
-    protected static function getGlobalSearchEloquentQuery(): Builder
+    public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['airlines']);
     }
@@ -54,7 +54,7 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(SelectOptions::airfields())
                             ->reactive()
-                            ->afterStateUpdated(function (Closure $get, Closure $set) {
+                            ->afterStateUpdated(function (\Filament\Forms\Get $get, \Filament\Forms\Set $set) {
                                 $terminalId = $get('terminal_id');
                                 if ($terminalId && Terminal::find($terminalId)->airfield_id === $get('airfield_id')) {
                                     return;
@@ -71,20 +71,20 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn (Closure $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                fn (\Filament\Forms\Get $get) => Terminal::where('airfield_id', $get('airfield_id'))
                                     ->get()
                                     ->mapWithKeys(
                                         fn (Terminal $terminal) => [$terminal->id => $terminal->description]
                                     )
                             )
                             ->disabled(
-                                fn (Page $livewire, Closure $get) => !Terminal::where(
+                                fn (Page $livewire, \Filament\Forms\Get $get) => !Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
                             )
                             ->dehydrated(
-                                fn (Page $livewire, Closure $get) => Terminal::where(
+                                fn (Page $livewire, \Filament\Forms\Get $get) => Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
@@ -95,11 +95,11 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (Closure $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                fn (\Filament\Forms\Get $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
                                 ),
-                                fn (Closure $get) => $get('airfield_id')
+                                fn (\Filament\Forms\Get $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
                             ->label(self::translateFormPath('type.label'))

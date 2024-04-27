@@ -11,9 +11,9 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\IconColumn;
@@ -25,7 +25,7 @@ class FirExitPointResource extends Resource
 
     protected static ?string $model = FirExitPoint::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-x';
+    protected static ?string $navigationIcon = 'heroicon-o-x-mark';
     protected static ?string $navigationGroup = 'Intention Codes';
 
     public static function form(Form $form): Form

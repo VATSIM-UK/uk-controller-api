@@ -8,9 +8,9 @@ use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Pages\ManageUnitDiscr
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Traits\MutatesRuleData;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class UnitDiscreteSquawkRangeResource extends Resource

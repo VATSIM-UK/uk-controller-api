@@ -20,4 +20,14 @@ class EditAircraft extends EditRecord
     {
         event(new AircraftDataUpdatedEvent);
     }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\DeleteAction::make()
+                ->after(function () {
+                    event(new AircraftDataUpdatedEvent);
+                }),
+        ];
+    }
 }

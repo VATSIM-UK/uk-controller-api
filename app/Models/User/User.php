@@ -134,9 +134,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsToMany(Dependency::class)->withTimestamps();
     }
 
-    public function canAccessFilament(): bool
+    public function canAccessPanel(\Filament\Panel $panel): bool
     {
-        return true;
+        return $panel->getId() === 'admin';
     }
 
     public function getFilamentName(): string

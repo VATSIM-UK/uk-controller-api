@@ -98,7 +98,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
         );
 
         // Emit the event and check we now see the status
-        $test->emit('requestAStandFormSubmitted');
+        $test->fireEvent('requestAStandFormSubmitted');
         $test->assertSeeHtml('You have currently requested Stand <b>EGLL / 1L</b>');
     }
 
@@ -119,7 +119,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
 
         // Delete the request (emitting the delete event) and check we now see the form
         $request->delete();
-        $test->emit('currentStandRequestRelinquished')
+        $test->fireEvent('currentStandRequestRelinquished')
             ->assertSeeHtml('Stand request for')
             ->assertSeeHtml('BAW123 at EGLL');
     }

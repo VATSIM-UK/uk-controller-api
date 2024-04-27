@@ -3,18 +3,19 @@
 namespace App\Filament\Helpers;
 
 use App\BaseFilamentTestCase;
+use App\Filament\Resources\AirfieldResource\Pages\EditAirfield;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class HasCoordinatesTest extends BaseFilamentTestCase
 {
     #[DataProvider('coordinateProvider')]
-    public static function testItHasCoordinates(float $latitude, float $longitude)
+    public function testItHasCoordinates(float $latitude, float $longitude)
     {
-        Livewire::test(CreateFakeAirfield::class)
+        Livewire::test(EditAirfield::class, ['record' => 1])
             ->set('data.latitude', $latitude)
             ->set('data.longitude', $longitude)
-            ->call('create')
+            ->call('save')
             ->assertHasNoErrors();
     }
 
@@ -40,10 +41,10 @@ class HasCoordinatesTest extends BaseFilamentTestCase
     #[DataProvider('badCoordinateProvider')]
     public function testItHasErrorsOnBadCoordinates(float|null $latitude, float|null $longitude, array $expectedErrors)
     {
-        Livewire::test(CreateFakeAirfield::class)
+        Livewire::test(EditAirfield::class, ['record' => 1])
             ->set('data.latitude', $latitude)
             ->set('data.longitude', $longitude)
-            ->call('create')
+            ->call('save')
             ->assertHasErrors($expectedErrors);
     }
 

@@ -69,7 +69,7 @@ class CurrentStandRequestTest extends BaseFilamentTestCase
         Livewire::test(CurrentStandRequest::class, ['standRequest' => $this->standRequest])
             ->assertOk()
             ->call('relinquish', $this->standRequest->id)
-            ->assertEmitted('currentStandRequestRelinquished');
+            ->assertDispatched('currentStandRequestRelinquished');
 
         $this->standRequest->refresh();
         $this->history->refresh();
@@ -91,7 +91,7 @@ class CurrentStandRequestTest extends BaseFilamentTestCase
         Livewire::test(CurrentStandRequest::class, ['standRequest' => $this->standRequest])
             ->assertOk()
             ->call('relinquish', $extraRequest->id)
-            ->assertNotEmitted('currentStandRequestRelinquished');
+            ->assertNotDispatched('currentStandRequestRelinquished');
 
         $this->assertDatabaseCount('stand_requests', 2);
         $this->assertDatabaseHas('stand_requests', ['id' => $extraRequest->id, 'deleted_at' => null]);

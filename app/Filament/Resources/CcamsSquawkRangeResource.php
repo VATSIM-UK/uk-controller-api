@@ -5,9 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Resources\CcamsSquawkRangeResource\Pages;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class CcamsSquawkRangeResource extends Resource

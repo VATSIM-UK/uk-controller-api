@@ -7,11 +7,11 @@ use App\Filament\Resources\NavaidResource\Pages;
 use App\Filament\Resources\NavaidResource\RelationManagers;
 use App\Models\Navigation\Navaid;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -22,7 +22,7 @@ class NavaidResource extends Resource
 
     protected static ?string $model = Navaid::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-location-marker';
+    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
     protected static ?string $recordTitleAttribute = 'identifier';
     protected static ?string $navigationLabel = 'Navaids and Holds';
     protected static ?string $label = 'Navaids and Holds';

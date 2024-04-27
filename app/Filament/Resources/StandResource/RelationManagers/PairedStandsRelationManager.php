@@ -7,7 +7,7 @@ use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
@@ -28,7 +28,7 @@ class PairedStandsRelationManager extends RelationManager
         return self::translateTablePath('description');
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         $attachAction = Tables\Actions\AttachAction::make('pair-stand');
         $detachAction = Tables\Actions\DetachAction::make('unpair-stand');
@@ -49,21 +49,22 @@ class PairedStandsRelationManager extends RelationManager
                     Select::make('recordId')
                         ->required()
                         ->options(
-                            $attachAction->getRelationship()
+                            $attachAction->getTable()
+                                ->getRelationship()
                                 ->getRelated()
                                 ->newModelQuery()
-                                ->where('airfield_id', $attachAction->getRelationship()->getParent()->airfield_id)
-                                ->where('id', '<>', $attachAction->getRelationship()->getParent()->id)
+                                ->where('airfield_id', $attachAction->getTable()->getRelationship()->getParent()->airfield_id)
+                                ->where('id', '<>', $attachAction->getTable()->getRelationship()->getParent()->id)
                                 ->whereDoesntHave('pairedStands', function (Builder $pairedStand) use ($attachAction) {
                                     $pairedStand->where(
                                         'stand_pairs.paired_stand_id',
-                                        $attachAction->getRelationship()->getParent()->id
+                                        $attachAction->getTable()->getRelationship()->getParent()->id
                                     );
                                 })
                                 ->get()
                                 ->mapWithKeys(
                                     fn (Stand $stand) => [
-                                        $stand->{$attachAction->getRelationship()->getRelatedKeyName(
+                                        $stand->{$attachAction->getTable()->getRelationship()->getRelatedKeyName(
                                         )} => $attachAction->getRecordTitle($stand),
                                     ]
                                 )
@@ -75,7 +76,7 @@ class PairedStandsRelationManager extends RelationManager
                 ])
                     ->using(function (array $data) use ($attachAction) {
                         DB::transaction(function () use ($attachAction, $data) {
-                            $stand = $attachAction->getRelationship()->getParent();
+                            $stand = $attachAction->getTable()->getRelationship()->getParent();
                             $pairedStand = Stand::findOrFail($data['recordId']);
                             $stand->pairedStands()->attach($pairedStand, ['stand_id' => $stand->id]);
                             $pairedStand->pairedStands()->attach($stand, ['stand_id' => $pairedStand->id]);
@@ -89,8 +90,8 @@ class PairedStandsRelationManager extends RelationManager
                 $detachAction->using(
                     function (Stand $record) use ($detachAction): void {
                         DB::transaction(function () use ($record, $detachAction) {
-                            $detachAction->getRelationship()->detach($record);
-                            $record->pairedStands()->detach($detachAction->getRelationship()->getParent());
+                            $detachAction->getTable()->getRelationship()->detach($record);
+                            $record->pairedStands()->detach($detachAction->getTable()->getRelationship()->getParent());
                         });
                     }
                 )

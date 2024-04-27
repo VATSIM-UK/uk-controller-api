@@ -7,5 +7,5 @@ trait HasResourceClass
     /**
      * Get the resource this test is for.
      */
-    protected abstract function resourceClass(): string;
+    protected static abstract function resourceClass(): string;
 }

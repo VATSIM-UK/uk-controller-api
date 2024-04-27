@@ -18,9 +18,9 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 
@@ -29,7 +29,7 @@ class IntentionCodeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = IntentionCode::class;
-    protected static ?string $navigationIcon = 'heroicon-o-code';
+    protected static ?string $navigationIcon = 'heroicon-o-code-bracket';
     protected static ?string $navigationGroup = 'Intention Codes';
 
     public static function form(Form $form): Form
@@ -54,9 +54,9 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('code_type.label'))
                             ->helperText(self::translateFormPath('code_type.helper')),
                         TextInput::make('single_code')
-                            ->required(fn (Closure $get) => $get('code_type') === 'single_code')
+                            ->required(fn (\Filament\Forms\Get $get) => $get('code_type') === 'single_code')
                             ->maxLength(2)
-                            ->hidden(fn (Closure $get) => $get('code_type') !== 'single_code')
+                            ->hidden(fn (\Filament\Forms\Get $get) => $get('code_type') !== 'single_code')
                             ->label(self::translateFormPath('single_code.label'))
                             ->helperText(self::translateFormPath('single_code.helper'))
                     ]),
@@ -78,13 +78,13 @@ class IntentionCodeResource extends Resource
                             ->minValue(1)
                             ->label(self::translateFormPath('position.label'))
                             ->helperText(self::translateFormPath('position.helper'))
-                            ->hidden(fn (Closure $get) => $get('order_type') !== 'at_position')
-                            ->required(fn (Closure $get) => $get('order_type') === 'at_position'),
+                            ->hidden(fn (\Filament\Forms\Get $get) => $get('order_type') !== 'at_position')
+                            ->required(fn (\Filament\Forms\Get $get) => $get('order_type') === 'at_position'),
                         Select::make('insert_position')
                             ->label(self::translateFormPath('before_after_position.label'))
                             ->helperText(self::translateFormPath('before_after_position.helper'))
-                            ->hidden(fn (Closure $get) => !in_array($get('order_type'), ['before', 'after']))
-                            ->required(fn (Closure $get) => in_array($get('order_type'), ['before', 'after']))
+                            ->hidden(fn (\Filament\Forms\Get $get) => !in_array($get('order_type'), ['before', 'after']))
+                            ->required(fn (\Filament\Forms\Get $get) => in_array($get('order_type'), ['before', 'after']))
                             ->options(
                                 fn () => IntentionCode::all()->mapWithKeys(
                                     fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]

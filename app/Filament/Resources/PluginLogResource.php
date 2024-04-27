@@ -7,8 +7,8 @@ use App\Models\Plugin\PluginLog;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Resources\Form;
+use Filament\Tables\Table;
+use Filament\Forms\Form;
 use Filament\Tables\Columns\TextColumn;
 
 class PluginLogResource extends Resource

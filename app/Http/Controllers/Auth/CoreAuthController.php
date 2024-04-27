@@ -37,7 +37,7 @@ class CoreAuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->intended(route('filament.pages.dashboard'));
+        return redirect()->intended(route('filament.admin.pages.dashboard'));
     }
 
     public function logout()

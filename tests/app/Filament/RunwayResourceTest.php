@@ -576,7 +576,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
         return 1;
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return RunwayResource::class;
     }

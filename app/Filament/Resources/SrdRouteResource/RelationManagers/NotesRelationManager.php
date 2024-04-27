@@ -5,7 +5,7 @@ namespace App\Filament\Resources\SrdRouteResource\RelationManagers;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class NotesRelationManager extends RelationManager
@@ -16,7 +16,7 @@ class NotesRelationManager extends RelationManager
     protected static string $relationship = 'notes';
     protected static ?string $recordTitleAttribute = 'id';
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

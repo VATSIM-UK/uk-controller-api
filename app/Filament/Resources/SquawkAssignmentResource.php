@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SquawkAssignmentResource\Pages;
 use App\Models\Squawk\SquawkAssignment;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class SquawkAssignmentResource extends Resource

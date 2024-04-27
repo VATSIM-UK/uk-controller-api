@@ -8,9 +8,9 @@ use App\Filament\Resources\UnitConspicuitySquawkCodeResource\Pages\ManageUnitCon
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Traits\MutatesRuleData;
 use App\Models\Squawk\UnitConspicuity\UnitConspicuitySquawkCode;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class UnitConspicuitySquawkCodeResource extends Resource
