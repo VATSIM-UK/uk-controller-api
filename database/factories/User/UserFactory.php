@@ -14,7 +14,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'id' => $this->faker->unique()->numberBetween(800000, 1900000),
+            'id' => fake()->unique()->numberBetween(800000, 1900000),
         ];
     }
 }
