@@ -37,18 +37,6 @@ class VersionController extends BaseController
     }
 
     /**
-     * Returns a collection of all the versions.
-     *
-     * @return JsonResponse
-     */
-    public function getAllVersions(): JsonResponse
-    {
-        return response()
-            ->json($this->versionService->getAllVersions())
-            ->setStatusCode(200);
-    }
-
-    /**
      * Returns information about a version
      *
      * @param Version $version

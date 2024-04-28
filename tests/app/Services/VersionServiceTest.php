@@ -96,16 +96,6 @@ class VersionServiceTest extends BaseFunctionalTestCase
         $this->service->getLatestVersionForReleaseChannel('bla');
     }
 
-    public function testGetAllVersionsReturnsAllVersions()
-    {
-        $versions = $this->service->getAllVersions();
-        $this->assertEquals(3, $versions->count());
-
-        foreach ($versions as $key => $version) {
-            $this->assertEquals($key + 1, $version->id);
-        }
-    }
-
     public function testToggleVersionAllowedThrowsExceptionOnUnknownVersion()
     {
         $this->expectException(VersionNotFoundException::class);
