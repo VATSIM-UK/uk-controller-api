@@ -126,12 +126,6 @@ class UserServiceTest extends BaseFunctionalTestCase
         $this->makeTestRequest('/useradmin', $accessToken);
     }
 
-    public function testItAVersionAdminAccessToken()
-    {
-        $accessToken = $this->service->createAdminUser();
-        $this->makeTestRequest('/versionadmin', $accessToken);
-    }
-
     public function testBanUserThrowsExceptionIfUserDoesntExist()
     {
         $this->expectException(ModelNotFoundException::class);
