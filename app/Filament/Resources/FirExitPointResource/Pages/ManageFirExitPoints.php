@@ -13,7 +13,7 @@ class ManageFirExitPoints extends ListRecords
 
     protected static string $resource = FirExitPointResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

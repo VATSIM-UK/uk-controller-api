@@ -1,5 +1,0 @@
-@import "../../vendor/filament/filament/resources/css/app.css";
-
-.dark .dark\:invert-logo{
-    filter: brightness(0) invert(1)
-}

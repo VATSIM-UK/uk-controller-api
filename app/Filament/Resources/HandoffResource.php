@@ -6,9 +6,9 @@ use App\Filament\Resources\HandoffResource\Pages;
 use App\Filament\Resources\HandoffResource\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\Handoff;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -17,7 +17,7 @@ class HandoffResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Handoff::class;
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'description';
     protected static ?string $navigationGroup = 'Airfield';
 

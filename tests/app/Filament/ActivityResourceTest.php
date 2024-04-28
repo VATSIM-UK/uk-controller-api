@@ -62,12 +62,7 @@ class ActivityResourceTest extends BaseFilamentTestCase
         return Activity::query()->firstOrFail();
     }
 
-    protected function getResourceClass(): string
-    {
-        return ActivityResource::class;
-    }
-
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return ActivityResource::class;
     }

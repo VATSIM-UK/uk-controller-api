@@ -10,7 +10,7 @@ class ViewPrenote extends ViewRecord
 {
     protected static string $resource = PrenoteResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),

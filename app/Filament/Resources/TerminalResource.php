@@ -8,11 +8,11 @@ use App\Filament\Resources\TerminalResource\RelationManagers\AirlinesRelationMan
 use App\Models\Airfield\Terminal;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -22,7 +22,7 @@ class TerminalResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Terminal::class;
-    protected static ?string $navigationIcon = 'heroicon-o-terminal';
+    protected static ?string $navigationIcon = 'heroicon-o-command-line';
     protected static ?string $navigationGroup = 'Airfield';
     protected static ?string $recordTitleAttribute = 'description';
 

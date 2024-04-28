@@ -5,7 +5,7 @@ namespace App\Filament\Resources\SidResource\RelationManagers;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class PrenotesRelationManager extends RelationManager
@@ -17,7 +17,7 @@ class PrenotesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'description';
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

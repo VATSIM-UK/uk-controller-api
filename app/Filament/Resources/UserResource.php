@@ -8,9 +8,9 @@ use App\Models\User\User;
 use App\Models\User\UserStatus;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class UserResource extends Resource
@@ -99,5 +99,10 @@ class UserResource extends Resource
     protected static function translationPathRoot(): string
     {
         return 'users';
+    }
+
+    protected static function resourceClass(): string
+    {
+        return UserResource::class;
     }
 }

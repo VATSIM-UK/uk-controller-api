@@ -18,7 +18,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
     public function testItCreatesAnExitPoint()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
@@ -43,7 +43,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateAnExitPointIfExitPointMissing()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'internal' => true,
@@ -51,27 +51,28 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_end' => 345,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_point']);
+            ->assertHasActionErrors(['exit_point']);
     }
 
     public function testItDoesntCreateAnExitPointIfInternalMissing()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
                     'exit_direction_start' => 123,
                     'exit_direction_end' => 345,
+                    'internal' => null,
                 ]
             )
-            ->assertHasPageActionErrors(['internal']);
+            ->assertHasActionErrors(['internal']);
     }
 
     public function testItDoesntCreateAnExitPointIfExitPointTooLong()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOOOOOOOOO',
@@ -80,13 +81,13 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_end' => 345,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_point']);
+            ->assertHasActionErrors(['exit_point']);
     }
 
     public function testItDoesntCreateAnExitPointIfStartDirectionMissing()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
@@ -94,13 +95,13 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_end' => 345,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_direction_start']);
+            ->assertHasActionErrors(['exit_direction_start']);
     }
 
     public function testItDoesntCreateAnExitPointIfStartDirectionNegative()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
@@ -109,13 +110,13 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_end' => 345,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_direction_start']);
+            ->assertHasActionErrors(['exit_direction_start']);
     }
 
     public function testItDoesntCreateAnExitPointIfStartDirectionTooLarge()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
@@ -124,13 +125,13 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_end' => 345,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_direction_start']);
+            ->assertHasActionErrors(['exit_direction_start']);
     }
 
     public function testItDoesntCreateAnExitPointIfEndDirectionMissing()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
@@ -138,13 +139,13 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_start' => 123,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_direction_end']);
+            ->assertHasActionErrors(['exit_direction_end']);
     }
 
     public function testItDoesntCreateAnExitPointIfEndDirectionNegative()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
@@ -153,13 +154,13 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_end' => -5,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_direction_end']);
+            ->assertHasActionErrors(['exit_direction_end']);
     }
 
     public function testItDoesntCreateAnExitPointIfEndDirectionTooLarge()
     {
         Livewire::test(ManageFirExitPoints::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'exit_point' => 'BOO',
@@ -168,7 +169,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_direction_end' => 361,
                 ]
             )
-            ->assertHasPageActionErrors(['exit_direction_end']);
+            ->assertHasActionErrors(['exit_direction_end']);
     }
 
     public function testItEditsAFirExitPoint()
@@ -208,6 +209,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'internal' => true,
                     'exit_direction_start' => 123,
                     'exit_direction_end' => 345,
+                    'exit_point' => null,
                 ]
             )
             ->assertHasTableActionErrors(['exit_point']);
@@ -223,6 +225,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_point' => 'TEST',
                     'exit_direction_start' => 123,
                     'exit_direction_end' => 345,
+                    'internal' => null,
                 ]
             )
             ->assertHasTableActionErrors(['internal']);
@@ -254,6 +257,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_point' => 'BOO',
                     'internal' => true,
                     'exit_direction_end' => 345,
+                    'exit_direction_start' => null,
                 ]
             )
             ->assertHasTableActionErrors(['exit_direction_start']);
@@ -302,6 +306,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
                     'exit_point' => 'BOO',
                     'internal' => true,
                     'exit_direction_start' => 123,
+                    'exit_direction_end' => null,
                 ]
             )
             ->assertHasTableActionErrors(['exit_direction_end']);
@@ -547,7 +552,7 @@ class FirExitPointResourceTest extends BaseFilamentTestCase
         return ['Fir Exit Points', 'FOO'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return FirExitPointResource::class;
     }

@@ -10,7 +10,7 @@ class EditControllerPosition extends EditRecord
 {
     protected static string $resource = ControllerPositionResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),

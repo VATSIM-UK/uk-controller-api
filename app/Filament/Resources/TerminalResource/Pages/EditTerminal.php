@@ -10,7 +10,7 @@ class EditTerminal extends EditRecord
 {
     protected static string $resource = TerminalResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),

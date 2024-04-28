@@ -18,7 +18,7 @@ class NonAssignableSquawkCodeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkCode()
     {
         Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '2512',
@@ -39,65 +39,65 @@ class NonAssignableSquawkCodeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateIfCodeNotUnique()
     {
         Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '1234',
                     'description' => 'abc',
                 ]
             )
-            ->assertHasPageActionErrors(['code']);
+            ->assertHasActionErrors(['code']);
     }
 
     public function testItDoesntCreateIfCodeInvalid()
     {
         Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'code' => '123a',
                     'description' => 'abc',
                 ]
             )
-            ->assertHasPageActionErrors(['code']);
+            ->assertHasActionErrors(['code']);
     }
 
     public function testItDoesntCreateARangeIfDescriptionMissing()
     {
         Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
                 ]
             )
-            ->assertHasPageActionErrors(['description']);
+            ->assertHasActionErrors(['description']);
     }
 
     public function testItDoesntCreateARangeIfDescriptionTooShort()
     {
         Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
                     'description' => '',
                 ]
             )
-            ->assertHasPageActionErrors(['description']);
+            ->assertHasActionErrors(['description']);
     }
 
     public function testItDoesntCreateARangeIfDescriptionTooLong()
     {
         Livewire::test(ManageNonAssignnableSquawkCodeRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
                     'description' => Str::padRight('', 256, 'a'),
                 ]
             )
-            ->assertHasPageActionErrors(['description']);
+            ->assertHasActionErrors(['description']);
     }
 
     public function testItEditsASquawkCode()
@@ -182,6 +182,7 @@ class NonAssignableSquawkCodeResourceTest extends BaseFilamentTestCase
                 NonAssignableSquawkCode::findOrFail(1),
                 [
                     'code' => '7231',
+                    'description' => null,
                 ]
             )
             ->assertHasTableActionErrors(['description']);
@@ -225,7 +226,7 @@ class NonAssignableSquawkCodeResourceTest extends BaseFilamentTestCase
         return ['Non Assignable Squawk Codes', '7500', 'Never to be used on the VATSIM network'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return NonAssignableSquawkCodeResource::class;
     }

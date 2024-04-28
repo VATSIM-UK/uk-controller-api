@@ -119,7 +119,7 @@ class StandReservationService
 
     private static function cidValid(?int $cid): bool
     {
-        return is_null($cid) || (new VatsimCidValidator())->isValid($cid);
+        return is_null($cid) || VatsimCidValidator::isValid($cid);
     }
 
     private static function dataInvalidForCidReservation(?int $cid, ?string $origin, ?string $destination): bool

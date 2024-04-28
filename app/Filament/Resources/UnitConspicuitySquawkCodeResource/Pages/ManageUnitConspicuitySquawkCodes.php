@@ -6,6 +6,7 @@ use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\UnitConspicuitySquawkCodeResource;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Traits\MutatesRuleData;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Actions\CreateAction;
 
 class ManageUnitConspicuitySquawkCodes extends ManageRecords
 {
@@ -13,9 +14,12 @@ class ManageUnitConspicuitySquawkCodes extends ManageRecords
     use MutatesRuleData;
 
     protected static string $resource = UnitConspicuitySquawkCodeResource::class;
-
-    protected function mutateFormDataBeforeCreate(array $data): array
+    
+    protected function getHeaderActions(): array
     {
-        return self::mutateFormData()($data);
+        return [
+            CreateAction::make()
+                ->mutateFormDataUsing(fn (array $data) => self::mutateFormData()($data)),
+        ];
     }
 }

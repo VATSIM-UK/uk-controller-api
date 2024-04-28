@@ -8,7 +8,7 @@ use Z3d0X\FilamentLogger\Resources\ActivityResource\Pages\ViewActivity;
 
 class ActivityResource extends BaseResource
 {
-    protected static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): ?string
     {
         return 'Administration';
     }

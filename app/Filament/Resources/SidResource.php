@@ -12,10 +12,10 @@ use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Page;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -47,11 +47,11 @@ class SidResource extends Resource
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
                     ->rule(
-                        fn (Closure $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
+                        fn (\Filament\Forms\Get $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
                             Runway::findOrFail($get('runway_id')),
                             $record
                         ),
-                        fn (Closure $get) => $get('runway_id')
+                        fn (\Filament\Forms\Get $get) => $get('runway_id')
                     )
                     ->required(),
                 Forms\Components\TextInput::make('initial_altitude')
@@ -65,14 +65,14 @@ class SidResource extends Resource
                 Forms\Components\TextInput::make('initial_heading')
                     ->label(self::translateFormPath('initial_heading.label'))
                     ->helperText(self::translateFormPath('initial_heading.helper'))
-                    ->hintIcon('heroicon-o-arrows-expand')
+                    ->hintIcon('heroicon-o-arrows-pointing-out')
                     ->integer()
                     ->minValue(1)
                     ->maxValue(360),
                 Select::make('handoff_id')
                     ->label(self::translateFormPath('handoff.label'))
                     ->helperText(self::translateFormPath('handoff.helper'))
-                    ->hintIcon('heroicon-o-clipboard-list')
+                    ->hintIcon('heroicon-o-clipboard-document-list')
                     ->options(SelectOptions::nonAirfieldHandoffs())
                     ->searchable(),
             ]);

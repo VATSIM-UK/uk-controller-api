@@ -6,9 +6,9 @@ use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Resources\NonAssignableSquawkCodeResource\Pages\ManageNonAssignnableSquawkCodeRanges;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class NonAssignableSquawkCodeResource extends Resource

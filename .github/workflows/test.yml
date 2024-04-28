@@ -14,13 +14,13 @@ jobs:
     name: PHP ${{ matrix.php }} / Composer ${{ matrix.composer }}
     runs-on: ubuntu-latest
     concurrency:
-      group: ukcp-api-test-${{ github.ref }}
+      group: ukcp-api-test-${{ github.ref }}-php-${{ matrix.php }}
       cancel-in-progress: true
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.2' ]
+        php: [ '8.2', '8.3' ]
         composer: [ 'v2' ]
         experimental: [ false ]
         #include:
@@ -67,7 +67,7 @@ jobs:
       - name: Setup Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: '16'
+          node-version: '20'
       #
       # COMPOSER DEPENDENICES
       #

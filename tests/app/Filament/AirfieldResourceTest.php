@@ -266,7 +266,6 @@ class AirfieldResourceTest extends BaseFilamentTestCase
     public function testItEditsAnAirfield()
     {
         Livewire::test(EditAirfield::class, ['record' => 1])
-            ->set('data.code', 'EGKK')
             ->set('data.latitude', 12.34)
             ->set('data.longitude', 45.67)
             ->set('data.elevation', 123)
@@ -280,7 +279,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
             'airfield',
             [
                 'id' => 1,
-                'code' => 'EGKK',
+                'code' => 'EGLL',
                 'latitude' => 12.34,
                 'longitude' => 45.67,
                 'elevation' => 123,
@@ -454,7 +453,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         $this->assertDatabaseHas('msl_airfield', ['airfield_id' => $airfield->id]);
 
         Livewire::test(EditAirfield::class, ['record' => $airfield->id])
-            ->callPageAction('delete')
+            ->callAction('delete')
             ->assertHasNoErrors()
             ->assertRedirect(AirfieldResource::getUrl('index'));
 
@@ -466,7 +465,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )->assertCanSeeTableRecords([1, 2]);
     }
 
@@ -474,7 +473,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('attach', data: ['recordId' => 4])
             ->assertHasNoTableActionErrors();
@@ -497,7 +496,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('attach', data: ['recordId' => 3, 'insert_after' => 1])
             ->assertHasNoTableActionErrors();
@@ -528,7 +527,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -559,7 +558,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(4))
             ->assertHasNoTableActionErrors();
@@ -590,7 +589,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -622,7 +621,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(1))
             ->assertHasNoTableActionErrors();
@@ -654,7 +653,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -686,7 +685,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(4))
             ->assertHasNoTableActionErrors();
@@ -709,7 +708,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('attach', data: ['recordId' => 4])
             ->assertHasNoTableActionErrors();
@@ -741,7 +740,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -772,7 +771,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
             ->assertHasNoTableActionErrors();
@@ -804,7 +803,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         );
         Livewire::test(
             ControllersRelationManager::class,
-            ['ownerRecord' => Airfield::findOrFail(1)]
+            ['ownerRecord' => Airfield::findOrFail(1), 'pageClass' => EditAirfield::class]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(3))
             ->assertHasNoTableActionErrors();
@@ -853,7 +852,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
         return $this->getEditRecord();
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return AirfieldResource::class;
     }

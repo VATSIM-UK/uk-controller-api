@@ -358,8 +358,8 @@ class AircraftResourceTest extends BaseFilamentTestCase
     public function testItDeletesAircraftFromTheEditPage()
     {
         Livewire::test(EditAircraft::class, ['record' => 1])
-            ->callPageAction('delete')
-            ->assertHasNoPageActionErrors();
+            ->callAction('delete')
+            ->assertHasNoActionErrors();
 
         $this->assertDatabaseMissing('aircraft', [
             'id' => 1,
@@ -373,7 +373,7 @@ class AircraftResourceTest extends BaseFilamentTestCase
     {
         Livewire::test(
             WakeCategoriesRelationManager::class,
-            ['ownerRecord' => Aircraft::findOrFail(1)]
+            ['ownerRecord' => Aircraft::findOrFail(1), 'pageClass' => EditAircraft::class]
         )
             ->callTableAction(
                 'attach',
@@ -402,7 +402,7 @@ class AircraftResourceTest extends BaseFilamentTestCase
 
         Livewire::test(
             WakeCategoriesRelationManager::class,
-            ['ownerRecord' => Aircraft::findOrFail(1)]
+            ['ownerRecord' => Aircraft::findOrFail(1), 'pageClass' => EditAircraft::class]
         )
             ->callTableAction('detach', 9)
             ->assertSuccessful()
@@ -447,7 +447,7 @@ class AircraftResourceTest extends BaseFilamentTestCase
         return Aircraft::find(1);
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return AircraftResource::class;
     }

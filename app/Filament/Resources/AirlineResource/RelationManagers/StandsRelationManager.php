@@ -7,7 +7,7 @@ use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\DetachAction;
 use Filament\Tables\Actions\EditAction;
@@ -29,7 +29,7 @@ class StandsRelationManager extends RelationManager
         return self::translateTablePath('description');
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

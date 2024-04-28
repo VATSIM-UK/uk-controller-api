@@ -2,16 +2,19 @@
 
 namespace App\Filament;
 
+use App\Filament\AccessCheckingHelpers\HasResourceClass;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Filament\Resources\Pages\ManageRecords;
+use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
-use Livewire\Testing\TestableLivewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 trait BaseChecksActionVisibility
 {
+    use HasResourceClass;
+
     #[DataProvider('tableActionProvider')]
     public function testItControlsActionVisibility(
         callable $testCase,
@@ -176,11 +179,8 @@ trait BaseChecksActionVisibility
                             $checkToPerform = in_array(
                                 $role,
                                 $rolesThatCanPerformAction
-                            ) ? 'assertPageActionVisible'
-                                : (
-                                    get_parent_class(
-                                        static::resourceListingClass()
-                                    ) === ManageRecords::class ? 'assertPageActionDoesNotExist' : 'assertPageActionHidden');
+                            ) ? 'assertActionVisible'
+                                : 'assertActionHidden';
 
                             $livewire->$checkToPerform($action);
                         },
@@ -193,7 +193,7 @@ trait BaseChecksActionVisibility
     }
 
     private static function assertTableActionVisibility(
-        TestableLivewire $livewire,
+        Testable $livewire,
         string $recordClass,
         string $recordId,
         string $action,
@@ -219,6 +219,7 @@ trait BaseChecksActionVisibility
                 $ownerRecordClass . '::findOrFail',
                 $ownerRecordId
             ),
+            'pageClass' => call_user_func(static::resourceClass() . '::getPages')['edit']->getPage(),
         ];
     }
 

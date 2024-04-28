@@ -52,12 +52,7 @@ class PluginLogResourceTest extends BaseFilamentTestCase
         return PluginLog::query()->firstOrFail();
     }
 
-    protected function getResourceClass(): string
-    {
-        return PluginLogResource::class;
-    }
-
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return PluginLogResource::class;
     }

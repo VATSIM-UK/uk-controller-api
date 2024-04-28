@@ -11,7 +11,7 @@ class EditAirfield extends EditRecord
 {
     protected static string $resource = AirfieldResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             DeleteAction::make()

@@ -16,7 +16,7 @@ class SquawkAssignmentResourceTest extends BaseFilamentTestCase
         return ['Squawk Assignments', 'BAW123', '1234', 'Not assigned by UKCP'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return SquawkAssignmentResource::class;
     }

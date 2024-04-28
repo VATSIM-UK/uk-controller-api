@@ -7,6 +7,7 @@ use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource;
 use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Pages\ManageUnitDiscreteSquawkRanges;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -18,7 +19,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRange()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -41,7 +42,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRangeWithRules()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -75,7 +76,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateARangeIfFirstInvalid()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '123a',
@@ -83,13 +84,13 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                     'unit' => 'EGKK',
                 ]
             )
-            ->assertHasPageActionErrors(['first']);
+            ->assertHasActionErrors(['first']);
     }
 
     public function testItDoesntCreateARangeIfLastInvalid()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -97,26 +98,26 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                     'unit' => 'EGKK',
                 ]
             )
-            ->assertHasPageActionErrors(['last']);
+            ->assertHasActionErrors(['last']);
     }
 
     public function testItDoesntCreateARangeIfUnitEmpty()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
                     'last' => '2345',
                 ]
             )
-            ->assertHasPageActionErrors(['unit']);
+            ->assertHasActionErrors(['unit']);
     }
 
     public function testItDoesntCreateARangeIfUnitTooShort()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -124,13 +125,13 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                     'unit' => '',
                 ]
             )
-            ->assertHasPageActionErrors(['unit']);
+            ->assertHasActionErrors(['unit']);
     }
 
     public function testItDoesntCreateARangeIfUnitTooLong()
     {
         Livewire::test(ManageUnitDiscreteSquawkRanges::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -138,7 +139,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
                     'unit' => Str::padRight('', 256, 'a'),
                 ]
             )
-            ->assertHasPageActionErrors(['unit']);
+            ->assertHasActionErrors(['unit']);
     }
 
     public function testItLoadsARangeWithRulesForEdit()
@@ -300,7 +301,7 @@ class UnitDiscreteSquawkRangeResourceTest extends BaseFilamentTestCase
         return ['Unit Discrete Squawk Ranges'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return UnitDiscreteSquawkRangeResource::class;
     }

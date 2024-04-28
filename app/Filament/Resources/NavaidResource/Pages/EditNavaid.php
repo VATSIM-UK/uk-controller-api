@@ -10,7 +10,7 @@ class EditNavaid extends EditRecord
 {
     protected static string $resource = NavaidResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),

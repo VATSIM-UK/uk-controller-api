@@ -6,6 +6,7 @@ use App\BaseApiTestCase;
 use App\Models\Notification\Notification;
 use App\Models\User\Admin;
 use App\Models\User\User;
+use App\Models\User\UserStatus;
 use App\Providers\AuthServiceProvider;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class UserControllerTest extends BaseApiTestCase
 {
     const USER_CREATE_URI = 'user/1203532';
+    const USER_CREATE_NO_CONFIG_URI = 'user';
     const ADMIN_LOGIN_URI = 'admin/login';
     const ADMIN_EMAIL = 'ukcp@vatsim.uk';
 
@@ -31,10 +33,49 @@ class UserControllerTest extends BaseApiTestCase
     public function testItRequiresUserAdminScope()
     {
         $this->regenerateAccessToken([], static::$tokenUser);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_NO_CONFIG_URI, ['cid' => 800001])->assertStatus(403);
+    }
+
+    public function testCreateUserReturnsCreatedOnSuccess()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_NO_CONFIG_URI, ['cid' => 800001])->assertStatus(201);
+    }
+
+    public function testCreateUserReturnsUnprocessableOnInvalidCid()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_NO_CONFIG_URI, ['cid' => 'abc'])->assertUnprocessable();
+    }
+
+    public function testCreateUserReturnsUnprocessableOnNoCid()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_NO_CONFIG_URI, [])->assertUnprocessable();
+    }
+
+    public function testCreateUserReturnsUnprocessableOnAlreadyExists()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_NO_CONFIG_URI, ['cid' => 800001])->assertStatus(201);
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_NO_CONFIG_URI, ['cid' => 800001])->assertStatus(422);
+    }
+
+    public function testCreatesUser()
+    {
+        $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_NO_CONFIG_URI, ['cid' => 800001])->assertStatus(201);
+        $this->assertDatabaseHas(
+            'user',
+            [
+                'id' => 800001,
+                'status' => UserStatus::ACTIVE
+            ]
+        );
+    }
+
+    public function testItRequiresUserAdminScopeWithConfig()
+    {
+        $this->regenerateAccessToken([], static::$tokenUser);
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(403);
     }
 
-    public function testCreateUserReturnsTheCorrectJsonStructure()
+    public function testCreateWithConfigUserReturnsTheCorrectJsonStructure()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertJsonStructure(
             [
@@ -44,12 +85,12 @@ class UserControllerTest extends BaseApiTestCase
         );
     }
 
-    public function testCreateUserReturnsCreatedOnSuccess()
+    public function testCreateUserWithConfigReturnsCreatedOnSuccess()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(201);
     }
 
-    public function testCreateUserReturnsUnprocessableOnAlreadyExists()
+    public function testCreateUserWithConfigReturnsUnprocessableOnAlreadyExists()
     {
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(201);
         $this->makeAuthenticatedApiRequest(self::METHOD_POST, self::USER_CREATE_URI)->assertStatus(422);
