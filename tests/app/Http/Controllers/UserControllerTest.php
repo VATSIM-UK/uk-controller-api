@@ -196,10 +196,6 @@ class UserControllerTest extends BaseApiTestCase
 
     public function testItHandlesNoModelsFoundCorrectly()
     {
-        // Unknown CID
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'user/1500000/notifications/unread')
-            ->assertStatus(404);
-
         // Unknown Notification Id
         $this->makeAuthenticatedApiRequest(self::METHOD_PUT, 'user/1203533/notifications/read/123456')
             ->assertStatus(404);

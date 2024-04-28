@@ -150,19 +150,18 @@ class UserService
     }
 
     /**
-     * Retrieves the user's unread notifications from the database
+     * Retrieves the user's unread notifications from the database. Creates the user if they do not exist.
      *
      * @param int $userCid
-     * @throws ModelNotFoundException
      * @return Collection
      */
     public function getUnreadNotificationsForUser(int $userCid, bool $includeInactive = false)
     {
         $query = Notification::orderBy('valid_from', 'desc')
             ->with('controllers')
-            ->unreadBy(User::findOrFail($userCid));
+            ->unreadBy($this->firstOrCreateUser($userCid));
 
-        if ($includeInactive) {
+        if (!$includeInactive) {
             $query->active();
         }
 
@@ -206,5 +205,10 @@ class UserService
         $user->save();
 
         return $user;
+    }
+
+    private function firstOrCreateUser(int $userCid): User
+    {
+        return User::firstOrCreate(['id' => $userCid], ['status' => UserStatus::ACTIVE]);
     }
 }
