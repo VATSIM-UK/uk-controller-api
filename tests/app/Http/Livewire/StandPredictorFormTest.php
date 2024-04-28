@@ -22,7 +22,7 @@ class StandPredictorFormTest extends BaseFilamentTestCase
             ->set('arrivalAirfield', 'EGLL')
             ->call('submit')
             ->assertHasNoErrors()
-            ->assertEmitted('standPredictorFormSubmitted', [
+            ->assertDispatched('standPredictorFormSubmitted', [
                 'callsign' => 'BAW999',
                 'cid' => 1203533,
                 'aircraft_id' => 1,
@@ -41,7 +41,7 @@ class StandPredictorFormTest extends BaseFilamentTestCase
             ->set('arrivalAirfield', 'EGLL')
             ->call('submit')
             ->assertHasNoErrors()
-            ->assertEmitted('standPredictorFormSubmitted', [
+            ->assertDispatched('standPredictorFormSubmitted', [
                 'callsign' => 'BAW999',
                 'cid' => 1203533,
                 'aircraft_id' => 1,
@@ -59,7 +59,7 @@ class StandPredictorFormTest extends BaseFilamentTestCase
             ->set('arrivalAirfield', 'EGLL')
             ->call('submit')
             ->assertHasErrors(['callsign'])
-            ->assertNotEmitted('standPredictorFormSubmitted');
+            ->assertNotDispatched('standPredictorFormSubmitted');
     }
 
     public function testItDoesntSubmitIfNoAircraftType()
@@ -70,7 +70,7 @@ class StandPredictorFormTest extends BaseFilamentTestCase
             ->set('arrivalAirfield', 'EGLL')
             ->call('submit')
             ->assertHasErrors(['aircraftType'])
-            ->assertNotEmitted('standPredictorFormSubmitted');
+            ->assertNotDispatched('standPredictorFormSubmitted');
     }
 
     public function testItDoesntSubmitIfNoDepartureAirfield()
@@ -80,7 +80,7 @@ class StandPredictorFormTest extends BaseFilamentTestCase
             ->set('arrivalAirfield', 'EGLL')
             ->call('submit')
             ->assertHasErrors(['departureAirfield'])
-            ->assertNotEmitted('standPredictorFormSubmitted');
+            ->assertNotDispatched('standPredictorFormSubmitted');
     }
 
     public function testItDoesntSubmitIfDepartureAirfieldNotIcao()
@@ -91,7 +91,7 @@ class StandPredictorFormTest extends BaseFilamentTestCase
             ->set('departureAirfield', '1234X')
             ->call('submit')
             ->assertHasErrors(['departureAirfield'])
-            ->assertNotEmitted('standPredictorFormSubmitted');
+            ->assertNotDispatched('standPredictorFormSubmitted');
     }
 
     public function testItDoesntSubmitIfNoArrivalAirfield()
@@ -101,6 +101,6 @@ class StandPredictorFormTest extends BaseFilamentTestCase
             ->set('departureAirfield', 'EGKK')
             ->call('submit')
             ->assertHasErrors(['arrivalAirfield'])
-            ->assertNotEmitted('standPredictorFormSubmitted');
+            ->assertNotDispatched('standPredictorFormSubmitted');
     }
 }

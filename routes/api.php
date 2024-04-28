@@ -145,9 +145,17 @@ Route::middleware('api')
                         'user/{cid}',
                         [
                             'middleware' => MiddlewareKeys::VATSIM_CID,
-                            'uses' => 'UserController@createUser',
+                            'uses' => 'UserController@createUserWithPluginConfig',
                         ]
                     )->where('cid', '[0-9]+');
+
+                    // Create without config
+                    Route::post(
+                        'user',
+                        [
+                            'uses' => 'UserController@createUser',
+                        ]
+                    );
 
                     // Reactivate user account
                     Route::put(

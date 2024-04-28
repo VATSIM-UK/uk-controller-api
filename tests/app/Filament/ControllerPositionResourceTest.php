@@ -225,7 +225,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
             ->assertHasErrors(['data.frequency']);
     }
 
-    protected function getResourceClass(): string
+    protected static function resourceClass(): string
     {
         return ControllerPositionResource::class;
     }
@@ -294,10 +294,5 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return ControllerPosition::findOrFail(1);
-    }
-
-    protected function resourceClass(): string
-    {
-        return ControllerPositionResource::class;
     }
 }

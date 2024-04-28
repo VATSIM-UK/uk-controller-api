@@ -68,7 +68,7 @@ class StandPredictorTest extends BaseFilamentTestCase
         $stand4->airlines()->sync([1]);
 
         Livewire::test(StandPredictor::class)
-            ->emit(
+            ->fireEvent(
                 'standPredictorFormSubmitted',
                 [
                     'callsign' => 'BAW999',

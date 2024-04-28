@@ -131,6 +131,14 @@ class CargoFlightPreferredArrivalStandAllocatorTest extends BaseFunctionalTestCa
         $this->assertNull($allocation);
     }
 
+    public function testItDoesntAllocateCargoStandsIfNoAirlineButIsCargoFlight()
+    {
+        $aircraft = $this->createAircraft('ABCDEF', 'EGLL');
+        $aircraft->remarks = 'Some stuff RMK/CARGO Some more stuff';
+        $allocation = $this->allocator->allocate($aircraft);
+        $this->assertNull($allocation);
+    }
+
     public function testItDoesntRankStandsIfUnknownAircraft()
     {
         $aircraft = $this->newAircraft('BAW1234', 'EGLL', 'C172');

@@ -1,10 +1,8 @@
 <x-filament::widget>
     <x-filament::card>
-        <x-tables::header.heading>
+        <div class="py-2">
             {{ __('widgets.status.heading') }}
-        </x-tables::header.heading>
-
-        <x-tables::hr />
+        </div>
 
         @if ($controller)
             @if ($controller->controller_position_id)

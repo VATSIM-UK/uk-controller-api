@@ -35,7 +35,7 @@ class UserCreate extends Command
 
         $userCid = $this->argument('vatsim_cid');
         $userConfig = json_encode(
-            $userService->createUser($userCid),
+            $userService->createUserWithConfig($userCid),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
 

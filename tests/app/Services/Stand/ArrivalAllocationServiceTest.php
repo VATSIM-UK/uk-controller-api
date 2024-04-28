@@ -34,7 +34,6 @@ use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -247,7 +246,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         Event::assertDispatched(StandAssignedEvent::class);
     }
 
-    public function testItDoesntAllocateStandIfTimedOut()
+    public function testItDoesntAllocateStandIfNotSeenWithinTheLastMinute()
     {
         $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
             'BMI221',
@@ -265,7 +264,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
                 'aircraft_id' => 1,
             ]
         );
-        $aircraft->updated_at = Carbon::now()->subMinutes(30);
+        $aircraft->updated_at = Carbon::now()->subMinutes(1)->subSecond();
         $aircraft->save();
 
         $this->service->allocateStandsAtArrivalAirfields();

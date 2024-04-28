@@ -12,7 +12,7 @@ class ListTerminals extends ListRecords
     use LimitsTableRecordListingOptions;
     protected static string $resource = TerminalResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

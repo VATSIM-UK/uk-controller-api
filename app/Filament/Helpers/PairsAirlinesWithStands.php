@@ -33,7 +33,7 @@ trait PairsAirlinesWithStands
                 ->label(self::translateFormPath('not_before.label'))
                 ->helperText(self::translateFormPath('not_before.helper'))
                 ->displayFormat('H:i')
-                ->afterStateUpdated(function (Closure $get, Closure $set) {
+                ->afterStateUpdated(function (\Filament\Forms\Get $get, \Filament\Forms\Set $set) {
                     if ($get('not_before') !== null) {
                         $set(
                             'not_before',

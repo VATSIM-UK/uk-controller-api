@@ -236,7 +236,7 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->call('submit')
             ->assertHasNoErrors()
             ->assertOk()
-            ->assertEmitted('requestAStandFormSubmitted');
+            ->assertDispatched('requestAStandFormSubmitted');
     }
 
     public function testItRendersWarningIfExistingAssignmentAtAirfield()

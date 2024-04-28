@@ -3156,7 +3156,7 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
             ->assertHasErrors('data.conditions.0.data.conditions');
     }
 
-    protected function getResourceClass(): string
+    protected static function resourceClass(): string
     {
         return IntentionCodeResource::class;
     }
@@ -3226,10 +3226,5 @@ class IntentionCodeResourceTest extends BaseFilamentTestCase
     protected function getViewRecord(): Model
     {
         return IntentionCode::find(1);
-    }
-
-    protected function resourceClass(): string
-    {
-        return IntentionCodeResource::class;
     }
 }

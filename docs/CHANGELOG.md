@@ -1,5 +1,44 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.1...6.60.2) (2024-04-27)
+
+
+### Bug Fixes
+
+* dont assign arrival stands if aircraft not seen in last minute ([e496a16](https://github.com/VATSIM-UK/uk-controller-api/commit/e496a16da86c137a992fe8af80e2bc469b93d6d6))
+
+## [6.60.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.0...6.60.1) (2024-04-27)
+
+
+### Bug Fixes
+
+* another form fix ([df7ec04](https://github.com/VATSIM-UK/uk-controller-api/commit/df7ec04d30ebab56784c09764f4de36f72c1717b))
+* filament event emitting methods ([696dadd](https://github.com/VATSIM-UK/uk-controller-api/commit/696dadd1afff6d51948805302a8e41316dfd46bb))
+* filament forms overload ([01f8939](https://github.com/VATSIM-UK/uk-controller-api/commit/01f8939b82611111e0e5b7909506f5d80819fedc))
+* handle deprecated request method ([40ebcc5](https://github.com/VATSIM-UK/uk-controller-api/commit/40ebcc5adf101c15216328f84f75121cb26be112))
+* remove aircraft page edit button ([c1baafc](https://github.com/VATSIM-UK/uk-controller-api/commit/c1baafc1ef5c4c8149a890f95253e9b67aae8257))
+* user filament access ([3c25709](https://github.com/VATSIM-UK/uk-controller-api/commit/3c25709ef85a6a7006b36118df23cb7eca3e45ab))
+
+
+### Miscellaneous Chores
+
+* remove commented code ([ffe8588](https://github.com/VATSIM-UK/uk-controller-api/commit/ffe8588b2f08ce57bd86b065e3d7d4c5a7ac23d2))
+* remove unused copy file ([01b9bc8](https://github.com/VATSIM-UK/uk-controller-api/commit/01b9bc8ea85d892db4f536ead4d93a15c3f07693))
+
+## [6.60.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.59.1...6.60.0) (2024-04-27)
+
+
+### Features
+
+* add user creation without config endpoint ([04eb65c](https://github.com/VATSIM-UK/uk-controller-api/commit/04eb65ccdf337fce3deb4b3b2ba7ad5636728bda))
+
+## [6.59.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.59.0...6.59.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* cargo allocator crash when cargo flight but no airline ([0cb27ff](https://github.com/VATSIM-UK/uk-controller-api/commit/0cb27ffa108aabe5c9a20ab9365f6896a31efeb2))
+
 ## [6.59.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.58.2...6.59.0) (2024-04-20)
 
 

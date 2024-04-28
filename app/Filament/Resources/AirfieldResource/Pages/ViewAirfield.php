@@ -10,7 +10,7 @@ class ViewAirfield extends ViewRecord
 {
     protected static string $resource = AirfieldResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\EditAction::make(),

@@ -13,7 +13,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('holds', function (Blueprint $table) {
-            $table->unsignedDecimal('outbound_leg_value', 8, 1)
+            $table->decimal('outbound_leg_value', 8, 1)
+                ->unsigned()
                 ->nullable()
                 ->after('turn_direction')
                 ->comment('The value of the outbound leg');

@@ -13,7 +13,7 @@ class ListAirlines extends ListRecords
 
     public static string $resource = AirlineResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             CreateAction::make(),

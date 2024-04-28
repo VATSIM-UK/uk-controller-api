@@ -17,7 +17,7 @@ class CcamsSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItCreatesASquawkRange()
     {
         Livewire::test(ManageCcamsSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
@@ -38,27 +38,27 @@ class CcamsSquawkRangeResourceTest extends BaseFilamentTestCase
     public function testItDoesntCreateARangeIfFirstInvalid()
     {
         Livewire::test(ManageCcamsSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '123a',
                     'last' => '2345',
                 ]
             )
-            ->assertHasPageActionErrors(['first']);
+            ->assertHasActionErrors(['first']);
     }
 
     public function testItDoesntCreateARangeIfLastInvalid()
     {
         Livewire::test(ManageCcamsSquawkRange::class)
-            ->callPageAction(
+            ->callAction(
                 'create',
                 [
                     'first' => '1234',
                     'last' => '234b',
                 ]
             )
-            ->assertHasPageActionErrors(['last']);
+            ->assertHasActionErrors(['last']);
     }
 
     public function testItEditsASquawkRange()
@@ -122,7 +122,7 @@ class CcamsSquawkRangeResourceTest extends BaseFilamentTestCase
         return ['Ccams Squawk Ranges', '0303'];
     }
 
-    protected function resourceClass(): string
+    protected static function resourceClass(): string
     {
         return CcamsSquawkRangeResource::class;
     }

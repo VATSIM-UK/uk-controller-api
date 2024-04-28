@@ -1,4 +1,4 @@
-const colors = require('tailwindcss/colors')
+import preset from '../../../../vendor/filament/filament/tailwind.config.preset'
 
 const vatukLightBlue = {
     DEFAULT: '#25ADE3',
@@ -28,26 +28,19 @@ const vatukDarkBlue = {
     '900': '#000000'
 }
 
-module.exports = {
+export default {
+    presets: [preset],
     content: [
-        './resources/**/*.blade.php',
+        './app/Filament/**/*.php',
+        './resources/views/filament/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
     ],
-    darkMode: 'class',
     theme: {
         extend: {
             colors: {
                 'vatuk-darkblue': vatukDarkBlue,
                 'vatuk-lightblue': vatukLightBlue,
-                danger: colors.rose,
-                primary: vatukLightBlue,
-                success: colors.green,
-                warning: colors.amber,
             },
         },
     },
-    plugins: [
-        require('@tailwindcss/forms'),
-        require('@tailwindcss/typography'),
-    ],
 }

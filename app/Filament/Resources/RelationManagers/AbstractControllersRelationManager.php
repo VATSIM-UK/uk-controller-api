@@ -8,7 +8,7 @@ use App\Models\Controller\ControllerPosition;
 use App\Services\ControllerPositionHierarchyService;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +24,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
     protected static string $relationship = 'controllers';
     protected static ?string $recordTitleAttribute = 'callsign';
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([

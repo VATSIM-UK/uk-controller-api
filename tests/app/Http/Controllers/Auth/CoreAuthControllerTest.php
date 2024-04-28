@@ -21,7 +21,7 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
     public function testItRedirectsToBasePage()
     {
         $this->get('/')
-            ->assertRedirect('admin/login');
+            ->assertRedirect('login');
     }
 
     public function testItRedirectsToSocialiteLogin()
@@ -50,7 +50,7 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
         Socialite::shouldReceive('driver->user')->andReturn($socialiteUser);
 
         $this->get('auth/callback')
-            ->assertRedirect('admin');
+            ->assertRedirect('');
 
         $this->assertDatabaseHas(
             'user',
@@ -71,7 +71,7 @@ class CoreAuthControllerTest extends BaseFunctionalTestCase
         Socialite::shouldReceive('driver->user')->andReturn($socialiteUser);
 
         $this->get('auth/callback')
-            ->assertRedirect('admin');
+            ->assertRedirect('');
 
         $this->assertDatabaseHas(
             'user',

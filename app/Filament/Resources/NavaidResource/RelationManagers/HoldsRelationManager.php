@@ -11,12 +11,13 @@ use App\Models\Measurement\MeasurementUnit;
 use App\Models\Runway\Runway;
 use Closure;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class HoldsRelationManager extends RelationManager
 {
@@ -28,7 +29,7 @@ class HoldsRelationManager extends RelationManager
     protected static ?string $recordTitleAttribute = 'description';
     protected static ?string $title = 'Published Holds';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -75,13 +76,13 @@ class HoldsRelationManager extends RelationManager
                             ->helperText(self::translateFormPath('outbound_leg_value.helper'))
                             ->numeric()
                             ->reactive()
-                            ->required(fn (Closure $get): bool => (bool) $get('outbound_leg_unit'))
+                            ->required(fn (\Filament\Forms\Get $get): bool => (bool) $get('outbound_leg_unit'))
                             ->minValue(0.5)
                             ->maxValue(100),
                         Forms\Components\Select::make('outbound_leg_unit')
                             ->label(self::translateFormPath('outbound_leg_unit.label'))
                             ->helperText(self::translateFormPath('outbound_leg_unit.helper'))
-                            ->required(fn (Closure $get): bool => (bool) $get('outbound_leg_value'))
+                            ->required(fn (\Filament\Forms\Get $get): bool => (bool) $get('outbound_leg_value'))
                             ->reactive()
                             ->options(
                                 MeasurementUnit::whereIn('unit', ['nm', 'min'])
@@ -124,7 +125,7 @@ class HoldsRelationManager extends RelationManager
                                             )
                                             ->preload()
                                             ->reactive()
-                                            ->afterStateUpdated(function (Closure $get, Closure $set) {
+                                            ->afterStateUpdated(function (\Filament\Forms\Get $get, \Filament\Forms\Set $set) {
                                                 $target = $get('target');
                                                 if (!$target || !$get('runway.designator')) {
                                                     $set('runway.designator', null);
@@ -152,7 +153,7 @@ class HoldsRelationManager extends RelationManager
                                             ->label(self::translateFormPath('minimum_level_runway.label'))
                                             ->helperText(self::translateFormPath('minimum_level_runway.helper'))
                                             ->options(
-                                                fn (Closure $get) => $get('target')
+                                                fn (\Filament\Forms\Get $get) => $get('target')
                                                 ? Runway::atAirfield($get('target'))->get()->mapWithKeys(
                                                     fn (Runway $runway) => [$runway->identifier => $runway->identifier]
                                                 )
@@ -179,7 +180,7 @@ class HoldsRelationManager extends RelationManager
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -192,10 +193,9 @@ class HoldsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('maximum_altitude')
                     ->label(self::translateTablePath('columns.maximum_altitude')),
                 Tables\Columns\TextColumn::make('turn_direction')
-                    ->enum([
-                        'left' => 'Left',
-                        'right' => 'Right',
-                    ])
+                    ->formatStateUsing(
+                        fn (string $state) => Str::ucfirst($state)
+                    )
                     ->label(self::translateTablePath('columns.turn_direction')),
                 TextColumn::make('outbound_leg')
                     ->label(self::translateTablePath('columns.outbound_leg'))

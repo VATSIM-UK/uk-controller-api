@@ -7,9 +7,9 @@ use App\Filament\Resources\SrdRouteResource\RelationManagers\NotesRelationManage
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -63,11 +63,8 @@ class SrdRouteResource extends Resource
                 Tables\Columns\TextColumn::make('route_segment')
                     ->label(self::translateTablePath('columns.route_segment'))
                     ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record)),
-                Tables\Columns\TextColumn::make('notes')
+                Tables\Columns\TextColumn::make('notes.id')
                     ->label(self::translateTablePath('columns.notes'))
-                    ->formatStateUsing(
-                        fn (Collection $state): string => $state->map(fn (SrdNote $note) => $note->id)->join(',')
-                    ),
             ])
             ->filters([
                 Tables\Filters\Filter::make('origin')

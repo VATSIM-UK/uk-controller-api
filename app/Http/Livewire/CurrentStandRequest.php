@@ -31,7 +31,7 @@ class CurrentStandRequest extends Component
             $request->delete();
             StandRequestHistory::find($id)
                 ->update(['deleted_at' => Carbon::now()]);
-            $this->emit('currentStandRequestRelinquished');
+            $this->dispatch('currentStandRequestRelinquished');
         });
     }
 

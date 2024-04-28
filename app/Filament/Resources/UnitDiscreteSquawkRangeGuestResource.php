@@ -5,9 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UnitDiscreteSquawkRangeGuestResource\Pages\ManageUnitDiscreteSquawkRangeGuests;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class UnitDiscreteSquawkRangeGuestResource extends Resource

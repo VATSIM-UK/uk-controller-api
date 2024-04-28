@@ -22,7 +22,7 @@ class VatsimCidValidator
      * @param $cid The user CID
      * @return bool
      */
-    public function isValid(int $cid) : bool
+    public static function isValid(int $cid) : bool
     {
         return $cid >= self::MINIMUM_MEMBER_CID ||
             ($cid >= self::MINIMUM_CID && $cid <= self::MAXIMUM_FOUNDER_CID);
