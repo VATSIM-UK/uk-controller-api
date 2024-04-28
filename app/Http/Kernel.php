@@ -53,11 +53,6 @@ class Kernel extends HttpKernel
             MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_VERSION_ADMIN,
             MiddlewareKeys::ADMIN_LOG,
         ],
-        'admin.dependency' => [
-            MiddlewareKeys::AUTH . ':api',
-            MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_DEPENDENCY_ADMIN,
-            MiddlewareKeys::ADMIN_LOG,
-        ],
         'admin.data' => [
             MiddlewareKeys::AUTH . ':api',
             MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_DATA_ADMIN,

@@ -233,17 +233,6 @@ Route::middleware('api')
                 }
             );
 
-            // Routes for dependency administration
-            Route::middleware('admin.dependency')->group(
-                function () {
-                    Route::delete('sid/{id}', 'SidController@deleteSid')
-                        ->where('sid', 'd+');
-                    Route::put('sid', 'SidController@createSid');
-                    Route::put('sid/{id}', 'SidController@updateSid')
-                        ->where('sid', 'd+');
-                }
-            );
-
             // Routes for data management.
             Route::middleware('admin.data')->group(
                 function () {
