@@ -151,7 +151,7 @@ class UserService
             ->with('controllers')
             ->unreadBy(User::findOrFail($userCid));
 
-        if ($includeInactive) {
+        if (!$includeInactive) {
             $query->active();
         }
 
@@ -195,5 +195,10 @@ class UserService
         $user->save();
 
         return $user;
+    }
+
+    private function firstOrCreateUser(int $userCid): User
+    {
+        return User::firstOrCreate(['id' => $userCid], ['status' => UserStatus::ACTIVE]);
     }
 }
