@@ -248,6 +248,54 @@ class UserServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas('user', ['id' => $userId, 'status' => UserStatus::ACTIVE]);
     }
 
+    public function testItMarksANotificationAsReadForAUser()
+    {
+        DB::table('notifications')->delete();
+        DB::table('user')->delete();
+
+        // Create a fake user
+        $user = User::factory()->create();
+
+        // Create a fake notification
+        $notification = Notification::factory()->create();
+
+        // Mark the notification as read
+        $this->service->markNotificationAsReadForUser($user->id, $notification->id);
+
+        // Check that the notification is marked as read
+        $this->assertDatabaseHas('notification_user', ['notification_id' => $notification->id, 'user_id' => $user->id]);
+    }
+
+    public function testItDoesntMarkANotificationAsReadForAUserIfItDoesntExist()
+    {
+        DB::table('notifications')->delete();
+        DB::table('user')->delete();
+
+        // Create a fake notification
+        $notification = Notification::factory()->create();
+
+        $this->expectException(ModelNotFoundException::class);
+        $this->service->markNotificationAsReadForUser(123, $notification->id);
+
+        // Check that the notification is not marked as read
+        $this->assertDatabaseMissing('notification_user', ['notification_id' => $notification->id]);
+    }
+
+    public function testItDoesntMarkANotificationAsReadForAUserIfTheNotificationDoesntExist()
+    {
+        DB::table('notifications')->delete();
+        DB::table('user')->delete();
+
+        // Create a fake user
+        $user = User::factory()->create();
+
+        $this->expectException(ModelNotFoundException::class);
+        $this->service->markNotificationAsReadForUser($user->id, 123);
+
+        // Check that the notification is not marked as read
+        $this->assertDatabaseMissing('notification_user', ['user_id' => $user->id]);
+    }
+
     private function makeTestRequest(string $uri, string $token)
     {
         $this->get('api' . $uri, ['Authorization' => 'Bearer ' . $token])->assertStatus(200);
