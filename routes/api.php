@@ -233,28 +233,6 @@ Route::middleware('api')
                 }
             );
 
-            // Routes for data management.
-            Route::middleware('admin.data')->group(
-                function () {
-                    Route::get('dataadmin', 'TeapotController@normalTeapots');
-
-                    Route::prefix('admin')->group(
-                        function () {
-                            Route::get('/navaids', 'Admin\\NavaidAdminController@getNavaids');
-                            Route::get('/navaids/{navaid}', 'Admin\\NavaidAdminController@getNavaid');
-                            Route::get('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@getHolds');
-                            Route::post('/navaids/{navaid}/holds', 'Admin\\HoldAdminController@createHold');
-                            Route::get('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@getHold');
-                            Route::put('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@modifyHold');
-                            Route::delete('/navaids/{navaid}/holds/{hold}', 'Admin\\HoldAdminController@deleteHold');
-                            Route::put('/navaids/{navaid}', 'Admin\\NavaidAdminController@modifyNavaid');
-                            Route::delete('/navaids/{navaid}', 'Admin\\NavaidAdminController@deleteNavaid');
-                            Route::post('/navaids', 'Admin\\NavaidAdminController@createNavaid');
-                        }
-                    );
-                }
-            );
-
             Route::middleware('admin.github')->group(
                 function () {
                     Route::post('github', 'GithubController@processGithubWebhook');
