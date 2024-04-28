@@ -245,11 +245,6 @@ Route::middleware('api')
                         Route::get('aircraft', 'AircraftController@getAllAircraft');
                         Route::get('wake-category', 'AircraftController@getAllWakeCategories');
 
-                        // Initial altitudes and sids
-                        Route::get('sid', 'SidController@getAllSids');
-                        Route::get('sid/{id}', 'SidController@getSid')
-                            ->where('id', '[0-9]+');
-
                         // Controller positions
                         Route::get('controller', 'ControllerPositionController@getAllControllers');
                         Route::get(
