@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.2...6.60.3) (2024-04-29)
+
+
+### Bug Fixes
+
+* create user if not exists when collecting notifications ([63a3a28](https://github.com/VATSIM-UK/uk-controller-api/commit/63a3a28e2cb08d35ec870c65047bbd0c6eeaaf06))
+* include inactive notifications for users ([2b1c57a](https://github.com/VATSIM-UK/uk-controller-api/commit/2b1c57a83c011ac72127088e7508b6c0f5d7f458))
+
 ## [6.60.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.1...6.60.2) (2024-04-27)
 
 
