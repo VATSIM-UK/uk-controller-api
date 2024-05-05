@@ -53,16 +53,10 @@ class AuthServiceProvider extends ServiceProvider
     // Scopes
     const SCOPE_USER = 'user';
     const SCOPE_USER_ADMIN = 'user-admin';
-    const SCOPE_VERSION_ADMIN = 'version-admin';
-    const SCOPE_DEPENDENCY_ADMIN = 'dependency-admin';
-    const SCOPE_DATA_ADMIN = 'data-admin';
 
     const AUTH_SCOPES = [
         self::SCOPE_USER => 'Can perform plugin user functions',
         self::SCOPE_USER_ADMIN => 'Can perform user administration functions',
-        self::SCOPE_VERSION_ADMIN => 'Can perform plugin version administration functions',
-        self::SCOPE_DEPENDENCY_ADMIN => 'Can perform dependency administration functions',
-        self::SCOPE_DATA_ADMIN => 'Can administer live data stored in the system',
     ];
 
     // These policies are used by filament to determine resource and action access.

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\BaseApiTestCase;
 use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
-use App\Providers\AuthServiceProvider;
 use App\Services\VersionService;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TestingUtils\Traits\WithSeedUsers;
@@ -19,51 +18,9 @@ class VersionControllerTest extends BaseApiTestCase
 
     use WithSeedUsers;
 
-    protected static $tokenScope = [
-        AuthServiceProvider::SCOPE_USER,
-        AuthServiceProvider::SCOPE_VERSION_ADMIN,
-    ];
-
     public function testItConstructs()
     {
         $this->assertInstanceOf(VersionController::class, $this->app->make(VersionController::class));
-    }
-
-    public function testGetAllVersionsFailsWithoutVersionAdminScope()
-    {
-        $this->regenerateAccessToken([], static::$tokenUser);
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version')
-            ->assertStatus(403);
-    }
-
-    public function testItFindsAllVersions()
-    {
-        $this->makeAuthenticatedApiRequest(self::METHOD_GET, 'version')
-            ->assertJson(
-                [
-                    [
-                        'id' => 1,
-                        'version' => '1.0.0',
-                        'created_at' => self::CREATION_DATE_FIRST,
-                        'updated_at' => self::CREATION_DATE_SECOND,
-                        'deleted_at' => self::DELETED_DATE_FIRST,
-                    ],
-                    [
-                        'id' => 2,
-                        'version' => '2.0.0',
-                        'created_at' => self::CREATION_DATE_SECOND,
-                        'updated_at' => null,
-                        'deleted_at' => null,
-                    ],
-                    [
-                        'id' => 3,
-                        'version' => '2.0.1',
-                        'created_at' => self::CREATION_DATE_THIRD,
-                        'updated_at' => null,
-                        'deleted_at' => null,
-                    ],
-                ]
-            )->assertStatus(200);
     }
 
     public function testItFindsAVersion()

@@ -3,10 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\BaseApiTestCase;
-use App\Models\Aircraft\WakeCategory;
-use App\Models\Airfield\Airfield;
-use App\Models\Airfield\Terminal;
-use App\Models\Stand\StandType;
+
+use App\Models\User\UserStatus;
 use App\Providers\AuthServiceProvider;
 use TestingUtils\Traits\WithSeedUsers;
 
@@ -15,7 +13,7 @@ class LogAdminActionTest extends BaseApiTestCase
     use WithSeedUsers;
 
     protected static $tokenScope = [
-        AuthServiceProvider::SCOPE_DATA_ADMIN
+        AuthServiceProvider::SCOPE_USER_ADMIN
     ];
 
     public function testItConstructs()
@@ -25,24 +23,29 @@ class LogAdminActionTest extends BaseApiTestCase
 
     public function testItRecordsAnAdminEvent()
     {
-        $navaidData = [
-            'identifier' => 'OHAI',
-            'latitude' => 1,
-            'longitude' => 2,
-        ];
-
+        // Create a new user
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
-            'api/admin/navaids',
-            $navaidData
+            'api/user',
+            ['cid' => 1203539]
         )->assertCreated();
 
+        // Check the user was created
+        $this->assertDatabaseHas(
+            'user',
+            [
+                'id' => 1203539,
+                'status' => UserStatus::ACTIVE,
+            ]
+        );
+
+        // Check we have a log entry
         $this->assertDatabaseHas(
             'admin_log',
             [
                 'user_id' => self::ACTIVE_USER_CID,
-                'request_uri' => "/api/admin/navaids",
-                'request_body' => json_encode($navaidData),
+                'request_uri' => "/api/user",
+                'request_body' => json_encode(['cid' => 1203539]),
             ]
         );
     }

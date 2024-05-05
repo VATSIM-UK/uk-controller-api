@@ -115,24 +115,7 @@ class UserService
             'access',
             [
                 AuthServiceProvider::SCOPE_USER_ADMIN,
-                AuthServiceProvider::SCOPE_VERSION_ADMIN,
                 AuthServiceProvider::SCOPE_USER
-            ]
-        )->accessToken;
-    }
-
-    /**
-     * Creates a user with the scope of data administration,
-     * returning the token of the user.
-     *
-     * @return string
-     */
-    public function createDataAdminUser() : string
-    {
-        return $this->createAdminUserModel()->createToken(
-            'access',
-            [
-                AuthServiceProvider::SCOPE_DATA_ADMIN
             ]
         )->accessToken;
     }

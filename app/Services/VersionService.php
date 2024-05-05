@@ -43,16 +43,6 @@ class VersionService
     }
 
     /**
-     * Returns a collection of all the versions
-     *
-     * @return Collection
-     */
-    public function getAllVersions(): Collection
-    {
-        return Version::withTrashed()->get();
-    }
-
-    /**
      * Toggles whether or not a version is allowed to be used in production.
      *
      * @throws VersionNotFoundException
