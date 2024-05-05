@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.3...6.60.4) (2024-05-05)
+
+
+### Bug Fixes
+
+* remove unbound routes ([328866a](https://github.com/VATSIM-UK/uk-controller-api/commit/328866a85df6292152d868427f6e6b0b8373a443))
+* remove unused console command ([3005c6c](https://github.com/VATSIM-UK/uk-controller-api/commit/3005c6c6ab230cb88cb934fa7cc506230de0b99c))
+
 ## [6.60.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.2...6.60.3) (2024-04-29)
 
 
