@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SrdServiceTest extends BaseFunctionalTestCase
 {
-    private const SRD_CURRENT_FILE = 'current-srd.xls';
+    private const SRD_CURRENT_FILE = 'current-srd.xlsx';
     private const SRD_VERSION_CACHE_KEY = 'SRD_VERSION';
 
     private SrdService $service;
@@ -82,7 +82,7 @@ class SrdServiceTest extends BaseFunctionalTestCase
         $mockFileSystem->shouldReceive('put')->with(self::SRD_CURRENT_FILE, $responseData)->once();
 
         Storage::shouldReceive('disk')->with('imports')->andReturn($mockFileSystem);
-        Artisan::shouldReceive('call')->with('srd:import current-srd.xls')->once();
+        Artisan::shouldReceive('call')->with('srd:import current-srd.xlsx')->once();
     }
 
     private function mockCacheSrdVersionWrite(): void
