@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SrdService
 {
-    private const SRD_CURRENT_FILE = 'current-srd.xls';
+    private const SRD_CURRENT_FILE = 'current-srd.xlsx';
     private const SRD_VERSION_CACHE_KEY = 'SRD_VERSION';
 
     /**
