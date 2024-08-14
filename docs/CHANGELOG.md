@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.4...6.60.5) (2024-08-14)
+
+
+### Bug Fixes
+
+* correctly display airlines count on terminal page ([d2878ab](https://github.com/VATSIM-UK/uk-controller-api/commit/d2878abc6b645ae0366dc6fc13fc8776906c3f78))
+* handle updated file format for srd document ([1b251e6](https://github.com/VATSIM-UK/uk-controller-api/commit/1b251e65f4de3560dd48c800f3a35fc5729d3c3f))
+
 ## [6.60.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.3...6.60.4) (2024-05-05)
 
 
