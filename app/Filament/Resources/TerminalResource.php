@@ -56,9 +56,9 @@ class TerminalResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
-                Tables\Columns\TextColumn::make('airlines')
+                Tables\Columns\TextColumn::make('airlines_count')
                     ->label(self::translateTablePath('columns.airlines'))
-                    ->formatStateUsing(fn (Collection $state) => $state->count()),
+                    ->counts('airlines'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
