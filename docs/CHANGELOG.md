@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.6](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.5...6.60.6) (2024-08-15)
+
+
+### Bug Fixes
+
+* use default cache store for cell caching ([72e9c2d](https://github.com/VATSIM-UK/uk-controller-api/commit/72e9c2df2aa27ac903cd3f7f8a95a80e4d85e5af))
+
 ## [6.60.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.4...6.60.5) (2024-08-14)
 
 
