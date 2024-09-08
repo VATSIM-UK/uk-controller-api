@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.7](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.6...6.60.7) (2024-09-08)
+
+
+### Bug Fixes
+
+* Disable SRD Update ([b584501](https://github.com/VATSIM-UK/uk-controller-api/commit/b5845015a64a52ae356ba076dcb59ce66aa79330))
+
 ## [6.60.6](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.5...6.60.6) (2024-08-15)
 
 
