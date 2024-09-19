@@ -91,9 +91,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('networkdata:update-controllers')->everyMinute()
             ->graceTimeInMinutes(3)
             ->withoutOverlapping(5);
-//        $schedule->command('srd:update')
-//            ->cron('0 1-7 * * *')
-//            ->doNotMonitor();
+        $schedule->command('srd:update')
+            ->cron('0 1-7 * * *')
+            ->when(config('srd.import_enabled'))
+            ->doNotMonitor();
         $schedule->command('horizon:snapshot')->everyFiveMinutes()->doNotMonitor();
         $schedule->command('plugin-events:clean')->everyTenMinutes()->doNotMonitor();
         $schedule->command('metars:update')->everyMinute();
