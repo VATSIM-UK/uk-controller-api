@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.8](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.7...6.60.8) (2024-09-20)
+
+
+### Bug Fixes
+
+* add setting option for enabling SRD imports ([488264b](https://github.com/VATSIM-UK/uk-controller-api/commit/488264bc1429333f68f2b3fc9374440d1b8a6d84))
+
 ## [6.60.7](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.6...6.60.7) (2024-09-08)
 
 
