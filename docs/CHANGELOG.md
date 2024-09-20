@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.9](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.8...6.60.9) (2024-09-20)
+
+
+### Bug Fixes
+
+* increase srd_routes column width ([8f8db77](https://github.com/VATSIM-UK/uk-controller-api/commit/8f8db773232be29bd3ae78f42448643e13ddd4be))
+
 ## [6.60.8](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.7...6.60.8) (2024-09-20)
 
 
