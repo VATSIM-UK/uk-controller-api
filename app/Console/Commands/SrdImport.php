@@ -49,20 +49,17 @@ class SrdImport extends Command
         $this->output->title('Starting SRD import');
         $this->output->section('Dropping existing SRD data');
 
-        // Drop the current SRD data
-        DB::statement("SET foreign_key_checks=0");
+        DB::transaction(function () {
+            // Clear the existing data
+            $this->output->comment('Dropping SRD notes');
+            DB::table('srd_notes')->delete();
+            $this->output->comment('Dropping SRD routes');
+            DB::table('srd_routes')->delete();
 
-        $this->output->comment('Dropping SRD notes and route links');
-        DB::table('srd_note_srd_route')->truncate();
-        $this->output->comment('Dropping SRD notes');
-        DB::table('srd_notes')->truncate();
-        $this->output->comment('Dropping SRD routes');
-        DB::table('srd_routes')->truncate();
-
-        DB::statement("SET foreign_key_checks=1");
-
-        // Import the data
-        $this->importer->withOutput($this->output)->import($this->argument('file_name'), 'imports');
+            // Import the data
+            $this->output->comment('About to start SRD import');
+            $this->importer->withOutput($this->output)->import($this->argument('file_name'), 'imports');
+        });
         $this->output->success('SRD import complete');
     }
 }

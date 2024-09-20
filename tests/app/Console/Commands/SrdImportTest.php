@@ -4,17 +4,17 @@ namespace App\Console\Commands;
 
 use App\BaseFunctionalTestCase;
 use App\Imports\Srd\SrdImport;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
-use Maatwebsite\Excel\Excel;
 use Mockery;
+use Mockery\MockInterface;
 
 class SrdImportTest extends BaseFunctionalTestCase
 {
-    private $mockImporter;
+    private readonly SrdImport|MockInterface $mockImporter;
 
     public function setUp(): void
     {
@@ -32,7 +32,7 @@ class SrdImportTest extends BaseFunctionalTestCase
         Artisan::call('srd:import srd.csv');
     }
 
-    public function testItTruncatesTablesAndCallsImporter()
+    public function testItDeletesDataAndCallsImporter()
     {
         Storage::fake('imports');
         Storage::disk('imports')->put('srd.csv', 'testdata');
@@ -43,24 +43,17 @@ class SrdImportTest extends BaseFunctionalTestCase
         $this->mockImporter->shouldReceive('import')
             ->with('srd.csv', 'imports');
 
+        $mockBuilderSrdRoutes = Mockery::mock(Builder::class);
+        $mockBuilderSrdRoutes->shouldReceive('delete')->once();
+        $mockBuilderSrdNotes = Mockery::mock(Builder::class);
+        $mockBuilderSrdNotes->shouldReceive('delete')->once();
+
         DB::partialMock();
-        DB::shouldReceive('statement')->with('SET foreign_key_checks=0')->once();
-
-        DB::shouldReceive('table')->with('srd_note_srd_route')
-            ->andReturnSelf()
-            ->once();
-
-        DB::shouldReceive('table')->with('srd_notes')
-            ->andReturnSelf()
-            ->once();
-
-        DB::shouldReceive('table')->with('srd_routes')
-            ->once()
-            ->andReturnSelf();
-
-        DB::shouldReceive('truncate')->andReturnSelf()->times(3);
-
-        DB::shouldReceive('statement')->with('SET foreign_key_checks=1')->once();
+        DB::shouldReceive('table')->with('srd_routes')->once()->andReturn($mockBuilderSrdRoutes);
+        DB::shouldReceive('table')->with('srd_notes')->once()->andReturn($mockBuilderSrdNotes);
+        DB::shouldReceive('transaction')->once()->andReturnUsing(function ($callback) {
+            $callback();
+        });
 
         Artisan::call('srd:import srd.csv');
     }
