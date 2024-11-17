@@ -27,7 +27,7 @@ jobs:
           echo "PR_NUMBER=$NUM" >> $GITHUB_ENV
 
       - name: Merge Dependabot
-        uses: fastify/github-action-merge-dependabot@v3.0.0
+        uses: fastify/github-action-merge-dependabot@v3
         with:
           github-token: ${{ secrets.PAT }}
           target: minor
