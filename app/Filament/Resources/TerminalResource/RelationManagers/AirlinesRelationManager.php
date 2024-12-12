@@ -31,6 +31,7 @@ class AirlinesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->allowDuplicates()
             ->columns([
                 TextColumn::make('icao_code')
                     ->label(self::translateTablePath('columns.icao'))
