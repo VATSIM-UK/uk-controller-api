@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.10](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.9...6.60.10) (2024-12-12)
+
+
+### Bug Fixes
+
+* Correctly handle duplicate airlines against a terminal ([2605710](https://github.com/VATSIM-UK/uk-controller-api/commit/26057101f951078a36884719ee0d412b5bb53ad4))
+
 ## [6.60.9](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.8...6.60.9) (2024-09-20)
 
 
