@@ -84,8 +84,7 @@ class StandAssignmentsHistoryResource extends Resource
                     ->searchable(),
                 TextColumn::make('identifier')
                     ->getStateUsing(fn (StandAssignmentsHistory $record) => $record->stand->airfieldIdentifier)
-                    ->label(static::translateTablePath('columns.identifier'))
-                    ->searchable(),
+                    ->label(static::translateTablePath('columns.identifier')),
                 TextColumn::make('assigned_at')
                     ->label(static::translateTablePath('columns.assigned_at'))
                     ->dateTime(),
