@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.11](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.10...6.60.11) (2024-12-21)
+
+
+### Bug Fixes
+
+* Searching column that does not exist ([8a9f98d](https://github.com/VATSIM-UK/uk-controller-api/commit/8a9f98dbb0369597e62129ff2541ac5d22cfa26d))
+
 ## [6.60.10](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.9...6.60.10) (2024-12-12)
 
 
