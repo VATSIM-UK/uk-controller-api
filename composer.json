@@ -29,7 +29,7 @@
         "laravel/passport": "^12.1",
         "laravel/socialite": "^5.5",
         "maatwebsite/excel": "^3.1",
-        "mjaschen/phpgeo": "^4.0",
+        "mjaschen/phpgeo": "^6.0",
         "nesbot/carbon": "^3.0",
         "ohdearapp/ohdear-php-sdk": "^3.1",
         "predis/predis": "^2.0",
