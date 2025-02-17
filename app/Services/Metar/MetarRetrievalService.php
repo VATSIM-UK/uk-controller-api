@@ -11,7 +11,7 @@ class MetarRetrievalService
 {
     public function retrieveMetars(Collection $airfields): Collection
     {
-        $metarResponse = Http::get(config('metar.vatsim_url'), ['id' => $this->getMetarQueryString($airfields)]);
+        $metarResponse = Http::get($this->getMetarUrl($airfields));
         if (!$metarResponse->ok()) {
             Log::error(
                 sprintf(
@@ -33,6 +33,15 @@ class MetarRetrievalService
                     $metarObject->tokenise()->first() => new DownloadedMetar($metar),
                 ];
             })->filter();
+    }
+
+    private function getMetarUrl(Collection $airfields)
+    {
+        return sprintf('%s%s%s',
+            config('metar.vatsim_url'),
+            "?id=",
+            $this->getMetarQueryString($airfields)
+        );
     }
 
     private function getMetarQueryString(Collection $airfields): string
