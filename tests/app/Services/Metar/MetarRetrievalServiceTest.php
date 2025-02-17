@@ -31,7 +31,7 @@ class MetarRetrievalServiceTest extends BaseUnitTestCase
                 sprintf(
                     '%s?id=%s',
                     config(self::URL_CONFIG_KEY),
-                    urlencode('EGLL,EGBB,EGKR,' . $this->expectedTimestamp)
+                    'EGLL,EGBB,EGKR,' . $this->expectedTimestamp
                 ) => Http::response('', 500),
             ]
         );
@@ -54,7 +54,7 @@ class MetarRetrievalServiceTest extends BaseUnitTestCase
                 sprintf(
                     '%s?id=%s',
                     config(self::URL_CONFIG_KEY),
-                    urlencode('EGLL,EGBB,EGKR,' . $this->expectedTimestamp)
+                    'EGLL,EGBB,EGKR,' . $this->expectedTimestamp
                 ) => Http::response(
                     implode("\n", $dataResponse)
                 ),
