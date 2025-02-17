@@ -37,7 +37,8 @@ class MetarRetrievalService
 
     private function getMetarUrl(Collection $airfields)
     {
-        return sprintf('%s%s%s',
+        return sprintf(
+            '%s%s%s',
             config('metar.vatsim_url'),
             "?id=",
             $this->getMetarQueryString($airfields)
