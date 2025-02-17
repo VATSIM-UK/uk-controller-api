@@ -1,5 +1,13 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.12](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.11...6.60.12) (2025-02-17)
+
+
+### Bug Fixes
+
+* Removal URL encoding from MetarRetrievalService ([2ec654c](https://github.com/VATSIM-UK/uk-controller-api/commit/2ec654c813674d2ee40fa92dbae0b8c8979944e0))
+* Stop Encoding METAR Download URL ([497740b](https://github.com/VATSIM-UK/uk-controller-api/commit/497740b48d7ca898fd266b93c9c0f3dccd271af6))
+
 ## [6.60.11](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.10...6.60.11) (2024-12-21)
 
 
