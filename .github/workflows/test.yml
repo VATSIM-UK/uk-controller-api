@@ -166,7 +166,7 @@ jobs:
 
       # Run Coverage Suite
       - name: Upload Code Coverage Report
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: false
 
