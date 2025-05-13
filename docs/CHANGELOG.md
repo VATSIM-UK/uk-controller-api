@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.60.13](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.12...6.60.13) (2025-05-13)
+
+
+### Miscellaneous Chores
+
+* **deps:** Update Dependabot Merge Version ([4aa254d](https://github.com/VATSIM-UK/uk-controller-api/commit/4aa254d3a20c682ddd00f2dabe51aa184572f50a))
+
 ## [6.60.12](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.11...6.60.12) (2025-02-17)
 
 
