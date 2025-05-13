@@ -779,17 +779,18 @@
     lodash-es "^4.17.21"
     micromatch "^4.0.2"
 
-"@semantic-release/commit-analyzer@^9.0.2":
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/@semantic-release/commit-analyzer/-/commit-analyzer-9.0.2.tgz#a78e54f9834193b55f1073fa6258eecc9a545e03"
-  integrity sha512-E+dr6L+xIHZkX4zNMe6Rnwg4YQrWNXK+rNsvwOPpdFppvZO1olE2fIgWhv89TkQErygevbjsZFSIxp+u6w2e5g==
+"@semantic-release/commit-analyzer@^13.0.1":
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/@semantic-release/commit-analyzer/-/commit-analyzer-13.0.1.tgz#d84b599c3fef623ccc01f0cc2025eb56a57d8feb"
+  integrity sha512-wdnBPHKkr9HhNhXOhZD5a2LNl91+hs8CC2vsAVYxtZH3y0dV3wKn+uZSN61rdJQZ8EGxzWB3inWocBHV9+u/CQ==
   dependencies:
-    conventional-changelog-angular "^5.0.0"
-    conventional-commits-filter "^2.0.0"
-    conventional-commits-parser "^3.2.3"
+    conventional-changelog-angular "^8.0.0"
+    conventional-changelog-writer "^8.0.0"
+    conventional-commits-filter "^5.0.0"
+    conventional-commits-parser "^6.0.0"
     debug "^4.0.0"
-    import-from "^4.0.0"
-    lodash "^4.17.4"
+    import-from-esm "^2.0.0"
+    lodash-es "^4.17.21"
     micromatch "^4.0.2"
 
 "@semantic-release/error@^3.0.0":
@@ -1625,6 +1626,13 @@ conventional-changelog-angular@^7.0.0:
   dependencies:
     compare-func "^2.0.0"
 
+conventional-changelog-angular@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/conventional-changelog-angular/-/conventional-changelog-angular-8.0.0.tgz#5701386850f0e0c2e630b43ee7821d322d87e7a6"
+  integrity sha512-CLf+zr6St0wIxos4bmaKHRXWAcsCXrJU6F4VdNDrGRK3B8LDLKoX3zuMV5GhtbGkVR/LohZ6MT6im43vZLSjmA==
+  dependencies:
+    compare-func "^2.0.0"
+
 conventional-changelog-conventionalcommits@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-7.0.2.tgz#aa5da0f1b2543094889e8cf7616ebe1a8f5c70d5"
@@ -1659,6 +1667,16 @@ conventional-changelog-writer@^7.0.0:
     semver "^7.5.2"
     split2 "^4.0.0"
 
+conventional-changelog-writer@^8.0.0:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/conventional-changelog-writer/-/conventional-changelog-writer-8.0.1.tgz#656e156ea0ab02b3bb574b7073beeb4f81c5b4bb"
+  integrity sha512-hlqcy3xHred2gyYg/zXSMXraY2mjAYYo0msUCpK+BGyaVJMFCKWVXPIHiaacGO2GGp13kvHWXFhYmxT4QQqW3Q==
+  dependencies:
+    conventional-commits-filter "^5.0.0"
+    handlebars "^4.7.7"
+    meow "^13.0.0"
+    semver "^7.5.2"
+
 conventional-commit-types@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/conventional-commit-types/-/conventional-commit-types-3.0.0.tgz#7c9214e58eae93e85dd66dbfbafe7e4fffa2365b"
@@ -1676,6 +1694,11 @@ conventional-commits-filter@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/conventional-commits-filter/-/conventional-commits-filter-4.0.0.tgz#845d713e48dc7d1520b84ec182e2773c10c7bf7f"
   integrity sha512-rnpnibcSOdFcdclpFwWa+pPlZJhXE7l+XK04zxhbWrhgpR96h33QLz8hITTXbcYICxVr3HZFtbtUAQ+4LdBo9A==
+
+conventional-commits-filter@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/conventional-commits-filter/-/conventional-commits-filter-5.0.0.tgz#72811f95d379e79d2d39d5c0c53c9351ef284e86"
+  integrity sha512-tQMagCOC59EVgNZcC5zl7XqO30Wki9i9J3acbUvkaosCT6JX3EeFwJD7Qqp4MCikRnzS18WXV3BLIQ66ytu6+Q==
 
 conventional-commits-parser@^3.2.3:
   version "3.2.4"
@@ -1698,6 +1721,13 @@ conventional-commits-parser@^5.0.0:
     is-text-path "^2.0.0"
     meow "^12.0.1"
     split2 "^4.0.0"
+
+conventional-commits-parser@^6.0.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/conventional-commits-parser/-/conventional-commits-parser-6.1.0.tgz#a650db0c139a99d6c52bb5b192102c7c4bdfb734"
+  integrity sha512-5nxDo7TwKB5InYBl4ZC//1g9GRwB/F3TXOGR9hgUjMGfvSP4Vu5NkpNro2+1+TIEy1vwxApl5ircECr2ri5JIw==
+  dependencies:
+    meow "^13.0.0"
 
 convert-hrtime@^5.0.0:
   version "5.0.0"
@@ -2703,6 +2733,14 @@ import-from-esm@^1.0.3, import-from-esm@^1.3.1:
     debug "^4.3.4"
     import-meta-resolve "^4.0.0"
 
+import-from-esm@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/import-from-esm/-/import-from-esm-2.0.0.tgz#184eb9aad4f557573bd6daf967ad5911b537797a"
+  integrity sha512-YVt14UZCgsX1vZQ3gKjkWVdBdHQ6eu3MPU1TBgL1H5orXe2+jWD006WCPPtOuwlQm10NuzOW5WawiF1Q9veW8g==
+  dependencies:
+    debug "^4.3.4"
+    import-meta-resolve "^4.0.0"
+
 import-from@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/import-from/-/import-from-4.0.0.tgz#2710b8d66817d232e16f4166e319248d3d5492e2"
@@ -3487,6 +3525,11 @@ meow@^12.0.1:
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/meow/-/meow-12.1.1.tgz#e558dddbab12477b69b2e9a2728c327f191bace6"
   integrity sha512-BhXM0Au22RwUneMPwSCnyhTOizdWoIEPU9sp0Aqa1PnDMR5Wv2FGXYDjuzJEIX+Eo2Rb8xuYe5jrnm5QowQFkw==
+
+meow@^13.0.0:
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/meow/-/meow-13.2.0.tgz#6b7d63f913f984063b3cc261b6e8800c4cd3474f"
+  integrity sha512-pxQJQzB6djGPXh08dacEloMFopsOqGVRKFPYvPOt9XDZ1HasbgDZA74CJGreSU4G3Ak7EFJGoiH2auq+yXISgA==
 
 meow@^8.0.0:
   version "8.1.2"
