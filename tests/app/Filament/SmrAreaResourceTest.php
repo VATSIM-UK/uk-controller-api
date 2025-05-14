@@ -94,9 +94,9 @@ class SmrAreaResourceTest extends BaseFilamentTestCase
         );
     }
 
-    /* public function testItDoesntEditAnAreaNoAirfieldId()
+    public function testItDoesntEditAnAreaNoAirfieldId()
     {
-        Livewire::test(EditSmrArea::class)
+        Livewire::test(EditSmrArea::class, ['record' => 1])
             ->set('data.airfield_id')
             ->set('data.coordinates', str_repeat($this::TEST_COORDINATE, 3))
             ->call('save')
@@ -105,7 +105,7 @@ class SmrAreaResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditAnAreaNoCoordinates()
     {
-        Livewire::test(EditSmrArea::class)
+        Livewire::test(EditSmrArea::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.coordinates')
             ->call('save')
@@ -114,7 +114,7 @@ class SmrAreaResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditAnAreaTooFewCoordinates()
     {
-        Livewire::test(EditSmrArea::class)
+        Livewire::test(EditSmrArea::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.coordinates', $this::TEST_COORDINATE)
             ->call('save')
@@ -123,12 +123,12 @@ class SmrAreaResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditAnAreaInvalidCoordinates()
     {
-        Livewire::test(EditSmrArea::class)
+        Livewire::test(EditSmrArea::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.coordinates', str_repeat("COORD:INVALID\n", 3))
             ->call('save')
             ->assertHasErrors(['data.coordinates']);
-    } */
+    }
 
     protected function getCreateText(): string
     {
@@ -193,10 +193,5 @@ class SmrAreaResourceTest extends BaseFilamentTestCase
             'edit',
             'delete',
         ];
-    }
-
-    protected static function readOnlyResourceTableActions(): array
-    {
-        return [];
     }
 }
