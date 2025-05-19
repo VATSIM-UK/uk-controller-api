@@ -37,7 +37,7 @@
         "spatie/laravel-activitylog": "^4.5",
         "spatie/laravel-markdown": "^2.2",
         "spatie/laravel-schedule-monitor": "^3.0",
-        "z3d0x/filament-logger": "^0.7.1"
+        "z3d0x/filament-logger": "^0.8.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
