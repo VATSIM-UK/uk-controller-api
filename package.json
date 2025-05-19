@@ -17,7 +17,7 @@
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.13",
     "autoprefixer": "^10.4.19",
-    "commitizen": "^4.3.0",
+    "commitizen": "^4.3.1",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "cz-conventional-changelog": "3.3.0",
     "laravel-vite-plugin": "^1.2.0",
