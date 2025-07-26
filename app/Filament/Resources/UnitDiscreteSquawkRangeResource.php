@@ -52,7 +52,8 @@ class UnitDiscreteSquawkRangeResource extends Resource
                     ->mutateFormDataUsing(self::mutateFormData())
                     ->mutateRecordDataUsing(self::mutateRecordData()),
                 Tables\Actions\DeleteAction::make(),
-            ]);
+            ])
+            ->defaultSort('first', 'asc');
     }
 
     public static function getPages(): array

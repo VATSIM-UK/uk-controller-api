@@ -50,7 +50,8 @@ class UnitDiscreteSquawkRangeGuestResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-            ]);
+            ])
+            ->defaultSort('primary_unit', 'asc');
     }
 
     public static function getPages(): array
