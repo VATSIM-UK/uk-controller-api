@@ -165,16 +165,22 @@ class StandOccupationService
     }
 
     /**
-     * Given some stands that have been recently occupied, remove any conflicting stand assignments.
+     * Given some stands that have been recently occupied, remove any conflicting stand assignments, unless the
+     * aircraft has already landed.
      */
     private function deleteConflictingAssignmentsFollowingOccupation(Collection $newOccupations): void
     {
-        StandAssignment::whereNotIn('callsign', $newOccupations->pluck('callsign'))
+        $conflictingAssignments = StandAssignment::with('aircraft')
+            ->whereNotIn('callsign', $newOccupations->pluck('callsign'))
             ->whereIn('stand_id', $newOccupations->pluck('stand_id'))
-            ->get()
-            ->each(function (StandAssignment $assignment) {
-                $this->assignmentsService->deleteStandAssignment($assignment);
-            });
+            ->get();
+
+        foreach ($conflictingAssignments as $assignment) {
+            if ($assignment->aircraft && $assignment->aircraft->hasLanded()) {
+                continue;
+            }
+            $this->assignmentsService->deleteStandAssignment($assignment);
+        }
     }
 
     /**
