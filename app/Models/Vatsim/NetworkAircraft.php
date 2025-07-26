@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
-use Location\Distance\Vincenty;
 use Location\Distance\Haversine;
 
 class NetworkAircraft extends Model
