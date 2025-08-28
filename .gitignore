@@ -20,3 +20,4 @@ bootstrap/cache/
 yarn-error.log
 .phpunit.cache
 DEVSENSE/
+package-lock.json
