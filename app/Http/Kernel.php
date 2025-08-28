@@ -66,7 +66,7 @@ class Kernel extends HttpKernel
             MiddlewareKeys::AUTH . ':web',
         ],
         'public' => [
-
+            \Illuminate\Http\Middleware\HandleCors::class,
         ],
     ];
 
