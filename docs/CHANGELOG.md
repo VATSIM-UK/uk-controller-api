@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.61.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.13...6.61.0) (2025-08-28)
+
+
+### Features
+
+* add CORS headers for docs.vatsim.uk ([9d7b378](https://github.com/VATSIM-UK/uk-controller-api/commit/9d7b378c22be65b2718638a0a598f0002061d32e))
+
 ## [6.60.13](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.12...6.60.13) (2025-05-13)
 
 
