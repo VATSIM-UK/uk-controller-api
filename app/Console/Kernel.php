@@ -13,10 +13,8 @@ use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
 use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\RecatCategoriesImport;
-use App\Console\Commands\SrdImport;
 use App\Console\Commands\StandReservationsImport;
 use App\Console\Commands\UpdateMetars;
-use App\Console\Commands\UpdateSrd;
 use App\Console\Commands\UpdateVatsimControllerData;
 use App\Console\Commands\UpdateVatsimNetworkData;
 use App\Console\Commands\UserAdminCreate;
@@ -54,7 +52,6 @@ class Kernel extends ConsoleKernel
         WakeCategoriesImport::class,
         StandReservationsImport::class,
         RecatCategoriesImport::class,
-        UpdateSrd::class,
         UpdateMetars::class,
         CleanPluginEvents::class,
         CleanDepartureReleaseRequestHistory::class,
