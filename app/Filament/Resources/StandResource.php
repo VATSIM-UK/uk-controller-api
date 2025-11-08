@@ -175,7 +175,8 @@ class StandResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('terminal.description')
                     ->label(self::translateTablePath('columns.terminal'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
@@ -241,7 +242,8 @@ class StandResource extends Resource
                             );
                         }
                     ),
-            ]);
+                ])
+                ->defaultSort('airfield.code', 'asc');
     }
 
     public static function getRelations(): array

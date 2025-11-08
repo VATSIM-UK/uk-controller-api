@@ -35,7 +35,8 @@ class CcamsSquawkRangeResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-            ]);
+            ])
+            ->defaultSort('first', 'asc');
     }
 
     public static function getPages(): array

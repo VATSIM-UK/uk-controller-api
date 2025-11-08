@@ -28,7 +28,13 @@ class SidResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $recordRouteKeyName = 'sid.id';
     protected static ?string $recordTitleAttribute = 'identifier';
+    protected static ?string $navigationLabel = 'SIDs';
     protected static ?string $navigationGroup = 'Airfield';
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'SIDs';
+    }
 
     public static function form(Form $form): Form
     {
@@ -115,8 +121,10 @@ class SidResource extends Resource
                                 }
                             );
                         }
-                    ),
-            ]);
+                    )
+                
+            ])
+            ->defaultSort('runway.airfield.code', 'asc');
     }
 
     public static function getRelations(): array

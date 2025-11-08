@@ -52,7 +52,8 @@ class UnitConspicuitySquawkCodeResource extends Resource
                     ->mutateFormDataUsing(self::mutateFormData())
                     ->mutateRecordDataUsing(self::mutateRecordData()),
                 Tables\Actions\DeleteAction::make(),
-            ]);
+            ])
+            ->defaultSort('code', 'asc');
     }
 
     public static function getPages(): array

@@ -85,7 +85,8 @@ class ControllerPositionResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-            ]);
+            ])
+            ->defaultSort('callsign', 'asc');
     }
     
     public static function getPages(): array
