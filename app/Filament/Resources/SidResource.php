@@ -31,6 +31,11 @@ class SidResource extends Resource
     protected static ?string $navigationLabel = 'SIDs';
     protected static ?string $navigationGroup = 'Airfield';
 
+    public static function getPluralModelLabel(): string
+    {
+        return 'SIDs';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
