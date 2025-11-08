@@ -1,5 +1,17 @@
 # UK Controller Plugin API Changelog
 
+## [6.61.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.0...6.61.1) (2025-11-08)
+
+
+### Bug Fixes
+
+* deprecate SRD import ([5623fdc](https://github.com/VATSIM-UK/uk-controller-api/commit/5623fdcf5819115da5e26f32ff79dd69bd72f834))
+
+
+### Miscellaneous Chores
+
+* more removals ([ef2ed6e](https://github.com/VATSIM-UK/uk-controller-api/commit/ef2ed6e5c4a982583c475d348df7e5b4edb589e3))
+
 ## [6.61.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.60.13...6.61.0) (2025-08-28)
 
 
