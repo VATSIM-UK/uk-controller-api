@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.61.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.1...6.61.2) (2025-11-08)
+
+
+### Bug Fixes
+
+* Update sorting on pages ([30c8188](https://github.com/VATSIM-UK/uk-controller-api/commit/30c81887f370117e68dd17a97fd15bd1ccd17a41))
+
 ## [6.61.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.0...6.61.1) (2025-11-08)
 
 
