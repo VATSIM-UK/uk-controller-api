@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.61.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.2...6.61.3) (2025-12-16)
+
+
+### Bug Fixes
+
+* Fix markdown fomratting in stand allocation guide ([1c38f79](https://github.com/VATSIM-UK/uk-controller-api/commit/1c38f7900cf72f17ce5d3b3c481d8eb935c26d3e))
+
 ## [6.61.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.1...6.61.2) (2025-11-08)
 
 
