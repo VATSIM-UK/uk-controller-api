@@ -3,6 +3,7 @@
 
     
     <x-filament-panels::form wire:submit="authenticate">
+        @csrf
         {{ $this->form }}
 
         <x-filament-panels::form.actions
