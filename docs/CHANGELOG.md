@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.61.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.3...6.61.4) (2026-01-10)
+
+
+### Miscellaneous Chores
+
+* trigger deploy ([f1755d1](https://github.com/VATSIM-UK/uk-controller-api/commit/f1755d1754f4befcb320fd7a1fd0970dbe1b1f87))
+
 ## [6.61.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.2...6.61.3) (2025-12-16)
 
 
