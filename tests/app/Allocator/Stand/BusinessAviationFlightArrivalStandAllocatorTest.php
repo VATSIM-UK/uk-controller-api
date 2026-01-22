@@ -2,6 +2,7 @@
 
 namespace App\Allocator\Stand;
 
+use App\Allocator\Stand\BusinessAviationFlightArrivalStandAllocator;
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airline\Airline;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class BusinessAviationFlightArrivalStandAllocatorTest extends BaseFunctionalTestCase
 {
-    private BusinessAviationFlightPreferredArrivalStandAllocator $allocator;
+    private BusinessAviationFlightArrivalStandAllocator $allocator;
 
     private Stand $baStand;
 
@@ -22,7 +23,7 @@ class BusinessAviationFlightArrivalStandAllocatorTest extends BaseFunctionalTest
     {
         parent::setUp();
 
-        $this->allocator = $this->app->make(BusinessAviationFlightPreferredArrivalStandAllocator::class);
+        $this->allocator = $this->app->make(BusinessAviationFlightArrivalStandAllocator::class);
 
         Aircraft::create([
             'code' => 'C25C',

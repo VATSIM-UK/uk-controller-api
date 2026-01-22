@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
  * aircraft in the flightplan. If this is satisfied, it will look
  * for any business aviation stand the airline uses and allocate that.
  */
-class BusinessAviationFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
+class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocator
 {
     use SelectsFromAirlineSpecificStands;
     use ChecksForBusinessAviationAircraft;
