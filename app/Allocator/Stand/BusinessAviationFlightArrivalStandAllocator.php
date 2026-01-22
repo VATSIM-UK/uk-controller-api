@@ -32,7 +32,7 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
             return null;
         }
 
-        return $this->selectAirlineSpecificStands(
+        return $this->selectStandsUsingStandardConditions(
             $aircraft,
             $this->queryFilter()
         );
@@ -50,7 +50,7 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
             return collect();
         }
         
-        return $this->selectRankedAirlineSpecificStands(
+        return $this->selectRankedStandsUsingStandardConditions(
             $aircraft,
             $this->queryFilter()
         );
