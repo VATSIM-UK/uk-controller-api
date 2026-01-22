@@ -40,6 +40,11 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
 
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
+        // If the aircraft is unknown, we can't do the ranking
+        if (!$aircraft->aircraft) {
+            return collect();
+        }
+
         // If the aircraft isn't a business aviation aircraft, we cant allocate a stand
         if (!$this->isBusinessAviationAircraft($aircraft)) {
             return collect();
