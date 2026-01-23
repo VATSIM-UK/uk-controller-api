@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\DB;
 
 // Migration to set is_business_aviation to true on relevent aircraft
 return new class extends Migration {
-
     private array $businessAviationAircraftCodes = [
         'C510',
         'C525',
