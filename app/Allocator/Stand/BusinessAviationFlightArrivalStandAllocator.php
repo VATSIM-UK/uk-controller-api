@@ -18,13 +18,6 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
     use SelectsFromAirlineSpecificStands;
     use ChecksForBusinessAviationAircraft;
 
-    private AirlineService $airlineService;
-
-    public function __construct(AirlineService $airlineService)
-    {
-        $this->airlineService = $airlineService;
-    }
-
     public function allocate(NetworkAircraft $aircraft): ?int
     {
         // If the aircraft isn't a business aviation aircraft, this rule doesn't apply
