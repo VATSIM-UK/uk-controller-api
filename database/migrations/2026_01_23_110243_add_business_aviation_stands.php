@@ -10,12 +10,12 @@ return new class extends Migration {
         'EGKK' => ['230R', '230L', '231R', '231L', '232R', '232L', '233R', '233L', '234R', '234L','235R', '235L'],
     ];
 
-    private int $businessTypeId = DB::table('stand_types')
-        ->where('key', StandType::TYPE_KEY_BUSINESS_AVIATION)
-        ->value('id');
-
     public function up(): void
     {
+        $businessTypeId = DB::table('stand_types')
+            ->where('key', StandType::TYPE_KEY_BUSINESS_AVIATION)
+            ->value('id');
+
         foreach ($this->businessAviationStands as $icao => $standIdentifiers) {
             $airfieldId = DB::table('airfields')
                 ->where('code', $icao)
@@ -32,6 +32,10 @@ return new class extends Migration {
 
     public function down(): void
     {
+        $businessTypeId = DB::table('stand_types')
+            ->where('key', StandType::TYPE_KEY_BUSINESS_AVIATION)
+            ->value('id');
+
         foreach ($this->businessAviationStands as $icao => $standIdentifiers) {
             $airfieldId = DB::table('airfields')
                 ->where('code', $icao)
