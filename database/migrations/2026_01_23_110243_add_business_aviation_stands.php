@@ -17,7 +17,7 @@ return new class extends Migration {
             ->value('id');
 
         foreach ($this->businessAviationStands as $icao => $standIdentifiers) {
-            $airfieldId = DB::table('airfields')
+            $airfieldId = DB::table('airfield')
                 ->where('code', $icao)
                 ->value('id');
 
@@ -37,7 +37,7 @@ return new class extends Migration {
             ->value('id');
 
         foreach ($this->businessAviationStands as $icao => $standIdentifiers) {
-            $airfieldId = DB::table('airfields')
+            $airfieldId = DB::table('airfield')
                 ->where('code', $icao)
                 ->value('id');
 
