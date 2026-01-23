@@ -63,14 +63,14 @@ return new class extends Migration {
     public function up(): void
     {
         DB::table('aircraft')
-            ->whereIn('icao_code', $this->businessAviationAircraftCodes)
+            ->whereIn('code', $this->businessAviationAircraftCodes)
             ->update(['is_business_aviation' => true, 'allocate_stands' => true]);
     }
 
     public function down(): void
     {
         DB::table('aircraft')
-            ->whereIn('icao_code', $this->businessAviationAircraftCodes)
+            ->whereIn('code', $this->businessAviationAircraftCodes)
             ->update(['is_business_aviation' => false, 'allocate_stands' => false]);
     }
 };
