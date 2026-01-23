@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up(): void
     {
         $businessTypeId = DB::table('stand_types')
-            ->where('key', StandType::TYPE_KEY_BUSINESS_AVIATION)
+            ->where('key', 'BUSINESS AVIATION')
             ->value('id');
 
         foreach ($this->businessAviationStands as $icao => $standIdentifiers) {
@@ -33,7 +33,7 @@ return new class extends Migration {
     public function down(): void
     {
         $businessTypeId = DB::table('stand_types')
-            ->where('key', StandType::TYPE_KEY_BUSINESS_AVIATION)
+            ->where('key', 'BUSINESS AVIATION')
             ->value('id');
 
         foreach ($this->businessAviationStands as $icao => $standIdentifiers) {
