@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 return new class extends Migration {
     private array $businessAviationStands = [
         'EGLL' => ['501', '502', '503', '504', '505', '506'],
-        'EGKK' => ['230R', '230L', '231R', '231L', '232R', '232L', '233R', '233L', '234R', '234L','235R' '235L'],
+        'EGKK' => ['230R', '230L', '231R', '231L', '232R', '232L', '233R', '233L', '234R', '234L','235R', '235L'],
     ];
 
     private int $businessTypeId = DB::table('stand_types')
