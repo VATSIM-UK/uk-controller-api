@@ -23,27 +23,22 @@ return new class extends Migration {
         'C750',
         'CJ1',
         'CJ6',
-
         'GLF2',
         'GLF3',
         'GLF4',
         'GLF5',
         'GLF6',
         'GLEX',
-
         'F2TH',
         'F900',
         'F50',
+        'FA7X',
         'FA8X',
-
         'E35L',
         'E50P',
         'E55P',
         'E545',
         'E550',
-        'E75S',
-        'E75L',
-
         'LJ45',
         'LJ60',
         'LJ70',
@@ -51,13 +46,19 @@ return new class extends Migration {
         'CL30',
         'CL35',
         'CL60',
+        'GA7C',
         'GL5T',
         'GL6T',
         'GL7T',
-
         'HA4T',
-
         'SF50',
+        'P46T',
+        'M600',
+        'TBM7',
+        'TBM8',
+        'TBM9',
+        'PC12',
+        'PC24',
     ];
 
     public function up(): void
