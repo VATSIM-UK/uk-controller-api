@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     private array $businessAviationStands = [
+        'EGLL' => ['449', '450', '451', '452', '453', '454', '455', '456', '457', '457L', '457R'],
         'EGKK' => ['230R', '230L', '231R', '231L', '232R', '232L', '233R', '233L', '234R', '234L','235R', '235L'],
         'EGSS' => ['504', '505', '506', '507', '508'],
         'EGPH' => ['317', '317A', '316', '315'],
