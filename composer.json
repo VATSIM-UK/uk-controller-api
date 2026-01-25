@@ -21,7 +21,7 @@
         "ext-intl": "*",
         "bugsnag/bugsnag-laravel": "^2.24",
         "composer/semver": "^3.2",
-        "filament/filament": "^3.2.70",
+        "filament/filament": "^3.6.5",
         "guzzlehttp/guzzle": "^7.0",
         "knplabs/github-api": "^3.0",
         "laravel/framework": "^11.0",
