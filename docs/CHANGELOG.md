@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.61.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.4...6.61.5) (2026-01-25)
+
+
+### Miscellaneous Chores
+
+* resolve CVE on filament ([555faa3](https://github.com/VATSIM-UK/uk-controller-api/commit/555faa3efbdfbd06c6c7b066289fb19be82f8870))
+
 ## [6.61.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.3...6.61.4) (2026-01-10)
 
 
