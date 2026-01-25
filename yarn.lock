@@ -2285,12 +2285,7 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-fdir@^6.4.4:
-  version "6.4.4"
-  resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.4.4.tgz#1cfcf86f875a883e19a8fab53622cfe992e8d2f9"
-  integrity sha512-1NZP+GK4GfuAv3PqKvxQRDMjdSRZjnkq7KfhlNrCNNlZ0ygQFpebfrnfnq/W7fpUnAv9aGWmY1zKx7FYL3gwhg==
-
-fdir@^6.5.0:
+fdir@^6.4.4, fdir@^6.5.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
   integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
@@ -4403,12 +4398,7 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
-picomatch@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.2.tgz#77c742931e8f3b8820946c76cd0c1f13730d1dab"
-  integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
-
-picomatch@^4.0.3:
+picomatch@^4.0.2, picomatch@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.3.tgz#796c76136d1eead715db1e7bad785dedd695a042"
   integrity sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==
@@ -5468,21 +5458,13 @@ tiny-relative-date@^2.0.2:
   resolved "https://registry.yarnpkg.com/tiny-relative-date/-/tiny-relative-date-2.0.2.tgz#0c35c2a3ef87b80f311314918505aa86c2d44bc9"
   integrity sha512-rGxAbeL9z3J4pI2GtBEoFaavHdO4RKAU54hEuOef5kfx5aPqiQtbhYktMOTL5OA33db8BjsDcLXuNp+/v19PHw==
 
-tinyglobby@^0.2.12, tinyglobby@^0.2.14:
+tinyglobby@^0.2.12, tinyglobby@^0.2.13, tinyglobby@^0.2.14:
   version "0.2.15"
   resolved "https://registry.yarnpkg.com/tinyglobby/-/tinyglobby-0.2.15.tgz#e228dd1e638cea993d2fdb4fcd2d4602a79951c2"
   integrity sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==
   dependencies:
     fdir "^6.5.0"
     picomatch "^4.0.3"
-
-tinyglobby@^0.2.13:
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/tinyglobby/-/tinyglobby-0.2.13.tgz#a0e46515ce6cbcd65331537e57484af5a7b2ff7e"
-  integrity sha512-mEwzpUgrLySlveBwEVDMKk5B57bhLPYovRfPAXD5gA/98Opn0rCDj3GtLwFvCvH5RK9uPCExUROW5NjDwvqkxw==
-  dependencies:
-    fdir "^6.4.4"
-    picomatch "^4.0.2"
 
 tippy.js@^6.3.7:
   version "6.3.7"
@@ -5775,10 +5757,10 @@ vite-plugin-full-reload@^1.1.0:
     picocolors "^1.0.0"
     picomatch "^2.3.1"
 
-vite@^6.3.5:
-  version "6.3.5"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-6.3.5.tgz#fec73879013c9c0128c8d284504c6d19410d12a3"
-  integrity sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==
+vite@^6.4.1:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-6.4.1.tgz#afbe14518cdd6887e240a4b0221ab6d0ce733f96"
+  integrity sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.4.4"
