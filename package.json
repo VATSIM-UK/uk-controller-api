@@ -25,7 +25,7 @@
     "postcss": "^8.4.38",
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^12.1.2",
-    "semantic-release": "23",
+    "semantic-release": "25",
     "tailwindcss": "^3.4.3",
     "tippy.js": "^6.3.7",
     "vite": "^6.3.5"
