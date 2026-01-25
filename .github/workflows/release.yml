@@ -30,7 +30,7 @@ jobs:
       - name: Setup Yarn
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "24"
 
       - name: Get Yarn Cache Directory
         id: yarn-cache-dir-path
@@ -48,7 +48,7 @@ jobs:
       - name: Load Cached Node Modules
         uses: actions/cache@v4
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
 
       # Install yarn things
