@@ -1,5 +1,15 @@
 # UK Controller Plugin API Changelog
 
+## <small>6.61.6 (2026-01-25)</small>
+
+* fix: bump semver to latest ([95f27d9](https://github.com/VATSIM-UK/uk-controller-api/commit/95f27d9))
+* fix: bump semver to latest ([08a64e8](https://github.com/VATSIM-UK/uk-controller-api/commit/08a64e8))
+* bump node ([f1cc711](https://github.com/VATSIM-UK/uk-controller-api/commit/f1cc711))
+* Merge pull request #1740 from VATSIM-UK/dependabot/npm_and_yarn/commitizen-4.3.1 ([9fb27e5](https://github.com/VATSIM-UK/uk-controller-api/commit/9fb27e5)), closes [#1740](https://github.com/VATSIM-UK/uk-controller-api/issues/1740)
+* Merge pull request #1741 from VATSIM-UK/dependabot/npm_and_yarn/tailwindcss/forms-0.5.10 ([7c5047f](https://github.com/VATSIM-UK/uk-controller-api/commit/7c5047f)), closes [#1741](https://github.com/VATSIM-UK/uk-controller-api/issues/1741)
+* build(deps-dev): Bump @tailwindcss/forms from 0.5.7 to 0.5.10 ([3399a38](https://github.com/VATSIM-UK/uk-controller-api/commit/3399a38))
+* build(deps-dev): Bump commitizen from 4.3.0 to 4.3.1 ([3061e4a](https://github.com/VATSIM-UK/uk-controller-api/commit/3061e4a))
+
 ## [6.61.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.4...6.61.5) (2026-01-25)
 
 
