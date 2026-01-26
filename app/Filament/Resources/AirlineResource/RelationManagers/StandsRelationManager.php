@@ -11,6 +11,8 @@ use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\DetachAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Database\Eloquent\Collection;
 
 class StandsRelationManager extends RelationManager
 {
@@ -56,7 +58,18 @@ class StandsRelationManager extends RelationManager
                     ->form(self::airlineStandPairingFormFields()),
                 DetachAction::make('unpair-stand')
                     ->label(self::translateFormPath('remove.label'))
-                    ->using(self::unpairingClosure())
+                    ->using(self::unpairingClosure()),
+                BulkAction::make('bulk-unpair-stand')
+                    ->label(self::translateFormPath('remove.label'))
+                    ->requiresConfirmation()
+                    ->action(function (Collection $records) {
+                        $unpair = self::unpairingClosure();
+
+                        $records->each(function ($record) use ($unpair) {
+                            $unpair($record);
+                        });
+                    })
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 
