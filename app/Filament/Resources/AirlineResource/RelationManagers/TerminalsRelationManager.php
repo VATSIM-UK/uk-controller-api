@@ -73,14 +73,20 @@ class TerminalsRelationManager extends RelationManager
                 DetachAction::make('unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
+                
+            ])
+            ->bulkActions([
                 BulkAction::make('bulk-unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
                     ->requiresConfirmation()
                     ->action(function (Collection $records) {
                         $unpair = self::unpairingClosure();
 
-                        $records->each(function ($record) use ($unpair) {
-                            $unpair($record);
+                        $records->each(function (Terminal $record) use ($unpair) {
+                            $action = DetachAction::make('bulk-unpair-terminal');
+                            $action->record($record);
+
+                            $unpair($action);
                         });
                     })
                     ->deselectRecordsAfterCompletion(),

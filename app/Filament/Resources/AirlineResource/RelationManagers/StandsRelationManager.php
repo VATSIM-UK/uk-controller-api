@@ -59,14 +59,19 @@ class StandsRelationManager extends RelationManager
                 DetachAction::make('unpair-stand')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
+            ])
+            ->bulkActions([
                 BulkAction::make('bulk-unpair-stand')
                     ->label(self::translateFormPath('remove.label'))
                     ->requiresConfirmation()
                     ->action(function (Collection $records) {
                         $unpair = self::unpairingClosure();
 
-                        $records->each(function ($record) use ($unpair) {
-                            $unpair($record);
+                        $records->each(function (Stand $record) use ($unpair) {
+                            $action = DetachAction::make('bulk-unpair-terminal');
+                            $action->record($record);
+
+                            $unpair($action);
                         });
                     })
                     ->deselectRecordsAfterCompletion(),
