@@ -7,7 +7,6 @@ use App\Helpers\Vatsim\ControllerPositionParser;
 use App\Models\Vatsim\NetworkControllerPosition;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class NetworkControllerService
 {
@@ -27,32 +26,17 @@ class NetworkControllerService
 
     public function updateNetworkData(): void
     {
-        $startTime = microtime(true);
-        Log::debug('NetworkControllerService: Starting network data update');
-
         $this->updateDatabaseControllers();
-        Log::debug('NetworkControllerService: Updated database controllers');
-
         $this->processTimeouts();
-        Log::debug('NetworkControllerService: Processed controller timeouts');
-
         event(new NetworkControllersUpdatedEvent());
-
-        $duration = microtime(true) - $startTime;
-        Log::debug('NetworkControllerService: Completed network data update', [
-            'duration_seconds' => $duration
-        ]);
     }
 
     private function updateDatabaseControllers(): void
     {
         $networkControllers = $this->dataService->getNetworkControllerData();
         if ($networkControllers->isEmpty()) {
-            Log::debug('NetworkControllerService: No network controller data received');
             return;
         }
-
-        Log::debug('NetworkControllerService: Upserting network controllers', ['count' => $networkControllers->count()]);
 
         NetworkControllerPosition::upsert(
             $networkControllers->map(function ($controller) {
@@ -69,11 +53,6 @@ class NetworkControllerService
 
     private function processTimeouts(): void
     {
-        $timedOutControllers = NetworkControllerPosition::where('updated_at', '<', Carbon::now()->subMinutes(3))->count();
-        if ($timedOutControllers > 0) {
-            Log::debug('NetworkControllerService: Removing timed-out controllers', ['count' => $timedOutControllers]);
-        }
-
         NetworkControllerPosition::where('updated_at', '<', Carbon::now()->subMinutes(3))
             ->delete();
     }

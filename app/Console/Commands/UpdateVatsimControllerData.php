@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Services\NetworkControllerService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 class UpdateVatsimControllerData extends Command
 {
@@ -26,17 +24,8 @@ class UpdateVatsimControllerData extends Command
 
     public function handle(NetworkControllerService $dataService)
     {
-        $startTime = microtime(true);
         $this->info('Starting network controller data update');
-        Log::debug('UpdateVatsimControllerData: Starting command execution', ['timestamp' => Carbon::now()]);
-
         $dataService->updateNetworkData();
-
-        $duration = microtime(true) - $startTime;
         $this->info('Network controller data successfully updated');
-        Log::debug('UpdateVatsimControllerData: Completed command execution', [
-            'duration_seconds' => $duration,
-            'timestamp' => Carbon::now()
-        ]);
     }
 }

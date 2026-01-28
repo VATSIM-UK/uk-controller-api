@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Services\NetworkAircraftService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 class UpdateVatsimNetworkData extends Command
 {
@@ -31,17 +29,8 @@ class UpdateVatsimNetworkData extends Command
      */
     public function handle(NetworkAircraftService $dataService)
     {
-        $startTime = microtime(true);
         $this->info('Starting network data update');
-        Log::debug('UpdateVatsimNetworkData: Starting command execution', ['timestamp' => Carbon::now()]);
-
         $dataService->updateNetworkData();
-
-        $duration = microtime(true) - $startTime;
         $this->info('Network data successfully updated');
-        Log::debug('UpdateVatsimNetworkData: Completed command execution', [
-            'duration_seconds' => $duration,
-            'timestamp' => Carbon::now()
-        ]);
     }
 }
