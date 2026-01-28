@@ -1,5 +1,34 @@
 # UK Controller Plugin API Changelog
 
+## <small>6.61.7 (2026-01-28)</small>
+
+* make logging less noisy ([a5c891b](https://github.com/VATSIM-UK/uk-controller-api/commit/a5c891b))
+* Merge pull request #1743 from VATSIM-UK/dependabot/github_actions/allenevans/set-env-4.0.0 ([1be9f51](https://github.com/VATSIM-UK/uk-controller-api/commit/1be9f51)), closes [#1743](https://github.com/VATSIM-UK/uk-controller-api/issues/1743)
+* Merge pull request #1751 from VATSIM-UK/dependabot/npm_and_yarn/postcss-nesting-13.0.2 ([c548a63](https://github.com/VATSIM-UK/uk-controller-api/commit/c548a63)), closes [#1751](https://github.com/VATSIM-UK/uk-controller-api/issues/1751)
+* Merge pull request #1752 from VATSIM-UK/dependabot/github_actions/rjstone/discord-webhook-notify-2 ([076b9c5](https://github.com/VATSIM-UK/uk-controller-api/commit/076b9c5)), closes [#1752](https://github.com/VATSIM-UK/uk-controller-api/issues/1752)
+* Merge pull request #1754 from VATSIM-UK/dependabot/github_actions/dawidd6/action-download-artifact-1 ([aa44882](https://github.com/VATSIM-UK/uk-controller-api/commit/aa44882)), closes [#1754](https://github.com/VATSIM-UK/uk-controller-api/issues/1754)
+* Merge pull request #1765 from VATSIM-UK/dependabot/github_actions/actions/checkout-5 ([55f415f](https://github.com/VATSIM-UK/uk-controller-api/commit/55f415f)), closes [#1765](https://github.com/VATSIM-UK/uk-controller-api/issues/1765)
+* Merge pull request #1767 from VATSIM-UK/dependabot/npm_and_yarn/semantic-release/release-notes-gener ([6ab40f8](https://github.com/VATSIM-UK/uk-controller-api/commit/6ab40f8)), closes [#1767](https://github.com/VATSIM-UK/uk-controller-api/issues/1767)
+* Merge pull request #1770 from VATSIM-UK/dependabot/github_actions/actions/setup-node-6 ([42ce223](https://github.com/VATSIM-UK/uk-controller-api/commit/42ce223)), closes [#1770](https://github.com/VATSIM-UK/uk-controller-api/issues/1770)
+* Merge pull request #1777 from VATSIM-UK/dependabot/npm_and_yarn/js-yaml-4.1.1 ([f1d1371](https://github.com/VATSIM-UK/uk-controller-api/commit/f1d1371)), closes [#1777](https://github.com/VATSIM-UK/uk-controller-api/issues/1777)
+* Merge pull request #1779 from VATSIM-UK/dependabot/npm_and_yarn/lodash-es-4.17.23 ([93d5c6b](https://github.com/VATSIM-UK/uk-controller-api/commit/93d5c6b)), closes [#1779](https://github.com/VATSIM-UK/uk-controller-api/issues/1779)
+* Merge pull request #1780 from VATSIM-UK/dependabot/npm_and_yarn/lodash-4.17.23 ([7066da9](https://github.com/VATSIM-UK/uk-controller-api/commit/7066da9)), closes [#1780](https://github.com/VATSIM-UK/uk-controller-api/issues/1780)
+* Merge pull request #1794 from VATSIM-UK/download-jobs-debug ([5d89317](https://github.com/VATSIM-UK/uk-controller-api/commit/5d89317)), closes [#1794](https://github.com/VATSIM-UK/uk-controller-api/issues/1794)
+* use log facade ([ad5a25a](https://github.com/VATSIM-UK/uk-controller-api/commit/ad5a25a))
+* fix: add metar logging ([37d11ed](https://github.com/VATSIM-UK/uk-controller-api/commit/37d11ed))
+* build(deps-dev): Bump @semantic-release/release-notes-generator ([a3162d4](https://github.com/VATSIM-UK/uk-controller-api/commit/a3162d4))
+* build(deps-dev): Bump lodash from 4.17.21 to 4.17.23 ([fc5471f](https://github.com/VATSIM-UK/uk-controller-api/commit/fc5471f))
+* build(deps-dev): Bump postcss-nesting from 12.1.2 to 13.0.2 ([ad1fe06](https://github.com/VATSIM-UK/uk-controller-api/commit/ad1fe06))
+* build(deps-dev): Bump vite from 6.3.5 to 6.4.1 ([4664e84](https://github.com/VATSIM-UK/uk-controller-api/commit/4664e84))
+* build(deps-dev): Bump vite from 6.3.5 to 6.4.1 ([816bd78](https://github.com/VATSIM-UK/uk-controller-api/commit/816bd78))
+* build(deps): Bump actions/checkout from 2 to 5 ([84ba393](https://github.com/VATSIM-UK/uk-controller-api/commit/84ba393))
+* build(deps): Bump actions/setup-node from 4 to 6 ([9b29429](https://github.com/VATSIM-UK/uk-controller-api/commit/9b29429))
+* build(deps): Bump allenevans/set-env from 2.0.0 to 4.0.0 ([ed657e5](https://github.com/VATSIM-UK/uk-controller-api/commit/ed657e5))
+* build(deps): Bump dawidd6/action-download-artifact from 9 to 11 ([a98b624](https://github.com/VATSIM-UK/uk-controller-api/commit/a98b624))
+* build(deps): Bump js-yaml from 4.1.0 to 4.1.1 ([f73fc27](https://github.com/VATSIM-UK/uk-controller-api/commit/f73fc27))
+* build(deps): Bump lodash-es from 4.17.21 to 4.17.23 ([3b71388](https://github.com/VATSIM-UK/uk-controller-api/commit/3b71388))
+* build(deps): Bump rjstone/discord-webhook-notify from 1 to 2 ([46332f4](https://github.com/VATSIM-UK/uk-controller-api/commit/46332f4))
+
 ## <small>6.61.6 (2026-01-25)</small>
 
 * fix: bump semver to latest ([95f27d9](https://github.com/VATSIM-UK/uk-controller-api/commit/95f27d9))
