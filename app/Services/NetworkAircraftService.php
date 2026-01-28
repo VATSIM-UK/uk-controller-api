@@ -7,6 +7,7 @@ use App\Jobs\Network\AircraftDisconnected;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Location\Coordinate;
 use Location\Distance\Haversine;
 
@@ -39,14 +40,30 @@ class NetworkAircraftService
 
     public function updateNetworkData(): void
     {
+        $startTime = microtime(true);
+        Log::debug('NetworkAircraftService: Starting network data update');
+
         $this->allAircraftBeforeUpdate = NetworkAircraft::all()->mapWithKeys(function (NetworkAircraft $aircraft) {
             return [$aircraft->callsign => $aircraft];
         });
+        Log::debug('NetworkAircraftService: Loaded aircraft from database', ['count' => $this->allAircraftBeforeUpdate->count()]);
 
-        $concernedPilots = $this->formatPilotData($this->dataService->getNetworkAircraftData());
+        $networkPilotData = $this->dataService->getNetworkAircraftData();
+        Log::debug('NetworkAircraftService: Retrieved network aircraft data', ['count' => $networkPilotData->count()]);
+
+        $concernedPilots = $this->formatPilotData($networkPilotData);
+        Log::debug('NetworkAircraftService: Formatted pilot data', ['count' => $concernedPilots->count()]);
+
         $this->processPilots($concernedPilots);
         $this->handleTimeouts();
+
         event(new NetworkDataUpdatedEvent());
+
+        $duration = microtime(true) - $startTime;
+        Log::debug('NetworkAircraftService: Completed network data update', [
+            'duration_seconds' => $duration,
+            'processed_aircraft' => $concernedPilots->count()
+        ]);
     }
 
     private function formatPilotData(Collection $pilots): Collection
