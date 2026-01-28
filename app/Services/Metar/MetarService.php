@@ -7,6 +7,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
 use App\Services\Metar\Parser\MetarParser;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class MetarService
 {
@@ -25,67 +26,97 @@ class MetarService
 
     public function updateAllMetars(): void
     {
-        $metarAirfields = Airfield::all();
-        $updatedMetars = $this->getUpdatedMetars($metarAirfields);
-        if ($updatedMetars->isEmpty()) {
-            return;
+        try {
+            $startTime = microtime(true);
+            $metarAirfields = Airfield::all();
+
+            $updatedMetars = $this->getUpdatedMetars($metarAirfields);
+            if ($updatedMetars->isEmpty()) {
+                Log::info('METAR update: No updated METARs to process');
+                return;
+            }
+
+            $upsertData = $this->getUpsertMetarData($metarAirfields, $updatedMetars);
+            Metar::upsert(
+                $upsertData,
+                ['airfield_id']
+            );
+
+            event(
+                new MetarsUpdatedEvent(
+                    Metar::with('airfield')
+                        ->whereIn('airfield_id', array_column($upsertData, 'airfield_id'))
+                        ->get()
+                )
+            );
+
+            $duration = round(microtime(true) - $startTime, 2);
+            Log::info("METAR update: Updated {$updatedMetars->count()} METARs in {$duration}s");
+        } catch (\Exception $e) {
+            Log::error('METAR update failed: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+            throw $e;
         }
-
-        $upsertData = $this->getUpsertMetarData($metarAirfields, $updatedMetars);
-        Metar::upsert(
-            $upsertData,
-            ['airfield_id']
-        );
-
-        event(
-            new MetarsUpdatedEvent(
-                Metar::with('airfield')
-                    ->whereIn('airfield_id', array_column($upsertData, 'airfield_id'))
-                    ->get()
-            )
-        );
     }
 
     private function getUpdatedMetars(Collection $airfields): Collection
     {
-        $currentMetars = Metar::with('airfield')->get()->mapWithKeys(function (Metar $metar) {
-            return [$metar->airfield->code => $metar->raw];
-        });
+        try {
+            $currentMetars = Metar::with('airfield')->get()->mapWithKeys(function (Metar $metar) {
+                return [$metar->airfield->code => $metar->raw];
+            });
 
-        return $this->getMetarsForAirfields($airfields)->reject(
-            function (DownloadedMetar $metar, string $airfield) use ($currentMetars) {
-                return $currentMetars->offsetExists($airfield) && $metar->raw() === $currentMetars->offsetGet(
-                    $airfield
-                );
-            }
-        );
+            $newMetars = $this->getMetarsForAirfields($airfields);
+
+            return $newMetars->reject(
+                function (DownloadedMetar $metar, string $airfield) use ($currentMetars) {
+                    return $currentMetars->offsetExists($airfield) && $metar->raw() === $currentMetars->offsetGet(
+                        $airfield
+                    );
+                }
+            );
+        } catch (\Exception $e) {
+            Log::error('METAR update: Error in getUpdatedMetars: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     private function getMetarsForAirfields(Collection $airfields): Collection
     {
-        return $this->retrievalService->retrieveMetars($airfields->pluck('code'));
+        try {
+            return $this->retrievalService->retrieveMetars($airfields->pluck('code'));
+        } catch (\Exception $e) {
+            Log::error('METAR update: Error retrieving METARs: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     private function getUpsertMetarData(Collection $airfields, Collection $metars): array
     {
-        return $airfields->filter(function (Airfield $airfield) use ($metars) {
-            return $metars->has($airfield->code);
-        })
-            ->map(function (Airfield $airfield) use ($metars) {
-                $metar = $metars[$airfield->code];
-
-                return [
-                    'airfield_id' => $airfield->id,
-                    'raw' => $metar->raw(),
-                    'parsed' => $this->parsers->reduce(
-                        function (Collection $parsed, MetarParser $parser) use ($airfield, $metar) {
-                            return $parsed->merge($parser->parse($airfield, $metar->tokenise()));
-                        },
-                        collect()
-                    ),
-                ];
+        try {
+            return $airfields->filter(function (Airfield $airfield) use ($metars) {
+                return $metars->has($airfield->code);
             })
-            ->toArray();
+                ->map(function (Airfield $airfield) use ($metars) {
+                    $metar = $metars[$airfield->code];
+
+                    return [
+                        'airfield_id' => $airfield->id,
+                        'raw' => $metar->raw(),
+                        'parsed' => $this->parsers->reduce(
+                            function (Collection $parsed, MetarParser $parser) use ($airfield, $metar) {
+                                return $parsed->merge($parser->parse($airfield, $metar->tokenise()));
+                            },
+                            collect()
+                        ),
+                    ];
+                })
+                ->toArray();
+        } catch (\Exception $e) {
+            Log::error('METAR update: Error building upsert data: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function getParsers(): Collection
