@@ -7,7 +7,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Metars\Metar;
 use App\Services\Metar\Parser\MetarParser;
 use Illuminate\Support\Collection;
-use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Log;
 
 class MetarService
 {
@@ -18,13 +18,10 @@ class MetarService
      */
     private Collection $parsers;
 
-    private LoggerInterface $logger;
-
-    public function __construct(MetarRetrievalService $retrievalService, Collection $parsers, LoggerInterface $logger)
+    public function __construct(MetarRetrievalService $retrievalService, Collection $parsers)
     {
         $this->retrievalService = $retrievalService;
         $this->parsers = $parsers;
-        $this->logger = $logger;
     }
 
     public function updateAllMetars(): void
@@ -35,7 +32,7 @@ class MetarService
 
             $updatedMetars = $this->getUpdatedMetars($metarAirfields);
             if ($updatedMetars->isEmpty()) {
-                $this->logger->info('METAR update: No updated METARs to process');
+                Log::info('METAR update: No updated METARs to process');
                 return;
             }
 
@@ -54,9 +51,9 @@ class MetarService
             );
 
             $duration = round(microtime(true) - $startTime, 2);
-            $this->logger->info("METAR update: Updated {$updatedMetars->count()} METARs in {$duration}s");
+            Log::info("METAR update: Updated {$updatedMetars->count()} METARs in {$duration}s");
         } catch (\Exception $e) {
-            $this->logger->error('METAR update failed: ' . $e->getMessage(), [
+            Log::error('METAR update failed: ' . $e->getMessage(), [
                 'exception' => $e,
             ]);
             throw $e;
@@ -80,7 +77,7 @@ class MetarService
                 }
             );
         } catch (\Exception $e) {
-            $this->logger->error('METAR update: Error in getUpdatedMetars: ' . $e->getMessage());
+            Log::error('METAR update: Error in getUpdatedMetars: ' . $e->getMessage());
             throw $e;
         }
     }
@@ -90,7 +87,7 @@ class MetarService
         try {
             return $this->retrievalService->retrieveMetars($airfields->pluck('code'));
         } catch (\Exception $e) {
-            $this->logger->error('METAR update: Error retrieving METARs: ' . $e->getMessage());
+            Log::error('METAR update: Error retrieving METARs: ' . $e->getMessage());
             throw $e;
         }
     }
@@ -117,7 +114,7 @@ class MetarService
                 })
                 ->toArray();
         } catch (\Exception $e) {
-            $this->logger->error('METAR update: Error building upsert data: ' . $e->getMessage());
+            Log::error('METAR update: Error building upsert data: ' . $e->getMessage());
             throw $e;
         }
     }
