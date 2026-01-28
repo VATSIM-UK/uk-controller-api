@@ -23,20 +23,16 @@ class UpdateMetars extends Command
 
     public function handle(MetarService $metarService)
     {
-        $this->info('Starting METAR update');
-
         try {
-            $this->info('Fetching all airfields from database');
+            $this->info('Starting METAR update');
             $startTime = microtime(true);
 
             $metarService->updateAllMetars();
 
-            $endTime = microtime(true);
-            $duration = round($endTime - $startTime, 2);
-            $this->info("METARs successfully updated in {$duration}s");
+            $duration = round(microtime(true) - $startTime, 2);
+            $this->info("METAR update completed in {$duration}s");
         } catch (\Exception $e) {
             $this->error("METAR update failed: {$e->getMessage()}");
-            $this->error("Stack trace: {$e->getTraceAsString()}");
             throw $e;
         }
     }
