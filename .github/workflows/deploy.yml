@@ -13,7 +13,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Checkout Codes
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ github.event.client_payload.ref }}
@@ -34,7 +34,7 @@ jobs:
       # DEPLOYMENT PARAMETERS
       #
       - name: Set additional deployment variables
-        uses: allenevans/set-env@v2.0.0
+        uses: allenevans/set-env@v4.0.0
         with:
           APP_URL: https://ukcp.vatsim.uk
           APPLICATION_ROOT: ${{ secrets.APPLICATION_ROOT }}
@@ -48,14 +48,14 @@ jobs:
       # DISCORD NOTIFICATION JOB START
       #
       - name: Discord Notification (Start)
-        uses: rjstone/discord-webhook-notify@v1
+        uses: rjstone/discord-webhook-notify@v2
         with:
-            severity: warn
-            description: ${{ format('Starting Deployment of **{0}**', github.repository) }}
-            details: >
-              ${{ format(':rocket: Starting Deployment of commit `{0}` by :technologist: *{1}* to **Production** ({2})', env.COMMIT, github.actor, env.APP_URL) }}
-            footer: ${{ format('https://{0}/actions/runs/{1}', github.repository, github.run_id) }}
-            webhookUrl: ${{ secrets.ACTIONS_DISCORD_WEBHOOK }}
+          severity: warn
+          description: ${{ format('Starting Deployment of **{0}**', github.repository) }}
+          details: >
+            ${{ format(':rocket: Starting Deployment of commit `{0}` by :technologist: *{1}* to **Production** ({2})', env.COMMIT, github.actor, env.APP_URL) }}
+          footer: ${{ format('https://{0}/actions/runs/{1}', github.repository, github.run_id) }}
+          webhookUrl: ${{ secrets.ACTIONS_DISCORD_WEBHOOK }}
 
       #
       # GITHUB DEPLOYMENT JOB START
@@ -73,9 +73,9 @@ jobs:
       # BUILD DEPENDENCIES SETUP
       #
       - name: Setup Yarn
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: "24"
 
       - name: Configure PHP
         uses: shivammathur/setup-php@v2
@@ -138,7 +138,7 @@ jobs:
 
       # Not required for deployment
       - name: Remove node_modules
-        run: 'rm -rf node_modules'
+        run: "rm -rf node_modules"
 
       - name: Reduce Composer Dependencies To Production
         run: composer install --no-interaction --no-dev --optimize-autoloader
@@ -312,22 +312,22 @@ jobs:
       #
       - name: Discord Notification (Failed)
         if: failure()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: rjstone/discord-webhook-notify@v2
         with:
-            severity: error
-            description: ${{ format('Deployment **FAILED** of **{0}**', github.repository) }}
-            details: >
-              ${{ format(':fire: Deployment **FAILED** for commit `{0}` by :technologist: *{1}* to **Production** ({2})', env.COMMIT, github.actor, env.APP_URL) }}
-            footer: ${{ format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}
-            webhookUrl: ${{ secrets.ACTIONS_DISCORD_WEBHOOK }}
+          severity: error
+          description: ${{ format('Deployment **FAILED** of **{0}**', github.repository) }}
+          details: >
+            ${{ format(':fire: Deployment **FAILED** for commit `{0}` by :technologist: *{1}* to **Production** ({2})', env.COMMIT, github.actor, env.APP_URL) }}
+          footer: ${{ format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}
+          webhookUrl: ${{ secrets.ACTIONS_DISCORD_WEBHOOK }}
 
       - name: Discord Notification (Success)
         if: success()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: rjstone/discord-webhook-notify@v2
         with:
-            severity: info
-            description: ${{ format('Deployment **SUCCEEDED** of **{0}**', github.repository) }}
-            details: >
-              ${{ format(':white_check_mark: Deployment **SUCCEEDED** for commit `{0}` by :technologist: *{1}* to **Production** ({2})', env.COMMIT, github.actor, env.APP_URL) }}
-            footer: ${{ format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}
-            webhookUrl: ${{ secrets.ACTIONS_DISCORD_WEBHOOK }}
+          severity: info
+          description: ${{ format('Deployment **SUCCEEDED** of **{0}**', github.repository) }}
+          details: >
+            ${{ format(':white_check_mark: Deployment **SUCCEEDED** for commit `{0}` by :technologist: *{1}* to **Production** ({2})', env.COMMIT, github.actor, env.APP_URL) }}
+          footer: ${{ format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}
+          webhookUrl: ${{ secrets.ACTIONS_DISCORD_WEBHOOK }}
