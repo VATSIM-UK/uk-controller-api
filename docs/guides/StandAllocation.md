@@ -83,6 +83,12 @@ This rule only applies to flights that have `RMK/CARGO` in their flightplan rema
 
 It will allocate any stands of type `CARGO`.
 
+### Business Aviation Aircraft
+
+This rule only applies to aircaft that are designated as Business Aviation.
+
+It will allocate any stands of type `BUSINESS AVIATION`.
+
 ### Airline Callsign
 
 This rule takes the callsign slug (the bit after the airline code in the callsign), along with the airline for the given flight.

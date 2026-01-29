@@ -69,6 +69,11 @@ class AircraftResource extends Resource
                     ->label(self::translateFormPath('allocate_stands.label'))
                     ->helperText(self::translateFormPath('allocate_stands.helper'))
                     ->default(false),
+                Toggle::make('is_business_aviation')
+                    ->label(self::translateFormPath('is_business_aviation.label'))
+                    ->helperText(self::translateFormPath('is_business_aviation.helper'))
+                    ->default(false)
+                    ->required(),
             ]);
     }
 
@@ -100,6 +105,9 @@ class AircraftResource extends Resource
                     ),
                 Tables\Columns\IconColumn::make('allocate_stands')
                     ->label(self::translateTablePath('columns.allocate_stands'))
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('is_business_aviation')
+                    ->label(self::translateTablePath('columns.is_business_aviation'))
                     ->boolean(),
             ])
             ->actions([
