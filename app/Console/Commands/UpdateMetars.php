@@ -23,17 +23,8 @@ class UpdateMetars extends Command
 
     public function handle(MetarService $metarService)
     {
-        try {
-            $this->info('Starting METAR update');
-            $startTime = microtime(true);
-
-            $metarService->updateAllMetars();
-
-            $duration = round(microtime(true) - $startTime, 2);
-            $this->info("METAR update completed in {$duration}s");
-        } catch (\Exception $e) {
-            $this->error("METAR update failed: {$e->getMessage()}");
-            throw $e;
-        }
+        $this->info('Starting METAR update');
+        $metarService->updateAllMetars();
+        $this->info('METARs successfully updated');
     }
 }
