@@ -23,7 +23,7 @@ class ParallelTestingServiceProvider extends ServiceProvider
          * - We intentionally do NOT generate Passport keys here (file race). Generate them once
          *   in CI (passport:keys --force) and in non-parallel local runs (see BaseFunctionalTestCase).
          */
-        ParallelTesting::setUpTestDatabase(function (string $database, string $token): void {
+        ParallelTesting::setUpTestDatabase(function (string $token): void {
             Artisan::call('migrate:fresh', ['--force' => true, '--no-interaction' => true]);
             Artisan::call('db:seed', ['--no-interaction' => true]);
 
