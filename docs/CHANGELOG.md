@@ -1,5 +1,30 @@
 # UK Controller Plugin API Changelog
 
+## <small>6.61.8 (2026-02-10)</small>
+
+* chore: bump semantic versioning ([79a5762](https://github.com/VATSIM-UK/uk-controller-api/commit/79a5762))
+* chore: migrate deployment commands from forge ([f6b81b9](https://github.com/VATSIM-UK/uk-controller-api/commit/f6b81b9))
+* chore: remove deploy commands from forge ([89ea44e](https://github.com/VATSIM-UK/uk-controller-api/commit/89ea44e))
+* Merge pull request #1785 from VATSIM-UK/dependabot/npm_and_yarn/tailwindcss/forms-0.5.11 ([6b25e70](https://github.com/VATSIM-UK/uk-controller-api/commit/6b25e70)), closes [#1785](https://github.com/VATSIM-UK/uk-controller-api/issues/1785)
+* Merge pull request #1788 from VATSIM-UK/dependabot/github_actions/peter-evans/repository-dispatch-4 ([01dcb7f](https://github.com/VATSIM-UK/uk-controller-api/commit/01dcb7f)), closes [#1788](https://github.com/VATSIM-UK/uk-controller-api/issues/1788)
+* Merge pull request #1789 from VATSIM-UK/dependabot/github_actions/actions/cache-5 ([94a26df](https://github.com/VATSIM-UK/uk-controller-api/commit/94a26df)), closes [#1789](https://github.com/VATSIM-UK/uk-controller-api/issues/1789)
+* Merge pull request #1790 from VATSIM-UK/dependabot/github_actions/dawidd6/action-download-artifact-1 ([3e89112](https://github.com/VATSIM-UK/uk-controller-api/commit/3e89112)), closes [#1790](https://github.com/VATSIM-UK/uk-controller-api/issues/1790)
+* Merge pull request #1791 from VATSIM-UK/dependabot/github_actions/actions/checkout-6 ([3b4ed01](https://github.com/VATSIM-UK/uk-controller-api/commit/3b4ed01)), closes [#1791](https://github.com/VATSIM-UK/uk-controller-api/issues/1791)
+* Merge pull request #1797 from VATSIM-UK/revert-1794-download-jobs-debug ([20adcf9](https://github.com/VATSIM-UK/uk-controller-api/commit/20adcf9)), closes [#1797](https://github.com/VATSIM-UK/uk-controller-api/issues/1797)
+* Merge pull request #1798 from CLC0609/tech-502-bump-phpunit-in-ukcp-repo-to-solve-cve ([2b599c0](https://github.com/VATSIM-UK/uk-controller-api/commit/2b599c0)), closes [#1798](https://github.com/VATSIM-UK/uk-controller-api/issues/1798)
+* Merge pull request #1800 from VATSIM-UK/dependabot/github_actions/dawidd6/action-download-artifact-1 ([e4181ff](https://github.com/VATSIM-UK/uk-controller-api/commit/e4181ff)), closes [#1800](https://github.com/VATSIM-UK/uk-controller-api/issues/1800)
+* Merge remote-tracking branch 'origin/main' into remove-deploy-from-forge ([fd493a6](https://github.com/VATSIM-UK/uk-controller-api/commit/fd493a6))
+* Revert "fix: Add explicit network data debug logging" ([42b7dde](https://github.com/VATSIM-UK/uk-controller-api/commit/42b7dde))
+* build(deps-dev): Bump @tailwindcss/forms from 0.5.10 to 0.5.11 ([9678700](https://github.com/VATSIM-UK/uk-controller-api/commit/9678700))
+* build(deps): Bump actions/cache from 4 to 5 ([5c81c15](https://github.com/VATSIM-UK/uk-controller-api/commit/5c81c15))
+* build(deps): Bump actions/checkout from 5 to 6 ([9019bee](https://github.com/VATSIM-UK/uk-controller-api/commit/9019bee))
+* build(deps): Bump dawidd6/action-download-artifact from 11 to 12 ([0eb7493](https://github.com/VATSIM-UK/uk-controller-api/commit/0eb7493))
+* build(deps): Bump dawidd6/action-download-artifact from 12 to 14 ([2c464e3](https://github.com/VATSIM-UK/uk-controller-api/commit/2c464e3))
+* build(deps): Bump peter-evans/repository-dispatch from 3 to 4 ([c22d617](https://github.com/VATSIM-UK/uk-controller-api/commit/c22d617))
+* build(deps): Bump tar from 7.5.6 to 7.5.7 ([8d49a8e](https://github.com/VATSIM-UK/uk-controller-api/commit/8d49a8e))
+* build(deps): Bump tar from 7.5.6 to 7.5.7 ([d80e13d](https://github.com/VATSIM-UK/uk-controller-api/commit/d80e13d))
+* fix: bump phpunit to version 11.5.50 ([bbd6a3f](https://github.com/VATSIM-UK/uk-controller-api/commit/bbd6a3f))
+
 ## <small>6.61.7 (2026-01-28)</small>
 
 * make logging less noisy ([a5c891b](https://github.com/VATSIM-UK/uk-controller-api/commit/a5c891b))
