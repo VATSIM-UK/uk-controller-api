@@ -13,6 +13,7 @@ class StandType extends Model
     private const TYPE_KEY_INTERNATIONAL = 'INTERNATIONAL';
     private const TYPE_KEY_DOMESTIC = 'DOMESTIC';
     private const TYPE_KEY_CARGO = 'CARGO';
+    private const TYPE_KEY_BUSINESS_AVIATION = 'BUSINESS AVIATION';
 
     protected $fillable = [
         'key',
@@ -36,5 +37,15 @@ class StandType extends Model
     public function scopeNotCargo(Builder $builder)
     {
         return $builder->where('key', '<>', self::TYPE_KEY_CARGO);
+    }
+
+    public function scopeBusinessAviation(Builder $builder)
+    {
+        return $builder->where('key', self::TYPE_KEY_BUSINESS_AVIATION);
+    }
+
+    public function scopeNotBusinessAviation(Builder $builder)
+    {
+        return $builder->where('key', '<>', self::TYPE_KEY_BUSINESS_AVIATION);
     }
 }

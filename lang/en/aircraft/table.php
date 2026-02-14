@@ -8,6 +8,7 @@ return [
         'length' => 'Length (m)',
         'wake_categories' => 'Wake Categories',
         'allocate_stands' => 'Stand allocation',
+        'is_business_aviation' => 'Is Business Aviation',
     ],
     'wake_categories' => [
         'columns' => [

@@ -166,6 +166,20 @@ class Stand extends Model
         })->orWhereNull('type_id');
     }
 
+    public function scopeBusinessAviation(Builder $builder): Builder
+    {
+        return $builder->whereHas('type', function (Builder $typeQuery) {
+            return $typeQuery->businessAviation();
+        });
+    }
+
+    public function scopeNotBusinessAviation(Builder $builder): Builder
+    {
+        return $builder->whereHas('type', function (Builder $typeQuery) {
+            return $typeQuery->notBusinessAviation();
+        })->orWhereNull('type_id');
+    }
+
     public function scopeDomestic(Builder $builder): Builder
     {
         return $builder->whereHas('type', function (Builder $typeQuery) {

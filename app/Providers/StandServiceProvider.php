@@ -9,6 +9,7 @@ use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
+use App\Allocator\Stand\BusinessAviationFlightArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\CidReservedArrivalStandAllocator;
@@ -46,6 +47,7 @@ class StandServiceProvider extends ServiceProvider
                     $application->make(CallsignFlightplanReservedArrivalStandAllocator::class),
                     $application->make(CargoFlightPreferredArrivalStandAllocator::class),
                     $application->make(CargoFlightArrivalStandAllocator::class),
+                    $application->make(BusinessAviationFlightArrivalStandAllocator::class),
                     $application->make(AirlineCallsignArrivalStandAllocator::class),
                     $application->make(AirlineCallsignSlugArrivalStandAllocator::class),
                     $application->make(AirlineAircraftArrivalStandAllocator::class),
