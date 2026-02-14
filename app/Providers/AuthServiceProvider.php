@@ -19,6 +19,7 @@ use App\Models\Notification\Notification;
 use App\Models\Plugin\PluginLog;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
+use App\Models\SmrArea;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
@@ -79,6 +80,7 @@ class AuthServiceProvider extends ServiceProvider
         Prenote::class => DefaultFilamentPolicy::class,
         Runway::class => DefaultFilamentPolicy::class,
         Sid::class => DefaultFilamentPolicy::class,
+        SmrArea::class => OperationsContributorPolicy::class,
         Stand::class => OperationsContributorPolicy::class,
         Terminal::class => OperationsContributorPolicy::class,
         UnitConspicuitySquawkCode::class => DefaultFilamentPolicy::class,
