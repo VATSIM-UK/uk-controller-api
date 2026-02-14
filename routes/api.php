@@ -303,7 +303,7 @@ Route::middleware('api')
                         // Enroute releases
                         Route::get('release/enroute/types', 'ReleaseController@enrouteReleaseTypeDependency');
 
-                        Route::get("smr-areas", "SmrAreaController@getFormattedSmrAreas");
+                        Route::get('smr-areas', 'SmrAreaController@getFormattedSmrAreas');
 
                         // Sids
                         Route::get('sid/dependency', 'SidController@getSidsDependency');
