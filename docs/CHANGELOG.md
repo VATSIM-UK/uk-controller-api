@@ -1,5 +1,41 @@
 # UK Controller Plugin API Changelog
 
+## [6.62.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.8...6.62.0) (2026-02-14)
+
+### Features
+
+* add a business aviation stand type and allocator ([d0ce70b](https://github.com/VATSIM-UK/uk-controller-api/commit/d0ce70b55b7b42403d6ce0d1aa3a90ffa5ea99f8))
+* add SMR area management/publication feature ([8187579](https://github.com/VATSIM-UK/uk-controller-api/commit/8187579dd74776f0a6ddb9f24400f9ce3ac3cbdf))
+
+### Miscellaneous Chores
+
+* add basic stand list with migration ([0b0f226](https://github.com/VATSIM-UK/uk-controller-api/commit/0b0f226e643c2055ddc197f70fc488e6387c9783))
+* add business aviation column to the db and update the resource pages ([2e8a17b](https://github.com/VATSIM-UK/uk-controller-api/commit/2e8a17b1977b82ddee98059f724092f237d2d695))
+* add initital list of business aviation aircraft ([4466cdd](https://github.com/VATSIM-UK/uk-controller-api/commit/4466cdda7c1bd1bb2d89bb90fdeedeee9f528545))
+* add LL stands ([3589f45](https://github.com/VATSIM-UK/uk-controller-api/commit/3589f45ea878c403786ab0f4e1bb752bfbb23b96))
+* add new allocator to the allocator tests ([915b902](https://github.com/VATSIM-UK/uk-controller-api/commit/915b902a27c7085037d6aad5e794f3dbffbdadc1))
+* change table name ([a60692b](https://github.com/VATSIM-UK/uk-controller-api/commit/a60692b3377409da9283899e70fbb62d8c0fbf4b))
+* fix another syntax error ([10423e1](https://github.com/VATSIM-UK/uk-controller-api/commit/10423e1c5da1f5305ef4b6d5601c008f55c23052))
+* fix error with loading the ba key ([52e961c](https://github.com/VATSIM-UK/uk-controller-api/commit/52e961c7bdde517bf69fdb6960f23f10fdd93ad3))
+* fix more naming conventions ([0b990e0](https://github.com/VATSIM-UK/uk-controller-api/commit/0b990e007dc7a02aaceee6c07a300f382a617b35))
+* fix naming conventions ([df097dd](https://github.com/VATSIM-UK/uk-controller-api/commit/df097dd6811750a6370ac0cd166029bb80ce313a))
+* fix ranking for business aviation aircraft ([55803c6](https://github.com/VATSIM-UK/uk-controller-api/commit/55803c6544415c470537a55312eb393c99d06068))
+* fix styling issue ([44d9407](https://github.com/VATSIM-UK/uk-controller-api/commit/44d940740088daf6bd0c9c9f1f56ebd7c9d3da61))
+* fix styling issues ([047d6d3](https://github.com/VATSIM-UK/uk-controller-api/commit/047d6d376f85fe341c91dafaa0573ba2d9d81b81))
+* fix syntax error ([7f9ac3e](https://github.com/VATSIM-UK/uk-controller-api/commit/7f9ac3ed5b6dd30a064d02d5f5182b2266eb887a))
+* improved aircraft lists with new sources ([8e3cecb](https://github.com/VATSIM-UK/uk-controller-api/commit/8e3cecb300e6263ec7aa95b3ed79bb8c3d1fbdae))
+* remove old function ([aade3a8](https://github.com/VATSIM-UK/uk-controller-api/commit/aade3a88b9e93e73211cbca8bb03ba6d14cb9f25))
+* remove unneeded service ([61a1a38](https://github.com/VATSIM-UK/uk-controller-api/commit/61a1a381e51212796d75347bfcd398ed9b57599b))
+* update column naming ([0704cbf](https://github.com/VATSIM-UK/uk-controller-api/commit/0704cbfe225ae26110fab2285e2fd9c4f73efb79))
+* update lists of stands and aircraft ([1299e49](https://github.com/VATSIM-UK/uk-controller-api/commit/1299e4966e00cb0d243165e06c7108278ef8c375))
+* update stand allocation guide to reflect the new allocation rule ([1e75a43](https://github.com/VATSIM-UK/uk-controller-api/commit/1e75a430ee33e18733ccf58d8d92658e4ff5c74d))
+* update stand allocation with new information ([f24a6cd](https://github.com/VATSIM-UK/uk-controller-api/commit/f24a6cd0b55d8a7c8c94714de553746d616d987f))
+* use standard conditions instead of airline specific ones ([d1f1eb8](https://github.com/VATSIM-UK/uk-controller-api/commit/d1f1eb8500074d0f0e8c56c0cd0af317d77b1c07))
+
+### Documentation
+
+* add note about output format ([439472d](https://github.com/VATSIM-UK/uk-controller-api/commit/439472d5ad253d37110b20740f811191c49b276c))
+
 ## <small>6.61.8 (2026-02-10)</small>
 
 * chore: bump semantic versioning ([79a5762](https://github.com/VATSIM-UK/uk-controller-api/commit/79a5762))
