@@ -113,6 +113,39 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
         );
     }
 
+    public function testItImportsAssociativeReservations()
+    {
+        $reservations = collect(
+            [
+                collect([
+                    'airfield' => 'EGLL',
+                    'stand' => '1L',
+                    'callsign' => 'BAW24A',
+                    'cid' => 1234567,
+                    'origin' => 'EGKK',
+                    'destination' => 'EGLL',
+                    'start' => '2024-01-01 09:00:00',
+                    'end' => '2024-01-01 10:00:00',
+                ]),
+            ]
+        );
+
+        $this->importer->collection($reservations);
+
+        $this->assertDatabaseHas(
+            'stand_reservations',
+            [
+                'stand_id' => 1,
+                'callsign' => 'BAW24A',
+                'cid' => 1234567,
+                'origin' => 'EGKK',
+                'destination' => 'EGLL',
+                'start' => '2024-01-01 09:00:00',
+                'end' => '2024-01-01 10:00:00',
+            ]
+        );
+    }
+
     public static function badReservationProvider(): array
     {
         return [
