@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
+use Location\Distance\Haversine;
 
 class NetworkAircraft extends Model
 {
@@ -167,5 +168,24 @@ class NetworkAircraft extends Model
     public function aircraft(): BelongsTo
     {
         return $this->belongsTo(Aircraft::class);
+    }
+
+    public function isNearDestination(float $thresholdNauticalMiles = 5.0): bool
+    {
+        if (!$this->destinationAirfield?->latitude || !$this->destinationAirfield?->longitude) {
+            return false;
+        }
+
+        $distanceToAirfieldInNm = LocationService::metersToNauticalMiles(
+            $this->latLong->getDistance($this->coordinate, new Haversine())
+        );
+
+        return $distanceToAirfieldInNm <= $thresholdNauticalMiles;
+    }
+
+    public function hasLanded(): bool
+    {
+        $isOnGround = $this->groundSpeed < 50;
+        return $isOnGround && $this->isNearDestination();
     }
 }
