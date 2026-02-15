@@ -80,7 +80,7 @@ jobs:
       - name: Configure PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.3
+          php-version: 8.4
           tools: v2
 
       # Add GitHub Auth to Composer
