@@ -44,8 +44,8 @@ class StandReservationPlanSubmissionTest extends BaseFilamentTestCase
 
         Livewire::test(StandReservationPlanSubmission::class)
             ->set('name', 'Speedbird 24')
-            ->set('contact_email', 'ops@example.com')
-            ->set('plan_json', json_encode([
+            ->set('contactEmail', 'ops@example.com')
+            ->set('planJson', json_encode([
                 'reservations' => [
                     [
                         'airfield' => 'EGLL',

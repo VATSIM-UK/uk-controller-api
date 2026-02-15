@@ -18,8 +18,8 @@ class StandReservationPlanSubmission extends Page
     protected static string $view = 'filament.pages.stand-reservation-plan-submission';
 
     public string $name = '';
-    public string $contact_email = '';
-    public string $plan_json = '';
+    public string $contactEmail = '';
+    public string $planJson = '';
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -35,26 +35,26 @@ class StandReservationPlanSubmission extends Page
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'contact_email' => ['required', 'email'],
-            'plan_json' => ['required', 'string'],
+            'contactEmail' => ['required', 'email'],
+            'planJson' => ['required', 'string'],
         ]);
 
-        $payload = json_decode($validated['plan_json'], true);
+        $payload = json_decode($validated['planJson'], true);
         if (!is_array($payload) || !isset($payload['reservations']) || !is_array($payload['reservations'])) {
-            $this->addError('plan_json', 'Plan JSON must contain a reservations array.');
+            $this->addError('planJson', 'Plan JSON must contain a reservations array.');
             return;
         }
 
         StandReservationPlan::create([
             'name' => $validated['name'],
-            'contact_email' => $validated['contact_email'],
+            'contact_email' => $validated['contactEmail'],
             'payload' => $payload,
             'approval_due_at' => Carbon::now()->addDays(7),
             'status' => 'pending',
             'submitted_by' => Auth::id(),
         ]);
 
-        $this->reset(['name', 'contact_email', 'plan_json']);
+        $this->reset(['name', 'contactEmail', 'planJson']);
 
         Notification::make()
             ->title('Plan submitted for admin approval')
