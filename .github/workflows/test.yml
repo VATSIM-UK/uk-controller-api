@@ -138,6 +138,9 @@ jobs:
       - name: Generate App Key
         run: php artisan key:generate
 
+      - name: Generate Passport Keys
+        run: php artisan passport:keys --force
+
       # Run Database Migration & Seed
       - name: Migrate Database
         run: php artisan migrate
@@ -146,23 +149,26 @@ jobs:
         run: php artisan db:seed
 
       # Publish/Install Packages
-      - name: Install Passport
-        run: php artisan passport:install
+      #- name: Install Passport
+      #  run: php artisan passport:install
 
-      - name: Publish Horizon
-        run: php artisan horizon:publish
+      #- name: Publish Horizon
+      #  run: php artisan horizon:publish
 
       # Start Application
-      - name: Serve Application
-        run: php artisan serve -q &
+      #- name: Serve Application
+      #  run: php artisan serve -q &
 
       #
       # RUN TESTING SUITE
       #
 
-      # Run Tests
-      - name: Run PHPUnit With Coverage
-        run: ./vendor/bin/phpunit --coverage-clover=coverage.xml
+      # Run Tests with Coverage
+      - name: Run Tests (Parallel) With No Coverage
+        run: php artisan test --parallel --processes=4 --recreate-databases --coverage-clover=coverage.xml
+
+      #- name: Run Tests (Coverage)
+      #  run: php artisan test --coverage-clover=coverage.xml
 
       # Run Coverage Suite
       - name: Upload Code Coverage Report
