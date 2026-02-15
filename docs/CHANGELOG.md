@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.62.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.1...6.62.2) (2026-02-15)
+
+### Miscellaneous Chores
+
+* Bump runners to php 8.4 ([4d35cef](https://github.com/VATSIM-UK/uk-controller-api/commit/4d35cef4c8d23664b7a87ae24849e2c1e40df8e7))
+* Stop duplicate workflow runs on PRs ([550c359](https://github.com/VATSIM-UK/uk-controller-api/commit/550c3595b7ad153d3fdfc67098c0bff06826da1a))
+
 ## [6.62.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.0...6.62.1) (2026-02-15)
 
 ### Miscellaneous Chores
