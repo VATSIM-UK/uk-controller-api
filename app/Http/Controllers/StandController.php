@@ -7,7 +7,9 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservationPlan;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Models\User\RoleKeys;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Coordinates\Latitude;
 use App\Rules\Coordinates\Longitude;
@@ -19,6 +21,7 @@ use App\Services\Stand\ArrivalAllocationService;
 use App\Services\Stand\DepartureAllocationService;
 use App\Services\Stand\StandAssignmentsService;
 use App\Services\Stand\StandStatusService;
+use App\Imports\Stand\StandReservationsImport;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -163,6 +166,106 @@ class StandController extends BaseController
                 ],
             )
             : response()->json([], 404);
+    }
+
+    public function uploadStandReservationPlan(Request $request): JsonResponse
+    {
+        if (!$request->user()->hasRole(RoleKeys::VAA)) {
+            return response()->json(['message' => 'Insufficient permissions'], 403);
+        }
+
+        $validated = Validator::make(
+            $request->json()->all(),
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'contact_email' => ['required', 'email'],
+                'reservations' => ['required', 'array', 'min:1'],
+                'start' => ['nullable', 'date'],
+                'end' => ['nullable', 'date', 'after:start'],
+                'active_from' => ['nullable', 'date'],
+                'active_to' => ['nullable', 'date', 'after:active_from'],
+            ]
+        )->validate();
+
+        $plan = StandReservationPlan::create([
+            'name' => $validated['name'],
+            'contact_email' => $validated['contact_email'],
+            'payload' => [
+                'start' => $validated['start'] ?? null,
+                'end' => $validated['end'] ?? null,
+                'active_from' => $validated['active_from'] ?? null,
+                'active_to' => $validated['active_to'] ?? null,
+                'reservations' => $validated['reservations'],
+            ],
+            'approval_due_at' => Carbon::now()->addDays(7),
+            'submitted_by' => $request->user()->id,
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'plan_id' => $plan->id,
+            'status' => $plan->status,
+            'approval_due_at' => $plan->approval_due_at,
+        ], 201);
+    }
+
+    public function getPendingStandReservationPlans(): JsonResponse
+    {
+        return response()->json(
+            StandReservationPlan::pending()->orderBy('created_at')->get()->map(function (StandReservationPlan $plan) {
+                return [
+                    'id' => $plan->id,
+                    'name' => $plan->name,
+                    'contact_email' => $plan->contact_email,
+                    'approval_due_at' => $plan->approval_due_at,
+                    'status' => $plan->status,
+                    'created_at' => $plan->created_at,
+                ];
+            })
+        );
+    }
+
+    public function approveStandReservationPlan(
+        StandReservationPlan $standReservationPlan,
+        StandReservationsImport $importer,
+        Request $request
+    ): JsonResponse {
+        if ($standReservationPlan->status !== 'pending') {
+            return response()->json(['message' => 'Plan is not pending'], 409);
+        }
+
+        if ($standReservationPlan->approval_due_at->isPast()) {
+            $standReservationPlan->update(['status' => 'expired']);
+            return response()->json(['message' => 'Approval window has expired'], 422);
+        }
+
+        $payload = $standReservationPlan->payload;
+        $defaultStart = $payload['start'] ?? $payload['active_from'] ?? null;
+        $defaultEnd = $payload['end'] ?? $payload['active_to'] ?? null;
+
+        $rows = collect($payload['reservations'] ?? [])->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
+            return collect([
+                'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? null,
+                'stand' => $reservation['stand'] ?? null,
+                'callsign' => $reservation['callsign'] ?? null,
+                'cid' => $reservation['cid'] ?? null,
+                'origin' => $reservation['origin'] ?? null,
+                'destination' => $reservation['destination'] ?? null,
+                'start' => $reservation['start'] ?? $defaultStart,
+                'end' => $reservation['end'] ?? $defaultEnd,
+            ]);
+        });
+
+        $createdReservations = $importer->importReservations($rows);
+
+        $standReservationPlan->update([
+            'status' => 'approved',
+            'approved_at' => Carbon::now(),
+            'approved_by' => $request->user()->id,
+            'imported_reservations' => $createdReservations,
+        ]);
+
+        return response()->json(['created' => $createdReservations]);
     }
 
     public function requestAutomaticStandAssignment(Request $request): JsonResponse

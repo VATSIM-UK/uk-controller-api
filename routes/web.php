@@ -26,3 +26,5 @@ Route::middleware('guest')->group(function () {
 
 // Redirect to allow old plugin versions to update to the latest
 Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
+
+

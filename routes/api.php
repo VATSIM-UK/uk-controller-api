@@ -91,6 +91,7 @@ Route::middleware('api')
                         // Stands
                         Route::put('stand/assignment', 'StandController@createStandAssignment');
                         Route::post('stand/assignment/requestauto', 'StandController@requestAutomaticStandAssignment');
+                        Route::post('stand/reservations/plan', 'StandController@uploadStandReservationPlan');
                         Route::delete('stand/assignment/{callsign}', 'StandController@deleteStandAssignment')
                             ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 
@@ -209,6 +210,14 @@ Route::middleware('api')
                             'uses' => 'UserController@getUnreadNotificationsForUser',
                         ]
                     )->where('cid', '[0-9]+');
+
+
+                    // Stand reservation plan approvals
+                    Route::get('stand/reservations/plan/pending', 'StandController@getPendingStandReservationPlans');
+                    Route::patch(
+                        'stand/reservations/plan/{standReservationPlan}/approve',
+                        'StandController@approveStandReservationPlan'
+                    )->where('standReservationPlan', '[0-9]+');
 
                     // Mark a notification as ready for a user
                     Route::put(

@@ -6,7 +6,9 @@ use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;;
+use App\Models\Stand\StandAssignment;
+use App\Models\User\Role;
+use App\Models\User\RoleKeys;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -290,6 +292,59 @@ class StandControllerTest extends BaseApiTestCase
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment/BAW123')
             ->assertStatus(200)
             ->assertJson($expected);
+    }
+
+
+    public function testItUploadsStandReservationPlanForVaaRole()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $response = $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Test event',
+                'contact_email' => 'event@example.com',
+                'start' => '2024-08-11 09:00:00',
+                'end' => '2024-08-11 18:00:00',
+                'reservations' => [
+                    [
+                        'airfield' => 'EGLL',
+                        'stand' => '1L',
+                        'callsign' => 'SBI24',
+                        'cid' => 1234567,
+                        'origin' => 'UUEE',
+                        'destination' => 'EGLL',
+                    ],
+                ],
+            ]
+        );
+
+        $response->assertStatus(201)
+            ->assertJsonStructure(['plan_id', 'status', 'approval_due_at'])
+            ->assertJson(['status' => 'pending']);
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'name' => 'Test event',
+            'contact_email' => 'event@example.com',
+            'status' => 'pending',
+        ]);
+        $this->assertDatabaseCount('stand_reservations', 0);
+    }
+
+    public function testItRejectsStandReservationPlanUploadForNonVaaRole()
+    {
+        $this->activeUser()->roles()->sync([]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'reservations' => [],
+            ]
+        )->assertStatus(403);
+
+        $this->assertDatabaseCount('stand_reservations', 0);
     }
 
     public function testItAutoAssignsDepartureStand()
