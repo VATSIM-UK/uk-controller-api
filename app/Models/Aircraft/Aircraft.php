@@ -16,6 +16,7 @@ class Aircraft extends Model
         'wingspan',
         'length',
         'allocate_stands',
+        'is_business_aviation',
     ];
 
     protected $hidden = [

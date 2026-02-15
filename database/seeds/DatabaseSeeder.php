@@ -150,6 +150,9 @@ class DatabaseSeeder extends Seeder
         IntentionCodeSeeder::class => [
             'intention_codes',
         ],
+        SmrAreaSeeder::class => [
+            'smr_area',
+        ],
     ];
 
     const OTHER_TABLES_TO_TRUNCATE = [
