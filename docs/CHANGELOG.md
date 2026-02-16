@@ -1,5 +1,79 @@
 # UK Controller Plugin API Changelog
 
+## [6.62.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.1...6.62.2) (2026-02-15)
+
+### Miscellaneous Chores
+
+* Bump runners to php 8.4 ([4d35cef](https://github.com/VATSIM-UK/uk-controller-api/commit/4d35cef4c8d23664b7a87ae24849e2c1e40df8e7))
+* Stop duplicate workflow runs on PRs ([550c359](https://github.com/VATSIM-UK/uk-controller-api/commit/550c3595b7ad153d3fdfc67098c0bff06826da1a))
+
+## [6.62.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.0...6.62.1) (2026-02-15)
+
+### Miscellaneous Chores
+
+* composer + yarn update ([0fa7d01](https://github.com/VATSIM-UK/uk-controller-api/commit/0fa7d0186d0b0ca102392b03083c5c4fd1cd892d))
+
+## [6.62.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.61.8...6.62.0) (2026-02-14)
+
+### Features
+
+* add a business aviation stand type and allocator ([d0ce70b](https://github.com/VATSIM-UK/uk-controller-api/commit/d0ce70b55b7b42403d6ce0d1aa3a90ffa5ea99f8))
+* add SMR area management/publication feature ([8187579](https://github.com/VATSIM-UK/uk-controller-api/commit/8187579dd74776f0a6ddb9f24400f9ce3ac3cbdf))
+
+### Miscellaneous Chores
+
+* add basic stand list with migration ([0b0f226](https://github.com/VATSIM-UK/uk-controller-api/commit/0b0f226e643c2055ddc197f70fc488e6387c9783))
+* add business aviation column to the db and update the resource pages ([2e8a17b](https://github.com/VATSIM-UK/uk-controller-api/commit/2e8a17b1977b82ddee98059f724092f237d2d695))
+* add initital list of business aviation aircraft ([4466cdd](https://github.com/VATSIM-UK/uk-controller-api/commit/4466cdda7c1bd1bb2d89bb90fdeedeee9f528545))
+* add LL stands ([3589f45](https://github.com/VATSIM-UK/uk-controller-api/commit/3589f45ea878c403786ab0f4e1bb752bfbb23b96))
+* add new allocator to the allocator tests ([915b902](https://github.com/VATSIM-UK/uk-controller-api/commit/915b902a27c7085037d6aad5e794f3dbffbdadc1))
+* change table name ([a60692b](https://github.com/VATSIM-UK/uk-controller-api/commit/a60692b3377409da9283899e70fbb62d8c0fbf4b))
+* fix another syntax error ([10423e1](https://github.com/VATSIM-UK/uk-controller-api/commit/10423e1c5da1f5305ef4b6d5601c008f55c23052))
+* fix error with loading the ba key ([52e961c](https://github.com/VATSIM-UK/uk-controller-api/commit/52e961c7bdde517bf69fdb6960f23f10fdd93ad3))
+* fix more naming conventions ([0b990e0](https://github.com/VATSIM-UK/uk-controller-api/commit/0b990e007dc7a02aaceee6c07a300f382a617b35))
+* fix naming conventions ([df097dd](https://github.com/VATSIM-UK/uk-controller-api/commit/df097dd6811750a6370ac0cd166029bb80ce313a))
+* fix ranking for business aviation aircraft ([55803c6](https://github.com/VATSIM-UK/uk-controller-api/commit/55803c6544415c470537a55312eb393c99d06068))
+* fix styling issue ([44d9407](https://github.com/VATSIM-UK/uk-controller-api/commit/44d940740088daf6bd0c9c9f1f56ebd7c9d3da61))
+* fix styling issues ([047d6d3](https://github.com/VATSIM-UK/uk-controller-api/commit/047d6d376f85fe341c91dafaa0573ba2d9d81b81))
+* fix syntax error ([7f9ac3e](https://github.com/VATSIM-UK/uk-controller-api/commit/7f9ac3ed5b6dd30a064d02d5f5182b2266eb887a))
+* improved aircraft lists with new sources ([8e3cecb](https://github.com/VATSIM-UK/uk-controller-api/commit/8e3cecb300e6263ec7aa95b3ed79bb8c3d1fbdae))
+* remove old function ([aade3a8](https://github.com/VATSIM-UK/uk-controller-api/commit/aade3a88b9e93e73211cbca8bb03ba6d14cb9f25))
+* remove unneeded service ([61a1a38](https://github.com/VATSIM-UK/uk-controller-api/commit/61a1a381e51212796d75347bfcd398ed9b57599b))
+* update column naming ([0704cbf](https://github.com/VATSIM-UK/uk-controller-api/commit/0704cbfe225ae26110fab2285e2fd9c4f73efb79))
+* update lists of stands and aircraft ([1299e49](https://github.com/VATSIM-UK/uk-controller-api/commit/1299e4966e00cb0d243165e06c7108278ef8c375))
+* update stand allocation guide to reflect the new allocation rule ([1e75a43](https://github.com/VATSIM-UK/uk-controller-api/commit/1e75a430ee33e18733ccf58d8d92658e4ff5c74d))
+* update stand allocation with new information ([f24a6cd](https://github.com/VATSIM-UK/uk-controller-api/commit/f24a6cd0b55d8a7c8c94714de553746d616d987f))
+* use standard conditions instead of airline specific ones ([d1f1eb8](https://github.com/VATSIM-UK/uk-controller-api/commit/d1f1eb8500074d0f0e8c56c0cd0af317d77b1c07))
+
+### Documentation
+
+* add note about output format ([439472d](https://github.com/VATSIM-UK/uk-controller-api/commit/439472d5ad253d37110b20740f811191c49b276c))
+
+## <small>6.61.8 (2026-02-10)</small>
+
+* chore: bump semantic versioning ([79a5762](https://github.com/VATSIM-UK/uk-controller-api/commit/79a5762))
+* chore: migrate deployment commands from forge ([f6b81b9](https://github.com/VATSIM-UK/uk-controller-api/commit/f6b81b9))
+* chore: remove deploy commands from forge ([89ea44e](https://github.com/VATSIM-UK/uk-controller-api/commit/89ea44e))
+* Merge pull request #1785 from VATSIM-UK/dependabot/npm_and_yarn/tailwindcss/forms-0.5.11 ([6b25e70](https://github.com/VATSIM-UK/uk-controller-api/commit/6b25e70)), closes [#1785](https://github.com/VATSIM-UK/uk-controller-api/issues/1785)
+* Merge pull request #1788 from VATSIM-UK/dependabot/github_actions/peter-evans/repository-dispatch-4 ([01dcb7f](https://github.com/VATSIM-UK/uk-controller-api/commit/01dcb7f)), closes [#1788](https://github.com/VATSIM-UK/uk-controller-api/issues/1788)
+* Merge pull request #1789 from VATSIM-UK/dependabot/github_actions/actions/cache-5 ([94a26df](https://github.com/VATSIM-UK/uk-controller-api/commit/94a26df)), closes [#1789](https://github.com/VATSIM-UK/uk-controller-api/issues/1789)
+* Merge pull request #1790 from VATSIM-UK/dependabot/github_actions/dawidd6/action-download-artifact-1 ([3e89112](https://github.com/VATSIM-UK/uk-controller-api/commit/3e89112)), closes [#1790](https://github.com/VATSIM-UK/uk-controller-api/issues/1790)
+* Merge pull request #1791 from VATSIM-UK/dependabot/github_actions/actions/checkout-6 ([3b4ed01](https://github.com/VATSIM-UK/uk-controller-api/commit/3b4ed01)), closes [#1791](https://github.com/VATSIM-UK/uk-controller-api/issues/1791)
+* Merge pull request #1797 from VATSIM-UK/revert-1794-download-jobs-debug ([20adcf9](https://github.com/VATSIM-UK/uk-controller-api/commit/20adcf9)), closes [#1797](https://github.com/VATSIM-UK/uk-controller-api/issues/1797)
+* Merge pull request #1798 from CLC0609/tech-502-bump-phpunit-in-ukcp-repo-to-solve-cve ([2b599c0](https://github.com/VATSIM-UK/uk-controller-api/commit/2b599c0)), closes [#1798](https://github.com/VATSIM-UK/uk-controller-api/issues/1798)
+* Merge pull request #1800 from VATSIM-UK/dependabot/github_actions/dawidd6/action-download-artifact-1 ([e4181ff](https://github.com/VATSIM-UK/uk-controller-api/commit/e4181ff)), closes [#1800](https://github.com/VATSIM-UK/uk-controller-api/issues/1800)
+* Merge remote-tracking branch 'origin/main' into remove-deploy-from-forge ([fd493a6](https://github.com/VATSIM-UK/uk-controller-api/commit/fd493a6))
+* Revert "fix: Add explicit network data debug logging" ([42b7dde](https://github.com/VATSIM-UK/uk-controller-api/commit/42b7dde))
+* build(deps-dev): Bump @tailwindcss/forms from 0.5.10 to 0.5.11 ([9678700](https://github.com/VATSIM-UK/uk-controller-api/commit/9678700))
+* build(deps): Bump actions/cache from 4 to 5 ([5c81c15](https://github.com/VATSIM-UK/uk-controller-api/commit/5c81c15))
+* build(deps): Bump actions/checkout from 5 to 6 ([9019bee](https://github.com/VATSIM-UK/uk-controller-api/commit/9019bee))
+* build(deps): Bump dawidd6/action-download-artifact from 11 to 12 ([0eb7493](https://github.com/VATSIM-UK/uk-controller-api/commit/0eb7493))
+* build(deps): Bump dawidd6/action-download-artifact from 12 to 14 ([2c464e3](https://github.com/VATSIM-UK/uk-controller-api/commit/2c464e3))
+* build(deps): Bump peter-evans/repository-dispatch from 3 to 4 ([c22d617](https://github.com/VATSIM-UK/uk-controller-api/commit/c22d617))
+* build(deps): Bump tar from 7.5.6 to 7.5.7 ([8d49a8e](https://github.com/VATSIM-UK/uk-controller-api/commit/8d49a8e))
+* build(deps): Bump tar from 7.5.6 to 7.5.7 ([d80e13d](https://github.com/VATSIM-UK/uk-controller-api/commit/d80e13d))
+* fix: bump phpunit to version 11.5.50 ([bbd6a3f](https://github.com/VATSIM-UK/uk-controller-api/commit/bbd6a3f))
+
 ## <small>6.61.7 (2026-01-28)</small>
 
 * make logging less noisy ([a5c891b](https://github.com/VATSIM-UK/uk-controller-api/commit/a5c891b))
