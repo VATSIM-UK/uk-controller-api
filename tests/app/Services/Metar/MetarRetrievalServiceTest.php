@@ -96,16 +96,16 @@ class MetarRetrievalServiceTest extends BaseUnitTestCase
                 sprintf(
                     '%s?id=%s',
                     config(self::URL_CONFIG_KEY),
-                    'EGLL,EGBB,EGKR,' . $this->expectedTimestamp
+                    'EGLL,' . $this->expectedTimestamp
                 ) => Http::response(
                     implode("\n", $dataResponse)
                 ),
             ]
         );
 
-        $result = $this->service->retrieveMetars(collect(['EGLL,EGBB,EGKR,']));
+        $result = $this->service->retrieveMetars(collect(['EGLL']));
         
-        $this->assertCount(1, $result);
+        $this->assertEquals(new DownloadedMetar('EGLL Q1001'), $result['EGLL']);
         $this->assertRequestSent();
     }
 
