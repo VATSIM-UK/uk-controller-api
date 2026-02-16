@@ -5,6 +5,7 @@ namespace App\Services\Metar;
 use App\BaseUnitTestCase;
 use Carbon\Carbon;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -67,6 +68,44 @@ class MetarRetrievalServiceTest extends BaseUnitTestCase
         $this->assertEquals(new DownloadedMetar('EGLL Q1001'), $metars['EGLL']);
         $this->assertEquals(new DownloadedMetar('EGBB Q0991 A2992'), $metars['EGBB']);
         $this->assertEquals(new DownloadedMetar('EGKR A2992'), $metars['EGKR']);
+        $this->assertRequestSent();
+    }
+
+    public function testItSkipsRequestDuringBackoffPeriod()
+    {
+        Cache::put('metar_backoff_until', Carbon::now()->addMinutes(5), now()->addHours(2));
+        Cache::put('metar_error_count', 3, now()->addHours(2));
+
+        Http::fake();
+
+        $result = $this->service->retrieveMetars(collect(['EGLL']));
+        
+        $this->assertEmpty($result);
+        Http::assertNothingSent();
+    }
+
+    public function testItRetriesAfterBackoffExpires()
+    {
+        $dataResponse = ['EGLL Q1001'];
+
+        Cache::put('metar_backoff_until', Carbon::now()->subSecond(), now()->addHours(2));
+        Cache::put('metar_error_count', 3, now()->addHours(2));
+
+        Http::fake(
+            [
+                sprintf(
+                    '%s?id=%s',
+                    config(self::URL_CONFIG_KEY),
+                    'EGLL,EGBB,EGKR,' . $this->expectedTimestamp
+                ) => Http::response(
+                    implode("\n", $dataResponse)
+                ),
+            ]
+        );
+
+        $result = $this->service->retrieveMetars(collect(['EGLL,EGBB,EGKR,']));
+        
+        $this->assertCount(1, $result);
         $this->assertRequestSent();
     }
 
