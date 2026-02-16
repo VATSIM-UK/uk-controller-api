@@ -3,8 +3,7 @@ name: Tests
 on:
   push:
     branches:
-      - "*"
-      - "**"
+      - main
     tags-ignore:
       - v*
   pull_request:
@@ -44,7 +43,7 @@ jobs:
           --health-retries 5
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       #
       # ENVIRONMENT DEPENDENCIES SETUP
       #
@@ -80,7 +79,7 @@ jobs:
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Restore Composer Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -88,7 +87,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Restore Vendor From Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: vendor
           key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
@@ -106,7 +105,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Load Yarn Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -115,7 +114,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
@@ -138,6 +137,9 @@ jobs:
       - name: Generate App Key
         run: php artisan key:generate
 
+      - name: Generate Passport Keys
+        run: php artisan passport:keys --force
+
       # Run Database Migration & Seed
       - name: Migrate Database
         run: php artisan migrate
@@ -146,23 +148,26 @@ jobs:
         run: php artisan db:seed
 
       # Publish/Install Packages
-      - name: Install Passport
-        run: php artisan passport:install
+      #- name: Install Passport
+      #  run: php artisan passport:install
 
-      - name: Publish Horizon
-        run: php artisan horizon:publish
+      #- name: Publish Horizon
+      #  run: php artisan horizon:publish
 
       # Start Application
-      - name: Serve Application
-        run: php artisan serve -q &
+      #- name: Serve Application
+      #  run: php artisan serve -q &
 
       #
       # RUN TESTING SUITE
       #
 
-      # Run Tests
-      - name: Run PHPUnit With Coverage
-        run: ./vendor/bin/phpunit --coverage-clover=coverage.xml
+      # Run Tests with Coverage
+      - name: Run Tests (Parallel) With No Coverage
+        run: php artisan test --parallel --processes=4 --recreate-databases --coverage-clover=coverage.xml
+
+      #- name: Run Tests (Coverage)
+      #  run: php artisan test --coverage-clover=coverage.xml
 
       # Run Coverage Suite
       - name: Upload Code Coverage Report
@@ -180,7 +185,7 @@ jobs:
       # RELEASE (main only)
       #
       - name: Trigger release workflow
-        uses: peter-evans/repository-dispatch@v3
+        uses: peter-evans/repository-dispatch@v4
         with:
           token: ${{ secrets.PAT }}
           event-type: release-trigger

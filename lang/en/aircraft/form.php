@@ -23,5 +23,9 @@ return [
         'category' => [
             'label' => 'Category',
         ]
+    ],
+    'is_business_aviation' => [
+        'label' => 'Is Business Aviation',
+        'helper' => 'Aircraft designated as business aviation will always be assigned business aviation stands in lieu of specific airline assignments',
     ]
 ];

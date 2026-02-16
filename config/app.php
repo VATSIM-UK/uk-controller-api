@@ -187,6 +187,7 @@ return [
         App\Providers\SquawkServiceProvider::class,
         App\Providers\StandServiceProvider::class,
         App\Providers\NetworkServiceProvider::class,
+        App\Providers\ParallelTestingServiceProvider::class,
     ],
 
     /*
