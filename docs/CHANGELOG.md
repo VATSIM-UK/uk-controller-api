@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.62.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.2...6.62.3) (2026-02-19)
+
+### Miscellaneous Chores
+
+* Improve devcontainer setup ([353c483](https://github.com/VATSIM-UK/uk-controller-api/commit/353c483013721e211d4b34ec25f92ce5d6ab1c42))
+
 ## [6.62.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.1...6.62.2) (2026-02-15)
 
 ### Miscellaneous Chores
