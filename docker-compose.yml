@@ -21,6 +21,7 @@ services:
         target: /var/www/ukcp
       - ./.docker/web/sso:/var/www/sso
       - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
+      - ./.docker/web/mysql-client:/etc/mysql/conf.d/
     networks:
       - ukcp-network
 

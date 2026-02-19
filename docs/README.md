@@ -35,6 +35,7 @@ the `docker-compose.yml`.
 - Fork the repository to your personal GitHub
 - Clone your fork of the repository locally
 - Run `composer install`
+- Run `npm ci && npm run build` to install and build the frontend assets
 - Copy `.env.example` to `.env` and fill in the `APP_URL` and database credentials
 - Create a new database for the app to use
 - Generate an `APP_KEY` for the application by running `php artisan key:generate`
@@ -58,11 +59,12 @@ running the following command:
 `php artisan test`
 
 ### Testing with Docker
+
 A separate database is available via the docker deployment on the same network to avoid losing the data contained in the migrations.
 
 The same deployment steps outlined above should be carried out, but append `--env=testing` to run them against the testing database.
 
-Copy the environment file `.env.testing.example` to `.env.testing` to allow these values to be used when running the test suite. 
+Copy the environment file `.env.testing.example` to `.env.testing` to allow these values to be used when running the test suite.
 
 The test suite will use the `testing` environment via the `APP_ENV` variable set within `phpunit.xml` (the PHPUnit configuration).
 In this instance, the phpunit command should be run from within the `web` container so that the docker network is available:
