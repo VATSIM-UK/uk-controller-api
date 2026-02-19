@@ -1,5 +1,15 @@
 # UK Controller Plugin API Changelog
 
+## [6.63.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.3...6.63.0) (2026-02-19)
+
+### Features
+
+* add bulk detach actions ([05e7f4c](https://github.com/VATSIM-UK/uk-controller-api/commit/05e7f4cee40b65995dd23426351d4772754d8e4a))
+
+### Bug Fixes
+
+* fix bulk detatch actions ([776f275](https://github.com/VATSIM-UK/uk-controller-api/commit/776f2759d3295f23af3ffae91b381eb782d187c4))
+
 ## [6.62.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.2...6.62.3) (2026-02-19)
 
 ### Miscellaneous Chores
