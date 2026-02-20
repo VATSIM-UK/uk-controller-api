@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Imports\Stand\StandReservationsImport;
 use App\Models\Stand\StandReservationPlan;
 use App\Models\User\RoleKeys;
+use App\Services\JsonSchema\StandReservationPlanSchemaValidator;
 use Carbon\Carbon;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -64,7 +65,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                     ->label('Reservation payload (JSON)')
                     ->required()
                     ->rows(14)
-                    ->helperText('Use an object containing a reservations array. Optional top-level start/end (or active_from/active_to) values are used as defaults for each reservation row.'),
+                    ->helperText('Use an object containing a reservations array. Optional top-level start/end (or active_from/active_to) values are used as defaults for each reservation row. See https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan-format.md for the formal specification and https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan.schema.json for machine validation.'),
             ])
             ->statePath('data');
     }
@@ -76,6 +77,12 @@ class StandReservationPlans extends Page implements HasForms, HasTable
         $payload = json_decode($validated['planJson'], true);
         if (!is_array($payload) || !isset($payload['reservations']) || !is_array($payload['reservations'])) {
             $this->addError('data.planJson', 'Plan JSON must contain a reservations array.');
+            return;
+        }
+
+        $schemaErrors = app(StandReservationPlanSchemaValidator::class)->validatePayload($payload);
+        if ($schemaErrors !== []) {
+            $this->addError('data.planJson', 'Plan JSON does not match schema: ' . $schemaErrors[0]);
             return;
         }
 

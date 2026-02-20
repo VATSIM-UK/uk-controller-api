@@ -14,6 +14,7 @@ use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Coordinates\Latitude;
 use App\Rules\Coordinates\Longitude;
 use App\Rules\VatsimCallsign;
+use App\Services\JsonSchema\StandReservationPlanSchemaValidator;
 use App\Services\AirlineService;
 use App\Services\NetworkAircraftService;
 use App\Services\Stand\AirfieldStandService;
@@ -168,7 +169,10 @@ class StandController extends BaseController
             : response()->json([], 404);
     }
 
-    public function uploadStandReservationPlan(Request $request): JsonResponse
+    public function uploadStandReservationPlan(
+        Request $request,
+        StandReservationPlanSchemaValidator $schemaValidator
+    ): JsonResponse
     {
         if (!$request->user()->hasRole(RoleKeys::VAA)) {
             return response()->json(['message' => 'Insufficient permissions'], 403);
@@ -186,6 +190,14 @@ class StandController extends BaseController
                 'active_to' => ['nullable', 'date', 'after:active_from'],
             ]
         )->validate();
+
+        $schemaErrors = $schemaValidator->validateApiRequest($request->json()->all());
+        if ($schemaErrors !== []) {
+            return response()->json([
+                'message' => 'Stand reservation plan request does not match schema',
+                'errors' => $schemaErrors,
+            ], 422);
+        }
 
         $plan = StandReservationPlan::create([
             'name' => $validated['name'],

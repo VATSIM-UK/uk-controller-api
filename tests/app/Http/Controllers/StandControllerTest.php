@@ -335,6 +335,31 @@ class StandControllerTest extends BaseApiTestCase
         $this->assertDatabaseCount('stand_reservations', 0);
     }
 
+    public function testItRejectsStandReservationPlanThatFailsJsonSchema()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Schema failure',
+                'contact_email' => 'event@example.com',
+                'start' => '2024-08-11 09:00:00',
+                'end' => '2024-08-11 18:00:00',
+                'unexpected' => 'field',
+                'reservations' => [
+                    [
+                        'airfield' => 'EGLL',
+                        'stand' => '1L',
+                    ],
+                ],
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'Stand reservation plan request does not match schema');
+    }
+
     public function testItRejectsStandReservationPlanUploadForNonVaaRole()
     {
         $this->activeUser()->roles()->sync([]);

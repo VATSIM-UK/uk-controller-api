@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vatsim.uk/schemas/stand-reservation-plan-request.schema.json",
+  "title": "Stand Reservation Plan Submission",
+  "description": "Request body for POST /stand/reservations/plan.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "contact_email",
+    "reservations"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Event or organisation name."
+    },
+    "contact_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Contact email for queries about this plan."
+    },
+    "start": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/start"
+    },
+    "end": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/end"
+    },
+    "active_from": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/active_from"
+    },
+    "active_to": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/active_to"
+    },
+    "reservations": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/reservations"
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "stand-reservation-plan.schema.json#/allOf/0"
+    },
+    {
+      "$ref": "stand-reservation-plan.schema.json#/allOf/1"
+    }
+  ]
+}

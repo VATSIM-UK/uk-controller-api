@@ -69,6 +69,33 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
     }
 
+    public function testItRejectsPlanJsonThatFailsSchemaValidation()
+    {
+        $this->assumeRole(RoleKeys::VAA);
+
+        Livewire::test(StandReservationPlans::class)
+            ->fillForm([
+                'name' => 'Speedbird 24',
+                'contactEmail' => 'ops@example.com',
+                'planJson' => json_encode([
+                    'reservations' => [
+                        [
+                            'airfield' => 'EGLL',
+                            'start' => '2026-02-20 09:00:00',
+                            'end' => '2026-02-20 10:00:00',
+                        ],
+                    ],
+                ]),
+            ])
+            ->call('submitPlan')
+            ->assertHasErrors(['data.planJson']);
+
+        $this->assertDatabaseMissing('stand_reservation_plans', [
+            'name' => 'Speedbird 24',
+            'contact_email' => 'ops@example.com',
+        ]);
+    }
+
     public function testItApprovesPlanAndCreatesReservations()
     {
         $this->assumeRole(RoleKeys::WEB_TEAM);
