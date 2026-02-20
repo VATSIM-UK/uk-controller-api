@@ -71,6 +71,12 @@ In this instance, the phpunit command should be run from within the `web` contai
 
 `docker exec -it web /bin/bash`
 
+## JSON Schemas
+
+- Stand reservation plan formal specification: `docs/schemas/stand-reservation-plan-format.md`
+- Stand reservation plan payload schema: `docs/schemas/stand-reservation-plan.schema.json`
+- Stand reservation plan API request schema: `docs/schemas/stand-reservation-plan-request.schema.json`
+
 ## Coding Style
 
 This project uses PSR-12 for its formatting style. You can enforce these standards through most Code Editors, or, alternatively, StyleCI will run on every pull request.
