@@ -27,76 +27,150 @@ class StandReservationPlanSchemaValidator
 
     private function validateNode(array $schema, mixed $data, string $path, string $schemaPath, array $rootSchema): array
     {
-        if (isset($schema['$ref']) && is_string($schema['$ref'])) {
-            [$resolvedSchema, $resolvedPath, $resolvedRoot] = $this->resolveRef($schema['$ref'], $schemaPath, $rootSchema);
-            return $this->validateNode($resolvedSchema, $data, $path, $resolvedPath, $resolvedRoot);
+        [$schema, $schemaPath, $rootSchema] = $this->resolveSchemaContext($schema, $schemaPath, $rootSchema);
+
+        $typeErrors = $this->validateNodeType($schema, $data, $path);
+        if ($typeErrors !== []) {
+            return $typeErrors;
+        }
+
+        return array_merge(
+            $this->validateStructuredData($schema, $data, $path, $schemaPath, $rootSchema),
+            $this->validateStringConstraints($schema, $data, $path),
+            $this->validateIntegerMinimum($schema, $data, $path),
+            $this->validateAllOf($schema, $data, $path, $schemaPath, $rootSchema),
+            $this->validateIfThen($schema, $data, $path, $schemaPath, $rootSchema),
+            $this->validateOneOf($schema, $data, $path, $schemaPath, $rootSchema),
+        );
+    }
+
+    private function resolveSchemaContext(array $schema, string $schemaPath, array $rootSchema): array
+    {
+        while (isset($schema['$ref']) && is_string($schema['$ref'])) {
+            [$schema, $schemaPath, $rootSchema] = $this->resolveRef($schema['$ref'], $schemaPath, $rootSchema);
+        }
+
+        return [$schema, $schemaPath, $rootSchema];
+    }
+
+    private function validateNodeType(array $schema, mixed $data, string $path): array
+    {
+        if (!isset($schema['type'])) {
+            return [];
+        }
+
+        return $this->validateType($schema['type'], $data, $path);
+    }
+
+    private function validateStructuredData(array $schema, mixed $data, string $path, string $schemaPath, array $rootSchema): array
+    {
+        if (is_array($data) && $this->isAssoc($data) && $this->shouldValidateObject($schema)) {
+            return $this->validateObject($schema, $data, $path, $schemaPath, $rootSchema);
+        }
+
+        if (is_array($data) && !$this->isAssoc($data) && $this->shouldValidateArray($schema)) {
+            return $this->validateArray($schema, $data, $path, $schemaPath, $rootSchema);
+        }
+
+        return [];
+    }
+
+    private function shouldValidateObject(array $schema): bool
+    {
+        return ($schema['type'] ?? null) === 'object'
+            || isset($schema['properties'])
+            || isset($schema['required'])
+            || array_key_exists('additionalProperties', $schema);
+    }
+
+    private function shouldValidateArray(array $schema): bool
+    {
+        return ($schema['type'] ?? null) === 'array'
+            || isset($schema['items'])
+            || isset($schema['minItems']);
+    }
+
+    private function validateIntegerMinimum(array $schema, mixed $data, string $path): array
+    {
+        if (($schema['type'] ?? null) !== 'integer' || !isset($schema['minimum']) || !is_int($data) || $data >= $schema['minimum']) {
+            return [];
+        }
+
+        return [sprintf('%s must be >= %d', $path, $schema['minimum'])];
+    }
+
+    private function validateStringConstraints(array $schema, mixed $data, string $path): array
+    {
+        if (!is_string($data)) {
+            return [];
         }
 
         $errors = [];
 
-        if (isset($schema['type'])) {
-            $typeErrors = $this->validateType($schema['type'], $data, $path);
-            if ($typeErrors !== []) {
-                return $typeErrors;
-            }
+        $pattern = $schema['pattern'] ?? null;
+        if (is_string($pattern) && @preg_match('/' . $pattern . '/', $data) !== 1) {
+            $errors[] = sprintf('%s does not match pattern %s', $path, $pattern);
         }
 
-        if (($schema['type'] ?? null) === 'object' && is_array($data) && $this->isAssoc($data)) {
-            $errors = array_merge($errors, $this->validateObject($schema, $data, $path, $schemaPath, $rootSchema));
-        }
-
-        if (($schema['type'] ?? null) === 'array' && is_array($data) && !$this->isAssoc($data)) {
-            $errors = array_merge($errors, $this->validateArray($schema, $data, $path, $schemaPath, $rootSchema));
-        }
-
-        if (is_string($data)) {
-            if (isset($schema['pattern']) && is_string($schema['pattern'])) {
-                if (@preg_match('/' . $schema['pattern'] . '/', $data) !== 1) {
-                    $errors[] = sprintf('%s does not match pattern %s', $path, $schema['pattern']);
-                }
-            }
-
-            if (($schema['format'] ?? null) === 'email' && filter_var($data, FILTER_VALIDATE_EMAIL) === false) {
-                $errors[] = sprintf('%s must be a valid email', $path);
-            }
-        }
-
-        if (($schema['type'] ?? null) === 'integer' && isset($schema['minimum']) && is_int($data) && $data < $schema['minimum']) {
-            $errors[] = sprintf('%s must be >= %d', $path, $schema['minimum']);
-        }
-
-        if (isset($schema['allOf']) && is_array($schema['allOf'])) {
-            foreach ($schema['allOf'] as $subSchema) {
-                if (!is_array($subSchema)) {
-                    continue;
-                }
-                $errors = array_merge($errors, $this->validateNode($subSchema, $data, $path, $schemaPath, $rootSchema));
-            }
-        }
-
-        if (isset($schema['if']) && is_array($schema['if']) && isset($schema['then']) && is_array($schema['then'])) {
-            if ($this->validateNode($schema['if'], $data, $path, $schemaPath, $rootSchema) === []) {
-                $errors = array_merge($errors, $this->validateNode($schema['then'], $data, $path, $schemaPath, $rootSchema));
-            }
-        }
-
-        if (isset($schema['oneOf']) && is_array($schema['oneOf'])) {
-            $validSchemas = 0;
-            foreach ($schema['oneOf'] as $subSchema) {
-                if (!is_array($subSchema)) {
-                    continue;
-                }
-                if ($this->validateNode($subSchema, $data, $path, $schemaPath, $rootSchema) === []) {
-                    $validSchemas++;
-                }
-            }
-
-            if ($validSchemas !== 1) {
-                $errors[] = sprintf('%s must match exactly one oneOf schema', $path);
-            }
+        if (($schema['format'] ?? null) === 'email' && filter_var($data, FILTER_VALIDATE_EMAIL) === false) {
+            $errors[] = sprintf('%s must be a valid email', $path);
         }
 
         return $errors;
+    }
+
+    private function validateAllOf(array $schema, mixed $data, string $path, string $schemaPath, array $rootSchema): array
+    {
+        if (!isset($schema['allOf']) || !is_array($schema['allOf'])) {
+            return [];
+        }
+
+        $errors = [];
+
+        foreach ($schema['allOf'] as $subSchema) {
+            if (!is_array($subSchema)) {
+                continue;
+            }
+
+            $errors = array_merge($errors, $this->validateNode($subSchema, $data, $path, $schemaPath, $rootSchema));
+        }
+
+        return $errors;
+    }
+
+    private function validateIfThen(array $schema, mixed $data, string $path, string $schemaPath, array $rootSchema): array
+    {
+        if (
+            !isset($schema['if'], $schema['then'])
+            || !is_array($schema['if'])
+            || !is_array($schema['then'])
+            || $this->validateNode($schema['if'], $data, $path, $schemaPath, $rootSchema) !== []
+        ) {
+            return [];
+        }
+
+        return $this->validateNode($schema['then'], $data, $path, $schemaPath, $rootSchema);
+    }
+
+    private function validateOneOf(array $schema, mixed $data, string $path, string $schemaPath, array $rootSchema): array
+    {
+        if (!isset($schema['oneOf']) || !is_array($schema['oneOf'])) {
+            return [];
+        }
+
+        $validSchemas = 0;
+
+        foreach ($schema['oneOf'] as $subSchema) {
+            if (!is_array($subSchema)) {
+                continue;
+            }
+
+            if ($this->validateNode($subSchema, $data, $path, $schemaPath, $rootSchema) === []) {
+                $validSchemas++;
+            }
+        }
+
+        return $validSchemas === 1 ? [] : [sprintf('%s must match exactly one oneOf schema', $path)];
     }
 
     private function validateObject(array $schema, array $data, string $path, string $schemaPath, array $rootSchema): array
