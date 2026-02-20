@@ -8,10 +8,10 @@ use App\Models\User\RoleKeys;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class StandReservationPlanReviewTest extends BaseFilamentTestCase
+class StandReservationPlansTest extends BaseFilamentTestCase
 {
     #[DataProvider('renderRoleProvider')]
-    public function testItRendersForAdminRolesOnly(?RoleKeys $role, bool $shouldRender)
+    public function testItRendersForAuthorisedRolesOnly(?RoleKeys $role, bool $shouldRender)
     {
         if ($role !== null) {
             $this->assumeRole($role);
@@ -19,7 +19,7 @@ class StandReservationPlanReviewTest extends BaseFilamentTestCase
             $this->noRole();
         }
 
-        $response = Livewire::test(StandReservationPlanReview::class);
+        $response = Livewire::test(StandReservationPlans::class);
         if ($shouldRender) {
             $response->assertOk();
         } else {
@@ -31,12 +31,42 @@ class StandReservationPlanReviewTest extends BaseFilamentTestCase
     {
         return [
             'None' => [null, false],
-            'VAA' => [RoleKeys::VAA, false],
-            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false],
+            'VAA' => [RoleKeys::VAA, true],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, true],
             'Web' => [RoleKeys::WEB_TEAM, true],
             'Operations' => [RoleKeys::OPERATIONS_TEAM, true],
+            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR, false],
         ];
+    }
+
+    public function testItSubmitsPlanAsPending()
+    {
+        $this->assumeRole(RoleKeys::VAA);
+
+        Livewire::test(StandReservationPlans::class)
+            ->fillForm([
+                'name' => 'Speedbird 24',
+                'contactEmail' => 'ops@example.com',
+                'planJson' => json_encode([
+                    'reservations' => [
+                        [
+                            'airfield' => 'EGLL',
+                            'stand' => '1L',
+                            'start' => '2026-02-20 09:00:00',
+                            'end' => '2026-02-20 10:00:00',
+                        ],
+                    ],
+                ]),
+            ])
+            ->call('submitPlan')
+            ->assertHasNoFormErrors();
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'name' => 'Speedbird 24',
+            'contact_email' => 'ops@example.com',
+            'status' => 'pending',
+            'submitted_by' => self::ACTIVE_USER_CID,
+        ]);
     }
 
     public function testItApprovesPlanAndCreatesReservations()
@@ -62,8 +92,8 @@ class StandReservationPlanReviewTest extends BaseFilamentTestCase
             'submitted_by' => self::ACTIVE_USER_CID,
         ]);
 
-        Livewire::test(StandReservationPlanReview::class)
-            ->call('approvePlan', $plan->id)
+        Livewire::test(StandReservationPlans::class)
+            ->callTableAction('approve', $plan)
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -91,8 +121,8 @@ class StandReservationPlanReviewTest extends BaseFilamentTestCase
             'submitted_by' => self::ACTIVE_USER_CID,
         ]);
 
-        Livewire::test(StandReservationPlanReview::class)
-            ->call('denyPlan', $plan->id)
+        Livewire::test(StandReservationPlans::class)
+            ->callTableAction('deny', $plan)
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [

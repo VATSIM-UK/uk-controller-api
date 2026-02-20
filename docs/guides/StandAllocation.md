@@ -231,3 +231,40 @@ The "best" stands left over at this point are then:
 
 If the "common rules" reject all possible stands, then the next specific rule is invoked and we start over. Otherwise,
 we've found a match, and that stand is assigned!
+
+
+## Event Stand Reservation Plan format
+
+When submitting an event stand plan (via API or Filament), send a JSON object with:
+
+- `name` and `contact_email` metadata (API), or form fields in Filament
+- `reservations`: an array of reservation rows
+- optional top-level `start` / `end` (or `active_from` / `active_to`) defaults
+
+Each reservation row supports:
+
+- `airfield` (or `airport` alias)
+- `stand`
+- optional flight metadata: `callsign`, `cid`, `origin`, `destination`
+- optional `start` / `end` which override top-level defaults
+
+Example payload body:
+
+```json
+{
+  "name": "Speedbird 24",
+  "contact_email": "ops@example.com",
+  "start": "2026-02-20 09:00:00",
+  "end": "2026-02-20 18:00:00",
+  "reservations": [
+    {
+      "airfield": "EGLL",
+      "stand": "1L",
+      "callsign": "SBI24",
+      "cid": 1234567,
+      "origin": "LFPG",
+      "destination": "EGLL"
+    }
+  ]
+}
+```
