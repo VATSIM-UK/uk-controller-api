@@ -172,8 +172,7 @@ class StandController extends BaseController
     public function uploadStandReservationPlan(
         Request $request,
         StandReservationPlanSchemaValidator $schemaValidator
-    ): JsonResponse
-    {
+    ): JsonResponse {
         if (!$request->user()->hasRole(RoleKeys::VAA)) {
             return response()->json(['message' => 'Insufficient permissions'], 403);
         }
