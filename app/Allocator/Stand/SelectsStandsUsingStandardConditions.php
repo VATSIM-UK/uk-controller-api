@@ -120,8 +120,11 @@ trait SelectsStandsUsingStandardConditions
     {
         $config = config('stands.night_remote_stand_weighting');
 
+        $arrivalAirfield = strtoupper((string) $aircraft->planned_destairport);
+        $configuredAirfields = array_map('strtoupper', $config['airfields'] ?? []);
+
         $isEnabledForAirfield = ($config['enabled'] ?? false)
-            && in_array($aircraft->arrival_airfield, $config['airfields'] ?? [], true);
+            && in_array($arrivalAirfield, $configuredAirfields, true);
 
         $hour = Carbon::now('Europe/London')->hour;
         $startHour = (int) ($config['start_hour'] ?? 22);
