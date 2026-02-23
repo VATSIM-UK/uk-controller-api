@@ -120,13 +120,8 @@ trait SelectsStandsUsingStandardConditions
     {
         $config = config('stands.night_remote_stand_weighting');
 
-        if (!($config['enabled'] ?? false)) {
-            return null;
-        }
-
-        if (!in_array($aircraft->arrival_airfield, $config['airfields'] ?? [], true)) {
-            return null;
-        }
+        $isEnabledForAirfield = ($config['enabled'] ?? false)
+            && in_array($aircraft->arrival_airfield, $config['airfields'] ?? [], true);
 
         $hour = Carbon::now('Europe/London')->hour;
         $startHour = (int) ($config['start_hour'] ?? 22);
@@ -137,7 +132,9 @@ trait SelectsStandsUsingStandardConditions
             ? $hour >= $startHour && $hour < $endHour
             : $hour >= $startHour || $hour < $endHour;
 
-        if (!$isNightWindow) {
+        $shouldApplyRemoteWeighting = $isEnabledForAirfield && $isNightWindow;
+
+        if (!$shouldApplyRemoteWeighting) {
             return null;
         }
 
