@@ -4,6 +4,7 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use Closure;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -73,6 +74,12 @@ trait SelectsStandsUsingStandardConditions
         );
     }
 
+    /**
+     * Build stand ordering for a given aircraft/query mode.
+     *
+     * We keep existing common ordering intact, but may prepend an additional
+     * night-time remote-stand condition when configured and applicable.
+     */
     private function orderByForStandsQuery(
         NetworkAircraft $aircraft,
         array $customOrders,
@@ -93,10 +100,50 @@ trait SelectsStandsUsingStandardConditions
                 : $this->commonOrderByConditionsWithoutAssignmentPriorityForAircraft($aircraft);
         }
 
+        $nightTimeRemoteStandCondition = $this->nightTimeRemoteStandOrderCondition($aircraft);
+
+        if ($nightTimeRemoteStandCondition !== null) {
+            $commonConditions = array_merge([$nightTimeRemoteStandCondition], $commonConditions);
+        }
+
         return array_merge(
             $customOrders,
             $commonConditions
         );
+    }
+
+    /**
+     * Returns an optional SQL ORDER BY fragment that prefers remote stands overnight
+     * for configured airfields, or null when the bias should not be applied.
+     */
+    private function nightTimeRemoteStandOrderCondition(NetworkAircraft $aircraft): ?string
+    {
+        $config = config('stands.night_remote_stand_weighting');
+
+        if (!($config['enabled'] ?? false)) {
+            return null;
+        }
+
+        if (!in_array($aircraft->arrival_airfield, $config['airfields'] ?? [], true)) {
+            return null;
+        }
+
+        $hour = Carbon::now('Europe/London')->hour;
+        $startHour = (int) ($config['start_hour'] ?? 22);
+        $endHour = (int) ($config['end_hour'] ?? 6);
+
+        // Supports both normal windows (e.g. 01 -> 05) and windows crossing midnight (e.g. 22 -> 06).
+        $isNightWindow = $startHour <= $endHour
+            ? $hour >= $startHour && $hour < $endHour
+            : $hour >= $startHour || $hour < $endHour;
+
+        if (!$isNightWindow) {
+            return null;
+        }
+
+        $threshold = (int) ($config['remote_priority_threshold'] ?? 100);
+
+        return sprintf('CASE WHEN stands.assignment_priority >= %d THEN 0 ELSE 1 END ASC', $threshold);
     }
 
     private function commonOrderByConditionsForAircraft(NetworkAircraft $aircraft): array

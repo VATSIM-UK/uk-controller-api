@@ -176,6 +176,81 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($highPriority->id, $assignment);
     }
 
+    public function testItPrefersRemoteStandsAtNightForConfiguredAirfields()
+    {
+        config()->set('stands.night_remote_stand_weighting.enabled', true);
+
+        Carbon::setTestNow(Carbon::create(2024, 1, 1, 23, 0, 0, 'Europe/London'));
+
+        // Lower assignment priority = more desirable stand during daytime
+        Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'T1',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'aerodrome_reference_code' => 'C',
+                'assignment_priority' => 1,
+            ]
+        );
+
+        $remoteStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'R1',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'aerodrome_reference_code' => 'C',
+                'assignment_priority' => 100,
+            ]
+        );
+
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
+
+        $assignment = $this->allocator->allocate($aircraft);
+
+        $this->assertEquals($remoteStand->id, $assignment);
+
+        Carbon::setTestNow();
+    }
+
+    public function testItDoesNotPreferRemoteStandsOutsideNightHours()
+    {
+        config()->set('stands.night_remote_stand_weighting.enabled', true);
+
+        Carbon::setTestNow(Carbon::create(2024, 1, 1, 12, 0, 0, 'Europe/London'));
+
+        $terminalStand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'T1',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'aerodrome_reference_code' => 'C',
+                'assignment_priority' => 1,
+            ]
+        );
+
+        Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'R1',
+                'latitude' => 54.65875500,
+                'longitude' => -6.22258694,
+                'aerodrome_reference_code' => 'C',
+                'assignment_priority' => 100,
+            ]
+        );
+
+        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
+
+        $assignment = $this->allocator->allocate($aircraft);
+
+        $this->assertEquals($terminalStand->id, $assignment);
+
+        Carbon::setTestNow();
+    }
+
     public function testItOnlyAssignsNonCargoStands()
     {
         // Create a stand a cargo stand
