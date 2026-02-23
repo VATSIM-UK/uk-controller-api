@@ -178,14 +178,17 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItPrefersRemoteStandsAtNightForConfiguredAirfields()
     {
+        $airfield = Airfield::factory()->create(['code' => 'EXXA']);
+
         config()->set('stands.night_remote_stand_weighting.enabled', true);
+        config()->set('stands.night_remote_stand_weighting.airfields', [$airfield->code]);
 
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 23, 0, 0, 'Europe/London'));
 
         // Lower assignment priority = more desirable stand during daytime
         Stand::create(
             [
-                'airfield_id' => 1,
+                'airfield_id' => $airfield->id,
                 'identifier' => 'T1',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
@@ -196,7 +199,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         $remoteStand = Stand::create(
             [
-                'airfield_id' => 1,
+                'airfield_id' => $airfield->id,
                 'identifier' => 'R1',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
@@ -205,7 +208,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
 
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
+        $aircraft = $this->createAircraft('AEU252', 'B738', $airfield->code);
 
         $assignment = $this->allocator->allocate($aircraft);
 
@@ -216,13 +219,16 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
     public function testItDoesNotPreferRemoteStandsOutsideNightHours()
     {
+        $airfield = Airfield::factory()->create(['code' => 'EXXB']);
+
         config()->set('stands.night_remote_stand_weighting.enabled', true);
+        config()->set('stands.night_remote_stand_weighting.airfields', [$airfield->code]);
 
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 12, 0, 0, 'Europe/London'));
 
         $terminalStand = Stand::create(
             [
-                'airfield_id' => 1,
+                'airfield_id' => $airfield->id,
                 'identifier' => 'T1',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
@@ -233,7 +239,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
 
         Stand::create(
             [
-                'airfield_id' => 1,
+                'airfield_id' => $airfield->id,
                 'identifier' => 'R1',
                 'latitude' => 54.65875500,
                 'longitude' => -6.22258694,
@@ -242,7 +248,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
 
-        $aircraft = $this->createAircraft('AEU252', 'B738', 'EGLL');
+        $aircraft = $this->createAircraft('AEU252', 'B738', $airfield->code);
 
         $assignment = $this->allocator->allocate($aircraft);
 
