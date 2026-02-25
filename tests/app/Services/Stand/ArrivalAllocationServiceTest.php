@@ -875,4 +875,77 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         $this->assertNotNull(StandAssignment::find($aircraft2->callsign));
         $this->assertNotNull(StandAssignment::find($aircraft3->callsign));
     }
+
+    public function testItDoesNotDeleteConflictingAssignmentIfAssignedAircraftHasLanded()
+    {
+        $airfield = Airfield::factory()->create();
+
+        $stand1 = Stand::factory()->create(['airfield_id' => $airfield->id]);
+        $stand2 = Stand::factory()->create(['airfield_id' => $airfield->id]);
+
+        $landedAircraft = NetworkAircraft::factory()->create([
+            'planned_destairport' => $airfield->code,
+            'groundspeed' => 10,
+            'latitude' => $airfield->latitude,
+            'longitude' => $airfield->longitude,
+        ]);
+
+        StandAssignment::create([
+            'callsign' => $landedAircraft->callsign,
+            'stand_id' => $stand1->id,
+        ]);
+
+        $newOccupier = NetworkAircraft::factory()->create();
+        $stand1->occupier()->sync([$newOccupier->callsign]);
+
+        StandAssignment::create([
+            'callsign' => $newOccupier->callsign,
+            'stand_id' => $stand1->id,
+        ]);
+
+        $this->service->handleStandOccupations();
+
+        $this->assertTrue(
+            StandAssignment::where('callsign', $landedAircraft->callsign)
+                ->where('stand_id', $stand1->id)
+                ->exists()
+        );
+    }
+
+    public function testItDeletesConflictingAssignmentIfAssignedAircraftHasNotLanded()
+    {
+        $airfield = Airfield::factory()->create();
+        $stand1 = Stand::factory()->create(['airfield_id' => $airfield->id]);
+
+        $airbornAircraft = NetworkAircraft::factory()->create([
+            'planned_destairport' => $airfield->code,
+            'groundspeed' => 250,
+            'latitude' => $airfield->latitude,
+            'longitude' => $airfield->longitude,
+        ]);
+
+        StandAssignment::create([
+            'callsign' => $airbornAircraft->callsign,
+            'stand_id' => $stand1->id,
+        ]);
+
+        $newOccupier = NetworkAircraft::factory()->create();
+        $stand1->occupier()->sync([$newOccupier->callsign]);
+        StandAssignment::create([
+            'callsign' => $newOccupier->callsign,
+            'stand_id' => $stand1->id,
+        ]);
+
+        $this->service->handleStandOccupations();
+
+        $this->assertFalse(
+            StandAssignment::where('callsign', $airbornAircraft->callsign)
+                ->where('stand_id', $stand1->id)
+                ->exists()
+        );
+
+        Event::assertDispatched(
+            fn(StandUnassignedEvent $event) => $event->getCallsign() === $airbornAircraft->callsign
+        );
+    }
 }
