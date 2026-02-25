@@ -6,6 +6,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Hold\NavaidNetworkAircraft;
 use App\Models\Navigation\Navaid;
+use App\Services\LocationService;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
 use App\Models\User\User;
@@ -177,7 +178,7 @@ class NetworkAircraft extends Model
         }
 
         $distanceToAirfieldInNm = LocationService::metersToNauticalMiles(
-            $this->latLong->getDistance($this->coordinate, new Haversine())
+            $this->latLong->getDistance($this->destinationAirfield->coordinate, new Haversine())
         );
 
         return $distanceToAirfieldInNm <= $thresholdNauticalMiles;
@@ -185,7 +186,7 @@ class NetworkAircraft extends Model
 
     public function hasLanded(): bool
     {
-        $isOnGround = $this->groundSpeed < 50;
+        $isOnGround = $this->groundspeed < 50;
         return $isOnGround && $this->isNearDestination();
     }
 }
