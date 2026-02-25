@@ -14,7 +14,5 @@ return [
         'start_hour' => 22,
         // Local Europe/London end hour (24h) for the overnight window (exclusive).
         'end_hour' => 6,
-        // Stands at/above this assignment_priority are treated as remote-preferred overnight.
-        'remote_priority_threshold' => 100,
     ],
 ];

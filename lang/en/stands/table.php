@@ -11,6 +11,7 @@ return [
         'airlines' => 'Airlines',
         'used' => 'Used',
         'priority' => 'Allocation Priority',
+        'overnight_remote_preferred' => 'Overnight Remote Preferred',
     ],
     'airlines' => [
         'description' => 'Airlines can be assigned to specific stands based on various parameters. See the allocation guide

@@ -205,6 +205,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'longitude' => -6.22258694,
                 'aerodrome_reference_code' => 'C',
                 'assignment_priority' => 100,
+                'overnight_remote_preferred' => true,
             ]
         );
 
@@ -245,6 +246,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'longitude' => -6.22258694,
                 'aerodrome_reference_code' => 'C',
                 'assignment_priority' => 100,
+                'overnight_remote_preferred' => true,
             ]
         );
 

@@ -141,9 +141,7 @@ trait SelectsStandsUsingStandardConditions
             return null;
         }
 
-        $threshold = (int) ($config['remote_priority_threshold'] ?? 100);
-
-        return sprintf('CASE WHEN stands.assignment_priority >= %d THEN 0 ELSE 1 END ASC', $threshold);
+        return 'CASE WHEN stands.overnight_remote_preferred = 1 THEN 0 ELSE 1 END ASC';
     }
 
     private function commonOrderByConditionsForAircraft(NetworkAircraft $aircraft): array
