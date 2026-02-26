@@ -65,7 +65,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                     ->label('Reservation payload (JSON)')
                     ->required()
                     ->rows(14)
-                    ->helperText('Use an object containing a reservations array. Optional top-level start/end (or active_from/active_to) values are used as defaults for each reservation row. See https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan-format.md for the formal specification and https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan.schema.json for machine validation.'),
+                    ->helperText('Use an object containing either a reservations array or stand_slots array. Top-level event_start/event_finish (or start/end) are treated as defaults for nested reservations. See https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan-format.md for the formal specification and https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan.schema.json for machine validation.'),
             ])
             ->statePath('data');
     }
@@ -75,8 +75,8 @@ class StandReservationPlans extends Page implements HasForms, HasTable
         $validated = $this->form->getState();
 
         $payload = json_decode($validated['planJson'], true);
-        if (!is_array($payload) || !isset($payload['reservations']) || !is_array($payload['reservations'])) {
-            $this->addError('data.planJson', 'Plan JSON must contain a reservations array.');
+        if (!is_array($payload) || (!isset($payload['reservations']) && !isset($payload['stand_slots']))) {
+            $this->addError('data.planJson', 'Plan JSON must contain either reservations or stand_slots.');
             return;
         }
 
@@ -203,8 +203,8 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         $payload = $plan->payload ?? [];
 
-        $start = $payload['start'] ?? $payload['active_from'] ?? null;
-        $end = $payload['end'] ?? $payload['active_to'] ?? null;
+        $start = $payload['event_start'] ?? $payload['start'] ?? null;
+        $end = $payload['event_finish'] ?? $payload['end'] ?? null;
 
         if ($start === null && $end === null) {
             return 'Per-reservation timing';
@@ -219,22 +219,30 @@ class StandReservationPlans extends Page implements HasForms, HasTable
 
     public function requestedStandsLabel(StandReservationPlan $plan): string
     {
-        $reservations = collect($plan->payload['reservations'] ?? []);
+        $reservationStands = collect($plan->payload['reservations'] ?? [])->map(function (array $reservation): string {
+            $airfield = $reservation['airfield'] ?? $reservation['airport'] ?? 'Unknown';
+            $stand = $reservation['stand'] ?? 'Unknown';
 
-        if ($reservations->isEmpty()) {
+            return sprintf('%s %s', $airfield, $stand);
+        });
+
+        $slotStands = collect($plan->payload['stand_slots'] ?? [])->map(function (array $slot): string {
+            $airfield = $slot['airfield'] ?? $slot['airport'] ?? 'Unknown';
+            $stand = $slot['stand'] ?? 'Unknown';
+
+            return sprintf('%s %s', $airfield, $stand);
+        });
+
+        $requestedStands = $reservationStands->concat($slotStands)->filter()->unique()->values();
+
+        if ($requestedStands->isEmpty()) {
             return 'No reservations';
         }
 
-        return $reservations
-            ->map(function (array $reservation): string {
-                $airfield = $reservation['airfield'] ?? $reservation['airport'] ?? 'Unknown';
-                $stand = $reservation['stand'] ?? 'Unknown';
-
-                return sprintf('%s %s', $airfield, $stand);
-            })
+        return $requestedStands
             ->take(5)
             ->implode(', ')
-            . ($reservations->count() > 5 ? '…' : '');
+            . ($requestedStands->count() > 5 ? '…' : '');
     }
 
     public function recentlyProcessedPlans(): Collection
@@ -253,10 +261,10 @@ class StandReservationPlans extends Page implements HasForms, HasTable
 
     private function rowsFromPayload(array $payload): Collection
     {
-        $defaultStart = $payload['start'] ?? $payload['active_from'] ?? null;
-        $defaultEnd = $payload['end'] ?? $payload['active_to'] ?? null;
+        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
+        $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
 
-        return collect($payload['reservations'] ?? [])->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
+        $reservationRows = collect($payload['reservations'] ?? [])->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
             return collect([
                 'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? null,
                 'stand' => $reservation['stand'] ?? null,
@@ -268,6 +276,26 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                 'end' => $reservation['end'] ?? $defaultEnd,
             ]);
         });
+
+        $slotRows = collect($payload['stand_slots'] ?? [])->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd) {
+            $slotAirfield = $standSlot['airfield'] ?? $standSlot['airport'] ?? null;
+            $slotStand = $standSlot['stand'] ?? null;
+
+            return collect($standSlot['slot_reservations'] ?? [])->map(function (array $slotReservation) use ($slotAirfield, $slotStand, $defaultStart, $defaultEnd) {
+                return collect([
+                    'airfield' => $slotReservation['airfield'] ?? $slotReservation['airport'] ?? $slotAirfield,
+                    'stand' => $slotReservation['stand'] ?? $slotStand,
+                    'callsign' => $slotReservation['callsign'] ?? null,
+                    'cid' => $slotReservation['cid'] ?? null,
+                    'origin' => $slotReservation['origin'] ?? null,
+                    'destination' => $slotReservation['destination'] ?? null,
+                    'start' => $slotReservation['start'] ?? $defaultStart,
+                    'end' => $slotReservation['end'] ?? $defaultEnd,
+                ]);
+            });
+        });
+
+        return $reservationRows->concat($slotRows)->values();
     }
 
     private function plansQuery(): Builder

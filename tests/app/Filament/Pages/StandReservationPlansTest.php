@@ -48,12 +48,19 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                 'name' => 'Speedbird 24',
                 'contactEmail' => 'ops@example.com',
                 'planJson' => json_encode([
-                    'reservations' => [
+                    'event_start' => '2026-02-20 09:00:00',
+                    'event_finish' => '2026-02-20 10:00:00',
+                    'stand_slots' => [
                         [
                             'airfield' => 'EGLL',
                             'stand' => '1L',
-                            'start' => '2026-02-20 09:00:00',
-                            'end' => '2026-02-20 10:00:00',
+                            'slot_reservations' => [
+                                [
+                                    'callsign' => 'SBI24',
+                                    'start' => '2026-02-20 09:00:00',
+                                    'end' => '2026-02-20 09:30:00',
+                                ],
+                            ],
                         ],
                     ],
                 ]),
@@ -78,13 +85,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                 'name' => 'Speedbird 24',
                 'contactEmail' => 'ops@example.com',
                 'planJson' => json_encode([
-                    'reservations' => [
-                        [
-                            'airfield' => 'EGLL',
-                            'start' => '2026-02-20 09:00:00',
-                            'end' => '2026-02-20 10:00:00',
-                        ],
-                    ],
+                    'event_start' => '2026-02-20 09:00:00',
+                    'event_finish' => '2026-02-20 10:00:00',
                 ]),
             ])
             ->call('submitPlan')
@@ -104,13 +106,19 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'name' => 'Speedbird 24',
             'contact_email' => 'ops@example.com',
             'payload' => [
-                'start' => '2024-08-11 09:00:00',
-                'end' => '2024-08-11 18:00:00',
-                'reservations' => [
+                'event_start' => '2024-08-11 09:00:00',
+                'event_finish' => '2024-08-11 18:00:00',
+                'stand_slots' => [
                     [
                         'airfield' => 'EGLL',
                         'stand' => '1L',
-                        'callsign' => 'SBI24',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI24',
+                                'start' => '2024-08-11 09:00:00',
+                                'end' => '2024-08-11 09:30:00',
+                            ],
+                        ],
                     ],
                 ],
             ],

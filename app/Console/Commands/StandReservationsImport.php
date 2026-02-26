@@ -66,12 +66,11 @@ class StandReservationsImport extends Command
 
     private function extractRowsFromJson(array $payload): Collection
     {
-        $defaultStart = $payload['start'] ?? $payload['active_from'] ?? null;
-        $defaultEnd = $payload['end'] ?? $payload['active_to'] ?? null;
+        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
+        $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
 
-        $reservations = $payload['reservations'] ?? $payload;
-
-        return collect($reservations)
+        // Backward-compatible flat row payloads (`reservations` or a raw array of rows).
+        $reservationRows = collect($payload['reservations'] ?? $payload)
             ->filter(fn (mixed $reservation) => is_array($reservation))
             ->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
                 return collect([
@@ -85,5 +84,30 @@ class StandReservationsImport extends Command
                     'end' => $reservation['end'] ?? $defaultEnd,
                 ]);
             });
+
+        // Preferred stand-slot payloads where one stand can contain multiple timed reservations.
+        $slotRows = collect($payload['stand_slots'] ?? [])
+            ->filter(fn (mixed $standSlot) => is_array($standSlot))
+            ->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd) {
+                $slotAirfield = $standSlot['airfield'] ?? $standSlot['airport'] ?? null;
+                $slotStand = $standSlot['stand'] ?? null;
+
+                return collect($standSlot['slot_reservations'] ?? [])
+                    ->filter(fn (mixed $reservation) => is_array($reservation))
+                    ->map(function (array $reservation) use ($slotAirfield, $slotStand, $defaultStart, $defaultEnd) {
+                        return collect([
+                            'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? $slotAirfield,
+                            'stand' => $reservation['stand'] ?? $slotStand,
+                            'callsign' => $reservation['callsign'] ?? null,
+                            'cid' => $reservation['cid'] ?? null,
+                            'origin' => $reservation['origin'] ?? null,
+                            'destination' => $reservation['destination'] ?? null,
+                            'start' => $reservation['start'] ?? $defaultStart,
+                            'end' => $reservation['end'] ?? $defaultEnd,
+                        ]);
+                    });
+            });
+
+        return $reservationRows->concat($slotRows)->values();
     }
 }

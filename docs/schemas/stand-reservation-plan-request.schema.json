@@ -7,8 +7,7 @@
   "additionalProperties": false,
   "required": [
     "name",
-    "contact_email",
-    "reservations"
+    "contact_email"
   ],
   "properties": {
     "name": {
@@ -28,14 +27,17 @@
     "end": {
       "$ref": "stand-reservation-plan.schema.json#/properties/end"
     },
-    "active_from": {
-      "$ref": "stand-reservation-plan.schema.json#/properties/active_from"
-    },
-    "active_to": {
-      "$ref": "stand-reservation-plan.schema.json#/properties/active_to"
-    },
     "reservations": {
       "$ref": "stand-reservation-plan.schema.json#/properties/reservations"
+    },
+    "event_start": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/event_start"
+    },
+    "event_finish": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/event_finish"
+    },
+    "stand_slots": {
+      "$ref": "stand-reservation-plan.schema.json#/properties/stand_slots"
     }
   },
   "allOf": [
@@ -44,6 +46,9 @@
     },
     {
       "$ref": "stand-reservation-plan.schema.json#/allOf/1"
+    },
+    {
+      "$ref": "stand-reservation-plan.schema.json#/allOf/2"
     }
   ]
 }

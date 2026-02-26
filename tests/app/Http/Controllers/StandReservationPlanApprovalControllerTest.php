@@ -35,13 +35,19 @@ class StandReservationPlanApprovalControllerTest extends BaseApiTestCase
             'name' => 'Speedbird 24',
             'contact_email' => 'ops@example.com',
             'payload' => [
-                'start' => '2024-08-11 09:00:00',
-                'end' => '2024-08-11 18:00:00',
-                'reservations' => [
+                'event_start' => '2024-08-11 09:00:00',
+                'event_finish' => '2024-08-11 18:00:00',
+                'stand_slots' => [
                     [
                         'airfield' => 'EGLL',
                         'stand' => '1L',
-                        'callsign' => 'SBI24',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI24',
+                                'start' => '2024-08-11 09:00:00',
+                                'end' => '2024-08-11 09:30:00',
+                            ],
+                        ],
                     ],
                 ],
             ],

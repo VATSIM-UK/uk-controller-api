@@ -238,15 +238,25 @@ we've found a match, and that stand is assigned!
 When submitting an event stand plan (via API or Filament), send a JSON object with:
 
 - `name` and `contact_email` metadata (API), or form fields in Filament
-- `reservations`: an array of reservation rows
-- optional top-level `start` / `end` (or `active_from` / `active_to`) defaults
+- either:
+  - `stand_slots` (recommended): an array where each stand is a slot containing `slot_reservations`
+  - `reservations`: flat reservation rows (legacy-compatible)
+- optional top-level defaults:
+  - `event_start` / `event_finish` (preferred)
+  - `start` / `end` (legacy)
 
-Each reservation row supports:
+### Slot-based format (recommended)
+
+Each `stand_slots[]` item supports:
 
 - `airfield` (or `airport` alias)
 - `stand`
+- `slot_reservations`: array of timed reservation rows
+
+Each slot reservation supports:
+
 - optional flight metadata: `callsign`, `cid`, `origin`, `destination`
-- optional `start` / `end` which override top-level defaults
+- optional `start` / `end` (falls back to top-level defaults)
 
 Example payload body:
 
@@ -254,17 +264,36 @@ Example payload body:
 {
   "name": "Speedbird 24",
   "contact_email": "ops@example.com",
-  "start": "2026-02-20 09:00:00",
-  "end": "2026-02-20 18:00:00",
-  "reservations": [
+  "event_start": "2026-02-20 09:00:00",
+  "event_finish": "2026-02-20 18:00:00",
+  "stand_slots": [
     {
       "airfield": "EGLL",
-      "stand": "1L",
-      "callsign": "SBI24",
-      "cid": 1234567,
-      "origin": "LFPG",
-      "destination": "EGLL"
+      "stand": "531",
+      "slot_reservations": [
+        {
+          "callsign": "BAW1234",
+          "start": "2026-02-20 09:00:00",
+          "end": "2026-02-20 09:30:00"
+        },
+        {
+          "callsign": "BAW4321",
+          "start": "2026-02-20 09:31:00",
+          "end": "2026-02-20 10:00:00"
+        }
+      ]
     }
   ]
 }
 ```
+
+
+### Event-day activation task
+
+Approved plans can be activated automatically on event day with:
+
+- `stand-reservations:activate-plans`
+
+This task imports approved plans whose `event_start` (or `start`) is now due and have not yet been imported, so slot-based stand reservations are applied at the correct time window.
+
+It also synchronises live stand assignments for active reservations by matching callsign/CID (and origin/destination when supplied), so a flight receives its requested stand automatically during its slot window and that assignment is lifted when the slot expires.

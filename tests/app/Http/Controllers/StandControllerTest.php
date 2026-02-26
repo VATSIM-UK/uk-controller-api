@@ -7,6 +7,7 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Services\NetworkAircraftService;
@@ -308,16 +309,22 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'name' => 'Test event',
                 'contact_email' => 'event@example.com',
-                'start' => '2024-08-11 09:00:00',
-                'end' => '2024-08-11 18:00:00',
-                'reservations' => [
+                'event_start' => '2024-08-11 09:00:00',
+                'event_finish' => '2024-08-11 18:00:00',
+                'stand_slots' => [
                     [
                         'airfield' => 'EGLL',
                         'stand' => '1L',
-                        'callsign' => 'SBI24',
-                        'cid' => 1234567,
-                        'origin' => 'UUEE',
-                        'destination' => 'EGLL',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI24',
+                                'cid' => 1234567,
+                                'origin' => 'UUEE',
+                                'destination' => 'EGLL',
+                                'start' => '2024-08-11 09:00:00',
+                                'end' => '2024-08-11 09:30:00',
+                            ],
+                        ],
                     ],
                 ],
             ]
@@ -345,15 +352,9 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'name' => 'Schema failure',
                 'contact_email' => 'event@example.com',
-                'start' => '2024-08-11 09:00:00',
-                'end' => '2024-08-11 18:00:00',
+                'event_start' => '2024-08-11 09:00:00',
+                'event_finish' => '2024-08-11 18:00:00',
                 'unexpected' => 'field',
-                'reservations' => [
-                    [
-                        'airfield' => 'EGLL',
-                        'stand' => '1L',
-                    ],
-                ],
             ]
         )
             ->assertStatus(422)
@@ -394,6 +395,37 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(201);
 
         $this->assertTrue(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 2)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+
+    public function testItUsesActiveReservationBeforeAutomaticAssignment(): void
+    {
+        StandReservation::create([
+            'stand_id' => 1,
+            'callsign' => 'BAW9232',
+            'cid' => 1234567,
+            'origin' => 'EGCC',
+            'destination' => 'EGLL',
+            'start' => now()->subMinutes(5),
+            'end' => now()->addMinutes(20),
+        ]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGCC',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )
+            ->assertJson(['stand_id' => 1])
+            ->assertStatus(201);
+
+        $this->assertTrue(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 1)->exists());
         Event::assertDispatched(StandAssignedEvent::class);
     }
 

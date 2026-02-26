@@ -5,7 +5,7 @@ This document is the normative specification for the stand-reservation plan JSON
 ## 1. Canonical machine-readable schemas
 
 - **Payload schema**: `docs/schemas/stand-reservation-plan.schema.json`
-  - Defines the plan payload object (`reservations`, optional defaults).
+  - Defines the plan payload object (`reservations` and/or `stand_slots`, optional defaults).
 - **API request schema**: `docs/schemas/stand-reservation-plan-request.schema.json`
   - Defines the full request body for `POST /stand/reservations/plan`.
 
@@ -17,26 +17,27 @@ If there is any ambiguity in this markdown, the JSON Schema files are authoritat
 
 A payload object MUST be a JSON object with these properties:
 
-- `reservations` (**required**): array of one or more reservation objects.
-- `start` (optional): default start datetime for reservation rows.
-- `end` (optional): default end datetime for reservation rows.
-- `active_from` (optional): alias default start datetime.
-- `active_to` (optional): alias default end datetime.
-
+- At least one of:
+  - `reservations`: array of one or more reservation objects.
+  - `stand_slots`: array of one or more stand-slot objects.
+- Optional top-level default datetimes:
+  - `event_start` / `event_finish` (preferred event-window names)
+  - `start` / `end` (legacy)
+  
 Constraints:
 
 - If `end` is present, `start` MUST also be present.
-- If `active_to` is present, `active_from` MUST also be present.
+- If `event_finish` is present, `event_start` MUST also be present.
 - Additional top-level properties are not allowed.
 
 ### 2.2 Reservation row object
 
-Each item in `reservations` MUST be a JSON object with:
+Each item in `reservations` (and each item in `stand_slots[].slot_reservations`) MUST be a JSON object with:
 
-- `stand` (**required**): stand identifier string.
+- `stand` (**required**): stand identifier string (optional when inherited from `stand_slots[].stand`).
 - Exactly one of:
   - `airfield`: ICAO code, or
-  - `airport`: ICAO code alias.
+  - `airport`: ICAO code alias (optional when inherited from `stand_slots[].airfield` / `airport`).
 
 Optional row-level fields:
 
@@ -51,6 +52,16 @@ Constraints:
 
 - If row `end` is present, row `start` MUST also be present.
 - Additional properties are not allowed.
+
+### 2.3 Stand-slot object
+
+Each item in `stand_slots` MUST be an object with:
+
+- `stand` (**required**): stand identifier string.
+- Exactly one of `airfield` or `airport` (**required**).
+- `slot_reservations` (**required**): array of one or more reservation row objects.
+
+`slot_reservations` is where multiple callsigns can be scheduled on the same stand at different times.
 
 ## 3. Datetime encoding
 
@@ -67,7 +78,9 @@ Datetime values MUST be strings matching one of the following forms:
 Notes:
 
 - Row-level `start`/`end` override top-level defaults.
-- When row-level values are omitted, top-level defaults are used during import.
+- When row-level values are omitted, defaults are resolved in this order:
+  1. `event_start` / `event_finish`
+  2. `start` / `end`
 
 ## 4. API submission body
 
@@ -75,7 +88,7 @@ Notes:
 
 - `name` (required string, max 255)
 - `contact_email` (required email)
-- Payload fields from section 2 (`reservations`, `start`, `end`, `active_from`, `active_to`)
+- Payload fields from section 2 (`reservations`, `stand_slots`, default datetime fields)
 
 This body is formally defined by:
 
@@ -83,17 +96,28 @@ This body is formally defined by:
 
 ## 5. Minimal valid examples
 
-### 5.1 Payload-only example
+### 5.1 Stand-slot payload example
 
 ```json
 {
-  "start": "2026-02-20 09:00:00",
-  "end": "2026-02-20 10:00:00",
-  "reservations": [
+  "event_start": "2026-02-20 09:00:00",
+  "event_finish": "2026-02-20 10:00:00",
+  "stand_slots": [
     {
       "airfield": "EGLL",
-      "stand": "1L",
-      "callsign": "SBI24"
+      "stand": "531",
+      "slot_reservations": [
+        {
+          "callsign": "BAW1234",
+          "start": "2026-02-20 09:00:00",
+          "end": "2026-02-20 09:30:00"
+        },
+        {
+          "callsign": "BAW4321",
+          "start": "2026-02-20 09:31:00",
+          "end": "2026-02-20 10:00:00"
+        }
+      ]
     }
   ]
 }
@@ -105,16 +129,28 @@ This body is formally defined by:
 {
   "name": "Speedbird 24",
   "contact_email": "ops@example.com",
-  "start": "2026-02-20 09:00:00",
-  "end": "2026-02-20 10:00:00",
-  "reservations": [
+  "event_start": "2026-02-20 09:00:00",
+  "event_finish": "2026-02-20 10:00:00",
+  "stand_slots": [
     {
       "airfield": "EGLL",
-      "stand": "1L",
-      "callsign": "SBI24",
-      "cid": 1234567,
-      "origin": "UUEE",
-      "destination": "EGLL"
+      "stand": "531",
+      "slot_reservations": [
+        {
+          "callsign": "BAW1234",
+          "start": "2026-02-20 09:00:00",
+          "end": "2026-02-20 09:30:00",
+          "origin": "EGCC",
+          "destination": "EGLL"
+        },
+        {
+          "callsign": "BAW4321",
+          "start": "2026-02-20 09:31:00",
+          "end": "2026-02-20 10:00:00",
+          "origin": "EHAM",
+          "destination": "EGLL"
+        }
+      ]
     }
   ]
 }

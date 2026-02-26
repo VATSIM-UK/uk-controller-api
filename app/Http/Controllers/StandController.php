@@ -7,6 +7,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
 use App\Models\Stand\StandReservationPlan;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Models\User\RoleKeys;
@@ -26,6 +27,7 @@ use App\Imports\Stand\StandReservationsImport;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
@@ -182,11 +184,12 @@ class StandController extends BaseController
             [
                 'name' => ['required', 'string', 'max:255'],
                 'contact_email' => ['required', 'email'],
-                'reservations' => ['required', 'array', 'min:1'],
+                'reservations' => ['nullable', 'array', 'min:1'],
+                'stand_slots' => ['nullable', 'array', 'min:1'],
                 'start' => ['nullable', 'date'],
                 'end' => ['nullable', 'date', 'after:start'],
-                'active_from' => ['nullable', 'date'],
-                'active_to' => ['nullable', 'date', 'after:active_from'],
+                'event_start' => ['nullable', 'date'],
+                'event_finish' => ['nullable', 'date', 'after:event_start'],
             ]
         )->validate();
 
@@ -204,9 +207,10 @@ class StandController extends BaseController
             'payload' => [
                 'start' => $validated['start'] ?? null,
                 'end' => $validated['end'] ?? null,
-                'active_from' => $validated['active_from'] ?? null,
-                'active_to' => $validated['active_to'] ?? null,
-                'reservations' => $validated['reservations'],
+                'event_start' => $validated['event_start'] ?? null,
+                'event_finish' => $validated['event_finish'] ?? null,
+                'reservations' => $validated['reservations'] ?? null,
+                'stand_slots' => $validated['stand_slots'] ?? null,
             ],
             'approval_due_at' => Carbon::now()->addDays(7),
             'submitted_by' => $request->user()->id,
@@ -251,10 +255,26 @@ class StandController extends BaseController
         }
 
         $payload = $standReservationPlan->payload;
-        $defaultStart = $payload['start'] ?? $payload['active_from'] ?? null;
-        $defaultEnd = $payload['end'] ?? $payload['active_to'] ?? null;
+        $rows = $this->rowsFromPayload($payload);
 
-        $rows = collect($payload['reservations'] ?? [])->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
+        $createdReservations = $importer->importReservations($rows);
+
+        $standReservationPlan->update([
+            'status' => 'approved',
+            'approved_at' => Carbon::now(),
+            'approved_by' => $request->user()->id,
+            'imported_reservations' => $createdReservations,
+        ]);
+
+        return response()->json(['created' => $createdReservations]);
+    }
+
+    private function rowsFromPayload(array $payload): Collection
+    {
+        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
+        $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
+
+        $reservationRows = collect($payload['reservations'] ?? [])->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
             return collect([
                 'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? null,
                 'stand' => $reservation['stand'] ?? null,
@@ -267,16 +287,25 @@ class StandController extends BaseController
             ]);
         });
 
-        $createdReservations = $importer->importReservations($rows);
+        $slotRows = collect($payload['stand_slots'] ?? [])->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd) {
+            $slotAirfield = $standSlot['airfield'] ?? $standSlot['airport'] ?? null;
+            $slotStand = $standSlot['stand'] ?? null;
 
-        $standReservationPlan->update([
-            'status' => 'approved',
-            'approved_at' => Carbon::now(),
-            'approved_by' => $request->user()->id,
-            'imported_reservations' => $createdReservations,
-        ]);
+            return collect($standSlot['slot_reservations'] ?? [])->map(function (array $slotReservation) use ($slotAirfield, $slotStand, $defaultStart, $defaultEnd) {
+                return collect([
+                    'airfield' => $slotReservation['airfield'] ?? $slotReservation['airport'] ?? $slotAirfield,
+                    'stand' => $slotReservation['stand'] ?? $slotStand,
+                    'callsign' => $slotReservation['callsign'] ?? null,
+                    'cid' => $slotReservation['cid'] ?? null,
+                    'origin' => $slotReservation['origin'] ?? null,
+                    'destination' => $slotReservation['destination'] ?? null,
+                    'start' => $slotReservation['start'] ?? $defaultStart,
+                    'end' => $slotReservation['end'] ?? $defaultEnd,
+                ]);
+            });
+        });
 
-        return response()->json(['created' => $createdReservations]);
+        return $reservationRows->concat($slotRows)->values();
     }
 
     public function requestAutomaticStandAssignment(Request $request): JsonResponse
@@ -322,6 +351,15 @@ class StandController extends BaseController
             ]
         );
 
+        // Reservation-based event slots must take precedence over distance-based auto allocation.
+        $reservedStandId = $this->activeReservedStandIdForAircraft($aircraft);
+        if ($reservedStandId !== null) {
+            // Assign exactly what was requested for this active slot window.
+            $this->assignmentsService->createStandAssignment($aircraft->callsign, $reservedStandId, 'Reservation');
+            return response()->json(['stand_id' => $reservedStandId], 201);
+        }
+
+        // If there is no active reservation, fall back to normal automatic stand assignment logic.
         $stand = $validated['assignment_type'] === 'departure'
             ? $this->departureAllocationService->assignStandToDepartingAircraft($aircraft)
             : $this->arrivalAllocationService->autoAllocateArrivalStandForAircraft($aircraft);
@@ -331,5 +369,36 @@ class StandController extends BaseController
         }
 
         return response()->json(['stand_id' => $stand], 201);
+    }
+
+    /**
+     * Match an active reservation for this aircraft by callsign/CID and optional route metadata.
+     */
+    private function activeReservedStandIdForAircraft(NetworkAircraft $aircraft): ?int
+    {
+        $reservation = StandReservation::query()
+            ->active()
+            ->where(function ($query) use ($aircraft) {
+                $query->where('callsign', $aircraft->callsign);
+
+                if ($aircraft->cid !== null) {
+                    $query->orWhere('cid', $aircraft->cid);
+                }
+            })
+            ->orderBy('start')
+            ->get()
+            ->first(function (StandReservation $reservation) use ($aircraft): bool {
+                if ($reservation->origin !== null && $reservation->origin !== $aircraft->planned_depairport) {
+                    return false;
+                }
+
+                if ($reservation->destination !== null && $reservation->destination !== $aircraft->planned_destairport) {
+                    return false;
+                }
+
+                return true;
+            });
+
+        return $reservation?->stand_id;
     }
 }
