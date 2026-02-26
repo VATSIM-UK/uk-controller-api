@@ -342,6 +342,93 @@ class StandOccupationServiceTest extends BaseFunctionalTestCase
         $this->assertDatabaseMissing('stand_assignments',['callsign' => 'BAW221']);
     }
 
+    public function testIsNearDestinationReturnsFalseIfNoDestinationAirfield()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW221',
+            [
+                'planned_destairport' => 'XXXX',
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+            ]
+        );
+
+        $this->assertFalse($aircraft->isNearDestination());
+    }
+
+    public function testIsNearDestinationReturnsTrueIfWithinThreshold()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW221',
+            [
+                'planned_destairport' => 'EGLL',
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+            ]
+        );
+
+        $this->assertTrue($aircraft->isNearDestination());
+    }
+
+    public function testIsNearDestinationReturnsFalseIfOutsideThreshold()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW221',
+            [
+                'planned_destairport' => 'EGLL',
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+            ]
+        );
+
+        $this->assertFalse($aircraft->isNearDestination());
+    }
+
+    public function testHasLandedReturnsTrueIfOnGroundAndNearDestination()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW221',
+            [
+                'planned_destairport' => 'EGLL',
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 10,
+            ]
+        );
+
+        $this->assertTrue($aircraft->hasLanded());
+    }
+
+    public function testHasLandedReturnsFalseIfAirborneAndNearDestination()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW221',
+            [
+                'planned_destairport' => 'EGLL',
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 250,
+            ]
+        );
+
+        $this->assertFalse($aircraft->hasLanded());
+    }
+
+    public function testHasLandedReturnsFalseIfOnGroundButNotNearDestination()
+    {
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW221',
+            [
+                'planned_destairport' => 'EGLL',
+                'latitude' => 51.646099,
+                'longitude' => 0.151667,
+                'groundspeed' => 10,
+            ]
+        );
+
+        $this->assertFalse($aircraft->hasLanded());
+    }
+
     private function addStandAssignment(string $callsign, int $standId): StandAssignment
     {
         NetworkAircraftService::createPlaceholderAircraft($callsign);
