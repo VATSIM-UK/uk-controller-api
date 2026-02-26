@@ -6,6 +6,7 @@ use App\Imports\Stand\StandReservationsImport;
 use App\Models\Stand\StandReservationPlan;
 use App\Models\User\RoleKeys;
 use App\Services\JsonSchema\StandReservationPlanSchemaValidator;
+use App\Services\Stand\StandReservationPayloadRowsBuilder;
 use Carbon\Carbon;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -167,7 +168,8 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             return;
         }
 
-        $createdReservations = app(StandReservationsImport::class)->importReservations($this->rowsFromPayload($plan->payload));
+        $rows = app(StandReservationPayloadRowsBuilder::class)->fromPayload($plan->payload);
+        $createdReservations = app(StandReservationsImport::class)->importReservations($rows);
 
         $plan->update([
             'status' => 'approved',
@@ -219,19 +221,13 @@ class StandReservationPlans extends Page implements HasForms, HasTable
 
     public function requestedStandsLabel(StandReservationPlan $plan): string
     {
-        $reservationStands = collect($plan->payload['reservations'] ?? [])->map(function (array $reservation): string {
-            $airfield = $reservation['airfield'] ?? $reservation['airport'] ?? 'Unknown';
-            $stand = $reservation['stand'] ?? 'Unknown';
+        $reservationStands = collect($plan->payload['reservations'] ?? [])
+            ->filter(fn (mixed $reservation): bool => is_array($reservation))
+            ->map(fn (array $reservation): string => $this->standLabel($reservation));
 
-            return sprintf('%s %s', $airfield, $stand);
-        });
-
-        $slotStands = collect($plan->payload['stand_slots'] ?? [])->map(function (array $slot): string {
-            $airfield = $slot['airfield'] ?? $slot['airport'] ?? 'Unknown';
-            $stand = $slot['stand'] ?? 'Unknown';
-
-            return sprintf('%s %s', $airfield, $stand);
-        });
+        $slotStands = collect($plan->payload['stand_slots'] ?? [])
+            ->filter(fn (mixed $slot): bool => is_array($slot))
+            ->map(fn (array $slot): string => $this->standLabel($slot));
 
         $requestedStands = $reservationStands->concat($slotStands)->filter()->unique()->values();
 
@@ -259,53 +255,6 @@ class StandReservationPlans extends Page implements HasForms, HasTable
         return $query->get();
     }
 
-    private function rowsFromPayload(array $payload): Collection
-    {
-        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
-        $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
-
-        $reservationRows = collect($payload['reservations'] ?? [])
-            ->filter(fn (mixed $reservation): bool => is_array($reservation))
-            ->map(
-                fn (array $reservation): Collection => $this->buildReservationRow($reservation, $defaultStart, $defaultEnd)
-            );
-
-        $slotRows = collect($payload['stand_slots'] ?? [])
-            ->filter(fn (mixed $standSlot): bool => is_array($standSlot))
-            ->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd) {
-                $slotAirfield = $standSlot['airfield'] ?? $standSlot['airport'] ?? null;
-                $slotStand = $standSlot['stand'] ?? null;
-
-                return collect($standSlot['slot_reservations'] ?? [])
-                    ->filter(fn (mixed $slotReservation): bool => is_array($slotReservation))
-                    ->map(
-                        fn (array $slotReservation): Collection =>
-                            $this->buildReservationRow($slotReservation, $defaultStart, $defaultEnd, $slotAirfield, $slotStand)
-                    );
-            });
-
-        return $reservationRows->concat($slotRows)->values();
-    }
-
-    private function buildReservationRow(
-        array $reservation,
-        ?string $defaultStart,
-        ?string $defaultEnd,
-        ?string $fallbackAirfield = null,
-        ?string $fallbackStand = null
-    ): Collection {
-        return collect([
-            'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? $fallbackAirfield,
-            'stand' => $reservation['stand'] ?? $fallbackStand,
-            'callsign' => $reservation['callsign'] ?? null,
-            'cid' => $reservation['cid'] ?? null,
-            'origin' => $reservation['origin'] ?? null,
-            'destination' => $reservation['destination'] ?? null,
-            'start' => $reservation['start'] ?? $defaultStart,
-            'end' => $reservation['end'] ?? $defaultEnd,
-        ]);
-    }
-
     private function plansQuery(): Builder
     {
         $query = StandReservationPlan::query();
@@ -319,22 +268,35 @@ class StandReservationPlans extends Page implements HasForms, HasTable
 
     private static function userCanAccess(): bool
     {
-        return Auth::user()->roles()
-            ->whereIn('key', [
-                RoleKeys::VAA,
-                RoleKeys::WEB_TEAM,
-                RoleKeys::OPERATIONS_TEAM,
-                RoleKeys::DIVISION_STAFF_GROUP,
-            ])->exists();
+        return self::userHasAnyRole([
+            RoleKeys::VAA,
+            RoleKeys::WEB_TEAM,
+            RoleKeys::OPERATIONS_TEAM,
+            RoleKeys::DIVISION_STAFF_GROUP,
+        ]);
     }
 
     private function userCanReview(): bool
     {
+        return self::userHasAnyRole([
+            RoleKeys::WEB_TEAM,
+            RoleKeys::OPERATIONS_TEAM,
+            RoleKeys::DIVISION_STAFF_GROUP,
+        ]);
+    }
+
+    private function standLabel(array $standData): string
+    {
+        $airfield = $standData['airfield'] ?? $standData['airport'] ?? 'Unknown';
+        $stand = $standData['stand'] ?? 'Unknown';
+
+        return sprintf('%s %s', $airfield, $stand);
+    }
+
+    private static function userHasAnyRole(array $roleKeys): bool
+    {
         return Auth::user()->roles()
-            ->whereIn('key', [
-                RoleKeys::WEB_TEAM,
-                RoleKeys::OPERATIONS_TEAM,
-                RoleKeys::DIVISION_STAFF_GROUP,
-            ])->exists();
+            ->whereIn('key', $roleKeys)
+            ->exists();
     }
 }
