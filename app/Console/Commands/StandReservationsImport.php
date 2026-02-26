@@ -70,7 +70,10 @@ class StandReservationsImport extends Command
         $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
 
         // Backward-compatible flat row payloads (`reservations` or a raw array of rows).
-        $reservationRows = collect($payload['reservations'] ?? $payload)
+        // If slot-based payload keys are present without `reservations`, do not treat the root object as flat rows.
+        $flatRows = $payload['reservations'] ?? (isset($payload['stand_slots']) ? [] : $payload);
+
+        $reservationRows = collect($flatRows)
             ->filter(fn (mixed $reservation) => is_array($reservation))
             ->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
                 return collect([

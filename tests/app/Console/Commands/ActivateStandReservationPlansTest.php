@@ -136,6 +136,10 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
             'planned_destairport' => 'EGLL',
         ]);
 
+        NetworkAircraft::create([
+            'callsign' => 'OLD123',
+        ]);
+
         StandAssignment::create([
             'callsign' => 'OLD123',
             'stand_id' => 2,
