@@ -332,28 +332,12 @@ class StandController extends BaseController
             ]
         )->validate();
 
-        $aircraftTypeId = null;
-        $responseStatus = 201;
-        $responsePayload = null;
-
-        if ($validated['assignment_type'] === 'arrival') {
-            $aircraftTypeId = Aircraft::where('code', $validated['aircraft_type'])->first()?->id;
-            if (!$aircraftTypeId) {
-                $responseStatus = 422;
-                $responsePayload = ['message' => 'Invalid aircraft type'];
-            }
+        $aircraftTypeId = $this->resolveAircraftTypeId($validated);
+        if ($aircraftTypeId === false) {
+            return response()->json(['message' => 'Invalid aircraft type'], 422);
         }
 
-        if ($responseStatus !== 201) {
-            return response()->json($responsePayload ?? [], $responseStatus);
-        }
-
-        // Grab aircraft from the network, if it doesn't exist, create a placeholder.
-        $aircraft = NetworkAircraft::find($validated['callsign']);
-        if (!$aircraft) {
-            NetworkAircraftService::createPlaceholderAircraft($validated['callsign']);
-            $aircraft = new NetworkAircraft(['callsign' => $validated['callsign']]);
-        }
+        $aircraft = $this->getOrCreateAircraft($validated['callsign']);
 
         // Fill with data provided by the user - will always be the latest data we have.
         $aircraft->fill(
@@ -368,8 +352,38 @@ class StandController extends BaseController
             ]
         );
 
+        $reservedStandId = $this->findReservedStandId($aircraft);
+        if ($reservedStandId !== null) {
+            return $this->respondWithReservedStand($aircraft->callsign, $reservedStandId);
+        }
+
+        return $this->respondWithAutoAllocatedStand($validated['assignment_type'], $aircraft);
+    }
+
+    private function resolveAircraftTypeId(array $validated): int|false|null
+    {
+        if ($validated['assignment_type'] !== 'arrival') {
+            return null;
+        }
+
+        return Aircraft::where('code', $validated['aircraft_type'])->first()?->id ?: false;
+    }
+
+    private function getOrCreateAircraft(string $callsign): NetworkAircraft
+    {
+        $aircraft = NetworkAircraft::find($callsign);
+        if ($aircraft !== null) {
+            return $aircraft;
+        }
+
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
+        return new NetworkAircraft(['callsign' => $callsign]);
+    }
+
+    private function findReservedStandId(NetworkAircraft $aircraft): ?int
+    {
         // Reservation-based event slots must take precedence over distance-based auto allocation.
-        $reservation = StandReservation::query()
+        return StandReservation::query()
             ->active()
             ->where(function ($query) use ($aircraft) {
                 $query->where('callsign', $aircraft->callsign);
@@ -380,39 +394,42 @@ class StandController extends BaseController
             })
             ->orderBy('start')
             ->get()
-            ->first(function (StandReservation $reservation) use ($aircraft): bool {
-                if ($reservation->origin !== null && $reservation->origin !== $aircraft->planned_depairport) {
-                    return false;
-                }
+            ->first(fn (StandReservation $reservation): bool => $this->reservationMatchesAircraftRoute($reservation, $aircraft))
+            ?->stand_id;
+    }
 
-                if ($reservation->destination !== null && $reservation->destination !== $aircraft->planned_destairport) {
-                    return false;
-                }
-
-                return true;
-            });
-
-        $reservedStandId = $reservation?->stand_id;
-
-        if ($reservedStandId !== null) {
-            // Assign exactly what was requested for this active slot window.
-            $this->assignmentsService->createStandAssignment($aircraft->callsign, $reservedStandId, 'Reservation');
-            $responsePayload = ['stand_id' => $reservedStandId];
-        } else {
-            // If there is no active reservation, fall back to normal automatic stand assignment logic.
-            $stand = $validated['assignment_type'] === 'departure'
-                ? $this->departureAllocationService->assignStandToDepartingAircraft($aircraft)
-                : $this->arrivalAllocationService->autoAllocateArrivalStandForAircraft($aircraft);
-
-            if ($stand === null) {
-                $responseStatus = 404;
-                $responsePayload = ['message' => 'No stand available'];
-            } else {
-                $responsePayload = ['stand_id' => $stand];
-            }
+    private function reservationMatchesAircraftRoute(StandReservation $reservation, NetworkAircraft $aircraft): bool
+    {
+        if ($reservation->origin !== null && $reservation->origin !== $aircraft->planned_depairport) {
+            return false;
         }
 
-        return response()->json($responsePayload ?? [], $responseStatus);
+        if ($reservation->destination !== null && $reservation->destination !== $aircraft->planned_destairport) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function respondWithReservedStand(string $callsign, int $reservedStandId): JsonResponse
+    {
+        // Assign exactly what was requested for this active slot window.
+        $this->assignmentsService->createStandAssignment($callsign, $reservedStandId, 'Reservation');
+        return response()->json(['stand_id' => $reservedStandId], 201);
+    }
+
+    private function respondWithAutoAllocatedStand(string $assignmentType, NetworkAircraft $aircraft): JsonResponse
+    {
+        // If there is no active reservation, fall back to normal automatic stand assignment logic.
+        $stand = $assignmentType === 'departure'
+            ? $this->departureAllocationService->assignStandToDepartingAircraft($aircraft)
+            : $this->arrivalAllocationService->autoAllocateArrivalStandForAircraft($aircraft);
+
+        if ($stand === null) {
+            return response()->json(['message' => 'No stand available'], 404);
+        }
+
+        return response()->json(['stand_id' => $stand], 201);
     }
 
 
