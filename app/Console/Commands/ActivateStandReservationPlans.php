@@ -8,9 +8,9 @@ use App\Models\Stand\StandReservation;
 use App\Models\Stand\StandReservationPlan;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\Stand\StandAssignmentsService;
+use App\Support\StandReservationPayloadRows;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class ActivateStandReservationPlans extends Command
@@ -40,7 +40,9 @@ class ActivateStandReservationPlans extends Command
                 continue;
             }
 
-            $createdReservations = $importer->importReservations($this->rowsFromPayload($payload));
+            $createdReservations = $importer->importReservations(
+                StandReservationPayloadRows::fromPayload($payload)
+            );
 
             $plan->update([
                 'imported_reservations' => $createdReservations,
@@ -126,54 +128,5 @@ class ActivateStandReservationPlans extends Command
         }
 
         return $query->first();
-    }
-
-    private function rowsFromPayload(array $payload): Collection
-    {
-        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
-        $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
-
-        // Backward-compatible flat reservation rows.
-        $reservationRows = collect($payload['reservations'] ?? [])
-            ->filter(fn (mixed $reservation): bool => is_array($reservation))
-            ->map(
-                fn (array $reservation): Collection => $this->buildReservationRow($reservation, $defaultStart, $defaultEnd)
-            );
-
-        // Preferred stand-slot rows where each stand contains one or more timed slot reservations.
-        $slotRows = collect($payload['stand_slots'] ?? [])
-            ->filter(fn (mixed $standSlot): bool => is_array($standSlot))
-            ->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd) {
-                $slotAirfield = $standSlot['airfield'] ?? $standSlot['airport'] ?? null;
-                $slotStand = $standSlot['stand'] ?? null;
-
-                return collect($standSlot['slot_reservations'] ?? [])
-                    ->filter(fn (mixed $slotReservation): bool => is_array($slotReservation))
-                    ->map(
-                        fn (array $slotReservation): Collection =>
-                            $this->buildReservationRow($slotReservation, $defaultStart, $defaultEnd, $slotAirfield, $slotStand)
-                    );
-            });
-
-        return $reservationRows->concat($slotRows)->values();
-    }
-
-    private function buildReservationRow(
-        array $reservation,
-        ?string $defaultStart,
-        ?string $defaultEnd,
-        ?string $fallbackAirfield = null,
-        ?string $fallbackStand = null
-    ): Collection {
-        return collect([
-            'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? $fallbackAirfield,
-            'stand' => $reservation['stand'] ?? $fallbackStand,
-            'callsign' => $reservation['callsign'] ?? null,
-            'cid' => $reservation['cid'] ?? null,
-            'origin' => $reservation['origin'] ?? null,
-            'destination' => $reservation['destination'] ?? null,
-            'start' => $reservation['start'] ?? $defaultStart,
-            'end' => $reservation['end'] ?? $defaultEnd,
-        ]);
     }
 }

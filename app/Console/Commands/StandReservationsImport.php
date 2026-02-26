@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Imports\Stand\StandReservationsImport as Importer;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use App\Support\StandReservationPayloadRows;
 use Maatwebsite\Excel\Excel;
 
 class StandReservationsImport extends Command
@@ -49,7 +49,9 @@ class StandReservationsImport extends Command
                 return 1;
             }
 
-            $importer->withOutput($this->output)->collection($this->extractRowsFromJson($payload));
+            $importer->withOutput($this->output)->collection(
+                StandReservationPayloadRows::fromPayload($payload)
+            );
         } else {
             $importer->withOutput($this->output)->import($fileName, 'imports', Excel::CSV);
         }
@@ -62,55 +64,5 @@ class StandReservationsImport extends Command
     private function fileIsJson(string $fileName): bool
     {
         return str_ends_with(strtolower($fileName), '.json');
-    }
-
-    private function extractRowsFromJson(array $payload): Collection
-    {
-        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
-        $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
-
-        // Backward-compatible flat row payloads (`reservations` or a raw array of rows).
-        // If slot-based payload keys are present without `reservations`, do not treat the root object as flat rows.
-        $flatRows = $payload['reservations'] ?? (isset($payload['stand_slots']) ? [] : $payload);
-
-        $reservationRows = collect($flatRows)
-            ->filter(fn (mixed $reservation) => is_array($reservation))
-            ->map(function (array $reservation) use ($defaultStart, $defaultEnd) {
-                return collect([
-                    'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? null,
-                    'stand' => $reservation['stand'] ?? null,
-                    'callsign' => $reservation['callsign'] ?? null,
-                    'cid' => $reservation['cid'] ?? null,
-                    'origin' => $reservation['origin'] ?? null,
-                    'destination' => $reservation['destination'] ?? null,
-                    'start' => $reservation['start'] ?? $defaultStart,
-                    'end' => $reservation['end'] ?? $defaultEnd,
-                ]);
-            });
-
-        // Preferred stand-slot payloads where one stand can contain multiple timed reservations.
-        $slotRows = collect($payload['stand_slots'] ?? [])
-            ->filter(fn (mixed $standSlot) => is_array($standSlot))
-            ->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd) {
-                $slotAirfield = $standSlot['airfield'] ?? $standSlot['airport'] ?? null;
-                $slotStand = $standSlot['stand'] ?? null;
-
-                return collect($standSlot['slot_reservations'] ?? [])
-                    ->filter(fn (mixed $reservation) => is_array($reservation))
-                    ->map(function (array $reservation) use ($slotAirfield, $slotStand, $defaultStart, $defaultEnd) {
-                        return collect([
-                            'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? $slotAirfield,
-                            'stand' => $reservation['stand'] ?? $slotStand,
-                            'callsign' => $reservation['callsign'] ?? null,
-                            'cid' => $reservation['cid'] ?? null,
-                            'origin' => $reservation['origin'] ?? null,
-                            'destination' => $reservation['destination'] ?? null,
-                            'start' => $reservation['start'] ?? $defaultStart,
-                            'end' => $reservation['end'] ?? $defaultEnd,
-                        ]);
-                    });
-            });
-
-        return $reservationRows->concat($slotRows)->values();
     }
 }
