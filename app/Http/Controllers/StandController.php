@@ -385,6 +385,4 @@ class StandController extends BaseController
 
         return response()->json(['stand_id' => $stand], 201);
     }
-
-
 }

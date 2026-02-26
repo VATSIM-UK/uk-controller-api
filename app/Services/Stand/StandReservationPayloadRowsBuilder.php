@@ -11,27 +11,39 @@ class StandReservationPayloadRowsBuilder
         $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
         $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
 
-        $reservationRows = collect($payload['reservations'] ?? [])
+        return $this->rowsFromReservations($payload['reservations'] ?? [], $defaultStart, $defaultEnd)
+            ->concat($this->rowsFromStandSlots($payload['stand_slots'] ?? [], $defaultStart, $defaultEnd))
+            ->values();
+    }
+
+    private function rowsFromStandSlots(array $standSlots, ?string $defaultStart, ?string $defaultEnd): Collection
+    {
+        return collect($standSlots)
+            ->filter(fn (mixed $standSlot): bool => is_array($standSlot))
+            ->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd): Collection {
+                return $this->rowsFromReservations(
+                    reservations: $standSlot['slot_reservations'] ?? [],
+                    defaultStart: $defaultStart,
+                    defaultEnd: $defaultEnd,
+                    fallbackAirfield: $standSlot['airfield'] ?? $standSlot['airport'] ?? null,
+                    fallbackStand: $standSlot['stand'] ?? null,
+                );
+            });
+    }
+
+    private function rowsFromReservations(
+        array $reservations,
+        ?string $defaultStart,
+        ?string $defaultEnd,
+        ?string $fallbackAirfield = null,
+        ?string $fallbackStand = null
+    ): Collection {
+        return collect($reservations)
             ->filter(fn (mixed $reservation): bool => is_array($reservation))
             ->map(
-                fn (array $reservation): Collection => $this->buildReservationRow($reservation, $defaultStart, $defaultEnd)
+                fn (array $reservation): Collection =>
+                    $this->buildReservationRow($reservation, $defaultStart, $defaultEnd, $fallbackAirfield, $fallbackStand)
             );
-
-        $slotRows = collect($payload['stand_slots'] ?? [])
-            ->filter(fn (mixed $standSlot): bool => is_array($standSlot))
-            ->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd) {
-                $slotAirfield = $standSlot['airfield'] ?? $standSlot['airport'] ?? null;
-                $slotStand = $standSlot['stand'] ?? null;
-
-                return collect($standSlot['slot_reservations'] ?? [])
-                    ->filter(fn (mixed $slotReservation): bool => is_array($slotReservation))
-                    ->map(
-                        fn (array $slotReservation): Collection =>
-                            $this->buildReservationRow($slotReservation, $defaultStart, $defaultEnd, $slotAirfield, $slotStand)
-                    );
-            });
-
-        return $reservationRows->concat($slotRows)->values();
     }
 
     private function buildReservationRow(
