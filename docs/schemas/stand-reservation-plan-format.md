@@ -1,4 +1,4 @@
-# Stand Reservation Plan JSON Format (Formal Specification)
+# Stand Reservation Plan JSON Format
 
 This document is the normative specification for the stand-reservation plan JSON format.
 
