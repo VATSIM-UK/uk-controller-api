@@ -232,7 +232,6 @@ The "best" stands left over at this point are then:
 If the "common rules" reject all possible stands, then the next specific rule is invoked and we start over. Otherwise,
 we've found a match, and that stand is assigned!
 
-
 ## Event Stand Reservation Plan format
 
 When submitting an event stand plan via the API or the UKCP website, send a JSON object with:
