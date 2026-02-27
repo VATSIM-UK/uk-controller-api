@@ -176,12 +176,9 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertEquals($highPriority->id, $assignment);
     }
 
-    public function testItPrefersRemoteStandsAtNightForConfiguredAirfields()
+    public function testItPrefersRemoteStandsAtNight()
     {
         $airfield = Airfield::factory()->create(['code' => 'EXXA']);
-
-        config()->set('stands.night_remote_stand_weighting.enabled', true);
-        config()->set('stands.night_remote_stand_weighting.airfields', [$airfield->code]);
 
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 23, 0, 0, 'Europe/London'));
 
@@ -221,9 +218,6 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
     public function testItDoesNotPreferRemoteStandsOutsideNightHours()
     {
         $airfield = Airfield::factory()->create(['code' => 'EXXB']);
-
-        config()->set('stands.night_remote_stand_weighting.enabled', true);
-        config()->set('stands.night_remote_stand_weighting.airfields', [$airfield->code]);
 
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 12, 0, 0, 'Europe/London'));
 

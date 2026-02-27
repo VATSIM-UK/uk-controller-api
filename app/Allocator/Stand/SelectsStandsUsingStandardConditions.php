@@ -100,7 +100,7 @@ trait SelectsStandsUsingStandardConditions
                 : $this->commonOrderByConditionsWithoutAssignmentPriorityForAircraft($aircraft);
         }
 
-        $nightTimeRemoteStandCondition = $this->nightTimeRemoteStandOrderCondition($aircraft);
+        $nightTimeRemoteStandCondition = $this->nightTimeRemoteStandOrderCondition();
 
         if ($nightTimeRemoteStandCondition !== null) {
             $commonConditions = array_merge([$nightTimeRemoteStandCondition], $commonConditions);
@@ -114,17 +114,11 @@ trait SelectsStandsUsingStandardConditions
 
     /**
      * Returns an optional SQL ORDER BY fragment that prefers remote stands overnight
-     * for configured airfields, or null when the bias should not be applied.
+     * within the configured night window, or null when the bias should not be applied.
      */
-    private function nightTimeRemoteStandOrderCondition(NetworkAircraft $aircraft): ?string
+    private function nightTimeRemoteStandOrderCondition(): ?string
     {
         $config = config('stands.night_remote_stand_weighting');
-
-        $arrivalAirfield = strtoupper((string) $aircraft->planned_destairport);
-        $configuredAirfields = array_map('strtoupper', $config['airfields'] ?? []);
-
-        $isEnabledForAirfield = ($config['enabled'] ?? false)
-            && in_array($arrivalAirfield, $configuredAirfields, true);
 
         $hour = Carbon::now('Europe/London')->hour;
         $startHour = (int) ($config['start_hour'] ?? 22);
@@ -135,9 +129,7 @@ trait SelectsStandsUsingStandardConditions
             ? $hour >= $startHour && $hour < $endHour
             : $hour >= $startHour || $hour < $endHour;
 
-        $shouldApplyRemoteWeighting = $isEnabledForAirfield && $isNightWindow;
-
-        if (!$shouldApplyRemoteWeighting) {
+        if (!$isNightWindow) {
             return null;
         }
 
