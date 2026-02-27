@@ -2,7 +2,7 @@
 
 This document is the normative specification for the stand-reservation plan JSON format.
 
-## 1. Canonical machine-readable schemas
+## 1. Where to find the schemas
 
 - **Payload schema**: `docs/schemas/stand-reservation-plan.schema.json`
   - Defines the plan payload object (`reservations` and/or `stand_slots`, optional defaults).
