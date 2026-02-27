@@ -235,7 +235,7 @@ we've found a match, and that stand is assigned!
 
 ## Event Stand Reservation Plan format
 
-When submitting an event stand plan (via API or Filament), send a JSON object with:
+When submitting an event stand plan via the API or the UKCP website, send a JSON object with:
 
 - `name` and `contact_email` metadata (API), or form fields in Filament
 - either:
