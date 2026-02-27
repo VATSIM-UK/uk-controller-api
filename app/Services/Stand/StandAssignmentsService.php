@@ -22,7 +22,7 @@ class StandAssignmentsService
 
     public function assignmentForCallsign(string $callsign): ?StandAssignment
     {
-        return StandAssignment::find($callsign);
+        return StandAssignment::with('assignmentHistory')->find($callsign);
     }
 
     public function deleteAssignmentIfExists(NetworkAircraft $aircraft): void
