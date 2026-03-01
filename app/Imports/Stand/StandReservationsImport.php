@@ -24,7 +24,7 @@ class StandReservationsImport implements ToCollection
         }
     }
 
-    private const INDEXED_AIRFIELD = 0;
+    private const INDEXED_AIRPORT = 0;
     private const INDEXED_STAND = 1;
     private const INDEXED_CALLSIGN = 2;
     private const INDEXED_START = 3;
@@ -102,14 +102,14 @@ class StandReservationsImport implements ToCollection
     /**
      * For the data to be valid:
      *
-     * - Index 0 must be an airfield ICAO where stands are present (see constructor)
-     * - Index 1 must be a valid stand identifier at the airfield in index 0
+     * - Index 0 must be an airport ICAO where stands are present (see constructor)
+     * - Index 1 must be a valid stand identifier at the airport in index 0
      * - Index 3 must be a valid timestamp - start time
      * - Index 4 must be a valid timestamp after index 3 - end time
      */
     private function extractReservationData(Collection $row): ?array
     {
-        if ($row->has('airport') || $row->has('stand')) {
+        if ($row->has('airport') && $row->has('stand')) {
             return [
                 'airport' => $row->get('airport'),
                 'stand' => $row->get('stand'),
@@ -122,12 +122,12 @@ class StandReservationsImport implements ToCollection
             ];
         }
 
-        if (!$row->has(self::INDEXED_AIRFIELD) || !$row->has(self::INDEXED_STAND)) {
+        if (!$row->has(self::INDEXED_AIRPORT) || !$row->has(self::INDEXED_STAND)) {
             return null;
         }
 
         return [
-            'airport' => $row->get(self::INDEXED_AIRFIELD),
+            'airport' => $row->get(self::INDEXED_AIRPORT),
             'stand' => $row->get(self::INDEXED_STAND),
             'callsign' => $this->emptyStringToNull($row->get(self::INDEXED_CALLSIGN)),
             'cid' => $this->emptyStringToNull($row->get(self::INDEXED_CID)),

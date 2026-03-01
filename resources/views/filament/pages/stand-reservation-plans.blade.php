@@ -10,7 +10,7 @@
   "end": "2026-02-20 18:00:00",
   "reservations": [
     {
-      "airfield": "EGLL",
+      "airport": "EGLL",
       "stand": "1L",
       "callsign": "SBI24",
       "cid": 1234567,
@@ -19,7 +19,7 @@
     }
   ]
 }</code></pre>
-                <p class="mt-2">You can also use per-reservation <code>start</code>/<code>end</code>, and <code>airport</code> as an alias for <code>airfield</code>.</p>
+                <p class="mt-2">You can also use per-reservation <code>start</code>/<code>end</code>, and ensure each reservation includes <code>airport</code>.</p>
             </div>
 
             <x-filament::button type="submit">Submit plan</x-filament::button>

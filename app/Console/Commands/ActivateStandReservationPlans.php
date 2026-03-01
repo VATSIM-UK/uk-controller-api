@@ -25,8 +25,7 @@ class ActivateStandReservationPlans extends Command
         StandReservationsImport $importer,
         StandAssignmentsService $assignmentsService,
         StandReservationPayloadRowsBuilder $payloadRowsBuilder
-    ): int
-    {
+    ): int {
         $plans = StandReservationPlan::query()
             ->where('status', 'approved')
             ->whereNull('imported_reservations')
