@@ -91,7 +91,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                 $eventStart = $this->eventStartAt($payload);
                 if ($eventStart === null) {
                     $planJsonError = 'Plan JSON must include event_start.';
-                } elseif ($eventStart->startOfDay()->lt(Carbon::today())) {
+                } elseif ($eventStart->copy()->startOfDay()->lt(Carbon::today())) {
                     $planJsonError = 'Event start must be today or in the future.';
                 }
             }
