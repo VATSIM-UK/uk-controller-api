@@ -267,7 +267,7 @@ Example payload body:
   "event_finish": "2026-02-20 18:00:00",
   "stand_slots": [
     {
-      "airfield": "EGLL",
+      "airport": "EGLL",
       "stand": "531",
       "slot_reservations": [
         {
@@ -285,14 +285,3 @@ Example payload body:
   ]
 }
 ```
-
-
-### Event-day activation task
-
-Approved plans can be activated automatically on event day with:
-
-- `stand-reservations:activate-plans`
-
-This task imports approved plans whose `event_start` (or `start`) is now due and have not yet been imported, so slot-based stand reservations are applied at the correct time window.
-
-It also synchronises live stand assignments for active reservations by matching callsign/CID (and origin/destination when supplied), so a flight receives its requested stand automatically during its slot window and that assignment is lifted when the slot expires.

@@ -91,7 +91,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             'name' => $validated['name'],
             'contact_email' => $validated['contactEmail'],
             'payload' => $payload,
-            'approval_due_at' => Carbon::now()->addDays(7),
+            'approval_due_at' => $this->approvalDueAt($payload),
             'status' => 'pending',
             'submitted_by' => Auth::id(),
         ]);
@@ -103,6 +103,16 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             ->title('Plan submitted for admin approval')
             ->success()
             ->send();
+    }
+
+    private function approvalDueAt(array $payload): Carbon
+    {
+        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
+        if ($defaultStart !== null) {
+            return Carbon::parse($defaultStart)->subHours(12);
+        }
+
+        return Carbon::now()->addDays(7);
     }
 
     public function table(Table $table): Table
@@ -248,7 +258,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             ->orderByDesc('updated_at')
             ->limit(10);
 
-        if (!$this->userCanReview()) {
+        if (!$this->userCanViewAll()) {
             $query->where('submitted_by', Auth::id());
         }
 
@@ -259,7 +269,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         $query = StandReservationPlan::query();
 
-        if (!$this->userCanReview()) {
+        if (!$this->userCanViewAll()) {
             $query->where('submitted_by', Auth::id());
         }
 
@@ -279,7 +289,6 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     private function userCanReview(): bool
     {
         return self::userHasAnyRole([
-            RoleKeys::WEB_TEAM,
             RoleKeys::OPERATIONS_TEAM,
             RoleKeys::DIVISION_STAFF_GROUP,
         ]);

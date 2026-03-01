@@ -40,11 +40,11 @@ class StandReservationPayloadRows
         array $reservation,
         ?string $defaultStart,
         ?string $defaultEnd,
-        ?string $fallbackAirfield = null,
+        ?string $fallbackAirport = null,
         ?string $fallbackStand = null
     ): Collection {
         return collect([
-            'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? $fallbackAirfield,
+            'airport' => $reservation['airport'] ?? $fallbackAirport,
             'stand' => $reservation['stand'] ?? $fallbackStand,
             'callsign' => $reservation['callsign'] ?? null,
             'cid' => $reservation['cid'] ?? null,

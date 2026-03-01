@@ -86,11 +86,6 @@
       "description": "Date/time in either RFC 3339 format or \"YYYY-MM-DD HH:MM:SS\".",
       "pattern": "^(\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:Z|[+-]\\d{2}:\\d{2})?)$"
     },
-    "airfieldIcao": {
-      "type": "string",
-      "pattern": "^[A-Z]{4}$",
-      "description": "ICAO code in uppercase (e.g. EGLL)."
-    },
     "callsign": {
       "type": "string",
       "pattern": "^[A-Z]{2,3}[0-9]{1,4}[A-Z]?$",
@@ -100,22 +95,19 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "stand"
+        "stand",
+        "airport"
       ],
       "properties": {
-        "airfield": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Arrival airfield ICAO. Use either airfield or airport."
-        },
         "airport": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Alias for airfield. Use either airport or airfield."
+          "$ref": "#/$defs/airportIcao",
+          "description": "Arrival airport ICAO."
         },
         "stand": {
           "type": "string",
           "minLength": 1,
           "maxLength": 10,
-          "description": "Stand identifier at the selected airfield."
+          "description": "Stand identifier at the selected airport."
         },
         "callsign": {
           "$ref": "#/$defs/callsign",
@@ -127,12 +119,12 @@
           "description": "Optional VATSIM CID match."
         },
         "origin": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Optional departure airfield ICAO used for matching."
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional departure airport ICAO used for matching."
         },
         "destination": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Optional destination airfield ICAO used for matching."
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional destination airport ICAO used for matching."
         },
         "start": {
           "$ref": "#/$defs/dateTime",
@@ -143,18 +135,6 @@
           "description": "Reservation-specific end time. Falls back to top-level end."
         }
       },
-      "oneOf": [
-        {
-          "required": [
-            "airfield"
-          ]
-        },
-        {
-          "required": [
-            "airport"
-          ]
-        }
-      ],
       "allOf": [
         {
           "if": {
@@ -176,16 +156,13 @@
       "additionalProperties": false,
       "required": [
         "stand",
-        "slot_reservations"
+        "slot_reservations",
+        "airport"
       ],
       "properties": {
-        "airfield": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Stand airfield ICAO. Use either airfield or airport."
-        },
         "airport": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Alias for airfield. Use either airport or airfield."
+          "$ref": "#/$defs/airportIcao",
+          "description": "Stand airport ICAO."
         },
         "stand": {
           "type": "string",
@@ -202,18 +179,6 @@
           "description": "Reservations assigned to this stand slot."
         }
       },
-      "oneOf": [
-        {
-          "required": [
-            "airfield"
-          ]
-        },
-        {
-          "required": [
-            "airport"
-          ]
-        }
-      ],
       "description": "A stand acting as a slot containing multiple timed callsign reservations."
     },
     "slotReservation": {
@@ -221,19 +186,15 @@
       "additionalProperties": false,
       "required": [],
       "properties": {
-        "airfield": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Arrival airfield ICAO. Use either airfield or airport."
-        },
         "airport": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Alias for airfield. Use either airport or airfield."
+          "$ref": "#/$defs/airportIcao",
+          "description": "Arrival airport ICAO."
         },
         "stand": {
           "type": "string",
           "minLength": 1,
           "maxLength": 10,
-          "description": "Stand identifier at the selected airfield."
+          "description": "Stand identifier at the selected airport."
         },
         "callsign": {
           "$ref": "#/$defs/callsign",
@@ -245,12 +206,12 @@
           "description": "Optional VATSIM CID match."
         },
         "origin": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Optional departure airfield ICAO used for matching."
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional departure airport ICAO used for matching."
         },
         "destination": {
-          "$ref": "#/$defs/airfieldIcao",
-          "description": "Optional destination airfield ICAO used for matching."
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional destination airport ICAO used for matching."
         },
         "start": {
           "$ref": "#/$defs/dateTime",
@@ -275,7 +236,12 @@
           }
         }
       ],
-      "description": "A reservation row nested under a stand slot. Airfield/stand may be inherited from the parent stand slot."
+      "description": "A reservation row nested under a stand slot. Airport/stand may be inherited from the parent stand slot."
+    },
+    "airportIcao": {
+      "type": "string",
+      "pattern": "^[A-Z]{4}$",
+      "description": "ICAO airport code in uppercase (e.g. EGLL)."
     }
   }
 }

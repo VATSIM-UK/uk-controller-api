@@ -37,17 +37,17 @@ class StandReservationsImport implements ToCollection
      * Supported row format:
      *
      * Indexed (CSV):
-     * 0 - Airport ICAO
-     * 1 - Stand identifier
+     * 0 - Airport ICAO where the stand exists (stand location / allocation airport)
+     * 1 - Stand identifier at index 0 airport
      * 2 - Callsign (optional)
      * 3 - Start datetime
      * 4 - End datetime
      * 5 - CID (optional)
-     * 6 - Origin (optional)
-     * 7 - Destination (optional)
+     * 6 - Origin airport ICAO from the flight plan (optional metadata for matching)
+     * 7 - Destination airport ICAO from the flight plan (optional metadata for matching)
      *
      * Associative (JSON):
-     * airfield, stand, start, end (required)
+     * airport, stand, start, end (required)
      * callsign, cid, origin, destination (optional)
      *
      * @param Collection[] $rows
@@ -109,9 +109,9 @@ class StandReservationsImport implements ToCollection
      */
     private function extractReservationData(Collection $row): ?array
     {
-        if ($row->has('airfield') || $row->has('stand')) {
+        if ($row->has('airport') || $row->has('stand')) {
             return [
-                'airfield' => $row->get('airfield'),
+                'airport' => $row->get('airport'),
                 'stand' => $row->get('stand'),
                 'callsign' => $this->emptyStringToNull($row->get('callsign')),
                 'cid' => $this->emptyStringToNull($row->get('cid')),
@@ -127,7 +127,7 @@ class StandReservationsImport implements ToCollection
         }
 
         return [
-            'airfield' => $row->get(self::INDEXED_AIRFIELD),
+            'airport' => $row->get(self::INDEXED_AIRFIELD),
             'stand' => $row->get(self::INDEXED_STAND),
             'callsign' => $this->emptyStringToNull($row->get(self::INDEXED_CALLSIGN)),
             'cid' => $this->emptyStringToNull($row->get(self::INDEXED_CID)),
@@ -146,10 +146,10 @@ class StandReservationsImport implements ToCollection
     private function rowValid(array $reservationData): bool
     {
         try {
-            return isset($reservationData['airfield']) &&
-                array_key_exists($reservationData['airfield'], $this->stands) &&
+            return isset($reservationData['airport']) &&
+                array_key_exists($reservationData['airport'], $this->stands) &&
                 isset($reservationData['stand']) &&
-                array_key_exists($reservationData['stand'], $this->stands[$reservationData['airfield']]) &&
+                array_key_exists($reservationData['stand'], $this->stands[$reservationData['airport']]) &&
                 isset($reservationData['start']) &&
                 ($startTime = Carbon::parse($reservationData['start'])) &&
                 isset($reservationData['end']) &&

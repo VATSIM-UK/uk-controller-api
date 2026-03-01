@@ -35,9 +35,7 @@ Constraints:
 Each item in `reservations` (and each item in `stand_slots[].slot_reservations`) MUST be a JSON object with:
 
 - `stand` (**required**): stand identifier string (optional when inherited from `stand_slots[].stand`).
-- Exactly one of:
-  - `airfield`: ICAO code, or
-  - `airport`: ICAO code alias (optional when inherited from `stand_slots[].airfield` / `airport`).
+- `airport`: ICAO code alias (optional when inherited from `stand_slots[].airport`).
 
 Optional row-level fields:
 
@@ -58,7 +56,7 @@ Constraints:
 Each item in `stand_slots` MUST be an object with:
 
 - `stand` (**required**): stand identifier string.
-- Exactly one of `airfield` or `airport` (**required**).
+- `airport` (**required**).
 - `slot_reservations` (**required**): array of one or more reservation row objects.
 
 `slot_reservations` is where multiple callsigns can be scheduled on the same stand at different times.
@@ -104,7 +102,7 @@ This body is formally defined by:
   "event_finish": "2026-02-20 10:00:00",
   "stand_slots": [
     {
-      "airfield": "EGLL",
+      "airport": "EGLL",
       "stand": "531",
       "slot_reservations": [
         {
@@ -133,7 +131,7 @@ This body is formally defined by:
   "event_finish": "2026-02-20 10:00:00",
   "stand_slots": [
     {
-      "airfield": "EGLL",
+      "airport": "EGLL",
       "stand": "531",
       "slot_reservations": [
         {
