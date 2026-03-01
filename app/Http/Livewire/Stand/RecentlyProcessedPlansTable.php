@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Stand;
 
 use App\Models\Stand\StandReservationPlan;
 use App\Models\User\RoleKeys;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -13,8 +15,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class RecentlyProcessedPlansTable extends Component implements HasTable
+class RecentlyProcessedPlansTable extends Component implements HasForms, HasTable
 {
+    use InteractsWithForms;
     use InteractsWithTable;
 
     public function makeFilamentTranslatableContentDriver(): ?\Filament\Support\Contracts\TranslatableContentDriver

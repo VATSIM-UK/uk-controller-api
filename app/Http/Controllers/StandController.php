@@ -184,10 +184,10 @@ class StandController extends BaseController
             [
                 'name' => ['required', 'string', 'max:255'],
                 'contact_email' => ['required', 'email'],
-                // Keep a lightweight API-level guard that requires at least one reservation source
-                // before the stricter JSON schema validator runs.
-                'reservations' => ['nullable', 'array', 'min:1', 'required_without:stand_slots'],
-                'stand_slots' => ['nullable', 'array', 'min:1', 'required_without:reservations'],
+                // Keep a lightweight API-level shape validation for optional payload branches,
+                // then defer cross-field requirements to the JSON schema validator.
+                'reservations' => ['nullable', 'array', 'min:1'],
+                'stand_slots' => ['nullable', 'array', 'min:1'],
                 'start' => ['nullable', 'date'],
                 'end' => ['nullable', 'date', 'after:start'],
                 'event_start' => ['nullable', 'date'],
