@@ -23,7 +23,6 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class StandReservationPlans extends Page implements HasForms, HasTable
@@ -247,19 +246,6 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             . ($requestedStands->count() > 5 ? '…' : '');
     }
 
-    public function recentlyProcessedPlans(): Collection
-    {
-        $query = StandReservationPlan::query()
-            ->whereIn('status', ['approved', 'denied', 'expired'])
-            ->orderByDesc('updated_at')
-            ->limit(10);
-
-        if (!$this->userCanViewAll()) {
-            $query->where('submitted_by', Auth::id());
-        }
-
-        return $query->get();
-    }
 
     private function plansQuery(): Builder
     {

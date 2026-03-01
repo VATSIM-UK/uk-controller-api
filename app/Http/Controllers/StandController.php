@@ -184,8 +184,10 @@ class StandController extends BaseController
             [
                 'name' => ['required', 'string', 'max:255'],
                 'contact_email' => ['required', 'email'],
-                'reservations' => ['nullable', 'array', 'min:1'],
-                'stand_slots' => ['nullable', 'array', 'min:1'],
+                // Keep a lightweight API-level guard that requires at least one reservation source
+                // before the stricter JSON schema validator runs.
+                'reservations' => ['nullable', 'array', 'min:1', 'required_without:stand_slots'],
+                'stand_slots' => ['nullable', 'array', 'min:1', 'required_without:reservations'],
                 'start' => ['nullable', 'date'],
                 'end' => ['nullable', 'date', 'after:start'],
                 'event_start' => ['nullable', 'date'],
@@ -314,6 +316,12 @@ class StandController extends BaseController
         return $this->respondWithAutoAllocatedStand($validated['assignment_type'], $aircraft);
     }
 
+    /**
+     * Mirrors the previous inline aircraft-type validation:
+     * - departures do not need an aircraft type lookup,
+     * - arrivals must map aircraft_type to a known aircraft id,
+     * - unknown aircraft_type returns false so the caller can return a 422.
+     */
     private function resolveAircraftTypeId(array $validated): int|false|null
     {
         if ($validated['assignment_type'] !== 'arrival') {

@@ -31,22 +31,12 @@
 
         <div class="mt-6 space-y-3">
             <p class="text-sm font-medium">Recently processed plans</p>
-            @forelse($this->recentlyProcessedPlans() as $plan)
-                <div class="rounded-lg border border-gray-200 p-3 text-sm dark:border-gray-700">
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="font-medium">{{ $plan->name }}</span>
-                        <span class="text-xs uppercase tracking-wide">{{ $plan->status }}</span>
-                    </div>
-                    <p class="text-xs text-gray-600 dark:text-gray-300">Submitted by: {{ $plan->contact_email }} · Updated: {{ $plan->updated_at?->toDateTimeString() }}</p>
-                    <p class="mt-1 text-xs text-gray-600 dark:text-gray-300">Window: {{ $this->allocationWindowLabel($plan) }}</p>
-                    <p class="mt-1 text-xs text-gray-600 dark:text-gray-300">Requested stands: {{ $this->requestedStandsLabel($plan) }}</p>
-                    @if($plan->status === 'approved')
-                        <p class="mt-1 text-xs text-gray-600 dark:text-gray-300">Imported reservations: {{ $plan->imported_reservations ?? 0 }}</p>
-                    @endif
-                </div>
-            @empty
-                <p class="text-sm text-gray-600 dark:text-gray-300">No processed plans yet.</p>
-            @endforelse
+
+            @livewire(
+                \App\Http\Livewire\Stand\RecentlyProcessedPlansTable::class,
+                [],
+                key('stand-recently-processed-plans-table')
+            )
         </div>
     </x-filament::section>
 </x-filament-panels::page>
