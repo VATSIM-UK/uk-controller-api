@@ -7,14 +7,6 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "start": {
-      "$ref": "#/$defs/dateTime",
-      "description": "Default reservation start applied to rows that omit start."
-    },
-    "end": {
-      "$ref": "#/$defs/dateTime",
-      "description": "Default reservation end applied to rows that omit end."
-    },
     "reservations": {
       "type": "array",
       "minItems": 1,
@@ -25,11 +17,11 @@
     },
     "event_start": {
       "$ref": "#/$defs/dateTime",
-      "description": "Event-level default start datetime for slot reservations and rows that omit start."
+      "description": "Event-level default start datetime for slot reservations and rows that omit slotstart."
     },
     "event_finish": {
       "$ref": "#/$defs/dateTime",
-      "description": "Event-level default end datetime for slot reservations and rows that omit end."
+      "description": "Event-level default end datetime for slot reservations and rows that omit slotend."
     },
     "stand_slots": {
       "type": "array",
@@ -41,18 +33,6 @@
     }
   },
   "allOf": [
-    {
-      "if": {
-        "required": [
-          "end"
-        ]
-      },
-      "then": {
-        "required": [
-          "start"
-        ]
-      }
-    },
     {
       "if": {
         "required": [
@@ -126,25 +106,25 @@
           "$ref": "#/$defs/airportIcao",
           "description": "Optional destination airport ICAO used for matching."
         },
-        "start": {
+        "slotstart": {
           "$ref": "#/$defs/dateTime",
-          "description": "Reservation-specific start time. Falls back to top-level start."
+          "description": "Reservation-specific start time. Falls back to event_start."
         },
-        "end": {
+        "slotend": {
           "$ref": "#/$defs/dateTime",
-          "description": "Reservation-specific end time. Falls back to top-level end."
+          "description": "Reservation-specific end time. Falls back to event_finish."
         }
       },
       "allOf": [
         {
           "if": {
             "required": [
-              "end"
+              "slotend"
             ]
           },
           "then": {
             "required": [
-              "start"
+              "slotstart"
             ]
           }
         }
@@ -213,25 +193,25 @@
           "$ref": "#/$defs/airportIcao",
           "description": "Optional destination airport ICAO used for matching."
         },
-        "start": {
+        "slotstart": {
           "$ref": "#/$defs/dateTime",
-          "description": "Reservation-specific start time. Falls back to top-level start."
+          "description": "Reservation-specific start time. Falls back to event_start."
         },
-        "end": {
+        "slotend": {
           "$ref": "#/$defs/dateTime",
-          "description": "Reservation-specific end time. Falls back to top-level end."
+          "description": "Reservation-specific end time. Falls back to event_finish."
         }
       },
       "allOf": [
         {
           "if": {
             "required": [
-              "end"
+              "slotend"
             ]
           },
           "then": {
             "required": [
-              "start"
+              "slotstart"
             ]
           }
         }

@@ -35,8 +35,8 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'BAW1234',
-                                'start' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
-                                'end' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
+                                'slotstart' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
+                                'slotend' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],
@@ -76,8 +76,8 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'BAW9999',
-                                'start' => now()->addDay()->format('Y-m-d H:i:s'),
-                                'end' => now()->addDay()->addMinutes(30)->format('Y-m-d H:i:s'),
+                                'slotstart' => now()->addDay()->format('Y-m-d H:i:s'),
+                                'slotend' => now()->addDay()->addMinutes(30)->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],
@@ -114,8 +114,8 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'BAW1000',
-                                'start' => now()->subMinutes(5)->format('Y-m-d H:i:s'),
-                                'end' => now()->addMinutes(25)->format('Y-m-d H:i:s'),
+                                'slotstart' => now()->subMinutes(5)->format('Y-m-d H:i:s'),
+                                'slotend' => now()->addMinutes(25)->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],

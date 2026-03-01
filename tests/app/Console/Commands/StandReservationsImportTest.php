@@ -47,8 +47,8 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
     {
         Storage::fake('imports');
         Storage::disk('imports')->put('stands.json', json_encode([
-            'start' => '2024-01-01 09:00:00',
-            'end' => '2024-01-01 18:00:00',
+            'event_start' => '2024-01-01 09:00:00',
+            'event_finish' => '2024-01-01 18:00:00',
             'reservations' => [
                 [
                     'airport' => 'EGLL',
@@ -82,13 +82,13 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
                     'slot_reservations' => [
                         [
                             'callsign' => 'BAW1234',
-                            'start' => '2024-01-01 09:00:00',
-                            'end' => '2024-01-01 09:30:00',
+                            'slotstart' => '2024-01-01 09:00:00',
+                            'slotend' => '2024-01-01 09:30:00',
                         ],
                         [
                             'callsign' => 'BAW4321',
-                            'start' => '2024-01-01 09:31:00',
-                            'end' => '2024-01-01 10:00:00',
+                            'slotstart' => '2024-01-01 09:31:00',
+                            'slotend' => '2024-01-01 10:00:00',
                         ],
                     ],
                 ],

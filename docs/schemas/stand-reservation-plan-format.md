@@ -21,21 +21,22 @@ A payload object MUST be a JSON object with these properties:
   - `reservations`: array of one or more reservation objects.
   - `stand_slots`: array of one or more stand-slot objects.
 - Optional top-level default datetimes:
-  - `event_start` / `event_finish` (preferred event-window names)
-  - `start` / `end` (legacy)
+  - `event_start` / `event_finish`
   
 Constraints:
 
-- If `end` is present, `start` MUST also be present.
 - If `event_finish` is present, `event_start` MUST also be present.
 - Additional top-level properties are not allowed.
 
 ### 2.2 Reservation row object
 
-Each item in `reservations` (and each item in `stand_slots[].slot_reservations`) MUST be a JSON object with:
+Each reservation row MUST be a JSON object.
 
-- `stand` (**required**): stand identifier string (optional when inherited from `stand_slots[].stand`).
-- `airport` (**required**): ICAO code (optional when inherited from `stand_slots[].airport`).
+For top-level `reservations[]`, these fields are **required**:
+- `stand`: stand identifier string.
+- `airport`: ICAO code.
+
+For `stand_slots[].slot_reservations[]`, `stand` and `airport` may be omitted and inherited from the parent stand-slot object.
 
 Optional row-level fields:
 
@@ -43,12 +44,12 @@ Optional row-level fields:
 - `cid`: positive integer VATSIM CID.
 - `origin`: ICAO code.
 - `destination`: ICAO code.
-- `start`: row-specific start datetime.
-- `end`: row-specific end datetime.
+- `slotstart`: row-specific start datetime.
+- `slotend`: row-specific end datetime.
 
 Constraints:
 
-- If row `end` is present, row `start` MUST also be present.
+- If row `slotend` is present, row `slotstart` MUST also be present.
 - Additional properties are not allowed.
 
 ### 2.3 Stand-slot object
@@ -75,10 +76,7 @@ Datetime values MUST be strings matching one of the following forms:
 
 Notes:
 
-- Row-level `start`/`end` override top-level defaults.
-- When row-level values are omitted, defaults are resolved in this order:
-  1. `event_start` / `event_finish`
-  2. `start` / `end`
+- Row-level `slotstart`/`slotend` override top-level defaults (`event_start`/`event_finish`).
 
 ## 4. API submission body
 
@@ -107,13 +105,11 @@ This body is formally defined by:
       "slot_reservations": [
         {
           "callsign": "BAW1234",
-          "cid": "12345",
           "slotstart": "2026-02-20 09:00:00",
           "slotend": "2026-02-20 09:30:00"
         },
         {
           "callsign": "BAW4321",
-          "cid": "54321",
           "slotstart": "2026-02-20 09:31:00",
           "slotend": "2026-02-20 10:00:00"
         }
@@ -138,15 +134,15 @@ This body is formally defined by:
       "slot_reservations": [
         {
           "callsign": "BAW1234",
-          "start": "2026-02-20 09:00:00",
-          "end": "2026-02-20 09:30:00",
+          "slotstart": "2026-02-20 09:00:00",
+          "slotend": "2026-02-20 09:30:00",
           "origin": "EGCC",
           "destination": "EGLL"
         },
         {
           "callsign": "BAW4321",
-          "start": "2026-02-20 09:31:00",
-          "end": "2026-02-20 10:00:00",
+          "slotstart": "2026-02-20 09:31:00",
+          "slotend": "2026-02-20 10:00:00",
           "origin": "EHAM",
           "destination": "EGLL"
         }

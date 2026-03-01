@@ -8,7 +8,6 @@ class StandReservationPayloadRowsBuilder
 {
     public function fromPayload(array $payload): Collection
     {
-        // Use canonical plan-level timing keys as defaults for nested reservations.
         $defaultStart = $payload['event_start'] ?? null;
         $defaultEnd = $payload['event_finish'] ?? null;
 
@@ -64,8 +63,8 @@ class StandReservationPayloadRowsBuilder
             'cid' => $reservation['cid'] ?? null,
             'origin' => $reservation['origin'] ?? null,
             'destination' => $reservation['destination'] ?? null,
-            'start' => $reservation['start'] ?? $defaultStart,
-            'end' => $reservation['end'] ?? $defaultEnd,
+            'start' => $reservation['slotstart'] ?? $defaultStart,
+            'end' => $reservation['slotend'] ?? $defaultEnd,
         ]);
     }
 }

@@ -321,8 +321,8 @@ class StandControllerTest extends BaseApiTestCase
                                 'cid' => 1234567,
                                 'origin' => 'UUEE',
                                 'destination' => 'EGLL',
-                                'start' => '2024-08-11 09:00:00',
-                                'end' => '2024-08-11 09:30:00',
+                                'slotstart' => '2024-08-11 09:00:00',
+                                'slotend' => '2024-08-11 09:30:00',
                             ],
                         ],
                     ],
@@ -355,6 +355,31 @@ class StandControllerTest extends BaseApiTestCase
                 'event_start' => '2024-08-11 09:00:00',
                 'event_finish' => '2024-08-11 18:00:00',
                 'unexpected' => 'field',
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'Stand reservation plan request does not match schema');
+    }
+
+
+    public function testItRejectsLegacyStartEndFieldsInStandReservationPlanPayload()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Legacy fields',
+                'contact_email' => 'event@example.com',
+                'start' => '2024-08-11 09:00:00',
+                'end' => '2024-08-11 18:00:00',
+                'reservations' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                    ],
+                ],
             ]
         )
             ->assertStatus(422)

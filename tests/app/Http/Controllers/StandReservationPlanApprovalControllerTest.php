@@ -49,8 +49,8 @@ class StandReservationPlanApprovalControllerTest extends BaseApiTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'SBI24',
-                                'start' => $reservationStart->format('Y-m-d H:i:s'),
-                                'end' => $reservationEnd->format('Y-m-d H:i:s'),
+                                'slotstart' => $reservationStart->format('Y-m-d H:i:s'),
+                                'slotend' => $reservationEnd->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],
@@ -92,8 +92,8 @@ class StandReservationPlanApprovalControllerTest extends BaseApiTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'SBI99',
-                                'start' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
-                                'end' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
+                                'slotstart' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
+                                'slotend' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],

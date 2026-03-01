@@ -21,12 +21,6 @@
       "format": "email",
       "description": "Contact email for queries about this plan."
     },
-    "start": {
-      "$ref": "stand-reservation-plan.schema.json#/properties/start"
-    },
-    "end": {
-      "$ref": "stand-reservation-plan.schema.json#/properties/end"
-    },
     "reservations": {
       "$ref": "stand-reservation-plan.schema.json#/properties/reservations"
     },
