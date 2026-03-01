@@ -10,8 +10,7 @@ return new class extends Migration {
         Schema::table('stands', function (Blueprint $table): void {
             $table->boolean('overnight_remote_preferred')
                 ->default(false)
-                ->after('assignment_priority')
-                ->comment('Whether the stand should be preferred for overnight remote parking bias');
+                ->after('assignment_priority');
 
             $table->index('overnight_remote_preferred');
         });
