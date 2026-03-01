@@ -8,8 +8,9 @@ class StandReservationPayloadRowsBuilder
 {
     public function fromPayload(array $payload): Collection
     {
-        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
-        $defaultEnd = $payload['event_finish'] ?? $payload['end'] ?? null;
+        // Use canonical plan-level timing keys as defaults for nested reservations.
+        $defaultStart = $payload['event_start'] ?? null;
+        $defaultEnd = $payload['event_finish'] ?? null;
 
         return $this->rowsFromReservations($payload['reservations'] ?? [], $defaultStart, $defaultEnd)
             ->concat($this->rowsFromStandSlots($payload['stand_slots'] ?? [], $defaultStart, $defaultEnd))
@@ -18,6 +19,7 @@ class StandReservationPayloadRowsBuilder
 
     private function rowsFromStandSlots(array $standSlots, ?string $defaultStart, ?string $defaultEnd): Collection
     {
+        // Expand stand_slots into concrete reservation rows using slot-level defaults.
         return collect($standSlots)
             ->filter(fn (mixed $standSlot): bool => is_array($standSlot))
             ->flatMap(function (array $standSlot) use ($defaultStart, $defaultEnd): Collection {
@@ -31,6 +33,7 @@ class StandReservationPayloadRowsBuilder
             });
     }
 
+    // Normalise every reservation to the importer-friendly associative row structure.
     private function rowsFromReservations(
         array $reservations,
         ?string $defaultStart,
@@ -53,6 +56,7 @@ class StandReservationPayloadRowsBuilder
         ?string $fallbackAirport = null,
         ?string $fallbackStand = null
     ): Collection {
+        // Output matches the associative format consumed by StandReservationsImport.
         return collect([
             'airport' => $reservation['airport'] ?? $fallbackAirport,
             'stand' => $reservation['stand'] ?? $fallbackStand,

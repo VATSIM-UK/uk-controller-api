@@ -38,6 +38,7 @@ class StandReservationPlan extends Model
         return $builder->where('status', 'pending');
     }
 
+    // Used by review flows to hide requests where the event has already started.
     public function scopePendingWithinApprovalWindow(Builder $builder): Builder
     {
         return $builder
@@ -51,7 +52,8 @@ class StandReservationPlan extends Model
 
     public function eventStartAt(): ?Carbon
     {
-        $eventStart = $this->payload['event_start'] ?? $this->payload['start'] ?? null;
+        // Canonical payloads provide event_start for plan-level activation timing.
+        $eventStart = $this->payload['event_start'] ?? null;
 
         if (!is_string($eventStart) || $eventStart === '') {
             return null;

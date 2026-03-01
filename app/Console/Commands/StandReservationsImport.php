@@ -42,6 +42,7 @@ class StandReservationsImport extends Command
         $this->output->title('Starting stand reservations import');
 
         if ($this->fileIsJson($fileName)) {
+            // JSON imports reuse the same payload format accepted by stand reservation plans.
             $payload = json_decode(Storage::disk('imports')->get($fileName), true);
 
             if (!is_array($payload)) {
@@ -50,9 +51,11 @@ class StandReservationsImport extends Command
             }
 
             $importer->withOutput($this->output)->collection(
+                // Convert schema payload data into the row format expected by the importer.
                 $payloadRowsBuilder->fromPayload($payload)
             );
         } else {
+            // CSV support remains for backwards compatibility with existing import workflows.
             $importer->withOutput($this->output)->import($fileName, 'imports', Excel::CSV);
         }
 
@@ -61,6 +64,7 @@ class StandReservationsImport extends Command
         return 0;
     }
 
+    // File extension check keeps import routing simple and backwards compatible.
     private function fileIsJson(string $fileName): bool
     {
         return str_ends_with(strtolower($fileName), '.json');

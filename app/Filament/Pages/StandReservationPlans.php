@@ -65,7 +65,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                     ->label('Reservation payload (JSON)')
                     ->required()
                     ->rows(14)
-                    ->helperText('Use an object containing either a reservations array or stand_slots array. Top-level event_start/event_finish (or start/end) are treated as defaults for nested reservations. See https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan-format.md for the formal specification and https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan.schema.json for machine validation.'),
+                    ->helperText('Use an object containing either a reservations array or stand_slots array. Top-level event_start/event_finish are treated as defaults for nested reservations. See https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan-format.md for the formal specification and https://github.com/VATSIM-UK/uk-controller-api/tree/main/docs/schemas/stand-reservation-plan.schema.json for machine validation.'),
             ])
             ->statePath('data');
     }
@@ -74,12 +74,14 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         $validated = $this->form->getState();
 
+        // Accept raw JSON from the form and validate its shape before persistence.
         $payload = json_decode($validated['planJson'], true);
         if (!is_array($payload) || (!isset($payload['reservations']) && !isset($payload['stand_slots']))) {
             $this->addError('data.planJson', 'Plan JSON must contain either reservations or stand_slots.');
             return;
         }
 
+        // Enforce the canonical schema used by API and documentation.
         $schemaErrors = app(StandReservationPlanSchemaValidator::class)->validatePayload($payload);
         if ($schemaErrors !== []) {
             $this->addError('data.planJson', 'Plan JSON does not match schema: ' . $schemaErrors[0]);
@@ -105,9 +107,10 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     }
 
 
+    // Approval deadline defaults to one day before event start, or 7 days from submission.
     private function approvalDueAt(array $payload): Carbon
     {
-        $eventStart = $payload['event_start'] ?? $payload['start'] ?? null;
+        $eventStart = $payload['event_start'] ?? null;
 
         if (is_string($eventStart) && $eventStart !== '') {
             return Carbon::parse($eventStart)->subDay();
@@ -173,6 +176,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             return;
         }
 
+        // Prevent approving plans for events that already started.
         $eventStart = $plan->eventStartAt();
         if ($eventStart !== null && $eventStart->isPast()) {
             $plan->update([
@@ -187,6 +191,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             return;
         }
 
+        // Build normalized row data, then import reservations in one pass.
         $rows = app(StandReservationPayloadRowsBuilder::class)->fromPayload($plan->payload);
         $createdReservations = app(StandReservationsImport::class)->importReservations($rows);
 
@@ -224,8 +229,8 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         $payload = $plan->payload ?? [];
 
-        $start = $payload['event_start'] ?? $payload['start'] ?? null;
-        $end = $payload['event_finish'] ?? $payload['end'] ?? null;
+        $start = $payload['event_start'] ?? null;
+        $end = $payload['event_finish'] ?? null;
 
         if ($start === null && $end === null) {
             return 'Per-reservation timing';
@@ -240,6 +245,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
 
     public function requestedStandsLabel(StandReservationPlan $plan): string
     {
+        // Merge direct reservations and stand slot reservations into one deduplicated label list.
         $reservationStands = collect($plan->payload['reservations'] ?? [])
             ->filter(fn (mixed $reservation): bool => is_array($reservation))
             ->map(fn (array $reservation): string => $this->standLabel($reservation));
@@ -265,6 +271,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         $query = StandReservationPlan::query();
 
+        // Non-review users should only see plans they submitted.
         if (!$this->userCanViewAll()) {
             $query->where('submitted_by', Auth::id());
         }

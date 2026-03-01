@@ -107,13 +107,15 @@ This body is formally defined by:
       "slot_reservations": [
         {
           "callsign": "BAW1234",
-          "start": "2026-02-20 09:00:00",
-          "end": "2026-02-20 09:30:00"
+          "cid": "12345",
+          "slotstart": "2026-02-20 09:00:00",
+          "slotend": "2026-02-20 09:30:00"
         },
         {
           "callsign": "BAW4321",
-          "start": "2026-02-20 09:31:00",
-          "end": "2026-02-20 10:00:00"
+          "cid": "54321",
+          "slotstart": "2026-02-20 09:31:00",
+          "slotend": "2026-02-20 10:00:00"
         }
       ]
     }

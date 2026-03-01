@@ -20,6 +20,7 @@ class SyncStandReservationAssignments extends Command
     public function handle(StandAssignmentsService $assignmentsService): int
     {
         // Active reservations represent the currently valid slot windows.
+        // Process reservations in chronological order so earlier slots win when overlaps exist.
         $activeReservations = StandReservation::query()->active()->orderBy('start')->get();
 
         $currentManagedAssignments = [];
@@ -59,6 +60,7 @@ class SyncStandReservationAssignments extends Command
             }
         }
 
+        // Persist only reservation-managed assignments so later runs can safely remove expired ones.
         Cache::forever(self::MANAGED_ASSIGNMENTS_CACHE_KEY, $currentManagedAssignments);
 
         $this->info(sprintf('Synchronised %d reservation assignment(s).', $synchronisedAssignments));
@@ -66,6 +68,7 @@ class SyncStandReservationAssignments extends Command
         return 0;
     }
 
+    // Match by CID where available, otherwise callsign, with optional route narrowing.
     private function matchingAircraftForReservation(StandReservation $reservation): ?NetworkAircraft
     {
         $query = NetworkAircraft::query()->notTimedOut();

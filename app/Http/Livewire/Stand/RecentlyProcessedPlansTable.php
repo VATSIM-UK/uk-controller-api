@@ -69,9 +69,11 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
 
     private function recentlyProcessedPlansQuery(): Builder
     {
+        // Show only completed review outcomes in this historical table.
         $query = StandReservationPlan::query()
             ->whereIn('status', ['approved', 'denied', 'expired']);
 
+        // Match page-level permissions by restricting standard users to their own submissions.
         if (!$this->userCanViewAll()) {
             $query->where('submitted_by', Auth::id());
         }
@@ -83,8 +85,8 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
     {
         $payload = $plan->payload ?? [];
 
-        $start = $payload['event_start'] ?? $payload['start'] ?? null;
-        $end = $payload['event_finish'] ?? $payload['end'] ?? null;
+        $start = $payload['event_start'] ?? null;
+        $end = $payload['event_finish'] ?? null;
 
         if ($start === null && $end === null) {
             return 'Per-reservation timing';
@@ -99,6 +101,7 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
 
     private function requestedStandsLabel(StandReservationPlan $plan): string
     {
+        // Build a concise, deduplicated stand summary across all payload branches.
         $reservationStands = collect($plan->payload['reservations'] ?? [])
             ->filter(fn (mixed $reservation): bool => is_array($reservation))
             ->map(fn (array $reservation): string => $this->standLabel($reservation));

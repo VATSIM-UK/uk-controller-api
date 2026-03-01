@@ -188,13 +188,12 @@ class StandController extends BaseController
                 // then defer cross-field requirements to the JSON schema validator.
                 'reservations' => ['nullable', 'array', 'min:1'],
                 'stand_slots' => ['nullable', 'array', 'min:1'],
-                'start' => ['nullable', 'date'],
-                'end' => ['nullable', 'date', 'after:start'],
                 'event_start' => ['nullable', 'date'],
                 'event_finish' => ['nullable', 'date', 'after:event_start'],
             ]
         )->validate();
 
+        // Use JSON schema to enforce nested and conditional payload rules beyond Laravel validators.
         $schemaErrors = $schemaValidator->validateApiRequest($request->json()->all());
         if ($schemaErrors !== []) {
             return response()->json([
@@ -207,8 +206,6 @@ class StandController extends BaseController
             'name' => $validated['name'],
             'contact_email' => $validated['contact_email'],
             'payload' => [
-                'start' => $validated['start'] ?? null,
-                'end' => $validated['end'] ?? null,
                 'event_start' => $validated['event_start'] ?? null,
                 'event_finish' => $validated['event_finish'] ?? null,
                 'reservations' => $validated['reservations'] ?? null,
@@ -252,12 +249,14 @@ class StandController extends BaseController
             return response()->json(['message' => 'Plan is not pending'], 409);
         }
 
+        // Do not allow late approvals after the event has already started.
         $eventStart = $standReservationPlan->eventStartAt();
         if ($eventStart !== null && $eventStart->isPast()) {
             $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => null]);
             return response()->json(['message' => 'Event start has already passed'], 422);
         }
 
+        // Normalize either reservations or stand_slots payload branches into importer rows.
         $payload = $standReservationPlan->payload;
         $createdReservations = $importer->importReservations($payloadRowsBuilder->fromPayload($payload));
 
@@ -309,6 +308,7 @@ class StandController extends BaseController
             ]
         );
 
+        // Active reservation slots should override generic automatic allocation.
         $reservedStandId = $this->findReservedStandId($aircraft);
         if ($reservedStandId !== null) {
             return $this->respondWithReservedStand($aircraft->callsign, $reservedStandId);
@@ -332,6 +332,7 @@ class StandController extends BaseController
         return Aircraft::where('code', $validated['aircraft_type'])->first()?->id ?: false;
     }
 
+    // Reuse existing live aircraft data, or create a placeholder for immediate allocation requests.
     private function getOrCreateAircraft(string $callsign): NetworkAircraft
     {
         $aircraft = NetworkAircraft::find($callsign);
@@ -381,6 +382,7 @@ class StandController extends BaseController
         return response()->json(['stand_id' => $reservedStandId], 201);
     }
 
+    // Fall through to the legacy departure/arrival allocators when no reservation applies.
     private function respondWithAutoAllocatedStand(string $assignmentType, NetworkAircraft $aircraft): JsonResponse
     {
         // If there is no active reservation, fall back to normal automatic stand assignment logic.

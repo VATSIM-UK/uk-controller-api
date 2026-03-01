@@ -22,6 +22,7 @@ class ActivateStandReservationPlans extends Command
             ->where('status', 'pending')
             ->get()
             ->each(function (StandReservationPlan $plan): void {
+                // Auto-deny stale pending plans so they cannot be approved once the event has started.
                 $eventStart = $plan->eventStartAt();
 
                 if ($eventStart !== null && $eventStart->isPast()) {
@@ -33,6 +34,7 @@ class ActivateStandReservationPlans extends Command
                 }
             });
 
+        // Approved plans are imported exactly once when they become due.
         $plans = StandReservationPlan::query()
             ->where('status', 'approved')
             ->whereNull('imported_reservations')
@@ -45,6 +47,7 @@ class ActivateStandReservationPlans extends Command
             $payload = $plan->payload ?? [];
             $eventStart = $plan->eventStartAt();
 
+            // Import only when the event window is active.
             if ($eventStart === null || $eventStart->isFuture()) {
                 continue;
             }
@@ -53,6 +56,7 @@ class ActivateStandReservationPlans extends Command
                 $payloadRowsBuilder->fromPayload($payload)
             );
 
+            // Mark the plan as processed to keep activation idempotent across schedule runs.
             $plan->update([
                 'imported_reservations' => $createdReservations,
             ]);

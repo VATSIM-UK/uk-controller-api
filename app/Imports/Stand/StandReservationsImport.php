@@ -65,6 +65,7 @@ class StandReservationsImport implements ToCollection
         }
 
         foreach ($rows as $row) {
+            // Accept either associative JSON-style rows or indexed CSV-style rows.
             $reservationData = $this->extractReservationData($row);
 
             if (!$reservationData || !$this->rowValid($reservationData)) {
@@ -75,6 +76,7 @@ class StandReservationsImport implements ToCollection
                 continue;
             }
 
+            // Persist one reservation row once it passes stand/time validation checks.
             StandReservation::create(
                 [
                     'stand_id' => $this->stands[$reservationData['airport']][$reservationData['stand']],
@@ -109,6 +111,7 @@ class StandReservationsImport implements ToCollection
      */
     private function extractReservationData(Collection $row): ?array
     {
+        // Associative payload (JSON/schema route).
         if ($row->has('airport') && $row->has('stand')) {
             return [
                 'airport' => $row->get('airport'),
@@ -122,6 +125,7 @@ class StandReservationsImport implements ToCollection
             ];
         }
 
+        // Indexed payload (legacy CSV route).
         if (!$row->has(self::INDEXED_AIRPORT) || !$row->has(self::INDEXED_STAND)) {
             return null;
         }
@@ -143,6 +147,7 @@ class StandReservationsImport implements ToCollection
         return $value === '' ? null : $value;
     }
 
+    // Validate stand identity and ensure a strictly positive reservation time window.
     private function rowValid(array $reservationData): bool
     {
         try {

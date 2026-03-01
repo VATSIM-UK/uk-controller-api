@@ -157,8 +157,7 @@
       "required": [
         "airport",
         "stand",
-        "slot_reservations",
-        "airport"
+        "slot_reservations"
       ],
       "properties": {
         "airport": {
