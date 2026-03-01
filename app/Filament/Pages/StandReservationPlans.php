@@ -41,6 +41,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     public function mount(): void
     {
         abort_unless(self::userCanAccess(), 403);
+        $this->autoExpirePendingPlansOnOrAfterEventDay();
         $this->form->fill();
     }
 
@@ -88,11 +89,22 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             return;
         }
 
+        $eventStart = $this->eventStartAt($payload);
+        if ($eventStart === null) {
+            $this->addError('data.planJson', 'Plan JSON must include event_start.');
+            return;
+        }
+
+        if ($eventStart->startOfDay()->lt(Carbon::today())) {
+            $this->addError('data.planJson', 'Event start must be today or in the future.');
+            return;
+        }
+
         StandReservationPlan::create([
             'name' => $validated['name'],
             'contact_email' => $validated['contactEmail'],
             'payload' => $payload,
-            'approval_due_at' => $this->approvalDueAt($payload),
+            'approval_due_at' => $eventStart->copy()->subDay(),
             'status' => 'pending',
             'submitted_by' => Auth::id(),
         ]);
@@ -107,16 +119,15 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     }
 
 
-    // Approval deadline defaults to one day before event start, or 7 days from submission.
-    private function approvalDueAt(array $payload): Carbon
+    private function eventStartAt(array $payload): ?Carbon
     {
         $eventStart = $payload['event_start'] ?? null;
 
-        if (is_string($eventStart) && $eventStart !== '') {
-            return Carbon::parse($eventStart)->subDay();
+        if (!is_string($eventStart) || $eventStart === '') {
+            return null;
         }
 
-        return Carbon::now()->addDays(7);
+        return Carbon::parse($eventStart);
     }
 
     public function table(Table $table): Table
@@ -176,16 +187,16 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             return;
         }
 
-        // Prevent approving plans for events that already started.
+        // Event day is a hard deadline: pending plans are marked expired once that day starts.
         $eventStart = $plan->eventStartAt();
-        if ($eventStart !== null && $eventStart->isPast()) {
+        if ($eventStart !== null && $eventStart->startOfDay()->lte(Carbon::today())) {
             $plan->update([
-                'status' => 'denied',
-                'denied_at' => Carbon::now(),
+                'status' => 'expired',
+                'denied_at' => null,
                 'denied_by' => null,
             ]);
 
-            Notification::make()->title('Event start has already passed; plan was denied')->warning()->send();
+            Notification::make()->title('Plan expired because event day has started')->warning()->send();
             $this->resetTable();
 
             return;
@@ -266,6 +277,30 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             . ($requestedStands->count() > 5 ? '…' : '');
     }
 
+
+
+    private function autoExpirePendingPlansOnOrAfterEventDay(): void
+    {
+        $today = Carbon::today();
+
+        StandReservationPlan::query()
+            ->pending()
+            ->whereNotNull('payload->event_start')
+            ->get()
+            ->each(function (StandReservationPlan $plan) use ($today): void {
+                $eventStart = $plan->eventStartAt();
+
+                if ($eventStart === null || $eventStart->startOfDay()->gt($today)) {
+                    return;
+                }
+
+                $plan->update([
+                    'status' => 'expired',
+                    'denied_at' => null,
+                    'denied_by' => null,
+                ]);
+            });
+    }
 
     private function plansQuery(): Builder
     {

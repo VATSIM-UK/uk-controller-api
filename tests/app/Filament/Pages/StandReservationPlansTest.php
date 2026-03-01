@@ -57,8 +57,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                             'slot_reservations' => [
                                 [
                                     'callsign' => 'SBI24',
-                                    'start' => '2026-02-20 09:00:00',
-                                    'end' => '2026-02-20 09:30:00',
+                                    'slotstart' => '2026-02-20 09:00:00',
+                                    'slotend' => '2026-02-20 09:30:00',
                                 ],
                             ],
                         ],
@@ -74,6 +74,76 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'status' => 'pending',
             'submitted_by' => self::ACTIVE_USER_CID,
             'approval_due_at' => '2026-02-19 09:00:00',
+        ]);
+    }
+
+
+    public function testItRejectsPlanWithoutEventStart()
+    {
+        $this->assumeRole(RoleKeys::VAA);
+
+        Livewire::test(StandReservationPlans::class)
+            ->fillForm([
+                'name' => 'Missing Event Start',
+                'contactEmail' => 'ops@example.com',
+                'planJson' => json_encode([
+                    'event_finish' => now()->addDay()->setTime(10, 0)->format('Y-m-d H:i:s'),
+                    'stand_slots' => [
+                        [
+                            'airport' => 'EGLL',
+                            'stand' => '1L',
+                            'slot_reservations' => [
+                                [
+                                    'callsign' => 'SBI24',
+                                    'slotstart' => now()->addDay()->setTime(9, 0)->format('Y-m-d H:i:s'),
+                                    'slotend' => now()->addDay()->setTime(9, 30)->format('Y-m-d H:i:s'),
+                                ],
+                            ],
+                        ],
+                    ],
+                ]),
+            ])
+            ->call('submitPlan')
+            ->assertHasErrors(['data.planJson']);
+
+        $this->assertDatabaseMissing('stand_reservation_plans', [
+            'name' => 'Missing Event Start',
+            'contact_email' => 'ops@example.com',
+        ]);
+    }
+
+    public function testItRejectsPlanWithEventStartBeforeToday()
+    {
+        $this->assumeRole(RoleKeys::VAA);
+
+        Livewire::test(StandReservationPlans::class)
+            ->fillForm([
+                'name' => 'Past Event Plan',
+                'contactEmail' => 'ops@example.com',
+                'planJson' => json_encode([
+                    'event_start' => now()->subDay()->setTime(9, 0)->format('Y-m-d H:i:s'),
+                    'event_finish' => now()->subDay()->setTime(10, 0)->format('Y-m-d H:i:s'),
+                    'stand_slots' => [
+                        [
+                            'airport' => 'EGLL',
+                            'stand' => '1L',
+                            'slot_reservations' => [
+                                [
+                                    'callsign' => 'SBI24',
+                                    'slotstart' => now()->subDay()->setTime(9, 0)->format('Y-m-d H:i:s'),
+                                    'slotend' => now()->subDay()->setTime(9, 30)->format('Y-m-d H:i:s'),
+                                ],
+                            ],
+                        ],
+                    ],
+                ]),
+            ])
+            ->call('submitPlan')
+            ->assertHasErrors(['data.planJson']);
+
+        $this->assertDatabaseMissing('stand_reservation_plans', [
+            'name' => 'Past Event Plan',
+            'contact_email' => 'ops@example.com',
         ]);
     }
 
@@ -116,8 +186,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'SBI24',
-                                'start' => '2024-08-11 09:00:00',
-                                'end' => '2024-08-11 09:30:00',
+                                'slotstart' => '2024-08-11 09:00:00',
+                                'slotend' => '2024-08-11 09:30:00',
                             ],
                         ],
                     ],
@@ -162,8 +232,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'SBI25',
-                                'start' => '2024-08-11 10:00:00',
-                                'end' => '2024-08-11 10:30:00',
+                                'slotstart' => '2024-08-11 10:00:00',
+                                'slotend' => '2024-08-11 10:30:00',
                             ],
                         ],
                     ],
@@ -210,7 +280,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
     }
 
-    public function testItSystemDeniesApprovalWhenEventStartHasPassed()
+    public function testItMarksPlanExpiredWhenApprovingOnOrAfterEventDay()
     {
         $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
 
@@ -227,8 +297,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'SBI26',
-                                'start' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
-                                'end' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
+                                'slotstart' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
+                                'slotend' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],
@@ -245,12 +315,52 @@ class StandReservationPlansTest extends BaseFilamentTestCase
 
         $this->assertDatabaseHas('stand_reservation_plans', [
             'id' => $plan->id,
-            'status' => 'denied',
+            'status' => 'expired',
             'denied_by' => null,
         ]);
 
         $this->assertDatabaseMissing('stand_reservations', [
             'callsign' => 'SBI26',
+        ]);
+    }
+
+
+    public function testItAutoExpiresPendingPlanWhenEventDayStarts()
+    {
+        $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
+
+        $plan = StandReservationPlan::create([
+            'name' => 'Event Day Plan',
+            'contact_email' => 'ops@example.com',
+            'payload' => [
+                'event_start' => now()->endOfDay()->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addDay()->format('Y-m-d H:i:s'),
+                'stand_slots' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI30',
+                                'slotstart' => now()->endOfDay()->subHour()->format('Y-m-d H:i:s'),
+                                'slotend' => now()->endOfDay()->format('Y-m-d H:i:s'),
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'approval_due_at' => now()->subDay(),
+            'status' => 'pending',
+            'submitted_by' => self::ACTIVE_USER_CID,
+        ]);
+
+        Livewire::test(StandReservationPlans::class)
+            ->assertOk();
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'id' => $plan->id,
+            'status' => 'expired',
+            'denied_by' => null,
         ]);
     }
 

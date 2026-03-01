@@ -303,14 +303,16 @@ class StandControllerTest extends BaseApiTestCase
     {
         $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
 
+        $eventStart = now()->addDay()->setTime(9, 0);
+
         $response = $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'stand/reservations/plan',
             [
                 'name' => 'Test event',
                 'contact_email' => 'event@example.com',
-                'event_start' => '2024-08-11 09:00:00',
-                'event_finish' => '2024-08-11 18:00:00',
+                'event_start' => $eventStart->format('Y-m-d H:i:s'),
+                'event_finish' => $eventStart->copy()->setTime(18, 0)->format('Y-m-d H:i:s'),
                 'stand_slots' => [
                     [
                         'airport' => 'EGLL',
@@ -321,8 +323,8 @@ class StandControllerTest extends BaseApiTestCase
                                 'cid' => 1234567,
                                 'origin' => 'UUEE',
                                 'destination' => 'EGLL',
-                                'slotstart' => '2024-08-11 09:00:00',
-                                'slotend' => '2024-08-11 09:30:00',
+                                'slotstart' => $eventStart->copy()->format('Y-m-d H:i:s'),
+                                'slotend' => $eventStart->copy()->addMinutes(30)->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],
@@ -338,9 +340,33 @@ class StandControllerTest extends BaseApiTestCase
             'name' => 'Test event',
             'contact_email' => 'event@example.com',
             'status' => 'pending',
+            'approval_due_at' => $eventStart->copy()->subDay()->format('Y-m-d H:i:s'),
         ]);
         $this->assertDatabaseCount('stand_reservations', 0);
     }
+
+    public function testItRejectsStandReservationPlanWithoutEventStart()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Missing event start',
+                'contact_email' => 'event@example.com',
+                'reservations' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                    ],
+                ],
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['event_start']);
+    }
+
 
     public function testItRejectsStandReservationPlanThatFailsJsonSchema()
     {
@@ -352,8 +378,8 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'name' => 'Schema failure',
                 'contact_email' => 'event@example.com',
-                'event_start' => '2024-08-11 09:00:00',
-                'event_finish' => '2024-08-11 18:00:00',
+                'event_start' => now()->addDay()->setTime(9, 0)->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addDay()->setTime(18, 0)->format('Y-m-d H:i:s'),
                 'unexpected' => 'field',
             ]
         )

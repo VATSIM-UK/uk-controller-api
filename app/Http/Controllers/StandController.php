@@ -188,7 +188,7 @@ class StandController extends BaseController
                 // then defer cross-field requirements to the JSON schema validator.
                 'reservations' => ['nullable', 'array', 'min:1'],
                 'stand_slots' => ['nullable', 'array', 'min:1'],
-                'event_start' => ['nullable', 'date'],
+                'event_start' => ['required', 'date', 'after_or_equal:today'],
                 'event_finish' => ['nullable', 'date', 'after:event_start'],
             ]
         )->validate();
@@ -206,12 +206,12 @@ class StandController extends BaseController
             'name' => $validated['name'],
             'contact_email' => $validated['contact_email'],
             'payload' => [
-                'event_start' => $validated['event_start'] ?? null,
+                'event_start' => $validated['event_start'],
                 'event_finish' => $validated['event_finish'] ?? null,
                 'reservations' => $validated['reservations'] ?? null,
                 'stand_slots' => $validated['stand_slots'] ?? null,
             ],
-            'approval_due_at' => Carbon::now()->addDays(7),
+            'approval_due_at' => Carbon::parse($validated['event_start'])->subDay(),
             'submitted_by' => $request->user()->id,
             'status' => 'pending',
         ]);
@@ -318,8 +318,13 @@ class StandController extends BaseController
     }
 
     /**
-     * Mirrors the previous inline aircraft-type validation:
-     * - departures do not need an aircraft type lookup,
+     * Why the old inline aircraft-type block was removed from requestAutomaticStandAssignment():
+     * - the behaviour is unchanged (arrivals still validate aircraft_type against Aircraft::code and return 422 on miss),
+     * - extracting it avoids mixing validation/mapping concerns with assignment orchestration,
+     * - this centralises the rule in one place for easier review and future reuse.
+     *
+     * Behaviour preserved from the previous inline implementation:
+     * - departures do not require an aircraft type lookup (returns null),
      * - arrivals must map aircraft_type to a known aircraft id,
      * - unknown aircraft_type returns false so the caller can return a 422.
      */
