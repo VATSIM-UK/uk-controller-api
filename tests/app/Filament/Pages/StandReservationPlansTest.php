@@ -107,8 +107,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'name' => 'Speedbird 24',
             'contact_email' => 'ops@example.com',
             'payload' => [
-                'event_start' => '2024-08-11 09:00:00',
-                'event_finish' => '2024-08-11 18:00:00',
+                'event_start' => now()->addDay()->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addDays(2)->format('Y-m-d H:i:s'),
                 'stand_slots' => [
                     [
                         'airport' => 'EGLL',
@@ -153,8 +153,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'name' => 'Late Approval Plan',
             'contact_email' => 'ops@example.com',
             'payload' => [
-                'event_start' => '2024-08-11 09:00:00',
-                'event_finish' => '2024-08-11 18:00:00',
+                'event_start' => now()->addDay()->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addDays(2)->format('Y-m-d H:i:s'),
                 'stand_slots' => [
                     [
                         'airport' => 'EGLL',
@@ -207,6 +207,50 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'id' => $plan->id,
             'status' => 'denied',
             'denied_by' => self::ACTIVE_USER_CID,
+        ]);
+    }
+
+    public function testItSystemDeniesApprovalWhenEventStartHasPassed()
+    {
+        $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
+
+        $plan = StandReservationPlan::create([
+            'name' => 'Too Late Plan',
+            'contact_email' => 'ops@example.com',
+            'payload' => [
+                'event_start' => now()->subHour()->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addHour()->format('Y-m-d H:i:s'),
+                'stand_slots' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI26',
+                                'start' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
+                                'end' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'approval_due_at' => now()->addDays(7),
+            'status' => 'pending',
+            'submitted_by' => self::ACTIVE_USER_CID,
+        ]);
+
+        Livewire::test(StandReservationPlans::class)
+            ->callTableAction('approve', $plan)
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'id' => $plan->id,
+            'status' => 'denied',
+            'denied_by' => null,
+        ]);
+
+        $this->assertDatabaseMissing('stand_reservations', [
+            'callsign' => 'SBI26',
         ]);
     }
 

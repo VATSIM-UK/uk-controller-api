@@ -18,6 +18,21 @@ class ActivateStandReservationPlans extends Command
         StandReservationsImport $importer,
         StandReservationPayloadRowsBuilder $payloadRowsBuilder
     ): int {
+        StandReservationPlan::query()
+            ->where('status', 'pending')
+            ->get()
+            ->each(function (StandReservationPlan $plan): void {
+                $eventStart = $plan->eventStartAt();
+
+                if ($eventStart !== null && $eventStart->isPast()) {
+                    $plan->update([
+                        'status' => 'denied',
+                        'denied_at' => Carbon::now(),
+                        'denied_by' => null,
+                    ]);
+                }
+            });
+
         $plans = StandReservationPlan::query()
             ->where('status', 'approved')
             ->whereNull('imported_reservations')
@@ -28,9 +43,9 @@ class ActivateStandReservationPlans extends Command
 
         foreach ($plans as $plan) {
             $payload = $plan->payload ?? [];
-            $eventStart = $payload['event_start'] ?? $payload['start'] ?? null;
+            $eventStart = $plan->eventStartAt();
 
-            if ($eventStart === null || Carbon::parse($eventStart)->isFuture()) {
+            if ($eventStart === null || $eventStart->isFuture()) {
                 continue;
             }
 

@@ -173,6 +173,20 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             return;
         }
 
+        $eventStart = $plan->eventStartAt();
+        if ($eventStart !== null && $eventStart->isPast()) {
+            $plan->update([
+                'status' => 'denied',
+                'denied_at' => Carbon::now(),
+                'denied_by' => null,
+            ]);
+
+            Notification::make()->title('Event start has already passed; plan was denied')->warning()->send();
+            $this->resetTable();
+
+            return;
+        }
+
         $rows = app(StandReservationPayloadRowsBuilder::class)->fromPayload($plan->payload);
         $createdReservations = app(StandReservationsImport::class)->importReservations($rows);
 

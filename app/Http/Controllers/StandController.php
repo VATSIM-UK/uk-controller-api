@@ -252,9 +252,10 @@ class StandController extends BaseController
             return response()->json(['message' => 'Plan is not pending'], 409);
         }
 
-        if ($standReservationPlan->approval_due_at->isPast()) {
-            $standReservationPlan->update(['status' => 'expired']);
-            return response()->json(['message' => 'Approval window has expired'], 422);
+        $eventStart = $standReservationPlan->eventStartAt();
+        if ($eventStart !== null && $eventStart->isPast()) {
+            $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => null]);
+            return response()->json(['message' => 'Event start has already passed'], 422);
         }
 
         $payload = $standReservationPlan->payload;

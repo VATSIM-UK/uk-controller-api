@@ -40,6 +40,23 @@ class StandReservationPlan extends Model
 
     public function scopePendingWithinApprovalWindow(Builder $builder): Builder
     {
-        return $builder->pending()->where('approval_due_at', '>=', Carbon::now());
+        return $builder
+            ->pending()
+            ->where(function (Builder $query): void {
+                $query
+                    ->whereNull("payload->event_start")
+                    ->orWhere("payload->event_start", '>=', Carbon::now()->format('Y-m-d H:i:s'));
+            });
+    }
+
+    public function eventStartAt(): ?Carbon
+    {
+        $eventStart = $this->payload['event_start'] ?? $this->payload['start'] ?? null;
+
+        if (!is_string($eventStart) || $eventStart === '') {
+            return null;
+        }
+
+        return Carbon::parse($eventStart);
     }
 }

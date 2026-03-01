@@ -98,4 +98,41 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
             'imported_reservations' => null,
         ]);
     }
+
+    public function testItSystemDeniesPendingPlansAfterEventStart(): void
+    {
+        $plan = StandReservationPlan::create([
+            'name' => 'Expired Approval',
+            'contact_email' => 'ops@example.com',
+            'payload' => [
+                'event_start' => now()->subMinutes(10)->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addHour()->format('Y-m-d H:i:s'),
+                'stand_slots' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '531',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'BAW1000',
+                                'start' => now()->subMinutes(5)->format('Y-m-d H:i:s'),
+                                'end' => now()->addMinutes(25)->format('Y-m-d H:i:s'),
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'approval_due_at' => now()->addDays(2),
+            'status' => 'pending',
+        ]);
+
+        $this->mockImporter->shouldReceive('importReservations')->never();
+
+        $this->assertEquals(0, Artisan::call('stand-reservations:activate-plans'));
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'id' => $plan->id,
+            'status' => 'denied',
+            'denied_by' => null,
+        ]);
+    }
 }

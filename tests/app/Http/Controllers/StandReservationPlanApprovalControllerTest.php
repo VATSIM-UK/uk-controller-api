@@ -71,4 +71,45 @@ class StandReservationPlanApprovalControllerTest extends BaseApiTestCase
             'imported_reservations' => 1,
         ]);
     }
+
+    public function testItSystemDeniesPendingPlanWhenEventStartHasPassed()
+    {
+        $plan = StandReservationPlan::create([
+            'name' => 'Late Approval',
+            'contact_email' => 'ops@example.com',
+            'payload' => [
+                'event_start' => now()->subHour()->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addHour()->format('Y-m-d H:i:s'),
+                'stand_slots' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI99',
+                                'start' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
+                                'end' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'approval_due_at' => now()->addDays(7),
+            'status' => 'pending',
+        ]);
+
+        $this->makeAuthenticatedApiRequest(self::METHOD_PATCH, "stand/reservations/plan/{$plan->id}/approve")
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'Event start has already passed');
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'id' => $plan->id,
+            'status' => 'denied',
+            'denied_by' => null,
+        ]);
+
+        $this->assertDatabaseMissing('stand_reservations', [
+            'callsign' => 'SBI99',
+        ]);
+    }
 }
