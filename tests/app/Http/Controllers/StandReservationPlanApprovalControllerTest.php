@@ -31,12 +31,17 @@ class StandReservationPlanApprovalControllerTest extends BaseApiTestCase
 
     public function testItApprovesPendingPlanAndImportsReservations()
     {
+        $eventStart = now()->addDay()->startOfHour();
+        $eventFinish = (clone $eventStart)->addHours(9);
+        $reservationStart = (clone $eventStart)->addMinutes(15);
+        $reservationEnd = (clone $reservationStart)->addMinutes(30);
+
         $plan = StandReservationPlan::create([
             'name' => 'Speedbird 24',
             'contact_email' => 'ops@example.com',
             'payload' => [
-                'event_start' => '2024-08-11 09:00:00',
-                'event_finish' => '2024-08-11 18:00:00',
+                'event_start' => $eventStart->format('Y-m-d H:i:s'),
+                'event_finish' => $eventFinish->format('Y-m-d H:i:s'),
                 'stand_slots' => [
                     [
                         'airport' => 'EGLL',
@@ -44,8 +49,8 @@ class StandReservationPlanApprovalControllerTest extends BaseApiTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'SBI24',
-                                'start' => '2024-08-11 09:00:00',
-                                'end' => '2024-08-11 09:30:00',
+                                'start' => $reservationStart->format('Y-m-d H:i:s'),
+                                'end' => $reservationEnd->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],
