@@ -179,8 +179,20 @@ class StandController extends BaseController
             return response()->json(['message' => 'Insufficient permissions'], 403);
         }
 
+        $requestPayload = $request->json()->all();
+
+        // Prioritise schema feedback for payload-shape issues (e.g. deprecated fields)
+        // before returning field-level required errors from Laravel validation.
+        $schemaErrors = $schemaValidator->validateApiRequest($requestPayload);
+        if ($schemaErrors !== []) {
+            return response()->json([
+                'message' => 'Stand reservation plan request does not match schema',
+                'errors' => $schemaErrors,
+            ], 422);
+        }
+
         $validated = Validator::make(
-            $request->json()->all(),
+            $requestPayload,
             [
                 'name' => ['required', 'string', 'max:255'],
                 'contact_email' => ['required', 'email'],
@@ -192,15 +204,6 @@ class StandController extends BaseController
                 'event_finish' => ['nullable', 'date', 'after:event_start'],
             ]
         )->validate();
-
-        // Use JSON schema to enforce nested and conditional payload rules beyond Laravel validators.
-        $schemaErrors = $schemaValidator->validateApiRequest($request->json()->all());
-        if ($schemaErrors !== []) {
-            return response()->json([
-                'message' => 'Stand reservation plan request does not match schema',
-                'errors' => $schemaErrors,
-            ], 422);
-        }
 
         $plan = StandReservationPlan::create([
             'name' => $validated['name'],

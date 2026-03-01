@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <x-filament::section heading="Upload stand reservation plan" description="Plans require admin approval within 7 days before stands are allocated.">
+    <x-filament::section heading="Upload stand reservation plan" description="Plans require admin approval before stands are allocated.">
         <form wire:submit="submitPlan" class="space-y-4">
             {{ $this->form }}
 

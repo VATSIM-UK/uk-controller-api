@@ -43,13 +43,16 @@ class StandReservationPlansTest extends BaseFilamentTestCase
     {
         $this->assumeRole(RoleKeys::VAA);
 
+        $eventStart = now()->addDay()->setTime(9, 0);
+        $eventFinish = $eventStart->copy()->addHour();
+
         Livewire::test(StandReservationPlans::class)
             ->fillForm([
                 'name' => 'Speedbird 24',
                 'contactEmail' => 'ops@example.com',
                 'planJson' => json_encode([
-                    'event_start' => '2026-02-20 09:00:00',
-                    'event_finish' => '2026-02-20 10:00:00',
+                    'event_start' => $eventStart->format('Y-m-d H:i:s'),
+                    'event_finish' => $eventFinish->format('Y-m-d H:i:s'),
                     'stand_slots' => [
                         [
                             'airport' => 'EGLL',
@@ -57,8 +60,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                             'slot_reservations' => [
                                 [
                                     'callsign' => 'SBI24',
-                                    'slotstart' => '2026-02-20 09:00:00',
-                                    'slotend' => '2026-02-20 09:30:00',
+                                    'slotstart' => $eventStart->format('Y-m-d H:i:s'),
+                                    'slotend' => $eventStart->copy()->addMinutes(30)->format('Y-m-d H:i:s'),
                                 ],
                             ],
                         ],
@@ -73,7 +76,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'contact_email' => 'ops@example.com',
             'status' => 'pending',
             'submitted_by' => self::ACTIVE_USER_CID,
-            'approval_due_at' => '2026-02-19 09:00:00',
+            'approval_due_at' => $eventStart->copy()->subDay()->format('Y-m-d H:i:s'),
         ]);
     }
 
