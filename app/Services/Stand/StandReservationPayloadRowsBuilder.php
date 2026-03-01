@@ -25,7 +25,7 @@ class StandReservationPayloadRowsBuilder
                     reservations: $standSlot['slot_reservations'] ?? [],
                     defaultStart: $defaultStart,
                     defaultEnd: $defaultEnd,
-                    fallbackAirfield: $standSlot['airfield'] ?? $standSlot['airport'] ?? null,
+                    fallbackAirport: $standSlot['airport'] ?? null,
                     fallbackStand: $standSlot['stand'] ?? null,
                 );
             });
@@ -35,14 +35,14 @@ class StandReservationPayloadRowsBuilder
         array $reservations,
         ?string $defaultStart,
         ?string $defaultEnd,
-        ?string $fallbackAirfield = null,
+        ?string $fallbackAirport = null,
         ?string $fallbackStand = null
     ): Collection {
         return collect($reservations)
             ->filter(fn (mixed $reservation): bool => is_array($reservation))
             ->map(
                 fn (array $reservation): Collection =>
-                    $this->buildReservationRow($reservation, $defaultStart, $defaultEnd, $fallbackAirfield, $fallbackStand)
+                    $this->buildReservationRow($reservation, $defaultStart, $defaultEnd, $fallbackAirport, $fallbackStand)
             );
     }
 
@@ -50,11 +50,11 @@ class StandReservationPayloadRowsBuilder
         array $reservation,
         ?string $defaultStart,
         ?string $defaultEnd,
-        ?string $fallbackAirfield = null,
+        ?string $fallbackAirport = null,
         ?string $fallbackStand = null
     ): Collection {
         return collect([
-            'airfield' => $reservation['airfield'] ?? $reservation['airport'] ?? $fallbackAirfield,
+            'airport' => $reservation['airport'] ?? $fallbackAirport,
             'stand' => $reservation['stand'] ?? $fallbackStand,
             'callsign' => $reservation['callsign'] ?? null,
             'cid' => $reservation['cid'] ?? null,

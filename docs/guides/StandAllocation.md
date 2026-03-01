@@ -248,7 +248,7 @@ When submitting an event stand plan via the API or the UKCP website, send a JSON
 
 Each `stand_slots[]` item supports:
 
-- `airfield` (or `airport` alias)
+- `airport`
 - `stand`
 - `slot_reservations`: array of timed reservation rows
 

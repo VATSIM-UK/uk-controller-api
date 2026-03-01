@@ -35,7 +35,7 @@ Constraints:
 Each item in `reservations` (and each item in `stand_slots[].slot_reservations`) MUST be a JSON object with:
 
 - `stand` (**required**): stand identifier string (optional when inherited from `stand_slots[].stand`).
-- `airport`: ICAO code alias (optional when inherited from `stand_slots[].airport`).
+- `airport` (**required**): ICAO code (optional when inherited from `stand_slots[].airport`).
 
 Optional row-level fields:
 

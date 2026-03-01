@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Imports\Stand\StandReservationsImport as Importer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use App\Support\StandReservationPayloadRows;
+use App\Services\Stand\StandReservationPayloadRowsBuilder;
 use Maatwebsite\Excel\Excel;
 
 class StandReservationsImport extends Command
@@ -30,7 +30,7 @@ class StandReservationsImport extends Command
      * @param Importer $importer
      * @return mixed
      */
-    public function handle(Importer $importer)
+    public function handle(Importer $importer, StandReservationPayloadRowsBuilder $payloadRowsBuilder)
     {
         $fileName = $this->argument('file_name');
 
@@ -50,7 +50,7 @@ class StandReservationsImport extends Command
             }
 
             $importer->withOutput($this->output)->collection(
-                StandReservationPayloadRows::fromPayload($payload)
+                $payloadRowsBuilder->fromPayload($payload)
             );
         } else {
             $importer->withOutput($this->output)->import($fileName, 'imports', Excel::CSV);

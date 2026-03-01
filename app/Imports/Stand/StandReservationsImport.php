@@ -77,7 +77,7 @@ class StandReservationsImport implements ToCollection
 
             StandReservation::create(
                 [
-                    'stand_id' => $this->stands[$reservationData['airfield']][$reservationData['stand']],
+                    'stand_id' => $this->stands[$reservationData['airport']][$reservationData['stand']],
                     'callsign' => $reservationData['callsign'],
                     'cid' => $reservationData['cid'],
                     'origin' => $reservationData['origin'],

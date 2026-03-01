@@ -51,7 +51,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
             'end' => '2024-01-01 18:00:00',
             'reservations' => [
                 [
-                    'airfield' => 'EGLL',
+                    'airport' => 'EGLL',
                     'stand' => '1L',
                     'callsign' => 'BAW24A',
                 ],
@@ -77,7 +77,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
             'event_finish' => '2024-01-01 18:00:00',
             'stand_slots' => [
                 [
-                    'airfield' => 'EGLL',
+                    'airport' => 'EGLL',
                     'stand' => '531',
                     'slot_reservations' => [
                         [
@@ -108,12 +108,12 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
                 $first = $rows->first();
                 $second = $rows->last();
 
-                return $first->get('airfield') === 'EGLL'
+                return $first->get('airport') === 'EGLL'
                     && $first->get('stand') === '531'
                     && $first->get('callsign') === 'BAW1234'
                     && $first->get('start') === '2024-01-01 09:00:00'
                     && $first->get('end') === '2024-01-01 09:30:00'
-                    && $second->get('airfield') === 'EGLL'
+                    && $second->get('airport') === 'EGLL'
                     && $second->get('stand') === '531'
                     && $second->get('callsign') === 'BAW4321';
             }))

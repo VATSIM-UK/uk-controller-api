@@ -313,7 +313,7 @@ class StandControllerTest extends BaseApiTestCase
                 'event_finish' => '2024-08-11 18:00:00',
                 'stand_slots' => [
                     [
-                        'airfield' => 'EGLL',
+                        'airport' => 'EGLL',
                         'stand' => '1L',
                         'slot_reservations' => [
                             [

@@ -41,7 +41,7 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
                 'event_finish' => now()->addHours(2)->format('Y-m-d H:i:s'),
                 'stand_slots' => [
                     [
-                        'airfield' => 'EGLL',
+                        'airport' => 'EGLL',
                         'stand' => '531',
                         'slot_reservations' => [
                             [
@@ -86,7 +86,7 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
                 'event_finish' => now()->addDays(2)->format('Y-m-d H:i:s'),
                 'stand_slots' => [
                     [
-                        'airfield' => 'EGLL',
+                        'airport' => 'EGLL',
                         'stand' => '531',
                         'slot_reservations' => [
                             [

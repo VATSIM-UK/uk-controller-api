@@ -155,6 +155,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "airport",
         "stand",
         "slot_reservations",
         "airport"

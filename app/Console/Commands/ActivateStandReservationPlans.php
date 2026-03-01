@@ -8,7 +8,7 @@ use App\Models\Stand\StandReservation;
 use App\Models\Stand\StandReservationPlan;
 use App\Models\Vatsim\NetworkAircraft;
 use App\Services\Stand\StandAssignmentsService;
-use App\Support\StandReservationPayloadRows;
+use App\Services\Stand\StandReservationPayloadRowsBuilder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -21,7 +21,11 @@ class ActivateStandReservationPlans extends Command
 
     protected $description = 'Import due stand reservation plans and sync active reservation stand assignments';
 
-    public function handle(StandReservationsImport $importer, StandAssignmentsService $assignmentsService): int
+    public function handle(
+        StandReservationsImport $importer,
+        StandAssignmentsService $assignmentsService,
+        StandReservationPayloadRowsBuilder $payloadRowsBuilder
+    ): int
     {
         $plans = StandReservationPlan::query()
             ->where('status', 'approved')
@@ -41,7 +45,7 @@ class ActivateStandReservationPlans extends Command
             }
 
             $createdReservations = $importer->importReservations(
-                StandReservationPayloadRows::fromPayload($payload)
+                $payloadRowsBuilder->fromPayload($payload)
             );
 
             $plan->update([

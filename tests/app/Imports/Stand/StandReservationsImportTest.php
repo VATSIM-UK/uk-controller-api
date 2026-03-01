@@ -118,7 +118,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
         $reservations = collect(
             [
                 collect([
-                    'airfield' => 'EGLL',
+                    'airport' => 'EGLL',
                     'stand' => '1L',
                     'callsign' => 'BAW24A',
                     'cid' => 1234567,

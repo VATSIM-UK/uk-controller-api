@@ -105,11 +105,13 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             ->send();
     }
 
+
     private function approvalDueAt(array $payload): Carbon
     {
-        $defaultStart = $payload['event_start'] ?? $payload['start'] ?? null;
-        if ($defaultStart !== null) {
-            return Carbon::parse($defaultStart)->subHours(12);
+        $eventStart = $payload['event_start'] ?? $payload['start'] ?? null;
+
+        if (is_string($eventStart) && $eventStart !== '') {
+            return Carbon::parse($eventStart)->subDay();
         }
 
         return Carbon::now()->addDays(7);
@@ -169,12 +171,6 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         if ($plan->status !== 'pending') {
             Notification::make()->title('Plan is no longer pending')->warning()->send();
-            return;
-        }
-
-        if ($plan->approval_due_at->isPast()) {
-            $plan->update(['status' => 'expired']);
-            Notification::make()->title('Approval window has expired')->danger()->send();
             return;
         }
 
@@ -294,12 +290,21 @@ class StandReservationPlans extends Page implements HasForms, HasTable
         ]);
     }
 
+    private function userCanViewAll(): bool
+    {
+        return self::userHasAnyRole([
+            RoleKeys::WEB_TEAM,
+            RoleKeys::OPERATIONS_TEAM,
+            RoleKeys::DIVISION_STAFF_GROUP,
+        ]);
+    }
+
     private function standLabel(array $standData): string
     {
-        $airfield = $standData['airfield'] ?? $standData['airport'] ?? 'Unknown';
+        $airport = $standData['airport'] ?? 'Unknown';
         $stand = $standData['stand'] ?? 'Unknown';
 
-        return sprintf('%s %s', $airfield, $stand);
+        return sprintf('%s %s', $airport, $stand);
     }
 
     private static function userHasAnyRole(array $roleKeys): bool

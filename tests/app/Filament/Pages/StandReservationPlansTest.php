@@ -52,7 +52,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                     'event_finish' => '2026-02-20 10:00:00',
                     'stand_slots' => [
                         [
-                            'airfield' => 'EGLL',
+                            'airport' => 'EGLL',
                             'stand' => '1L',
                             'slot_reservations' => [
                                 [
@@ -73,6 +73,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'contact_email' => 'ops@example.com',
             'status' => 'pending',
             'submitted_by' => self::ACTIVE_USER_CID,
+            'approval_due_at' => '2026-02-19 09:00:00',
         ]);
     }
 
@@ -100,7 +101,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
 
     public function testItApprovesPlanAndCreatesReservations()
     {
-        $this->assumeRole(RoleKeys::WEB_TEAM);
+        $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
 
         $plan = StandReservationPlan::create([
             'name' => 'Speedbird 24',
@@ -110,7 +111,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                 'event_finish' => '2024-08-11 18:00:00',
                 'stand_slots' => [
                     [
-                        'airfield' => 'EGLL',
+                        'airport' => 'EGLL',
                         'stand' => '1L',
                         'slot_reservations' => [
                             [
@@ -143,6 +144,48 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
     }
 
+
+    public function testItApprovesPlanAfterApprovalDueDate()
+    {
+        $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
+
+        $plan = StandReservationPlan::create([
+            'name' => 'Late Approval Plan',
+            'contact_email' => 'ops@example.com',
+            'payload' => [
+                'event_start' => '2024-08-11 09:00:00',
+                'event_finish' => '2024-08-11 18:00:00',
+                'stand_slots' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI25',
+                                'start' => '2024-08-11 10:00:00',
+                                'end' => '2024-08-11 10:30:00',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'approval_due_at' => now()->subDay(),
+            'status' => 'pending',
+            'submitted_by' => self::ACTIVE_USER_CID,
+        ]);
+
+        Livewire::test(StandReservationPlans::class)
+            ->callTableAction('approve', $plan)
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'id' => $plan->id,
+            'status' => 'approved',
+            'approved_by' => self::ACTIVE_USER_CID,
+            'imported_reservations' => 1,
+        ]);
+    }
+
     public function testItDeniesPlan()
     {
         $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
@@ -166,4 +209,51 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'denied_by' => self::ACTIVE_USER_CID,
         ]);
     }
+
+    public function testItShowsVaaOnlyTheirOwnPlans()
+    {
+        $this->assumeRole(RoleKeys::VAA);
+
+        $ownPlan = StandReservationPlan::create([
+            'name' => 'Own Plan',
+            'contact_email' => 'vaa@example.com',
+            'payload' => ['reservations' => []],
+            'approval_due_at' => now()->addDays(7),
+            'status' => 'pending',
+            'submitted_by' => self::ACTIVE_USER_CID,
+        ]);
+
+        $otherPlan = StandReservationPlan::create([
+            'name' => 'Other Plan',
+            'contact_email' => 'ops@example.com',
+            'payload' => ['reservations' => []],
+            'approval_due_at' => now()->addDays(7),
+            'status' => 'pending',
+            'submitted_by' => 1,
+        ]);
+
+        Livewire::test(StandReservationPlans::class)
+            ->assertCanSeeTableRecords([$ownPlan])
+            ->assertCanNotSeeTableRecords([$otherPlan]);
+    }
+
+    public function testItAllowsTechToViewAllPlansButNotReview()
+    {
+        $this->assumeRole(RoleKeys::WEB_TEAM);
+
+        $plan = StandReservationPlan::create([
+            'name' => 'Pending Plan',
+            'contact_email' => 'ops@example.com',
+            'payload' => ['reservations' => []],
+            'approval_due_at' => now()->addDays(7),
+            'status' => 'pending',
+            'submitted_by' => 1,
+        ]);
+
+        Livewire::test(StandReservationPlans::class)
+            ->assertCanSeeTableRecords([$plan])
+            ->assertTableActionHidden('approve', $plan)
+            ->assertTableActionHidden('deny', $plan);
+    }
+
 }
