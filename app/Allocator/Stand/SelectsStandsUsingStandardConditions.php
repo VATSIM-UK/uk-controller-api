@@ -76,9 +76,6 @@ trait SelectsStandsUsingStandardConditions
 
     /**
      * Build stand ordering for a given aircraft/query mode.
-     *
-     * We keep existing common ordering intact, but may prepend an additional
-     * night-time remote-stand condition when configured and applicable.
      */
     private function orderByForStandsQuery(
         NetworkAircraft $aircraft,
