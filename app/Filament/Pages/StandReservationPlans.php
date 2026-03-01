@@ -77,26 +77,28 @@ class StandReservationPlans extends Page implements HasForms, HasTable
 
         // Accept raw JSON from the form and validate its shape before persistence.
         $payload = json_decode($validated['planJson'], true);
+        $eventStart = null;
+        $planJsonError = null;
+
         if (!is_array($payload) || (!isset($payload['reservations']) && !isset($payload['stand_slots']))) {
-            $this->addError('data.planJson', 'Plan JSON must contain either reservations or stand_slots.');
-            return;
+            $planJsonError = 'Plan JSON must contain either reservations or stand_slots.';
+        } else {
+            // Enforce the canonical schema used by API and documentation.
+            $schemaErrors = app(StandReservationPlanSchemaValidator::class)->validatePayload($payload);
+            if ($schemaErrors !== []) {
+                $planJsonError = 'Plan JSON does not match schema: ' . $schemaErrors[0];
+            } else {
+                $eventStart = $this->eventStartAt($payload);
+                if ($eventStart === null) {
+                    $planJsonError = 'Plan JSON must include event_start.';
+                } elseif ($eventStart->startOfDay()->lt(Carbon::today())) {
+                    $planJsonError = 'Event start must be today or in the future.';
+                }
+            }
         }
 
-        // Enforce the canonical schema used by API and documentation.
-        $schemaErrors = app(StandReservationPlanSchemaValidator::class)->validatePayload($payload);
-        if ($schemaErrors !== []) {
-            $this->addError('data.planJson', 'Plan JSON does not match schema: ' . $schemaErrors[0]);
-            return;
-        }
-
-        $eventStart = $this->eventStartAt($payload);
-        if ($eventStart === null) {
-            $this->addError('data.planJson', 'Plan JSON must include event_start.');
-            return;
-        }
-
-        if ($eventStart->startOfDay()->lt(Carbon::today())) {
-            $this->addError('data.planJson', 'Event start must be today or in the future.');
+        if ($planJsonError !== null) {
+            $this->addError('data.planJson', $planJsonError);
             return;
         }
 
