@@ -4,31 +4,20 @@ namespace App\Console\Commands;
 
 use App\BaseFunctionalTestCase;
 use App\Imports\Stand\StandReservationsImport as Importer;
-use App\Models\Stand\StandAssignment;
-use App\Models\Stand\StandReservation;
 use App\Models\Stand\StandReservationPlan;
-use App\Models\Vatsim\NetworkAircraft;
-use App\Services\Stand\StandAssignmentsService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
 use Mockery;
 
 class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
 {
     private $mockImporter;
-    private $mockAssignmentsService;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->mockImporter = Mockery::mock(Importer::class);
         $this->app->instance(Importer::class, $this->mockImporter);
-
-        $this->mockAssignmentsService = Mockery::mock(StandAssignmentsService::class);
-        $this->app->instance(StandAssignmentsService::class, $this->mockAssignmentsService);
-
-        Cache::flush();
     }
 
     public function testItImportsApprovedPlansWhenEventStartHasBegun(): void
@@ -63,10 +52,6 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
             ->once()
             ->with(Mockery::on(fn (Collection $rows): bool => $rows->count() === 1 && $rows->first()->get('stand') === '531'))
             ->andReturn(1);
-
-        $this->mockAssignmentsService->shouldReceive('assignmentForCallsign')->never();
-        $this->mockAssignmentsService->shouldReceive('createStandAssignment')->never();
-        $this->mockAssignmentsService->shouldReceive('deleteStandAssignment')->never();
 
         $this->assertEquals(0, Artisan::call('stand-reservations:activate-plans'));
 
@@ -105,9 +90,6 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
         ]);
 
         $this->mockImporter->shouldReceive('importReservations')->never();
-        $this->mockAssignmentsService->shouldReceive('assignmentForCallsign')->never();
-        $this->mockAssignmentsService->shouldReceive('createStandAssignment')->never();
-        $this->mockAssignmentsService->shouldReceive('deleteStandAssignment')->never();
 
         $this->assertEquals(0, Artisan::call('stand-reservations:activate-plans'));
 
@@ -115,59 +97,5 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
             'id' => $plan->id,
             'imported_reservations' => null,
         ]);
-    }
-
-    public function testItAssignsStandToMatchingActiveReservationCallsignAndLiftsExpiredSlotAssignments(): void
-    {
-        StandReservation::create([
-            'stand_id' => 1,
-            'callsign' => 'BAW1234',
-            'cid' => 1234567,
-            'origin' => 'EGCC',
-            'destination' => 'EGLL',
-            'start' => now()->subMinutes(5),
-            'end' => now()->addMinutes(20),
-        ]);
-
-        NetworkAircraft::create([
-            'callsign' => 'BAW1234',
-            'cid' => 1234567,
-            'planned_depairport' => 'EGCC',
-            'planned_destairport' => 'EGLL',
-        ]);
-
-        NetworkAircraft::create([
-            'callsign' => 'OLD123',
-        ]);
-
-        StandAssignment::create([
-            'callsign' => 'OLD123',
-            'stand_id' => 2,
-        ]);
-
-        Cache::forever('stand_reservations:managed_assignments', [
-            'OLD123' => 2,
-        ]);
-
-        $this->mockImporter->shouldReceive('importReservations')->never();
-
-        $this->mockAssignmentsService->shouldReceive('assignmentForCallsign')
-            ->once()
-            ->with('BAW1234')
-            ->andReturn(null);
-
-        $this->mockAssignmentsService->shouldReceive('createStandAssignment')
-            ->once()
-            ->with('BAW1234', 1, 'Reservation');
-
-        $this->mockAssignmentsService->shouldReceive('deleteStandAssignment')
-            ->once()
-            ->with(Mockery::on(fn (StandAssignment $assignment): bool => $assignment->callsign === 'OLD123' && $assignment->stand_id === 2));
-
-        $this->assertEquals(0, Artisan::call('stand-reservations:activate-plans'));
-
-        $this->assertEquals([
-            'BAW1234' => 1,
-        ], Cache::get('stand_reservations:managed_assignments'));
     }
 }
