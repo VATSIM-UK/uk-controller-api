@@ -207,7 +207,10 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                             ->formatStateUsing(fn (StandReservationPlan $record): string => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '{}'),
                     ])
                     ->extraModalFooterActions(function (Action $mountedAction, ?StandReservationPlan $record): array {
-                        if ($mountedAction->getName() !== 'review' || ! $record instanceof StandReservationPlan) {
+                        // Keep mounted action injected and used; approve/reject visibility is controlled per-action.
+                        $mountedActionName = $mountedAction->getName();
+
+                        if (! $record instanceof StandReservationPlan || $mountedActionName === '') {
                             return [];
                         }
 
