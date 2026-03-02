@@ -206,7 +206,12 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                             ->dehydrated(false)
                             ->formatStateUsing(fn (StandReservationPlan $record): string => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '{}'),
                     ])
-                    ->extraModalFooterActions(fn (StandReservationPlan $record): array => [
+                    ->extraModalFooterActions(function (?StandReservationPlan $record): array {
+                        if (! $record instanceof StandReservationPlan) {
+                            return [];
+                        }
+
+                        return [
                         Action::make('approve')
                             ->label('Approve')
                             ->color('success')
@@ -226,7 +231,8 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                                     ->helperText('This reason will be visible to the VAA.'),
                             ])
                             ->action(fn (array $data) => $this->rejectPlan($record, $data['reason'])),
-                    ]),
+                        ];
+                    }),
             ]);
     }
 
