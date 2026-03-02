@@ -202,7 +202,9 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('approve', $plan)
+            ->mountTableAction('review', $plan)
+            ->mountTableAction(['review', 'approve'], $plan)
+            ->callMountedTableAction()
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -248,7 +250,9 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('approve', $plan)
+            ->mountTableAction('review', $plan)
+            ->mountTableAction(['review', 'approve'], $plan)
+            ->callMountedTableAction()
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -273,7 +277,10 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('reject', $plan, ['reason' => 'Stands requested conflict with active constraints.'])
+            ->mountTableAction('review', $plan)
+            ->mountTableAction(['review', 'reject'], $plan)
+            ->setTableActionData(['reason' => 'Stands requested conflict with active constraints.'])
+            ->callMountedTableAction()
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -298,7 +305,10 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('reject', $plan, ['reason' => ''])
+            ->mountTableAction('review', $plan)
+            ->mountTableAction(['review', 'reject'], $plan)
+            ->setTableActionData(['reason' => ''])
+            ->callMountedTableAction()
             ->assertHasTableActionErrors(['reason' => ['required']]);
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -312,12 +322,14 @@ class StandReservationPlansTest extends BaseFilamentTestCase
     {
         $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
 
+        $eventStart = now()->addDay()->startOfDay()->addHour();
+
         $plan = StandReservationPlan::create([
             'name' => 'Too Late Plan',
             'contact_email' => 'ops@example.com',
             'payload' => [
-                'event_start' => now()->subHour()->format('Y-m-d H:i:s'),
-                'event_finish' => now()->addHour()->format('Y-m-d H:i:s'),
+                'event_start' => $eventStart->format('Y-m-d H:i:s'),
+                'event_finish' => $eventStart->copy()->addHours(2)->format('Y-m-d H:i:s'),
                 'stand_slots' => [
                     [
                         'airport' => 'EGLL',
@@ -325,8 +337,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
                         'slot_reservations' => [
                             [
                                 'callsign' => 'SBI26',
-                                'slotstart' => now()->subMinutes(30)->format('Y-m-d H:i:s'),
-                                'slotend' => now()->addMinutes(10)->format('Y-m-d H:i:s'),
+                                'slotstart' => $eventStart->copy()->subMinutes(30)->format('Y-m-d H:i:s'),
+                                'slotend' => $eventStart->copy()->addMinutes(10)->format('Y-m-d H:i:s'),
                             ],
                         ],
                     ],
@@ -337,9 +349,17 @@ class StandReservationPlansTest extends BaseFilamentTestCase
             'submitted_by' => self::ACTIVE_USER_CID,
         ]);
 
-        Livewire::test(StandReservationPlans::class)
-            ->callTableAction('approve', $plan)
+        $component = Livewire::test(StandReservationPlans::class)
+            ->mountTableAction('review', $plan)
+            ->mountTableAction(['review', 'approve'], $plan);
+
+        $this->travelTo($eventStart->copy()->startOfDay());
+
+        $component
+            ->callMountedTableAction()
             ->assertHasNoErrors();
+
+        $this->travelBack();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
             'id' => $plan->id,
@@ -436,8 +456,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
 
         Livewire::test(StandReservationPlans::class)
             ->assertCanSeeTableRecords([$plan])
-            ->assertTableActionHidden('approve', $plan)
-            ->assertTableActionHidden('reject', $plan);
+            ->assertTableActionDoesNotExist('review', null, $plan);
     }
 
 }

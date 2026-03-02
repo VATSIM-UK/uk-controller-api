@@ -169,7 +169,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                         'expired' => 'Expired',
                     ]),
             ])
-            ->actions([
+            ->actions($this->userCanReview() ? [
                 Action::make('review')
                     ->label('Review')
                     ->icon('heroicon-o-eye')
@@ -215,28 +215,28 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                         }
 
                         return [
-                        Action::make('approve')
-                            ->label('Approve')
-                            ->color('success')
-                            ->visible(fn (): bool => $this->userCanReview() && $record->status === 'pending')
-                            ->requiresConfirmation()
-                            ->action(fn () => $this->approvePlan($record)),
-                        Action::make('reject')
-                            ->label('Reject')
-                            ->color('danger')
-                            ->visible(fn (): bool => $this->userCanReview() && $record->status === 'pending')
-                            ->form([
-                                Textarea::make('reason')
-                                    ->label('Reason')
-                                    ->required()
-                                    ->maxLength(1000)
-                                    ->rows(4)
-                                    ->helperText('This reason will be visible to the VAA.'),
-                            ])
-                            ->action(fn (array $data) => $this->rejectPlan($record, $data['reason'])),
+                            Action::make('approve')
+                                ->label('Approve')
+                                ->color('success')
+                                ->visible(fn (): bool => $this->userCanReview() && $record->status === 'pending')
+                                ->requiresConfirmation()
+                                ->action(fn () => $this->approvePlan($record)),
+                            Action::make('reject')
+                                ->label('Reject')
+                                ->color('danger')
+                                ->visible(fn (): bool => $this->userCanReview() && $record->status === 'pending')
+                                ->form([
+                                    Textarea::make('reason')
+                                        ->label('Reason')
+                                        ->required()
+                                        ->maxLength(1000)
+                                        ->rows(4)
+                                        ->helperText('This reason will be visible to the VAA.'),
+                                ])
+                                ->action(fn (array $data) => $this->rejectPlan($record, $data['reason'])),
                         ];
                     }),
-            ]);
+            ] : []);
     }
 
     private function approvePlan(StandReservationPlan $plan): void
