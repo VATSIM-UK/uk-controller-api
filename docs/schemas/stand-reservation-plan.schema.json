@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vatsim.uk/schemas/stand-reservation-plan.schema.json",
+  "title": "Stand Reservation Plan Payload",
+  "description": "Canonical JSON payload for stand reservation plans (used by planJson and embedded in API submissions).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "reservations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/reservation"
+      },
+      "description": "Reservation rows to import once the plan is approved."
+    },
+    "event_start": {
+      "$ref": "#/$defs/dateTime",
+      "description": "Event-level default start datetime for slot reservations and rows that omit slotstart."
+    },
+    "event_finish": {
+      "$ref": "#/$defs/dateTime",
+      "description": "Event-level default end datetime for slot reservations and rows that omit slotend."
+    },
+    "stand_slots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/standSlot"
+      },
+      "description": "Stand-based slots where each stand contains one or more timed slot reservations."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "event_finish"
+        ]
+      },
+      "then": {
+        "required": [
+          "event_start"
+        ]
+      }
+    },
+    {
+      "anyOf": [
+        {
+          "required": [
+            "reservations"
+          ]
+        },
+        {
+          "required": [
+            "stand_slots"
+          ]
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "dateTime": {
+      "type": "string",
+      "description": "Date/time in either RFC 3339 format or \"YYYY-MM-DD HH:MM:SS\".",
+      "pattern": "^(\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:Z|[+-]\\d{2}:\\d{2})?)$"
+    },
+    "callsign": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,3}[0-9]{1,4}[A-Z]?$",
+      "description": "VATSIM callsign pattern used by reservation validation."
+    },
+    "reservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stand",
+        "airport"
+      ],
+      "properties": {
+        "airport": {
+          "$ref": "#/$defs/airportIcao",
+          "description": "Arrival airport ICAO."
+        },
+        "stand": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10,
+          "description": "Stand identifier at the selected airport."
+        },
+        "callsign": {
+          "$ref": "#/$defs/callsign",
+          "description": "Optional exact callsign match."
+        },
+        "cid": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Optional VATSIM CID match."
+        },
+        "origin": {
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional departure airport ICAO used for matching."
+        },
+        "destination": {
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional destination airport ICAO used for matching."
+        },
+        "slotstart": {
+          "$ref": "#/$defs/dateTime",
+          "description": "Reservation-specific start time. Falls back to event_start."
+        },
+        "slotend": {
+          "$ref": "#/$defs/dateTime",
+          "description": "Reservation-specific end time. Falls back to event_finish."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "slotend"
+            ]
+          },
+          "then": {
+            "required": [
+              "slotstart"
+            ]
+          }
+        }
+      ],
+      "description": "A single stand reservation row."
+    },
+    "standSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "airport",
+        "stand",
+        "slot_reservations"
+      ],
+      "properties": {
+        "airport": {
+          "$ref": "#/$defs/airportIcao",
+          "description": "Stand airport ICAO."
+        },
+        "stand": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10,
+          "description": "Stand identifier that acts as the slot container."
+        },
+        "slot_reservations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/slotReservation"
+          },
+          "description": "Reservations assigned to this stand slot."
+        }
+      },
+      "description": "A stand acting as a slot containing multiple timed callsign reservations."
+    },
+    "slotReservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "airport": {
+          "$ref": "#/$defs/airportIcao",
+          "description": "Arrival airport ICAO."
+        },
+        "stand": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10,
+          "description": "Stand identifier at the selected airport."
+        },
+        "callsign": {
+          "$ref": "#/$defs/callsign",
+          "description": "Optional exact callsign match."
+        },
+        "cid": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Optional VATSIM CID match."
+        },
+        "origin": {
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional departure airport ICAO used for matching."
+        },
+        "destination": {
+          "$ref": "#/$defs/airportIcao",
+          "description": "Optional destination airport ICAO used for matching."
+        },
+        "slotstart": {
+          "$ref": "#/$defs/dateTime",
+          "description": "Reservation-specific start time. Falls back to event_start."
+        },
+        "slotend": {
+          "$ref": "#/$defs/dateTime",
+          "description": "Reservation-specific end time. Falls back to event_finish."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "slotend"
+            ]
+          },
+          "then": {
+            "required": [
+              "slotstart"
+            ]
+          }
+        }
+      ],
+      "description": "A reservation row nested under a stand slot. Airport/stand may be inherited from the parent stand slot."
+    },
+    "airportIcao": {
+      "type": "string",
+      "pattern": "^[A-Z]{4}$",
+      "description": "ICAO airport code in uppercase (e.g. EGLL)."
+    }
+  }
+}

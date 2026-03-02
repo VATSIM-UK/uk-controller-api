@@ -231,3 +231,57 @@ The "best" stands left over at this point are then:
 
 If the "common rules" reject all possible stands, then the next specific rule is invoked and we start over. Otherwise,
 we've found a match, and that stand is assigned!
+
+## Event Stand Reservation Plan format
+
+When submitting an event stand plan via the API or the UKCP website, send a JSON object with:
+
+- `name` and `contact_email` metadata (API), or form fields in Filament
+- either:
+  - `stand_slots` (recommended): an array where each stand is a slot containing `slot_reservations`
+  - `reservations`: flat reservation rows (legacy-compatible)
+- optional top-level defaults:
+  - `event_start` / `event_finish` (preferred)
+  - `start` / `end` (legacy)
+
+### Slot-based format (recommended)
+
+Each `stand_slots[]` item supports:
+
+- `airport`
+- `stand`
+- `slot_reservations`: array of timed reservation rows
+
+Each slot reservation supports:
+
+- optional flight metadata: `callsign`, `cid`, `origin`, `destination`
+- optional `start` / `end` (falls back to top-level defaults)
+
+Example payload body:
+
+```json
+{
+  "name": "Speedbird 24",
+  "contact_email": "ops@example.com",
+  "event_start": "2026-02-20 09:00:00",
+  "event_finish": "2026-02-20 18:00:00",
+  "stand_slots": [
+    {
+      "airport": "EGLL",
+      "stand": "531",
+      "slot_reservations": [
+        {
+          "callsign": "BAW1234",
+          "start": "2026-02-20 09:00:00",
+          "end": "2026-02-20 09:30:00"
+        },
+        {
+          "callsign": "BAW4321",
+          "start": "2026-02-20 09:31:00",
+          "end": "2026-02-20 10:00:00"
+        }
+      ]
+    }
+  ]
+}
+```

@@ -7,11 +7,15 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
+use App\Models\Stand\StandReservationPlan;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Models\User\RoleKeys;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Coordinates\Latitude;
 use App\Rules\Coordinates\Longitude;
 use App\Rules\VatsimCallsign;
+use App\Services\JsonSchema\StandReservationPlanSchemaValidator;
 use App\Services\AirlineService;
 use App\Services\NetworkAircraftService;
 use App\Services\Stand\AirfieldStandService;
@@ -19,6 +23,8 @@ use App\Services\Stand\ArrivalAllocationService;
 use App\Services\Stand\DepartureAllocationService;
 use App\Services\Stand\StandAssignmentsService;
 use App\Services\Stand\StandStatusService;
+use App\Services\Stand\StandReservationPayloadRowsBuilder;
+use App\Imports\Stand\StandReservationsImport;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -165,6 +171,111 @@ class StandController extends BaseController
             : response()->json([], 404);
     }
 
+    public function uploadStandReservationPlan(
+        Request $request,
+        StandReservationPlanSchemaValidator $schemaValidator
+    ): JsonResponse {
+        if (!$request->user()->hasRole(RoleKeys::VAA)) {
+            return response()->json(['message' => 'Insufficient permissions'], 403);
+        }
+
+        $requestPayload = $request->json()->all();
+
+        // Prioritise schema feedback for payload-shape issues (e.g. deprecated fields)
+        // before returning field-level required errors from Laravel validation.
+        $schemaErrors = $schemaValidator->validateApiRequest($requestPayload);
+        if ($schemaErrors !== []) {
+            return response()->json([
+                'message' => 'Stand reservation plan request does not match schema',
+                'errors' => $schemaErrors,
+            ], 422);
+        }
+
+        $validated = Validator::make(
+            $requestPayload,
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'contact_email' => ['required', 'email'],
+                // Keep a lightweight API-level shape validation for optional payload branches,
+                // then defer cross-field requirements to the JSON schema validator.
+                'reservations' => ['nullable', 'array', 'min:1'],
+                'stand_slots' => ['nullable', 'array', 'min:1'],
+                'event_start' => ['required', 'date', 'after_or_equal:today'],
+                'event_finish' => ['nullable', 'date', 'after:event_start'],
+            ]
+        )->validate();
+
+        $plan = StandReservationPlan::create([
+            'name' => $validated['name'],
+            'contact_email' => $validated['contact_email'],
+            'payload' => [
+                'event_start' => $validated['event_start'],
+                'event_finish' => $validated['event_finish'] ?? null,
+                'reservations' => $validated['reservations'] ?? null,
+                'stand_slots' => $validated['stand_slots'] ?? null,
+            ],
+            'approval_due_at' => Carbon::parse($validated['event_start'])->subDay(),
+            'submitted_by' => $request->user()->id,
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'plan_id' => $plan->id,
+            'status' => $plan->status,
+            'approval_due_at' => $plan->approval_due_at,
+        ], 201);
+    }
+
+    public function getPendingStandReservationPlans(): JsonResponse
+    {
+        return response()->json(
+            StandReservationPlan::pending()->orderBy('created_at')->get()->map(function (StandReservationPlan $plan) {
+                return [
+                    'id' => $plan->id,
+                    'name' => $plan->name,
+                    'contact_email' => $plan->contact_email,
+                    'approval_due_at' => $plan->approval_due_at,
+                    'status' => $plan->status,
+                    'created_at' => $plan->created_at,
+                ];
+            })
+        );
+    }
+
+    public function approveStandReservationPlan(
+        StandReservationPlan $standReservationPlan,
+        StandReservationsImport $importer,
+        StandReservationPayloadRowsBuilder $payloadRowsBuilder,
+        Request $request
+    ): JsonResponse {
+        if ($standReservationPlan->status !== 'pending') {
+            return response()->json(['message' => 'Plan is not pending'], 409);
+        }
+
+        // Do not allow late approvals after the event has already started.
+        $eventStart = $standReservationPlan->eventStartAt();
+        if ($eventStart !== null && $eventStart->isPast()) {
+            $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID, 'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON]);
+            return response()->json(['message' => 'Event start has already passed'], 422);
+        }
+
+        // Normalize either reservations or stand_slots payload branches into importer rows.
+        $payload = $standReservationPlan->payload;
+        $createdReservations = $importer->importReservations($payloadRowsBuilder->fromPayload($payload));
+
+        $standReservationPlan->update([
+            'status' => 'approved',
+            'approved_at' => Carbon::now(),
+            'approved_by' => $request->user()->id,
+            'imported_reservations' => $createdReservations,
+        ]);
+
+        return response()->json([
+            'status' => $standReservationPlan->status,
+            'created' => $createdReservations,
+        ]);
+    }
+
     public function requestAutomaticStandAssignment(Request $request): JsonResponse
     {
         $validated = Validator::make(
@@ -180,20 +291,12 @@ class StandController extends BaseController
             ]
         )->validate();
 
-        $aircraftTypeId = null;
-        if ($validated['assignment_type'] === 'arrival') {
-            $aircraftTypeId = Aircraft::where('code', $validated['aircraft_type'])->first()?->id;
-            if (!$aircraftTypeId) {
-                return response()->json(['message' => 'Invalid aircraft type'], 422);
-            }
+        $aircraftTypeId = $this->resolveAircraftTypeId($validated);
+        if ($aircraftTypeId === false) {
+            return response()->json(['message' => 'Invalid aircraft type'], 422);
         }
 
-        // Grab aircraft from the network, if it doesn't exist, create a placeholder.
-        $aircraft = NetworkAircraft::find($validated['callsign']);
-        if (!$aircraft) {
-            NetworkAircraftService::createPlaceholderAircraft($validated['callsign']);
-            $aircraft = new NetworkAircraft(['callsign' => $validated['callsign']]);
-        }
+        $aircraft = $this->getOrCreateAircraft($validated['callsign']);
 
         // Fill with data provided by the user - will always be the latest data we have.
         $aircraft->fill(
@@ -208,7 +311,79 @@ class StandController extends BaseController
             ]
         );
 
-        $stand = $validated['assignment_type'] === 'departure'
+        // Active reservation slots should override generic automatic allocation.
+        $reservedStandId = $this->findReservedStandId($aircraft);
+        if ($reservedStandId !== null) {
+            return $this->respondWithReservedStand($aircraft->callsign, $reservedStandId);
+        }
+
+        return $this->respondWithAutoAllocatedStand($validated['assignment_type'], $aircraft);
+    }
+
+    private function resolveAircraftTypeId(array $validated): int|false|null
+    {
+        if ($validated['assignment_type'] !== 'arrival') {
+            return null;
+        }
+
+        return Aircraft::where('code', $validated['aircraft_type'])->first()?->id ?: false;
+    }
+
+    // Reuse existing live aircraft data, or create a placeholder for immediate allocation requests.
+    private function getOrCreateAircraft(string $callsign): NetworkAircraft
+    {
+        $aircraft = NetworkAircraft::find($callsign);
+        if ($aircraft !== null) {
+            return $aircraft;
+        }
+
+        NetworkAircraftService::createPlaceholderAircraft($callsign);
+        return new NetworkAircraft(['callsign' => $callsign]);
+    }
+
+    private function findReservedStandId(NetworkAircraft $aircraft): ?int
+    {
+        // Reservation-based event slots must take precedence over distance-based auto allocation.
+        return StandReservation::query()
+            ->active()
+            ->where(function ($query) use ($aircraft) {
+                $query->where('callsign', $aircraft->callsign);
+
+                if ($aircraft->cid !== null) {
+                    $query->orWhere('cid', $aircraft->cid);
+                }
+            })
+            ->orderBy('start')
+            ->get()
+            ->first(fn (StandReservation $reservation): bool => $this->reservationMatchesAircraftRoute($reservation, $aircraft))
+            ?->stand_id;
+    }
+
+    private function reservationMatchesAircraftRoute(StandReservation $reservation, NetworkAircraft $aircraft): bool
+    {
+        if ($reservation->origin !== null && $reservation->origin !== $aircraft->planned_depairport) {
+            return false;
+        }
+
+        if ($reservation->destination !== null && $reservation->destination !== $aircraft->planned_destairport) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function respondWithReservedStand(string $callsign, int $reservedStandId): JsonResponse
+    {
+        // Assign exactly what was requested for this active slot window.
+        $this->assignmentsService->createStandAssignment($callsign, $reservedStandId, 'Reservation');
+        return response()->json(['stand_id' => $reservedStandId], 201);
+    }
+
+    // Fall through to the legacy departure/arrival allocators when no reservation applies.
+    private function respondWithAutoAllocatedStand(string $assignmentType, NetworkAircraft $aircraft): JsonResponse
+    {
+        // If there is no active reservation, fall back to normal automatic stand assignment logic.
+        $stand = $assignmentType === 'departure'
             ? $this->departureAllocationService->assignStandToDepartingAircraft($aircraft)
             : $this->arrivalAllocationService->autoAllocateArrivalStandForAircraft($aircraft);
 
