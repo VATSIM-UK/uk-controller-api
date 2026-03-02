@@ -259,7 +259,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
     }
 
-    public function testItDeniesPlan()
+    public function testItRejectsPlanWithReason()
     {
         $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
 
@@ -273,13 +273,38 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('deny', $plan)
+            ->callTableAction('reject', $plan, ['reason' => 'Stands requested conflict with active constraints.'])
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
             'id' => $plan->id,
             'status' => 'denied',
             'denied_by' => self::ACTIVE_USER_CID,
+            'denied_reason' => 'Stands requested conflict with active constraints.',
+        ]);
+    }
+
+    public function testItRequiresReasonWhenRejectingPlan()
+    {
+        $this->assumeRole(RoleKeys::OPERATIONS_TEAM);
+
+        $plan = StandReservationPlan::create([
+            'name' => 'Denied Plan Missing Reason',
+            'contact_email' => 'ops@example.com',
+            'payload' => ['reservations' => []],
+            'approval_due_at' => now()->addDays(7),
+            'status' => 'pending',
+            'submitted_by' => self::ACTIVE_USER_CID,
+        ]);
+
+        Livewire::test(StandReservationPlans::class)
+            ->callTableAction('reject', $plan, ['reason' => ''])
+            ->assertHasTableActionErrors(['reason' => ['required']]);
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'id' => $plan->id,
+            'status' => 'pending',
+            'denied_reason' => null,
         ]);
     }
 
@@ -319,7 +344,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         $this->assertDatabaseHas('stand_reservation_plans', [
             'id' => $plan->id,
             'status' => 'expired',
-            'denied_by' => null,
+            'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
+            'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
         ]);
 
         $this->assertDatabaseMissing('stand_reservations', [
@@ -363,7 +389,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         $this->assertDatabaseHas('stand_reservation_plans', [
             'id' => $plan->id,
             'status' => 'expired',
-            'denied_by' => null,
+            'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
+            'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
         ]);
     }
 
@@ -410,7 +437,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         Livewire::test(StandReservationPlans::class)
             ->assertCanSeeTableRecords([$plan])
             ->assertTableActionHidden('approve', $plan)
-            ->assertTableActionHidden('deny', $plan);
+            ->assertTableActionHidden('reject', $plan);
     }
 
 }

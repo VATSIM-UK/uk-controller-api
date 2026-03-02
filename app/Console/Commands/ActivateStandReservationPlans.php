@@ -29,7 +29,8 @@ class ActivateStandReservationPlans extends Command
                     $plan->update([
                         'status' => 'denied',
                         'denied_at' => Carbon::now(),
-                        'denied_by' => null,
+                        'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
+                        'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
                     ]);
                 }
             });

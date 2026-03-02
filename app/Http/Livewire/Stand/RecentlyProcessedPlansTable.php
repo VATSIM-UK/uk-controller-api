@@ -37,6 +37,10 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
                     ->searchable(),
                 TextColumn::make('status')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'denied' => 'Rejected',
+                        default => ucfirst($state),
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'approved' => 'success',
                         'denied' => 'danger',
@@ -55,6 +59,9 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
                 TextColumn::make('requested_stands')
                     ->label('Requested stands')
                     ->state(fn (StandReservationPlan $record): string => $this->requestedStandsLabel($record)),
+                TextColumn::make('denied_reason')
+                    ->label('Rejection reason')
+                    ->wrap(),
                 TextColumn::make('imported_reservations')
                     ->label('Imported')
                     ->numeric(),

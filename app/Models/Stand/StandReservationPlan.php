@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class StandReservationPlan extends Model
 {
+    public const AUTOMATION_DENIED_BY_USER_ID = 1;
+
+    public const AUTOMATION_NOT_APPROVED_REASON = 'Not approved by UKCP Automation';
+
     protected $fillable = [
         'name',
         'contact_email',
@@ -17,6 +21,7 @@ class StandReservationPlan extends Model
         'denied_at',
         'approved_by',
         'denied_by',
+        'denied_reason',
         'submitted_by',
         'status',
         'imported_reservations',

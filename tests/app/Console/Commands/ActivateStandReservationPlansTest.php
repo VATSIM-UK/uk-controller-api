@@ -132,7 +132,8 @@ class ActivateStandReservationPlansTest extends BaseFunctionalTestCase
         $this->assertDatabaseHas('stand_reservation_plans', [
             'id' => $plan->id,
             'status' => 'denied',
-            'denied_by' => null,
+            'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
+            'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
         ]);
     }
 }

@@ -120,7 +120,6 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             ->send();
     }
 
-
     private function eventStartAt(array $payload): ?Carbon
     {
         $eventStart = $payload['event_start'] ?? null;
@@ -140,22 +139,36 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             ->columns([
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('contact_email')->label('Contact')->searchable(),
-                TextColumn::make('status')->badge()->color(fn (string $state): string => match ($state) {
-                    'approved' => 'success',
-                    'denied' => 'danger',
-                    'expired' => 'warning',
-                    default => 'gray',
-                }),
+                TextColumn::make('status')
+                    ->badge()
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'denied' => 'Rejected',
+                        default => ucfirst($state),
+                    })
+                    ->color(fn(string $state): string => match ($state) {
+                        'approved' => 'success',
+                        'denied' => 'danger',
+                        'expired' => 'warning',
+                        default => 'gray',
+                    }),
                 TextColumn::make('created_at')->label('Submitted')->dateTime()->sortable(),
-                TextColumn::make('approval_due_at')->label('Approval due')->dateTime()->sortable(),
+                TextColumn::make('approval_due_at')
+                    ->label('Approval due')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('payload_window')
                     ->label('Planned window')
-                    ->state(fn (StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
+                    ->state(fn(StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
                 TextColumn::make('requested_stands')
                     ->label('Requested stands')
-                    ->state(fn (StandReservationPlan $record): string => $this->requestedStandsLabel($record))
+                    ->state(fn(StandReservationPlan $record): string => $this->requestedStandsLabel($record))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('approved_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('denied_reason')
+                    ->label('Rejection reason')
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('denied_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('imported_reservations')->numeric()->label('Imported')->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -164,7 +177,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                     ->options([
                         'pending' => 'Pending',
                         'approved' => 'Approved',
-                        'denied' => 'Denied',
+                        'denied' => 'Rejected',
                         'expired' => 'Expired',
                     ]),
             ])
@@ -172,13 +185,22 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                 Action::make('approve')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn (StandReservationPlan $record): bool => $this->userCanReview() && $record->status === 'pending')
-                    ->action(fn (StandReservationPlan $record) => $this->approvePlan($record)),
-                Action::make('deny')
+                    ->visible(fn(StandReservationPlan $record): bool => $this->userCanReview() && $record->status === 'pending')
+                    ->action(fn(StandReservationPlan $record) => $this->approvePlan($record)),
+                Action::make('reject')
+                    ->label('Reject')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->visible(fn (StandReservationPlan $record): bool => $this->userCanReview() && $record->status === 'pending')
-                    ->action(fn (StandReservationPlan $record) => $this->denyPlan($record)),
+                    ->form([
+                        Textarea::make('reason')
+                            ->label('Reason')
+                            ->required()
+                            ->maxLength(1000)
+                            ->rows(4)
+                            ->helperText('This reason will be visible to the VAA.'),
+                    ])
+                    ->visible(fn(StandReservationPlan $record): bool => $this->userCanReview() && $record->status === 'pending')
+                    ->action(fn(StandReservationPlan $record, array $data) => $this->rejectPlan($record, $data['reason'])),
             ]);
     }
 
@@ -195,7 +217,8 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             $plan->update([
                 'status' => 'expired',
                 'denied_at' => null,
-                'denied_by' => null,
+                'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
+                'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
             ]);
 
             Notification::make()->title('Plan expired because event day has started')->warning()->send();
@@ -219,7 +242,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
         $this->resetTable();
     }
 
-    private function denyPlan(StandReservationPlan $plan): void
+    private function rejectPlan(StandReservationPlan $plan, string $reason): void
     {
         if ($plan->status !== 'pending') {
             Notification::make()->title('Plan is no longer pending')->warning()->send();
@@ -230,13 +253,12 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             'status' => 'denied',
             'denied_at' => Carbon::now(),
             'denied_by' => Auth::id(),
+            'denied_reason' => $reason,
         ]);
 
-        Notification::make()->title('Plan denied')->success()->send();
+        Notification::make()->title('Plan rejected')->success()->send();
         $this->resetTable();
     }
-
-
 
     public function allocationWindowLabel(StandReservationPlan $plan): string
     {
@@ -260,12 +282,12 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         // Merge direct reservations and stand slot reservations into one deduplicated label list.
         $reservationStands = collect($plan->payload['reservations'] ?? [])
-            ->filter(fn (mixed $reservation): bool => is_array($reservation))
-            ->map(fn (array $reservation): string => $this->standLabel($reservation));
+            ->filter(fn(mixed $reservation): bool => is_array($reservation))
+            ->map(fn(array $reservation): string => $this->standLabel($reservation));
 
         $slotStands = collect($plan->payload['stand_slots'] ?? [])
-            ->filter(fn (mixed $slot): bool => is_array($slot))
-            ->map(fn (array $slot): string => $this->standLabel($slot));
+            ->filter(fn(mixed $slot): bool => is_array($slot))
+            ->map(fn(array $slot): string => $this->standLabel($slot));
 
         $requestedStands = $reservationStands->concat($slotStands)->filter()->unique()->values();
 
@@ -278,8 +300,6 @@ class StandReservationPlans extends Page implements HasForms, HasTable
             ->implode(', ')
             . ($requestedStands->count() > 5 ? '…' : '');
     }
-
-
 
     private function autoExpirePendingPlansOnOrAfterEventDay(): void
     {
@@ -299,7 +319,8 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                 $plan->update([
                     'status' => 'expired',
                     'denied_at' => null,
-                    'denied_by' => null,
+                    'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
+                    'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
                 ]);
             });
     }

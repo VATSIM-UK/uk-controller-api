@@ -255,7 +255,7 @@ class StandController extends BaseController
         // Do not allow late approvals after the event has already started.
         $eventStart = $standReservationPlan->eventStartAt();
         if ($eventStart !== null && $eventStart->isPast()) {
-            $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => null]);
+            $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID, 'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON]);
             return response()->json(['message' => 'Event start has already passed'], 422);
         }
 
