@@ -206,7 +206,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                             ->dehydrated(false)
                             ->formatStateUsing(fn (StandReservationPlan $record): string => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '{}'),
                     ])
-                    ->extraModalFooterActions(function (?StandReservationPlan $record): array {
+                    ->extraModalFooterActions(function (Action $action, ?StandReservationPlan $record): array {
                         if (! $record instanceof StandReservationPlan) {
                             return [];
                         }
