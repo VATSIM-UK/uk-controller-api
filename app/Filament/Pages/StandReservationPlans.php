@@ -240,12 +240,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
         // Event day is a hard deadline: pending plans are marked expired once that day starts.
         $eventStart = $plan->eventStartAt();
         if ($eventStart !== null && $eventStart->startOfDay()->lte(Carbon::today())) {
-            $plan->update([
-                'status' => 'expired',
-                'denied_at' => null,
-                'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
-                'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
-            ]);
+            $this->markPlanAsExpired($plan);
 
             Notification::make()->title('Plan expired because event day has started')->warning()->send();
             $this->resetTable();
@@ -342,13 +337,18 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                     return;
                 }
 
-                $plan->update([
-                    'status' => 'expired',
-                    'denied_at' => null,
-                    'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
-                    'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
-                ]);
+                $this->markPlanAsExpired($plan);
             });
+    }
+
+    private function markPlanAsExpired(StandReservationPlan $plan): void
+    {
+        $plan->update([
+            'status' => 'expired',
+            'denied_at' => null,
+            'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
+            'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON,
+        ]);
     }
 
     private function plansQuery(): Builder

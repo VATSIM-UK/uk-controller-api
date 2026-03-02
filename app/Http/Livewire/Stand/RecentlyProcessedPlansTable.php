@@ -109,15 +109,11 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
     private function requestedStandsLabel(StandReservationPlan $plan): string
     {
         // Build a concise, deduplicated stand summary across all payload branches.
-        $reservationStands = collect($plan->payload['reservations'] ?? [])
-            ->filter(fn (mixed $reservation): bool => is_array($reservation))
-            ->map(fn (array $reservation): string => $this->standLabel($reservation));
-
-        $slotStands = collect($plan->payload['stand_slots'] ?? [])
-            ->filter(fn (mixed $slot): bool => is_array($slot))
-            ->map(fn (array $slot): string => $this->standLabel($slot));
-
-        $requestedStands = $reservationStands->concat($slotStands)->filter()->unique()->values();
+        $requestedStands = $this->extractStandLabels($plan->payload['reservations'] ?? [])
+            ->concat($this->extractStandLabels($plan->payload['stand_slots'] ?? []))
+            ->filter()
+            ->unique()
+            ->values();
 
         if ($requestedStands->isEmpty()) {
             return 'No reservations';
@@ -127,6 +123,13 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
             ->take(5)
             ->implode(', ')
             . ($requestedStands->count() > 5 ? '…' : '');
+    }
+
+    private function extractStandLabels(array $items): \Illuminate\Support\Collection
+    {
+        return collect($items)
+            ->filter(fn (mixed $item): bool => is_array($item))
+            ->map(fn (array $item): string => $this->standLabel($item));
     }
 
     private function standLabel(array $standData): string
