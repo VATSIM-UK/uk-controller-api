@@ -202,7 +202,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('review.approve', $plan)
+            ->callTableAction('approve', $plan)
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -248,7 +248,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('review.approve', $plan)
+            ->callTableAction('approve', $plan)
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -273,7 +273,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('review.reject', $plan, ['reason' => 'Stands requested conflict with active constraints.'])
+            ->callTableAction('reject', $plan, ['reason' => 'Stands requested conflict with active constraints.'])
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -298,7 +298,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('review.reject', $plan, ['reason' => ''])
+            ->callTableAction('reject', $plan, ['reason' => ''])
             ->assertHasTableActionErrors(['reason' => ['required']]);
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -338,7 +338,7 @@ class StandReservationPlansTest extends BaseFilamentTestCase
         ]);
 
         Livewire::test(StandReservationPlans::class)
-            ->callTableAction('review.approve', $plan)
+            ->callTableAction('approve', $plan)
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('stand_reservation_plans', [
@@ -436,8 +436,8 @@ class StandReservationPlansTest extends BaseFilamentTestCase
 
         Livewire::test(StandReservationPlans::class)
             ->assertCanSeeTableRecords([$plan])
-            ->assertTableActionHidden('review.approve', $plan)
-            ->assertTableActionHidden('review.reject', $plan);
+            ->assertTableActionHidden('approve', $plan)
+            ->assertTableActionHidden('reject', $plan);
     }
 
 }

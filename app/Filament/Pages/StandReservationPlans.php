@@ -206,11 +206,11 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                             ->dehydrated(false)
                             ->formatStateUsing(fn (StandReservationPlan $record): string => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '{}'),
                     ])
-                    ->extraModalFooterActions(function (Action $mountedAction, ?StandReservationPlan $record): array {
-                        // Keep mounted action injected and used; approve/reject visibility is controlled per-action.
-                        $mountedActionName = $mountedAction->getName();
+                    ->extraModalFooterActions(function (Action $action, ?StandReservationPlan $record): array {
+                        // Use `$action` name so Filament injects the mounted action into this callback.
+                        $actionName = $action->getName();
 
-                        if (! $record instanceof StandReservationPlan || $mountedActionName === '') {
+                        if (! $record instanceof StandReservationPlan || $actionName === '') {
                             return [];
                         }
 
