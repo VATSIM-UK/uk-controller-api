@@ -12,7 +12,7 @@ class ActivateStandReservationPlans extends Command
 {
     protected $signature = 'stand-reservations:activate-plans';
 
-    protected $description = 'Import due stand reservation plans';
+    protected $description = 'Activate and import due stand reservation plans';
 
     public function handle(
         StandReservationsImport $importer,
