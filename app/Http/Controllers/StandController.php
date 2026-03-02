@@ -320,17 +320,6 @@ class StandController extends BaseController
         return $this->respondWithAutoAllocatedStand($validated['assignment_type'], $aircraft);
     }
 
-    /**
-     * Why the old inline aircraft-type block was removed from requestAutomaticStandAssignment():
-     * - the behaviour is unchanged (arrivals still validate aircraft_type against Aircraft::code and return 422 on miss),
-     * - extracting it avoids mixing validation/mapping concerns with assignment orchestration,
-     * - this centralises the rule in one place for easier review and future reuse.
-     *
-     * Behaviour preserved from the previous inline implementation:
-     * - departures do not require an aircraft type lookup (returns null),
-     * - arrivals must map aircraft_type to a known aircraft id,
-     * - unknown aircraft_type returns false so the caller can return a 422.
-     */
     private function resolveAircraftTypeId(array $validated): int|false|null
     {
         if ($validated['assignment_type'] !== 'arrival') {
