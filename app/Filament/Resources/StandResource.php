@@ -160,6 +160,10 @@ class StandResource extends Resource
                             ->maxValue(9999)
                             ->default(100)
                             ->required(),
+                        Toggle::make('overnight_remote_preferred')
+                            ->label(self::translateFormPath('overnight_remote_preferred.label'))
+                            ->helperText(self::translateFormPath('overnight_remote_preferred.helper'))
+                            ->default(false),
                         TextInput::make('origin_slug')
                             ->label(self::translateFormPath('origin_slug.label'))
                             ->helperText(self::translateFormPath('origin_slug.helper'))
@@ -203,6 +207,8 @@ class StandResource extends Resource
                     ->label(self::translateTablePath('columns.priority'))
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\BooleanColumn::make('overnight_remote_preferred')
+                    ->label(self::translateTablePath('columns.overnight_remote_preferred')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

@@ -35,6 +35,7 @@ class Stand extends Model
         'max_aircraft_length',
         'max_aircraft_wingspan',
         'assignment_priority',
+        'overnight_remote_preferred',
         'closed_at',
         'isOpen',
     ];
@@ -46,6 +47,7 @@ class Stand extends Model
         'max_aircraft_length' => 'double',
         'max_aircraft_wingspan' => 'double',
         'assignment_priority' => 'integer',
+        'overnight_remote_preferred' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'closed_at' => 'datetime',
