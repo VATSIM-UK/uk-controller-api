@@ -142,11 +142,11 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                 TextColumn::make('contact_email')->label('Contact')->searchable(),
                 TextColumn::make('status')
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'denied' => 'Rejected',
                         default => ucfirst($state),
                     })
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'approved' => 'success',
                         'denied' => 'danger',
                         'expired' => 'warning',
@@ -158,7 +158,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('payload_window')->label('Planned window')->state(fn(StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
+                TextColumn::make('payload_window')->label('Planned window')->state(fn (StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -175,27 +175,27 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                     ->icon('heroicon-o-eye')
                     ->slideOver()
                     ->modalWidth('2xl')
-                    ->modalHeading(fn(StandReservationPlan $record): string => sprintf('Plan details: %s', $record->name))
+                    ->modalHeading(fn (StandReservationPlan $record): string => sprintf('Plan details: %s', $record->name))
                     ->modalSubmitAction(false)
                     ->form([
                         Placeholder::make('submitted_by')
                             ->label('Submitted by')
-                            ->content(fn(StandReservationPlan $record): string => (string)($record->submitted_by ?? 'Unknown')),
+                            ->content(fn (StandReservationPlan $record): string => (string)($record->submitted_by ?? 'Unknown')),
                         Placeholder::make('submitted_at')
                             ->label('Submitted at')
-                            ->content(fn(StandReservationPlan $record): string => $record->created_at?->toDateTimeString() ?? 'Unknown'),
+                            ->content(fn (StandReservationPlan $record): string => $record->created_at?->toDateTimeString() ?? 'Unknown'),
                         Placeholder::make('approval_due')
                             ->label('Approval due')
-                            ->content(fn(StandReservationPlan $record): string => $record->approval_due_at?->toDateTimeString() ?? 'Unknown'),
+                            ->content(fn (StandReservationPlan $record): string => $record->approval_due_at?->toDateTimeString() ?? 'Unknown'),
                         Placeholder::make('planned_window')
                             ->label('Planned window')
                             ->content(fn(StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
                         Placeholder::make('requested_stands')
                             ->label('Requested stands')
-                            ->content(fn(StandReservationPlan $record): string => $this->requestedStandsLabel($record)),
+                            ->content(fn (StandReservationPlan $record): string => $this->requestedStandsLabel($record)),
                         Placeholder::make('status')
                             ->label('Status')
-                            ->content(fn(StandReservationPlan $record): string => $record->status === 'denied' ? 'Rejected' : ucfirst($record->status)),
+                            ->content(fn (StandReservationPlan $record): string => $record->status === 'denied' ? 'Rejected' : ucfirst($record->status)),
                         Placeholder::make('denied_reason')
                             ->label('Rejection reason')
                             ->content(fn(StandReservationPlan $record): string => $record->denied_reason ?: 'N/A'),
@@ -204,19 +204,19 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                             ->rows(10)
                             ->disabled()
                             ->dehydrated(false)
-                            ->formatStateUsing(fn(StandReservationPlan $record): string => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '{}'),
+                            ->formatStateUsing(fn (StandReservationPlan $record): string => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '{}'),
                     ])
-                    ->extraModalFooterActions(fn(StandReservationPlan $record): array => [
+                    ->extraModalFooterActions(fn (StandReservationPlan $record): array => [
                         Action::make('approve')
                             ->label('Approve')
                             ->color('success')
-                            ->visible(fn(): bool => $this->userCanReview() && $record->status === 'pending')
+                            ->visible(fn (): bool => $this->userCanReview() && $record->status === 'pending')
                             ->requiresConfirmation()
-                            ->action(fn() => $this->approvePlan($record)),
+                            ->action(fn () => $this->approvePlan($record)),
                         Action::make('reject')
                             ->label('Reject')
                             ->color('danger')
-                            ->visible(fn(): bool => $this->userCanReview() && $record->status === 'pending')
+                            ->visible(fn (): bool => $this->userCanReview() && $record->status === 'pending')
                             ->form([
                                 Textarea::make('reason')
                                     ->label('Reason')
@@ -225,7 +225,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                                     ->rows(4)
                                     ->helperText('This reason will be visible to the VAA.'),
                             ])
-                            ->action(fn(array $data) => $this->rejectPlan($record, $data['reason'])),
+                            ->action(fn (array $data) => $this->rejectPlan($record, $data['reason'])),
                     ]),
             ]);
     }
@@ -308,12 +308,12 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         // Merge direct reservations and stand slot reservations into one deduplicated label list.
         $reservationStands = collect($plan->payload['reservations'] ?? [])
-            ->filter(fn(mixed $reservation): bool => is_array($reservation))
-            ->map(fn(array $reservation): string => $this->standLabel($reservation));
+            ->filter(fn (mixed $reservation): bool => is_array($reservation))
+            ->map(fn (array $reservation): string => $this->standLabel($reservation));
 
         $slotStands = collect($plan->payload['stand_slots'] ?? [])
-            ->filter(fn(mixed $slot): bool => is_array($slot))
-            ->map(fn(array $slot): string => $this->standLabel($slot));
+            ->filter(fn (mixed $slot): bool => is_array($slot))
+            ->map(fn (array $slot): string => $this->standLabel($slot));
 
         $requestedStands = $reservationStands->concat($slotStands)->filter()->unique()->values();
 
