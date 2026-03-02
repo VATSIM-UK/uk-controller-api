@@ -189,7 +189,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                             ->content(fn (StandReservationPlan $record): string => $record->approval_due_at?->toDateTimeString() ?? 'Unknown'),
                         Placeholder::make('planned_window')
                             ->label('Planned window')
-                            ->content(fn(StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
+                            ->content(fn (StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
                         Placeholder::make('requested_stands')
                             ->label('Requested stands')
                             ->content(fn (StandReservationPlan $record): string => $this->requestedStandsLabel($record)),
@@ -198,7 +198,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
                             ->content(fn (StandReservationPlan $record): string => $record->status === 'denied' ? 'Rejected' : ucfirst($record->status)),
                         Placeholder::make('denied_reason')
                             ->label('Rejection reason')
-                            ->content(fn(StandReservationPlan $record): string => $record->denied_reason ?: 'N/A'),
+                            ->content(fn (StandReservationPlan $record): string => $record->denied_reason ?: 'N/A'),
                         Textarea::make('raw_payload')
                             ->label('Payload')
                             ->rows(10)
