@@ -6,7 +6,8 @@ use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;;
+use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandAssignmentsHistory;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -93,10 +94,12 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
+                'assigned_by_reservation_allocator' => false,
             ],
             [
                 'callsign' => 'BAW456',
                 'stand_id' => 2,
+                'assigned_by_reservation_allocator' => false,
             ],
         ];
 
@@ -284,12 +287,65 @@ class StandControllerTest extends BaseApiTestCase
             'id' => 2,
             'identifier' => '251',
             'airfield' => 'EGLL',
+            'assigned_by_reservation_allocator' => false,
         ];
 
         $this->addStandAssignment('BAW123', 2);
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment/BAW123')
             ->assertStatus(200)
             ->assertJson($expected);
+    }
+
+
+    public function testItReturnsReservationAllocatorSourceInStandAssignments(): void
+    {
+        $callsign = 'BAW789';
+        $this->addStandAssignment($callsign, 1);
+
+        StandAssignmentsHistory::create(
+            [
+                'callsign' => $callsign,
+                'stand_id' => 1,
+                'type' => 'App\Allocator\Stand\UserRequestedArrivalStandAllocator',
+                'context' => [],
+            ]
+        );
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment')
+            ->assertStatus(200)
+            ->assertJsonFragment(
+                [
+                    'callsign' => $callsign,
+                    'stand_id' => 1,
+                    'assigned_by_reservation_allocator' => true,
+                ]
+            );
+    }
+
+    public function testItReturnsReservationAllocatorSourceForSingleAssignmentRoute(): void
+    {
+        $callsign = 'BAW987';
+        $this->addStandAssignment($callsign, 1);
+
+        StandAssignmentsHistory::create(
+            [
+                'callsign' => $callsign,
+                'stand_id' => 1,
+                'type' => 'App\Allocator\Stand\UserRequestedArrivalStandAllocator',
+                'context' => [],
+            ]
+        );
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, sprintf('stand/assignment/%s', $callsign))
+            ->assertStatus(200)
+            ->assertJson(
+                [
+                    'id' => 1,
+                    'airfield' => 'EGLL',
+                    'identifier' => '1L',
+                    'assigned_by_reservation_allocator' => true,
+                ]
+            );
     }
 
     public function testItAutoAssignsDepartureStand()

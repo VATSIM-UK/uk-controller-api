@@ -71,11 +71,15 @@ class StandController extends BaseController
     public function getStandAssignments(): JsonResponse
     {
         return response()->json(
-            StandAssignment::all()->map(
+            StandAssignment::with('assignmentHistory')->get()->map(
                 function (StandAssignment $assignment) {
                     return [
                         'callsign' => $assignment->callsign,
                         'stand_id' => $assignment->stand_id,
+                        'assigned_by_reservation_allocator' => str_starts_with(
+                            (string) $assignment->assignmentHistory?->type,
+                            'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator'
+                        ),
                     ];
                 }
             )
@@ -153,13 +157,17 @@ class StandController extends BaseController
 
     public function getStandAssignmentForAircraft(string $aircraft): JsonResponse
     {
-        $assignment = $this->assignmentsService->assignmentForCallsign($aircraft);
+        $assignment = $this->assignmentsService->assignmentForCallsign($aircraft)?->load('assignmentHistory');
         return $assignment
             ? response()->json(
                 [
                     'id' => $assignment->stand_id,
                     'airfield' => $assignment->stand->airfield->code,
                     'identifier' => $assignment->stand->identifier,
+                    'assigned_by_reservation_allocator' => str_starts_with(
+                        (string) $assignment->assignmentHistory?->type,
+                        'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator'
+                    ),
                 ],
             )
             : response()->json([], 404);
