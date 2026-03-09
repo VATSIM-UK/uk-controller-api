@@ -75,8 +75,6 @@ class SyncStandReservationAssignments extends Command
 
         if ($reservation->cid !== null) {
             $query->where('cid', $reservation->cid);
-        } else {
-            $query->where('callsign', $reservation->callsign);
         }
 
         if ($reservation->origin !== null) {

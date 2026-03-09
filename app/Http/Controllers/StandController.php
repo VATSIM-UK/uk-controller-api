@@ -201,7 +201,7 @@ class StandController extends BaseController
                 'reservations' => ['nullable', 'array', 'min:1'],
                 'stand_slots' => ['nullable', 'array', 'min:1'],
                 'event_start' => ['required', 'date', 'after_or_equal:today'],
-                'event_finish' => ['nullable', 'date', 'after:event_start'],
+                'event_finish' => ['required', 'date', 'after:event_start'],
             ]
         )->validate();
 

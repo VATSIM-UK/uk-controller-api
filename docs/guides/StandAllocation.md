@@ -239,10 +239,8 @@ When submitting an event stand plan via the API or the UKCP website, send a JSON
 - `name` and `contact_email` metadata (API), or form fields in Filament
 - either:
   - `stand_slots` (recommended): an array where each stand is a slot containing `slot_reservations`
-  - `reservations`: flat reservation rows (legacy-compatible)
-- optional top-level defaults:
-  - `event_start` / `event_finish` (preferred)
-  - `start` / `end` (legacy)
+  - `reservations`: flat reservation rows
+  - `event_start` / `event_finish`
 
 ### Slot-based format (recommended)
 
@@ -255,7 +253,7 @@ Each `stand_slots[]` item supports:
 Each slot reservation supports:
 
 - optional flight metadata: `callsign`, `cid`, `origin`, `destination`
-- optional `start` / `end` (falls back to top-level defaults)
+- optional `slotstart` / `slotend` (falls back to top-level defaults)
 
 Example payload body:
 
@@ -271,14 +269,14 @@ Example payload body:
       "stand": "531",
       "slot_reservations": [
         {
-          "callsign": "BAW1234",
-          "start": "2026-02-20 09:00:00",
-          "end": "2026-02-20 09:30:00"
+          "cid": "1234567",
+          "slotstart": "2026-02-20 09:00:00",
+          "slotend": "2026-02-20 09:30:00"
         },
         {
-          "callsign": "BAW4321",
-          "start": "2026-02-20 09:31:00",
-          "end": "2026-02-20 10:00:00"
+          "cid": "7654321",
+          "slotstart": "2026-02-20 09:31:00",
+          "slotend": "2026-02-20 10:00:00"
         }
       ]
     }
