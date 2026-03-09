@@ -61,6 +61,7 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
                     ->state(fn (StandReservationPlan $record): string => $this->requestedStandsLabel($record)),
                 TextColumn::make('denied_reason')
                     ->label('Rejection reason')
+                    ->tooltip(fn (StandReservationPlan $record): ?string => $record->denied_reason)
                     ->wrap(),
                 TextColumn::make('imported_reservations')
                     ->label('Imported')

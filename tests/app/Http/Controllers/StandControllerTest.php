@@ -321,8 +321,6 @@ class StandControllerTest extends BaseApiTestCase
                             [
                                 'callsign' => 'SBI24',
                                 'cid' => 1234567,
-                                'origin' => 'UUEE',
-                                'destination' => 'EGLL',
                                 'slotstart' => $eventStart->copy()->format('Y-m-d H:i:s'),
                                 'slotend' => $eventStart->copy()->addMinutes(30)->format('Y-m-d H:i:s'),
                             ],
@@ -450,14 +448,14 @@ class StandControllerTest extends BaseApiTestCase
     }
 
 
-    public function testItUsesActiveReservationBeforeAutomaticAssignment(): void
+    public function testItUsesActiveReservationBeforeAutomaticAssignmentEvenWhenRouteDiffers(): void
     {
         StandReservation::create([
             'stand_id' => 1,
             'callsign' => 'BAW9232',
             'cid' => 1234567,
-            'origin' => 'EGCC',
-            'destination' => 'EGLL',
+            'origin' => 'LEBL',
+            'destination' => 'LFPG',
             'start' => now()->subMinutes(5),
             'end' => now()->addMinutes(20),
         ]);
@@ -477,6 +475,66 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(201);
 
         $this->assertTrue(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 1)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItDoesNotUseActiveReservationWhenAircraftCidIsMissing(): void
+    {
+        StandReservation::create([
+            'stand_id' => 3,
+            'callsign' => 'BAW9232',
+            'cid' => 1234567,
+            'origin' => 'EGCC',
+            'destination' => 'EGLL',
+            'start' => now()->subMinutes(5),
+            'end' => now()->addMinutes(20),
+        ]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGCC',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )->assertStatus(201);
+
+        $assignedStandId = StandAssignment::where('callsign', 'BAW9232')->first()?->stand_id;
+        $this->assertTrue(in_array($assignedStandId, [1, 2]));
+        $this->assertFalse(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 3)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItDoesNotUseActiveReservationWhenCidDiffersEvenIfCallsignMatches(): void
+    {
+        StandReservation::create([
+            'stand_id' => 3,
+            'callsign' => 'BAW9232',
+            'cid' => 9999999,
+            'origin' => 'EGCC',
+            'destination' => 'EGLL',
+            'start' => now()->subMinutes(5),
+            'end' => now()->addMinutes(20),
+        ]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGCC',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )->assertStatus(201);
+
+        $assignedStandId = StandAssignment::where('callsign', 'BAW9232')->first()?->stand_id;
+        $this->assertTrue(in_array($assignedStandId, [1, 2]));
+        $this->assertFalse(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 3)->exists());
         Event::assertDispatched(StandAssignedEvent::class);
     }
 

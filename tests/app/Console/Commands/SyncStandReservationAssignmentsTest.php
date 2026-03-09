@@ -25,7 +25,7 @@ class SyncStandReservationAssignmentsTest extends BaseFunctionalTestCase
         Cache::flush();
     }
 
-    public function testItAssignsStandToMatchingActiveReservationCallsignAndLiftsExpiredSlotAssignments(): void
+    public function testItAssignsStandToMatchingActiveReservationCidAndLiftsExpiredSlotAssignments(): void
     {
         StandReservation::create([
             'stand_id' => 1,
@@ -118,6 +118,42 @@ class SyncStandReservationAssignmentsTest extends BaseFunctionalTestCase
         $this->assertEquals([
             'DLH4321' => 3,
         ], Cache::get('stand_reservations:managed_assignments'));
+    }
+
+    public function testItSkipsReservationWhenCidIsNotPresent(): void
+    {
+        StandReservation::create([
+            'stand_id' => 2,
+            'callsign' => 'BAW900',
+            'cid' => null,
+            'origin' => 'EGCC',
+            'destination' => 'EGLL',
+            'start' => now()->subMinutes(5),
+            'end' => now()->addMinutes(20),
+        ]);
+
+        NetworkAircraft::create([
+            'callsign' => 'RANDOM1',
+            'cid' => 1234567,
+            'planned_depairport' => 'EGCC',
+            'planned_destairport' => 'EGLL',
+        ]);
+
+        NetworkAircraft::create([
+            'callsign' => 'BAW900',
+            'cid' => 7654321,
+            'planned_depairport' => 'EGBB',
+            'planned_destairport' => 'EGKK',
+        ]);
+
+        $this->mockAssignmentsService->shouldReceive('assignmentForCallsign')->never();
+        $this->mockAssignmentsService->shouldReceive('createStandAssignment')->never();
+
+        $this->mockAssignmentsService->shouldReceive('deleteStandAssignment')->never();
+
+        $this->assertEquals(0, Artisan::call('stand-reservations:sync-assignments'));
+
+        $this->assertEquals([], Cache::get('stand_reservations:managed_assignments'));
     }
 
 }

@@ -30,8 +30,6 @@ class StandReservationsImport implements ToCollection
     private const INDEXED_START = 3;
     private const INDEXED_END = 4;
     private const INDEXED_CID = 5;
-    private const INDEXED_ORIGIN = 6;
-    private const INDEXED_DESTINATION = 7;
 
     /**
      * Supported row format:
@@ -39,16 +37,15 @@ class StandReservationsImport implements ToCollection
      * Indexed (CSV):
      * 0 - Airport ICAO where the stand exists (stand location / allocation airport)
      * 1 - Stand identifier at index 0 airport
-     * 2 - Callsign (optional)
+     * 2 - Callsign (display label only)
      * 3 - Start datetime
      * 4 - End datetime
-     * 5 - CID (optional)
-     * 6 - Origin airport ICAO from the flight plan (optional metadata for matching)
-     * 7 - Destination airport ICAO from the flight plan (optional metadata for matching)
+     * 5 - CID (matching key)
+     * 6+ - Ignored (legacy metadata columns)
      *
      * Associative (JSON):
      * airport, stand, start, end (required)
-     * callsign, cid, origin, destination (optional)
+     * callsign (display label), cid (matching key)
      *
      * @param Collection[] $rows
      */
@@ -82,8 +79,6 @@ class StandReservationsImport implements ToCollection
                     'stand_id' => $this->stands[$reservationData['airport']][$reservationData['stand']],
                     'callsign' => $reservationData['callsign'],
                     'cid' => $reservationData['cid'],
-                    'origin' => $reservationData['origin'],
-                    'destination' => $reservationData['destination'],
                     'start' => Carbon::parse($reservationData['start']),
                     'end' => Carbon::parse($reservationData['end']),
                 ]
@@ -118,8 +113,6 @@ class StandReservationsImport implements ToCollection
                 'stand' => $row->get('stand'),
                 'callsign' => $this->emptyStringToNull($row->get('callsign')),
                 'cid' => $this->emptyStringToNull($row->get('cid')),
-                'origin' => $this->emptyStringToNull($row->get('origin')),
-                'destination' => $this->emptyStringToNull($row->get('destination')),
                 'start' => $row->get('start'),
                 'end' => $row->get('end'),
             ];
@@ -135,8 +128,6 @@ class StandReservationsImport implements ToCollection
             'stand' => $row->get(self::INDEXED_STAND),
             'callsign' => $this->emptyStringToNull($row->get(self::INDEXED_CALLSIGN)),
             'cid' => $this->emptyStringToNull($row->get(self::INDEXED_CID)),
-            'origin' => $this->emptyStringToNull($row->get(self::INDEXED_ORIGIN)),
-            'destination' => $this->emptyStringToNull($row->get(self::INDEXED_DESTINATION)),
             'start' => $row->get(self::INDEXED_START),
             'end' => $row->get(self::INDEXED_END),
         ];

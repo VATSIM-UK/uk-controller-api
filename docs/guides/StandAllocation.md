@@ -60,10 +60,7 @@ Below is a description of the specific rules used to assign stands to arriving a
 This rule matches flights for a particular arrival airfield and a specific member CID. It is only used in organised events
 where stand reservations are necessary.
 
-### Callsign Reserved
-
-This rule matches flights for a particular arrival airfield and a specific callsign. It is only used in organised events
-where stand reservations are necessary.
+Callsign-based reservation matching is not used.
 
 ### User Requested
 
@@ -252,7 +249,8 @@ Each `stand_slots[]` item supports:
 
 Each slot reservation supports:
 
-- optional flight metadata: `callsign`, `cid`, `origin`, `destination`
+- matching metadata: `cid` (required for automatic reservation matching)
+- optional display metadata: `callsign`
 - optional `slotstart` / `slotend` (falls back to top-level defaults)
 
 Example payload body:

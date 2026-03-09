@@ -255,7 +255,7 @@ class StandController extends BaseController
         // Do not allow late approvals after the event has already started.
         $eventStart = $standReservationPlan->eventStartAt();
         if ($eventStart !== null && $eventStart->isPast()) {
-            $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID, 'denied_reason' => StandReservationPlan::AUTOMATION_NOT_APPROVED_REASON]);
+            $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID, 'denied_reason' => StandReservationPlan::AUTOMATION_EVENT_STARTED_PRIOR_TO_APPROVAL_REASON]);
             return response()->json(['message' => 'Event start has already passed'], 422);
         }
 
@@ -343,33 +343,17 @@ class StandController extends BaseController
 
     private function findReservedStandId(NetworkAircraft $aircraft): ?int
     {
+        if ($aircraft->cid === null) {
+            return null;
+        }
+
         // Reservation-based event slots must take precedence over distance-based auto allocation.
         return StandReservation::query()
             ->active()
-            ->where(function ($query) use ($aircraft) {
-                $query->where('callsign', $aircraft->callsign);
-
-                if ($aircraft->cid !== null) {
-                    $query->orWhere('cid', $aircraft->cid);
-                }
-            })
+            ->where('cid', $aircraft->cid)
+            // Route metadata and callsign are ignored; CID is the reservation key.
             ->orderBy('start')
-            ->get()
-            ->first(fn (StandReservation $reservation): bool => $this->reservationMatchesAircraftRoute($reservation, $aircraft))
-            ?->stand_id;
-    }
-
-    private function reservationMatchesAircraftRoute(StandReservation $reservation, NetworkAircraft $aircraft): bool
-    {
-        if ($reservation->origin !== null && $reservation->origin !== $aircraft->planned_depairport) {
-            return false;
-        }
-
-        if ($reservation->destination !== null && $reservation->destination !== $aircraft->planned_destairport) {
-            return false;
-        }
-
-        return true;
+            ->value('stand_id');
     }
 
     private function respondWithReservedStand(string $callsign, int $reservedStandId): JsonResponse

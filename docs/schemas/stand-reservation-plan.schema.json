@@ -91,20 +91,20 @@
         },
         "callsign": {
           "$ref": "#/$defs/callsign",
-          "description": "Optional exact callsign match."
+          "description": "Optional callsign label retained for display; ignored for matching."
         },
         "cid": {
           "type": "integer",
           "minimum": 1,
-          "description": "Optional VATSIM CID match."
+          "description": "Optional VATSIM CID used for matching (required for automatic reservation matching)."
         },
         "origin": {
           "$ref": "#/$defs/airportIcao",
-          "description": "Optional departure airport ICAO used for matching."
+          "description": "Deprecated and ignored for stand reservation matching."
         },
         "destination": {
           "$ref": "#/$defs/airportIcao",
-          "description": "Optional destination airport ICAO used for matching."
+          "description": "Deprecated and ignored for stand reservation matching."
         },
         "slotstart": {
           "$ref": "#/$defs/dateTime",
@@ -178,20 +178,20 @@
         },
         "callsign": {
           "$ref": "#/$defs/callsign",
-          "description": "Optional exact callsign match."
+          "description": "Optional callsign label retained for display; ignored for matching."
         },
         "cid": {
           "type": "integer",
           "minimum": 1,
-          "description": "Optional VATSIM CID match."
+          "description": "Optional VATSIM CID used for matching (required for automatic reservation matching)."
         },
         "origin": {
           "$ref": "#/$defs/airportIcao",
-          "description": "Optional departure airport ICAO used for matching."
+          "description": "Deprecated and ignored for stand reservation matching."
         },
         "destination": {
           "$ref": "#/$defs/airportIcao",
-          "description": "Optional destination airport ICAO used for matching."
+          "description": "Deprecated and ignored for stand reservation matching."
         },
         "slotstart": {
           "$ref": "#/$defs/dateTime",

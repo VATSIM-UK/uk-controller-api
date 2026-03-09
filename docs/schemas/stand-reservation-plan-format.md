@@ -38,12 +38,10 @@ For top-level `reservations[]`, these fields are **required**:
 
 For `stand_slots[].slot_reservations[]`, `stand` and `airport` may be omitted and inherited from the parent stand-slot object.
 
-Optional row-level fields:
+Additional row-level fields:
 
-- `callsign`: VATSIM callsign.
-- `cid`: positive integer VATSIM CID.
-- `origin`: ICAO code.
-- `destination`: ICAO code.
+- `callsign`: VATSIM callsign label (ignored for automatic reservation matching).
+- `cid`: positive integer VATSIM CID (required for automatic reservation matching).
 - `slotstart`: row-specific start datetime.
 - `slotend`: row-specific end datetime.
 
@@ -105,11 +103,13 @@ This body is formally defined by:
       "slot_reservations": [
         {
           "callsign": "BAW1234",
+          "cid": 1234567,
           "slotstart": "2026-02-20 09:00:00",
           "slotend": "2026-02-20 09:30:00"
         },
         {
           "callsign": "BAW4321",
+          "cid": 7654321,
           "slotstart": "2026-02-20 09:31:00",
           "slotend": "2026-02-20 10:00:00"
         }
@@ -134,17 +134,15 @@ This body is formally defined by:
       "slot_reservations": [
         {
           "callsign": "BAW1234",
+          "cid": 1234567,
           "slotstart": "2026-02-20 09:00:00",
-          "slotend": "2026-02-20 09:30:00",
-          "origin": "EGCC",
-          "destination": "EGLL"
+          "slotend": "2026-02-20 09:30:00"
         },
         {
           "callsign": "BAW4321",
+          "cid": 7654321,
           "slotstart": "2026-02-20 09:31:00",
-          "slotend": "2026-02-20 10:00:00",
-          "origin": "EHAM",
-          "destination": "EGLL"
+          "slotend": "2026-02-20 10:00:00"
         }
       ]
     }

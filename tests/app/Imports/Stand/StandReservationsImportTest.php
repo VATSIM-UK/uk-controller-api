@@ -122,6 +122,7 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
                     'stand' => '1L',
                     'callsign' => 'BAW24A',
                     'cid' => 1234567,
+                    // Legacy fields remain accepted but are intentionally ignored.
                     'origin' => 'EGKK',
                     'destination' => 'EGLL',
                     'start' => '2024-01-01 09:00:00',
@@ -138,8 +139,8 @@ class StandReservationsImportTest extends BaseFunctionalTestCase
                 'stand_id' => 1,
                 'callsign' => 'BAW24A',
                 'cid' => 1234567,
-                'origin' => 'EGKK',
-                'destination' => 'EGLL',
+                'origin' => null,
+                'destination' => null,
                 'start' => '2024-01-01 09:00:00',
                 'end' => '2024-01-01 10:00:00',
             ]

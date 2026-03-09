@@ -61,8 +61,6 @@ class StandReservationPayloadRowsBuilder
             'stand' => $reservation['stand'] ?? $fallbackStand,
             'callsign' => $reservation['callsign'] ?? null,
             'cid' => $reservation['cid'] ?? null,
-            'origin' => $reservation['origin'] ?? null,
-            'destination' => $reservation['destination'] ?? null,
             'start' => $reservation['slotstart'] ?? $defaultStart,
             'end' => $reservation['slotend'] ?? $defaultEnd,
         ]);

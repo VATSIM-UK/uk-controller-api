@@ -11,6 +11,7 @@ class StandReservationPlan extends Model
     public const AUTOMATION_DENIED_BY_USER_ID = 1;
 
     public const AUTOMATION_NOT_APPROVED_REASON = 'Not approved by UKCP Automation';
+    public const AUTOMATION_EVENT_STARTED_PRIOR_TO_APPROVAL_REASON = 'Event started prior to approval';
 
     protected $fillable = [
         'name',

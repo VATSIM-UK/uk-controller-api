@@ -68,23 +68,16 @@ class SyncStandReservationAssignments extends Command
         return 0;
     }
 
-    // Match by CID where available, otherwise callsign, with optional route narrowing.
+    // Match by CID only.
     private function matchingAircraftForReservation(StandReservation $reservation): ?NetworkAircraft
     {
-        $query = NetworkAircraft::query()->notTimedOut();
-
-        if ($reservation->cid !== null) {
-            $query->where('cid', $reservation->cid);
+        if ($reservation->cid === null) {
+            return null;
         }
 
-        if ($reservation->origin !== null) {
-            $query->where('planned_depairport', $reservation->origin);
-        }
-
-        if ($reservation->destination !== null) {
-            $query->where('planned_destairport', $reservation->destination);
-        }
-
-        return $query->first();
+        return NetworkAircraft::query()
+            ->notTimedOut()
+            ->where('cid', $reservation->cid)
+            ->first();
     }
 }
