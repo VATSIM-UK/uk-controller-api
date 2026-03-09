@@ -460,6 +460,13 @@ class StandControllerTest extends BaseApiTestCase
             'end' => now()->addMinutes(20),
         ]);
 
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW9232',
+            [
+                'cid' => 1234567,
+            ]
+        );
+
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'stand/assignment/requestauto',
@@ -489,13 +496,6 @@ class StandControllerTest extends BaseApiTestCase
             'start' => now()->subMinutes(5),
             'end' => now()->addMinutes(20),
         ]);
-
-        NetworkAircraftService::createOrUpdateNetworkAircraft(
-            'BAW9232',
-            [
-                'cid' => 1234567,
-            ]
-        );
 
         $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,

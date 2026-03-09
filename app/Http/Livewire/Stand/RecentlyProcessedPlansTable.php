@@ -58,7 +58,8 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
                     ->state(fn (StandReservationPlan $record): string => $this->allocationWindowLabel($record)),
                 TextColumn::make('requested_stands')
                     ->label('Requested stands')
-                    ->state(fn (StandReservationPlan $record): string => $this->requestedStandsLabel($record)),
+                    ->state(fn (StandReservationPlan $record): string => $this->requestedStandsLabel($record))
+                    ->tooltip(fn (StandReservationPlan $record): ?string => $this->requestedStandsTooltip($record)),
                 TextColumn::make('denied_reason')
                     ->label('Rejection reason')
                     ->tooltip(fn (StandReservationPlan $record): ?string => $record->denied_reason)
@@ -110,11 +111,7 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
     private function requestedStandsLabel(StandReservationPlan $plan): string
     {
         // Build a concise, deduplicated stand summary across all payload branches.
-        $requestedStands = $this->extractStandLabels($plan->payload['reservations'] ?? [])
-            ->concat($this->extractStandLabels($plan->payload['stand_slots'] ?? []))
-            ->filter()
-            ->unique()
-            ->values();
+        $requestedStands = $this->requestedStands($plan);
 
         if ($requestedStands->isEmpty()) {
             return 'No reservations';
@@ -124,6 +121,29 @@ class RecentlyProcessedPlansTable extends Component implements HasForms, HasTabl
             ->take(5)
             ->implode(', ')
             . ($requestedStands->count() > 5 ? '…' : '');
+    }
+
+    private function requestedStandsTooltip(StandReservationPlan $plan): ?string
+    {
+        $requestedStands = $this->requestedStands($plan);
+
+        if ($requestedStands->isEmpty()) {
+            return null;
+        }
+
+        return $requestedStands
+            ->values()
+            ->map(fn (string $stand, int $index): string => sprintf('%d. %s', $index + 1, $stand))
+            ->implode(PHP_EOL);
+    }
+
+    private function requestedStands(StandReservationPlan $plan): \Illuminate\Support\Collection
+    {
+        return $this->extractStandLabels($plan->payload['reservations'] ?? [])
+            ->concat($this->extractStandLabels($plan->payload['stand_slots'] ?? []))
+            ->filter()
+            ->unique()
+            ->values();
     }
 
     private function extractStandLabels(array $items): \Illuminate\Support\Collection
