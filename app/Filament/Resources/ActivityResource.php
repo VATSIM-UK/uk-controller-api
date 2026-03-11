@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ActivityResource\Pages\ListActivities;
 
-use Jacobtims\FilamentLogger\Resources\ActivityResource as BaseResource;
-use Jacobtims\FilamentLogger\Resources\ActivityResource\Pages\ViewActivity;
+use Z3d0X\FilamentLogger\Resources\ActivityResource as BaseResource;
+use Z3d0X\FilamentLogger\Resources\ActivityResource\Pages\ViewActivity;
 
 class ActivityResource extends BaseResource
 {
