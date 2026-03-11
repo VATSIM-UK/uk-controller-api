@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.63.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.63.1...6.63.2) (2026-03-11)
+
+### Bug Fixes
+
+* upgrade to laravel 12 properly ([1b3a57c](https://github.com/VATSIM-UK/uk-controller-api/commit/1b3a57c6a5fefeb1eaada8e36ffc18792945cfeb))
+
 ## [6.63.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.63.0...6.63.1) (2026-03-11)
 
 ### Bug Fixes
