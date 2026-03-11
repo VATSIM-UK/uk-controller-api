@@ -71,8 +71,7 @@ trait SelectsStandsUsingStandardConditions
                 $aircraft
             ),
             $this->orderByForStandsQuery($aircraft, $specificOrders, $includeAssignmentPriority, $isRanking)
-
-    );
+        );
     }
 
     /**
