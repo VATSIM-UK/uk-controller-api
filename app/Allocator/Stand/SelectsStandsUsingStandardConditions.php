@@ -71,9 +71,10 @@ trait SelectsStandsUsingStandardConditions
                 $aircraft
             ),
             $this->orderByForStandsQuery($aircraft, $specificOrders, $includeAssignmentPriority, $isRanking)
-                    );
+
+    );
     }
-    
+
     /**
      * Build stand ordering for a given aircraft/query mode.
      */
