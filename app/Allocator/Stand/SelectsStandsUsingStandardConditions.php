@@ -4,6 +4,7 @@ namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
 use Closure;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -73,6 +74,9 @@ trait SelectsStandsUsingStandardConditions
         );
     }
 
+    /**
+     * Build stand ordering for a given aircraft/query mode.
+     */
     private function orderByForStandsQuery(
         NetworkAircraft $aircraft,
         array $customOrders,
@@ -93,10 +97,40 @@ trait SelectsStandsUsingStandardConditions
                 : $this->commonOrderByConditionsWithoutAssignmentPriorityForAircraft($aircraft);
         }
 
+        $nightTimeRemoteStandCondition = $this->nightTimeRemoteStandOrderCondition();
+
+        if ($nightTimeRemoteStandCondition !== null) {
+            $commonConditions = array_merge([$nightTimeRemoteStandCondition], $commonConditions);
+        }
+
         return array_merge(
             $customOrders,
             $commonConditions
         );
+    }
+
+    /**
+     * Returns an optional SQL ORDER BY fragment that prefers remote stands overnight
+     * within the configured night window, or null when the bias should not be applied.
+     */
+    private function nightTimeRemoteStandOrderCondition(): ?string
+    {
+        $config = config('stands.night_remote_stand_weighting');
+
+        $hour = Carbon::now('Europe/London')->hour;
+        $startHour = (int) ($config['start_hour'] ?? 22);
+        $endHour = (int) ($config['end_hour'] ?? 6);
+
+        // Supports both normal windows (e.g. 01 -> 05) and windows crossing midnight (e.g. 22 -> 06).
+        $isNightWindow = $startHour <= $endHour
+            ? $hour >= $startHour && $hour < $endHour
+            : $hour >= $startHour || $hour < $endHour;
+
+        if (!$isNightWindow) {
+            return null;
+        }
+
+        return 'CASE WHEN stands.overnight_remote_preferred = 1 THEN 0 ELSE 1 END ASC';
     }
 
     private function commonOrderByConditionsForAircraft(NetworkAircraft $aircraft): array
