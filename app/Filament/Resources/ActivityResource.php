@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ActivityResource\Pages\ListActivities;
+
 use Z3d0X\FilamentLogger\Resources\ActivityResource as BaseResource;
 use Z3d0X\FilamentLogger\Resources\ActivityResource\Pages\ViewActivity;
 
