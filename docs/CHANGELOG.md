@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.63.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.63.0...6.63.1) (2026-03-11)
+
+### Bug Fixes
+
+* Bump laravel ([3dca26e](https://github.com/VATSIM-UK/uk-controller-api/commit/3dca26e7353e95dd51ed35273b12e1b508364d26))
+
 ## [6.63.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.3...6.63.0) (2026-02-19)
 
 ### Features
