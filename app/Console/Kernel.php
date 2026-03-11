@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ActivateStandReservationPlans;
 use App\Console\Commands\AllocateStandForArrival;
 use App\Console\Commands\CheckForKeyTableUpdates;
 use App\Console\Commands\CleanDepartureReleaseRequestHistory;
@@ -14,6 +15,7 @@ use App\Console\Commands\ClearAssignedHoldsHistory;
 use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\RecatCategoriesImport;
 use App\Console\Commands\StandReservationsImport;
+use App\Console\Commands\SyncStandReservationAssignments;
 use App\Console\Commands\UpdateMetars;
 use App\Console\Commands\UpdateVatsimControllerData;
 use App\Console\Commands\UpdateVatsimNetworkData;
@@ -38,6 +40,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        ActivateStandReservationPlans::class,
         CleanSquawkAssignmentsHistory::class,
         CreateUserToken::class,
         DeleteExpiredTokens::class,
@@ -51,6 +54,7 @@ class Kernel extends ConsoleKernel
         CleanStandAssignmentsHistory::class,
         WakeCategoriesImport::class,
         StandReservationsImport::class,
+        SyncStandReservationAssignments::class,
         RecatCategoriesImport::class,
         UpdateMetars::class,
         CleanPluginEvents::class,
@@ -91,6 +95,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('plugin-events:clean')->everyTenMinutes()->doNotMonitor();
         $schedule->command('metars:update')->everyMinute();
         $schedule->command('database:check-table-updates')->everyMinute();
+        $schedule->command('stand-reservations:activate-plans')->everyTenMinutes()->doNotMonitor();
+        $schedule->command('stand-reservations:sync-assignments')->everyFiveMinute()->doNotMonitor();
         $schedule->job(UpdateOnlineCallsigns::class)->everyTwoMinutes()->doNotMonitor();
     }
 

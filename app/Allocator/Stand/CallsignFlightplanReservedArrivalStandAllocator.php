@@ -8,8 +8,7 @@ use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Matches the network aircraft with a stand that is allocated to an aircraft of the same callsign
- * with the same flightplan (origin/dest).
+ * Matches the network aircraft with a stand reservation by exact callsign.
  */
 class CallsignFlightplanReservedArrivalStandAllocator implements ArrivalStandAllocator
 {
@@ -20,8 +19,6 @@ class CallsignFlightplanReservedArrivalStandAllocator implements ArrivalStandAll
                 $standQuery->unoccupied()->unassigned();
             })
             ->where('callsign', $aircraft->callsign)
-            ->where('origin', $aircraft->planned_depairport)
-            ->where('destination', $aircraft->planned_destairport)
             ->active()
             ->first();
 

@@ -91,7 +91,26 @@ class CidReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
         $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
     }
 
-    public function testItDoesntAllocateReservedStandIfNotRightDestination()
+    public function testItDoesntAllocateReservedStandWhenAircraftCidIsMissing()
+    {
+        NetworkAircraft::find('BAW123')->update(['cid' => null]);
+
+        StandReservation::create(
+            [
+                'callsign' => 'BAW123',
+                'cid' => null,
+                'stand_id' => 1,
+                'start' => Carbon::now()->subMinute(),
+                'end' => Carbon::now()->addHour(),
+                'origin' => 'EGSS',
+                'destination' => 'EGLL',
+            ]
+        );
+
+        $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
+    }
+
+    public function testItAllocatesReservedStandIfDestinationDiffers()
     {
         StandReservation::create(
             [
@@ -105,7 +124,7 @@ class CidReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ]
         );
 
-        $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
+        $this->assertEquals(1, $this->allocator->allocate(NetworkAircraft::find('BAW123')));
     }
 
     public function testItDoesntAllocateReservedStandIfNotFree()
@@ -120,6 +139,7 @@ class CidReservedArrivalStandAllocatorTest extends BaseFunctionalTestCase
         StandReservation::create(
             [
                 'callsign' => 'BAW123',
+                'cid' => self::ACTIVE_USER_CID,
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addHour(),

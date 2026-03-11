@@ -71,7 +71,7 @@ class CallsignFlightplanReservedArrivalStandAllocatorTest extends BaseFunctional
         $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
     }
 
-    public function testItDoesntAllocateReservedStandIfIncorrectOrigin()
+    public function testItAllocatesReservedStandEvenIfOriginDiffers()
     {
         StandReservation::create(
             [
@@ -84,10 +84,10 @@ class CallsignFlightplanReservedArrivalStandAllocatorTest extends BaseFunctional
             ]
         );
 
-        $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
+        $this->assertEquals(1, $this->allocator->allocate(NetworkAircraft::find('BAW123')));
     }
 
-    public function testItDoesntAllocateReservedStandIfIncorrectDestination()
+    public function testItAllocatesReservedStandEvenIfDestinationDiffers()
     {
         StandReservation::create(
             [
@@ -100,7 +100,7 @@ class CallsignFlightplanReservedArrivalStandAllocatorTest extends BaseFunctional
             ]
         );
 
-        $this->assertNull($this->allocator->allocate(NetworkAircraft::find('BAW123')));
+        $this->assertEquals(1, $this->allocator->allocate(NetworkAircraft::find('BAW123')));
     }
 
     public function testItDoesntAllocateReservedStandIfNotFree()

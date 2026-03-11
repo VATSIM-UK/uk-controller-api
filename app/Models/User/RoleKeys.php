@@ -8,4 +8,5 @@ enum RoleKeys: string
     case WEB_TEAM = 'web_team';
     case OPERATIONS_TEAM = 'ops_team';
     case OPERATIONS_CONTRIBUTOR = 'ops_contributor';
+    case VAA = 'vaa';
 }

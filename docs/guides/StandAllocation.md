@@ -60,10 +60,7 @@ Below is a description of the specific rules used to assign stands to arriving a
 This rule matches flights for a particular arrival airfield and a specific member CID. It is only used in organised events
 where stand reservations are necessary.
 
-### Callsign Reserved
-
-This rule matches flights for a particular arrival airfield and a specific callsign. It is only used in organised events
-where stand reservations are necessary.
+Callsign-based reservation matching is not used.
 
 ### User Requested
 
@@ -231,3 +228,56 @@ The "best" stands left over at this point are then:
 
 If the "common rules" reject all possible stands, then the next specific rule is invoked and we start over. Otherwise,
 we've found a match, and that stand is assigned!
+
+## Event Stand Reservation Plan format
+
+When submitting an event stand plan via the API or the UKCP website, send a JSON object with:
+
+- `name` and `contact_email` metadata (API), or form fields in Filament
+- either:
+  - `stand_slots` (recommended): an array where each stand is a slot containing `slot_reservations`
+  - `reservations`: flat reservation rows
+  - `event_start` / `event_finish`
+
+### Slot-based format (recommended)
+
+Each `stand_slots[]` item supports:
+
+- `airport`
+- `stand`
+- `slot_reservations`: array of timed reservation rows
+
+Each slot reservation supports:
+
+- matching metadata: `cid` (required for automatic reservation matching)
+- optional display metadata: `callsign`
+- optional `slotstart` / `slotend` (falls back to top-level defaults)
+
+Example payload body:
+
+```json
+{
+  "name": "Speedbird 24",
+  "contact_email": "ops@example.com",
+  "event_start": "2026-02-20 09:00:00",
+  "event_finish": "2026-02-20 18:00:00",
+  "stand_slots": [
+    {
+      "airport": "EGLL",
+      "stand": "531",
+      "slot_reservations": [
+        {
+          "cid": "1234567",
+          "slotstart": "2026-02-20 09:00:00",
+          "slotend": "2026-02-20 09:30:00"
+        },
+        {
+          "cid": "7654321",
+          "slotstart": "2026-02-20 09:31:00",
+          "slotend": "2026-02-20 10:00:00"
+        }
+      ]
+    }
+  ]
+}
+```

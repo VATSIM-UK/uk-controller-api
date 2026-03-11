@@ -6,15 +6,21 @@ use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;;
+use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandReservation;
+use App\Models\User\Role;
+use App\Models\User\RoleKeys;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\DataProvider;
+use TestingUtils\Traits\WithSeedUsers;
 
 class StandControllerTest extends BaseApiTestCase
 {
+    use WithSeedUsers;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -292,6 +298,133 @@ class StandControllerTest extends BaseApiTestCase
             ->assertJson($expected);
     }
 
+
+    public function testItUploadsStandReservationPlanForVaaRole()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $eventStart = now()->addDay()->setTime(9, 0);
+
+        $response = $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Test event',
+                'contact_email' => 'event@example.com',
+                'event_start' => $eventStart->format('Y-m-d H:i:s'),
+                'event_finish' => $eventStart->copy()->setTime(18, 0)->format('Y-m-d H:i:s'),
+                'stand_slots' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                        'slot_reservations' => [
+                            [
+                                'callsign' => 'SBI24',
+                                'cid' => 1234567,
+                                'slotstart' => $eventStart->copy()->format('Y-m-d H:i:s'),
+                                'slotend' => $eventStart->copy()->addMinutes(30)->format('Y-m-d H:i:s'),
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $response->assertStatus(201)
+            ->assertJsonStructure(['plan_id', 'status', 'approval_due_at'])
+            ->assertJson(['status' => 'pending']);
+
+        $this->assertDatabaseHas('stand_reservation_plans', [
+            'name' => 'Test event',
+            'contact_email' => 'event@example.com',
+            'status' => 'pending',
+            'approval_due_at' => $eventStart->copy()->subDay()->format('Y-m-d H:i:s'),
+        ]);
+        $this->assertDatabaseCount('stand_reservations', 0);
+    }
+
+    public function testItRejectsStandReservationPlanWithoutEventStart()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Missing event start',
+                'contact_email' => 'event@example.com',
+                'reservations' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                    ],
+                ],
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['event_start']);
+    }
+
+
+    public function testItRejectsStandReservationPlanThatFailsJsonSchema()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Schema failure',
+                'contact_email' => 'event@example.com',
+                'event_start' => now()->addDay()->setTime(9, 0)->format('Y-m-d H:i:s'),
+                'event_finish' => now()->addDay()->setTime(18, 0)->format('Y-m-d H:i:s'),
+                'unexpected' => 'field',
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'Stand reservation plan request does not match schema');
+    }
+
+
+    public function testItRejectsLegacyStartEndFieldsInStandReservationPlanPayload()
+    {
+        $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'name' => 'Legacy fields',
+                'contact_email' => 'event@example.com',
+                'start' => '2024-08-11 09:00:00',
+                'end' => '2024-08-11 18:00:00',
+                'reservations' => [
+                    [
+                        'airport' => 'EGLL',
+                        'stand' => '1L',
+                    ],
+                ],
+            ]
+        )
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'Stand reservation plan request does not match schema');
+    }
+
+    public function testItRejectsStandReservationPlanUploadForNonVaaRole()
+    {
+        $this->activeUser()->roles()->sync([]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/reservations/plan',
+            [
+                'reservations' => [],
+            ]
+        )->assertStatus(403);
+
+        $this->assertDatabaseCount('stand_reservations', 0);
+    }
+
     public function testItAutoAssignsDepartureStand()
     {
 
@@ -311,6 +444,111 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(201);
 
         $this->assertTrue(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 2)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+
+    public function testItUsesActiveReservationBeforeAutomaticAssignmentEvenWhenRouteDiffers(): void
+    {
+        StandReservation::create([
+            'stand_id' => 1,
+            'callsign' => 'BAW9232',
+            'cid' => 1234567,
+            'origin' => 'LEBL',
+            'destination' => 'LFPG',
+            'start' => now()->subMinutes(5),
+            'end' => now()->addMinutes(20),
+        ]);
+
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW9232',
+            [
+                'cid' => 1234567,
+            ]
+        );
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGCC',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )
+            ->assertJson(['stand_id' => 1])
+            ->assertStatus(201);
+
+        $this->assertTrue(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 1)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItDoesNotUseActiveReservationWhenAircraftCidIsMissing(): void
+    {
+        StandReservation::create([
+            'stand_id' => 3,
+            'callsign' => 'BAW9232',
+            'cid' => 1234567,
+            'origin' => 'EGCC',
+            'destination' => 'EGLL',
+            'start' => now()->subMinutes(5),
+            'end' => now()->addMinutes(20),
+        ]);
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGCC',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )->assertStatus(201);
+
+        $assignedStandId = StandAssignment::where('callsign', 'BAW9232')->first()?->stand_id;
+        $this->assertTrue(in_array($assignedStandId, [1, 2]));
+        $this->assertFalse(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 3)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItDoesNotUseActiveReservationWhenCidDiffersEvenIfCallsignMatches(): void
+    {
+        StandReservation::create([
+            'stand_id' => 3,
+            'callsign' => 'BAW9232',
+            'cid' => 9999999,
+            'origin' => 'EGCC',
+            'destination' => 'EGLL',
+            'start' => now()->subMinutes(5),
+            'end' => now()->addMinutes(20),
+        ]);
+
+        NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'BAW9232',
+            [
+                'cid' => 1111111,
+            ]
+        );
+
+        $this->makeAuthenticatedApiRequest(
+            self::METHOD_POST,
+            'stand/assignment/requestauto',
+            [
+                'callsign' => 'BAW9232',
+                'assignment_type' => 'arrival',
+                'departure_airfield' => 'EGCC',
+                'arrival_airfield' => 'EGLL',
+                'aircraft_type' => 'B738',
+            ]
+        )->assertStatus(201);
+
+        $assignedStandId = StandAssignment::where('callsign', 'BAW9232')->first()?->stand_id;
+        $this->assertTrue(in_array($assignedStandId, [1, 2]));
+        $this->assertFalse(StandAssignment::where('callsign', 'BAW9232')->where('stand_id', 3)->exists());
         Event::assertDispatched(StandAssignedEvent::class);
     }
 
