@@ -5,7 +5,6 @@ namespace App\Models\Stand;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StandAssignment extends Model
 {
@@ -36,11 +35,5 @@ class StandAssignment extends Model
     public function aircraft(): BelongsTo
     {
         return $this->belongsTo(NetworkAircraft::class, 'callsign', 'callsign');
-    }
-
-    public function assignmentHistory(): HasOne
-    {
-        return $this->hasOne(StandAssignmentsHistory::class, 'callsign', 'callsign')
-            ->latestOfMany('assigned_at');
     }
 }
