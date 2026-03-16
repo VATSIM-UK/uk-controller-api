@@ -118,8 +118,7 @@ trait SelectsStandsUsingStandardConditions
         $config = config('stands.night_remote_stand_weighting');
 
         // Feature flag: if disabled or misconfigured, do not apply any bias.
-        $enabled = (bool) ($config['enabled'] ?? false);
-        if (!$enabled) {
+        if (!(bool) ($config['enabled'] ?? false)) {
             return null;
         }
 
@@ -129,11 +128,9 @@ trait SelectsStandsUsingStandardConditions
             return null;
         }
 
-        // Normalize configured airfields; if none are configured, do not apply the bias.
+        // Normalize configured airfields; if none are configured or destination not in list, do not apply bias.
         $configuredAirfields = array_map(
-            static function ($airfield): string {
-                return strtoupper(trim((string) $airfield));
-            },
+            static fn($airfield): string => strtoupper(trim((string) $airfield)),
             $config['airfields'] ?? []
         );
 
@@ -141,6 +138,7 @@ trait SelectsStandsUsingStandardConditions
             return null;
         }
 
+        // Check if current time is within the configured night window.
         $hour = Carbon::now('Europe/London')->hour;
         $startHour = (int) ($config['start_hour'] ?? 22);
         $endHour = (int) ($config['end_hour'] ?? 6);
@@ -150,11 +148,7 @@ trait SelectsStandsUsingStandardConditions
             ? $hour >= $startHour && $hour < $endHour
             : $hour >= $startHour || $hour < $endHour;
 
-        if (!$isNightWindow) {
-            return null;
-        }
-
-        return 'CASE WHEN stands.overnight_remote_preferred = 1 THEN 0 ELSE 1 END ASC';
+        return $isNightWindow ? 'CASE WHEN stands.overnight_remote_preferred = 1 THEN 0 ELSE 1 END ASC' : null;
     }
 
     private function commonOrderByConditionsForAircraft(NetworkAircraft $aircraft): array
