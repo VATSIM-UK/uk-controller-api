@@ -20,8 +20,7 @@ class StandUnassignedEvent extends HighPriorityBroadcastEvent
     public function __construct(
         string $callsign,
         ?string $assignmentSource = null,
-    )
-    {
+    ){
         $this->callsign = $callsign;
         $this->assignmentSource = $assignmentSource;
     }
