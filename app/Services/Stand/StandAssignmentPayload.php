@@ -45,18 +45,16 @@ class StandAssignmentPayload
 
     private static function sourceFromHistoryType(string $historyType): string
     {
+        $source = self::SOURCE_SYSTEM_AUTO;
+
         if (str_starts_with($historyType, self::PILOT_REQUEST_ALLOCATOR_PREFIX)) {
-            return self::SOURCE_RESERVATION_ALLOCATOR;
+            $source = self::SOURCE_RESERVATION_ALLOCATOR;
+        } elseif ($historyType === 'User') {
+            $source = self::SOURCE_MANUAL;
+        } elseif (str_contains($historyType, 'Vaa') || str_contains($historyType, 'StandReservation')) {
+            $source = self::SOURCE_VAA_ALLOCATOR;
         }
 
-        if ($historyType === 'User') {
-            return self::SOURCE_MANUAL;
-        }
-
-        if (str_contains($historyType, 'Vaa') || str_contains($historyType, 'StandReservation')) {
-            return self::SOURCE_VAA_ALLOCATOR;
-        }
-
-        return self::SOURCE_SYSTEM_AUTO;
+        return $source;
     }
 }
