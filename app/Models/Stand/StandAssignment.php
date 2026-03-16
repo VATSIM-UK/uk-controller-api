@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StandAssignment extends Model
 {
-    public const SOURCE_USER = 'manual';
+    public const SOURCE_USER = 'user';
     public const SOURCE_RESERVATION_ALLOCATOR = 'reservation_allocator';
     public const SOURCE_VAA_ALLOCATOR = 'vaa_allocator';
     public const SOURCE_SYSTEM = 'system_auto';

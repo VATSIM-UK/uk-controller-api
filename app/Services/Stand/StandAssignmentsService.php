@@ -107,7 +107,7 @@ class StandAssignmentsService
         ];
 
         foreach ($sourceMap as $key => $source) {
-            if ($assignmentType === $key || str_ends_with($assignmentType, $key)) {
+            if ($assignmentType === $key) {
                 return $source;
             }
         }

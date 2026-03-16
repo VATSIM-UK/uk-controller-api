@@ -286,7 +286,7 @@ class StandControllerTest extends BaseApiTestCase
     {
         $expected = [
             'callsign' => 'BAW123',
-            'stand_id' => 2,
+            'id' => 2,
             'identifier' => '251',
             'airfield' => 'EGLL',
             'assignment_source' => StandAssignment::SOURCE_SYSTEM,
@@ -325,7 +325,7 @@ class StandControllerTest extends BaseApiTestCase
             ->assertJson(
                 [
                     'callsign' => $callsign,
-                    'stand_id' => 1,
+                    'id' => 1,
                     'airfield' => 'EGLL',
                     'identifier' => '1L',
                     'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,

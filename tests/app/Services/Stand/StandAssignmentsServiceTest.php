@@ -160,7 +160,7 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->service->createStandAssignment(
             'BAW123',
             2,
-            'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator'
+            'UserRequestedArrivalStandAllocator'
         );
 
         $this->assertDatabaseHas(
@@ -169,6 +169,22 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
                 'callsign' => 'BAW123',
                 'stand_id' => 2,
                 'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
+            ]
+        );
+    }
+
+    public function testItSetsVaaAllocatorSourceForVaaAllocatorAssignments()
+    {
+        $this->mockHistoryService->shouldReceive('createHistoryItem')->once();
+
+        $this->service->createStandAssignment('BAW123', 2, 'CidReservedArrivalStandAllocator');
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 2,
+                'assignment_source' => StandAssignment::SOURCE_VAA_ALLOCATOR,
             ]
         );
     }
