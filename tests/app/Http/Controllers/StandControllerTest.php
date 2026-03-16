@@ -366,7 +366,7 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(422)
             ->assertJsonPath('message', 'Stand reservation plan request does not match schema');
 
-        $this->assertContains('$.event_start is required', $response->json('errors'));
+        $this->assertContains('$.event_start is required', $response->json('errors.event_start'));
     }
 
 
