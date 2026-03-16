@@ -25,6 +25,7 @@ class StandAssignedEventTest extends BaseUnitTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
             ]
         );
         $this->event = new StandAssignedEvent($this->assignment);
@@ -36,10 +37,7 @@ class StandAssignedEventTest extends BaseUnitTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
-                'assigned_by_reservation_allocator' => false,
-                'assigned_by_pilot_request' => false,
-                'assignment_source' => 'system_auto',
-                'assignment_status' => 'assigned',
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
             ],
             $this->event->broadcastWith()
         );

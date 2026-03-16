@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Services\Stand\StandAssignmentPayload;
+use App\Models\Stand\StandAssignment;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 
@@ -17,25 +17,13 @@ class StandUnassignedEvent extends HighPriorityBroadcastEvent
 
     private ?string $assignmentSource;
 
-    private string $assignmentStatus;
-
-    private bool $assignedByReservationAllocator;
-
-    private bool $assignedByPilotRequest;
-
     public function __construct(
         string $callsign,
         ?string $assignmentSource = null,
-        string $assignmentStatus = StandAssignmentPayload::STATUS_ASSIGNED,
-        bool $assignedByReservationAllocator = false,
-        bool $assignedByPilotRequest = false,
     )
     {
         $this->callsign = $callsign;
         $this->assignmentSource = $assignmentSource;
-        $this->assignmentStatus = $assignmentStatus;
-        $this->assignedByReservationAllocator = $assignedByReservationAllocator;
-        $this->assignedByPilotRequest = $assignedByPilotRequest;
     }
 
     public function broadcastWith()
@@ -43,10 +31,7 @@ class StandUnassignedEvent extends HighPriorityBroadcastEvent
         return [
             'callsign' => $this->callsign,
             'stand_id' => null,
-            'assigned_by_reservation_allocator' => $this->assignedByReservationAllocator,
-            'assigned_by_pilot_request' => $this->assignedByPilotRequest,
-            'assignment_source' => $this->assignmentSource ?? StandAssignmentPayload::SOURCE_SYSTEM_AUTO,
-            'assignment_status' => $this->assignmentStatus,
+            'assignment_source' => $this->assignmentSource ?? StandAssignment::SOURCE_SYSTEM_AUTO,
         ];
     }
 

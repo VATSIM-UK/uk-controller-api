@@ -34,9 +34,9 @@ class StandAssignmentsService
 
     public function deleteStandAssignment(StandAssignment $assignment): void
     {
-        $assignmentPayload = StandAssignmentPayload::fromAssignment($assignment);
+        $assignmentSource = $assignment->assignment_source;
         $this->deleteAssignmentAndHistoryData($assignment);
-        $this->unassignedEvent($assignmentPayload);
+        $this->unassignedEvent($assignment->callsign, $assignmentSource);
     }
 
     /**
@@ -72,6 +72,7 @@ class StandAssignmentsService
                 ['callsign' => $callsign],
                 [
                     'stand_id' => $stand->id,
+                    'assignment_source' => $this->assignmentSourceFromType($assignmentType),
                 ]
             );
 
@@ -87,20 +88,34 @@ class StandAssignmentsService
         });
 
         $existingAssignments->each(function (StandAssignment $assignment) {
-            $this->unassignedEvent(StandAssignmentPayload::fromAssignment($assignment));
+            $this->unassignedEvent($assignment->callsign, $assignment->assignment_source);
         });
         event(new StandAssignedEvent($assignment));
     }
 
-    private function unassignedEvent(array $assignmentPayload): void
+    private function unassignedEvent(string $callsign, ?string $assignmentSource): void
     {
-        event(new StandUnassignedEvent(
-            $assignmentPayload['callsign'],
-            $assignmentPayload['assignment_source'],
-            $assignmentPayload['assignment_status'],
-            $assignmentPayload['assigned_by_reservation_allocator'],
-            $assignmentPayload['assigned_by_pilot_request'],
-        ));
+        event(new StandUnassignedEvent($callsign, $assignmentSource));
+    }
+
+    private function assignmentSourceFromType(string $assignmentType): string
+    {
+        if ($assignmentType === 'User') {
+            return StandAssignment::SOURCE_MANUAL;
+        }
+
+        if (str_ends_with($assignmentType, 'UserRequestedArrivalStandAllocator')) {
+            return StandAssignment::SOURCE_RESERVATION_ALLOCATOR;
+        }
+
+        if (
+            str_ends_with($assignmentType, 'CidReservedArrivalStandAllocator')
+            || str_ends_with($assignmentType, 'CallsignFlightplanReservedArrivalStandAllocator')
+        ) {
+            return StandAssignment::SOURCE_VAA_ALLOCATOR;
+        }
+
+        return StandAssignment::SOURCE_SYSTEM_AUTO;
     }
 
     private function deleteAssignmentAndHistoryData(StandAssignment $assignment): void

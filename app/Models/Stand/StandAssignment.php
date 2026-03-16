@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StandAssignment extends Model
 {
+    public const SOURCE_MANUAL = 'manual';
+    public const SOURCE_RESERVATION_ALLOCATOR = 'reservation_allocator';
+    public const SOURCE_VAA_ALLOCATOR = 'vaa_allocator';
+    public const SOURCE_SYSTEM_AUTO = 'system_auto';
+
     const UPDATED_AT = null;
 
     public $incrementing = false;
@@ -20,6 +25,7 @@ class StandAssignment extends Model
     protected $fillable = [
         'callsign',
         'stand_id',
+        'assignment_source',
     ];
 
     public function stand(): BelongsTo

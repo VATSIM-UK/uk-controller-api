@@ -7,8 +7,6 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
-use App\Models\Stand\StandAssignmentsHistory;
-use App\Models\Stand\StandRequest;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -83,10 +81,12 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => 1,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
                 ],
                 [
                     'callsign' => 'BAW456',
                     'stand_id' => 2,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
                 ],
             ]
         );
@@ -95,18 +95,12 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
-                'assigned_by_reservation_allocator' => false,
-                'assigned_by_pilot_request' => false,
-                'assignment_source' => 'system_auto',
-                'assignment_status' => 'assigned',
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
             ],
             [
                 'callsign' => 'BAW456',
                 'stand_id' => 2,
-                'assigned_by_reservation_allocator' => false,
-                'assigned_by_pilot_request' => false,
-                'assignment_source' => 'system_auto',
-                'assignment_status' => 'assigned',
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
             ],
         ];
 
@@ -296,10 +290,7 @@ class StandControllerTest extends BaseApiTestCase
             'id' => 2,
             'identifier' => '251',
             'airfield' => 'EGLL',
-            'assigned_by_reservation_allocator' => false,
-            'assigned_by_pilot_request' => false,
-            'assignment_source' => 'system_auto',
-            'assignment_status' => 'assigned',
+            'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
         ];
 
         $this->addStandAssignment('BAW123', 2);
@@ -309,19 +300,10 @@ class StandControllerTest extends BaseApiTestCase
     }
 
 
-    public function testItReturnsReservationAllocatorSourceInStandAssignments(): void
+    public function testItReturnsAssignmentSourceInStandAssignments(): void
     {
         $callsign = 'BAW789';
-        $this->addStandAssignment($callsign, 1);
-
-        StandAssignmentsHistory::create(
-            [
-                'callsign' => $callsign,
-                'stand_id' => 1,
-                'type' => 'App\Allocator\Stand\UserRequestedArrivalStandAllocator',
-                'context' => [],
-            ]
-        );
+        $this->addStandAssignment($callsign, 1, StandAssignment::SOURCE_RESERVATION_ALLOCATOR);
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment')
             ->assertStatus(200)
@@ -329,27 +311,15 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'callsign' => $callsign,
                     'stand_id' => 1,
-                    'assigned_by_reservation_allocator' => true,
-                    'assigned_by_pilot_request' => true,
-                    'assignment_source' => 'reservation_allocator',
-                    'assignment_status' => 'assigned',
+                    'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
                 ]
             );
     }
 
-    public function testItReturnsReservationAllocatorSourceForSingleAssignmentRoute(): void
+    public function testItReturnsAssignmentSourceForSingleAssignmentRoute(): void
     {
         $callsign = 'BAW987';
-        $this->addStandAssignment($callsign, 1);
-
-        StandAssignmentsHistory::create(
-            [
-                'callsign' => $callsign,
-                'stand_id' => 1,
-                'type' => 'App\Allocator\Stand\UserRequestedArrivalStandAllocator',
-                'context' => [],
-            ]
-        );
+        $this->addStandAssignment($callsign, 1, StandAssignment::SOURCE_RESERVATION_ALLOCATOR);
 
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, sprintf('stand/assignment/%s', $callsign))
             ->assertStatus(200)
@@ -360,125 +330,9 @@ class StandControllerTest extends BaseApiTestCase
                     'id' => 1,
                     'airfield' => 'EGLL',
                     'identifier' => '1L',
-                    'assigned_by_reservation_allocator' => true,
-                    'assigned_by_pilot_request' => true,
-                    'assignment_source' => 'reservation_allocator',
-                    'assignment_status' => 'assigned',
+                    'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
                 ]
             );
-    }
-
-    public function testItReturnsRequestedUnavailableWhenPilotRequestedStandCannotBeAssigned(): void
-    {
-        $callsign = 'BAW111';
-
-        NetworkAircraftService::createOrUpdateNetworkAircraft(
-            $callsign,
-            [
-                'cid' => 1203533,
-                'planned_destairport' => 'EGLL',
-                'planned_depairport' => 'EGGW',
-            ]
-        );
-
-        $this->addStandAssignment('OTHER1', 1);
-
-        StandRequest::create([
-            'user_id' => 1203533,
-            'callsign' => $callsign,
-            'stand_id' => 1,
-            'requested_time' => Carbon::now(),
-        ]);
-
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, sprintf('stand/assignment/%s', $callsign))
-            ->assertStatus(200)
-            ->assertJson([
-                'callsign' => $callsign,
-                'stand_id' => null,
-                'assigned_by_reservation_allocator' => true,
-                'assigned_by_pilot_request' => true,
-                'assignment_source' => 'reservation_allocator',
-                'assignment_status' => 'requested_unavailable',
-            ]);
-    }
-
-    public function testItReturnsRequestedUnavailableInStandAssignmentsList(): void
-    {
-        $callsign = 'BAW112';
-
-        NetworkAircraftService::createOrUpdateNetworkAircraft(
-            $callsign,
-            [
-                'cid' => 1203533,
-                'planned_destairport' => 'EGLL',
-                'planned_depairport' => 'EGGW',
-            ]
-        );
-
-        $this->addStandAssignment('OTHER2', 1);
-
-        StandRequest::create([
-            'user_id' => 1203533,
-            'callsign' => $callsign,
-            'stand_id' => 1,
-            'requested_time' => Carbon::now(),
-        ]);
-
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment')
-            ->assertStatus(200)
-            ->assertJsonFragment([
-                'callsign' => $callsign,
-                'stand_id' => null,
-                'assigned_by_reservation_allocator' => true,
-                'assigned_by_pilot_request' => true,
-                'assignment_source' => 'reservation_allocator',
-                'assignment_status' => 'requested_unavailable',
-            ]);
-    }
-
-    public function testItBroadcastsRequestedUnavailableWhenAutoAssignFailsForPilotRequestedStand(): void
-    {
-        $callsign = 'BAW113';
-
-        NetworkAircraftService::createOrUpdateNetworkAircraft(
-            $callsign,
-            [
-                'cid' => 1203533,
-            ]
-        );
-
-        StandRequest::create([
-            'user_id' => 1203533,
-            'callsign' => $callsign,
-            'stand_id' => 1,
-            'requested_time' => Carbon::now(),
-        ]);
-
-        $this->addStandAssignment('OTHER3', 1);
-        $this->addStandAssignment('OTHER4', 2);
-
-        $this->makeAuthenticatedApiRequest(
-            self::METHOD_POST,
-            'stand/assignment/requestauto',
-            [
-                'callsign' => $callsign,
-                'assignment_type' => 'arrival',
-                'departure_airfield' => 'EGGW',
-                'arrival_airfield' => 'EGLL',
-                'aircraft_type' => 'B738',
-            ]
-        )->assertNotFound();
-
-        Event::assertDispatched(
-            fn (StandUnassignedEvent $event): bool => $event->broadcastWith() === [
-                'callsign' => $callsign,
-                'stand_id' => null,
-                'assigned_by_reservation_allocator' => true,
-                'assigned_by_pilot_request' => true,
-                'assignment_source' => 'reservation_allocator',
-                'assignment_status' => 'requested_unavailable',
-            ]
-        );
     }
 
     public function testItAutoAssignsDepartureStand()
@@ -846,13 +700,18 @@ class StandControllerTest extends BaseApiTestCase
         ];
     }
 
-    private function addStandAssignment(string $callsign, int $standId)
+    private function addStandAssignment(
+        string $callsign,
+        int $standId,
+        string $assignmentSource = StandAssignment::SOURCE_SYSTEM_AUTO,
+    )
     {
         NetworkAircraftService::createPlaceholderAircraft($callsign);
         StandAssignment::create(
             [
                 'callsign' => $callsign,
                 'stand_id' => $standId,
+                'assignment_source' => $assignmentSource,
             ]
         );
     }
