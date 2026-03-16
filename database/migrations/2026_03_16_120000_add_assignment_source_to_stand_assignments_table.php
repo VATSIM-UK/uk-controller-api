@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Stand\StandAssignment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,7 +9,7 @@ return new class extends Migration {
     {
         Schema::table('stand_assignments', function (Blueprint $table): void {
             $table->string('assignment_source')
-                ->default(StandAssignment::SOURCE_SYSTEM)
+                ->default('system_auto')
                 ->after('stand_id');
         });
     }
