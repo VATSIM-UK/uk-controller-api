@@ -124,9 +124,6 @@ trait SelectsStandsUsingStandardConditions
 
         // Normalize the destination airport for comparison.
         $destination = strtoupper(trim((string) ($aircraft->planned_destairport ?? '')));
-        if ($destination === '') {
-            return null;
-        }
 
         // Normalize configured airfields; if none are configured or destination not in list, do not apply bias.
         $configuredAirfields = array_map(
@@ -134,7 +131,7 @@ trait SelectsStandsUsingStandardConditions
             $config['airfields'] ?? []
         );
 
-        if ($configuredAirfields === [] || !in_array($destination, $configuredAirfields, true)) {
+        if ($destination === '' || $configuredAirfields === [] || !in_array($destination, $configuredAirfields, true)) {
             return null;
         }
 
