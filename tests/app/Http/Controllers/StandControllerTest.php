@@ -95,11 +95,13 @@ class StandControllerTest extends BaseApiTestCase
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
                 'assigned_by_reservation_allocator' => false,
+                'assigned_by_pilot_request' => false,
             ],
             [
                 'callsign' => 'BAW456',
                 'stand_id' => 2,
                 'assigned_by_reservation_allocator' => false,
+                'assigned_by_pilot_request' => false,
             ],
         ];
 
@@ -288,6 +290,7 @@ class StandControllerTest extends BaseApiTestCase
             'identifier' => '251',
             'airfield' => 'EGLL',
             'assigned_by_reservation_allocator' => false,
+            'assigned_by_pilot_request' => false,
         ];
 
         $this->addStandAssignment('BAW123', 2);
@@ -318,6 +321,7 @@ class StandControllerTest extends BaseApiTestCase
                     'callsign' => $callsign,
                     'stand_id' => 1,
                     'assigned_by_reservation_allocator' => true,
+                    'assigned_by_pilot_request' => true,
                 ]
             );
     }
@@ -344,6 +348,7 @@ class StandControllerTest extends BaseApiTestCase
                     'airfield' => 'EGLL',
                     'identifier' => '1L',
                     'assigned_by_reservation_allocator' => true,
+                    'assigned_by_pilot_request' => true,
                 ]
             );
     }

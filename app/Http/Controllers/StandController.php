@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Validator;
 class StandController extends BaseController
 {
     const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
+    private const PILOT_REQUEST_ALLOCATOR_PREFIX = 'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator';
+
     private readonly StandAssignmentsService $assignmentsService;
     private readonly AirfieldStandService $airfieldStandService;
     private readonly ArrivalAllocationService $arrivalAllocationService;
@@ -73,13 +75,13 @@ class StandController extends BaseController
         return response()->json(
             StandAssignment::with('assignmentHistory')->get()->map(
                 function (StandAssignment $assignment) {
+                    $assignedByPilotRequest = $this->isPilotRequestedAssignment($assignment);
+
                     return [
                         'callsign' => $assignment->callsign,
                         'stand_id' => $assignment->stand_id,
-                        'assigned_by_reservation_allocator' => str_starts_with(
-                            (string) $assignment->assignmentHistory?->type,
-                            'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator'
-                        ),
+                        'assigned_by_reservation_allocator' => $assignedByPilotRequest,
+                        'assigned_by_pilot_request' => $assignedByPilotRequest,
                     ];
                 }
             )
@@ -158,19 +160,30 @@ class StandController extends BaseController
     public function getStandAssignmentForAircraft(string $aircraft): JsonResponse
     {
         $assignment = $this->assignmentsService->assignmentForCallsign($aircraft)?->load('assignmentHistory');
-        return $assignment
-            ? response()->json(
-                [
-                    'id' => $assignment->stand_id,
-                    'airfield' => $assignment->stand->airfield->code,
-                    'identifier' => $assignment->stand->identifier,
-                    'assigned_by_reservation_allocator' => str_starts_with(
-                        (string) $assignment->assignmentHistory?->type,
-                        'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator'
-                    ),
-                ],
-            )
-            : response()->json([], 404);
+
+        if (!$assignment) {
+            return response()->json([], 404);
+        }
+
+        $assignedByPilotRequest = $this->isPilotRequestedAssignment($assignment);
+
+        return response()->json(
+            [
+                'id' => $assignment->stand_id,
+                'airfield' => $assignment->stand->airfield->code,
+                'identifier' => $assignment->stand->identifier,
+                'assigned_by_reservation_allocator' => $assignedByPilotRequest,
+                'assigned_by_pilot_request' => $assignedByPilotRequest,
+            ],
+        );
+    }
+
+    private function isPilotRequestedAssignment(StandAssignment $assignment): bool
+    {
+        return str_starts_with(
+            (string) $assignment->assignmentHistory?->type,
+            self::PILOT_REQUEST_ALLOCATOR_PREFIX,
+        );
     }
 
     public function requestAutomaticStandAssignment(Request $request): JsonResponse
