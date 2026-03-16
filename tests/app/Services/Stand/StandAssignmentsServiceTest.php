@@ -127,12 +127,49 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 2,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM,
             ]
         );
 
         Event::assertDispatched(
             fn(StandAssignedEvent $event): bool => $event->getStandAssignment()->callsign === 'BAW123' &&
             $event->getStandAssignment()->stand_id === 2
+        );
+    }
+
+    public function testItSetsManualSourceForUserAssignments()
+    {
+        $this->mockHistoryService->shouldReceive('createHistoryItem')->once();
+
+        $this->service->createStandAssignment('BAW123', 2, 'User');
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 2,
+                'assignment_source' => StandAssignment::SOURCE_USER,
+            ]
+        );
+    }
+
+    public function testItSetsReservationAllocatorSourceForReservationAllocatorAssignments()
+    {
+        $this->mockHistoryService->shouldReceive('createHistoryItem')->once();
+
+        $this->service->createStandAssignment(
+            'BAW123',
+            2,
+            'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator'
+        );
+
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 2,
+                'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
+            ]
         );
     }
 

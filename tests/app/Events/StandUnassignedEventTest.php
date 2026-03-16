@@ -20,14 +20,7 @@ class StandUnassignedEventTest extends BaseUnitTestCase
 
     public function testItBroadcastsWithData()
     {
-        $this->assertEquals(
-            [
-                'callsign' => 'BAW123',
-                'stand_id' => null,
-                'assignment_source' => 'system_auto',
-            ],
-            $this->event->broadcastWith()
-        );
+        $this->assertEquals(['callsign' => 'BAW123'], $this->event->broadcastWith());
     }
 
     public function testItBroadcastsOnChannel()

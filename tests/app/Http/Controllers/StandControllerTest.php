@@ -81,12 +81,12 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => 1,
-                    'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM,
                 ],
                 [
                     'callsign' => 'BAW456',
                     'stand_id' => 2,
-                    'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM,
                 ],
             ]
         );
@@ -95,12 +95,12 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
-                'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM,
             ],
             [
                 'callsign' => 'BAW456',
                 'stand_id' => 2,
-                'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM,
             ],
         ];
 
@@ -287,10 +287,9 @@ class StandControllerTest extends BaseApiTestCase
         $expected = [
             'callsign' => 'BAW123',
             'stand_id' => 2,
-            'id' => 2,
             'identifier' => '251',
             'airfield' => 'EGLL',
-            'assignment_source' => StandAssignment::SOURCE_SYSTEM_AUTO,
+            'assignment_source' => StandAssignment::SOURCE_SYSTEM,
         ];
 
         $this->addStandAssignment('BAW123', 2);
@@ -327,7 +326,6 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'callsign' => $callsign,
                     'stand_id' => 1,
-                    'id' => 1,
                     'airfield' => 'EGLL',
                     'identifier' => '1L',
                     'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
@@ -703,7 +701,7 @@ class StandControllerTest extends BaseApiTestCase
     private function addStandAssignment(
         string $callsign,
         int $standId,
-        string $assignmentSource = StandAssignment::SOURCE_SYSTEM_AUTO,
+        string $assignmentSource = StandAssignment::SOURCE_SYSTEM,
     )
     {
         NetworkAircraftService::createPlaceholderAircraft($callsign);

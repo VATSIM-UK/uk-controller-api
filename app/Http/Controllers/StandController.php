@@ -162,7 +162,6 @@ class StandController extends BaseController
             [
                 'callsign' => $assignment->callsign,
                 'stand_id' => $assignment->stand_id,
-                'id' => $assignment->stand_id,
                 'airfield' => $assignment->stand->airfield->code,
                 'identifier' => $assignment->stand->identifier,
                 'assignment_source' => $assignment->assignment_source,

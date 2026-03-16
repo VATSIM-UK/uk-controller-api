@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::table('stand_assignments', function (Blueprint $table): void {
             $table->string('assignment_source')
-                ->default(StandAssignment::SOURCE_SYSTEM_AUTO)
+                ->default(StandAssignment::SOURCE_SYSTEM)
                 ->after('stand_id');
         });
     }
