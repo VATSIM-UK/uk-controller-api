@@ -57,7 +57,7 @@ Below is a description of the specific rules used to assign stands to arriving a
 
 ### CID Reserved
 
-This rule matches flights for a particular arrival airfield and a specific member CID. It is only used in organised events
+This rule matches flights for a specific member CID, regardless of the arrival airfield. It is only used in organised events
 where stand reservations are necessary.
 
 Callsign-based reservation matching is not used.
@@ -234,10 +234,10 @@ we've found a match, and that stand is assigned!
 When submitting an event stand plan via the API or the UKCP website, send a JSON object with:
 
 - `name` and `contact_email` metadata (API), or form fields in Filament
+- `event_start` / `event_finish` (required event time window)
 - either:
   - `stand_slots` (recommended): an array where each stand is a slot containing `slot_reservations`
   - `reservations`: flat reservation rows
-  - `event_start` / `event_finish`
 
 ### Slot-based format (recommended)
 

@@ -51,7 +51,9 @@ class StandReservationsImport extends Command
             }
 
             $rows = array_is_list($payload)
-                ? collect($payload)
+                ? collect($payload)->map(static function ($row) {
+                    return collect($row);
+                })
                 : $payloadRowsBuilder->fromPayload($payload);
 
             $importer->withOutput($this->output)->collection(

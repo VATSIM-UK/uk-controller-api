@@ -104,8 +104,12 @@ class StandReservationsImport implements ToCollection
      * - Index 3 must be a valid timestamp - start time
      * - Index 4 must be a valid timestamp after index 3 - end time
      */
-    private function extractReservationData(Collection $row): ?array
+    private function extractReservationData(Collection|array $row): ?array
     {
+        if (is_array($row)) {
+            $row = Collection::make($row);
+        }
+
         // Associative payload (JSON/schema route).
         if ($row->has('airport') && $row->has('stand')) {
             return [

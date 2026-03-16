@@ -181,16 +181,8 @@ class StandController extends BaseController
 
         $requestPayload = $request->json()->all();
 
-        // Prioritise schema feedback for payload-shape issues (e.g. deprecated fields)
-        // before returning field-level required errors from Laravel validation.
-        $schemaErrors = $schemaValidator->validateApiRequest($requestPayload);
-        if ($schemaErrors !== []) {
-            return response()->json([
-                'message' => 'Stand reservation plan request does not match schema',
-                'errors' => $schemaErrors,
-            ], 422);
-        }
-
+        // First run basic Laravel validation so callers always receive the
+        // standard validation error structure for required/date fields.
         $validated = Validator::make(
             $requestPayload,
             [
@@ -204,6 +196,18 @@ class StandController extends BaseController
                 'event_finish' => ['required', 'date', 'after:event_start'],
             ]
         )->validate();
+
+        // After field-level validation passes, run the JSON schema validator
+        // and map any schema errors into Laravel's standard validation error shape.
+        $schemaErrors = $schemaValidator->validateApiRequest($requestPayload);
+        if ($schemaErrors !== []) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => [
+                    'schema' => $schemaErrors,
+                ],
+            ], 422);
+        }
 
         $plan = StandReservationPlan::create([
             'name' => $validated['name'],

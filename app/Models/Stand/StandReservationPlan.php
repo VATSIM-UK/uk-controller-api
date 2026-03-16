@@ -65,6 +65,10 @@ class StandReservationPlan extends Model
             return null;
         }
 
-        return Carbon::parse($eventStart);
+        try {
+            return Carbon::parse($eventStart);
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 }

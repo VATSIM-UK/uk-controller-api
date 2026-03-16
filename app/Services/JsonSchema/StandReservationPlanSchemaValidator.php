@@ -108,6 +108,16 @@ class StandReservationPlanSchemaValidator
             $errors[] = sprintf('%s must be a valid email', $path);
         }
 
+        $minLength = $schema['minLength'] ?? null;
+        if (is_int($minLength) && mb_strlen($data) < $minLength) {
+            $errors[] = sprintf('%s must be at least %d characters long', $path, $minLength);
+        }
+
+        $maxLength = $schema['maxLength'] ?? null;
+        if (is_int($maxLength) && mb_strlen($data) > $maxLength) {
+            $errors[] = sprintf('%s must be at most %d characters long', $path, $maxLength);
+        }
+
         return $errors;
     }
 
