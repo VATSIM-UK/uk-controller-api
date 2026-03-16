@@ -50,7 +50,7 @@ return [
     ],
     'overnight_remote_preferred' => [
         'label' => 'Overnight Remote Preferred',
-        'helper' => 'If enabled, this stand is preferred for overnight remote parking when remote weighting is active for the airfield.',
+        'helper' => 'If enabled, this stand is preferred for overnight remote parking by the allocator.',
     ],
     'origin_slug' => [
         'label' => 'Origin Slug',
