@@ -7,8 +7,6 @@ return [
     'night_remote_stand_weighting' => [
         // Enable overnight remote stand preference.
         'enabled' => true,
-        // Airfield codes where overnight remote stand preference applies (empty = all airfields).
-        'airfields' => [],
         // Local Europe/London start hour (24h) for the overnight window (inclusive).
         'start_hour' => 22,
         // Local Europe/London end hour (24h) for the overnight window (exclusive).
