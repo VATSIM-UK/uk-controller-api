@@ -130,7 +130,7 @@ trait SelectsStandsUsingStandardConditions
 
         // Normalize configured airfields; if none are configured or destination not in list, do not apply bias.
         $configuredAirfields = array_map(
-            static fn($airfield): string => strtoupper(trim((string) $airfield)),
+            static fn ($airfield): string => strtoupper(trim((string) $airfield)),
             $config['airfields'] ?? []
         );
 
