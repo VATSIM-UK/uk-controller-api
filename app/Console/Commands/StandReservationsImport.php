@@ -50,9 +50,13 @@ class StandReservationsImport extends Command
                 return 1;
             }
 
+            $rows = array_is_list($payload)
+                ? collect($payload)
+                : $payloadRowsBuilder->fromPayload($payload);
+
             $importer->withOutput($this->output)->collection(
                 // Convert schema payload data into the row format expected by the importer.
-                $payloadRowsBuilder->fromPayload($payload)
+                $rows
             );
         } else {
             // CSV support remains for backwards compatibility with existing import workflows.

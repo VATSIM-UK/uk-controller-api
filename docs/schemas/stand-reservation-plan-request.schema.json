@@ -7,7 +7,9 @@
   "additionalProperties": false,
   "required": [
     "name",
-    "contact_email"
+    "contact_email",
+    "event_start",
+    "event_finish"
   ],
   "properties": {
     "name": {
@@ -40,9 +42,6 @@
     },
     {
       "$ref": "stand-reservation-plan.schema.json#/allOf/1"
-    },
-    {
-      "$ref": "stand-reservation-plan.schema.json#/allOf/2"
     }
   ]
 }

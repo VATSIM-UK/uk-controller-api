@@ -267,12 +267,12 @@ Example payload body:
       "stand": "531",
       "slot_reservations": [
         {
-          "cid": "1234567",
+          "cid": 1234567,
           "slotstart": "2026-02-20 09:00:00",
           "slotend": "2026-02-20 09:30:00"
         },
         {
-          "cid": "7654321",
+          "cid": 7654321,
           "slotstart": "2026-02-20 09:31:00",
           "slotend": "2026-02-20 10:00:00"
         }

@@ -229,8 +229,24 @@ class StandReservationPlanSchemaValidator
         $schemaPath = $this->normaliseSchemaPath($schemaPath);
 
         if (!isset($this->schemaCache[$schemaPath])) {
-            $decoded = json_decode((string) file_get_contents(base_path($schemaPath)), true);
-            $this->schemaCache[$schemaPath] = is_array($decoded) ? $decoded : [];
+            $fullPath = base_path($schemaPath);
+            $contents = @file_get_contents($fullPath);
+
+            if ($contents === false) {
+                throw new \RuntimeException(sprintf('Unable to read JSON schema file: %s', $fullPath));
+            }
+
+            $decoded = json_decode($contents, true);
+
+            if (!is_array($decoded) || json_last_error() !== JSON_ERROR_NONE) {
+                throw new \RuntimeException(sprintf(
+                    'Invalid JSON schema in file %s: %s',
+                    $fullPath,
+                    json_last_error_msg()
+                ));
+            }
+
+            $this->schemaCache[$schemaPath] = $decoded;
         }
 
         return $this->schemaCache[$schemaPath];

@@ -364,7 +364,7 @@ class StandReservationPlans extends Page implements HasForms, HasTable
     {
         $plan->update([
             'status' => 'expired',
-            'denied_at' => null,
+            'denied_at' => Carbon::now(),
             'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
             'denied_reason' => StandReservationPlan::AUTOMATION_EVENT_STARTED_PRIOR_TO_APPROVAL_REASON,
         ]);
