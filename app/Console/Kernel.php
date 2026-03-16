@@ -96,7 +96,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('metars:update')->everyMinute();
         $schedule->command('database:check-table-updates')->everyMinute();
         $schedule->command('stand-reservations:activate-plans')->everyTenMinutes()->doNotMonitor();
-        $schedule->command('stand-reservations:sync-assignments')->everyFiveMinute()->doNotMonitor();
+        $schedule->command('stand-reservations:sync-assignments')->everyFiveMinutes()->doNotMonitor();
         $schedule->job(UpdateOnlineCallsigns::class)->everyTwoMinutes()->doNotMonitor();
     }
 

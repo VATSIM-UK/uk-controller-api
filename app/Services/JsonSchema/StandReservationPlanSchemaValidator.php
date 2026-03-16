@@ -46,6 +46,7 @@ class StandReservationPlanSchemaValidator
             $this->validateIntegerMinimum($schema, $data, $path),
             $this->validateAllOf($schema, $data, $path, $schemaPath, $rootSchema),
             $this->validateIfThen($schema, $data, $path, $schemaPath, $rootSchema),
+            $this->validateAnyOf($schema, $data, $path, $schemaPath, $rootSchema),
             $this->validateOneOf($schema, $data, $path, $schemaPath, $rootSchema),
         );
     }
@@ -141,6 +142,25 @@ class StandReservationPlanSchemaValidator
         }
 
         return $this->validateNode($schema['then'], $data, $path, $schemaPath, $rootSchema);
+    }
+
+    private function validateAnyOf(array $schema, mixed $data, string $path, string $schemaPath, array $rootSchema): array
+    {
+        if (!isset($schema['anyOf']) || !is_array($schema['anyOf'])) {
+            return [];
+        }
+
+        foreach ($schema['anyOf'] as $subSchema) {
+            if (!is_array($subSchema)) {
+                continue;
+            }
+
+            if ($this->validateNode($subSchema, $data, $path, $schemaPath, $rootSchema) === []) {
+                return [];
+            }
+        }
+
+        return [sprintf('%s must match at least one anyOf schema', $path)];
     }
 
     private function validateOneOf(array $schema, mixed $data, string $path, string $schemaPath, array $rootSchema): array

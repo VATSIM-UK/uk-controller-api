@@ -5,7 +5,10 @@
   "description": "Canonical JSON payload for stand reservation plans (used by planJson and embedded in API submissions).",
   "type": "object",
   "additionalProperties": false,
-  "required": [],
+  "required": [
+    "event_start",
+    "event_finish"
+  ],
   "properties": {
     "reservations": {
       "type": "array",

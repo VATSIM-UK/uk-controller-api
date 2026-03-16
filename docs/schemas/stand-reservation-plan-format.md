@@ -20,12 +20,13 @@ A payload object MUST be a JSON object with these properties:
 - At least one of:
   - `reservations`: array of one or more reservation objects.
   - `stand_slots`: array of one or more stand-slot objects.
-- Optional top-level default datetimes:
-  - `event_start` / `event_finish`
+- Required top-level default datetimes:
+  - `event_start`
+  - `event_finish`
   
 Constraints:
 
-- If `event_finish` is present, `event_start` MUST also be present.
+- `event_start` and `event_finish` MUST both be present.
 - Additional top-level properties are not allowed.
 
 ### 2.2 Reservation row object
