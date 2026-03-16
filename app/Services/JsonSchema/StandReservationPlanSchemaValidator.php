@@ -233,13 +233,13 @@ class StandReservationPlanSchemaValidator
             $contents = @file_get_contents($fullPath);
 
             if ($contents === false) {
-                throw new \RuntimeException(sprintf('Unable to read JSON schema file: %s', $fullPath));
+                throw new \UnexpectedValueException(sprintf('Unable to read JSON schema file: %s', $fullPath));
             }
 
             $decoded = json_decode($contents, true);
 
             if (!is_array($decoded) || json_last_error() !== JSON_ERROR_NONE) {
-                throw new \RuntimeException(sprintf(
+                throw new \UnexpectedValueException(sprintf(
                     'Invalid JSON schema in file %s: %s',
                     $fullPath,
                     json_last_error_msg()
