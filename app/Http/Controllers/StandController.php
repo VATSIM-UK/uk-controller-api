@@ -181,8 +181,27 @@ class StandController extends BaseController
 
         $requestPayload = $request->json()->all();
 
-        // First run basic Laravel validation so callers always receive the
-        // standard validation error structure for required/date fields.
+        // Prioritise schema feedback for payload-shape issues (e.g. deprecated fields)
+        // before returning field-level required errors from Laravel validation.
+        $schemaErrors = $schemaValidator->validateApiRequest($requestPayload);
+        if ($schemaErrors !== []) {
+            $validationErrors = [];
+
+            foreach ($schemaErrors as $schemaError) {
+                if (preg_match('/^\$\.([a-zA-Z0-9_]+) is required$/', $schemaError, $matches) !== 1) {
+                    continue;
+                }
+
+                $field = $matches[1];
+                $validationErrors[$field][] = $schemaError;
+            }
+
+            return response()->json([
+                'message' => 'Stand reservation plan request does not match schema',
+                'errors' => $validationErrors !== [] ? $validationErrors : $schemaErrors,
+            ], 422);
+        }
+
         $validated = Validator::make(
             $requestPayload,
             [
@@ -259,7 +278,7 @@ class StandController extends BaseController
         // Do not allow late approvals after the event has already started.
         $eventStart = $standReservationPlan->eventStartAt();
         if ($eventStart !== null && $eventStart->isPast()) {
-            $standReservationPlan->update(['status' => 'expired', 'denied_at' => Carbon::now(), 'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID, 'denied_reason' => StandReservationPlan::AUTOMATION_EVENT_STARTED_PRIOR_TO_APPROVAL_REASON]);
+            $standReservationPlan->update(['status' => 'denied', 'denied_at' => Carbon::now(), 'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID, 'denied_reason' => StandReservationPlan::AUTOMATION_EVENT_STARTED_PRIOR_TO_APPROVAL_REASON]);
             return response()->json(['message' => 'Event start has already passed'], 422);
         }
 
