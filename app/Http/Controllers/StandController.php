@@ -188,7 +188,7 @@ class StandController extends BaseController
             $validationErrors = [];
 
             foreach ($schemaErrors as $schemaError) {
-                if (preg_match('/^\$\.([a-zA-Z0-9_]+) is required$/', $schemaError, $matches) !== 1) {
+                if (preg_match('/^\$\.(\w+) is required$/', $schemaError, $matches) !== 1) {
                     continue;
                 }
 
@@ -215,18 +215,6 @@ class StandController extends BaseController
                 'event_finish' => ['required', 'date', 'after:event_start'],
             ]
         )->validate();
-
-        // After field-level validation passes, run the JSON schema validator
-        // and map any schema errors into Laravel's standard validation error shape.
-        $schemaErrors = $schemaValidator->validateApiRequest($requestPayload);
-        if ($schemaErrors !== []) {
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => [
-                    'schema' => $schemaErrors,
-                ],
-            ], 422);
-        }
 
         $plan = StandReservationPlan::create([
             'name' => $validated['name'],

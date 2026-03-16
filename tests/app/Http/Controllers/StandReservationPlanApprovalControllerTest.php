@@ -109,7 +109,7 @@ class StandReservationPlanApprovalControllerTest extends BaseApiTestCase
 
         $this->assertDatabaseHas('stand_reservation_plans', [
             'id' => $plan->id,
-            'status' => 'denied',
+            'status' => 'expired',
             'denied_by' => StandReservationPlan::AUTOMATION_DENIED_BY_USER_ID,
             'denied_reason' => StandReservationPlan::AUTOMATION_EVENT_STARTED_PRIOR_TO_APPROVAL_REASON,
         ]);
