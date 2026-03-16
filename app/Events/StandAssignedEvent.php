@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Stand\StandAssignment;
+use App\Services\Stand\StandAssignmentPayload;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 
@@ -22,10 +23,7 @@ class StandAssignedEvent extends HighPriorityBroadcastEvent
 
     public function broadcastWith()
     {
-        return [
-            'callsign' => $this->getStandAssignment()->callsign,
-            'stand_id' => $this->getStandAssignment()->stand_id,
-        ];
+        return StandAssignmentPayload::fromAssignment($this->getStandAssignment());
     }
 
     /**

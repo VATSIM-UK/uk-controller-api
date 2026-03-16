@@ -34,8 +34,9 @@ class StandAssignmentsService
 
     public function deleteStandAssignment(StandAssignment $assignment): void
     {
+        $assignmentPayload = StandAssignmentPayload::fromAssignment($assignment);
         $this->deleteAssignmentAndHistoryData($assignment);
-        $this->unassignedEvent($assignment);
+        $this->unassignedEvent($assignmentPayload);
     }
 
     /**
@@ -86,14 +87,20 @@ class StandAssignmentsService
         });
 
         $existingAssignments->each(function (StandAssignment $assignment) {
-            $this->unassignedEvent($assignment);
+            $this->unassignedEvent(StandAssignmentPayload::fromAssignment($assignment));
         });
         event(new StandAssignedEvent($assignment));
     }
 
-    private function unassignedEvent(StandAssignment $assignment): void
+    private function unassignedEvent(array $assignmentPayload): void
     {
-        event(new StandUnassignedEvent($assignment->callsign));
+        event(new StandUnassignedEvent(
+            $assignmentPayload['callsign'],
+            $assignmentPayload['assignment_source'],
+            $assignmentPayload['assignment_status'],
+            $assignmentPayload['assigned_by_reservation_allocator'],
+            $assignmentPayload['assigned_by_pilot_request'],
+        ));
     }
 
     private function deleteAssignmentAndHistoryData(StandAssignment $assignment): void

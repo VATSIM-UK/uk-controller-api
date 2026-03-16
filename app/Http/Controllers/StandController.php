@@ -7,7 +7,9 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignment;
+use App\Models\Stand\StandRequest;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Events\StandUnassignedEvent;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Coordinates\Latitude;
 use App\Rules\Coordinates\Longitude;
@@ -17,7 +19,9 @@ use App\Services\NetworkAircraftService;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\ArrivalAllocationService;
 use App\Services\Stand\DepartureAllocationService;
+use App\Services\Stand\StandAssignmentPayload;
 use App\Services\Stand\StandAssignmentsService;
+use App\Services\Stand\StandRequestService;
 use App\Services\Stand\StandStatusService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -28,26 +32,27 @@ use Illuminate\Support\Facades\Validator;
 class StandController extends BaseController
 {
     const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
-    private const PILOT_REQUEST_ALLOCATOR_PREFIX = 'App\\Allocator\\Stand\\UserRequestedArrivalStandAllocator';
-
     private readonly StandAssignmentsService $assignmentsService;
     private readonly AirfieldStandService $airfieldStandService;
     private readonly ArrivalAllocationService $arrivalAllocationService;
     private readonly DepartureAllocationService $departureAllocationService;
     private readonly AirlineService $airlineService;
+    private readonly StandRequestService $standRequestService;
 
     public function __construct(
         StandAssignmentsService $assignmentsService,
         AirfieldStandService $airfieldStandService,
         ArrivalAllocationService $arrivalAllocationService,
         DepartureAllocationService $departureAllocationService,
-        AirlineService $airlineService
+        AirlineService $airlineService,
+        StandRequestService $standRequestService
     ) {
         $this->assignmentsService = $assignmentsService;
         $this->airfieldStandService = $airfieldStandService;
         $this->arrivalAllocationService = $arrivalAllocationService;
         $this->departureAllocationService = $departureAllocationService;
         $this->airlineService = $airlineService;
+        $this->standRequestService = $standRequestService;
     }
 
     public function getStandsDependency(): JsonResponse
@@ -72,20 +77,24 @@ class StandController extends BaseController
 
     public function getStandAssignments(): JsonResponse
     {
-        return response()->json(
-            StandAssignment::with('assignmentHistory')->get()->map(
-                function (StandAssignment $assignment) {
-                    $assignedByPilotRequest = $this->isPilotRequestedAssignment($assignment);
-
-                    return [
-                        'callsign' => $assignment->callsign,
-                        'stand_id' => $assignment->stand_id,
-                        'assigned_by_reservation_allocator' => $assignedByPilotRequest,
-                        'assigned_by_pilot_request' => $assignedByPilotRequest,
-                    ];
-                }
-            )
+        $assigned = StandAssignment::with('assignmentHistory')->get()->map(
+            fn (StandAssignment $assignment) => StandAssignmentPayload::fromAssignment($assignment)
         );
+
+        $requestedUnavailable = StandRequest::with('stand')
+            ->current()
+            ->whereNotNull('callsign')
+            ->get()
+            ->filter(fn (StandRequest $request): bool =>
+                !is_null($request->callsign)
+                && !StandAssignment::where('callsign', $request->callsign)->exists()
+                && !$this->isStandAvailable($request->stand_id)
+            )
+            ->map(fn (StandRequest $request): array => StandAssignmentPayload::requestedUnavailable($request->callsign))
+            ->unique('callsign')
+            ->values();
+
+        return response()->json($assigned->concat($requestedUnavailable)->values());
     }
 
     public function createStandAssignment(Request $request): JsonResponse
@@ -162,28 +171,48 @@ class StandController extends BaseController
         $assignment = $this->assignmentsService->assignmentForCallsign($aircraft)?->load('assignmentHistory');
 
         if (!$assignment) {
+            $aircraftModel = NetworkAircraft::find($aircraft);
+            if ($aircraftModel !== null && $this->hasUnavailablePilotRequestedStand($aircraftModel)) {
+                return response()->json(StandAssignmentPayload::requestedUnavailable($aircraftModel->callsign));
+            }
+
             return response()->json([], 404);
         }
 
-        $assignedByPilotRequest = $this->isPilotRequestedAssignment($assignment);
+        $assignmentPayload = StandAssignmentPayload::fromAssignment($assignment);
 
         return response()->json(
             [
+                'callsign' => $assignmentPayload['callsign'],
+                'stand_id' => $assignmentPayload['stand_id'],
                 'id' => $assignment->stand_id,
                 'airfield' => $assignment->stand->airfield->code,
                 'identifier' => $assignment->stand->identifier,
-                'assigned_by_reservation_allocator' => $assignedByPilotRequest,
-                'assigned_by_pilot_request' => $assignedByPilotRequest,
+                'assigned_by_reservation_allocator' => $assignmentPayload['assigned_by_reservation_allocator'],
+                'assigned_by_pilot_request' => $assignmentPayload['assigned_by_pilot_request'],
+                'assignment_source' => $assignmentPayload['assignment_source'],
+                'assignment_status' => $assignmentPayload['assignment_status'],
             ],
         );
     }
 
-    private function isPilotRequestedAssignment(StandAssignment $assignment): bool
+    private function hasUnavailablePilotRequestedStand(NetworkAircraft $aircraft): bool
     {
-        return str_starts_with(
-            (string) $assignment->assignmentHistory?->type,
-            self::PILOT_REQUEST_ALLOCATOR_PREFIX,
-        );
+        $activeRequest = $this->standRequestService->activeRequestForAircraft($aircraft);
+        if ($activeRequest === null) {
+            return false;
+        }
+
+        return !$this->isStandAvailable($activeRequest->stand_id);
+    }
+
+    private function isStandAvailable(?int $standId): bool
+    {
+        if ($standId === null) {
+            return false;
+        }
+
+        return Stand::query()->whereKey($standId)->available()->exists();
     }
 
     public function requestAutomaticStandAssignment(Request $request): JsonResponse
@@ -234,6 +263,17 @@ class StandController extends BaseController
             : $this->arrivalAllocationService->autoAllocateArrivalStandForAircraft($aircraft);
 
         if ($stand === null) {
+            if ($this->hasUnavailablePilotRequestedStand($aircraft)) {
+                $payload = StandAssignmentPayload::requestedUnavailable($aircraft->callsign);
+                event(new StandUnassignedEvent(
+                    $payload['callsign'],
+                    $payload['assignment_source'],
+                    $payload['assignment_status'],
+                    $payload['assigned_by_reservation_allocator'],
+                    $payload['assigned_by_pilot_request'],
+                ));
+            }
+
             return response()->json(['message' => 'No stand available'], 404);
         }
 
