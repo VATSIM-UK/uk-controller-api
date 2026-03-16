@@ -347,7 +347,7 @@ class StandControllerTest extends BaseApiTestCase
     {
         $this->activeUser()->roles()->sync([Role::idFromKey(RoleKeys::VAA)]);
 
-        $this->makeAuthenticatedApiRequest(
+        $response = $this->makeAuthenticatedApiRequest(
             self::METHOD_POST,
             'stand/reservations/plan',
             [
@@ -360,9 +360,13 @@ class StandControllerTest extends BaseApiTestCase
                     ],
                 ],
             ]
-        )
+        );
+
+        $response
             ->assertStatus(422)
-            ->assertJsonValidationErrors(['event_start']);
+            ->assertJsonPath('message', 'Stand reservation plan request does not match schema');
+
+        $this->assertContains('$.event_start is required', $response->json('errors'));
     }
 
 
