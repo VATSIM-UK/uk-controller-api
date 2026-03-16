@@ -100,19 +100,17 @@ class StandAssignmentsService
 
     private function assignmentSourceFromType(string $assignmentType): string
     {
-        if ($assignmentType === 'User') {
-            return StandAssignment::SOURCE_MANUAL;
-        }
+        $sourceMap = [
+            'User' => StandAssignment::SOURCE_MANUAL,
+            'UserRequestedArrivalStandAllocator' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
+            'CidReservedArrivalStandAllocator' => StandAssignment::SOURCE_VAA_ALLOCATOR,
+            'CallsignFlightplanReservedArrivalStandAllocator' => StandAssignment::SOURCE_VAA_ALLOCATOR,
+        ];
 
-        if (str_ends_with($assignmentType, 'UserRequestedArrivalStandAllocator')) {
-            return StandAssignment::SOURCE_RESERVATION_ALLOCATOR;
-        }
-
-        if (
-            str_ends_with($assignmentType, 'CidReservedArrivalStandAllocator')
-            || str_ends_with($assignmentType, 'CallsignFlightplanReservedArrivalStandAllocator')
-        ) {
-            return StandAssignment::SOURCE_VAA_ALLOCATOR;
+        foreach ($sourceMap as $key => $source) {
+            if ($assignmentType === $key || str_ends_with($assignmentType, $key)) {
+                return $source;
+            }
         }
 
         return StandAssignment::SOURCE_SYSTEM_AUTO;
