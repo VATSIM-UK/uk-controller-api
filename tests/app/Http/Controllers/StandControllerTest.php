@@ -6,7 +6,7 @@ use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandAssignment;;
+use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -81,10 +81,12 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => 1,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM,
                 ],
                 [
                     'callsign' => 'BAW456',
                     'stand_id' => 2,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM,
                 ],
             ]
         );
@@ -93,10 +95,12 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM,
             ],
             [
                 'callsign' => 'BAW456',
                 'stand_id' => 2,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM,
             ],
         ];
 
@@ -281,15 +285,52 @@ class StandControllerTest extends BaseApiTestCase
     public function testItReturnsStandAssignmentForAircraft()
     {
         $expected = [
+            'callsign' => 'BAW123',
             'id' => 2,
             'identifier' => '251',
             'airfield' => 'EGLL',
+            'assignment_source' => StandAssignment::SOURCE_SYSTEM,
         ];
 
         $this->addStandAssignment('BAW123', 2);
         $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment/BAW123')
             ->assertStatus(200)
             ->assertJson($expected);
+    }
+
+
+    public function testItReturnsAssignmentSourceInStandAssignments(): void
+    {
+        $callsign = 'BAW789';
+        $this->addStandAssignment($callsign, 1, StandAssignment::SOURCE_RESERVATION_ALLOCATOR);
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/assignment')
+            ->assertStatus(200)
+            ->assertJsonFragment(
+                [
+                    'callsign' => $callsign,
+                    'stand_id' => 1,
+                    'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
+                ]
+            );
+    }
+
+    public function testItReturnsAssignmentSourceForSingleAssignmentRoute(): void
+    {
+        $callsign = 'BAW987';
+        $this->addStandAssignment($callsign, 1, StandAssignment::SOURCE_RESERVATION_ALLOCATOR);
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, sprintf('stand/assignment/%s', $callsign))
+            ->assertStatus(200)
+            ->assertJson(
+                [
+                    'callsign' => $callsign,
+                    'id' => 1,
+                    'airfield' => 'EGLL',
+                    'identifier' => '1L',
+                    'assignment_source' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
+                ]
+            );
     }
 
     public function testItAutoAssignsDepartureStand()
@@ -657,13 +698,18 @@ class StandControllerTest extends BaseApiTestCase
         ];
     }
 
-    private function addStandAssignment(string $callsign, int $standId)
+    private function addStandAssignment(
+        string $callsign,
+        int $standId,
+        string $assignmentSource = StandAssignment::SOURCE_SYSTEM,
+    )
     {
         NetworkAircraftService::createPlaceholderAircraft($callsign);
         StandAssignment::create(
             [
                 'callsign' => $callsign,
                 'stand_id' => $standId,
+                'assignment_source' => $assignmentSource,
             ]
         );
     }

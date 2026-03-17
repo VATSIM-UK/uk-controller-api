@@ -35,7 +35,7 @@ class StandAssignmentsService
     public function deleteStandAssignment(StandAssignment $assignment): void
     {
         $this->deleteAssignmentAndHistoryData($assignment);
-        $this->unassignedEvent($assignment);
+        $this->unassignedEvent($assignment->callsign);
     }
 
     /**
@@ -71,6 +71,7 @@ class StandAssignmentsService
                 ['callsign' => $callsign],
                 [
                     'stand_id' => $stand->id,
+                    'assignment_source' => $this->assignmentSourceFromType($assignmentType),
                 ]
             );
 
@@ -86,14 +87,32 @@ class StandAssignmentsService
         });
 
         $existingAssignments->each(function (StandAssignment $assignment) {
-            $this->unassignedEvent($assignment);
+            $this->unassignedEvent($assignment->callsign);
         });
         event(new StandAssignedEvent($assignment));
     }
 
-    private function unassignedEvent(StandAssignment $assignment): void
+    private function unassignedEvent(string $callsign): void
     {
-        event(new StandUnassignedEvent($assignment->callsign));
+        event(new StandUnassignedEvent($callsign));
+    }
+
+    private function assignmentSourceFromType(string $assignmentType): string
+    {
+        $sourceMap = [
+            'User' => StandAssignment::SOURCE_USER,
+            'UserRequestedArrivalStandAllocator' => StandAssignment::SOURCE_RESERVATION_ALLOCATOR,
+            'CidReservedArrivalStandAllocator' => StandAssignment::SOURCE_VAA_ALLOCATOR,
+            'CallsignFlightplanReservedArrivalStandAllocator' => StandAssignment::SOURCE_VAA_ALLOCATOR,
+        ];
+
+        foreach ($sourceMap as $key => $source) {
+            if ($assignmentType === $key) {
+                return $source;
+            }
+        }
+
+        return StandAssignment::SOURCE_SYSTEM;
     }
 
     private function deleteAssignmentAndHistoryData(StandAssignment $assignment): void
