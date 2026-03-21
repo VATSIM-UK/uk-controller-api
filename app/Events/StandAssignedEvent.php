@@ -25,6 +25,7 @@ class StandAssignedEvent extends HighPriorityBroadcastEvent
         return [
             'callsign' => $this->getStandAssignment()->callsign,
             'stand_id' => $this->getStandAssignment()->stand_id,
+            'assignment_source' => $this->getStandAssignment()->assignment_source,
         ];
     }
 

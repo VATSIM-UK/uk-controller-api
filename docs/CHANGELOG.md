@@ -1,5 +1,29 @@
 # UK Controller Plugin API Changelog
 
+## [6.64.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.63.2...6.64.0) (2026-03-17)
+
+### Features
+
+* add assignment source to stand assignments and update related events and services ([7c14428](https://github.com/VATSIM-UK/uk-controller-api/commit/7c14428f3eaddaa59f04649688642ddf68c47e50))
+* add canonical stand assignment source/status to API and events ([3711c8e](https://github.com/VATSIM-UK/uk-controller-api/commit/3711c8e9f0efb58b6aac2ecdbb33f4aada09b4d1))
+
+### Bug Fixes
+
+* CI Style fixes ([4b7494c](https://github.com/VATSIM-UK/uk-controller-api/commit/4b7494c907fb3665f973ffccb66e11366fa7e3e0))
+* Max Returns ([e9316e6](https://github.com/VATSIM-UK/uk-controller-api/commit/e9316e6ffca1015cad8c7b45f73a5c8d58468d11))
+
+## [6.63.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.63.1...6.63.2) (2026-03-11)
+
+### Bug Fixes
+
+* upgrade to laravel 12 properly ([1b3a57c](https://github.com/VATSIM-UK/uk-controller-api/commit/1b3a57c6a5fefeb1eaada8e36ffc18792945cfeb))
+
+## [6.63.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.63.0...6.63.1) (2026-03-11)
+
+### Bug Fixes
+
+* Bump laravel ([3dca26e](https://github.com/VATSIM-UK/uk-controller-api/commit/3dca26e7353e95dd51ed35273b12e1b508364d26))
+
 ## [6.63.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.62.3...6.63.0) (2026-02-19)
 
 ### Features

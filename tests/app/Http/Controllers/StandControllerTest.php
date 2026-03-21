@@ -87,10 +87,12 @@ class StandControllerTest extends BaseApiTestCase
                 [
                     'callsign' => 'BAW123',
                     'stand_id' => 1,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM,
                 ],
                 [
                     'callsign' => 'BAW456',
                     'stand_id' => 2,
+                    'assignment_source' => StandAssignment::SOURCE_SYSTEM,
                 ],
             ]
         );
@@ -99,10 +101,12 @@ class StandControllerTest extends BaseApiTestCase
             [
                 'callsign' => 'BAW123',
                 'stand_id' => 1,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM,
             ],
             [
                 'callsign' => 'BAW456',
                 'stand_id' => 2,
+                'assignment_source' => StandAssignment::SOURCE_SYSTEM,
             ],
         ];
 
@@ -287,9 +291,11 @@ class StandControllerTest extends BaseApiTestCase
     public function testItReturnsStandAssignmentForAircraft()
     {
         $expected = [
+            'callsign' => 'BAW123',
             'id' => 2,
             'identifier' => '251',
             'airfield' => 'EGLL',
+            'assignment_source' => StandAssignment::SOURCE_SYSTEM,
         ];
 
         $this->addStandAssignment('BAW123', 2);
@@ -297,7 +303,6 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(200)
             ->assertJson($expected);
     }
-
 
     public function testItUploadsStandReservationPlanForVaaRole()
     {
@@ -899,13 +904,18 @@ class StandControllerTest extends BaseApiTestCase
         ];
     }
 
-    private function addStandAssignment(string $callsign, int $standId)
+    private function addStandAssignment(
+        string $callsign,
+        int $standId,
+        string $assignmentSource = StandAssignment::SOURCE_SYSTEM,
+    )
     {
         NetworkAircraftService::createPlaceholderAircraft($callsign);
         StandAssignment::create(
             [
                 'callsign' => $callsign,
                 'stand_id' => $standId,
+                'assignment_source' => $assignmentSource,
             ]
         );
     }
