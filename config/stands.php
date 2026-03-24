@@ -5,9 +5,8 @@ return [
     'assignment_acars_message' => env('SEND_STAND_ACARS_MESSAGES', true),
     'night_remote_stand_weighting' => [
         'enabled' => true,
-        // Local ZULU time start hour (24h) for the overnight window (inclusive).
+        // Europe/London time start and end hour (24h) for the overnight window (Automatic DST support).
         'start_hour' => 22,
-        // Local ZULU time end hour (24h) for the overnight window (exclusive).
         'end_hour' => 6,
     ],
 ];
