@@ -11,15 +11,12 @@ return new class extends Migration {
             $table->boolean('overnight_remote_preferred')
                 ->default(false)
                 ->after('assignment_priority');
-
-            $table->index('overnight_remote_preferred');
         });
     }
 
     public function down(): void
     {
         Schema::table('stands', function (Blueprint $table): void {
-            $table->dropIndex(['overnight_remote_preferred']);
             $table->dropColumn('overnight_remote_preferred');
         });
     }
