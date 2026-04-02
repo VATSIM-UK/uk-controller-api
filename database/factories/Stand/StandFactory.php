@@ -30,6 +30,7 @@ class StandFactory extends Factory
             'longitude' => $this->faker->longitude(),
             'aerodrome_reference_code' => 'F', // A380
             'assignment_priority' => $this->faker->numberBetween(0, 1000),
+            'overnight_remote_preferred' => false,
         ];
     }
 

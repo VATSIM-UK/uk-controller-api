@@ -48,6 +48,10 @@ return [
         'label' => 'Allocation Priority',
         'helper' => 'Global priority when assigning. Lower value is higher priority. Minimum 1, maximum 9999.',
     ],
+    'overnight_remote_preferred' => [
+        'label' => 'Overnight Remote Preferred',
+        'helper' => 'If enabled, this stand is preferred for overnight remote parking by the allocator.',
+    ],
     'origin_slug' => [
         'label' => 'Origin Slug',
         'helper' => 'Full or partial airfield ICAO to match arrival aircraft against. This is used when doing a "any flights from these origin airports" allocation and does not override airline-specific rules.',
