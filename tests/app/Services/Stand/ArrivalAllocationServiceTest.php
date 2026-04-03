@@ -14,7 +14,6 @@ use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator;
 use App\Allocator\Stand\ArrivalStandAllocator;
 use App\Allocator\Stand\BusinessAviationFlightArrivalStandAllocator;
-use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
 use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
 use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
@@ -187,7 +186,6 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
             [
                 CidReservedArrivalStandAllocator::class,
                 UserRequestedArrivalStandAllocator::class,
-                CallsignFlightplanReservedArrivalStandAllocator::class,
                 CargoFlightPreferredArrivalStandAllocator::class,
                 CargoFlightArrivalStandAllocator::class,
                 BusinessAviationFlightArrivalStandAllocator::class,
@@ -218,6 +216,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         StandReservation::create(
             [
                 'callsign' => 'BMI221',
+                'cid' => 1234,
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addMinute(),
@@ -777,6 +776,7 @@ class ArrivalAllocationServiceTest extends BaseFunctionalTestCase
         StandReservation::create(
             [
                 'callsign' => 'BMI221',
+                'cid' => 1234,
                 'stand_id' => 1,
                 'start' => Carbon::now()->subMinute(),
                 'end' => Carbon::now()->addMinute(),

@@ -24,60 +24,136 @@ class StandReservationsImport implements ToCollection
         }
     }
 
+    private const INDEXED_AIRPORT = 0;
+    private const INDEXED_STAND = 1;
+    private const INDEXED_CALLSIGN = 2;
+    private const INDEXED_START = 3;
+    private const INDEXED_END = 4;
+    private const INDEXED_CID = 5;
+
     /**
-     * Row format:
+     * Supported row format:
      *
-     * 0 - Airport ICAO
-     * 1 - Stand identifier
-     * 2 - Callsign (optional)
+     * Indexed (CSV):
+     * 0 - Airport ICAO where the stand exists (stand location / allocation airport)
+     * 1 - Stand identifier at index 0 airport
+     * 2 - Callsign (display label only)
      * 3 - Start datetime
      * 4 - End datetime
+     * 5 - CID (matching key)
+     * 6+ - Ignored (legacy metadata columns)
+     *
+     * Associative (JSON):
+     * airport, stand, start, end (required)
+     * callsign (display label), cid (matching key)
      *
      * @param Collection[] $rows
      */
     public function collection(Collection $rows)
     {
-        $this->output->progressStart($rows->count());
+        $this->importReservations($rows);
+    }
+
+    public function importReservations(Collection $rows): int
+    {
+        $createdReservations = 0;
+        if (isset($this->output)) {
+            $this->output->progressStart($rows->count());
+        }
+
         foreach ($rows as $row) {
-            if (!$this->rowValid($row)) {
-                $this->output->warning(sprintf('Invalid reservation: %s', implode(', ', $row->toArray())));
-                $this->output->progressAdvance();
+            // Accept either associative JSON-style rows or indexed CSV-style rows.
+            $reservationData = $this->extractReservationData($row);
+
+            if (!$reservationData || !$this->rowValid($reservationData)) {
+                if (isset($this->output)) {
+                    $this->output->warning(sprintf('Invalid reservation: %s', implode(', ', $row->toArray())));
+                    $this->output->progressAdvance();
+                }
                 continue;
             }
 
+            // Persist one reservation row once it passes stand/time validation checks.
             StandReservation::create(
                 [
-                    'stand_id' => $this->stands[$row[0]][$row[1]],
-                    'callsign' => $row[2] ?? null,
-                    'start' => Carbon::parse($row[3]),
-                    'end' => Carbon::parse($row[4]),
+                    'stand_id' => $this->stands[$reservationData['airport']][$reservationData['stand']],
+                    'callsign' => $reservationData['callsign'],
+                    'cid' => $reservationData['cid'],
+                    'start' => Carbon::parse($reservationData['start']),
+                    'end' => Carbon::parse($reservationData['end']),
                 ]
             );
-            $this->output->progressAdvance();
+            $createdReservations++;
+            if (isset($this->output)) {
+                $this->output->progressAdvance();
+            }
         }
 
-        $this->output->progressFinish();
+        if (isset($this->output)) {
+            $this->output->progressFinish();
+        }
+
+        return $createdReservations;
     }
 
     /**
      * For the data to be valid:
      *
-     * - Index 0 must be an airfield ICAO where stands are present (see constructor)
-     * - Index 1 must be a valid stand identifier at the airfield in index 0
+     * - Index 0 must be an airport ICAO where stands are present (see constructor)
+     * - Index 1 must be a valid stand identifier at the airport in index 0
      * - Index 3 must be a valid timestamp - start time
      * - Index 4 must be a valid timestamp after index 3 - end time
      */
-    private function rowValid(Collection $row): bool
+    private function extractReservationData(Collection|array $row): ?array
+    {
+        if (is_array($row)) {
+            $row = Collection::make($row);
+        }
+
+        // Associative payload (JSON/schema route).
+        if ($row->has('airport') && $row->has('stand')) {
+            return [
+                'airport' => $row->get('airport'),
+                'stand' => $row->get('stand'),
+                'callsign' => $this->emptyStringToNull($row->get('callsign')),
+                'cid' => $this->emptyStringToNull($row->get('cid')),
+                'start' => $row->get('start'),
+                'end' => $row->get('end'),
+            ];
+        }
+
+        // Indexed payload (legacy CSV route).
+        if (!$row->has(self::INDEXED_AIRPORT) || !$row->has(self::INDEXED_STAND)) {
+            return null;
+        }
+
+        return [
+            'airport' => $row->get(self::INDEXED_AIRPORT),
+            'stand' => $row->get(self::INDEXED_STAND),
+            'callsign' => $this->emptyStringToNull($row->get(self::INDEXED_CALLSIGN)),
+            'cid' => $this->emptyStringToNull($row->get(self::INDEXED_CID)),
+            'start' => $row->get(self::INDEXED_START),
+            'end' => $row->get(self::INDEXED_END),
+        ];
+    }
+
+    private function emptyStringToNull(mixed $value): mixed
+    {
+        return $value === '' ? null : $value;
+    }
+
+    // Validate stand identity and ensure a strictly positive reservation time window.
+    private function rowValid(array $reservationData): bool
     {
         try {
-            return isset($row[0]) &&
-                array_key_exists($row[0], $this->stands) &&
-                isset($row[1]) &&
-                array_key_exists($row[1], $this->stands[$row[0]]) &&
-                isset($row[3]) &&
-                ($startTime = Carbon::parse($row[3])) &&
-                isset($row[4]) &&
-                ($endTime = Carbon::parse($row[4])) &&
+            return isset($reservationData['airport']) &&
+                array_key_exists($reservationData['airport'], $this->stands) &&
+                isset($reservationData['stand']) &&
+                array_key_exists($reservationData['stand'], $this->stands[$reservationData['airport']]) &&
+                isset($reservationData['start']) &&
+                ($startTime = Carbon::parse($reservationData['start'])) &&
+                isset($reservationData['end']) &&
+                ($endTime = Carbon::parse($reservationData['end'])) &&
                 $endTime > $startTime;
         } catch (Exception $exception) {
             return false;
