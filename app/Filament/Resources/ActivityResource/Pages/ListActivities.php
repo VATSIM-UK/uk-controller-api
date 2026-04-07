@@ -4,7 +4,7 @@ namespace App\Filament\Resources\ActivityResource\Pages;
 
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use Filament\Resources\Pages\ListRecords;
-use Z3d0X\FilamentLogger\Resources\ActivityResource;
+use Jacobtims\FilamentLogger\Resources\ActivityResource;
 
 class ListActivities extends ListRecords
 {
