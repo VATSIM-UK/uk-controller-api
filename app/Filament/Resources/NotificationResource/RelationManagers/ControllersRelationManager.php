@@ -2,6 +2,14 @@
 
 namespace App\Filament\Resources\NotificationResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\MultiSelect;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\ControllerPosition;
@@ -9,7 +17,6 @@ use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,27 +36,27 @@ class ControllersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('callsign')
+                TextColumn::make('callsign')
                     ->label(self::translateTablePath('columns.callsign'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('frequency')
+                TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency')),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                AttachAction::make()
                     ->label(self::translateTablePath('attach_action.label'))
                     ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
                     ->modalButton(self::translateTablePath('attach_action.modal_button'))
                     ->disableAttachAnother()
                     ->form([
-                        Forms\Components\Toggle::make('global')
+                        Toggle::make('global')
                             ->label(self::translateTablePath('attach_form.global.label'))
                             ->helperText(self::translateTablePath('attach_form.global.helper'))
                             ->reactive()
-                            ->afterStateUpdated(function (\Filament\Forms\Set $set) {
+                            ->afterStateUpdated(function (Set $set) {
                                 $set('controllers', null);
                             }),
-                        Forms\Components\MultiSelect::make('position_level')
+                        MultiSelect::make('position_level')
                             ->options(
                                 [
                                     'DEL' => 'Delivery',
@@ -60,8 +67,8 @@ class ControllersRelationManager extends RelationManager
                                 ]
                             )
                             ->reactive()
-                            ->hidden(fn (\Filament\Forms\Get $get) => $get('global')),
-                        Forms\Components\MultiSelect::make('controllers')
+                            ->hidden(fn (Get $get) => $get('global')),
+                        MultiSelect::make('controllers')
                             ->searchable()
                             ->options(
                                 fn (ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
@@ -75,8 +82,8 @@ class ControllersRelationManager extends RelationManager
                                         ) => [$controllerPosition->id => $controllerPosition->callsign]
                                     )
                             )
-                            ->hidden(fn (\Filament\Forms\Get $get) => $get('global') || $get('position_level'))
-                            ->required(fn (\Filament\Forms\Get $get) => !$get('global') && !$get('position_level')),
+                            ->hidden(fn (Get $get) => $get('global') || $get('position_level'))
+                            ->required(fn (Get $get) => !$get('global') && !$get('position_level')),
                     ])
                     ->action(function (AttachAction $action) {
                         $action->process(
@@ -112,11 +119,11 @@ class ControllersRelationManager extends RelationManager
                         });
                     }),
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make(),
+            ->recordActions([
+                DetachAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DetachBulkAction::make(),
+            ->toolbarActions([
+                DetachBulkAction::make(),
             ]);
     }
 

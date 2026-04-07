@@ -2,6 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\ViewAction;
+use Filament\Schemas\Components\Utilities\Get;
+use App\Filament\Resources\StandAssignmentsHistoryResource\Pages\ListStandAssignmentsHistories;
+use App\Filament\Resources\StandAssignmentsHistoryResource\Pages\ViewAssignmentContext;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandAssignmentsHistoryResource\Pages;
 use App\Models\Airfield\Airfield;
@@ -13,10 +18,8 @@ use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,11 +31,11 @@ class StandAssignmentsHistoryResource extends Resource
 
     protected static ?string $model = StandAssignmentsHistory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Stand Assignment History';
     protected static ?string $label = 'Stand Assignment History';
 
-    protected static ?string $navigationGroup = 'Airfield';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
 
     public static function getEloquentQuery(): Builder
     {
@@ -63,11 +66,11 @@ class StandAssignmentsHistoryResource extends Resource
         return self::userCanAccess();
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->disabled()
-            ->schema([
+            ->components([
                 ViewField::make('context')
                     ->columnSpanFull()
                     ->view('filament.forms.stand_assignment_history_context')
@@ -96,7 +99,7 @@ class StandAssignmentsHistoryResource extends Resource
                     ->label(static::translateTablePath('columns.type')),
             ])
             ->defaultSort('id', 'desc')
-            ->actions([
+            ->recordActions([
                 ViewAction::make('view_context')
                     ->label('View Context')
                     ->hidden(
@@ -112,7 +115,7 @@ class StandAssignmentsHistoryResource extends Resource
                         : $query
                     ),
                 Filter::make('airfield_and_stand')
-                    ->form([
+                    ->schema([
                         Select::make('airfield')
                             ->options(SelectOptions::airfields())
                             ->reactive()
@@ -120,11 +123,11 @@ class StandAssignmentsHistoryResource extends Resource
                             ->label('Airfield'),
                         Select::make('stand')
                             ->options(
-                                fn (\Filament\Forms\Get $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield')))
+                                fn (Get $get) => SelectOptions::standsForAirfield(Airfield::find($get('airfield')))
                             )
                             ->searchable()
                             ->label('Stand')
-                            ->hidden(fn (\Filament\Forms\Get $get) => !$get('airfield')),
+                            ->hidden(fn (Get $get) => !$get('airfield')),
                     ])
                     ->indicateUsing(function (array $data) {
                         if (isset($data['stand'])) {
@@ -157,8 +160,8 @@ class StandAssignmentsHistoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStandAssignmentsHistories::route('/'),
-            'view' => Pages\ViewAssignmentContext::route('/{record}'),
+            'index' => ListStandAssignmentsHistories::route('/'),
+            'view' => ViewAssignmentContext::route('/{record}'),
         ];
     }
 

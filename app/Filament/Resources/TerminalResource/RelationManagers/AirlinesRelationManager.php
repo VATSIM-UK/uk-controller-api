@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\TerminalResource\RelationManagers;
 
+use Filament\Actions\AttachAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DetachAction;
 use App\Filament\Helpers\PairsAirlinesWithTerminals;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\AttachAction;
-use Filament\Tables\Actions\DetachAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 
 class AirlinesRelationManager extends RelationManager
@@ -48,9 +48,9 @@ class AirlinesRelationManager extends RelationManager
                         ...self::airlineTerminalPairingFormFields(),
                     ])
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make('edit-airline-pairing')
-                    ->form(self::airlineTerminalPairingFormFields()),
+                    ->schema(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())

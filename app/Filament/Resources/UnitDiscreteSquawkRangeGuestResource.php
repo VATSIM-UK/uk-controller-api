@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\UnitDiscreteSquawkRangeGuestResource\Pages\ManageUnitDiscreteSquawkRangeGuests;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -15,14 +18,14 @@ class UnitDiscreteSquawkRangeGuestResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = UnitDiscreteSquawkRangeGuest::class;
-    protected static ?string $navigationGroup = 'Squawk Ranges';
+    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
     protected static ?string $navigationLabel = 'Unit Discrete Guests';
-    protected static ?string $navigationIcon = 'heroicon-o-wifi';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('primary_unit')
                     ->label(self::translateFormPath('primary.label'))
                     ->helperText(self::translateFormPath('primary.helper'))
@@ -42,14 +45,14 @@ class UnitDiscreteSquawkRangeGuestResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('primary_unit')
+                TextColumn::make('primary_unit')
                     ->label(self::translateTablePath('columns.primary_unit')),
-                Tables\Columns\TextColumn::make('guest_unit')
+                TextColumn::make('guest_unit')
                     ->label(self::translateTablePath('columns.guest_unit')),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->defaultSort('primary_unit', 'asc');
     }

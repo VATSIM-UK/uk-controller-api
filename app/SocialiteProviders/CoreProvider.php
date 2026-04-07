@@ -67,7 +67,7 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
      * Map the raw user array to a Socialite User instance.
      *
      * @param  array  $user
-     * @return \Laravel\Socialite\Two\User
+     * @return User
      */
     protected function mapUserToObject(array $user)
     {

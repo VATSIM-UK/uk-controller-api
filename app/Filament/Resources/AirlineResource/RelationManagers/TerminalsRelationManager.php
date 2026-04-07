@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources\AirlineResource\RelationManagers;
 
+use Filament\Actions\AttachAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\BulkAction;
 use App\Filament\Helpers\PairsAirlinesWithTerminals;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
-use Filament\Tables\Actions\BulkAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\AttachAction;
-use Filament\Tables\Actions\DetachAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -67,15 +67,15 @@ class TerminalsRelationManager extends RelationManager
                         ...self::airlineTerminalPairingFormFields(),
                     ]),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make('edit-terminal-pairing')
-                    ->form(self::airlineTerminalPairingFormFields()),
+                    ->schema(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
                 
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkAction::make('bulk-unpair-terminal')
                     ->label(self::translateFormPath('remove.label'))
                     ->requiresConfirmation()

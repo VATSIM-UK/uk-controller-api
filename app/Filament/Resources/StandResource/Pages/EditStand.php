@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\StandResource;
 use Carbon\Carbon;
 use Filament\Pages\Actions;
@@ -14,7 +15,7 @@ class EditStand extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

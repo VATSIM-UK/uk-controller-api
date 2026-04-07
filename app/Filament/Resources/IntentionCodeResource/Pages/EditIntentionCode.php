@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\IntentionCodeResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\IntentionCodeResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -19,7 +20,7 @@ class EditIntentionCode extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

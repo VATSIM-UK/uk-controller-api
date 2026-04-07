@@ -2,24 +2,28 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\AirlineResource\Pages\ListAirlines;
+use App\Filament\Resources\AirlineResource\Pages\CreateAirline;
+use App\Filament\Resources\AirlineResource\Pages\ViewAirline;
+use App\Filament\Resources\AirlineResource\Pages\EditAirline;
 use App\Events\Airline\AirlinesUpdatedEvent;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\AirlineResource\Pages;
 use App\Filament\Resources\AirlineResource\RelationManagers\StandsRelationManager;
 use App\Filament\Resources\AirlineResource\RelationManagers\TerminalsRelationManager;
 use App\Models\Airline\Airline;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 
@@ -27,15 +31,15 @@ class AirlineResource extends Resource
 {
     use TranslatesStrings;
 
-    public static ?string $navigationIcon = 'heroicon-o-paper-airplane';
+    public static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-airplane';
     protected static ?string $recordTitleAttribute = 'icao_code';
-    protected static ?string $navigationGroup = 'Airline';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airline';
     protected static ?string $model = Airline::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('icao_code')
                     ->required()
                     ->maxLength(255)
@@ -86,7 +90,7 @@ class AirlineResource extends Resource
                     ->label(self::translateTablePath('columns.is_cargo'))
                     ->boolean(),
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
@@ -107,10 +111,10 @@ class AirlineResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAirlines::route('/'),
-            'create' => Pages\CreateAirline::route('/create'),
-            'view' => Pages\ViewAirline::route('/{record}'),
-            'edit' => Pages\EditAirline::route('/{record}/edit'),
+            'index' => ListAirlines::route('/'),
+            'create' => CreateAirline::route('/create'),
+            'view' => ViewAirline::route('/{record}'),
+            'edit' => EditAirline::route('/{record}/edit'),
         ];
     }
 

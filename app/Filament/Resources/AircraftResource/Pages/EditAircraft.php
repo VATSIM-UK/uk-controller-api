@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AircraftResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Events\Aircraft\AircraftDataUpdatedEvent;
 use App\Filament\Resources\AircraftResource;
 use Filament\Pages\Actions;
@@ -24,7 +25,7 @@ class EditAircraft extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->after(function () {
                     event(new AircraftDataUpdatedEvent);
                 }),

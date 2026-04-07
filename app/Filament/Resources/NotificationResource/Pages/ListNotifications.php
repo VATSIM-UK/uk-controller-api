@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\NotificationResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\NotificationResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use Filament\Pages\Actions;
@@ -16,7 +17,7 @@ class ListNotifications extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Closure;
@@ -28,10 +31,10 @@ class RolesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description'),
+                TextColumn::make('description'),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                AttachAction::make()
                     ->label(self::translateTablePath('attach_action.trigger_button'))
                     ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
                     ->modalButton(self::translateTablePath('attach_action.confirm_button'))
@@ -39,11 +42,11 @@ class RolesRelationManager extends RelationManager
                     ->disableAttachAnother()
                     ->preloadRecordSelect()
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make()
+            ->recordActions([
+                DetachAction::make()
                     ->label(self::translateTablePath('detach_action.trigger_button'))
                     ->modalHeading(
-                        fn (Tables\Actions\DetachAction $action) => __(
+                        fn (DetachAction $action) => __(
                             'table.users.roles.detach_action.modal_heading',
                             ['role' => $action->getRecordTitle()]
                         )

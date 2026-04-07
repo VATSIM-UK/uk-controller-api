@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Actions\Action;
+use App\Filament\Resources\DependencyResource\Pages\ListDependencies;
 use App\Filament\Resources\DependencyResource\Pages;
 use App\Models\Dependency\Dependency;
 use App\Services\DependencyService;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 
 class DependencyResource extends Resource
@@ -16,8 +17,8 @@ class DependencyResource extends Resource
 
     protected static ?string $model = Dependency::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Plugin';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Plugin';
 
     public static function table(Table $table): Table
     {
@@ -31,7 +32,7 @@ class DependencyResource extends Resource
                     ->label(self::translateTablePath('columns.updated_at')),
 
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('download-dependency')
                     ->label(self::translateTablePath('actions.download.label'))
                     ->action(
@@ -53,7 +54,7 @@ class DependencyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDependencies::route('/'),
+            'index' => ListDependencies::route('/'),
         ];
     }
 

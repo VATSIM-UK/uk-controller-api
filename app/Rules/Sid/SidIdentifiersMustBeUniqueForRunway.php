@@ -2,6 +2,7 @@
 
 namespace App\Rules\Sid;
 
+use Illuminate\Translation\PotentiallyTranslatedString;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use Illuminate\Contracts\Validation\InvokableRule;
@@ -22,7 +23,7 @@ class SidIdentifiersMustBeUniqueForRunway implements InvokableRule
      *
      * @param string $attribute
      * @param mixed $value
-     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @param Closure(string):PotentiallyTranslatedString $fail
      * @return void
      */
     public function __invoke($attribute, $value, $fail)

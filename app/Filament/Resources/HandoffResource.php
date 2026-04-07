@@ -2,11 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TagsColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\HandoffResource\Pages\ListHandoffs;
+use App\Filament\Resources\HandoffResource\Pages\CreateHandoff;
+use App\Filament\Resources\HandoffResource\Pages\ViewHandoff;
+use App\Filament\Resources\HandoffResource\Pages\EditHandoff;
 use App\Filament\Resources\HandoffResource\Pages;
 use App\Filament\Resources\HandoffResource\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\Handoff;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -17,9 +25,9 @@ class HandoffResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Handoff::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'description';
-    protected static ?string $navigationGroup = 'Airfield';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
 
     public static function getEloquentQuery(): Builder
     {
@@ -27,10 +35,10 @@ class HandoffResource extends Resource
             ->whereDoesntHave('airfield');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('description')
                     ->label(self::translateFormPath('description.label'))
                     ->maxLength(255)
@@ -42,18 +50,18 @@ class HandoffResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TagsColumn::make('sids.identifier')
+                TagsColumn::make('sids.identifier')
                     ->label(self::translateTablePath('columns.sids')),
-                Tables\Columns\TagsColumn::make('controllers.callsign')
+                TagsColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.controllers')),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make()
             ])->defaultSort('description');
     }
     
@@ -67,10 +75,10 @@ class HandoffResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListHandoffs::route('/'),
-            'create' => Pages\CreateHandoff::route('/create'),
-            'view' => Pages\ViewHandoff::route('/{record}'),
-            'edit' => Pages\EditHandoff::route('/{record}/edit'),
+            'index' => ListHandoffs::route('/'),
+            'create' => CreateHandoff::route('/create'),
+            'view' => ViewHandoff::route('/{record}'),
+            'edit' => EditHandoff::route('/{record}/edit'),
         ];
     }
 

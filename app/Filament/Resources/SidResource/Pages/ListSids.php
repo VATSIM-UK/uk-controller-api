@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SidResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\SidResource;
 use Filament\Pages\Actions;
@@ -16,7 +17,7 @@ class ListSids extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

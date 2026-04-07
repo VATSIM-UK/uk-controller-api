@@ -2,13 +2,15 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use App\Filament\Resources\PluginLogResource\Pages\ListPluginLogs;
+use App\Filament\Resources\PluginLogResource\Pages\ViewPluginLog;
 use App\Filament\Resources\PluginLogResource\Pages;
 use App\Models\Plugin\PluginLog;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Forms\Form;
 use Filament\Tables\Columns\TextColumn;
 
 class PluginLogResource extends Resource
@@ -17,13 +19,13 @@ class PluginLogResource extends Resource
 
     protected static ?string $model = PluginLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rss';
-    protected static ?string $navigationGroup = 'Administration';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rss';
+    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('id')
                     ->label(self::translateFormPath('id.label'))
                     ->required(),
@@ -57,8 +59,8 @@ class PluginLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPluginLogs::route('/'),
-            'view' => Pages\ViewPluginLog::route('/{record}'),
+            'index' => ListPluginLogs::route('/'),
+            'view' => ViewPluginLog::route('/{record}'),
         ];
     }
     

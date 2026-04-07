@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PilotRequestAStand extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-bookmark';
-    protected static ?string $navigationGroup = 'Preferences';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bookmark';
+    protected static string | \UnitEnum | null $navigationGroup = 'Preferences';
     protected static ?string $navigationLabel = 'Request a Stand';
     protected static ?string $title = 'Request a Stand';
     protected static ?string $slug = 'request-a-stand';
-    protected static string $view = 'filament.pages.pilot-request-a-stand';
+    protected string $view = 'filament.pages.pilot-request-a-stand';
 
     protected $listeners = ['requestAStandFormSubmitted', 'currentStandRequestRelinquished'];
 

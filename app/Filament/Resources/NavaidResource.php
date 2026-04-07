@@ -2,12 +2,21 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\NavaidResource\RelationManagers\HoldsRelationManager;
+use App\Filament\Resources\NavaidResource\Pages\ListNavaids;
+use App\Filament\Resources\NavaidResource\Pages\CreateNavaid;
+use App\Filament\Resources\NavaidResource\Pages\ViewNavaid;
+use App\Filament\Resources\NavaidResource\Pages\EditNavaid;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Resources\NavaidResource\Pages;
 use App\Filament\Resources\NavaidResource\RelationManagers;
 use App\Models\Navigation\Navaid;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -22,21 +31,21 @@ class NavaidResource extends Resource
 
     protected static ?string $model = Navaid::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
     protected static ?string $recordTitleAttribute = 'identifier';
     protected static ?string $navigationLabel = 'Navaids and Holds';
     protected static ?string $label = 'Navaids and Holds';
-    protected static ?string $navigationGroup = 'Enroute';
+    protected static string | \UnitEnum | null $navigationGroup = 'Enroute';
 
     public static function getEloquentQuery(): Builder
     {
         return Navaid::with('holds');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('identifier')
                     ->unique(ignoreRecord: true)
                     ->required()
@@ -53,36 +62,36 @@ class NavaidResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('identifier')
+                TextColumn::make('identifier')
                     ->sortable()
                     ->searchable()
                     ->label(self::translateTablePath('columns.identifier')),
-                Tables\Columns\BooleanColumn::make('has_published_holds')
+                BooleanColumn::make('has_published_holds')
                     ->getStateUsing(function (Navaid $record) {
                         return $record->holds->isNotEmpty();
                     })
                     ->label(self::translateTablePath('columns.published_holds')),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])->defaultSort('identifier');
     }
 
     public static function getRelations(): array
     {
         return [
-            RelationManagers\HoldsRelationManager::class,
+            HoldsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNavaids::route('/'),
-            'create' => Pages\CreateNavaid::route('/create'),
-            'view' => Pages\ViewNavaid::route('/{record}'),
-            'edit' => Pages\EditNavaid::route('/{record}/edit'),
+            'index' => ListNavaids::route('/'),
+            'create' => CreateNavaid::route('/create'),
+            'view' => ViewNavaid::route('/{record}'),
+            'edit' => EditNavaid::route('/{record}/edit'),
         ];
     }
 

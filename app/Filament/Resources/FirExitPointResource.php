@@ -2,20 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\FirExitPointResource\Pages\ManageFirExitPoints;
 use App\Filament\Resources\FirExitPointResource\Pages;
 use App\Models\IntentionCode\ConditionType;
 use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Heading\ValidHeading;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 
@@ -25,13 +27,13 @@ class FirExitPointResource extends Resource
 
     protected static ?string $model = FirExitPoint::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-x-mark';
-    protected static ?string $navigationGroup = 'Intention Codes';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-x-mark';
+    protected static string | \UnitEnum | null $navigationGroup = 'Intention Codes';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('exit_point')
                     ->unique(ignoreRecord: true)
                     ->required()
@@ -76,9 +78,9 @@ class FirExitPointResource extends Resource
                 TextColumn::make('exit_direction_end')
                     ->label(self::translateTablePath('columns.exit_direction_end')),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make()
                     ->before(function (DeleteAction $action) {
                         $hasIntentionCodes = IntentionCode::all()
                             ->filter(
@@ -129,7 +131,7 @@ class FirExitPointResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageFirExitPoints::route('/'),
+            'index' => ManageFirExitPoints::route('/'),
         ];
     }
 

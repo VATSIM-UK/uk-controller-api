@@ -2,6 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TagsColumn;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\MultiSelectFilter;
+use App\Filament\Resources\StandResource\RelationManagers\AirlinesRelationManager;
+use App\Filament\Resources\StandResource\RelationManagers\PairedStandsRelationManager;
+use App\Filament\Resources\StandResource\Pages\ListStands;
+use App\Filament\Resources\StandResource\Pages\CreateStand;
+use App\Filament\Resources\StandResource\Pages\EditStand;
+use App\Filament\Resources\StandResource\Pages\ViewStand;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandResource\Pages;
 use App\Filament\Resources\StandResource\RelationManagers;
@@ -12,11 +30,9 @@ use App\Models\Stand\StandType;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use App\Rules\Stand\StandIdentifierMustBeUniqueAtAirfield;
 use Closure;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -33,19 +49,19 @@ class StandResource extends Resource
     private const DEFAULT_COLUMN_VALUE = '--';
 
     protected static ?string $model = Stand::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'identifier';
-    protected static ?string $navigationGroup = 'Airfield';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['airlines']);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Fieldset::make('Identifiers')->schema(
                     [
                         Select::make('airfield_id')
@@ -54,7 +70,7 @@ class StandResource extends Resource
                             ->hintIcon('heroicon-o-folder')
                             ->options(SelectOptions::airfields())
                             ->reactive()
-                            ->afterStateUpdated(function (\Filament\Forms\Get $get, \Filament\Forms\Set $set) {
+                            ->afterStateUpdated(function (Get $get, Set $set) {
                                 $terminalId = $get('terminal_id');
                                 if ($terminalId && Terminal::find($terminalId)->airfield_id === $get('airfield_id')) {
                                     return;
@@ -71,20 +87,20 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn (\Filament\Forms\Get $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                fn (Get $get) => Terminal::where('airfield_id', $get('airfield_id'))
                                     ->get()
                                     ->mapWithKeys(
                                         fn (Terminal $terminal) => [$terminal->id => $terminal->description]
                                     )
                             )
                             ->disabled(
-                                fn (Page $livewire, \Filament\Forms\Get $get) => !Terminal::where(
+                                fn (Page $livewire, Get $get) => !Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
                             )
                             ->dehydrated(
-                                fn (Page $livewire, \Filament\Forms\Get $get) => Terminal::where(
+                                fn (Page $livewire, Get $get) => Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
@@ -95,11 +111,11 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (\Filament\Forms\Get $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                fn (Get $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
                                 ),
-                                fn (\Filament\Forms\Get $get) => $get('airfield_id')
+                                fn (Get $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
                             ->label(self::translateFormPath('type.label'))
@@ -177,48 +193,48 @@ class StandResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('airfield.code')
+                TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('terminal.description')
+                TextColumn::make('terminal.description')
                     ->label(self::translateTablePath('columns.terminal'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
-                Tables\Columns\TextColumn::make('identifier')
+                TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('aerodrome_reference_code')
+                TextColumn::make('aerodrome_reference_code')
                     ->label(self::translateTablePath('columns.aerodrome_reference_code')),
-                Tables\Columns\TextColumn::make('max_aircraft_wingspan')
+                TextColumn::make('max_aircraft_wingspan')
                     ->label(self::translateTablePath('columns.max_size_wingspan'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
-                Tables\Columns\TextColumn::make('max_aircraft_length')
+                TextColumn::make('max_aircraft_length')
                     ->label(self::translateTablePath('columns.max_size_length'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
-                Tables\Columns\TagsColumn::make('uniqueAirlines.icao_code')
+                TagsColumn::make('uniqueAirlines.icao_code')
                     ->label(self::translateTablePath('columns.airlines'))
                     ->default([self::DEFAULT_COLUMN_VALUE]),
-                Tables\Columns\BooleanColumn::make('closed_at')
+                BooleanColumn::make('closed_at')
                     ->label(self::translateTablePath('columns.used'))
-                    ->getStateUsing(function (Tables\Columns\BooleanColumn $column) {
+                    ->getStateUsing(function (BooleanColumn $column) {
                         return $column->getRecord()->closed_at === null;
                     }),
-                Tables\Columns\TextColumn::make('assignment_priority')
+                TextColumn::make('assignment_priority')
                     ->label(self::translateTablePath('columns.priority'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\BooleanColumn::make('overnight_remote_preferred')
+                BooleanColumn::make('overnight_remote_preferred')
                     ->label(self::translateTablePath('columns.overnight_remote_preferred')),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('airfield')
+                SelectFilter::make('airfield')
                     ->label(self::translateFilterPath('airfield'))
                     ->options(SelectOptions::airfields())
                     ->searchable()
@@ -231,7 +247,7 @@ class StandResource extends Resource
                             return $query->where('airfield_id', $data['value']);
                         }
                     ),
-                Tables\Filters\MultiSelectFilter::make('airlines')
+                MultiSelectFilter::make('airlines')
                     ->label(self::translateFilterPath('airlines'))
                     ->options(SelectOptions::airlines())
                     ->query(
@@ -255,18 +271,18 @@ class StandResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\AirlinesRelationManager::class,
-            RelationManagers\PairedStandsRelationManager::class,
+            AirlinesRelationManager::class,
+            PairedStandsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStands::route('/'),
-            'create' => Pages\CreateStand::route('/create'),
-            'edit' => Pages\EditStand::route('/{record}/edit'),
-            'view' => Pages\ViewStand::route('/{record}'),
+            'index' => ListStands::route('/'),
+            'create' => CreateStand::route('/create'),
+            'edit' => EditStand::route('/{record}/edit'),
+            'view' => ViewStand::route('/{record}'),
         ];
     }
 

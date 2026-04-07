@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\HandoffResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\HandoffResource;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
@@ -15,7 +16,7 @@ class EditHandoff extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

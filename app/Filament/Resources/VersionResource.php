@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
+use App\Filament\Resources\VersionResource\Pages\ListVersions;
 use App\Filament\Resources\VersionResource\Pages;
 use App\Models\Version\Version;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\RestoreAction;
 use Illuminate\Database\Eloquent\Builder;
 
 class VersionResource extends Resource
@@ -17,8 +20,8 @@ class VersionResource extends Resource
 
     protected static ?string $model = Version::class;
     protected static ?string $navigationLabel = 'Plugin Versions';
-    protected static ?string $navigationIcon = 'heroicon-o-puzzle-piece';
-    protected static ?string $navigationGroup = 'Plugin';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-puzzle-piece';
+    protected static string | \UnitEnum | null $navigationGroup = 'Plugin';
 
     public static function getEloquentQuery(): Builder
     {
@@ -29,22 +32,22 @@ class VersionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('version')
+                TextColumn::make('version')
                     ->label(self::translateTablePath('columns.version'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('pluginReleaseChannel.name')
+                TextColumn::make('pluginReleaseChannel.name')
                     ->label(self::translateTablePath('columns.release_channel'))
                     ->formatStateUsing(fn (string $state) => ucwords($state)),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label(self::translateTablePath('columns.released_at'))
                     ->getStateUsing(fn (Version $record) => $record->created_at->format('D d M Y, H:i:s'))
                     ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean()
                     ->getStateUsing(fn (Version $record) => !$record->trashed())
                     ->label(self::translateTablePath('columns.is_active')),
             ])
-            ->actions([
+            ->recordActions([
                 DeleteAction::make()
                     ->requiresConfirmation()
                     ->modalHeading(self::translateTablePath('delete_modal.heading'))
@@ -59,7 +62,7 @@ class VersionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListVersions::route('/'),
+            'index' => ListVersions::route('/'),
         ];
     }
 

@@ -2,12 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\OrcamSquawkRangeResource\Pages\ManageOrcamSquawkRanges;
 use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Resources\OrcamSquawkRangeResource\Pages;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -18,14 +22,14 @@ class OrcamSquawkRangeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = OrcamSquawkRange::class;
-    protected static ?string $navigationGroup = 'Squawk Ranges';
+    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
     protected static ?string $navigationLabel = 'ORCAM';
-    protected static ?string $navigationIcon = 'heroicon-o-wifi';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 ...self::squawkRangeInputs(),
                 TextInput::make('origin')
                     ->label(self::translateFormPath('origin.label'))
@@ -40,12 +44,12 @@ class OrcamSquawkRangeResource extends Resource
         return $table
             ->columns([
                 ...self::squawkRangeTableColumns(),
-                Tables\Columns\TextColumn::make('origin')
+                TextColumn::make('origin')
                     ->label(self::translateTablePath('columns.origin')),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->defaultSort('first', 'asc');
     }
@@ -53,7 +57,7 @@ class OrcamSquawkRangeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageOrcamSquawkRanges::route('/'),
+            'index' => ManageOrcamSquawkRanges::route('/'),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SmrAreaResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\SmrAreaResource;
 use Filament\Pages\Actions;
@@ -15,7 +16,7 @@ class ListSmrAreas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

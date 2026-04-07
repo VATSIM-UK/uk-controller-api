@@ -2,11 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TagsColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\PrenoteResource\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\PrenoteResource\Pages\ListPrenotes;
+use App\Filament\Resources\PrenoteResource\Pages\CreatePrenote;
+use App\Filament\Resources\PrenoteResource\Pages\ViewPrenote;
+use App\Filament\Resources\PrenoteResource\Pages\EditPrenote;
 use App\Filament\Resources\PrenoteResource\Pages;
 use App\Filament\Resources\PrenoteResource\RelationManagers;
 use App\Models\Controller\Prenote;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -16,14 +25,14 @@ class PrenoteResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Prenote::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'description';
-    protected static ?string $navigationGroup = 'Airfield';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('description')
                     ->label(self::translateFormPath('description.label'))
                     ->maxLength(255)
@@ -35,34 +44,34 @@ class PrenoteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TagsColumn::make('controllers.callsign')
+                TagsColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.controllers'))
                     ->searchable(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])->defaultSort('description');
     }
 
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPrenotes::route('/'),
-            'create' => Pages\CreatePrenote::route('/create'),
-            'view' => Pages\ViewPrenote::route('/{record}'),
-            'edit' => Pages\EditPrenote::route('/{record}/edit'),
+            'index' => ListPrenotes::route('/'),
+            'create' => CreatePrenote::route('/create'),
+            'view' => ViewPrenote::route('/{record}'),
+            'edit' => EditPrenote::route('/{record}/edit'),
         ];
     }
 

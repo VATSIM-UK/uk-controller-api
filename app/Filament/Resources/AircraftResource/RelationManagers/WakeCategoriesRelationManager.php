@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\AircraftResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Forms\Components\Select;
+use Filament\Actions\DetachAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Aircraft\WakeCategory;
@@ -10,7 +14,6 @@ use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Tables\Actions\AttachAction;
 use Illuminate\Database\Eloquent\Builder;
 
 class WakeCategoriesRelationManager extends RelationManager
@@ -26,11 +29,11 @@ class WakeCategoriesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('scheme.name')
+                TextColumn::make('scheme.name')
                     ->label(self::translateTablePath('columns.scheme_name')),
-                Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                     ->label(self::translateTablePath('columns.code')),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
             ])
             ->headerActions([
@@ -38,7 +41,7 @@ class WakeCategoriesRelationManager extends RelationManager
                     ->preloadRecordSelect()
                     ->form(
                         fn (RelationManager $livewire) => [
-                            Forms\Components\Select::make('recordId')
+                            Select::make('recordId')
                                 ->label(self::translateFormPath('category.label'))
                                 ->required()
                                 ->options(
@@ -74,8 +77,8 @@ class WakeCategoriesRelationManager extends RelationManager
                         ]
                     ),
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make(),
+            ->recordActions([
+                DetachAction::make(),
             ]);
     }
 

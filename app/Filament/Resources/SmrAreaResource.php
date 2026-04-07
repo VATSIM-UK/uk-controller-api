@@ -2,6 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TernaryFilter;
+use App\Filament\Resources\SmrAreaResource\Pages\ListSmrAreas;
+use App\Filament\Resources\SmrAreaResource\Pages\CreateSmrArea;
+use App\Filament\Resources\SmrAreaResource\Pages\ViewSmrArea;
+use App\Filament\Resources\SmrAreaResource\Pages\EditSmrArea;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\SmrAreaResource\Pages;
@@ -10,7 +20,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -24,15 +33,15 @@ class SmrAreaResource extends Resource
 
     protected static ?string $model = SmrArea::class;
     protected static ?string $modelLabel = 'SMR Area';
-    protected static ?string $navigationGroup = 'Airfield';
-    protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-exclamation-triangle';
     protected static ?string $navigationLabel = 'SMR Areas';
     protected static ?string $pluralModelLabel = 'SMR Areas';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('airfield_id')
                     ->label(self::translateFormPath('airfield.label'))
                     ->helperText(self::translateFormPath('airfield.helper'))
@@ -70,27 +79,27 @@ class SmrAreaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('airfield.code')
+                TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(self::translateTablePath('columns.name'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('source')
+                TextColumn::make('source')
                     ->label(self::translateTablePath('columns.source'))
                     ->searchable(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->filters([
-                Tables\Filters\Filter::make('expired')
+                Filter::make('expired')
                     ->toggle()
                     ->label(self::translateFilterPath('expired'))
                     ->query(fn (Builder $query) => $query->expired()),
-                Tables\Filters\TernaryFilter::make('activation')
+                TernaryFilter::make('activation')
                     ->label(self::translateFilterPath('activation.label'))
                     ->trueLabel(self::translateFilterPath('activation.true'))
                     ->falseLabel(self::translateFilterPath('activation.false'))
@@ -105,10 +114,10 @@ class SmrAreaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSmrAreas::route('/'),
-            'create' => Pages\CreateSmrArea::route('/create'),
-            'view' => Pages\ViewSmrArea::route('/{record}'),
-            'edit' => Pages\EditSmrArea::route('/{record}/edit'),
+            'index' => ListSmrAreas::route('/'),
+            'create' => CreateSmrArea::route('/create'),
+            'view' => ViewSmrArea::route('/{record}'),
+            'edit' => EditSmrArea::route('/{record}/edit'),
         ];
     }
 

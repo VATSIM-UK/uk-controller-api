@@ -2,6 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TagsColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\AircraftResource\Pages\ListAircraft;
+use App\Filament\Resources\AircraftResource\Pages\CreateAircraft;
+use App\Filament\Resources\AircraftResource\Pages\ViewAircraft;
+use App\Filament\Resources\AircraftResource\Pages\EditAircraft;
 use App\Events\Aircraft\AircraftDataUpdatedEvent;
 use App\Filament\Resources\AircraftResource\Pages;
 use App\Filament\Resources\AircraftResource\RelationManagers\WakeCategoriesRelationManager;
@@ -10,7 +21,6 @@ use App\Models\Aircraft\WakeCategory;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -22,8 +32,8 @@ class AircraftResource extends Resource
 
     protected static ?string $model = Aircraft::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-paper-airplane';
-    protected static ?string $navigationGroup = 'Airline';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-airplane';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airline';
     protected static ?string $recordTitleAttribute = 'code';
 
     public static function getEloquentQuery(): Builder
@@ -31,10 +41,10 @@ class AircraftResource extends Resource
         return Aircraft::with('wakeCategories', 'wakeCategories.scheme');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('code')
                     ->label(self::translateFormPath('code.label'))
                     ->helperText(self::translateFormPath('code.helper'))
@@ -81,18 +91,18 @@ class AircraftResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                     ->label(self::translateTablePath('columns.code'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('aerodrome_reference_code')
+                TextColumn::make('aerodrome_reference_code')
                     ->label(self::translateTablePath('columns.aerodrome_reference_code'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('wingspan')
+                TextColumn::make('wingspan')
                     ->label(self::translateTablePath('columns.wingspan')),
-                Tables\Columns\TextColumn::make('length')
+                TextColumn::make('length')
                     ->label(self::translateTablePath('columns.length')),
-                Tables\Columns\TagsColumn::make('wakeCategories')
+                TagsColumn::make('wakeCategories')
                     ->label(self::translateTablePath('columns.wake_categories'))
                     ->getStateUsing(
                         fn (Aircraft $record) => $record->wakeCategories->map(
@@ -103,17 +113,17 @@ class AircraftResource extends Resource
                             )
                         )->toArray()
                     ),
-                Tables\Columns\IconColumn::make('allocate_stands')
+                IconColumn::make('allocate_stands')
                     ->label(self::translateTablePath('columns.allocate_stands'))
                     ->boolean(),
-                Tables\Columns\IconColumn::make('is_business_aviation')
+                IconColumn::make('is_business_aviation')
                     ->label(self::translateTablePath('columns.is_business_aviation'))
                     ->boolean(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make()
                     ->after(function () {
                         event(new AircraftDataUpdatedEvent);
                     }),
@@ -131,10 +141,10 @@ class AircraftResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAircraft::route('/'),
-            'create' => Pages\CreateAircraft::route('/create'),
-            'view' => Pages\ViewAircraft::route('/{record}'),
-            'edit' => Pages\EditAircraft::route('/{record}/edit'),
+            'index' => ListAircraft::route('/'),
+            'create' => CreateAircraft::route('/create'),
+            'view' => ViewAircraft::route('/{record}'),
+            'edit' => EditAircraft::route('/{record}/edit'),
         ];
     }
 

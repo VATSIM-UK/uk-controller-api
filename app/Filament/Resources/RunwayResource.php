@@ -2,6 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TagsColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\RunwayResource\Pages\ListRunways;
+use App\Filament\Resources\RunwayResource\Pages\CreateRunway;
+use App\Filament\Resources\RunwayResource\Pages\ViewRunway;
+use App\Filament\Resources\RunwayResource\Pages\EditRunway;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\RunwayResource\Pages;
@@ -10,7 +20,6 @@ use App\Rules\Heading\ValidHeading;
 use App\Rules\Runway\RunwayIdentifier;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -25,13 +34,13 @@ class RunwayResource extends Resource
 
     protected static ?string $model = Runway::class;
     protected static ?string $recordTitleAttribute = 'identifier';
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-up';
-    protected static ?string $navigationGroup = 'Airfield';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-arrow-up';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('airfield_id')
                     ->label(self::translateFormPath('airfield.label'))
                     ->helperText(self::translateFormPath('airfield.helper'))
@@ -69,20 +78,20 @@ class RunwayResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('airfield.code')
+                TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('identifier')
+                TextColumn::make('identifier')
                     ->label(self::translateTablePath('columns.identifier'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('heading')
+                TextColumn::make('heading')
                     ->label(self::translateTablePath('columns.heading')),
-                Tables\Columns\TagsColumn::make('sids.identifier')
+                TagsColumn::make('sids.identifier')
                     ->label(self::translateTablePath('columns.sids')),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('airfield')
+                SelectFilter::make('airfield')
                     ->label(self::translateFilterPath('airfield'))
                     ->options(SelectOptions::airfields())
                     ->searchable()
@@ -101,19 +110,19 @@ class RunwayResource extends Resource
                         }
                     ),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make()
             ]);
     }
     
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRunways::route('/'),
-            'create' => Pages\CreateRunway::route('/create'),
-            'view' => Pages\ViewRunway::route('/{record}'),
-            'edit' => Pages\EditRunway::route('/{record}/edit'),
+            'index' => ListRunways::route('/'),
+            'create' => CreateRunway::route('/create'),
+            'view' => ViewRunway::route('/{record}'),
+            'edit' => EditRunway::route('/{record}/edit'),
         ];
     }
 

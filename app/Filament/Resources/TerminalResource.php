@@ -2,13 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\TerminalResource\Pages\ListTerminals;
+use App\Filament\Resources\TerminalResource\Pages\CreateTerminal;
+use App\Filament\Resources\TerminalResource\Pages\EditTerminal;
+use App\Filament\Resources\TerminalResource\Pages\ViewTerminal;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\TerminalResource\Pages;
 use App\Filament\Resources\TerminalResource\RelationManagers\AirlinesRelationManager;
 use App\Models\Airfield\Terminal;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -22,14 +29,14 @@ class TerminalResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Terminal::class;
-    protected static ?string $navigationIcon = 'heroicon-o-command-line';
-    protected static ?string $navigationGroup = 'Airfield';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-command-line';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
     protected static ?string $recordTitleAttribute = 'description';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('airfield_id')
                     ->required()
                     ->label(self::translateFormPath('airfield.label'))
@@ -50,19 +57,19 @@ class TerminalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('airfield.code')
+                TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
-                Tables\Columns\TextColumn::make('airlines_count')
+                TextColumn::make('airlines_count')
                     ->label(self::translateTablePath('columns.airlines'))
                     ->counts('airlines'),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ]);
     }
     
@@ -76,10 +83,10 @@ class TerminalResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTerminals::route('/'),
-            'create' => Pages\CreateTerminal::route('/create'),
-            'edit' => Pages\EditTerminal::route('/{record}/edit'),
-            'view' => Pages\ViewTerminal::route('/{record}'),
+            'index' => ListTerminals::route('/'),
+            'create' => CreateTerminal::route('/create'),
+            'edit' => EditTerminal::route('/{record}/edit'),
+            'view' => ViewTerminal::route('/{record}'),
         ];
     }
 

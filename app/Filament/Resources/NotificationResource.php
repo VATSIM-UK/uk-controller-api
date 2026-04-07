@@ -2,6 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\MultiSelectFilter;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\NotificationResource\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\NotificationResource\Pages\ListNotifications;
+use App\Filament\Resources\NotificationResource\Pages\CreateNotification;
+use App\Filament\Resources\NotificationResource\Pages\ViewNotification;
+use App\Filament\Resources\NotificationResource\Pages\EditNotification;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\NotificationResource\Pages;
 use App\Filament\Resources\NotificationResource\RelationManagers;
@@ -9,7 +21,6 @@ use App\Models\Notification\Notification;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -23,14 +34,14 @@ class NotificationResource extends Resource
     private const DATE_FORMAT = 'd M Y H:i';
 
     protected static ?string $model = Notification::class;
-    protected static ?string $navigationIcon = 'heroicon-o-bell';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bell';
     protected static ?string $recordTitleAttribute = 'title';
-    protected static ?string $navigationGroup = 'Controller';
+    protected static string | \UnitEnum | null $navigationGroup = 'Controller';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('title')
                     ->label(self::translateFormPath('title.label'))
                     ->maxLength(255)
@@ -64,33 +75,33 @@ class NotificationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->label(self::translateTablePath('columns.title'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('valid_from')
+                TextColumn::make('valid_from')
                     ->label(self::translateTablePath('columns.valid_from'))
                     ->date(self::DATE_FORMAT)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('valid_to')
+                TextColumn::make('valid_to')
                     ->label(self::translateTablePath('columns.valid_to'))
                     ->date(self::DATE_FORMAT)
                     ->sortable(),
-                Tables\Columns\BooleanColumn::make('read')
+                BooleanColumn::make('read')
                     ->label(self::translateTablePath('columns.read'))
                     ->getStateUsing(
                         fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     ),
             ])
             ->filters([
-                Tables\Filters\Filter::make('unread')
+                Filter::make('unread')
                     ->label(self::translateFilterPath('unread'))
                     ->query(fn (Builder $query) => $query->unreadBy(Auth::user()))
                     ->toggle(),
-                Tables\Filters\Filter::make('active')
+                Filter::make('active')
                     ->label(self::translateFilterPath('active'))
                     ->toggle()
                     ->query(fn (Builder $query) => $query->active()),
-                Tables\Filters\MultiSelectFilter::make('controllers')
+                MultiSelectFilter::make('controllers')
                     ->label(self::translateFilterPath('controllers'))
                     ->options(SelectOptions::controllers())
                     ->query(
@@ -108,9 +119,9 @@ class NotificationResource extends Resource
                         }
                     ),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
             ->defaultSort('valid_to', 'desc');
     }
@@ -118,17 +129,17 @@ class NotificationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ControllersRelationManager::class,
+            ControllersRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNotifications::route('/'),
-            'create' => Pages\CreateNotification::route('/create'),
-            'view' => Pages\ViewNotification::route('/{record}'),
-            'edit' => Pages\EditNotification::route('/{record}/edit'),
+            'index' => ListNotifications::route('/'),
+            'create' => CreateNotification::route('/create'),
+            'view' => ViewNotification::route('/{record}'),
+            'edit' => EditNotification::route('/{record}/edit'),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TerminalResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TerminalResource;
 use Filament\Pages\Actions;
@@ -15,7 +16,7 @@ class ListTerminals extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

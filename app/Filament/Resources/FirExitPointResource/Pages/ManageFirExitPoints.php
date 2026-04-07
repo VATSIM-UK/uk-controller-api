@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\FirExitPointResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\FirExitPointResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use Filament\Pages\Actions;
@@ -16,7 +17,7 @@ class ManageFirExitPoints extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

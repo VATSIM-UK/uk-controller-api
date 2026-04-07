@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StandResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\StandResource;
 use Filament\Pages\Actions;
@@ -16,7 +17,7 @@ class ListStands extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

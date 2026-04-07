@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ControllerPositionResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\ControllerPositionResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use Filament\Pages\Actions;
@@ -16,7 +17,7 @@ class ListControllerPositions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\AirfieldResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\AirfieldResource;
-use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\DB;
 

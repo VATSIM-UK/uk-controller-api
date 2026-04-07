@@ -2,6 +2,11 @@
 
 namespace App\Filament\Resources\AirlineResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\BulkAction;
 use App\Filament\Helpers\PairsAirlinesWithStands;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
@@ -9,9 +14,6 @@ use App\Models\Stand\Stand;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Tables\Actions\DetachAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 
 class StandsRelationManager extends RelationManager
@@ -35,7 +37,7 @@ class StandsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('stand_id')
+                TextColumn::make('stand_id')
                     ->formatStateUsing(fn (Stand $record) => $record->airfieldIdentifier)
                     ->label(self::translateTablePath('columns.stand'))
                     ->sortable()
@@ -43,8 +45,8 @@ class StandsRelationManager extends RelationManager
                 ...self::airlineStandPairingTableColumns(),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make('pair-stand')
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                AttachAction::make('pair-stand')
+                    ->form(fn (AttachAction $action): array => [
                         $action
                             ->recordTitle(fn (Stand $record):string => $record->airfieldIdentifier)
                             ->getRecordSelect()
@@ -53,14 +55,14 @@ class StandsRelationManager extends RelationManager
                         ...self::airlineStandPairingFormFields(),
                     ])
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make('edit-stand-pairing')
-                    ->form(self::airlineStandPairingFormFields()),
+                    ->schema(self::airlineStandPairingFormFields()),
                 DetachAction::make('unpair-stand')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkAction::make('bulk-unpair-stand')
                     ->label(self::translateFormPath('remove.label'))
                     ->requiresConfirmation()

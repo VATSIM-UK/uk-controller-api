@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Columns\TextColumn;
+use App\Filament\Resources\SquawkAssignmentResource\Pages\ListSquawkAssignments;
 use App\Filament\Resources\SquawkAssignmentResource\Pages;
 use App\Models\Squawk\SquawkAssignment;
 use Filament\Resources\Resource;
@@ -13,22 +15,22 @@ class SquawkAssignmentResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = SquawkAssignment::class;
-    protected static ?string $navigationIcon = 'heroicon-o-wifi';
-    protected static ?string $navigationGroup = 'Enroute';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
+    protected static string | \UnitEnum | null $navigationGroup = 'Enroute';
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('callsign')
+                TextColumn::make('callsign')
                     ->label(self::translateTablePath('columns.callsign'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                     ->label(self::translateTablePath('columns.code'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('assignment_type')
+                TextColumn::make('assignment_type')
                     ->label(self::translateTablePath('columns.type'))
                     ->formatStateUsing(fn (string $state) => self::mapAssignmentTypeToString($state)),
             ]);
@@ -37,7 +39,7 @@ class SquawkAssignmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSquawkAssignments::route('/'),
+            'index' => ListSquawkAssignments::route('/'),
         ];
     }
 

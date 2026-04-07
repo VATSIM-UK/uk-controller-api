@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\CcamsSquawkRangeResource\Pages\ManageCcamsSquawkRange;
 use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Resources\CcamsSquawkRangeResource\Pages;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -16,14 +19,14 @@ class CcamsSquawkRangeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = CcamsSquawkRange::class;
-    protected static ?string $navigationGroup = 'Squawk Ranges';
+    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
     protected static ?string $navigationLabel = 'CCAMS';
-    protected static ?string $navigationIcon = 'heroicon-o-wifi';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 ...self::squawkRangeInputs(),
             ]);
     }
@@ -32,9 +35,9 @@ class CcamsSquawkRangeResource extends Resource
     {
         return $table
             ->columns(self::squawkRangeTableColumns())
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->defaultSort('first', 'asc');
     }
@@ -42,7 +45,7 @@ class CcamsSquawkRangeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCcamsSquawkRange::route('/'),
+            'index' => ManageCcamsSquawkRange::route('/'),
         ];
     }
 

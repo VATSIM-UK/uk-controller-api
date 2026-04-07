@@ -2,12 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Actions\ViewAction;
+use App\Filament\Resources\SrdRouteResource\Pages\ListSrdRoutes;
+use App\Filament\Resources\SrdRouteResource\Pages\ViewSrdRoute;
 use App\Filament\Resources\SrdRouteResource\Pages;
 use App\Filament\Resources\SrdRouteResource\RelationManagers\NotesRelationManager;
 use App\Models\Srd\SrdNote;
 use App\Models\Srd\SrdRoute;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -19,14 +24,14 @@ class SrdRouteResource extends Resource
     use TranslatesStrings;
     
     protected static ?string $model = SrdRoute::class;
-    protected static ?string $navigationIcon = 'heroicon-o-map';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map';
     protected static ?string $navigationLabel = 'SRD Routes';
-    protected static ?string $navigationGroup = 'Enroute';
+    protected static string | \UnitEnum | null $navigationGroup = 'Enroute';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('origin')
                     ->label(self::translateFormPath('origin.label')),
                 TextInput::make('destination')
@@ -44,44 +49,44 @@ class SrdRouteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('origin')
+                TextColumn::make('origin')
                     ->label(self::translateTablePath('columns.origin'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('destination')
+                TextColumn::make('destination')
                     ->label(self::translateTablePath('columns.destination'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('minimum_level')
+                TextColumn::make('minimum_level')
                     ->label(self::translateTablePath('columns.minimum_level')),
-                Tables\Columns\TextColumn::make('maximum_level')
+                TextColumn::make('maximum_level')
                     ->label(self::translateTablePath('columns.maximum_level')),
-                Tables\Columns\TextColumn::make('sid')
+                TextColumn::make('sid')
                     ->default('--')
                     ->label(self::translateTablePath('columns.sid')),
-                Tables\Columns\TextColumn::make('star')
+                TextColumn::make('star')
                     ->default('--')
                     ->label(self::translateTablePath('columns.star')),
-                Tables\Columns\TextColumn::make('route_segment')
+                TextColumn::make('route_segment')
                     ->label(self::translateTablePath('columns.route_segment'))
                     ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record)),
-                Tables\Columns\TextColumn::make('notes.id')
+                TextColumn::make('notes.id')
                     ->label(self::translateTablePath('columns.notes'))
             ])
             ->filters([
-                Tables\Filters\Filter::make('origin')
+                Filter::make('origin')
                     ->formComponent(TextInput::class)
                     ->query(
                         fn (Builder $query, array $data) => isset($data['isActive'])
                             ? $query->where('origin', $data['isActive'])
                             : $query
                     ),
-                Tables\Filters\Filter::make('destination')
+                Filter::make('destination')
                     ->formComponent(TextInput::class)
                     ->query(
                         fn (Builder $query, array $data) => isset($data['isActive'])
                             ? $query->where('destination', $data['isActive'])
                             : $query
                     ),
-                Tables\Filters\Filter::make('level')
+                Filter::make('level')
                     ->formComponent(TextInput::class)
                     ->query(
                         fn (Builder $query, array $data) => isset($data['isActive'])
@@ -92,8 +97,8 @@ class SrdRouteResource extends Resource
                             : $query
                     ),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ]);
     }
 
@@ -107,8 +112,8 @@ class SrdRouteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSrdRoutes::route('/'),
-            'view' => Pages\ViewSrdRoute::route('/{record}'),
+            'index' => ListSrdRoutes::route('/'),
+            'view' => ViewSrdRoute::route('/{record}'),
         ];
     }
 

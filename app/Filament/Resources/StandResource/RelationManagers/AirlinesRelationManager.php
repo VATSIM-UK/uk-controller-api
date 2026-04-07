@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DetachAction;
 use App\Filament\Helpers\PairsAirlinesWithStands;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
@@ -30,25 +34,25 @@ class AirlinesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('icao_code')
+                TextColumn::make('icao_code')
                     ->label(self::translateTablePath('columns.icao'))
                     ->sortable()
                     ->searchable(),
                 ...self::airlineStandPairingTableColumns(),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make('pair-airline')
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                AttachAction::make('pair-airline')
+                    ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         ...self::airlineStandPairingFormFields(),
                     ])
             ])
-            ->actions([
-                Tables\Actions\EditAction::make('edit-airline-pairing')
-                    ->form(self::airlineStandPairingFormFields()),
-                Tables\Actions\DetachAction::make('unpair-airline')
+            ->recordActions([
+                EditAction::make('edit-airline-pairing')
+                    ->schema(self::airlineStandPairingFormFields()),
+                DetachAction::make('unpair-airline')
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())
             ]);

@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class StandPredictor extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationLabel = 'Stand Predictor';
     protected static ?string $slug = 'stand-predictor';
-    protected static string $view = 'filament.pages.stand-predictor';
-    protected static ?string $navigationGroup = 'Airfield';
+    protected string $view = 'filament.pages.stand-predictor';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
 
     protected $listeners = ['standPredictorFormSubmitted'];
 

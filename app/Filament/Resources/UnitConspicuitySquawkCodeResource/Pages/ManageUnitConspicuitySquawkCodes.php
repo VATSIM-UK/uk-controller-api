@@ -19,7 +19,7 @@ class ManageUnitConspicuitySquawkCodes extends ManageRecords
     {
         return [
             CreateAction::make()
-                ->mutateFormDataUsing(fn (array $data) => self::mutateFormData()($data)),
+                ->mutateDataUsing(fn (array $data) => self::mutateFormData()($data)),
         ];
     }
 }

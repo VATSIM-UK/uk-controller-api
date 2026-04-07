@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\StandResource\RelationManagers;
 
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
@@ -30,16 +33,16 @@ class PairedStandsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        $attachAction = Tables\Actions\AttachAction::make('pair-stand');
-        $detachAction = Tables\Actions\DetachAction::make('unpair-stand');
+        $attachAction = AttachAction::make('pair-stand');
+        $detachAction = DetachAction::make('unpair-stand');
 
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('airfield.code')
+                TextColumn::make('airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('identifier')
+                TextColumn::make('identifier')
                     ->label(self::translateTablePath('columns.identifier'))
                     ->sortable()
                     ->searchable(),
@@ -86,7 +89,7 @@ class PairedStandsRelationManager extends RelationManager
                     })
                     ->label(self::translateFormPath('add.label'))
             ])
-            ->actions([
+            ->recordActions([
                 $detachAction->using(
                     function (Stand $record) use ($detachAction): void {
                         DB::transaction(function () use ($record, $detachAction) {

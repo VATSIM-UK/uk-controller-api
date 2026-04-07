@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Resources\NonAssignableSquawkCodeResource\Pages\ManageNonAssignnableSquawkCodeRanges;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -17,14 +20,14 @@ class NonAssignableSquawkCodeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = NonAssignableSquawkCode::class;
-    protected static ?string $navigationGroup = 'Squawk Ranges';
+    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
     protected static ?string $navigationLabel = 'Non Assignable';
-    protected static ?string $navigationIcon = 'heroicon-o-wifi';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 self::singleSquawkInput('code', 'code')
                     ->unique(ignoreRecord: true),
                 TextInput::make('description')
@@ -39,12 +42,12 @@ class NonAssignableSquawkCodeResource extends Resource
         return $table
             ->columns([
                 self::squawkCodeTableColumn(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->defaultSort('code');
     }

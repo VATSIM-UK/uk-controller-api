@@ -2,6 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\IntentionCodeResource\Pages\ListIntentionCodes;
+use App\Filament\Resources\IntentionCodeResource\Pages\CreateIntentionCode;
+use App\Filament\Resources\IntentionCodeResource\Pages\ViewIntentionCode;
+use App\Filament\Resources\IntentionCodeResource\Pages\EditIntentionCode;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\IntentionCodeResource\Pages;
 use App\Models\IntentionCode\ConditionType;
@@ -13,12 +24,9 @@ use App\Services\IntentionCode\IntentionCodeService;
 use Closure;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
@@ -29,13 +37,13 @@ class IntentionCodeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = IntentionCode::class;
-    protected static ?string $navigationIcon = 'heroicon-o-code-bracket';
-    protected static ?string $navigationGroup = 'Intention Codes';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-code-bracket';
+    protected static string | \UnitEnum | null $navigationGroup = 'Intention Codes';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('description')
                     ->required()
                     ->maxLength(255)
@@ -54,9 +62,9 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('code_type.label'))
                             ->helperText(self::translateFormPath('code_type.helper')),
                         TextInput::make('single_code')
-                            ->required(fn (\Filament\Forms\Get $get) => $get('code_type') === 'single_code')
+                            ->required(fn (Get $get) => $get('code_type') === 'single_code')
                             ->maxLength(2)
-                            ->hidden(fn (\Filament\Forms\Get $get) => $get('code_type') !== 'single_code')
+                            ->hidden(fn (Get $get) => $get('code_type') !== 'single_code')
                             ->label(self::translateFormPath('single_code.label'))
                             ->helperText(self::translateFormPath('single_code.helper'))
                     ]),
@@ -78,13 +86,13 @@ class IntentionCodeResource extends Resource
                             ->minValue(1)
                             ->label(self::translateFormPath('position.label'))
                             ->helperText(self::translateFormPath('position.helper'))
-                            ->hidden(fn (\Filament\Forms\Get $get) => $get('order_type') !== 'at_position')
-                            ->required(fn (\Filament\Forms\Get $get) => $get('order_type') === 'at_position'),
+                            ->hidden(fn (Get $get) => $get('order_type') !== 'at_position')
+                            ->required(fn (Get $get) => $get('order_type') === 'at_position'),
                         Select::make('insert_position')
                             ->label(self::translateFormPath('before_after_position.label'))
                             ->helperText(self::translateFormPath('before_after_position.helper'))
-                            ->hidden(fn (\Filament\Forms\Get $get) => !in_array($get('order_type'), ['before', 'after']))
-                            ->required(fn (\Filament\Forms\Get $get) => in_array($get('order_type'), ['before', 'after']))
+                            ->hidden(fn (Get $get) => !in_array($get('order_type'), ['before', 'after']))
+                            ->required(fn (Get $get) => in_array($get('order_type'), ['before', 'after']))
                             ->options(
                                 fn () => IntentionCode::all()->mapWithKeys(
                                     fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
@@ -109,10 +117,10 @@ class IntentionCodeResource extends Resource
 
             ])
             ->defaultSort('priority')
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make()
                     ->using(fn (IntentionCode $record) => IntentionCodeService::deleteIntentionCode($record)),
             ]);
     }
@@ -120,10 +128,10 @@ class IntentionCodeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListIntentionCodes::route('/'),
-            'create' => Pages\CreateIntentionCode::route('/create'),
-            'view' => Pages\ViewIntentionCode::route('/{record}'),
-            'edit' => Pages\EditIntentionCode::route('/{record}/edit'),
+            'index' => ListIntentionCodes::route('/'),
+            'create' => CreateIntentionCode::route('/create'),
+            'view' => ViewIntentionCode::route('/{record}'),
+            'edit' => EditIntentionCode::route('/{record}/edit'),
         ];
     }
 

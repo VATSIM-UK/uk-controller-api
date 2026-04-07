@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\SidResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TagsColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -21,14 +25,14 @@ class PrenotesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
-                Tables\Columns\TagsColumn::make('controllers.callsign')
+                TagsColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.controllers')),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                AttachAction::make()
+                    ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(__('form.stands.airlines.icao.label'))
                             ->required(),
@@ -38,11 +42,11 @@ class PrenotesRelationManager extends RelationManager
                     ->modalButton(self::translateTablePath('attach_action.confirm_button'))
                     ->disableAttachAnother(),
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make()
+            ->recordActions([
+                DetachAction::make()
                     ->label(self::translateTablePath('detach_action.trigger_button'))
                     ->modalHeading(
-                        fn (Tables\Actions\DetachAction $action) => __(
+                        fn (DetachAction $action) => __(
                             'table.sids.prenotes.detach_action.modal_heading',
                             ['prenote' => $action->getRecordTitle()]
                         )

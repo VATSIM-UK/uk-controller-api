@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SrdRouteResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -20,9 +21,9 @@ class NotesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label(self::translateTablePath('columns.number')),
-                Tables\Columns\TextColumn::make('note_text')
+                TextColumn::make('note_text')
                     ->label(self::translateTablePath('columns.text')),
             ]);
     }

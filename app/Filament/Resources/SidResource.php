@@ -2,6 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Tables\Filters\SelectFilter;
+use App\Filament\Resources\SidResource\RelationManagers\PrenotesRelationManager;
+use App\Filament\Resources\SidResource\Pages\ListSids;
+use App\Filament\Resources\SidResource\Pages\CreateSid;
+use App\Filament\Resources\SidResource\Pages\ViewSid;
+use App\Filament\Resources\SidResource\Pages\EditSid;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\SidResource\Pages;
 use App\Filament\Resources\SidResource\RelationManagers;
@@ -12,7 +24,6 @@ use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Page;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -25,21 +36,21 @@ class SidResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Sid::class;
-    protected static ?string $navigationIcon = 'heroicon-o-map';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map';
     protected static ?string $recordRouteKeyName = 'sid.id';
     protected static ?string $recordTitleAttribute = 'identifier';
     protected static ?string $navigationLabel = 'SIDs';
-    protected static ?string $navigationGroup = 'Airfield';
+    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
 
     public static function getPluralModelLabel(): string
     {
         return 'SIDs';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('runway_id')
                     ->label(self::translateFormPath('runway.label'))
                     ->helperText(self::translateFormPath('runway.helper'))
@@ -49,18 +60,18 @@ class SidResource extends Resource
                     ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->searchable()
                     ->required(),
-                Forms\Components\TextInput::make('identifier')
+                TextInput::make('identifier')
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
                     ->rule(
-                        fn (\Filament\Forms\Get $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
+                        fn (Get $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
                             Runway::findOrFail($get('runway_id')),
                             $record
                         ),
-                        fn (\Filament\Forms\Get $get) => $get('runway_id')
+                        fn (Get $get) => $get('runway_id')
                     )
                     ->required(),
-                Forms\Components\TextInput::make('initial_altitude')
+                TextInput::make('initial_altitude')
                     ->label(self::translateFormPath('initial_altitude.label'))
                     ->helperText(self::translateFormPath('initial_altitude.helper'))
                     ->hintIcon('heroicon-o-presentation-chart-line')
@@ -68,7 +79,7 @@ class SidResource extends Resource
                     ->minValue(0)
                     ->maxValue(99999)
                     ->required(),
-                Forms\Components\TextInput::make('initial_heading')
+                TextInput::make('initial_heading')
                     ->label(self::translateFormPath('initial_heading.label'))
                     ->helperText(self::translateFormPath('initial_heading.helper'))
                     ->hintIcon('heroicon-o-arrows-pointing-out')
@@ -88,23 +99,23 @@ class SidResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('runway.airfield.code')
+                TextColumn::make('runway.airfield.code')
                     ->label(self::translateTablePath('columns.airfield'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('runway.identifier')
+                TextColumn::make('runway.identifier')
                     ->label(self::translateTablePath('columns.runway')),
-                Tables\Columns\TextColumn::make('identifier')
+                TextColumn::make('identifier')
                     ->label(self::translateTablePath('columns.identifier')),
-                Tables\Columns\TextColumn::make('initial_altitude')
+                TextColumn::make('initial_altitude')
                     ->label(self::translateTablePath('columns.initial_altitude')),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('airfield')
+                SelectFilter::make('airfield')
                     ->label(self::translateFilterPath('airfield'))
                     ->options(SelectOptions::airfields())
                     ->searchable()
@@ -130,17 +141,17 @@ class SidResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PrenotesRelationManager::class,
+            PrenotesRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSids::route('/'),
-            'create' => Pages\CreateSid::route('/create'),
-            'view' => Pages\ViewSid::route('/{record}'),
-            'edit' => Pages\EditSid::route('/{record}/edit'),
+            'index' => ListSids::route('/'),
+            'create' => CreateSid::route('/create'),
+            'view' => ViewSid::route('/{record}'),
+            'edit' => EditSid::route('/{record}/edit'),
         ];
     }
 

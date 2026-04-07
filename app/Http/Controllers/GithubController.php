@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Models\SectorFile\SectorFileIssue;
 use Exception;
 use Github\Client;
@@ -91,7 +92,7 @@ class GithubController
      *
      * @param SectorFileIssue $databaseIssue
      * @param array $issue
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return ResponseFactory|Response
      */
     private function processLabels(SectorFileIssue $databaseIssue, array $issue)
     {

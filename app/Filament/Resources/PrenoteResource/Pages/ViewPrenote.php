@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\PrenoteResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\PrenoteResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
@@ -13,7 +14,7 @@ class ViewPrenote extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

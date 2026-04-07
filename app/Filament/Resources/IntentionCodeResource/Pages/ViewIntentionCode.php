@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\IntentionCodeResource\Pages;
 
+use Filament\Actions\EditAction;
 use App\Filament\Resources\IntentionCodeResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
@@ -15,7 +16,7 @@ class ViewIntentionCode extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
         ];
     }
 }
