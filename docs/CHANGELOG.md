@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.64.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.64.0...6.64.1) (2026-04-07)
+
+### Bug Fixes
+
+* style fixes ([94c1fe9](https://github.com/VATSIM-UK/uk-controller-api/commit/94c1fe9e6f8a44c9c448511cead840cbb6d1405c))
+* update stands config for overnight stands ([833d9bd](https://github.com/VATSIM-UK/uk-controller-api/commit/833d9bd5645c7d76b23bbb99fd7939ca219b7f6e))
+
 ## [6.64.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.63.2...6.64.0) (2026-03-17)
 
 ### Features
