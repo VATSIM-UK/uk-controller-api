@@ -23,6 +23,7 @@ use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use App\Filament\Resources\TranslatesStrings;
 
 class TerminalResource extends Resource
 {
@@ -42,8 +43,8 @@ class TerminalResource extends Resource
                     ->label(self::translateFormPath('airfield.label'))
                     ->options(SelectOptions::airfields())
                     ->searchable(!App::runningUnitTests())
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
+                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
                     ->required(),
                 TextInput::make('description')
                     ->required()
@@ -72,14 +73,14 @@ class TerminalResource extends Resource
                 EditAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             AirlinesRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [

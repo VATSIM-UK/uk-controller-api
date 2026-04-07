@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use App\Filament\Resources\TranslatesStrings;
 
 class NotificationResource extends Resource
 {
@@ -89,18 +90,18 @@ class NotificationResource extends Resource
                 BooleanColumn::make('read')
                     ->label(self::translateTablePath('columns.read'))
                     ->getStateUsing(
-                        fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
+                        fn(Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     ),
             ])
             ->filters([
                 Filter::make('unread')
                     ->label(self::translateFilterPath('unread'))
-                    ->query(fn (Builder $query) => $query->unreadBy(Auth::user()))
+                    ->query(fn(Builder $query) => $query->unreadBy(Auth::user()))
                     ->toggle(),
                 Filter::make('active')
                     ->label(self::translateFilterPath('active'))
                     ->toggle()
-                    ->query(fn (Builder $query) => $query->active()),
+                    ->query(fn(Builder $query) => $query->active()),
                 MultiSelectFilter::make('controllers')
                     ->label(self::translateFilterPath('controllers'))
                     ->options(SelectOptions::controllers())

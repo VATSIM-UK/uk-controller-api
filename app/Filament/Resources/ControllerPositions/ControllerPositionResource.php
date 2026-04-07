@@ -22,6 +22,7 @@ use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
+use App\Filament\Resources\TranslatesStrings;
 
 class ControllerPositionResource extends Resource
 {
@@ -56,22 +57,22 @@ class ControllerPositionResource extends Resource
                             ->helperText(self::translateFormPath('frequency.helper'))
                             ->length(7),
                     ]),
-                    Fieldset::make('coordination')
-                        ->label(self::translateFormPath('coordination_section.label'))
-                        ->schema([
-                            Toggle::make('requests_departure_releases')
-                                ->label(self::translateFormPath('requests_departure_releases.label'))
-                                ->helperText(self::translateFormPath('requests_departure_releases.helper')),
-                            Toggle::make('receives_departure_releases')
-                                ->label(self::translateFormPath('receives_departure_releases.label'))
-                                ->helperText(self::translateFormPath('receives_departure_releases.helper')),
-                            Toggle::make('sends_prenotes')
-                                ->label(self::translateFormPath('sends_prenotes.label'))
-                                ->helperText(self::translateFormPath('sends_prenotes.helper')),
-                            Toggle::make('receives_prenotes')
-                                ->label(self::translateFormPath('receives_prenotes.label'))
-                                ->helperText(self::translateFormPath('receives_prenotes.helper')),
-                        ])
+                Fieldset::make('coordination')
+                    ->label(self::translateFormPath('coordination_section.label'))
+                    ->schema([
+                        Toggle::make('requests_departure_releases')
+                            ->label(self::translateFormPath('requests_departure_releases.label'))
+                            ->helperText(self::translateFormPath('requests_departure_releases.helper')),
+                        Toggle::make('receives_departure_releases')
+                            ->label(self::translateFormPath('receives_departure_releases.label'))
+                            ->helperText(self::translateFormPath('receives_departure_releases.helper')),
+                        Toggle::make('sends_prenotes')
+                            ->label(self::translateFormPath('sends_prenotes.label'))
+                            ->helperText(self::translateFormPath('sends_prenotes.helper')),
+                        Toggle::make('receives_prenotes')
+                            ->label(self::translateFormPath('receives_prenotes.label'))
+                            ->helperText(self::translateFormPath('receives_prenotes.helper')),
+                    ])
             ]);
     }
 
@@ -85,7 +86,7 @@ class ControllerPositionResource extends Resource
                     ->searchable(),
                 TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description'))
-                    ->formatStateUsing(fn (?string $state) => $state ?: '--')
+                    ->formatStateUsing(fn(?string $state) => $state ?: '--')
                     ->searchable(),
                 TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency'))
@@ -99,7 +100,7 @@ class ControllerPositionResource extends Resource
             ])
             ->defaultSort('callsign', 'asc');
     }
-    
+
     public static function getPages(): array
     {
         return [

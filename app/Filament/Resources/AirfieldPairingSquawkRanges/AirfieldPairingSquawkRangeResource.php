@@ -9,6 +9,7 @@ use Filament\Actions\DeleteAction;
 use App\Filament\Resources\AirfieldPairingSquawkRanges\Pages\ManageAirfieldPairingSquawkRange;
 use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Resources\AirfieldPairingSquawkRangeResource\Pages;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use Filament\Forms\Components\TextInput;

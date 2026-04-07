@@ -9,6 +9,7 @@ use App\Models\Squawk\SquawkAssignment;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
+use App\Filament\Resources\TranslatesStrings;
 
 class SquawkAssignmentResource extends Resource
 {
@@ -32,7 +33,7 @@ class SquawkAssignmentResource extends Resource
                     ->sortable(),
                 TextColumn::make('assignment_type')
                     ->label(self::translateTablePath('columns.type'))
-                    ->formatStateUsing(fn (string $state) => self::mapAssignmentTypeToString($state)),
+                    ->formatStateUsing(fn(string $state) => self::mapAssignmentTypeToString($state)),
             ]);
     }
 

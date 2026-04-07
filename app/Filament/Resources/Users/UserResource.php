@@ -22,6 +22,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
+use App\Filament\Resources\TranslatesStrings;
 
 class UserResource extends Resource
 {
@@ -59,8 +60,8 @@ class UserResource extends Resource
                     ->disabled(),
                 Select::make('status')
                     ->options(
-                        fn () => UserStatus::all()->mapWithKeys(
-                            fn (UserStatus $status) => [$status->id => $status->statusMessage()]
+                        fn() => UserStatus::all()->mapWithKeys(
+                            fn(UserStatus $status) => [$status->id => $status->statusMessage()]
                         )
                     )
                     ->required(),
@@ -79,7 +80,7 @@ class UserResource extends Resource
                     ->searchable(['user.first_name', 'user.last_name']),
                 TextColumn::make('status')
                     ->label(self::translateTablePath('columns.status'))
-                    ->formatStateUsing(fn (int $state) => UserStatus::find($state)?->statusMessage()),
+                    ->formatStateUsing(fn(int $state) => UserStatus::find($state)?->statusMessage()),
                 TagsColumn::make('roles.description')
                     ->label(self::translateTablePath('columns.roles'))
             ])

@@ -10,6 +10,7 @@ use App\Services\DependencyService;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use App\Filament\Resources\TranslatesStrings;
 
 class DependencyResource extends Resource
 {
@@ -36,7 +37,7 @@ class DependencyResource extends Resource
                 Action::make('download-dependency')
                     ->label(self::translateTablePath('actions.download.label'))
                     ->action(
-                        fn (Dependency $record) => response()
+                        fn(Dependency $record) => response()
                             ->streamDownload(
                                 function () use ($record) {
                                     echo json_encode(DependencyService::fetchDependencyDataById($record->id));

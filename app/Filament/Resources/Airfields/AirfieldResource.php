@@ -16,6 +16,7 @@ use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\AirfieldResource\Pages;
 use App\Filament\Resources\Airfields\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Rules\Airfield\AirfieldIcao;
 use Filament\Forms\Components\Select;
@@ -50,7 +51,7 @@ class AirfieldResource extends Resource
                             ->required()
                             ->label(self::translateFormPath('code.label'))
                             ->helperText(self::translateFormPath('code.helper'))
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
+                            ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord),
                         ...self::coordinateInputs(),
                         TextInput::make('elevation')
                             ->required()

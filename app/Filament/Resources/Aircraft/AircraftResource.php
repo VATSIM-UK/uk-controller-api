@@ -14,8 +14,8 @@ use App\Filament\Resources\Aircraft\Pages\CreateAircraft;
 use App\Filament\Resources\Aircraft\Pages\ViewAircraft;
 use App\Filament\Resources\Aircraft\Pages\EditAircraft;
 use App\Events\Aircraft\AircraftDataUpdatedEvent;
-use App\Filament\Resources\AircraftResource\Pages;
 use App\Filament\Resources\Aircraft\RelationManagers\WakeCategoriesRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use Filament\Forms\Components\Select;
@@ -23,7 +23,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
 class AircraftResource extends Resource
@@ -105,8 +104,8 @@ class AircraftResource extends Resource
                 TagsColumn::make('wakeCategories')
                     ->label(self::translateTablePath('columns.wake_categories'))
                     ->getStateUsing(
-                        fn (Aircraft $record) => $record->wakeCategories->map(
-                            fn (WakeCategory $category) => sprintf(
+                        fn(Aircraft $record) => $record->wakeCategories->map(
+                            fn(WakeCategory $category) => sprintf(
                                 '%s: %s',
                                 $category->scheme->name,
                                 $category->description

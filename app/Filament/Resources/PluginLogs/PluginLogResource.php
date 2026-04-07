@@ -12,6 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use App\Filament\Resources\TranslatesStrings;
 
 class PluginLogResource extends Resource
 {
@@ -37,7 +38,7 @@ class PluginLogResource extends Resource
                     ->required(),
                 Textarea::make('metadata')
                     ->columnSpan('full')
-                    ->formatStateUsing(fn (array|null $state) => json_encode($state, JSON_PRETTY_PRINT))
+                    ->formatStateUsing(fn(array|null $state) => json_encode($state, JSON_PRETTY_PRINT))
                     ->label(self::translateFormPath('metadata.label'))
                     ->required(),
             ]);
@@ -55,7 +56,7 @@ class PluginLogResource extends Resource
                     ->label(self::translateTablePath('columns.created_at')),
             ])->defaultSort('id', 'desc');
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -63,7 +64,7 @@ class PluginLogResource extends Resource
             'view' => ViewPluginLog::route('/{record}'),
         ];
     }
-    
+
     protected static function translationPathRoot(): string
     {
         return 'plugin';

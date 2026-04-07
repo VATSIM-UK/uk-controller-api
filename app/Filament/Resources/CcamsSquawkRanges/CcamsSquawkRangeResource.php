@@ -12,6 +12,7 @@ use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
+use App\Filament\Resources\TranslatesStrings;
 
 class CcamsSquawkRangeResource extends Resource
 {

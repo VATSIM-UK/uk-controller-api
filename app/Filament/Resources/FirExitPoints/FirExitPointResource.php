@@ -20,6 +20,7 @@ use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use App\Filament\Resources\TranslatesStrings;
 
 class FirExitPointResource extends Resource
 {
@@ -84,7 +85,7 @@ class FirExitPointResource extends Resource
                     ->before(function (DeleteAction $action) {
                         $hasIntentionCodes = IntentionCode::all()
                             ->filter(
-                                fn (IntentionCode $intentionCode) => self::hasExitPointCondition(
+                                fn(IntentionCode $intentionCode) => self::hasExitPointCondition(
                                     $intentionCode->conditions,
                                     $action->getRecord()
                                 )

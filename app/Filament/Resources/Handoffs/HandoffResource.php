@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\TranslatesStrings;
 
 class HandoffResource extends Resource
 {
@@ -64,14 +65,14 @@ class HandoffResource extends Resource
                 EditAction::make()
             ])->defaultSort('description');
     }
-    
+
     public static function getRelations(): array
     {
         return [
             ControllersRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [

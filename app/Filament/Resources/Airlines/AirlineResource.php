@@ -26,6 +26,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use App\Filament\Resources\TranslatesStrings;
 
 class AirlineResource extends Resource
 {
@@ -68,9 +69,9 @@ class AirlineResource extends Resource
                                 ->helperText(self::translateFormPath('copy_stand_assignments.helper'))
                         ]
                     )
-                    ->hidden(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
+                    ->hidden(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord),
             ]);
     }
 

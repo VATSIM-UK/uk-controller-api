@@ -23,6 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\TranslatesStrings;
 
 class NavaidResource extends Resource
 {
@@ -52,7 +53,7 @@ class NavaidResource extends Resource
                     ->maxLength(5)
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
+                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord),
                 self::latitudeInput(),
                 self::longitudeInput()
             ]);
