@@ -6,7 +6,7 @@ use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
 ;
-use App\Filament\Resources\ActivityResource;
+use App\Filament\Resources\Activities\ActivityResource;
 use App\Models\User\RoleKeys;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Activity;

@@ -3,11 +3,11 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\IntentionCodeResource;
-use App\Filament\Resources\IntentionCodeResource\Pages\CreateIntentionCode;
-use App\Filament\Resources\IntentionCodeResource\Pages\EditIntentionCode;
-use App\Filament\Resources\IntentionCodeResource\Pages\ListIntentionCodes;
-use App\Filament\Resources\IntentionCodeResource\Pages\ViewIntentionCode;
+use App\Filament\Resources\IntentionCodes\IntentionCodeResource;
+use App\Filament\Resources\IntentionCodes\Pages\CreateIntentionCode;
+use App\Filament\Resources\IntentionCodes\Pages\EditIntentionCode;
+use App\Filament\Resources\IntentionCodes\Pages\ListIntentionCodes;
+use App\Filament\Resources\IntentionCodes\Pages\ViewIntentionCode;
 use App\Models\IntentionCode\IntentionCode;
 use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Model;

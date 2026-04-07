@@ -5,7 +5,7 @@ namespace App\Filament;
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
-use App\Filament\Resources\PluginLogResource;
+use App\Filament\Resources\PluginLogs\PluginLogResource;
 use App\Models\User\RoleKeys;
 use App\Models\Plugin\PluginLog;
 use Illuminate\Database\Eloquent\Model;

@@ -3,12 +3,12 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\TerminalResource\RelationManagers\AirlinesRelationManager;
-use App\Filament\Resources\TerminalResource;
-use App\Filament\Resources\TerminalResource\Pages\CreateTerminal;
-use App\Filament\Resources\TerminalResource\Pages\EditTerminal;
-use App\Filament\Resources\TerminalResource\Pages\ListTerminals;
-use App\Filament\Resources\TerminalResource\Pages\ViewTerminal;
+use App\Filament\Resources\Terminals\RelationManagers\AirlinesRelationManager;
+use App\Filament\Resources\Terminals\TerminalResource;
+use App\Filament\Resources\Terminals\Pages\CreateTerminal;
+use App\Filament\Resources\Terminals\Pages\EditTerminal;
+use App\Filament\Resources\Terminals\Pages\ListTerminals;
+use App\Filament\Resources\Terminals\Pages\ViewTerminal;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use Illuminate\Database\Eloquent\Model;

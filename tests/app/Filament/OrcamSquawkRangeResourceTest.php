@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\OrcamSquawkRangeResource;
-use App\Filament\Resources\OrcamSquawkRangeResource\Pages\ManageOrcamSquawkRanges;
+use App\Filament\Resources\OrcamSquawkRanges\OrcamSquawkRangeResource;
+use App\Filament\Resources\OrcamSquawkRanges\Pages\ManageOrcamSquawkRanges;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use Livewire\Livewire;
 

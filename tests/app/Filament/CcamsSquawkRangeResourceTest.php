@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\CcamsSquawkRangeResource;
-use App\Filament\Resources\CcamsSquawkRangeResource\Pages\ManageCcamsSquawkRange;
+use App\Filament\Resources\CcamsSquawkRanges\CcamsSquawkRangeResource;
+use App\Filament\Resources\CcamsSquawkRanges\Pages\ManageCcamsSquawkRange;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use Livewire\Livewire;
 

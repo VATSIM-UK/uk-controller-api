@@ -4,7 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
-use App\Filament\Resources\SquawkAssignmentResource;
+use App\Filament\Resources\SquawkAssignments\SquawkAssignmentResource;
 use App\Models\Squawk\SquawkAssignment;
 
 class SquawkAssignmentResourceTest extends BaseFilamentTestCase

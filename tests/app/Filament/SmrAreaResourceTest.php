@@ -3,11 +3,11 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\SmrAreaResource;
-use App\Filament\Resources\SmrAreaResource\Pages\CreateSmrArea;
-use App\Filament\Resources\SmrAreaResource\Pages\EditSmrArea;
-use App\Filament\Resources\SmrAreaResource\Pages\ListSmrAreas;
-use App\Filament\Resources\SmrAreaResource\Pages\ViewSmrArea;
+use App\Filament\Resources\SmrAreas\SmrAreaResource;
+use App\Filament\Resources\SmrAreas\Pages\CreateSmrArea;
+use App\Filament\Resources\SmrAreas\Pages\EditSmrArea;
+use App\Filament\Resources\SmrAreas\Pages\ListSmrAreas;
+use App\Filament\Resources\SmrAreas\Pages\ViewSmrArea;
 use App\Models\SmrArea;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;

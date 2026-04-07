@@ -1,0 +1,156 @@
+<?php
+
+namespace App\Filament\Resources\Notifications\RelationManagers;
+
+use App\Filament\Resources\Notifications\RelationManagers\ControllersRelationManager;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\MultiSelect;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
+use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
+use App\Filament\Resources\TranslatesStrings;
+use App\Models\Controller\ControllerPosition;
+use Carbon\Carbon;
+use Closure;
+use Filament\Forms;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Table;
+use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
+class ControllersRelationManager extends RelationManager
+{
+    use LimitsTableRecordListingOptions;
+
+    use TranslatesStrings;
+
+    protected static string $relationship = 'controllers';
+    protected static ?string $recordTitleAttribute = 'callsign';
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('callsign')
+                    ->label(self::translateTablePath('columns.callsign'))
+                    ->searchable(),
+                TextColumn::make('frequency')
+                    ->label(self::translateTablePath('columns.frequency')),
+            ])
+            ->headerActions([
+                AttachAction::make()
+                    ->label(self::translateTablePath('attach_action.label'))
+                    ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
+                    ->modalButton(self::translateTablePath('attach_action.modal_button'))
+                    ->disableAttachAnother()
+                    ->form([
+                        Toggle::make('global')
+                            ->label(self::translateTablePath('attach_form.global.label'))
+                            ->helperText(self::translateTablePath('attach_form.global.helper'))
+                            ->reactive()
+                            ->afterStateUpdated(function (Set $set) {
+                                $set('controllers', null);
+                            }),
+                        MultiSelect::make('position_level')
+                            ->options(
+                                [
+                                    'DEL' => 'Delivery',
+                                    'GND' => 'Ground',
+                                    'TWR' => 'Tower',
+                                    'APP' => 'Approach',
+                                    'CTR' => 'Enroute',
+                                ]
+                            )
+                            ->reactive()
+                            ->hidden(fn (Get $get) => $get('global')),
+                        MultiSelect::make('controllers')
+                            ->searchable()
+                            ->options(
+                                fn (ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
+                                    'id',
+                                    $livewire->getOwnerRecord()->controllers()->pluck('controller_positions.id')
+                                )
+                                    ->get()
+                                    ->mapWithKeys(
+                                        fn (
+                                            ControllerPosition $controllerPosition
+                                        ) => [$controllerPosition->id => $controllerPosition->callsign]
+                                    )
+                            )
+                            ->hidden(fn (Get $get) => $get('global') || $get('position_level'))
+                            ->required(fn (Get $get) => !$get('global') && !$get('position_level')),
+                    ])
+                    ->action(function (AttachAction $action) {
+                        $action->process(
+                            function () {
+                                return;
+                            }
+                        );
+                        $action->success();
+                    })
+                    ->using(function (ControllersRelationManager $livewire, array $data) {
+                        DB::transaction(function () use ($livewire, $data) {
+                            $positionsToInsert = self::controllersForNotification($data)
+                                ->merge(
+                                    $livewire->getOwnerRecord()->controllers()->pluck(
+                                        'controller_positions.id'
+                                    )
+                                )
+                                ->unique()
+                                ->values()
+                                ->map(fn (int $positionId) => [
+                                    'notification_id' => $livewire->getOwnerRecord()->id,
+                                    'controller_position_id' => $positionId,
+                                    'created_at' => Carbon::now(),
+                                    'updated_at' => Carbon::now(),
+                                ])
+                                ->toArray();
+
+                            DB::table('controller_position_notification')
+                                ->where('notification_id', $livewire->getOwnerRecord()->id)
+                                ->delete();
+                            DB::table('controller_position_notification')
+                                ->insert($positionsToInsert);
+                        });
+                    }),
+            ])
+            ->recordActions([
+                DetachAction::make(),
+            ])
+            ->toolbarActions([
+                DetachBulkAction::make(),
+            ]);
+    }
+
+    private static function controllersForNotification(array $data): Collection
+    {
+        if ($data['global']) {
+            return ControllerPosition::all()->pluck('id');
+        }
+
+        if (!empty($data['position_level'])) {
+            $query = array_reduce(
+                array_map(
+                    fn (string $level) => ControllerPosition::where('callsign', 'like', '%' . $level),
+                    $data['position_level']
+                ),
+                fn (?Builder $carry, Builder $positionQuery) => $carry ? $carry->union($positionQuery) : $positionQuery
+            );
+
+            return $query->get()->pluck('id');
+        }
+
+        return collect($data['controllers']);
+    }
+
+    protected static function translationPathRoot(): string
+    {
+        return 'notifications.controller_positions';
+    }
+}

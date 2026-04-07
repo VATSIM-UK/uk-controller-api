@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\UnitDiscreteSquawkRangeResource;
-use App\Filament\Resources\UnitDiscreteSquawkRangeResource\Pages\ManageUnitDiscreteSquawkRanges;
+use App\Filament\Resources\UnitDiscreteSquawkRanges\UnitDiscreteSquawkRangeResource;
+use App\Filament\Resources\UnitDiscreteSquawkRanges\Pages\ManageUnitDiscreteSquawkRanges;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

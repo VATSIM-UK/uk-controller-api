@@ -1,9 +1,9 @@
 <?php
 
-use App\Filament\Resources\ActivityResource;
-use App\Filament\Resources\DependencyResource;
-use App\Filament\Resources\PluginLogResource;
-use App\Filament\Resources\SquawkAssignmentResource;
+use App\Filament\Resources\Activities\ActivityResource;
+use App\Filament\Resources\Dependencies\DependencyResource;
+use App\Filament\Resources\PluginLogs\PluginLogResource;
+use App\Filament\Resources\SquawkAssignments\SquawkAssignmentResource;
 
 return [
     'activity_resource' => ActivityResource::class,

@@ -3,7 +3,7 @@
 namespace App\Filament\Helpers;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\AirfieldResource\Pages\EditAirfield;
+use App\Filament\Resources\Airfields\Pages\EditAirfield;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\DataProvider;
 

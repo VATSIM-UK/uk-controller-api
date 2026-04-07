@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\AirfieldPairingSquawkRangeResource;
-use App\Filament\Resources\AirfieldPairingSquawkRangeResource\Pages\ManageAirfieldPairingSquawkRange;
+use App\Filament\Resources\AirfieldPairingSquawkRanges\AirfieldPairingSquawkRangeResource;
+use App\Filament\Resources\AirfieldPairingSquawkRanges\Pages\ManageAirfieldPairingSquawkRange;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use Livewire\Livewire;
 

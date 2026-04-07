@@ -3,16 +3,16 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\PrenoteResource;
-use App\Filament\Resources\PrenoteResource\Pages\ListPrenotes;
-use App\Filament\Resources\PrenoteResource\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\Prenotes\PrenoteResource;
+use App\Filament\Resources\Prenotes\Pages\ListPrenotes;
+use App\Filament\Resources\Prenotes\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
 use App\Services\ControllerPositionHierarchyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
-use App\Filament\Resources\PrenoteResource\Pages\EditPrenote;
+use App\Filament\Resources\Prenotes\Pages\EditPrenote;
 
 class PrenoteResourceTest extends BaseFilamentTestCase
 {
@@ -21,13 +21,13 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForView()
     {
-        Livewire::test(PrenoteResource\Pages\ViewPrenote::class, ['record' => 1])
+        Livewire::test(Prenotes\Pages\ViewPrenote::class, ['record' => 1])
             ->assertSet('data.description', 'Prenote One');
     }
 
     public function testItCreatesAPrenote()
     {
-        Livewire::test(PrenoteResource\Pages\CreatePrenote::class)
+        Livewire::test(Prenotes\Pages\CreatePrenote::class)
             ->set('data.description', 'A Prenote')
             ->call('create')
             ->assertHasNoErrors();
@@ -42,7 +42,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreatePrenoteIfDescriptionEmpty()
     {
-        Livewire::test(PrenoteResource\Pages\CreatePrenote::class)
+        Livewire::test(Prenotes\Pages\CreatePrenote::class)
             ->set('data.description', '')
             ->call('create')
             ->assertHasErrors(['data.description']);
@@ -50,7 +50,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreatePrenoteIfDescriptionTooLong()
     {
-        Livewire::test(PrenoteResource\Pages\CreatePrenote::class)
+        Livewire::test(Prenotes\Pages\CreatePrenote::class)
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('create')
             ->assertHasErrors(['data.description']);
@@ -58,13 +58,13 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForEdit()
     {
-        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
+        Livewire::test(Prenotes\Pages\EditPrenote::class, ['record' => 1])
             ->assertSet('data.description', 'Prenote One');
     }
 
     public function testItEditsAPrenote()
     {
-        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
+        Livewire::test(Prenotes\Pages\EditPrenote::class, ['record' => 1])
             ->set('data.description', 'A Prenote')
             ->call('save')
             ->assertHasNoErrors();
@@ -79,7 +79,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditPrenoteIfIfDescriptionEmpty()
     {
-        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
+        Livewire::test(Prenotes\Pages\EditPrenote::class, ['record' => 1])
             ->set('data.description', '')
             ->call('save')
             ->assertHasErrors(['data.description']);
@@ -87,7 +87,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditPrenoteIfDescriptionTooLong()
     {
-        Livewire::test(PrenoteResource\Pages\EditPrenote::class, ['record' => 1])
+        Livewire::test(Prenotes\Pages\EditPrenote::class, ['record' => 1])
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('save')
             ->assertHasErrors(['data.description']);
@@ -96,7 +96,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     public function testItDisplaysControllers()
     {
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )->assertCanSeeTableRecords([1, 2]);
     }
@@ -104,7 +104,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeAttachedAtTheEnd()
     {
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('attach', data: ['recordId' => 3])
@@ -126,7 +126,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
     public function testControllersCanBeAttachedAfterAnotherController()
     {
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('attach', data: ['recordId' => 3, 'insert_after' => 1])
@@ -157,7 +157,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(2))
@@ -188,7 +188,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('detach', ControllerPosition::findOrFail(4))
@@ -219,7 +219,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(2))
@@ -251,7 +251,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveUp', ControllerPosition::findOrFail(1))
@@ -283,7 +283,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(2))
@@ -315,7 +315,7 @@ class PrenoteResourceTest extends BaseFilamentTestCase
             ]
         );
         Livewire::test(
-            PrenoteResource\RelationManagers\ControllersRelationManager::class,
+            Prenotes\RelationManagers\ControllersRelationManager::class,
             ['ownerRecord' => Prenote::findOrFail(1), 'pageClass' => EditPrenote::class]
         )
             ->callTableAction('moveDown', ControllerPosition::findOrFail(4))

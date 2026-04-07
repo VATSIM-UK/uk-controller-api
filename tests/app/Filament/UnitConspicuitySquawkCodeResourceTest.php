@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\UnitConspicuitySquawkCodeResource;
-use App\Filament\Resources\UnitConspicuitySquawkCodeResource\Pages\ManageUnitConspicuitySquawkCodes;
+use App\Filament\Resources\UnitConspicuitySquawkCodes\UnitConspicuitySquawkCodeResource;
+use App\Filament\Resources\UnitConspicuitySquawkCodes\Pages\ManageUnitConspicuitySquawkCodes;
 use App\Models\Squawk\UnitConspicuity\UnitConspicuitySquawkCode;
 use Illuminate\Support\Str;
 use Livewire\Livewire;

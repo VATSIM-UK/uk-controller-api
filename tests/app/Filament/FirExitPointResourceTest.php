@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\FirExitPointResource;
-use App\Filament\Resources\FirExitPointResource\Pages\ManageFirExitPoints;
+use App\Filament\Resources\FirExitPoints\FirExitPointResource;
+use App\Filament\Resources\FirExitPoints\Pages\ManageFirExitPoints;
 use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use Livewire\Livewire;

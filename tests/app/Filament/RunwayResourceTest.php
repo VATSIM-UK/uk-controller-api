@@ -3,10 +3,10 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\RunwayResource;
-use App\Filament\Resources\RunwayResource\Pages\EditRunway;
-use App\Filament\Resources\RunwayResource\Pages\ListRunways;
-use App\Filament\Resources\RunwayResource\Pages\ViewRunway;
+use App\Filament\Resources\Runways\RunwayResource;
+use App\Filament\Resources\Runways\Pages\EditRunway;
+use App\Filament\Resources\Runways\Pages\ListRunways;
+use App\Filament\Resources\Runways\Pages\ViewRunway;
 use App\Models\Runway\Runway;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Livewire;
@@ -39,7 +39,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesARunway()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -66,7 +66,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItSetsTheInverseRunwayOnCreate()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 2)
             ->set('data.identifier', '15')
             ->set('data.threshold_latitude', 4)
@@ -96,7 +96,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayNoAirfield()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
@@ -109,7 +109,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayNoIdentifier()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.threshold_latitude', 4)
             ->set('data.threshold_longitude', 5)
@@ -122,7 +122,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayIdentifierInvalid()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', 'AAA')
             ->set('data.threshold_latitude', 4)
@@ -136,7 +136,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayNoLatitude()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_longitude', 5)
@@ -149,7 +149,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayLatitudeInvalid()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 'abc')
@@ -163,7 +163,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayNoLongitude()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -176,7 +176,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayLongitudeInvalid()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -190,7 +190,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayNoHeading()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -203,7 +203,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayHeadingInvalid()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -217,7 +217,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayNoGlideslopeAngle()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -230,7 +230,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayGlideslopeAngleInvalid()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -244,7 +244,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayGlideslopeAngleTooSmall()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -258,7 +258,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayNoThresholdElevation()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
@@ -271,7 +271,7 @@ class RunwayResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateARunwayThresholdElevationInvalid()
     {
-        Livewire::test(RunwayResource\Pages\CreateRunway::class)
+        Livewire::test(Runways\Pages\CreateRunway::class)
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '27R')
             ->set('data.threshold_latitude', 4)
