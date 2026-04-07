@@ -99,15 +99,15 @@ class SmrAreaResource extends Resource
                 Filter::make('expired')
                     ->toggle()
                     ->label(self::translateFilterPath('expired'))
-                    ->query(fn(Builder $query) => $query->expired()),
+                    ->query(fn (Builder $query) => $query->expired()),
                 TernaryFilter::make('activation')
                     ->label(self::translateFilterPath('activation.label'))
                     ->trueLabel(self::translateFilterPath('activation.true'))
                     ->falseLabel(self::translateFilterPath('activation.false'))
                     ->queries(
-                        true: fn(Builder $query) => $query->active(),
-                        false: fn(Builder $query) => $query->whereNot->active(),
-                        blank: fn(Builder $query) => $query,
+                        true: fn (Builder $query) => $query->active(),
+                        false: fn (Builder $query) => $query->whereNot->active(),
+                        blank: fn (Builder $query) => $query,
                     ),
             ]);
     }

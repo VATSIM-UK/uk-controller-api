@@ -43,8 +43,8 @@ class TerminalResource extends Resource
                     ->label(self::translateFormPath('airfield.label'))
                     ->options(SelectOptions::airfields())
                     ->searchable(!App::runningUnitTests())
-                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->required(),
                 TextInput::make('description')
                     ->required()

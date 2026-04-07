@@ -38,14 +38,14 @@ class VersionResource extends Resource
                     ->searchable(),
                 TextColumn::make('pluginReleaseChannel.name')
                     ->label(self::translateTablePath('columns.release_channel'))
-                    ->formatStateUsing(fn(string $state) => ucwords($state)),
+                    ->formatStateUsing(fn (string $state) => ucwords($state)),
                 TextColumn::make('created_at')
                     ->label(self::translateTablePath('columns.released_at'))
-                    ->getStateUsing(fn(Version $record) => $record->created_at->format('D d M Y, H:i:s'))
+                    ->getStateUsing(fn (Version $record) => $record->created_at->format('D d M Y, H:i:s'))
                     ->searchable(),
                 IconColumn::make('is_active')
                     ->boolean()
-                    ->getStateUsing(fn(Version $record) => !$record->trashed())
+                    ->getStateUsing(fn (Version $record) => !$record->trashed())
                     ->label(self::translateTablePath('columns.is_active')),
             ])
             ->recordActions([

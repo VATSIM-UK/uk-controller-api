@@ -37,7 +37,7 @@ class DependencyResource extends Resource
                 Action::make('download-dependency')
                     ->label(self::translateTablePath('actions.download.label'))
                     ->action(
-                        fn(Dependency $record) => response()
+                        fn (Dependency $record) => response()
                             ->streamDownload(
                                 function () use ($record) {
                                     echo json_encode(DependencyService::fetchDependencyDataById($record->id));

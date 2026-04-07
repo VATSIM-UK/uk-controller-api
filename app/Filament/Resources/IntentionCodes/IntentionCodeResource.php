@@ -63,9 +63,9 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('code_type.label'))
                             ->helperText(self::translateFormPath('code_type.helper')),
                         TextInput::make('single_code')
-                            ->required(fn(Get $get) => $get('code_type') === 'single_code')
+                            ->required(fn (Get $get) => $get('code_type') === 'single_code')
                             ->maxLength(2)
-                            ->hidden(fn(Get $get) => $get('code_type') !== 'single_code')
+                            ->hidden(fn (Get $get) => $get('code_type') !== 'single_code')
                             ->label(self::translateFormPath('single_code.label'))
                             ->helperText(self::translateFormPath('single_code.helper'))
                     ]),
@@ -87,16 +87,16 @@ class IntentionCodeResource extends Resource
                             ->minValue(1)
                             ->label(self::translateFormPath('position.label'))
                             ->helperText(self::translateFormPath('position.helper'))
-                            ->hidden(fn(Get $get) => $get('order_type') !== 'at_position')
-                            ->required(fn(Get $get) => $get('order_type') === 'at_position'),
+                            ->hidden(fn (Get $get) => $get('order_type') !== 'at_position')
+                            ->required(fn (Get $get) => $get('order_type') === 'at_position'),
                         Select::make('insert_position')
                             ->label(self::translateFormPath('before_after_position.label'))
                             ->helperText(self::translateFormPath('before_after_position.helper'))
-                            ->hidden(fn(Get $get) => !in_array($get('order_type'), ['before', 'after']))
-                            ->required(fn(Get $get) => in_array($get('order_type'), ['before', 'after']))
+                            ->hidden(fn (Get $get) => !in_array($get('order_type'), ['before', 'after']))
+                            ->required(fn (Get $get) => in_array($get('order_type'), ['before', 'after']))
                             ->options(
-                                fn() => IntentionCode::all()->mapWithKeys(
-                                    fn(IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
+                                fn () => IntentionCode::all()->mapWithKeys(
+                                    fn (IntentionCode $code) => [$code->id => self::formatCodeColumn($code)]
                                 )
                             ),
                     ]),
@@ -113,7 +113,7 @@ class IntentionCodeResource extends Resource
                 TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
                 TextColumn::make('code')
-                    ->formatStateUsing(fn(IntentionCode $record) => self::formatCodeColumn($record))
+                    ->formatStateUsing(fn (IntentionCode $record) => self::formatCodeColumn($record))
                     ->label(self::translateTablePath('columns.code')),
 
             ])
@@ -122,7 +122,7 @@ class IntentionCodeResource extends Resource
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
-                    ->using(fn(IntentionCode $record) => IntentionCodeService::deleteIntentionCode($record)),
+                    ->using(fn (IntentionCode $record) => IntentionCodeService::deleteIntentionCode($record)),
             ]);
     }
 
@@ -197,7 +197,7 @@ class IntentionCodeResource extends Resource
                             ->helperText(self::translateFormPath('conditions.exit_point.helper'))
                             ->required()
                             ->searchable()
-                            ->options(fn() => SelectOptions::firExitPoints()),
+                            ->options(fn () => SelectOptions::firExitPoints()),
                     ]),
                 Block::make(ConditionType::MaximumCruisingLevel->value)
                     ->label(self::translateFormPath('conditions.maximum_cruising_level.menu_item'))
@@ -241,13 +241,13 @@ class IntentionCodeResource extends Resource
                     ]),
                 Block::make(ConditionType::Not->value)
                     ->label(self::translateFormPath('conditions.not.menu_item'))
-                    ->schema(fn() => [self::conditions(true)]),
+                    ->schema(fn () => [self::conditions(true)]),
                 Block::make(ConditionType::AnyOf->value)
                     ->label(self::translateFormPath('conditions.any_of.menu_item'))
-                    ->schema(fn() => [self::conditions(true)]),
+                    ->schema(fn () => [self::conditions(true)]),
                 Block::make(ConditionType::AllOf->value)
                     ->label(self::translateFormPath('conditions.all_of.menu_item'))
-                    ->schema(fn() => [self::conditions(true)])
+                    ->schema(fn () => [self::conditions(true)])
             ]);
     }
 

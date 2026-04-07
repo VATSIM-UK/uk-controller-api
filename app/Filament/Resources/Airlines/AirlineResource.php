@@ -69,9 +69,9 @@ class AirlineResource extends Resource
                                 ->helperText(self::translateFormPath('copy_stand_assignments.helper'))
                         ]
                     )
-                    ->hidden(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord),
+                    ->hidden(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
             ]);
     }
 

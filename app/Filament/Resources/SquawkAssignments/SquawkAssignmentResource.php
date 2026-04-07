@@ -33,7 +33,7 @@ class SquawkAssignmentResource extends Resource
                     ->sortable(),
                 TextColumn::make('assignment_type')
                     ->label(self::translateTablePath('columns.type'))
-                    ->formatStateUsing(fn(string $state) => self::mapAssignmentTypeToString($state)),
+                    ->formatStateUsing(fn (string $state) => self::mapAssignmentTypeToString($state)),
             ]);
     }
 

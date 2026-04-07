@@ -85,7 +85,7 @@ class FirExitPointResource extends Resource
                     ->before(function (DeleteAction $action) {
                         $hasIntentionCodes = IntentionCode::all()
                             ->filter(
-                                fn(IntentionCode $intentionCode) => self::hasExitPointCondition(
+                                fn (IntentionCode $intentionCode) => self::hasExitPointCondition(
                                     $intentionCode->conditions,
                                     $action->getRecord()
                                 )

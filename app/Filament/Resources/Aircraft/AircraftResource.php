@@ -104,8 +104,8 @@ class AircraftResource extends Resource
                 TagsColumn::make('wakeCategories')
                     ->label(self::translateTablePath('columns.wake_categories'))
                     ->getStateUsing(
-                        fn(Aircraft $record) => $record->wakeCategories->map(
-                            fn(WakeCategory $category) => sprintf(
+                        fn (Aircraft $record) => $record->wakeCategories->map(
+                            fn (WakeCategory $category) => sprintf(
                                 '%s: %s',
                                 $category->scheme->name,
                                 $category->description
