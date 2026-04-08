@@ -58,6 +58,7 @@ class TerminalsRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make('pair-terminal')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action): array => [
                         $action
                             ->recordTitle(fn (Terminal $record): string => $record->airfieldDescription)
@@ -71,6 +72,7 @@ class TerminalsRelationManager extends RelationManager
                 EditAction::make('edit-terminal-pairing')
                     ->schema(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-terminal')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
                 

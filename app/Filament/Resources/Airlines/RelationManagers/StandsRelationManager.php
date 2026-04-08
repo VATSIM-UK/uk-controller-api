@@ -46,6 +46,7 @@ class StandsRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make('pair-stand')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action): array => [
                         $action
                             ->recordTitle(fn (Stand $record):string => $record->airfieldIdentifier)
@@ -59,6 +60,7 @@ class StandsRelationManager extends RelationManager
                 EditAction::make('edit-stand-pairing')
                     ->schema(self::airlineStandPairingFormFields()),
                 DetachAction::make('unpair-stand')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
             ])

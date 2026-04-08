@@ -105,6 +105,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->icon('heroicon-o-arrow-down')
                     ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 DetachAction::make()
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('detach'))
                     ->using(function (ControllerPosition $record) {
                         self::doUpdate(
                             fn () => ControllerPositionHierarchyService::removeFromHierarchy(

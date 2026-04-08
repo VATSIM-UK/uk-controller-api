@@ -33,8 +33,10 @@ class PairedStandsRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        $attachAction = AttachAction::make('pair-stand');
-        $detachAction = DetachAction::make('unpair-stand');
+        $attachAction = AttachAction::make('pair-stand')
+            ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'));
+        $detachAction = DetachAction::make('unpair-stand')
+            ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'));
 
         return $table
             ->columns([
