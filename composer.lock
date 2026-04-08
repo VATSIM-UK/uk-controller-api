@@ -346,29 +346,29 @@
         },
         {
             "name": "bugsnag/bugsnag-laravel",
-            "version": "v2.29.0",
+            "version": "v2.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bugsnag/bugsnag-laravel.git",
-                "reference": "5066f0aa068f12a555ce26c2d311b133cc06bdb7"
+                "reference": "ad05fc9af03dddf04d65addedf21607276afee5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/5066f0aa068f12a555ce26c2d311b133cc06bdb7",
-                "reference": "5066f0aa068f12a555ce26c2d311b133cc06bdb7",
+                "url": "https://api.github.com/repos/bugsnag/bugsnag-laravel/zipball/ad05fc9af03dddf04d65addedf21607276afee5f",
+                "reference": "ad05fc9af03dddf04d65addedf21607276afee5f",
                 "shasum": ""
             },
             "require": {
                 "bugsnag/bugsnag": "^3.29.0",
                 "bugsnag/bugsnag-psr-logger": "^1.4|^2.0",
-                "illuminate/contracts": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
-                "illuminate/support": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/contracts": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
                 "monolog/monolog": "^1.12|^2.0|^3.0",
                 "php": ">=5.5"
             },
             "require-dev": {
-                "orchestra/testbench": "^3.1|^4.0|^5.0|^6.0|^7.0|^8.0|^9.0|^10.0",
-                "phpunit/phpunit": "^4.8.36|^6.3.1|^7.5.15|^8.3.5|^9.3.10|^10.0|^11.0"
+                "orchestra/testbench": "^3.1|^4.0|^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "phpunit/phpunit": "^4.8.36|^6.3.1|^7.5.15|^8.3.5|^9.3.10|^10.0|^11.0|^12.0"
             },
             "type": "library",
             "extra": {
@@ -403,9 +403,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bugsnag/bugsnag-laravel/issues",
-                "source": "https://github.com/bugsnag/bugsnag-laravel/tree/v2.29.0"
+                "source": "https://github.com/bugsnag/bugsnag-laravel/tree/v2.30.0"
             },
-            "time": "2025-02-26T15:15:21+00:00"
+            "time": "2026-04-08T12:33:28+00:00"
         },
         {
             "name": "bugsnag/bugsnag-psr-logger",
