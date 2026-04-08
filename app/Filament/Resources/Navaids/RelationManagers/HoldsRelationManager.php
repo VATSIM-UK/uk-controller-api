@@ -233,6 +233,7 @@ class HoldsRelationManager extends RelationManager
                 ViewAction::make()
                     ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data)),
                 EditAction::make()
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('update'))
                     ->mutateRecordDataUsing(fn (Hold $record, array $data) => self::mutateRecordData($record, $data))
                     ->using(fn (Hold $record, array $data) => self::saveUpdatedHold($data, $record)),
                 DeleteAction::make(),

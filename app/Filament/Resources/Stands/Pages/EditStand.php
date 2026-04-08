@@ -19,6 +19,12 @@ class EditStand extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['closed_at'] = $data['closed_at'] === null;
+        return $data;
+    }
+
     public function mutateFormDataBeforeSave(array $data): array
     {
         $data['closed_at'] = $data['closed_at'] ? null : Carbon::now();

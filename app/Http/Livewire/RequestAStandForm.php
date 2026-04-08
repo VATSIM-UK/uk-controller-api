@@ -87,16 +87,16 @@ class RequestAStandForm extends Component implements HasForms
             : $this->getMinimumRequestableTime();
 
         return [
-            Placeholder::make('')
+            Placeholder::make('notice')
                 ->content($this->getFirstPlaceholderText()),
-            Placeholder::make('')
+            Placeholder::make('notice_disconnection')
                 ->content($this->getSecondPlaceholderText()),
             Fieldset::make('Recommendations')
                 ->schema([
-                    Placeholder::make('')
+                    Placeholder::make('recommendation_text')
                         ->columnSpanFull()
                         ->content($this->getRecommendationText()),
-                    Placeholder::make('')
+                    Placeholder::make('recommended_stands')
                         ->columnSpanFull()
                         ->content(implode(', ', $this->recommendedStands)),
                 ])

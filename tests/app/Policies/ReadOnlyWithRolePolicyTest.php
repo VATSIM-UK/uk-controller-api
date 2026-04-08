@@ -6,10 +6,12 @@ use App\BaseUnitTestCase;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class ReadOnlyWithRolePolicyTest extends BaseUnitTestCase
 {
+    use DatabaseTransactions;
     private readonly ReadOnlyWithRolePolicy $policy;
 
     public function setUp(): void

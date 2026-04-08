@@ -43,6 +43,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action, AbstractControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
                         Select::make('insert_after')
@@ -104,6 +105,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->icon('heroicon-o-arrow-down')
                     ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
                 DetachAction::make()
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('detach'))
                     ->using(function (ControllerPosition $record) {
                         self::doUpdate(
                             fn () => ControllerPositionHierarchyService::removeFromHierarchy(

@@ -42,6 +42,7 @@ class AirlinesRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make('pair-airline')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
@@ -51,8 +52,10 @@ class AirlinesRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make('edit-airline-pairing')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('update'))
                     ->schema(self::airlineStandPairingFormFields()),
                 DetachAction::make('unpair-airline')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure())
             ]);

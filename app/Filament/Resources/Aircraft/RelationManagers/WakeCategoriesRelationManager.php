@@ -4,17 +4,13 @@ namespace App\Filament\Resources\Aircraft\RelationManagers;
 
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\AttachAction;
-use Filament\Forms\Components\Select;
 use Filament\Actions\DetachAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Aircraft\WakeCategory;
-use App\Models\Aircraft\WakeCategoryScheme;
-use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
 
 class WakeCategoriesRelationManager extends RelationManager
 {
@@ -38,47 +34,18 @@ class WakeCategoriesRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->preloadRecordSelect()
-                    ->form(
-                        fn (RelationManager $livewire) => [
-                            Select::make('recordId')
-                                ->label(self::translateFormPath('category.label'))
-                                ->required()
-                                ->options(
-                                    function () use ($livewire) {
-                                        $schemesInUse = WakeCategoryScheme::whereHas(
-                                            'categories',
-                                            function (Builder $category) use ($livewire) {
-                                                $category->whereHas(
-                                                    'aircraft',
-                                                    function (Builder $aircraft) use ($livewire) {
-                                                        $aircraft->where('aircraft.id', $livewire->ownerRecord->id);
-                                                    }
-                                                );
-                                            }
-                                        )->get()->pluck('id');
-
-                                        return WakeCategory::with('scheme')
-                                            ->whereNotIn('wake_category_scheme_id', $schemesInUse)
-                                            ->orderBy('wake_category_scheme_id')
-                                            ->orderBy('relative_weighting')
-                                            ->get()
-                                            ->mapWithKeys(function (WakeCategory $category) {
-                                                return [
-                                                    $category->id => sprintf(
-                                                        '%s: %s',
-                                                        $category->scheme->name,
-                                                        $category->description
-                                                    ),
-                                                ];
-                                            });
-                                    }
-                                ),
-                        ]
-                    ),
+                    ->recordTitle(fn (WakeCategory $record) => sprintf('%s: %s', $record->scheme->name, $record->description))
+                    ->form(fn (AttachAction $action) => [
+                        $action->getRecordSelect()
+                            ->label(self::translateFormPath('category.label'))
+                            ->required(),
+                    ]),
             ])
             ->recordActions([
-                DetachAction::make(),
+                DetachAction::make()
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('detach')),
             ]);
     }
 
