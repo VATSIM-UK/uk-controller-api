@@ -70,7 +70,7 @@ class TerminalsRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make('edit-terminal-pairing')
-                    ->authorize(fn (RelationManager $livewire) => $livewire->can('edit'))
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('update'))
                     ->schema(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-terminal')
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))

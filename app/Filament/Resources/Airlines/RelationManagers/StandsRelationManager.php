@@ -58,7 +58,7 @@ class StandsRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make('edit-stand-pairing')
-                    ->authorize(fn (RelationManager $livewire) => $livewire->can('edit'))
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('update'))
                     ->schema(self::airlineStandPairingFormFields()),
                 DetachAction::make('unpair-stand')
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
