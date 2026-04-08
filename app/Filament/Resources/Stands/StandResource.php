@@ -164,10 +164,6 @@ class StandResource extends Resource
                         Toggle::make('closed_at')
                             ->label(self::translateFormPath('used_for_allocation.label'))
                             ->helperText(self::translateFormPath('used_for_allocation.helper'))
-                            ->default(true)
-                            ->afterStateHydrated(static function (Toggle $component, $state): void {
-                                $component->state(is_null($state));
-                            })
                             ->required(),
                         TextInput::make('assignment_priority')
                             ->label(self::translateFormPath('allocation_priority.label'))

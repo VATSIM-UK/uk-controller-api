@@ -51,6 +51,7 @@ class AirlinesRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make('edit-airline-pairing')
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('edit'))
                     ->schema(self::airlineTerminalPairingFormFields()),
                 DetachAction::make('unpair-airline')
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
