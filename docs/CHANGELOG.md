@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.64.1...6.65.0) (2026-04-08)
+
+### Features
+
+* Upgrade to filament V4 ([f5b6c63](https://github.com/VATSIM-UK/uk-controller-api/commit/f5b6c63531763cd69b2f07a83480c68afd28056a))
+
 ## [6.64.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.64.0...6.64.1) (2026-04-07)
 
 ### Bug Fixes
