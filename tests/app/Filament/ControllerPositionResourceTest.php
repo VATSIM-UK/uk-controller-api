@@ -4,7 +4,10 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\ControllerPositions\ControllerPositionResource;
+use App\Filament\Resources\ControllerPositions\Pages\CreateControllerPosition;
+use App\Filament\Resources\ControllerPositions\Pages\EditControllerPosition;
 use App\Filament\Resources\ControllerPositions\Pages\ListControllerPositions;
+use App\Filament\Resources\ControllerPositions\Pages\ViewControllerPosition;
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -17,7 +20,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForView()
     {
-        Livewire::test(ControllerPositions\Pages\ViewControllerPosition::class, ['record' => 1])
+        Livewire::test(ViewControllerPosition::class, ['record' => 1])
             ->assertSet('data.callsign', 'EGLL_S_TWR')
             ->assertSet('data.frequency', '118.500')
             ->assertSet('data.requests_departure_releases', true)
@@ -28,7 +31,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesAControllerPositionWithMinimumData()
     {
-        Livewire::test(ControllerPositions\Pages\CreateControllerPosition::class)
+        Livewire::test(CreateControllerPosition::class)
             ->set('data.callsign', 'LON_W_CTR')
             ->set('data.description', '')
             ->set('data.frequency', '126.075')
@@ -55,7 +58,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesAControllerPositionWithAllData()
     {
-        Livewire::test(ControllerPositions\Pages\CreateControllerPosition::class)
+        Livewire::test(CreateControllerPosition::class)
             ->set('data.callsign', 'LON_W_CTR')
             ->set('data.description', 'London West (Bandbox)')
             ->set('data.frequency', '126.075')
@@ -82,7 +85,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesAControllerPositionWith8Point33Spacing()
     {
-        Livewire::test(ControllerPositions\Pages\CreateControllerPosition::class)
+        Livewire::test(CreateControllerPosition::class)
             ->set('data.callsign', 'LON_W_CTR')
             ->set('data.description', 'London West (Bandbox)')
             ->set('data.frequency', '126.080')
@@ -109,7 +112,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateAPositionDuplicateCallsign()
     {
-        Livewire::test(ControllerPositions\Pages\CreateControllerPosition::class)
+        Livewire::test(CreateControllerPosition::class)
             ->set('data.callsign', 'EGLL_S_TWR')
             ->set('data.frequency', '126.075')
             ->set('data.requests_departure_releases', true)
@@ -122,7 +125,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateAPositionDescriptionTooLong()
     {
-        Livewire::test(ControllerPositions\Pages\CreateControllerPosition::class)
+        Livewire::test(CreateControllerPosition::class)
             ->set('data.callsign', 'LON_W_CTR')
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->set('data.frequency', '126.075')
@@ -136,7 +139,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateAPositionInvalidFrequency()
     {
-        Livewire::test(ControllerPositions\Pages\CreateControllerPosition::class)
+        Livewire::test(CreateControllerPosition::class)
             ->set('data.callsign', 'LON_W_CTR')
             ->set('data.frequency', '126.111')
             ->set('data.requests_departure_releases', true)
@@ -149,7 +152,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItEditsAControllerPosition()
     {
-        Livewire::test(ControllerPositions\Pages\EditControllerPosition::class, ['record' => 1])
+        Livewire::test(EditControllerPosition::class, ['record' => 1])
             ->set('data.callsign', 'EGLL_S_TWR')
             ->set('data.description', '')
             ->set('data.frequency', '126.075')
@@ -176,7 +179,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItEditsAControllerPositionAllData()
     {
-        Livewire::test(ControllerPositions\Pages\EditControllerPosition::class, ['record' => 1])
+        Livewire::test(EditControllerPosition::class, ['record' => 1])
             ->set('data.callsign', 'EGLL_S_TWR')
             ->set('data.description', 'Foo')
             ->set('data.frequency', '126.075')
@@ -203,7 +206,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditAPositionDuplicateCallsign()
     {
-        Livewire::test(ControllerPositions\Pages\EditControllerPosition::class, ['record' => 1])
+        Livewire::test(EditControllerPosition::class, ['record' => 1])
             ->set('data.callsign', 'EGLL_N_APP')
             ->call('save')
             ->assertHasErrors(['data.callsign']);
@@ -211,7 +214,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditAPositionDescriptionTooLong()
     {
-        Livewire::test(ControllerPositions\Pages\EditControllerPosition::class, ['record' => 1])
+        Livewire::test(EditControllerPosition::class, ['record' => 1])
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('save')
             ->assertHasErrors(['data.description']);
@@ -219,7 +222,7 @@ class ControllerPositionResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditAPositionInvalidFrequency()
     {
-        Livewire::test(ControllerPositions\Pages\EditControllerPosition::class, ['record' => 1])
+        Livewire::test(EditControllerPosition::class, ['record' => 1])
             ->set('data.frequency', '126.111')
             ->call('save')
             ->assertHasErrors(['data.frequency']);

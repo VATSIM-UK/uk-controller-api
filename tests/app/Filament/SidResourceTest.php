@@ -4,7 +4,9 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\Sids\SidResource;
+use App\Filament\Resources\Sids\Pages\CreateSid;
 use App\Filament\Resources\Sids\Pages\ListSids;
+use App\Filament\Resources\Sids\Pages\ViewSid;
 use App\Filament\Resources\Sids\RelationManagers\PrenotesRelationManager;
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
@@ -37,7 +39,7 @@ class SidResourceTest extends BaseFilamentTestCase
     public function testItLoadsDataForView()
     {
         Sid::where('id', 1)->update(['initial_heading' => 350]);
-        Livewire::test(Sids\Pages\ViewSid::class, ['record' => 1])
+        Livewire::test(ViewSid::class, ['record' => 1])
             ->assertSet('data.runway_id', 1)
             ->assertSet('data.identifier', 'TEST1X')
             ->assertSet('data.initial_altitude', 3000)
@@ -47,7 +49,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesASidWithFullData()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -71,7 +73,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesASidWithMaximumInitialHeading()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -95,7 +97,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesASidWithMinimumInitialHeading()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -119,7 +121,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesASidWithMinimumData()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -140,7 +142,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsValidationIfInitialAltitudeNotNumber()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 'abc')
@@ -150,7 +152,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsValidationIfInitialAltitudeTooSmall()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', -1)
@@ -160,7 +162,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsValidationIfInitialAltitudeTooBig()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 100000)
@@ -170,7 +172,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsValidationIfInitialHeadingTooSmall()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -181,7 +183,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsValidationIfInitialHeadingNorthAsZero()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -192,7 +194,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsValidationIfInitialHeadingTooBig()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -203,7 +205,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsValidationIfSidAlreadyExistsForRunway()
     {
-        Livewire::test(Sids\Pages\CreateSid::class)
+        Livewire::test(CreateSid::class)
             ->set('data.runway_id', 1)
             ->set('data.identifier', 'TEST1X')
             ->set('data.initial_altitude', 4500)
@@ -215,7 +217,7 @@ class SidResourceTest extends BaseFilamentTestCase
     public function testItLoadsDataForEdit()
     {
         Sid::where('id', 1)->update(['initial_heading' => 350]);
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->assertSet('data.runway_id', 1)
             ->assertSet('data.identifier', 'TEST1X')
             ->assertSet('data.initial_altitude', 3000)
@@ -225,7 +227,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItEditsASidWithFullData()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -249,7 +251,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItEditsASidWithMaximumInitialHeading()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
             ->set('data.initial_heading', 360)
@@ -272,7 +274,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItEditsASidWithMinimumInitialHeading()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
             ->set('data.initial_heading', 1)
@@ -295,7 +297,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testItEditsASidWithMinimumData()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
             ->set('data.handoff_id', null)
@@ -317,7 +319,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsValidationIfInitialAltitudeNotNumber()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 'abc')
@@ -327,7 +329,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsValidationIfInitialAltitudeTooSmall()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', -1)
@@ -337,7 +339,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsValidationIfInitialAltitudeTooBig()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 100000)
@@ -347,7 +349,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsValidationIfInitialHeadingTooSmall()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -358,7 +360,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsValidationIfInitialHeadingNorthAsZero()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -369,7 +371,7 @@ class SidResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsValidationIfInitialHeadingTooBig()
     {
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'SID1X')
             ->set('data.initial_altitude', 4500)
@@ -381,7 +383,7 @@ class SidResourceTest extends BaseFilamentTestCase
     public function testEditFailsValidationIfSidAlreadyExistsForRunway()
     {
         Sid::where('id', 1)->update(['runway_id' => 2]);
-        Livewire::test(Sids\Pages\EditSid::class, ['record' => 1])
+        Livewire::test(EditSid::class, ['record' => 1])
             ->set('data.runway_id', 2)
             ->set('data.identifier', 'TEST1Y')
             ->set('data.initial_altitude', 4500)

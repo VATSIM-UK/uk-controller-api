@@ -45,6 +45,7 @@ class ControllersRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->label(self::translateTablePath('attach_action.label'))
                     ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
                     ->modalButton(self::translateTablePath('attach_action.modal_button'))
@@ -121,7 +122,8 @@ class ControllersRelationManager extends RelationManager
                     }),
             ])
             ->recordActions([
-                DetachAction::make(),
+                DetachAction::make()
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('detach')),
             ])
             ->toolbarActions([
                 DetachBulkAction::make(),

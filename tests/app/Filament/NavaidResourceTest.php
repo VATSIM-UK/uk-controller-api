@@ -4,7 +4,9 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\Navaids\NavaidResource;
+use App\Filament\Resources\Navaids\Pages\CreateNavaid;
 use App\Filament\Resources\Navaids\Pages\ListNavaids;
+use App\Filament\Resources\Navaids\Pages\ViewNavaid;
 use App\Filament\Resources\Navaids\RelationManagers\HoldsRelationManager;
 use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
@@ -29,7 +31,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForView()
     {
-        Livewire::test(Navaids\Pages\ViewNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(ViewNavaid::class, ['record' => 'WILLO'])
             ->assertSet('data.identifier', 'WILLO')
             ->assertSet('data.latitude', 50.9850000)
             ->assertSet('data.longitude', -0.1916667);
@@ -37,7 +39,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesANavaid()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'NOVMA')
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
@@ -56,7 +58,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesANavaidMaxValues()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'NOVMA')
             ->set('data.latitude', 90)
             ->set('data.longitude', 180)
@@ -75,7 +77,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesANavaidMinValues()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'NOVMA')
             ->set('data.latitude', -90)
             ->set('data.longitude', -180)
@@ -94,7 +96,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateANavaidDuplicateIdentifier()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
@@ -104,7 +106,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateANavaidIdentifierTooLong()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'WILLO2')
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
@@ -114,7 +116,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateANavaidLatitudeTooSmall()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', -91)
             ->set('data.longitude', 45.6)
@@ -124,7 +126,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateANavaidLatitudeTooLarge()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', 91)
             ->set('data.longitude', 45.6)
@@ -134,7 +136,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateANavaidLongitudeTooSmall()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', 15)
             ->set('data.longitude', -181)
@@ -144,7 +146,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateANavaidLongitudeTooLarge()
     {
-        Livewire::test(Navaids\Pages\CreateNavaid::class)
+        Livewire::test(CreateNavaid::class)
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', 15)
             ->set('data.longitude', 181)
@@ -154,7 +156,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItEditsANavaid()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
             ->call('save')
@@ -172,7 +174,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItEditsANavaidMaxValues()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.latitude', 90)
             ->set('data.longitude', 180)
             ->call('save')
@@ -191,7 +193,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItEditsANavaidMinValues()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.latitude', -90)
             ->set('data.longitude', -180)
             ->call('save')
@@ -210,7 +212,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditANavaidIdentifierTooLong()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.identifier', 'WILLO2')
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
@@ -220,7 +222,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditANavaidDuplicateIdentifier()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.identifier', 'TIMBA')
             ->set('data.latitude', 12.3)
             ->set('data.longitude', 45.6)
@@ -230,7 +232,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditANavaidLatitudeTooSmall()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', -91)
             ->set('data.longitude', 45.6)
@@ -240,7 +242,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditANavaidLatitudeTooLarge()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', 91)
             ->set('data.longitude', 45.6)
@@ -250,7 +252,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditANavaidLongitudeTooSmall()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', 15)
             ->set('data.longitude', -181)
@@ -260,7 +262,7 @@ class NavaidResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditANavaidLongitudeTooLarge()
     {
-        Livewire::test(Navaids\Pages\EditNavaid::class, ['record' => 'WILLO'])
+        Livewire::test(EditNavaid::class, ['record' => 'WILLO'])
             ->set('data.identifier', 'WILLO')
             ->set('data.latitude', 15)
             ->set('data.longitude', 181)

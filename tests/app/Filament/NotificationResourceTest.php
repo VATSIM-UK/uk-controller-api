@@ -4,6 +4,7 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\Notifications\NotificationResource;
+use App\Filament\Resources\Notifications\Pages\CreateNotification;
 use App\Filament\Resources\Notifications\Pages\EditNotification;
 use App\Filament\Resources\Notifications\Pages\ListNotifications;
 use App\Filament\Resources\Notifications\Pages\ViewNotification;
@@ -102,7 +103,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         $validFrom = Carbon::now()->addHours(4);
         $validTo = Carbon::now()->addHours(6);
 
-        Livewire::test(Notifications\Pages\CreateNotification::class)
+        Livewire::test(CreateNotification::class)
             ->set('data.title', 'Title')
             ->set('data.body', 'Body')
             ->set('data.link', 'https://vatsim.uk')
@@ -128,7 +129,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
         $validFrom = Carbon::now()->addHours(4);
         $validTo = Carbon::now()->addHours(6);
 
-        Livewire::test(Notifications\Pages\CreateNotification::class)
+        Livewire::test(CreateNotification::class)
             ->set('data.title', 'Title')
             ->set('data.body', 'Body')
             ->set('data.valid_from', $validFrom)
@@ -150,7 +151,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
 
     public function testNotificationCreationFailsTitleTooLong()
     {
-        Livewire::test(Notifications\Pages\CreateNotification::class)
+        Livewire::test(CreateNotification::class)
             ->set('data.title', Str::padLeft('', 256, 'a'))
             ->set('data.body', 'Body')
             ->set('data.valid_from', Carbon::now()->addHours(4))
@@ -161,7 +162,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
 
     public function testNotificationCreationFailsBodyTooLong()
     {
-        Livewire::test(Notifications\Pages\CreateNotification::class)
+        Livewire::test(CreateNotification::class)
             ->set('data.title', 'Title')
             ->set('data.body', Str::padLeft('', 65536, 'a'))
             ->set('data.valid_from', Carbon::now()->addHours(4))
@@ -172,7 +173,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
 
     public function testNotificationCreationFailsValidToBeforeValidFrom()
     {
-        Livewire::test(Notifications\Pages\CreateNotification::class)
+        Livewire::test(CreateNotification::class)
             ->set('data.title', 'Title')
             ->set('data.body', 'Body')
             ->set('data.valid_from', Carbon::now()->addHours(4))
@@ -183,7 +184,7 @@ class NotificationResourceTest extends BaseFilamentTestCase
 
     public function testNotificationCreationFailsLinkNotUrl()
     {
-        Livewire::test(Notifications\Pages\CreateNotification::class)
+        Livewire::test(CreateNotification::class)
             ->set('data.title', 'Title')
             ->set('data.body', 'Body')
             ->set('data.link', 'abc')

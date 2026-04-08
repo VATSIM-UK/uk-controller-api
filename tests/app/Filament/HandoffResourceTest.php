@@ -4,7 +4,10 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\Resources\Handoffs\HandoffResource;
+use App\Filament\Resources\Handoffs\Pages\CreateHandoff;
+use App\Filament\Resources\Handoffs\Pages\EditHandoff;
 use App\Filament\Resources\Handoffs\Pages\ListHandoffs;
+use App\Filament\Resources\Handoffs\Pages\ViewHandoff;
 use App\Filament\Resources\Handoffs\RelationManagers\ControllersRelationManager;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
@@ -12,7 +15,6 @@ use App\Services\ControllerPositionHierarchyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
-use HandoffResource\Pages\EditHandoff;
 
 class HandoffResourceTest extends BaseFilamentTestCase
 {
@@ -21,13 +23,13 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForView()
     {
-        Livewire::test(Handoffs\Pages\ViewHandoff::class, ['record' => 1])
+        Livewire::test(ViewHandoff::class, ['record' => 1])
             ->assertSet('data.description', 'foo');
     }
 
     public function testItCreatesAHandoff()
     {
-        Livewire::test(Handoffs\Pages\CreateHandoff::class)
+        Livewire::test(CreateHandoff::class)
             ->set('data.description', 'A Handoff')
             ->call('create')
             ->assertHasNoErrors();
@@ -42,7 +44,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateHandoffIfDescriptionEmpty()
     {
-        Livewire::test(Handoffs\Pages\CreateHandoff::class)
+        Livewire::test(CreateHandoff::class)
             ->set('data.description', '')
             ->call('create')
             ->assertHasErrors(['data.description']);
@@ -50,7 +52,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntCreateHandoffIfDescriptionTooLong()
     {
-        Livewire::test(Handoffs\Pages\CreateHandoff::class)
+        Livewire::test(CreateHandoff::class)
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('create')
             ->assertHasErrors(['data.description']);
@@ -58,13 +60,13 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForEdit()
     {
-        Livewire::test(Handoffs\Pages\EditHandoff::class, ['record' => 1])
+        Livewire::test(EditHandoff::class, ['record' => 1])
             ->assertSet('data.description', 'foo');
     }
 
     public function testItEditsAHandoff()
     {
-        Livewire::test(Handoffs\Pages\EditHandoff::class, ['record' => 1])
+        Livewire::test(EditHandoff::class, ['record' => 1])
             ->set('data.description', 'A Handoff')
             ->call('save')
             ->assertHasNoErrors();
@@ -79,7 +81,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditHandoffIfDescriptionEmpty()
     {
-        Livewire::test(Handoffs\Pages\EditHandoff::class, ['record' => 1])
+        Livewire::test(EditHandoff::class, ['record' => 1])
             ->set('data.description', '')
             ->call('save')
             ->assertHasErrors(['data.description']);
@@ -87,7 +89,7 @@ class HandoffResourceTest extends BaseFilamentTestCase
 
     public function testItDoesntEditHandoffIfDescriptionTooLong()
     {
-        Livewire::test(Handoffs\Pages\EditHandoff::class, ['record' => 1])
+        Livewire::test(EditHandoff::class, ['record' => 1])
             ->set('data.description', Str::padRight('', 256, 'a'))
             ->call('save')
             ->assertHasErrors(['data.description']);
