@@ -9,7 +9,7 @@ use App\Filament\Resources\IntentionCodes\Pages\EditIntentionCode;
 use App\Filament\Resources\IntentionCodes\Pages\ListIntentionCodes;
 use App\Filament\Resources\IntentionCodes\Pages\ViewIntentionCode;
 use App\Models\IntentionCode\IntentionCode;
-use Filament\Tables\Actions\DeleteAction;
+use Filament\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

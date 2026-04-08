@@ -43,6 +43,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action, AbstractControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
                         Select::make('insert_after')

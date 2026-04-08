@@ -11,7 +11,7 @@ use App\Filament\Resources\Notifications\RelationManagers\ControllersRelationMan
 use App\Models\Controller\ControllerPosition;
 use App\Models\Notification\Notification;
 use Carbon\Carbon;
-use Filament\Tables\Actions\AttachAction;
+use Filament\Actions\AttachAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
