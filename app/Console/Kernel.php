@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Bugsnag\BugsnagLaravel\OomBootstrapper;
 use App\Console\Commands\AllocateStandForArrival;
 use App\Console\Commands\CheckForKeyTableUpdates;
 use App\Console\Commands\CleanDepartureReleaseRequestHistory;
@@ -65,7 +66,7 @@ class Kernel extends ConsoleKernel
      * Define the application's command schedule.
      *
      * @codeCoverageIgnore
-     * @param              \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param Schedule $schedule
      * @return             void
      */
     protected function schedule(Schedule $schedule)
@@ -97,7 +98,7 @@ class Kernel extends ConsoleKernel
     protected function bootstrappers()
     {
         return array_merge(
-            env('APP_ENV') === 'testing' ? [] : [\Bugsnag\BugsnagLaravel\OomBootstrapper::class],
+            env('APP_ENV') === 'testing' ? [] : [OomBootstrapper::class],
             parent::bootstrappers(),
         );
     }

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class MyStatus extends Widget
 {
-    protected static string $view = 'filament.widgets.my-status';
+    protected string $view = 'filament.widgets.my-status';
 
     protected function getViewData(): array
     {

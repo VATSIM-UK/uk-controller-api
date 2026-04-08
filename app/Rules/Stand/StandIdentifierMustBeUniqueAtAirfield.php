@@ -2,6 +2,7 @@
 
 namespace App\Rules\Stand;
 
+use Illuminate\Translation\PotentiallyTranslatedString;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use Closure;
@@ -23,7 +24,7 @@ class StandIdentifierMustBeUniqueAtAirfield implements InvokableRule
      *
      * @param string $attribute
      * @param mixed $value
-     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @param Closure(string):PotentiallyTranslatedString $fail
      * @return void
      */
     public function __invoke($attribute, $value, $fail)

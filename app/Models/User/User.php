@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+use Filament\Panel;
 use App\Models\Dependency\Dependency;
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
@@ -60,7 +61,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Returns the relation to the users status
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function accountStatus(): HasOne
     {
@@ -134,7 +135,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->belongsToMany(Dependency::class)->withTimestamps();
     }
 
-    public function canAccessPanel(\Filament\Panel $panel): bool
+    public function canAccessPanel(Panel $panel): bool
     {
         return $panel->getId() === 'admin';
     }

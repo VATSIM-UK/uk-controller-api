@@ -4,12 +4,12 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Events\Aircraft\AircraftDataUpdatedEvent;
-use App\Filament\Resources\AircraftResource;
-use App\Filament\Resources\AircraftResource\Pages\CreateAircraft;
-use App\Filament\Resources\AircraftResource\Pages\EditAircraft;
-use App\Filament\Resources\AircraftResource\Pages\ListAircraft;
-use App\Filament\Resources\AircraftResource\Pages\ViewAircraft;
-use App\Filament\Resources\AircraftResource\RelationManagers\WakeCategoriesRelationManager;
+use App\Filament\Resources\Aircraft\AircraftResource;
+use App\Filament\Resources\Aircraft\Pages\CreateAircraft;
+use App\Filament\Resources\Aircraft\Pages\EditAircraft;
+use App\Filament\Resources\Aircraft\Pages\ListAircraft;
+use App\Filament\Resources\Aircraft\Pages\ViewAircraft;
+use App\Filament\Resources\Aircraft\RelationManagers\WakeCategoriesRelationManager;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
 use Illuminate\Database\Eloquent\Model;

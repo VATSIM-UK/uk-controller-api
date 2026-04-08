@@ -49,7 +49,9 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            ]) + [
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => !in_array(env('APP_ENV'), ['local', 'testing']),
+            ] : [],
         ],
         'information_schema' => [
             'driver' => 'mysql',
@@ -68,7 +70,9 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            ]) + [
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => !in_array(env('APP_ENV'), ['local', 'testing'], true),
+            ] : [],
         ],
         'mysql_analyze' => [
             'driver' => 'mysql',
@@ -87,7 +91,9 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            ]) + [
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => !in_array(env('APP_ENV'), ['local', 'testing']),
+            ] : [],
         ],
     ],
 

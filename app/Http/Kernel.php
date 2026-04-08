@@ -2,6 +2,14 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\EncryptCookies;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Http\Middleware\HandleCors;
+use Bugsnag\BugsnagLaravel\OomBootstrapper;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\ControllingOnLiveNetwork;
 use App\Http\Middleware\GithubAuth;
@@ -52,28 +60,28 @@ class Kernel extends HttpKernel
             MiddlewareKeys::GITHUB_AUTH,
         ],
         'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            SubstituteBindings::class,
         ],
         'api' => [
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            SubstituteBindings::class,
         ],
         'web_auth' => [
             MiddlewareKeys::AUTH . ':web',
         ],
         'public' => [
-            \Illuminate\Http\Middleware\HandleCors::class,
+            HandleCors::class,
         ],
     ];
 
     protected function bootstrappers()
     {
         return array_merge(
-            [\Bugsnag\BugsnagLaravel\OomBootstrapper::class],
+            [OomBootstrapper::class],
             parent::bootstrappers(),
         );
     }

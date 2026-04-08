@@ -3,10 +3,12 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\StandResource;
-use App\Filament\Resources\StandResource\Pages\ListStands;
-use App\Filament\Resources\StandResource\RelationManagers\AirlinesRelationManager;
-use App\Filament\Resources\StandResource\RelationManagers\PairedStandsRelationManager;
+use App\Filament\Resources\Stands\StandResource;
+use App\Filament\Resources\Stands\Pages\CreateStand;
+use App\Filament\Resources\Stands\Pages\ListStands;
+use App\Filament\Resources\Stands\Pages\ViewStand;
+use App\Filament\Resources\Stands\RelationManagers\AirlinesRelationManager;
+use App\Filament\Resources\Stands\RelationManagers\PairedStandsRelationManager;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
@@ -14,7 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
-use App\Filament\Resources\StandResource\Pages\EditStand;
+use App\Filament\Resources\Stands\Pages\EditStand;
 
 class StandResourceTest extends BaseFilamentTestCase
 {
@@ -60,7 +62,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 ]
             );
 
-        Livewire::test(StandResource\Pages\ViewStand::class, ['record' => 1])
+        Livewire::test(ViewStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
             ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
@@ -89,7 +91,7 @@ class StandResourceTest extends BaseFilamentTestCase
             );
         Stand::findOrFail(1)->close();
 
-        Livewire::test(StandResource\Pages\ViewStand::class, ['record' => 1])
+        Livewire::test(ViewStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
             ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
@@ -106,7 +108,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesAStandWithMinimalData()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.identifier', '33L')
             ->set('data.latitude', 4.5)
@@ -137,7 +139,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItCreatesAStandWithSameIdentifierDifferentAirfield()
     {
         Stand::where('identifier', '1L')->firstOrFail();
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.identifier', '1L')
             ->set('data.latitude', 4.5)
@@ -167,7 +169,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItCreatesAStandWithAllData()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -204,7 +206,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfAirfieldNotSet()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
             ->set('data.latitude', 4.5)
@@ -219,7 +221,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfIdentifierNotSet()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.latitude', 4.5)
@@ -234,7 +236,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfIdentifierEmpty()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '')
@@ -250,7 +252,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfIdentifierNotUniqueForAirfield()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '32')
@@ -266,7 +268,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfLatitudeNonNumeric()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -282,7 +284,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfLongitudeNonNumeric()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -298,7 +300,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityNonNumeric()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -314,7 +316,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityTooSmall()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -330,7 +332,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfStandAllocationPriorityTooBig()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -346,7 +348,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfOriginSlugInvalid()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -363,7 +365,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfWingspanNotNumeric()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -382,7 +384,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testCreateFailsWithValidationErrorsIfLengthNotNumeric()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 2)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -412,7 +414,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 ]
             );
 
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
             ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
@@ -442,7 +444,7 @@ class StandResourceTest extends BaseFilamentTestCase
             );
         Stand::findOrFail(1)->close();
 
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
             ->assertSet('data.identifier', '1L')
             ->assertSet('data.latitude', $this->coordinateEqual('51.47436111'))
@@ -459,7 +461,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItEditsAStandWithMinimalData()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.identifier', '33R')
             ->set('data.latitude', 1.2)
@@ -490,7 +492,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItEditsAStandWithSameIdentifierDifferentAirfield()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 3])
+        Livewire::test(EditStand::class, ['record' => 3])
             ->set('data.airfield_id', 2)
             ->set('data.identifier', '1L')
             ->set('data.latitude', 4.5)
@@ -521,7 +523,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItEditsAStandWithAllData()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -558,7 +560,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfIdentifierEmpty()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '')
@@ -574,7 +576,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfIdentifierNotUniqueForAirfield()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '251')
@@ -590,7 +592,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfLatitudeNonNumeric()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -606,7 +608,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfLongitudeNonNumeric()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -622,7 +624,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfStandAllocationPriorityNonNumeric()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -638,7 +640,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfStandAllocationPriorityTooSmall()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -654,7 +656,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfStandAllocationPriorityTooBig()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -670,7 +672,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfOriginSlugInvalidPartialIcao()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -687,7 +689,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfMaxAircraftLengthNotNumeric()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -706,7 +708,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfMaxAircraftWingspanNotNumeric()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -725,7 +727,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfMaxAircraftLengthNegative()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -744,7 +746,7 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testEditFailsWithValidationErrorsIfMaxAircraftWingspanNegative()
     {
-        Livewire::test(StandResource\Pages\EditStand::class, ['record' => 1])
+        Livewire::test(EditStand::class, ['record' => 1])
             ->set('data.airfield_id', 1)
             ->set('data.terminal_id', 1)
             ->set('data.identifier', '33L')
@@ -764,7 +766,7 @@ class StandResourceTest extends BaseFilamentTestCase
     public function testItOnlyAllowsSelectionOfTerminalsAtTheRightAirfield()
     {
         $terminal = Terminal::factory()->create(['airfield_id' => 2]);
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->set('data.airfield_id', 1)
             ->assertSeeHtmlInOrder(['Terminal 1', 'Terminal 2'])
             ->assertDontSeeHtml($terminal->description)
@@ -777,19 +779,19 @@ class StandResourceTest extends BaseFilamentTestCase
 
     public function testItHasAllAirfieldsForCreatingStands()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->assertSeeHtml(['EGBB', 'EGKR', 'EGLL']);
     }
 
     public function testItHasStandTypeOptions()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->assertSeeHtml(['Domestic', 'International', 'Cargo']);
     }
 
     public function testItHasAerodromeReferenceCodeOptions()
     {
-        Livewire::test(StandResource\Pages\CreateStand::class)
+        Livewire::test(CreateStand::class)
             ->assertSeeHtmlInOrder(
                 ['A', 'B', 'C', 'D', 'E', 'F']
             );

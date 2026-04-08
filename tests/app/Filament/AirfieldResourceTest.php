@@ -3,11 +3,12 @@
 namespace App\Filament;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\AirfieldResource;
-use App\Filament\Resources\AirfieldResource\Pages\CreateAirfield;
-use App\Filament\Resources\AirfieldResource\Pages\EditAirfield;
-use App\Filament\Resources\AirfieldResource\Pages\ListAirfields;
-use App\Filament\Resources\AirfieldResource\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\Airfields\AirfieldResource;
+use App\Filament\Resources\Airfields\Pages\CreateAirfield;
+use App\Filament\Resources\Airfields\Pages\ViewAirfield;
+use App\Filament\Resources\Airfields\Pages\EditAirfield;
+use App\Filament\Resources\Airfields\Pages\ListAirfields;
+use App\Filament\Resources\Airfields\RelationManagers\ControllersRelationManager;
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
@@ -29,7 +30,7 @@ class AirfieldResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForView()
     {
-        Livewire::test(AirfieldResource\Pages\ViewAirfield::class, ['record' => 1])
+        Livewire::test(ViewAirfield::class, ['record' => 1])
             ->assertSet('data.code', 'EGLL')
             ->assertSet('data.latitude', 51.4775)
             ->assertSet('data.longitude', -0.461389)

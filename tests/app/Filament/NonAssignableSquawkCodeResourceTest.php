@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\NonAssignableSquawkCodeResource;
-use App\Filament\Resources\NonAssignableSquawkCodeResource\Pages\ManageNonAssignnableSquawkCodeRanges;
+use App\Filament\Resources\NonAssignableSquawkCodes\NonAssignableSquawkCodeResource;
+use App\Filament\Resources\NonAssignableSquawkCodes\Pages\ManageNonAssignnableSquawkCodeRanges;
 use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use Illuminate\Support\Str;
 use Livewire\Livewire;

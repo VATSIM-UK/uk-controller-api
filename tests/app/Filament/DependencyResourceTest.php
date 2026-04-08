@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
-use App\Filament\Resources\DependencyResource;
-use App\Filament\Resources\DependencyResource\Pages\ListDependencies;
+use App\Filament\Resources\Dependencies\DependencyResource;
+use App\Filament\Resources\Dependencies\Pages\ListDependencies;
 use App\Models\Dependency\Dependency;
 use App\Services\DependencyService;
 use Livewire\Livewire;

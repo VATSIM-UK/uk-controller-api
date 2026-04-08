@@ -2,21 +2,18 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
+use Illuminate\Contracts\Support\Htmlable;
 use Filament\Actions\Action;
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Form;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Filament\Pages\Auth\Login as BaseLogin;
+use Filament\Schemas\Schema;
 
 /**
- * @property ComponentContainer $form
+ * @property \Filament\Schemas\Schema $form
  */
-class Login extends BaseLogin
+class Login extends \Filament\Auth\Pages\Login
 {
     use InteractsWithForms;
-
-    protected static string $view = 'filament.pages.core-login';
 
     public function authenticate(): ?LoginResponse
     {
@@ -30,7 +27,7 @@ class Login extends BaseLogin
             ->label('Sign in via VATSIM UK Core');
     }
 
-    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable
+    public function getHeading(): string|Htmlable
     {
         return 'UK Controller Plugin';
     }

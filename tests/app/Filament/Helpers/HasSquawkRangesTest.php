@@ -3,7 +3,7 @@
 namespace App\Filament\Helpers;
 
 use App\BaseFilamentTestCase;
-use App\Filament\Resources\CcamsSquawkRangeResource\Pages\ManageCcamsSquawkRange;
+use App\Filament\Resources\CcamsSquawkRanges\Pages\ManageCcamsSquawkRange;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\DataProvider;

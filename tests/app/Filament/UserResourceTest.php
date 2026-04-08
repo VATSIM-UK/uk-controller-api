@@ -5,7 +5,10 @@ namespace App\Filament;
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
 use App\Filament\AccessCheckingHelpers\ChecksViewFilamentAccess;
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\Users\Pages\EditUser;
+use App\Filament\Resources\Users\Pages\ViewUser;
+use App\Filament\Resources\Users\RelationManagers\RolesRelationManager;
+use App\Filament\Resources\Users\UserResource;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
@@ -83,7 +86,7 @@ class UserResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForView()
     {
-        Livewire::test(UserResource\Pages\ViewUser::class, ['record' => self::BANNED_USER_CID])
+        Livewire::test(ViewUser::class, ['record' => self::BANNED_USER_CID])
             ->assertSet('data.first_name', 'User')
             ->assertSet('data.last_name', 'Banned')
             ->assertSet('data.status', 2);
@@ -91,7 +94,7 @@ class UserResourceTest extends BaseFilamentTestCase
 
     public function testItLoadsDataForEdit()
     {
-        Livewire::test(UserResource\Pages\EditUser::class, ['record' => self::BANNED_USER_CID])
+        Livewire::test(EditUser::class, ['record' => self::BANNED_USER_CID])
             ->assertSet('data.first_name', 'User')
             ->assertSet('data.last_name', 'Banned')
             ->assertSet('data.status', 2);
@@ -99,7 +102,7 @@ class UserResourceTest extends BaseFilamentTestCase
 
     public function testAUsersStatusCanBeChanged()
     {
-        Livewire::test(UserResource\Pages\EditUser::class, ['record' => self::BANNED_USER_CID])
+        Livewire::test(EditUser::class, ['record' => self::BANNED_USER_CID])
             ->set('data.status', 1)
             ->call('save')
             ->assertHasNoErrors();
@@ -113,7 +116,7 @@ class UserResourceTest extends BaseFilamentTestCase
         $this->bannedUser()->roles()->sync([$rowToExpect]);
 
         Livewire::test(
-            UserResource\RelationManagers\RolesRelationManager::class,
+            RolesRelationManager::class,
             ['ownerRecord' => $this->bannedUser(), 'pageClass' => EditUser::class]
         )
             ->assertCanSeeTableRecords([$rowToExpect]);
@@ -124,7 +127,7 @@ class UserResourceTest extends BaseFilamentTestCase
         $rowToExpect = Role::idFromKey(RoleKeys::DIVISION_STAFF_GROUP);
 
         Livewire::test(
-            UserResource\RelationManagers\RolesRelationManager::class,
+            RolesRelationManager::class,
             ['ownerRecord' => $this->bannedUser(), 'pageClass' => EditUser::class]
         )
             ->callTableAction('attach', data: ['recordId' => $rowToExpect])
@@ -139,7 +142,7 @@ class UserResourceTest extends BaseFilamentTestCase
         $this->bannedUser()->roles()->sync([$rowToExpect]);
 
         Livewire::test(
-            UserResource\RelationManagers\RolesRelationManager::class,
+            RolesRelationManager::class,
             ['ownerRecord' => $this->bannedUser(), 'pageClass' => EditUser::class]
         )
             ->callTableAction('detach', Role::fromKey(RoleKeys::DIVISION_STAFF_GROUP))

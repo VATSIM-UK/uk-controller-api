@@ -6,7 +6,7 @@ use Filament\Widgets\Widget;
 
 class MyRoles extends Widget
 {
-    protected static string $view = 'filament.widgets.my-roles';
+    protected string $view = 'filament.widgets.my-roles';
 
     protected int|string|array $columnSpan = 1;
 

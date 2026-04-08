@@ -1,6 +1,7 @@
 <?php
 namespace App\Console\Commands;
 
+use App\Exceptions\UserAlreadyExistsException;
 use App\Services\UserService;
 use Illuminate\Console\Command;
 
@@ -19,7 +20,7 @@ class UserAdminCreate extends Command
     /**
      * Handles the command
      * @param UserService $userService Service to do the user work.
-     * @throws \App\Exceptions\UserAlreadyExistsException
+     * @throws UserAlreadyExistsException
      */
     public function handle(UserService $userService)
     {

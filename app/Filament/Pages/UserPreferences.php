@@ -2,13 +2,13 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Fieldset;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\User\User;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,13 +17,13 @@ class UserPreferences extends Page implements HasForms
     use InteractsWithForms;
     use TranslatesStrings;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationGroup = 'Preferences';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \UnitEnum | null $navigationGroup = 'Preferences';
     protected static ?string $navigationLabel = 'My Preferences';
     protected static ?string $title = 'My Preferences';
     protected static ?string $slug = 'my-preferences';
 
-    protected static string $view = 'filament.pages.user-preferences';
+    protected string $view = 'filament.pages.user-preferences';
 
     public ?array $data = [];
 
@@ -32,9 +32,9 @@ class UserPreferences extends Page implements HasForms
         $this->form->fill(Auth::user()->toArray());
     }
     
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             Fieldset::make('stand_acars')
                 ->model(fn () => Auth::user())
                 ->label(self::translateFormPath('user_preferences.acars_heading.label'))

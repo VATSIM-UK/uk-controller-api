@@ -2,9 +2,9 @@
 
 namespace App\Filament\Helpers;
 
+use Filament\Actions\DetachAction;
 use App\Filament\Resources\TranslatesStrings;
 use Closure;
-use Filament\Tables\Actions\DetachAction;
 use Illuminate\Support\Facades\DB;
 
 trait PairsAirlinesWithTerminals

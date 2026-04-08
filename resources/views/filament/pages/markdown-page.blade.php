@@ -1,7 +1,7 @@
-<x-filament::page>
-    <x-filament::card>
-        <div class="prose dark:prose-invert max-w-none">
+<x-filament-panels::page>
+    <x-filament::section>
+        <div class="fi-prose max-w-none">
             {!! $md !!}
         </div>
-    </x-filament::card>
-</x-filament::page>
+    </x-filament::section>
+</x-filament-panels::page>

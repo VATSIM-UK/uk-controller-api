@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksManageRecordsFilamentAccess;
-use App\Filament\Resources\UnitDiscreteSquawkRangeGuestResource;
-use App\Filament\Resources\UnitDiscreteSquawkRangeGuestResource\Pages\ManageUnitDiscreteSquawkRangeGuests;
+use App\Filament\Resources\UnitDiscreteSquawkRangeGuests\UnitDiscreteSquawkRangeGuestResource;
+use App\Filament\Resources\UnitDiscreteSquawkRangeGuests\Pages\ManageUnitDiscreteSquawkRangeGuests;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
 use Illuminate\Support\Str;
 use Livewire\Livewire;

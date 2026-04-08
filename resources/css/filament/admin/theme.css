@@ -1,15 +1,60 @@
-@import '/vendor/filament/filament/resources/css/theme.css';
+@import "tailwindcss";
+@import "../../../../vendor/filament/filament/resources/css/theme.css";
 
-@config 'tailwind.config.js';
+@source "../../../../vendor/filament/filament/resources/views";
+@source "../../../../vendor/filament/support/resources/views";
+@source "../../../../vendor/filament/tables/resources/views";
+@source "../../../../vendor/filament/forms/resources/views";
+@source "../../../../vendor/filament/actions/resources/views";
+@source "../../../../vendor/filament/notifications/resources/views";
+@source "../../../../vendor/filament/widgets/resources/views";
 
-.fi-simple-layout {
-    @apply dark:bg-gradient-to-b dark:from-vatuk-darkblue-400 dark:to-vatuk-darkblue-900 !important;
+@source "../../../../app/Filament/**/*.php";
+@source "../../../../resources/views/filament/**/*.blade.php";
+
+@theme {
+    --color-primary: var(--primary-600);
+    --color-danger: var(--danger-600);
+    --color-success: var(--success-600);
+    --color-warning: var(--warning-600);
+    --color-info: var(--info-600);
+    --color-gray: var(--gray-600);
+
+    --color-vatuk-darkblue: #17375e;
+    --color-vatuk-darkblue-50: #3378cd;
+    --color-vatuk-darkblue-100: #2c6ab6;
+    --color-vatuk-darkblue-200: #265d9f;
+    --color-vatuk-darkblue-300: #215089;
+    --color-vatuk-darkblue-400: #1c4373;
+    --color-vatuk-darkblue-500: #17375e;
+    --color-vatuk-darkblue-600: #022b50;
+    --color-vatuk-darkblue-700: #001f43;
+    --color-vatuk-darkblue-800: #001436;
+    --color-vatuk-darkblue-900: #000000;
+
+    --color-vatuk-lightblue: #25ade3;
+    --color-vatuk-lightblue-50: #8dd8f6;
+    --color-vatuk-lightblue-100: #78cdf1;
+    --color-vatuk-lightblue-200: #62c3ec;
+    --color-vatuk-lightblue-300: #006192;
+    --color-vatuk-lightblue-400: #48b8e8;
+    --color-vatuk-lightblue-500: #007aab;
+    --color-vatuk-lightblue-600: #007aab;
+    --color-vatuk-lightblue-700: #005888;
+    --color-vatuk-lightblue-800: #00325e;
+    --color-vatuk-lightblue-900: #000000;
 }
 
-.fi-main-ctn {
-    @apply dark:bg-gradient-to-b dark:from-vatuk-darkblue-400 dark:to-vatuk-darkblue-900 !important;
-}
+@layer components {
+    .fi-simple-layout {
+        @apply dark:bg-gradient-to-b dark:from-vatuk-darkblue-400 dark:to-vatuk-darkblue-900;
+    }
 
-.fi-sidebar-nav {
-    @apply dark:bg-gray-900 !important
+    .fi-main-ctn {
+        @apply dark:bg-gradient-to-b dark:from-vatuk-darkblue-400 dark:to-vatuk-darkblue-900;
+    }
+
+    .fi-sidebar-nav {
+        @apply dark:bg-gray-900;
+    }
 }

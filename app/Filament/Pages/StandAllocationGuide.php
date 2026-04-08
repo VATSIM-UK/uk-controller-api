@@ -8,11 +8,11 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class StandAllocationGuide extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-x-circle';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-x-circle';
 
-    protected static string $view = 'filament.pages.markdown-page';
+    protected string $view = 'filament.pages.markdown-page';
 
-    protected static ?string $navigationGroup = 'Documentation';
+    protected static string | \UnitEnum | null $navigationGroup = 'Documentation';
 
     protected static ?string $slug = 'stand-allocation';
 

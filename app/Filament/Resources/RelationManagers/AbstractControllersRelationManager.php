@@ -2,6 +2,11 @@
 
 namespace App\Filament\Resources\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Forms\Components\Select;
+use Filament\Actions\Action;
+use Filament\Actions\DetachAction;
 use App\Filament\Resources\TranslatesStrings;
 use App\Helpers\Controller\FrequencyFormatter;
 use App\Models\Controller\ControllerPosition;
@@ -28,19 +33,20 @@ abstract class AbstractControllersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order')
+                TextColumn::make('order')
                     ->label(self::translateTablePath('columns.order.label')),
-                Tables\Columns\TextColumn::make('callsign')
+                TextColumn::make('callsign')
                     ->label(self::translateTablePath('columns.callsign.label')),
-                Tables\Columns\TextColumn::make('frequency')
+                TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency.label'))
                     ->formatStateUsing(fn (float $state) => FrequencyFormatter::formatFrequency($state)),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
-                    ->form(fn (Tables\Actions\AttachAction $action, AbstractControllersRelationManager $livewire) => [
+                AttachAction::make()
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('attach'))
+                    ->form(fn (AttachAction $action, AbstractControllersRelationManager $livewire) => [
                         $action->getRecordSelect(),
-                        Forms\Components\Select::make('insert_after')
+                        Select::make('insert_after')
                             ->label(self::translateTablePath('attach_form.insert_after.label'))
                             ->helperText(self::translateTablePath('attach_form.insert_after.helper'))
                             ->options(
@@ -69,8 +75,8 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
                     ->modalButton(self::translateTablePath('attach_action.modal_button')),
             ])
-            ->actions([
-                Tables\Actions\Action::make('moveUp')
+            ->recordActions([
+                Action::make('moveUp')
                     ->action(function (ControllerPosition $record) {
                         self::doUpdate(
                             fn () => ControllerPositionHierarchyService::moveControllerInHierarchy(
@@ -84,7 +90,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->label(self::translateTablePath('move_up_action.label'))
                     ->icon('heroicon-o-arrow-up')
                     ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
-                Tables\Actions\Action::make('moveDown')
+                Action::make('moveDown')
                     ->action(function (ControllerPosition $record) {
                         self::doUpdate(
                             fn () => ControllerPositionHierarchyService::moveControllerInHierarchy(
@@ -98,7 +104,8 @@ abstract class AbstractControllersRelationManager extends RelationManager
                     ->label(self::translateTablePath('move_down_action.label'))
                     ->icon('heroicon-o-arrow-down')
                     ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('moveUp')),
-                Tables\Actions\DetachAction::make()
+                DetachAction::make()
+                    ->authorize(fn (AbstractControllersRelationManager $livewire) => $livewire->can('detach'))
                     ->using(function (ControllerPosition $record) {
                         self::doUpdate(
                             fn () => ControllerPositionHierarchyService::removeFromHierarchy(

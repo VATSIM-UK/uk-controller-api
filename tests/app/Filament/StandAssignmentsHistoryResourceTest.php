@@ -4,8 +4,8 @@ namespace App\Filament;
 
 use App\BaseFilamentTestCase;
 use App\Filament\AccessCheckingHelpers\ChecksListingFilamentAccess;
-use App\Filament\Resources\StandAssignmentsHistoryResource;
-use App\Filament\Resources\StandAssignmentsHistoryResource\Pages\ListStandAssignmentsHistories;
+use App\Filament\Resources\StandAssignmentsHistories\StandAssignmentsHistoryResource;
+use App\Filament\Resources\StandAssignmentsHistories\Pages\ListStandAssignmentsHistories;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignmentsHistory;

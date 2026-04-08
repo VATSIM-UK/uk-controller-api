@@ -3,7 +3,7 @@
 namespace App\Filament;
 
 use App\BaseUnitTestCase;
-use App\Filament\Resources\ActivityResource;
+use App\Filament\Resources\Activities\ActivityResource;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Facades\Filament;
 

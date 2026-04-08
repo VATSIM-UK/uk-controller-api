@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\View;
 use App\Filament\Helpers\DisplaysStandStatus;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
@@ -14,11 +16,9 @@ use App\Services\Stand\ArrivalAllocationService;
 use Carbon\Carbon;
 use Closure;
 use Exception;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\View;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Illuminate\Support\Facades\DB;
@@ -87,16 +87,16 @@ class RequestAStandForm extends Component implements HasForms
             : $this->getMinimumRequestableTime();
 
         return [
-            Placeholder::make('')
+            Placeholder::make('notice')
                 ->content($this->getFirstPlaceholderText()),
-            Placeholder::make('')
+            Placeholder::make('notice_disconnection')
                 ->content($this->getSecondPlaceholderText()),
             Fieldset::make('Recommendations')
                 ->schema([
-                    Placeholder::make('')
+                    Placeholder::make('recommendation_text')
                         ->columnSpanFull()
                         ->content($this->getRecommendationText()),
-                    Placeholder::make('')
+                    Placeholder::make('recommended_stands')
                         ->columnSpanFull()
                         ->content(implode(', ', $this->recommendedStands)),
                 ])
