@@ -4,7 +4,7 @@ use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration {
     public function up(): void
     {
         Role::create([
@@ -17,6 +17,4 @@ return new class () extends Migration {
     {
         Role::where('key', RoleKeys::VAA->value)->delete();
     }
-
-
 };
