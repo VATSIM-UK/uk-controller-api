@@ -50,7 +50,7 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) + [
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('APP_ENV') !== 'local',
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => !in_array(env('APP_ENV'), ['local', 'testing']),
             ] : [],
         ],
         'information_schema' => [
@@ -71,7 +71,7 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) + [
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('APP_ENV') !== 'local',
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => !in_array(env('APP_ENV'), ['local', 'testing'], true),
             ] : [],
         ],
         'mysql_analyze' => [
@@ -92,7 +92,7 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) + [
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('APP_ENV') !== 'local',
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => !in_array(env('APP_ENV'), ['local', 'testing']),
             ] : [],
         ],
     ],
