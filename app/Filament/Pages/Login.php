@@ -6,7 +6,7 @@ use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Illuminate\Contracts\Support\Htmlable;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 
 /**
  * @property \Filament\Schemas\Schema $form
@@ -15,7 +15,7 @@ class Login extends \Filament\Auth\Pages\Login
 {
     use InteractsWithForms;
 
-    protected string $view = 'filament.pages.core-login';
+    // protected string $view = 'filament.pages.core-login';
 
     public function authenticate(): ?LoginResponse
     {

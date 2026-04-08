@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../../../../vendor/filament/filament/resources/css/theme.css";
 
 @source "../../../../vendor/filament/filament/resources/views";
 @source "../../../../vendor/filament/support/resources/views";
