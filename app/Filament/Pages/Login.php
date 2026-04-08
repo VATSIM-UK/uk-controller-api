@@ -15,8 +15,6 @@ class Login extends \Filament\Auth\Pages\Login
 {
     use InteractsWithForms;
 
-    // protected string $view = 'filament.pages.core-login';
-
     public function authenticate(): ?LoginResponse
     {
         $this->redirectRoute('vatsimuk.redirect');
