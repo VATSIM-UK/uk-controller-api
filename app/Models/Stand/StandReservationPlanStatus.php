@@ -9,4 +9,5 @@ enum StandReservationPlanStatus: string
     case APPROVED = 'approved';
     case REJECTED = 'rejected';
     case IMPORTED = 'imported';
+    
 }

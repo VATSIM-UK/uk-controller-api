@@ -7,14 +7,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void
-            Schema::create('stand_reservation_plans', function (Blueprint $table): void {
+    {
+
+
+        Schema::create('stand_reservation_plans', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->string('contact_email');
             $table->json('payload');
-            $table->unsignedBigInteger('submitted_by')->nullable();
+            $table->unsignedInteger('submitted_by')->nullable();
             $table->timestamp('submitted_at')->nullable();
-            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->unsignedInteger('approved_by')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->string('status')->default(StandReservationPlanStatus::DRAFT->value);
             $table->json('imported_reservations')->nullable();

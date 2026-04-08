@@ -17,4 +17,5 @@ return new class extends Migration {
     {
         Role::where('key', RoleKeys::VAA->value)->delete();
     }
+    
 };
