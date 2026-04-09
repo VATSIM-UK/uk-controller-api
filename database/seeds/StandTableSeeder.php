@@ -38,5 +38,8 @@ class StandTableSeeder extends Seeder
                 ],
             ]
         );
+
+        // Seed pivot data required for Filament relation manager tests
+        DB::table('stand_pairs')->insert(['stand_id' => 1, 'paired_stand_id' => 2]);
     }
 }

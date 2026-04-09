@@ -7,7 +7,7 @@ class AirlineTableSeeder extends Seeder
 {
     public function run()
     {
-        Airline::create(
+        $baw = Airline::create(
             [
                 'icao_code' => 'BAW',
                 'name' => 'British Airways',
@@ -28,5 +28,9 @@ class AirlineTableSeeder extends Seeder
                 'callsign' => 'VIR'
             ]
         );
+
+        // Seed pivot data required for Filament relation manager tests
+        $baw->terminals()->attach(1, ['priority' => 100]);
+        $baw->stands()->attach(1, ['priority' => 100]);
     }
 }

@@ -32,6 +32,8 @@ class AircraftTableSeeder extends Seeder
                 WakeCategory::where('code', 'M')->where('wake_category_scheme_id', $recatScheme)->firstOrFail()->id,
             ]
         );
+        // Ensure wake category id=1 is attached for Filament relation manager tests
+        $b738->wakeCategories()->syncWithoutDetaching([WakeCategory::orderBy('id')->firstOrFail()->id]);
 
         $a333 = Aircraft::create(
             [

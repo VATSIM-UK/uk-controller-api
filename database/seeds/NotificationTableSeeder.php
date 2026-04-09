@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Controller\ControllerPosition;
 use App\Models\Notification\Notification;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -8,7 +9,7 @@ class NotificationTableSeeder extends Seeder
 {
     public function run()
     {
-        Notification::create(
+        $notification = Notification::create(
             [
                 'title' => 'Foo',
                 'body' => 'Bar',
@@ -17,5 +18,8 @@ class NotificationTableSeeder extends Seeder
                 'valid_to' => Carbon::now()->addHour(),
             ]
         );
+
+        // Seed pivot data required for Filament relation manager tests
+        $notification->controllers()->attach(ControllerPosition::findOrFail(1));
     }
 }
