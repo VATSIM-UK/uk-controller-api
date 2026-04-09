@@ -200,15 +200,42 @@ trait BaseChecksActionVisibility
         bool $actionCanBePerformed
     ): void
     {
-        $actionRecord = call_user_func(
-            $recordClass . '::findOrFail',
+        $table = $livewire->instance()->getTable();
+        $isRecordAction = false;
+
+        foreach ($table->getRecordActions() as $recordAction) {
+            if ($recordAction instanceof \Filament\Tables\Actions\ActionGroup) {
+                foreach ($recordAction->getFlatActions() as $flatAction) {
+                    if ($flatAction->getName() === $action) {
+                        $isRecordAction = true;
+                        break 2;
+                    }
+                }
+            } else {
+                if ($recordAction->getName() === $action) {
+                    $isRecordAction = true;
+                    break;
+                }
+            }
+        }
+
+        $actionRecord = $isRecordAction ? call_user_func(
+            [$recordClass, 'findOrFail'],
             $recordId
-        );
+        ) : null;
 
         if ($actionCanBePerformed) {
-            $livewire->assertTableActionVisible($action, $actionRecord);
+            if ($actionRecord !== null) {
+                $livewire->assertTableActionVisible($action, $actionRecord);
+            } else {
+                $livewire->assertTableActionVisible($action);
+            }
         } else {
-            $livewire->assertTableActionHidden($action, $actionRecord);
+            if ($actionRecord !== null) {
+                $livewire->assertTableActionHidden($action, $actionRecord);
+            } else {
+                $livewire->assertTableActionHidden($action);
+            }
         }
     }
 
@@ -216,10 +243,10 @@ trait BaseChecksActionVisibility
     {
         return [
             'ownerRecord' => call_user_func(
-                $ownerRecordClass . '::findOrFail',
+                [$ownerRecordClass, 'findOrFail'],
                 $ownerRecordId
             ),
-            'pageClass' => call_user_func(static::resourceClass() . '::getPages')['edit']->getPage(),
+            'pageClass' => call_user_func([static::resourceClass(), 'getPages'])['edit']->getPage(),
         ];
     }
 
