@@ -30,7 +30,7 @@ class UserResource extends Resource
 
     protected static ?string $model = User::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function canGloballySearch(): bool
@@ -81,8 +81,9 @@ class UserResource extends Resource
                 TextColumn::make('status')
                     ->label(self::translateTablePath('columns.status'))
                     ->formatStateUsing(fn (int $state) => UserStatus::find($state)?->statusMessage()),
-                TagsColumn::make('roles.description')
+                TextColumn::make('roles.description')
                     ->label(self::translateTablePath('columns.roles'))
+                    ->badge(),
             ])
             ->recordActions([
                 ViewAction::make(),

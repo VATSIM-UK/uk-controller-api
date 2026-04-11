@@ -31,8 +31,8 @@ class AircraftResource extends Resource
 
     protected static ?string $model = Aircraft::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-airplane';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airline';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-paper-airplane';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airline';
     protected static ?string $recordTitleAttribute = 'code';
 
     public static function getEloquentQuery(): Builder
@@ -101,8 +101,9 @@ class AircraftResource extends Resource
                     ->label(self::translateTablePath('columns.wingspan')),
                 TextColumn::make('length')
                     ->label(self::translateTablePath('columns.length')),
-                TagsColumn::make('wakeCategories')
+                TextColumn::make('wakeCategories')
                     ->label(self::translateTablePath('columns.wake_categories'))
+                    ->badge()
                     ->getStateUsing(
                         fn (Aircraft $record) => $record->wakeCategories->map(
                             fn (WakeCategory $category) => sprintf(

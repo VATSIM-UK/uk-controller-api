@@ -16,7 +16,7 @@ class PrenotesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
     use TranslatesStrings;
-    
+
     protected static string $relationship = 'prenotes';
 
     protected static ?string $recordTitleAttribute = 'description';
@@ -27,8 +27,9 @@ class PrenotesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
-                TagsColumn::make('controllers.callsign')
-                    ->label(self::translateTablePath('columns.controllers')),
+                TextColumn::make('controllers.callsign')
+                    ->label(self::translateTablePath('columns.controllers'))
+                    ->badge(),
             ])
             ->headerActions([
                 AttachAction::make()
@@ -53,7 +54,7 @@ class PrenotesRelationManager extends RelationManager
                             ['prenote' => $action->getRecordTitle()]
                         )
                     )
-                    ->modalButton(self::translateTablePath('detach_action.confirm_button'))
+                    ->modalButton(self::translateTablePath('detach_action.confirm_button')),
             ]);
     }
 

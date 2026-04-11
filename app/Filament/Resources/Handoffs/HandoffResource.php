@@ -26,9 +26,9 @@ class HandoffResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Handoff::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'description';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function getEloquentQuery(): Builder
     {
@@ -43,7 +43,7 @@ class HandoffResource extends Resource
                 TextInput::make('description')
                     ->label(self::translateFormPath('description.label'))
                     ->maxLength(255)
-                    ->required()
+                    ->required(),
             ]);
     }
 
@@ -55,14 +55,19 @@ class HandoffResource extends Resource
                     ->label(self::translateTablePath('columns.description'))
                     ->searchable()
                     ->sortable(),
-                TagsColumn::make('sids.identifier')
-                    ->label(self::translateTablePath('columns.sids')),
-                TagsColumn::make('controllers.callsign')
-                    ->label(self::translateTablePath('columns.controllers')),
+                TextColumn::make('sids.identifier')
+                    ->label(self::translateTablePath('columns.sids'))
+                    ->badge()
+                    ->wrap(),
+                TextColumn::make('controllers.callsign')
+                    ->label(self::translateTablePath('columns.controllers'))
+                    ->badge()
+                    ->wrap(),
+
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make()
+                EditAction::make(),
             ])->defaultSort('description');
     }
 

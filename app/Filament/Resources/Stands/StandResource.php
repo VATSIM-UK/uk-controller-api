@@ -6,6 +6,7 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\BooleanColumn;
@@ -50,9 +51,9 @@ class StandResource extends Resource
     private const DEFAULT_COLUMN_VALUE = '--';
 
     protected static ?string $model = Stand::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'identifier';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
@@ -208,20 +209,24 @@ class StandResource extends Resource
                 TextColumn::make('max_aircraft_length')
                     ->label(self::translateTablePath('columns.max_size_length'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
-                TagsColumn::make('uniqueAirlines.icao_code')
+                TextColumn::make('uniqueAirlines.icao_code')
                     ->label(self::translateTablePath('columns.airlines'))
-                    ->default([self::DEFAULT_COLUMN_VALUE]),
-                BooleanColumn::make('closed_at')
+                    ->default([self::DEFAULT_COLUMN_VALUE])
+                    ->badge()
+                    ->wrap(),
+                IconColumn::make('closed_at')
                     ->label(self::translateTablePath('columns.used'))
-                    ->getStateUsing(function (BooleanColumn $column) {
+                    ->getStateUsing(function (IconColumn $column) {
                         return $column->getRecord()->closed_at === null;
-                    }),
+                    })
+                    ->boolean(),
                 TextColumn::make('assignment_priority')
                     ->label(self::translateTablePath('columns.priority'))
                     ->sortable()
                     ->searchable(),
-                BooleanColumn::make('overnight_remote_preferred')
-                    ->label(self::translateTablePath('columns.overnight_remote_preferred')),
+                IconColumn::make('overnight_remote_preferred')
+                    ->label(self::translateTablePath('columns.overnight_remote_preferred'))
+                    ->boolean(),
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -262,7 +267,7 @@ class StandResource extends Resource
                         }
                     ),
             ])
-            ->defaultSort('airfield.code', 'asc');
+            ->defaultSort('identifier');
     }
 
     public static function getRelations(): array

@@ -28,6 +28,7 @@ use App\Models\Runway\Runway;
 use Closure;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -91,13 +92,13 @@ class HoldsRelationManager extends RelationManager
                             ->helperText(self::translateFormPath('outbound_leg_value.helper'))
                             ->numeric()
                             ->reactive()
-                            ->required(fn (Get $get): bool => (bool) $get('outbound_leg_unit'))
+                            ->required(fn (Get $get): bool => (bool)$get('outbound_leg_unit'))
                             ->minValue(0.5)
                             ->maxValue(100),
                         Select::make('outbound_leg_unit')
                             ->label(self::translateFormPath('outbound_leg_unit.label'))
                             ->helperText(self::translateFormPath('outbound_leg_unit.helper'))
-                            ->required(fn (Get $get): bool => (bool) $get('outbound_leg_value'))
+                            ->required(fn (Get $get): bool => (bool)$get('outbound_leg_value'))
                             ->reactive()
                             ->options(
                                 MeasurementUnit::whereIn('unit', ['nm', 'min'])
@@ -219,9 +220,10 @@ class HoldsRelationManager extends RelationManager
                         ? sprintf('%s %s', $record->outbound_leg_value, $record->outboundLegUnit->description)
                         : '--'
                     ),
-                BooleanColumn::make('restrictions')
+                IconColumn::make('restrictions')
                     ->label(self::translateTablePath('columns.has_restrictions'))
-                    ->getStateUsing(fn (Hold $record) => $record->restrictions->isNotEmpty()),
+                    ->getStateUsing(fn (Hold $record) => $record->restrictions->isNotEmpty())
+                    ->boolean(),
             ])
             ->headerActions([
                 CreateAction::make()
@@ -257,7 +259,7 @@ class HoldsRelationManager extends RelationManager
         ];
 
         if (isset($restriction['data']['override'])) {
-            $data['override'] = (int) $restriction['data']['override'];
+            $data['override'] = (int)$restriction['data']['override'];
         }
 
         if (isset($restriction['data']['runway']['designator'])) {
@@ -275,7 +277,7 @@ class HoldsRelationManager extends RelationManager
         return [
             'type' => $restriction['type'],
             'levels' => array_map(
-                fn (array $level) => (int) $level['level'],
+                fn (array $level) => (int)$level['level'],
                 $restriction['data']['levels']
             ),
         ];
@@ -292,8 +294,8 @@ class HoldsRelationManager extends RelationManager
                         'id' => $restriction->id,
                         'runway' => [
                             'designator' => isset($restriction->restriction['runway'])
-                            ? $restriction->restriction['runway']['designator']
-                            : null,
+                                ? $restriction->restriction['runway']['designator']
+                                : null,
                         ],
                     ],
                 ],

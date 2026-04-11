@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Airfields;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TagsColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use App\Filament\Resources\Airfields\Pages\ListAirfields;
@@ -34,9 +33,9 @@ class AirfieldResource extends Resource
     use HasCoordinates;
 
     protected static ?string $model = Airfield::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-x-circle';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-x-circle';
     protected static ?string $recordTitleAttribute = 'code';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function form(Schema $schema): Schema
     {
@@ -93,8 +92,10 @@ class AirfieldResource extends Resource
                     ->label(self::translateTablePath('columns.transition')),
                 TextColumn::make('runways.identifier')
                     ->label(self::translateTablePath('columns.runways')),
-                TagsColumn::make('controllers.callsign')
+                TextColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.top_down'))
+                    ->badge()
+                    ->wrap()
                     ->default(['--']),
             ])
             ->recordActions([

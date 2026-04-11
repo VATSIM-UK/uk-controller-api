@@ -29,9 +29,9 @@ class ControllerPositionResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = ControllerPosition::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-microphone';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-microphone';
     protected static ?string $recordTitleAttribute = 'callsign';
-    protected static string | \UnitEnum | null $navigationGroup = 'Controller';
+    protected static string|\UnitEnum|null $navigationGroup = 'Controller';
 
     public static function form(Schema $schema): Schema
     {
@@ -72,7 +72,7 @@ class ControllerPositionResource extends Resource
                         Toggle::make('receives_prenotes')
                             ->label(self::translateFormPath('receives_prenotes.label'))
                             ->helperText(self::translateFormPath('receives_prenotes.helper')),
-                    ])
+                    ]),
             ]);
     }
 
@@ -91,8 +91,9 @@ class ControllerPositionResource extends Resource
                 TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency'))
                     ->searchable(),
-                TagsColumn::make('topDownAirfields.code')
-                    ->label(self::translateTablePath('columns.top_down')),
+                TextColumn::make('topDownAirfields.code')
+                    ->label(self::translateTablePath('columns.top_down'))
+                    ->badge(),
             ])
             ->recordActions([
                 ViewAction::make(),

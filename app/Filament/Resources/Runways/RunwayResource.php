@@ -35,8 +35,8 @@ class RunwayResource extends Resource
 
     protected static ?string $model = Runway::class;
     protected static ?string $recordTitleAttribute = 'identifier';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-arrow-up';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-up';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function form(Schema $schema): Schema
     {
@@ -88,8 +88,9 @@ class RunwayResource extends Resource
                     ->searchable(),
                 TextColumn::make('heading')
                     ->label(self::translateTablePath('columns.heading')),
-                TagsColumn::make('sids.identifier')
-                    ->label(self::translateTablePath('columns.sids')),
+                TextColumn::make('sids.identifier')
+                    ->label(self::translateTablePath('columns.sids'))
+                    ->badge(),
             ])
             ->filters([
                 SelectFilter::make('airfield')
@@ -113,7 +114,7 @@ class RunwayResource extends Resource
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make()
+                EditAction::make(),
             ]);
     }
 
