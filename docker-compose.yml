@@ -75,6 +75,17 @@ services:
     networks:
       - ukcp-network
 
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - ukcp-network
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql 
+
 # Netwokring
 networks:
   ukcp-network:
