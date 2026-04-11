@@ -1,5 +1,15 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.0...6.65.1) (2026-04-11)
+
+### Bug Fixes
+
+* qol tables ([a794a85](https://github.com/VATSIM-UK/uk-controller-api/commit/a794a8509b4133dfef378b0477a2a1c21785693f))
+
+### Miscellaneous Chores
+
+* Stop using deprecated BooleanColumn ([1cac938](https://github.com/VATSIM-UK/uk-controller-api/commit/1cac9389b3e72142f4d497a862d54dfd0c20589b))
+
 ## [6.65.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.64.1...6.65.0) (2026-04-08)
 
 ### Features
