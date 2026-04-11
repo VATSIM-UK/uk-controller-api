@@ -30,7 +30,7 @@ class UserResource extends Resource
 
     protected static ?string $model = User::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function canGloballySearch(): bool
@@ -60,8 +60,8 @@ class UserResource extends Resource
                     ->disabled(),
                 Select::make('status')
                     ->options(
-                        fn () => UserStatus::all()->mapWithKeys(
-                            fn (UserStatus $status) => [$status->id => $status->statusMessage()]
+                        fn() => UserStatus::all()->mapWithKeys(
+                            fn(UserStatus $status) => [$status->id => $status->statusMessage()]
                         )
                     )
                     ->required(),
@@ -80,9 +80,10 @@ class UserResource extends Resource
                     ->searchable(['user.first_name', 'user.last_name']),
                 TextColumn::make('status')
                     ->label(self::translateTablePath('columns.status'))
-                    ->formatStateUsing(fn (int $state) => UserStatus::find($state)?->statusMessage()),
-                TagsColumn::make('roles.description')
+                    ->formatStateUsing(fn(int $state) => UserStatus::find($state)?->statusMessage()),
+                TextColumn::make('roles.description')
                     ->label(self::translateTablePath('columns.roles'))
+                    ->badge(),
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Navaids;
 
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Actions\ViewAction;
@@ -32,11 +33,11 @@ class NavaidResource extends Resource
 
     protected static ?string $model = Navaid::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map-pin';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map-pin';
     protected static ?string $recordTitleAttribute = 'identifier';
     protected static ?string $navigationLabel = 'Navaids and Holds';
     protected static ?string $label = 'Navaids and Holds';
-    protected static string | \UnitEnum | null $navigationGroup = 'Enroute';
+    protected static string|\UnitEnum|null $navigationGroup = 'Enroute';
 
     public static function getEloquentQuery(): Builder
     {
@@ -53,9 +54,9 @@ class NavaidResource extends Resource
                     ->maxLength(5)
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
+                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord),
                 self::latitudeInput(),
-                self::longitudeInput()
+                self::longitudeInput(),
             ]);
     }
 
@@ -67,11 +68,12 @@ class NavaidResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->label(self::translateTablePath('columns.identifier')),
-                BooleanColumn::make('has_published_holds')
+                IconColumn::make('has_published_holds')
                     ->getStateUsing(function (Navaid $record) {
                         return $record->holds->isNotEmpty();
                     })
-                    ->label(self::translateTablePath('columns.published_holds')),
+                    ->label(self::translateTablePath('columns.published_holds'))
+                    ->boolean(),
             ])
             ->recordActions([
                 ViewAction::make(),

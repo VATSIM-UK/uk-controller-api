@@ -16,7 +16,7 @@ class PrenotesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
     use TranslatesStrings;
-    
+
     protected static string $relationship = 'prenotes';
 
     protected static ?string $recordTitleAttribute = 'description';
@@ -27,13 +27,14 @@ class PrenotesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description')),
-                TagsColumn::make('controllers.callsign')
-                    ->label(self::translateTablePath('columns.controllers')),
+                TextColumn::make('controllers.callsign')
+                    ->label(self::translateTablePath('columns.controllers'))
+                    ->badge(),
             ])
             ->headerActions([
                 AttachAction::make()
-                    ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
-                    ->form(fn (AttachAction $action): array => [
+                    ->authorize(fn(RelationManager $livewire) => $livewire->can('attach'))
+                    ->form(fn(AttachAction $action): array => [
                         $action->getRecordSelect()
                             ->label(__('form.stands.airlines.icao.label'))
                             ->required(),
@@ -45,15 +46,15 @@ class PrenotesRelationManager extends RelationManager
             ])
             ->recordActions([
                 DetachAction::make()
-                    ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
+                    ->authorize(fn(RelationManager $livewire) => $livewire->can('detach'))
                     ->label(self::translateTablePath('detach_action.trigger_button'))
                     ->modalHeading(
-                        fn (DetachAction $action) => __(
+                        fn(DetachAction $action) => __(
                             'table.sids.prenotes.detach_action.modal_heading',
                             ['prenote' => $action->getRecordTitle()]
                         )
                     )
-                    ->modalButton(self::translateTablePath('detach_action.confirm_button'))
+                    ->modalButton(self::translateTablePath('detach_action.confirm_button')),
             ]);
     }
 

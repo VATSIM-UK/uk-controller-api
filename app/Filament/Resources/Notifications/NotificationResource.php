@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Notifications;
 
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Filters\Filter;
@@ -87,11 +88,12 @@ class NotificationResource extends Resource
                     ->label(self::translateTablePath('columns.valid_to'))
                     ->date(self::DATE_FORMAT)
                     ->sortable(),
-                BooleanColumn::make('read')
+                IconColumn::make('read')
                     ->label(self::translateTablePath('columns.read'))
                     ->getStateUsing(
                         fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     ),
+                    ->boolean(),
             ])
             ->filters([
                 Filter::make('unread')
