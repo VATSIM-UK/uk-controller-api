@@ -91,19 +91,19 @@ class NotificationResource extends Resource
                 IconColumn::make('read')
                     ->label(self::translateTablePath('columns.read'))
                     ->getStateUsing(
-                        fn(Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
+                        fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     )
                     ->boolean(),
             ])
             ->filters([
                 Filter::make('unread')
                     ->label(self::translateFilterPath('unread'))
-                    ->query(fn(Builder $query) => $query->unreadBy(Auth::user()))
+                    ->query(fn (Builder $query) => $query->unreadBy(Auth::user()))
                     ->toggle(),
                 Filter::make('active')
                     ->label(self::translateFilterPath('active'))
                     ->toggle()
-                    ->query(fn(Builder $query) => $query->active()),
+                    ->query(fn (Builder $query) => $query->active()),
                 MultiSelectFilter::make('controllers')
                     ->label(self::translateFilterPath('controllers'))
                     ->options(SelectOptions::controllers())
