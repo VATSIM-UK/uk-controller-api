@@ -81,28 +81,28 @@ class StandResource extends Resource
                                 $set('terminal_id', null);
                             })
                             ->searchable(!App::runningUnitTests())
-                            ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                            ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                            ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
                             ->label(self::translateFormPath('terminal.label'))
                             ->helperText(self::translateFormPath('terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn(Get $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                fn (Get $get) => Terminal::where('airfield_id', $get('airfield_id'))
                                     ->get()
                                     ->mapWithKeys(
-                                        fn(Terminal $terminal) => [$terminal->id => $terminal->description]
+                                        fn (Terminal $terminal) => [$terminal->id => $terminal->description]
                                     )
                             )
                             ->disabled(
-                                fn(Page $livewire, Get $get) => !Terminal::where(
+                                fn (Page $livewire, Get $get) => !Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
                             )
                             ->dehydrated(
-                                fn(Page $livewire, Get $get) => Terminal::where(
+                                fn (Page $livewire, Get $get) => Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
@@ -113,19 +113,19 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
-                                fn(Get $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                fn (Get $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
                                 ),
-                                fn(Get $get) => $get('airfield_id')
+                                fn (Get $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
                             ->label(self::translateFormPath('type.label'))
                             ->helperText(self::translateFormPath('type.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn() => StandType::all()->mapWithKeys(
-                                    fn(StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
+                                fn () => StandType::all()->mapWithKeys(
+                                    fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
                                 )
                             ),
                         TextInput::make('latitude')

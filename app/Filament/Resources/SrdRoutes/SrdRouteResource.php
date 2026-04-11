@@ -68,7 +68,7 @@ class SrdRouteResource extends Resource
                     ->label(self::translateTablePath('columns.star')),
                 TextColumn::make('route_segment')
                     ->label(self::translateTablePath('columns.route_segment'))
-                    ->formatStateUsing(fn(SrdRoute $record) => self::buildFullSrdRouteString($record))
+                    ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record))
                     ->limit(50),
                 TextColumn::make('notes.id')
                     ->label(self::translateTablePath('columns.notes')),
@@ -77,21 +77,21 @@ class SrdRouteResource extends Resource
                 Filter::make('origin')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        fn (Builder $query, array $data) => isset($data['isActive'])
                         ? $query->where('origin', $data['isActive'])
                         : $query
                     ),
                 Filter::make('destination')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        fn (Builder $query, array $data) => isset($data['isActive'])
                         ? $query->where('destination', $data['isActive'])
                         : $query
                     ),
                 Filter::make('level')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn(Builder $query, array $data) => isset($data['isActive'])
+                        fn (Builder $query, array $data) => isset($data['isActive'])
                         ? $query->where(function (Builder $query) use ($data) {
                             return $query->where('minimum_level', '<=', $data['isActive'])
                                 ->orWhereNull('minimum_level');
