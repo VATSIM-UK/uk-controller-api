@@ -26,9 +26,9 @@ class PrenoteResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = Prenote::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'description';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function form(Schema $schema): Schema
     {
@@ -49,9 +49,11 @@ class PrenoteResource extends Resource
                     ->label(self::translateTablePath('columns.description'))
                     ->sortable()
                     ->searchable(),
-                TagsColumn::make('controllers.callsign')
+                TextColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.controllers'))
-                    ->searchable(),
+                    ->searchable()
+                    ->badge()
+                    ->wrap(),
             ])
             ->recordActions([
                 ViewAction::make(),

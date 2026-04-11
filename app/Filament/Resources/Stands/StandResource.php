@@ -6,6 +6,7 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\BooleanColumn;
@@ -50,9 +51,9 @@ class StandResource extends Resource
     private const DEFAULT_COLUMN_VALUE = '--';
 
     protected static ?string $model = Stand::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'identifier';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
@@ -80,28 +81,28 @@ class StandResource extends Resource
                                 $set('terminal_id', null);
                             })
                             ->searchable(!App::runningUnitTests())
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                            ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
+                            ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                            ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
                             ->label(self::translateFormPath('terminal.label'))
                             ->helperText(self::translateFormPath('terminal.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn (Get $get) => Terminal::where('airfield_id', $get('airfield_id'))
+                                fn(Get $get) => Terminal::where('airfield_id', $get('airfield_id'))
                                     ->get()
                                     ->mapWithKeys(
-                                        fn (Terminal $terminal) => [$terminal->id => $terminal->description]
+                                        fn(Terminal $terminal) => [$terminal->id => $terminal->description]
                                     )
                             )
                             ->disabled(
-                                fn (Page $livewire, Get $get) => !Terminal::where(
+                                fn(Page $livewire, Get $get) => !Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
                             )
                             ->dehydrated(
-                                fn (Page $livewire, Get $get) => Terminal::where(
+                                fn(Page $livewire, Get $get) => Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
@@ -112,19 +113,19 @@ class StandResource extends Resource
                             ->helperText(self::translateFormPath('identifier.helper'))
                             ->required()
                             ->rule(
-                                fn (Get $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
+                                fn(Get $get, ?Model $record) => new StandIdentifierMustBeUniqueAtAirfield(
                                     Airfield::findOrFail($get('airfield_id')),
                                     $record
                                 ),
-                                fn (Get $get) => $get('airfield_id')
+                                fn(Get $get) => $get('airfield_id')
                             ),
                         Select::make('type_id')
                             ->label(self::translateFormPath('type.label'))
                             ->helperText(self::translateFormPath('type.helper'))
                             ->hintIcon('heroicon-o-folder')
                             ->options(
-                                fn () => StandType::all()->mapWithKeys(
-                                    fn (StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
+                                fn() => StandType::all()->mapWithKeys(
+                                    fn(StandType $type) => [$type->id => ucfirst(strtolower($type->key))]
                                 )
                             ),
                         TextInput::make('latitude')
@@ -208,20 +209,24 @@ class StandResource extends Resource
                 TextColumn::make('max_aircraft_length')
                     ->label(self::translateTablePath('columns.max_size_length'))
                     ->default(self::DEFAULT_COLUMN_VALUE),
-                TagsColumn::make('uniqueAirlines.icao_code')
+                TextColumn::make('uniqueAirlines.icao_code')
                     ->label(self::translateTablePath('columns.airlines'))
-                    ->default([self::DEFAULT_COLUMN_VALUE]),
-                BooleanColumn::make('closed_at')
+                    ->default([self::DEFAULT_COLUMN_VALUE])
+                    ->badge()
+                    ->wrap(),
+                IconColumn::make('closed_at')
                     ->label(self::translateTablePath('columns.used'))
-                    ->getStateUsing(function (BooleanColumn $column) {
+                    ->getStateUsing(function (IconColumn $column) {
                         return $column->getRecord()->closed_at === null;
-                    }),
+                    })
+                    ->boolean(),
                 TextColumn::make('assignment_priority')
                     ->label(self::translateTablePath('columns.priority'))
                     ->sortable()
                     ->searchable(),
-                BooleanColumn::make('overnight_remote_preferred')
-                    ->label(self::translateTablePath('columns.overnight_remote_preferred')),
+                IconColumn::make('overnight_remote_preferred')
+                    ->label(self::translateTablePath('columns.overnight_remote_preferred'))
+                    ->boolean(),
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -262,7 +267,7 @@ class StandResource extends Resource
                         }
                     ),
             ])
-            ->defaultSort('airfield.code', 'asc');
+            ->defaultSort('identifier');
     }
 
     public static function getRelations(): array
