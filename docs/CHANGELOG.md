@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.1...6.65.2) (2026-04-11)
+
+### Miscellaneous Chores
+
+* add adminer to local docker compose ([0e0224b](https://github.com/VATSIM-UK/uk-controller-api/commit/0e0224b3eebf4b7f7834f083642037e6181eace3))
+
 ## [6.65.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.0...6.65.1) (2026-04-11)
 
 ### Bug Fixes
