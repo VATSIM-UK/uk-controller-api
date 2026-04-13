@@ -33,7 +33,7 @@
         "mjaschen/phpgeo": "^4.0",
         "nesbot/carbon": "^3.0",
         "ohdearapp/ohdear-php-sdk": "^4.7",
-        "predis/predis": "^2.0",
+        "predis/predis": "^3.4",
         "sentry/sentry-laravel": "^4.0",
         "spatie/laravel-activitylog": "^4.5",
         "spatie/laravel-markdown": "^2.2",
