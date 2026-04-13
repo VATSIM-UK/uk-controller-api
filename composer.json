@@ -40,7 +40,7 @@
         "spatie/laravel-schedule-monitor": "^4.3"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.7",
+        "barryvdh/laravel-debugbar": "^4.2",
         "brianium/paratest": "^7.8",
         "fakerphp/faker": "^1.13",
         "filament/upgrade": "4.0",
