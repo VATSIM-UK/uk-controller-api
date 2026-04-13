@@ -32,7 +32,7 @@
         "maatwebsite/excel": "^3.1",
         "mjaschen/phpgeo": "^4.0",
         "nesbot/carbon": "^3.0",
-        "ohdearapp/ohdear-php-sdk": "^3.1",
+        "ohdearapp/ohdear-php-sdk": "^4.7",
         "predis/predis": "^2.0",
         "sentry/sentry-laravel": "^4.0",
         "spatie/laravel-activitylog": "^4.5",
