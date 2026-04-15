@@ -16,9 +16,7 @@
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.19",
-    "commitizen": "^4.3.1",
     "conventional-changelog-conventionalcommits": "^9.3.1",
-    "cz-conventional-changelog": "3.3.0",
     "laravel-vite-plugin": "^3.0.1",
     "lodash": "^4.18.1",
     "postcss-import": "^16.1.1",
@@ -36,8 +34,7 @@
     "watch-poll": "vite watch -- --watch-options-poll=1000",
     "hot": "vite watch --hot",
     "prod": "yarn run production",
-    "production": "vite build",
-    "commit": "cz"
+    "production": "vite build"
   },
   "repository": {
     "type": "git",
@@ -49,49 +46,6 @@
     "url": "https://github.com/VATSIM-UK/uk-controller-api/issues"
   },
   "homepage": "https://github.com/VATSIM-UK/uk-controller-api#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog",
-      "types": {
-        "feat": {
-          "title": "feat",
-          "description": "A new feature"
-        },
-        "fix": {
-          "title": "fix",
-          "description": "A bug fix"
-        },
-        "docs": {
-          "title": "docs",
-          "description": "Documentation only changes"
-        },
-        "style": {
-          "title": "style",
-          "description": "Changes that do not affect the meaning of the code (white space, formatting, missing semi-colons etc"
-        },
-        "refactor": {
-          "title": "refactor",
-          "description": "A code change that neither fixes a bug or adds a feature"
-        },
-        "perf": {
-          "title": "perf",
-          "description": "A change that improves performance"
-        },
-        "test": {
-          "title": "test",
-          "description": "Adding or updating the automated test suite"
-        },
-        "chore": {
-          "title": "chore",
-          "description": "Changes to the build process or auxiliary tools and libraries such as documentation generation"
-        },
-        "data": {
-          "title": "data",
-          "description": "Migrations and other updates to data, possibly consumed by the plugin binary"
-        }
-      }
-    }
-  },
   "release": {
     "repositoryUrl": "https://github.com/VATSIM-UK/uk-controller-api",
     "branches": [
