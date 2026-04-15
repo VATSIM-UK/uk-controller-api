@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.4...6.65.5) (2026-04-15)
+
+### Miscellaneous Chores
+
+* Fix all sonarqube warnings ([6b5d8ea](https://github.com/VATSIM-UK/uk-controller-api/commit/6b5d8eaa11e7886d07d63b017f9a55a932a6c0e5))
+
 ## [6.65.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.3...6.65.4) (2026-04-15)
 
 ### Miscellaneous Chores
