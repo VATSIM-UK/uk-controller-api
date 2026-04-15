@@ -89,7 +89,7 @@ class ControllersRelationManager extends RelationManager
                     ])
                     ->action(function (AttachAction $action) {
                         $action->process( // NOSONAR
-                            function () {
+                            function () { // NOSONAR
                             }
                         );
                         $action->success();
