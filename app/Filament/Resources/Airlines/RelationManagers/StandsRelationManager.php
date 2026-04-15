@@ -22,7 +22,6 @@ class StandsRelationManager extends RelationManager
     use PairsAirlinesWithStands;
     use TranslatesStrings;
 
-    private const DEFAULT_COLUMN_VALUE = '--';
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'stands';
     protected static ?string $inverseRelationship = 'airlines';
