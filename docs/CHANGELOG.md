@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.3...6.65.4) (2026-04-15)
+
+### Miscellaneous Chores
+
+* Add git setup to devcontainer ([c994b36](https://github.com/VATSIM-UK/uk-controller-api/commit/c994b36d373dd1444a74e6b7775f68c5253bb629))
+
 ## [6.65.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.2...6.65.3) (2026-04-15)
 
 ### Bug Fixes
