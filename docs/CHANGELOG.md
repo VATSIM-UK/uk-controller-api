@@ -1,5 +1,16 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.2...6.65.3) (2026-04-15)
+
+### Bug Fixes
+
+* trigger release ([618f8df](https://github.com/VATSIM-UK/uk-controller-api/commit/618f8df3e3ea0dfc6d5285fc754895407da7a76c))
+
+### Miscellaneous Chores
+
+* fix json formatting ([ae84db7](https://github.com/VATSIM-UK/uk-controller-api/commit/ae84db79b7bb1a8beedecfea1500225606735dc3))
+* remove cz ([aa7fc62](https://github.com/VATSIM-UK/uk-controller-api/commit/aa7fc62ac11d081007a38430d7b1ce87efb74c58))
+
 ## [6.65.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.1...6.65.2) (2026-04-11)
 
 ### Miscellaneous Chores
