@@ -88,7 +88,7 @@ class ControllersRelationManager extends RelationManager
                             ->required(fn (Get $get) => !$get('global') && !$get('position_level')),
                     ])
                     ->action(function (AttachAction $action) {
-                        $action->process(
+                        $action->process( // NOSONAR
                             function () {
                             }
                         );
