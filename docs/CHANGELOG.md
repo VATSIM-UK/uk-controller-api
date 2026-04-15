@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.6](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.5...6.65.6) (2026-04-15)
+
+### Miscellaneous Chores
+
+* Allow filament patch versions ([bd2acc1](https://github.com/VATSIM-UK/uk-controller-api/commit/bd2acc1f297460bea28f78cf3f72c4e2af1218f7))
+
 ## [6.65.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.4...6.65.5) (2026-04-15)
 
 ### Miscellaneous Chores
