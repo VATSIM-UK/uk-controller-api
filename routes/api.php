@@ -93,6 +93,7 @@ Route::middleware('api')
                         Route::post('stand/assignment/requestauto', 'StandController@requestAutomaticStandAssignment');
                         Route::delete('stand/assignment/{callsign}', 'StandController@deleteStandAssignment')
                             ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+                        Route::post('stand/reservation-plan', 'StandReservationPlanController@store');
 
                         // Notifications
                         Route::get('notifications', 'NotificationController@getActiveNotifications');
