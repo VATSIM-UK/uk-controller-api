@@ -24,8 +24,41 @@ class StandReservationPlanPayload implements InvokableRule
             return;
         }
 
-        $this->validateUnknownKeys($attribute, $value, ['event_start', 'event_end', 'event_airport', 'event_airports', 'reservations'], $fail);
+        $this->validateUnknownKeys(
+            $attribute,
+            $value,
+            ['event_start', 'event_end', 'event_airport', 'event_airports', 'reservations'],
+            $fail
+        );
 
+        [$eventStart, $eventEnd] = $this->validateEventTimes($attribute, $value, $fail);
+        $eventAirports = $this->validateEventAirportScope($attribute, $value, $fail);
+        $reservations = $this->extractReservations($attribute, $value, $fail);
+
+        if (is_null($reservations)) {
+            return;
+        }
+
+        $intervalsByStand = $this->collectStandIntervals(
+            $attribute,
+            $reservations,
+            $eventAirports,
+            $eventStart,
+            $eventEnd,
+            $fail
+        );
+
+        $this->validateStandIntervalOverlaps($attribute, $intervalsByStand, $fail);
+    }
+
+    /**
+     * @param string $attribute
+     * @param array<string, mixed> $value
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @return array{0:?CarbonImmutable,1:?CarbonImmutable}
+     */
+    private function validateEventTimes(string $attribute, array $value, Closure $fail): array
+    {
         $eventStart = $this->parseZuluTime($value['event_start'] ?? null);
         if (!$eventStart) {
             $fail("$attribute.event_start must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
@@ -40,102 +73,196 @@ class StandReservationPlanPayload implements InvokableRule
             $fail("$attribute.event_end must be after event_start.");
         }
 
-        $eventAirports = $this->validateEventAirportScope($attribute, $value, $fail);
+        return [$eventStart, $eventEnd];
+    }
 
+    /**
+     * @param string $attribute
+     * @param array<string, mixed> $value
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @return ?array<int, mixed>
+     */
+    private function extractReservations(string $attribute, array $value, Closure $fail): ?array
+    {
         if (!array_key_exists('reservations', $value) || !is_array($value['reservations']) || count($value['reservations']) === 0) {
             $fail("$attribute.reservations must be a non-empty array.");
-            return;
+            return null;
         }
 
+        return $value['reservations'];
+    }
+
+    /**
+     * @param string $attribute
+     * @param array<int, mixed> $reservations
+     * @param array<int, string> $eventAirports
+     * @param ?CarbonImmutable $eventStart
+     * @param ?CarbonImmutable $eventEnd
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @return array<string, array<int, array{index:int,from:CarbonImmutable,to:CarbonImmutable}>>
+     */
+    private function collectStandIntervals(
+        string $attribute,
+        array $reservations,
+        array $eventAirports,
+        ?CarbonImmutable $eventStart,
+        ?CarbonImmutable $eventEnd,
+        Closure $fail
+    ): array {
         $intervalsByStand = [];
 
-        foreach ($value['reservations'] as $index => $reservation) {
-            $itemPath = "$attribute.reservations.$index";
+        foreach ($reservations as $index => $reservation) {
+            $interval = $this->validateReservationAndBuildInterval(
+                $attribute,
+                $index,
+                $reservation,
+                $eventAirports,
+                $eventStart,
+                $eventEnd,
+                $fail
+            );
 
-            if (!is_array($reservation)) {
-                $fail("$itemPath must be an object.");
+            if (is_null($interval)) {
                 continue;
             }
 
-            $this->validateUnknownKeys($itemPath, $reservation, ['stand_id', 'stand', 'airport', 'cid', 'timefrom', 'timeto'], $fail);
+            $intervalsByStand[$interval['stand_key']][] = [
+                'index' => $interval['index'],
+                'from' => $interval['from'],
+                'to' => $interval['to'],
+            ];
+        }
 
-            $standIdProvided = array_key_exists('stand_id', $reservation) && $reservation['stand_id'] !== null;
-            $standProvided = array_key_exists('stand', $reservation) && $reservation['stand'] !== null && $reservation['stand'] !== '';
+        return $intervalsByStand;
+    }
 
-            if ($standIdProvided === $standProvided) {
-                $fail("$itemPath must include exactly one of stand_id or stand.");
-                continue;
+    /**
+     * @param string $attribute
+     * @param int $index
+     * @param mixed $reservation
+     * @param array<int, string> $eventAirports
+     * @param ?CarbonImmutable $eventStart
+     * @param ?CarbonImmutable $eventEnd
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @return ?array{index:int,stand_key:string,from:CarbonImmutable,to:CarbonImmutable}
+     */
+    private function validateReservationAndBuildInterval(
+        string $attribute,
+        int $index,
+        mixed $reservation,
+        array $eventAirports,
+        ?CarbonImmutable $eventStart,
+        ?CarbonImmutable $eventEnd,
+        Closure $fail
+    ): ?array {
+        $itemPath = "$attribute.reservations.$index";
+
+        if (!is_array($reservation)) {
+            $fail("$itemPath must be an object.");
+            return null;
+        }
+
+        $this->validateUnknownKeys($itemPath, $reservation, ['stand_id', 'stand', 'airport', 'cid', 'timefrom', 'timeto'], $fail);
+
+        $standIdProvided = array_key_exists('stand_id', $reservation) && $reservation['stand_id'] !== null;
+        $standProvided = array_key_exists('stand', $reservation) && $reservation['stand'] !== null && $reservation['stand'] !== '';
+
+        if ($standIdProvided === $standProvided) {
+            $fail("$itemPath must include exactly one of stand_id or stand.");
+            return null;
+        }
+
+        if (!$this->isValidCid($reservation['cid'] ?? null)) {
+            $fail("$itemPath.cid must be a valid VATSIM CID.");
+        }
+
+        $timeFrom = $this->parseZuluTime($reservation['timefrom'] ?? null);
+        if (!$timeFrom) {
+            $fail("$itemPath.timefrom must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
+        }
+
+        $timeTo = $this->parseZuluTime($reservation['timeto'] ?? null);
+        if (!$timeTo) {
+            $fail("$itemPath.timeto must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
+        }
+
+        if ($timeFrom && $timeTo && !$timeTo->isAfter($timeFrom)) {
+            $fail("$itemPath.timeto must be after timefrom.");
+        }
+
+        if ($eventStart && $timeFrom && $timeFrom->isBefore($eventStart)) {
+            $fail("$itemPath.timefrom must be within the event window.");
+        }
+
+        if ($eventEnd && $timeTo && $timeTo->isAfter($eventEnd)) {
+            $fail("$itemPath.timeto must be within the event window.");
+        }
+
+        $standKey = $this->resolveStandKey($itemPath, $reservation, $standIdProvided, $standProvided, $eventAirports, $fail);
+
+        if (!$standKey || !$timeFrom || !$timeTo) {
+            return null;
+        }
+
+        return [
+            'index' => $index,
+            'stand_key' => $standKey,
+            'from' => $timeFrom,
+            'to' => $timeTo,
+        ];
+    }
+
+    /**
+     * @param string $itemPath
+     * @param array<string, mixed> $reservation
+     * @param bool $standIdProvided
+     * @param bool $standProvided
+     * @param array<int, string> $eventAirports
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @return ?string
+     */
+    private function resolveStandKey(
+        string $itemPath,
+        array $reservation,
+        bool $standIdProvided,
+        bool $standProvided,
+        array $eventAirports,
+        Closure $fail
+    ): ?string {
+        if ($standIdProvided) {
+            if (!$this->isPositiveInteger($reservation['stand_id'])) {
+                $fail("$itemPath.stand_id must be a positive integer.");
+                return null;
             }
 
-            if (!$this->isValidCid($reservation['cid'] ?? null)) {
-                $fail("$itemPath.cid must be a valid VATSIM CID.");
-            }
+            return sprintf('id:%d', $reservation['stand_id']);
+        }
 
-            $timeFrom = $this->parseZuluTime($reservation['timefrom'] ?? null);
-            if (!$timeFrom) {
-                $fail("$itemPath.timefrom must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
-            }
+        if (!$standProvided) {
+            return null;
+        }
 
-            $timeTo = $this->parseZuluTime($reservation['timeto'] ?? null);
-            if (!$timeTo) {
-                $fail("$itemPath.timeto must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
-            }
+        if (!is_string($reservation['stand']) || trim($reservation['stand']) === '') {
+            $fail("$itemPath.stand must be a non-empty string.");
+            return null;
+        }
 
-            if ($timeFrom && $timeTo && !$timeTo->isAfter($timeFrom)) {
-                $fail("$itemPath.timeto must be after timefrom.");
-            }
+        $resolvedAirport = $this->normalizeAirportCode($reservation['airport'] ?? null);
 
-            if ($eventStart && $timeFrom && $timeFrom->isBefore($eventStart)) {
-                $fail("$itemPath.timefrom must be within the event window.");
-            }
-
-            if ($eventEnd && $timeTo && $timeTo->isAfter($eventEnd)) {
-                $fail("$itemPath.timeto must be within the event window.");
-            }
-
-            $standKey = null;
-            if ($standIdProvided) {
-                if (!$this->isPositiveInteger($reservation['stand_id'])) {
-                    $fail("$itemPath.stand_id must be a positive integer.");
-                } else {
-                    $standKey = sprintf('id:%d', $reservation['stand_id']);
-                }
-            }
-
-            if ($standProvided) {
-                if (!is_string($reservation['stand']) || trim($reservation['stand']) === '') {
-                    $fail("$itemPath.stand must be a non-empty string.");
-                }
-
-                $resolvedAirport = $this->normalizeAirportCode($reservation['airport'] ?? null);
-
-                if (is_null($resolvedAirport)) {
-                    if (count($eventAirports) === 1) {
-                        $resolvedAirport = $eventAirports[0];
-                    } else {
-                        $fail("$itemPath.airport is required when event_airports contains multiple airports and stand is used.");
-                    }
-                }
-
-                if ($resolvedAirport && is_string($reservation['stand']) && trim($reservation['stand']) !== '') {
-                    $standKey = sprintf(
-                        'code:%s:%s',
-                        $resolvedAirport,
-                        strtoupper(trim($reservation['stand']))
-                    );
-                }
-            }
-
-            if ($standKey && $timeFrom && $timeTo) {
-                $intervalsByStand[$standKey][] = [
-                    'index' => $index,
-                    'from' => $timeFrom,
-                    'to' => $timeTo,
-                ];
+        if (is_null($resolvedAirport)) {
+            if (count($eventAirports) === 1) {
+                $resolvedAirport = $eventAirports[0];
+            } else {
+                $fail("$itemPath.airport is required when event_airports contains multiple airports and stand is used.");
+                return null;
             }
         }
 
-        $this->validateStandIntervalOverlaps($attribute, $intervalsByStand, $fail);
+        return sprintf(
+            'code:%s:%s',
+            $resolvedAirport,
+            strtoupper(trim($reservation['stand']))
+        );
     }
 
     /**
