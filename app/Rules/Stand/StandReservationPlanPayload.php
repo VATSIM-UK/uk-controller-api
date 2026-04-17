@@ -156,60 +156,67 @@ class StandReservationPlanPayload implements InvokableRule
         Closure $fail
     ): ?array {
         $itemPath = "$attribute.reservations.$index";
+        $interval = null;
 
         if (!is_array($reservation)) {
             $fail("$itemPath must be an object.");
-            return null;
+        } else {
+            $this->validateUnknownKeys($itemPath, $reservation, ['stand_id', 'stand', 'airport', 'cid', 'timefrom', 'timeto'], $fail);
+
+            $standIdProvided = array_key_exists('stand_id', $reservation) && $reservation['stand_id'] !== null;
+            $standProvided = array_key_exists('stand', $reservation) && $reservation['stand'] !== null && $reservation['stand'] !== '';
+            $hasSingleStandMode = $standIdProvided !== $standProvided;
+
+            if (!$hasSingleStandMode) {
+                $fail("$itemPath must include exactly one of stand_id or stand.");
+            }
+
+            if (!$this->isValidCid($reservation['cid'] ?? null)) {
+                $fail("$itemPath.cid must be a valid VATSIM CID.");
+            }
+
+            $timeFrom = $this->parseZuluTime($reservation['timefrom'] ?? null);
+            if (!$timeFrom) {
+                $fail("$itemPath.timefrom must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
+            }
+
+            $timeTo = $this->parseZuluTime($reservation['timeto'] ?? null);
+            if (!$timeTo) {
+                $fail("$itemPath.timeto must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
+            }
+
+            if ($timeFrom && $timeTo && !$timeTo->isAfter($timeFrom)) {
+                $fail("$itemPath.timeto must be after timefrom.");
+            }
+
+            if ($eventStart && $timeFrom && $timeFrom->isBefore($eventStart)) {
+                $fail("$itemPath.timefrom must be within the event window.");
+            }
+
+            if ($eventEnd && $timeTo && $timeTo->isAfter($eventEnd)) {
+                $fail("$itemPath.timeto must be within the event window.");
+            }
+
+            $standKey = $this->resolveStandKey(
+                $itemPath,
+                $reservation,
+                $standIdProvided,
+                $standProvided,
+                $eventAirports,
+                $fail
+            );
+
+            if ($hasSingleStandMode && $standKey && $timeFrom && $timeTo) {
+                $interval = [
+                    'index' => $index,
+                    'stand_key' => $standKey,
+                    'from' => $timeFrom,
+                    'to' => $timeTo,
+                ];
+            }
         }
 
-        $this->validateUnknownKeys($itemPath, $reservation, ['stand_id', 'stand', 'airport', 'cid', 'timefrom', 'timeto'], $fail);
-
-        $standIdProvided = array_key_exists('stand_id', $reservation) && $reservation['stand_id'] !== null;
-        $standProvided = array_key_exists('stand', $reservation) && $reservation['stand'] !== null && $reservation['stand'] !== '';
-
-        if ($standIdProvided === $standProvided) {
-            $fail("$itemPath must include exactly one of stand_id or stand.");
-            return null;
-        }
-
-        if (!$this->isValidCid($reservation['cid'] ?? null)) {
-            $fail("$itemPath.cid must be a valid VATSIM CID.");
-        }
-
-        $timeFrom = $this->parseZuluTime($reservation['timefrom'] ?? null);
-        if (!$timeFrom) {
-            $fail("$itemPath.timefrom must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
-        }
-
-        $timeTo = $this->parseZuluTime($reservation['timeto'] ?? null);
-        if (!$timeTo) {
-            $fail("$itemPath.timeto must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
-        }
-
-        if ($timeFrom && $timeTo && !$timeTo->isAfter($timeFrom)) {
-            $fail("$itemPath.timeto must be after timefrom.");
-        }
-
-        if ($eventStart && $timeFrom && $timeFrom->isBefore($eventStart)) {
-            $fail("$itemPath.timefrom must be within the event window.");
-        }
-
-        if ($eventEnd && $timeTo && $timeTo->isAfter($eventEnd)) {
-            $fail("$itemPath.timeto must be within the event window.");
-        }
-
-        $standKey = $this->resolveStandKey($itemPath, $reservation, $standIdProvided, $standProvided, $eventAirports, $fail);
-
-        if (!$standKey || !$timeFrom || !$timeTo) {
-            return null;
-        }
-
-        return [
-            'index' => $index,
-            'stand_key' => $standKey,
-            'from' => $timeFrom,
-            'to' => $timeTo,
-        ];
+        return $interval;
     }
 
     /**
@@ -229,40 +236,39 @@ class StandReservationPlanPayload implements InvokableRule
         array $eventAirports,
         Closure $fail
     ): ?string {
+        $standKey = null;
+
         if ($standIdProvided) {
             if (!$this->isPositiveInteger($reservation['stand_id'])) {
                 $fail("$itemPath.stand_id must be a positive integer.");
-                return null;
-            }
-
-            return sprintf('id:%d', $reservation['stand_id']);
-        }
-
-        if (!$standProvided) {
-            return null;
-        }
-
-        if (!is_string($reservation['stand']) || trim($reservation['stand']) === '') {
-            $fail("$itemPath.stand must be a non-empty string.");
-            return null;
-        }
-
-        $resolvedAirport = $this->normalizeAirportCode($reservation['airport'] ?? null);
-
-        if (is_null($resolvedAirport)) {
-            if (count($eventAirports) === 1) {
-                $resolvedAirport = $eventAirports[0];
             } else {
-                $fail("$itemPath.airport is required when event_airports contains multiple airports and stand is used.");
-                return null;
+                $standKey = sprintf('id:%d', $reservation['stand_id']);
+            }
+        } elseif ($standProvided) {
+            $stand = $reservation['stand'];
+
+            if (!is_string($stand) || trim($stand) === '') {
+                $fail("$itemPath.stand must be a non-empty string.");
+            } else {
+                $resolvedAirport = $this->normalizeAirportCode($reservation['airport'] ?? null);
+
+                if (is_null($resolvedAirport) && count($eventAirports) === 1) {
+                    $resolvedAirport = $eventAirports[0];
+                }
+
+                if (is_null($resolvedAirport)) {
+                    $fail("$itemPath.airport is required when event_airports contains multiple airports and stand is used.");
+                } else {
+                    $standKey = sprintf(
+                        'code:%s:%s',
+                        $resolvedAirport,
+                        strtoupper(trim($stand))
+                    );
+                }
             }
         }
 
-        return sprintf(
-            'code:%s:%s',
-            $resolvedAirport,
-            strtoupper(trim($reservation['stand']))
-        );
+        return $standKey;
     }
 
     /**
@@ -291,41 +297,36 @@ class StandReservationPlanPayload implements InvokableRule
     {
         $hasSingleAirport = array_key_exists('event_airport', $payload);
         $hasMultipleAirports = array_key_exists('event_airports', $payload);
+        $airports = [];
 
         if ($hasSingleAirport === $hasMultipleAirports) {
             $fail("$attribute must include exactly one of event_airport or event_airports.");
-            return [];
-        }
-
-        if ($hasSingleAirport) {
+        } elseif ($hasSingleAirport) {
             $airport = $this->normalizeAirportCode($payload['event_airport']);
 
             if (!$airport) {
                 $fail("$attribute.event_airport must be a 4-letter ICAO code.");
-                return [];
+            } else {
+                $airports = [$airport];
             }
+        } else {
+            if (!is_array($payload['event_airports']) || count($payload['event_airports']) === 0) {
+                $fail("$attribute.event_airports must be a non-empty array of 4-letter ICAO codes.");
+            } else {
+                foreach ($payload['event_airports'] as $index => $airport) {
+                    $normalizedAirport = $this->normalizeAirportCode($airport);
+                    if (!$normalizedAirport) {
+                        $fail("$attribute.event_airports.$index must be a 4-letter ICAO code.");
+                        continue;
+                    }
 
-            return [$airport];
-        }
+                    $airports[] = $normalizedAirport;
+                }
 
-        if (!is_array($payload['event_airports']) || count($payload['event_airports']) === 0) {
-            $fail("$attribute.event_airports must be a non-empty array of 4-letter ICAO codes.");
-            return [];
-        }
-
-        $airports = [];
-        foreach ($payload['event_airports'] as $index => $airport) {
-            $normalizedAirport = $this->normalizeAirportCode($airport);
-            if (!$normalizedAirport) {
-                $fail("$attribute.event_airports.$index must be a 4-letter ICAO code.");
-                continue;
+                if (count(array_unique($airports)) !== count($airports)) {
+                    $fail("$attribute.event_airports must not contain duplicate airports.");
+                }
             }
-
-            $airports[] = $normalizedAirport;
-        }
-
-        if (count(array_unique($airports)) !== count($airports)) {
-            $fail("$attribute.event_airports must not contain duplicate airports.");
         }
 
         return $airports;
@@ -348,18 +349,18 @@ class StandReservationPlanPayload implements InvokableRule
 
     private function parseZuluTime(mixed $value): ?CarbonImmutable
     {
-        if (!is_string($value) || !preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $value)) {
-            return null;
-        }
+        $parsed = null;
 
-        try {
-            $parsed = CarbonImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $value, 'UTC');
-        } catch (\Exception) {
-            return null;
-        }
+        if (is_string($value) && preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $value)) {
+            try {
+                $candidate = CarbonImmutable::createFromFormat('Y-m-d\TH:i:s\Z', $value, 'UTC');
+            } catch (\Exception) {
+                $candidate = null;
+            }
 
-        if (!$parsed || $parsed->format('Y-m-d\TH:i:s\Z') !== $value) {
-            return null;
+            if ($candidate && $candidate->format('Y-m-d\TH:i:s\Z') === $value) {
+                $parsed = $candidate;
+            }
         }
 
         return $parsed;
