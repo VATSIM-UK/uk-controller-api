@@ -293,7 +293,7 @@ class StandReservationPlanPayload implements InvokableRule
      */
     private function resolveStandKeyFromId(string $itemPath, array $reservation, Closure $fail): ?string
     {
-        if (!$reservation['stand_id'] > 0) {
+        if (!is_int($reservation['stand_id']) || $reservation['stand_id'] <= 0) {
             $fail("$itemPath.stand_id must be a positive integer.");
             return null;
         }
@@ -388,7 +388,7 @@ class StandReservationPlanPayload implements InvokableRule
         $airport = $this->normalizeAirportCode($payload['event_airport']);
 
         if (!$airport) {
-            $fail("$attribute.event_airport must be a 4-letter ICAO code.");
+            $fail("$attribute.event_airport must be a UK 4-letter ICAO code.");
             return [];
         }
 
@@ -404,7 +404,7 @@ class StandReservationPlanPayload implements InvokableRule
     private function validateMultipleEventAirports(string $attribute, array $payload, Closure $fail): array
     {
         if (!is_array($payload['event_airports']) || count($payload['event_airports']) === 0) {
-            $fail("$attribute.event_airports must be a non-empty array of 4-letter ICAO codes.");
+            $fail("$attribute.event_airports must be a non-empty array of UK 4-letter ICAO codes.");
             return [];
         }
 
@@ -412,7 +412,7 @@ class StandReservationPlanPayload implements InvokableRule
         foreach ($payload['event_airports'] as $index => $airport) {
             $normalizedAirport = $this->normalizeAirportCode($airport);
             if (!$normalizedAirport) {
-                $fail("$attribute.event_airports.$index must be a 4-letter ICAO code.");
+                $fail("$attribute.event_airports.$index must be a UK 4-letter ICAO code.");
                 continue;
             }
 
@@ -434,7 +434,7 @@ class StandReservationPlanPayload implements InvokableRule
 
         $airport = strtoupper(trim($value));
 
-        if (!preg_match('/^[A-Z]{4}$/', $airport)) {
+        if (!preg_match('/^(EG|EI)[A-Z]{2}$/', $airport)) {
             return null;
         }
 
@@ -458,11 +458,6 @@ class StandReservationPlanPayload implements InvokableRule
         }
 
         return $parsed;
-    }
-
-    private function isPositiveInteger(mixed $value): bool
-    {
-        return is_int($value) && $value > 0;
     }
 
     private function isValidCid(mixed $value): bool

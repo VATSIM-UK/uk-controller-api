@@ -19,19 +19,23 @@ A stand reservation plan submission contains:
 
 - `event_start` (string, required): Event start in Zulu.
 - `event_end` (string, required): Event end in Zulu and after `event_start`.
-- Exactly one of:
+
+Use exactly one of the following:
+
 - `event_airport` (string, required if single-airport event): 4-letter ICAO.
 - `event_airports` (array of strings, required if multi-airport event): non-empty, unique 4-letter ICAOs.
-- `reservations` (array, required): One or more reservation objects.
+- `reservations` (array, required): One or more reservation objects. Multiple stands can be included in one plan, and the same stand can be reused at different times as long as the time windows do not overlap.
 
 ## Reservation Schema
 
 Each item in `payload.reservations` must include:
 
 - `cid` (integer, required): Valid VATSIM CID.
-- `timefrom` (string, required): Reservation start in Zulu.
-- `timeto` (string, required): Reservation end in Zulu and after `timefrom`.
-- Exactly one stand reference mode:
+- `timefrom` (string, required): Reservation start in Zulu. Must be inside the event window (`event_start` to `event_end`).
+- `timeto` (string, required): Reservation end in Zulu and after `timefrom`. Must be inside the event window (`event_start` to `event_end`).
+
+Use exactly one stand reference mode:
+
 - `stand_id` (integer, required if using stand ID mode)
 - `stand` (string, required if using stand identifier mode)
 
@@ -43,16 +47,6 @@ Optional field:
 
 - If you use `stand` and the event has one airport (`event_airport`), `airport` may be omitted.
 - If you use `stand` and the event has multiple airports (`event_airports`), `airport` is required per reservation.
-
-## Validation Rules
-
-The server applies these rules:
-
-- Unknown fields are rejected (strict schema).
-- Reservation times must be inside the event window (`event_start` to `event_end`).
-- Multiple stands can be included in one plan.
-- The same stand can be reused at different times if time windows do not overlap.
-- Overlapping reservations for the same stand are rejected.
 
 ## Valid Example
 
