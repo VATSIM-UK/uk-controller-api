@@ -96,7 +96,7 @@ The server applies these rules:
 }
 ```
 
-## Invalid Example (Overlapping Same Stand)
+## Invalid Example
 
 ```json
 {
