@@ -54,7 +54,7 @@ The server applies these rules:
 - The same stand can be reused at different times if time windows do not overlap.
 - Overlapping reservations for the same stand are rejected.
 
-## Valid Example (Multi-Stand, Reused Stand)
+## Valid Example
 
 ```json
 {
