@@ -5,7 +5,7 @@ Whilst the final decision on where aircraft should park belongs to the controlle
 a realistic stand is assigned to each flight, based on a number of parameters. This is a highly complex system, so this guide
 is intended to explain how it all works under the hood.
 
-## Related guide
+## VAA Stand Reservation System
 
 For VAA event stand reservation plan payloads and JSON validation requirements, see
 `docs/guides/VaaStandReservationPlans.md`.
