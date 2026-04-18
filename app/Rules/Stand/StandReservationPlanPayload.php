@@ -293,7 +293,7 @@ class StandReservationPlanPayload implements InvokableRule
      */
     private function resolveStandKeyFromId(string $itemPath, array $reservation, Closure $fail): ?string
     {
-        if (!$this->isPositiveInteger($reservation['stand_id'])) {
+        if (!$reservation['stand_id'] > 0) {
             $fail("$itemPath.stand_id must be a positive integer.");
             return null;
         }
