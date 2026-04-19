@@ -2,10 +2,25 @@
 
 This guide explains how Virtual Airline Administrators (VAAs) should build JSON payloads for stand reservation plans.
 
-All times must be in Zulu (UTC) format:
+All times must be in ISO 8601 Zulu (UTC) format:
 
 - `YYYY-MM-DDTHH:MM:SSZ`
 - Example: `2026-06-12T14:30:00Z`
+
+## JSON Schema
+
+Use this schema for pre-validation in editors, CI, or upload tooling:
+
+- `docs/guides/schemas/vaa-stand-reservation-plan.schema.json`
+
+The schema validates structure, field types, allowed keys, timestamp shape, CID ranges, UK ICAO format, and stand reference mode.
+
+Server-side checks are still required for rules that JSON Schema cannot enforce on its own:
+
+- `event_end` must be after `event_start`.
+- Reservation `timeto` must be after `timefrom`.
+- Reservation times must stay within the event window.
+- The same stand must not have overlapping reservation windows.
 
 ## Top-Level Schema
 
