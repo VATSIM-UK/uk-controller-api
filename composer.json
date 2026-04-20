@@ -27,7 +27,7 @@
         "knplabs/github-api": "^3.0",
         "laravel/framework": "^12",
         "laravel/horizon": "^5.7",
-        "laravel/passport": "^12.1",
+        "laravel/passport": "^13.7",
         "laravel/socialite": "^5.5",
         "maatwebsite/excel": "^3.1",
         "mjaschen/phpgeo": "^4.0",
