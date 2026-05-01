@@ -7,7 +7,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\MultiSelectFilter;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use App\Filament\Resources\Notifications\RelationManagers\ControllersRelationManager;
@@ -23,6 +22,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
@@ -104,7 +104,8 @@ class NotificationResource extends Resource
                     ->label(self::translateFilterPath('active'))
                     ->toggle()
                     ->query(fn (Builder $query) => $query->active()),
-                MultiSelectFilter::make('controllers')
+                SelectFilter::make('controllers')
+                    ->multiple()
                     ->label(self::translateFilterPath('controllers'))
                     ->options(SelectOptions::controllers())
                     ->query(

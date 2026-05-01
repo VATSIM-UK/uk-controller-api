@@ -2,12 +2,11 @@
 
 namespace App\Filament\Resources\Notifications\RelationManagers;
 
-use App\Filament\Resources\Notifications\RelationManagers\ControllersRelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\AttachAction;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Set;
-use Filament\Forms\Components\MultiSelect;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Actions\DetachAction;
 use Filament\Actions\DetachBulkAction;
@@ -58,7 +57,8 @@ class ControllersRelationManager extends RelationManager
                             ->afterStateUpdated(function (Set $set) {
                                 $set('controllers', null);
                             }),
-                        MultiSelect::make('position_level')
+                        Select::make('position_level')
+                            ->multiple()
                             ->options(
                                 [
                                     'DEL' => 'Delivery',
@@ -70,8 +70,9 @@ class ControllersRelationManager extends RelationManager
                             )
                             ->reactive()
                             ->hidden(fn (Get $get) => $get('global')),
-                        MultiSelect::make('controllers')
+                        Select::make('controllers')
                             ->searchable()
+                            ->multiple()
                             ->options(
                                 fn (ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
                                     'id',

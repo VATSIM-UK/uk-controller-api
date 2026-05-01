@@ -14,7 +14,6 @@ use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\MultiSelectFilter;
 use App\Filament\Resources\Stands\RelationManagers\AirlinesRelationManager;
 use App\Filament\Resources\Stands\RelationManagers\PairedStandsRelationManager;
 use App\Filament\Resources\Stands\Pages\ListStands;
@@ -249,7 +248,8 @@ class StandResource extends Resource
                             return $query->where('airfield_id', $data['value']);
                         }
                     ),
-                MultiSelectFilter::make('airlines')
+                SelectFilter::make('airlines')
+                    ->multiple()
                     ->label(self::translateFilterPath('airlines'))
                     ->options(SelectOptions::airlines())
                     ->query(
