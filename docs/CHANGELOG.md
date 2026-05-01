@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.7](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.6...6.65.7) (2026-05-01)
+
+### Miscellaneous Chores
+
+* deprecate MultiSelect ([06980ef](https://github.com/VATSIM-UK/uk-controller-api/commit/06980ef9b668146eed7aebd5a6ddd6a77008f930))
+* Remove deprecated multifilters ([1f76f65](https://github.com/VATSIM-UK/uk-controller-api/commit/1f76f65643d8e9128a1e2a83a7bd80244070f103))
+
 ## [6.65.6](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.5...6.65.6) (2026-04-15)
 
 ### Miscellaneous Chores
