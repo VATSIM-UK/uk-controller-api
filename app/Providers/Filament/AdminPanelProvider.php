@@ -17,6 +17,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -77,6 +78,12 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('images/logo-dark.png'))
             ->defaultThemeMode(ThemeMode::Dark)
             ->favicon(asset('images/favicon.png'))
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_LOGO_AFTER,
+                fn (): string => app()->environment('local')
+                ? '<div style="position: absolute; left: 50%; transform: translateX(-50%); color: #ef4444; font-weight: 600; pointer-events: none;">Development environment</div>'
+                : '',
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
