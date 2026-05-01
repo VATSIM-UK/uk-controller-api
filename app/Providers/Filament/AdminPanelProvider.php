@@ -80,7 +80,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('images/favicon.png'))
             ->renderHook(
                 PanelsRenderHook::TOPBAR_LOGO_AFTER,
-                fn(): string => app()->environment('local')
+                fn (): string => app()->environment('local')
                 ? '<div style="position: absolute; left: 50%; transform: translateX(-50%); color: #ef4444; font-weight: 600; pointer-events: none;">Development environment</div>'
                 : '',
             )
