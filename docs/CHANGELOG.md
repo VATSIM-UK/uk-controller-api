@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.8](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.7...6.65.8) (2026-05-01)
+
+### Miscellaneous Chores
+
+* Add development ENV info ([2002ced](https://github.com/VATSIM-UK/uk-controller-api/commit/2002ced76e4d3fd190e33bfd7a29b475de7a4d99))
+* make filters searchable ([de0bb55](https://github.com/VATSIM-UK/uk-controller-api/commit/de0bb558046fc034f985c79cbba9bf093cec0ffd))
+
 ## [6.65.7](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.6...6.65.7) (2026-05-01)
 
 ### Miscellaneous Chores
