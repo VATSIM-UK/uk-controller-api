@@ -44,7 +44,7 @@ class ControllersRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
-                    ->authorize(fn(RelationManager $livewire) => $livewire->can('attach'))
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->label(self::translateTablePath('attach_action.label'))
                     ->modalHeading(self::translateTablePath('attach_action.modal_heading'))
                     ->modalButton(self::translateTablePath('attach_action.modal_button'))
@@ -69,24 +69,24 @@ class ControllersRelationManager extends RelationManager
                                 ]
                             )
                             ->reactive()
-                            ->hidden(fn(Get $get) => $get('global')),
+                            ->hidden(fn (Get $get) => $get('global')),
                         Select::make('controllers')
                             ->searchable()
                             ->multiple()
                             ->options(
-                                fn(ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
+                                fn (ControllersRelationManager $livewire) => ControllerPosition::whereNotIn(
                                     'id',
                                     $livewire->getOwnerRecord()->controllers()->pluck('controller_positions.id')
                                 )
                                     ->get()
                                     ->mapWithKeys(
-                                        fn(
-                                        ControllerPosition $controllerPosition
-                                    ) => [$controllerPosition->id => $controllerPosition->callsign]
+                                        fn (
+                                            ControllerPosition $controllerPosition
+                                        ) => [$controllerPosition->id => $controllerPosition->callsign]
                                     )
                             )
-                            ->hidden(fn(Get $get) => $get('global') || $get('position_level'))
-                            ->required(fn(Get $get) => !$get('global') && !$get('position_level')),
+                            ->hidden(fn (Get $get) => $get('global') || $get('position_level'))
+                            ->required(fn (Get $get) => !$get('global') && !$get('position_level')),
                     ])
                     ->action(function (AttachAction $action) {
                         $action->process( // NOSONAR
@@ -105,7 +105,7 @@ class ControllersRelationManager extends RelationManager
                                 )
                                 ->unique()
                                 ->values()
-                                ->map(fn(int $positionId) => [
+                                ->map(fn (int $positionId) => [
                                     'notification_id' => $livewire->getOwnerRecord()->id,
                                     'controller_position_id' => $positionId,
                                     'created_at' => Carbon::now(),
@@ -123,7 +123,7 @@ class ControllersRelationManager extends RelationManager
             ])
             ->recordActions([
                 DetachAction::make()
-                    ->authorize(fn(RelationManager $livewire) => $livewire->can('detach')),
+                    ->authorize(fn (RelationManager $livewire) => $livewire->can('detach')),
             ])
             ->toolbarActions([
                 DetachBulkAction::make(),
@@ -139,10 +139,10 @@ class ControllersRelationManager extends RelationManager
         if (!empty($data['position_level'])) {
             $query = array_reduce(
                 array_map(
-                    fn(string $level) => ControllerPosition::where('callsign', 'like', '%' . $level),
+                    fn (string $level) => ControllerPosition::where('callsign', 'like', '%' . $level),
                     $data['position_level']
                 ),
-                fn(?Builder $carry, Builder $positionQuery) => $carry ? $carry->union($positionQuery) : $positionQuery
+                fn (?Builder $carry, Builder $positionQuery) => $carry ? $carry->union($positionQuery) : $positionQuery
             );
 
             return $query->get()->pluck('id');
