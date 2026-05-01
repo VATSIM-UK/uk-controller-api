@@ -252,6 +252,7 @@ class StandResource extends Resource
                     ->multiple()
                     ->label(self::translateFilterPath('airlines'))
                     ->options(SelectOptions::airlines())
+                    ->searchable()
                     ->query(
                         function (Builder $query, array $data) {
                             if (empty($data['values'])) {

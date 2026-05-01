@@ -106,6 +106,7 @@ class NotificationResource extends Resource
                     ->query(fn (Builder $query) => $query->active()),
                 SelectFilter::make('controllers')
                     ->multiple()
+                    ->searchable()
                     ->label(self::translateFilterPath('controllers'))
                     ->options(SelectOptions::controllers())
                     ->query(
