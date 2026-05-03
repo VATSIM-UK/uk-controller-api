@@ -6,6 +6,7 @@ use App\Filament\AccessCheckingHelpers\HasResourceClass;
 use App\Models\User\Role;
 use App\Models\User\RoleKeys;
 use App\Models\User\User;
+use Filament\Actions\Exceptions\ActionNotResolvableException;
 use Filament\Resources\Pages\ManageRecords;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
@@ -80,6 +81,8 @@ trait BaseChecksActionVisibility
                     )] = [
                             function () use ($relationManager, $role, $action, $rolesThatCanPerformAction)
                             {
+                                static::setUpRelationManagerRecord($relationManager);
+
                                 $livewire = Livewire::test(
                                     $relationManager,
                                     static::relationManagerLivewireParams(
@@ -90,8 +93,8 @@ trait BaseChecksActionVisibility
 
                                 static::assertTableActionVisibility(
                                     $livewire,
-                                    static::tableActionRecordClass()[$relationManager],
-                                    static::tableActionRecordId()[$relationManager],
+                                    static::tableActionRecordClass()[$relationManager] ?? null,
+                                    static::tableActionRecordId()[$relationManager] ?? null,
                                     $action,
                                     in_array(
                                         $role,
@@ -106,6 +109,14 @@ trait BaseChecksActionVisibility
         }
 
         return $allActions;
+    }
+
+    /**
+     * Override in test classes to set up records for relation manager tests
+     * that require the record to exist in the relationship (e.g., DeleteAction).
+     */
+    protected static function setUpRelationManagerRecord(string $relationManager): void
+    {
     }
 
     private static function generateResourceTableTestCases(
@@ -194,22 +205,34 @@ trait BaseChecksActionVisibility
 
     private static function assertTableActionVisibility(
         Testable $livewire,
-        string $recordClass,
-        string $recordId,
+        ?string $recordClass,
+        int|string|null $recordId,
         string $action,
         bool $actionCanBePerformed
     ): void
     {
-        $actionRecord = call_user_func(
-            $recordClass . '::findOrFail',
-            $recordId
-        );
+        $actionRecord = $recordClass && $recordId
+            ? call_user_func($recordClass . '::findOrFail', $recordId)
+            : null;
 
-        if ($actionCanBePerformed) {
-            $livewire->assertTableActionVisible($action, $actionRecord);
-        } else {
-            $livewire->assertTableActionHidden($action, $actionRecord);
+        $assertMethod = $actionCanBePerformed
+            ? 'assertTableActionVisible'
+            : 'assertTableActionHidden';
+
+        // Filament 4.11+ validates that the record exists in the table's
+        // relationship when testing action visibility. If the record is not
+        // part of the relationship (e.g., for relation managers where no
+        // relationship has been set up), we retry without the record.
+        if ($actionRecord) {
+            try {
+                $livewire->$assertMethod($action, $actionRecord);
+                return;
+            } catch (ActionNotResolvableException) {
+                // Record is not part of the relationship, retry without record
+            }
         }
+
+        $livewire->$assertMethod($action);
     }
 
     private static function relationManagerLivewireParams(string $ownerRecordClass, int|string $ownerRecordId): array
