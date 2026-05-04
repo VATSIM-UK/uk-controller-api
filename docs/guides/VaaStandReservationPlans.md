@@ -13,7 +13,7 @@ Use this schema for pre-validation in editors, CI, or upload tooling:
 
 - `docs/guides/schemas/vaa-stand-reservation-plan.schema.json`
 
-The schema validates structure, field types, allowed keys, timestamp shape, CID ranges, UK ICAO format, and stand reference mode.
+The schema validates structure, field types, allowed keys, timestamp shape, CID ranges, EG/EI ICAO format, and stand reference mode.
 
 Server-side checks are still required for rules that JSON Schema cannot enforce on its own:
 
