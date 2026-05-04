@@ -69,7 +69,7 @@ class StandReservationPlanPayload implements InvokableRule
             $fail("$attribute.event_end must be a Zulu timestamp in format YYYY-MM-DDTHH:MM:SSZ.");
         }
 
-        if (!$eventEnd->isAfter($eventStart)) {
+        if ($eventStart && $eventEnd && !$eventEnd->isAfter($eventStart)) {
             $fail("$attribute.event_end must be after event_start.");
         }
 
