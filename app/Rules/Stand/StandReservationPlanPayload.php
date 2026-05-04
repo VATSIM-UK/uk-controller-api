@@ -331,6 +331,11 @@ class StandReservationPlanPayload implements InvokableRule
             return null;
         }
 
+        if (!in_array($resolvedAirport, $eventAirports, true)) {
+            $fail("$itemPath.airport must be one of the event's airports.");
+            return null;
+        }
+
         return sprintf(
             'code:%s:%s',
             $resolvedAirport,
