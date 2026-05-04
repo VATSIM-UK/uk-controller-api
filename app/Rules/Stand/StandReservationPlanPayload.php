@@ -326,13 +326,12 @@ class StandReservationPlanPayload implements InvokableRule
             $resolvedAirport = $eventAirports[0];
         }
 
-        if (is_null($resolvedAirport)) {
-            $fail("$itemPath.airport is required when event_airports contains multiple airports and stand is used.");
-            return null;
-        }
-
-        if (!in_array($resolvedAirport, $eventAirports, true)) {
-            $fail("$itemPath.airport must be one of the event's airports.");
+        if (is_null($resolvedAirport) || !in_array($resolvedAirport, $eventAirports, true)) {
+            $fail(
+                is_null($resolvedAirport)
+                    ? "$itemPath.airport is required when event_airports contains multiple airports and stand is used."
+                    : "$itemPath.airport must be one of the event's airports."
+            );
             return null;
         }
 
