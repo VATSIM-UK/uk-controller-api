@@ -34,12 +34,12 @@ A stand reservation plan submission contains:
 
 - `event_start` (string, required): Event start in Zulu.
 - `event_end` (string, required): Event end in Zulu and after `event_start`.
+- `reservations` (array, required): One or more reservation objects. Multiple stands can be included in one plan, and the same stand can be reused at different times as long as the time windows do not overlap.
 
-Use exactly one of the following:
+Use exactly one of the following airport scope fields:
 
 - `event_airport` (string, required if single-airport event): 4-letter ICAO.
 - `event_airports` (array of strings, required if multi-airport event): non-empty, unique 4-letter ICAOs.
-- `reservations` (array, required): One or more reservation objects. Multiple stands can be included in one plan, and the same stand can be reused at different times as long as the time windows do not overlap.
 
 ## Reservation Schema
 
