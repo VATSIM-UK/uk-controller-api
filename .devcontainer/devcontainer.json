@@ -13,8 +13,8 @@
 		"source=${localEnv:USERPROFILE}/.ssh/id_rsa,target=/home/www/.ssh/id_rsa,type=bind,consistency=cached,readonly",
 		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/www/.ssh,type=bind,consistency=cached"
 	],
-    "remoteUser": "www"
+    "remoteUser": "www",
     // "forwardPorts": [],
     // "runServices": [],
-    // "shutdownAction": "none",
+    "shutdownAction": "stopCompose",
 }
