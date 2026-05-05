@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.9](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.8...6.65.9) (2026-05-05)
+
+### Miscellaneous Chores
+
+* Add composer lock to gitignore ([e6ef4e8](https://github.com/VATSIM-UK/uk-controller-api/commit/e6ef4e881f7e95361322ea746033488442091a0b))
+* Bump filament to latest v4 ([73aaa60](https://github.com/VATSIM-UK/uk-controller-api/commit/73aaa60cfc92e17cb4b3da55067d5dcda958dbeb))
+
 ## [6.65.8](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.7...6.65.8) (2026-05-01)
 
 ### Miscellaneous Chores
