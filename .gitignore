@@ -21,3 +21,4 @@ yarn-error.log
 .phpunit.cache
 DEVSENSE/
 package-lock.json
+.devcontainer/devcontainer-lock.json

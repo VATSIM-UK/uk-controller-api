@@ -21,7 +21,7 @@
         "ext-simplexml": "*",
         "bugsnag/bugsnag-laravel": "^2.24",
         "composer/semver": "^3.2",
-        "filament/filament": "^4.0",
+        "filament/filament": "^4.11.2",
         "guzzlehttp/guzzle": "^7.0",
         "jacobtims/filament-logger": "^1.2",
         "knplabs/github-api": "^3.0",
