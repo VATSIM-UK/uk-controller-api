@@ -189,6 +189,12 @@ class DatabaseSeeder extends Seeder
         foreach (self::SEEDERS as $seeder => $tables) {
             $this->call($seeder);
         }
+
+        // Dev-only seeders
+        if (app()->environment('local')) {
+            $this->call(DevUserSeeder::class);
+        }
+
         DB::statement("SET foreign_key_checks=1");
     }
 }
