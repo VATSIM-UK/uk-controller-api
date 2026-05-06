@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.65.10](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.9...6.65.10) (2026-05-06)
+
+### Miscellaneous Chores
+
+* Make dev user superuser ([0eeaf76](https://github.com/VATSIM-UK/uk-controller-api/commit/0eeaf761ad55b018cc050b81e636179f27e3b0b9))
+* Shutdown devcontainer compose ([512fbf6](https://github.com/VATSIM-UK/uk-controller-api/commit/512fbf65bcc6bc1ca56a6f05753f5060617863ef))
+
 ## [6.65.9](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.8...6.65.9) (2026-05-05)
 
 ### Miscellaneous Chores
