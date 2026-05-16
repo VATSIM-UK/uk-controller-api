@@ -84,8 +84,13 @@ class StandReservationPlanPayload implements InvokableRule
      */
     private function extractReservations(string $attribute, array $value, Closure $fail): ?array
     {
-        if (!array_key_exists('reservations', $value) || !is_array($value['reservations']) || count($value['reservations']) === 0) {
-            $fail("$attribute.reservations must be a non-empty array.");
+        if (
+            !array_key_exists('reservations', $value)
+            || !is_array($value['reservations'])
+            || count($value['reservations']) === 0
+            || !array_is_list($value['reservations'])
+        ) {
+            $fail("$attribute.reservations must be a non-empty list of reservations.");
             return null;
         }
 
@@ -318,6 +323,10 @@ class StandReservationPlanPayload implements InvokableRule
 
         if (!is_string($stand) || trim($stand) === '') {
             $fail("$itemPath.stand must be a non-empty string.");
+            return null;
+        }
+
+        if ($eventAirports === []) {
             return null;
         }
 

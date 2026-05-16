@@ -96,6 +96,57 @@ class StandReservationPlanPayloadTest extends BaseUnitTestCase
         $this->assertTrue($this->validatePayload($payload));
     }
 
+    public function testItRejectsAStandIdentifierPlanWhenAirportIsMissingForMultiAirportEvents(): void
+    {
+        $payload = [
+            'event_start' => '2026-06-12T08:00:00Z',
+            'event_end' => '2026-06-12T20:00:00Z',
+            'event_airports' => ['EGLL', 'EGKK'],
+            'reservations' => [
+                [
+                    'stand' => 'A23',
+                    'cid' => 1203533,
+                    'timefrom' => '2026-06-12T09:00:00Z',
+                    'timeto' => '2026-06-12T10:00:00Z',
+                ],
+            ],
+        ];
+
+        $validator = Validator::make(['payload' => $payload], ['payload' => $this->rule]);
+
+        $this->assertFalse($validator->passes());
+        $this->assertContains(
+            "payload.reservations.0.airport is required when event_airports contains multiple airports and stand is used.",
+            $validator->errors()->all()
+        );
+    }
+
+    public function testItRejectsAStandIdentifierPlanWhenAirportIsNotOneOfTheEventAirports(): void
+    {
+        $payload = [
+            'event_start' => '2026-06-12T08:00:00Z',
+            'event_end' => '2026-06-12T20:00:00Z',
+            'event_airports' => ['EGLL', 'EGKK'],
+            'reservations' => [
+                [
+                    'airport' => 'EGCC',
+                    'stand' => 'A23',
+                    'cid' => 1203533,
+                    'timefrom' => '2026-06-12T09:00:00Z',
+                    'timeto' => '2026-06-12T10:00:00Z',
+                ],
+            ],
+        ];
+
+        $validator = Validator::make(['payload' => $payload], ['payload' => $this->rule]);
+
+        $this->assertFalse($validator->passes());
+        $this->assertContains(
+            "payload.reservations.0.airport must be one of the event's airports.",
+            $validator->errors()->all()
+        );
+    }
+
     public function testItAcceptsEiPrefixedUkIcaoCodes(): void
     {
         $payload = [
@@ -114,6 +165,56 @@ class StandReservationPlanPayloadTest extends BaseUnitTestCase
         ];
 
         $this->assertTrue($this->validatePayload($payload));
+    }
+
+    public function testItDoesNotEmitAStandAirportMismatchWhenEventAirportsAreInvalid(): void
+    {
+        $payload = [
+            'event_start' => '2026-06-12T08:00:00Z',
+            'event_end' => '2026-06-12T20:00:00Z',
+            'event_airports' => [],
+            'reservations' => [
+                [
+                    'airport' => 'EGLL',
+                    'stand' => 'A23',
+                    'cid' => 1203533,
+                    'timefrom' => '2026-06-12T09:00:00Z',
+                    'timeto' => '2026-06-12T10:00:00Z',
+                ],
+            ],
+        ];
+
+        $validator = Validator::make(['payload' => $payload], ['payload' => $this->rule]);
+
+        $this->assertFalse($validator->passes());
+        $this->assertContains(
+            'payload.event_airports must be a non-empty array of UK 4-letter ICAO codes.',
+            $validator->errors()->all()
+        );
+        $this->assertNotContains(
+            "payload.reservations.0.airport is required when event_airports contains multiple airports and stand is used.",
+            $validator->errors()->all()
+        );
+        $this->assertNotContains(
+            "payload.reservations.0.airport must be one of the event's airports.",
+            $validator->errors()->all()
+        );
+    }
+
+    public function testItRejectsReservationsThatAreNotAList(): void
+    {
+        $payload = $this->validSingleAirportPayload();
+        $payload['reservations'] = [
+            'stand-one' => $payload['reservations'][0],
+        ];
+
+        $validator = Validator::make(['payload' => $payload], ['payload' => $this->rule]);
+
+        $this->assertFalse($validator->passes());
+        $this->assertContains(
+            'payload.reservations must be a non-empty list of reservations.',
+            $validator->errors()->all()
+        );
     }
 
     public function testItRejectsNonUkIcaoCodes(): void
