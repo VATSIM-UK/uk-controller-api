@@ -326,29 +326,28 @@ class StandReservationPlanPayload implements InvokableRule
             return null;
         }
 
-        if ($eventAirports === []) {
-            return null;
+        if ($eventAirports !== []) {
+            $resolvedAirport = $this->normalizeAirportCode($reservation['airport'] ?? null);
+            if (is_null($resolvedAirport) && count($eventAirports) === 1) {
+                $resolvedAirport = $eventAirports[0];
+            }
+
+            if (is_null($resolvedAirport) || !in_array($resolvedAirport, $eventAirports, true)) {
+                $fail(
+                    is_null($resolvedAirport)
+                        ? "$itemPath.airport is required when event_airports contains multiple airports and stand is used."
+                        : "$itemPath.airport must be one of the event's airports."
+                );
+            } else {
+                return sprintf(
+                    'code:%s:%s',
+                    $resolvedAirport,
+                    strtoupper(trim($stand))
+                );
+            }
         }
 
-        $resolvedAirport = $this->normalizeAirportCode($reservation['airport'] ?? null);
-        if (is_null($resolvedAirport) && count($eventAirports) === 1) {
-            $resolvedAirport = $eventAirports[0];
-        }
-
-        if (is_null($resolvedAirport) || !in_array($resolvedAirport, $eventAirports, true)) {
-            $fail(
-                is_null($resolvedAirport)
-                    ? "$itemPath.airport is required when event_airports contains multiple airports and stand is used."
-                    : "$itemPath.airport must be one of the event's airports."
-            );
-            return null;
-        }
-
-        return sprintf(
-            'code:%s:%s',
-            $resolvedAirport,
-            strtoupper(trim($stand))
-        );
+        return null;
     }
 
     /**
