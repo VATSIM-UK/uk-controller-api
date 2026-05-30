@@ -26,3 +26,23 @@ Route::middleware('guest')->group(function () {
 
 // Redirect to allow old plugin versions to update to the latest
 Route::get('version/latest', fn () => Redirect::to('api/version/latest'));
+
+// API Documentation (Swagger UI)
+Route::prefix('api/documentation')->group(function () {
+    Route::get('', function () {
+        return view('api-documentation');
+    });
+
+    Route::get('openapi.yaml', function () {
+        $specPath = base_path('docs/openapi.yaml');
+
+        if (!file_exists($specPath)) {
+            abort(404);
+        }
+
+        return response()->file($specPath, [
+            'Content-Type' => 'application/x-yaml',
+            'Content-Disposition' => 'inline; filename="openapi.yaml"',
+        ]);
+    });
+});
