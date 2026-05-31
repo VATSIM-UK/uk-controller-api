@@ -1,0 +1,1391 @@
+openapi: 3.0.0
+info:
+  title: UK Controller Plugin API
+  description: |
+    API for the VATSIM UK Controller Plugin. This document describes the public-facing endpoints that do not require plugin authentication. 
+    
+    _Endpoints used by the plugin remain undocumented as they should never really be used externally._
+
+    Base URL: `/api`
+  version: 1.0.0
+  contact:
+    name: VATSIM UK Helpdesk
+    url: https://helpdesk.vatsim.uk
+
+servers:
+  - url: https://ukcp.vatsim.uk/api
+    description: Production server
+  - url: http://ukcp.devapp/api
+    description: Local development
+
+paths:
+  /:
+    get:
+      summary: API welcome message
+      description: Returns a welcome message for the UK Controller Plugin API.
+      tags:
+        - General
+      responses:
+        '200':
+          description: Welcome message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Welcome to the UK Controller Plugin API
+
+  /aircraft:
+    get:
+      summary: Get all aircraft
+      description: Returns all aircraft types known to the system.
+      tags:
+        - Aircraft
+      responses:
+        '200':
+          description: List of aircraft
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Aircraft'
+
+  /wake-category:
+    get:
+      summary: Get all wake categories
+      description: Returns all wake turbulence categories.
+      tags:
+        - Aircraft
+      responses:
+        '200':
+          description: List of wake categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WakeCategory'
+
+  /controller:
+    get:
+      summary: Get all controller positions
+      description: Returns all controller positions.
+      tags:
+        - Controllers
+      responses:
+        '200':
+          description: List of controller positions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ControllerPosition'
+
+  /controller-positions-v2:
+    get:
+      summary: Get controller positions dependency
+      description: Returns controller positions with top-down airfield information for dependency calculation.
+      tags:
+        - Controllers
+      responses:
+        '200':
+          description: Controller positions dependency data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ControllerPositionDependency'
+
+  /airfield:
+    get:
+      summary: Get all airfields
+      description: Returns all airfields with their controller positions and prenote pairings.
+      tags:
+        - Airfields
+      responses:
+        '200':
+          description: List of airfields with relations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Airfield'
+
+  /airfield/dependency:
+    get:
+      summary: Get airfields dependency
+      description: Returns airfields with departure speed groups, top-down controllers, pairing prenotes, and handoff information.
+      tags:
+        - Airfields
+      responses:
+        '200':
+          description: Airfields dependency data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AirfieldDependency'
+
+  /departure/intervals/sid-groups/dependency:
+    get:
+      summary: Get departure SID interval groups
+      description: Returns departure SID interval group dependency data.
+      tags:
+        - Departures
+      responses:
+        '200':
+          description: SID interval groups dependency
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SidDepartureIntervalGroup'
+
+  /flight-rules/dependency:
+    get:
+      summary: Get flight rules dependency
+      description: Returns all flight rules (e.g. IFR, VFR).
+      tags:
+        - Flight Rules
+      responses:
+        '200':
+          description: Flight rules list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlightRule'
+
+  /hold:
+    get:
+      summary: Get all holds
+      description: Returns all holds with restrictions, navaid info, deemed separated holds, and outbound leg unit.
+      tags:
+        - Holds
+      responses:
+        '200':
+          description: List of holds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hold'
+
+  /hold/assigned:
+    get:
+      summary: Get assigned holds
+      description: Returns currently assigned holds with callsign and navaid identifier.
+      tags:
+        - Holds
+      responses:
+        '200':
+          description: List of assigned holds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssignedHold'
+
+  /hold/proximity:
+    get:
+      summary: Get proximity holds
+      description: Returns aircraft that are in proximity of holds, including navaid IDs and entry times.
+      tags:
+        - Holds
+      responses:
+        '200':
+          description: List of proximity hold entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProximityHold'
+
+  /handoffs/dependency:
+    get:
+      summary: Get handoffs dependency
+      description: Returns handoff groups with their ordered controller positions.
+      tags:
+        - Handoffs
+      responses:
+        '200':
+          description: Handoffs dependency data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Handoff'
+
+  /prenotes/dependency:
+    get:
+      summary: Get prenotes dependency
+      description: Returns prenote groups with their ordered controller positions.
+      tags:
+        - Prenotes
+      responses:
+        '200':
+          description: Prenotes dependency data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prenote'
+
+  /regional-pressure:
+    get:
+      summary: Get regional pressures
+      description: Returns current regional pressure settings keyed by region code.
+      tags:
+        - Regional Pressure
+      responses:
+        '200':
+          description: Regional pressure settings
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                example:
+                  LONDON: 1013
+                  SCOTTISH: 1012
+
+  /altimeter-setting-region:
+    get:
+      summary: Get altimeter setting regions
+      description: Returns all altimeter setting regions.
+      tags:
+        - Regional Pressure
+      responses:
+        '200':
+          description: List of altimeter setting regions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AltimeterSettingRegion'
+
+  /metar:
+    get:
+      summary: Get all METARs
+      description: Returns all METAR data with parsed and raw formats.
+      tags:
+        - METAR
+      responses:
+        '200':
+          description: List of METARs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Metar'
+
+  /msl:
+    get:
+      summary: Get all minimum stack levels
+      description: Returns all minimum stack levels for both airfields and TMAs.
+      tags:
+        - Minimum Stack Levels
+      responses:
+        '200':
+          description: All minimum stack levels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  airfield:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                    description: Map of airfield ICAO codes to MSL values
+                    example:
+                      EGLL: 6000
+                      EGKK: 6000
+                  tma:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                    description: Map of TMA names to MSL values
+                    example:
+                      LONDON: 6000
+                      MANCHESTER: 5000
+
+  /msl/airfield:
+    get:
+      summary: Get airfield minimum stack levels
+      description: Returns minimum stack levels for all airfields.
+      tags:
+        - Minimum Stack Levels
+      responses:
+        '200':
+          description: Airfield MSL data
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                example:
+                  EGLL: 6000
+                  EGKK: 6000
+
+  /msl/tma:
+    get:
+      summary: Get TMA minimum stack levels
+      description: Returns minimum stack levels for all Terminal Control Areas.
+      tags:
+        - Minimum Stack Levels
+      responses:
+        '200':
+          description: TMA MSL data
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                example:
+                  LONDON: 6000
+                  MANCHESTER: 5000
+
+  /msl/airfield/{icao}:
+    get:
+      summary: Get MSL for an airfield
+      description: Returns the minimum stack level for a specific airfield by ICAO code.
+      tags:
+        - Minimum Stack Levels
+      parameters:
+        - name: icao
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-Z]{4}$'
+            example: EGLL
+          description: ICAO code of the airfield
+      responses:
+        '200':
+          description: MSL value for the airfield
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msl:
+                    type: integer
+                    example: 6000
+        '404':
+          description: Airfield not found or no MSL data
+          content:
+            application/json:
+              schema:
+                nullable: true
+
+  /msl/tma/{tma}:
+    get:
+      summary: Get MSL for a TMA
+      description: Returns the minimum stack level for a specific Terminal Control Area.
+      tags:
+        - Minimum Stack Levels
+      parameters:
+        - name: tma
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-Z]{4}$'
+            example: LONDON
+          description: Name of the TMA
+      responses:
+        '200':
+          description: MSL value for the TMA
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msl:
+                    type: integer
+                    example: 6000
+        '404':
+          description: TMA not found or no MSL data
+          content:
+            application/json:
+              schema:
+                nullable: true
+
+  /srd/route/search:
+    get:
+      summary: Search SRD routes
+      description: Searches for Standard Route Document (SRD) routes by origin and destination.
+      tags:
+        - SRD
+      parameters:
+        - name: origin
+          in: query
+          required: true
+          schema:
+            type: string
+            example: EGLL
+          description: Origin airfield ICAO code
+        - name: destination
+          in: query
+          required: true
+          schema:
+            type: string
+            example: EGKK
+          description: Destination airfield ICAO code
+        - name: requestedLevel
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 6000
+          description: Optional requested flight level to filter routes by
+      responses:
+        '200':
+          description: List of matching SRD routes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SrdRoute'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+
+  /navaid/dependency:
+    get:
+      summary: Get navaid dependency
+      description: Returns all navaids with sectorfile-formatted coordinates.
+      tags:
+        - Navaids
+      responses:
+        '200':
+          description: List of navaids
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Navaid'
+
+  /release/enroute/types:
+    get:
+      summary: Get enroute release types
+      description: Returns all enroute release types.
+      tags:
+        - Releases
+      responses:
+        '200':
+          description: List of enroute release types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EnrouteReleaseType'
+
+  /smr-areas:
+    get:
+      summary: Get SMR areas
+      description: Returns SMR (Surface Movement Radar) area coordinates in a plain text sline format for vSMR compatibility.
+      tags:
+        - SMR
+      responses:
+        '200':
+          description: SMR area coordinates in plain text
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |-
+                  N051.28.21.000:W000.27.42.000
+                  N051.28.21.000:E000.01.12.000
+                  N051.28.21.000:E000.27.42.000
+                  N051.28.21.000:W000.27.42.000
+
+                  N051.28.21.000:W000.27.42.000
+                  N051.28.21.000:W000.27.42.000
+
+  /sid/dependency:
+    get:
+      summary: Get SIDs dependency
+      description: Returns Standard Instrument Departure (SID) routes with runway, handoff, and prenote information.
+      tags:
+        - SIDs
+      responses:
+        '200':
+          description: SID dependency data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sid'
+
+  /stand/status:
+    get:
+      summary: Get airfield stand status
+      description: Returns the current stand status for an airfield, including occupancy, assignments, and reservations.
+      tags:
+        - Stands
+      parameters:
+        - name: airfield
+          in: query
+          required: true
+          schema:
+            type: string
+            example: EGLL
+          description: ICAO code of the airfield
+      responses:
+        '200':
+          description: Stand status for the airfield
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stands:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StandStatus'
+                  generated_at:
+                    type: string
+                    format: date-time
+                    description: When the data was generated
+                  refresh_interval_minutes:
+                    type: integer
+                    example: 5
+                  refresh_at:
+                    type: string
+                    format: date-time
+                    description: When the data should be refreshed
+        '404':
+          description: Airfield not found
+
+  /stand/dependency:
+    get:
+      summary: Get stands dependency
+      description: Returns all stands grouped by airfield for dependency calculation. Excludes closed stands.
+      tags:
+        - Stands
+      responses:
+        '200':
+          description: Stands grouped by airfield
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/StandBasicInfo'
+                example:
+                  EGLL:
+                    - id: 1
+                      identifier: 1L
+                    - id: 2
+                      identifier: 1R
+                  EGKK:
+                    - id: 10
+                      identifier: 1
+                    - id: 11
+                      identifier: 2
+
+  /stand/assignment:
+    get:
+      summary: Get all stand assignments
+      description: Returns all current stand assignments.
+      tags:
+        - Stands
+      responses:
+        '200':
+          description: List of stand assignments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StandAssignment'
+
+  /stand/assignment/{callsign}:
+    get:
+      summary: Get stand assignment for an aircraft
+      description: Returns the stand assignment for a specific aircraft by callsign.
+      tags:
+        - Stands
+      parameters:
+        - name: callsign
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-Z]{3}[0-9]{1,4}[A-Z]?$'
+            example: BAW123
+          description: VATSIM callsign of the aircraft
+      responses:
+        '200':
+          description: Stand assignment for the aircraft
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandAssignmentDetail'
+        '404':
+          description: No stand assignment found for the callsign
+
+  /wake-schemes/dependency:
+    get:
+      summary: Get wake schemes dependency
+      description: Returns wake turbulence category schemes with their categories and departure/arrival intervals.
+      tags:
+        - Wake Categories
+      responses:
+        '200':
+          description: Wake schemes dependency data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WakeCategoryScheme'
+
+  /version/latest:
+    get:
+      summary: Get latest plugin version
+      description: Returns details of the latest plugin version for a given release channel.
+      tags:
+        - Version
+      parameters:
+        - name: channel
+          in: query
+          required: false
+          schema:
+            type: string
+            default: stable
+            example: stable
+            enum:
+              - stable
+              - beta
+              - rc
+          description: Release channel to get the latest version for
+      responses:
+        '200':
+          description: Latest version details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionDetail'
+        '404':
+          description: No version found for the specified channel
+
+  /version/{version}:
+    get:
+      summary: Get version details
+      description: Returns details for a specific plugin version.
+      tags:
+        - Version
+      parameters:
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 2.0.0
+          description: Semantic version string
+      responses:
+        '200':
+          description: Version details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionDetail'
+        '404':
+          description: Version not found
+
+components:
+  schemas:
+    # ── Aircraft ──────────────────────────────────────────────
+    Aircraft:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+          description: ICAO aircraft type code
+          example: B738
+        aerodrome_reference_code:
+          type: string
+          example: C
+        wingspan:
+          type: number
+          format: double
+          nullable: true
+        length:
+          type: number
+          format: double
+          nullable: true
+        allocate_stands:
+          type: boolean
+        is_business_aviation:
+          type: boolean
+
+    WakeCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+          example: M
+        description:
+          type: string
+          example: Medium
+        relative_weighting:
+          type: integer
+        subsequent_departure_intervals:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              code:
+                type: string
+              relative_weighting:
+                type: integer
+              interval:
+                type: object
+                properties:
+                  value:
+                    type: integer
+                  unit:
+                    type: string
+
+    # ── Controllers ───────────────────────────────────────────
+    ControllerPosition:
+      type: object
+      properties:
+        id:
+          type: integer
+        callsign:
+          type: string
+          example: LON_S_CTR
+        description:
+          type: string
+          example: London Control South
+        frequency:
+          type: number
+          format: decimal
+          example: 126.120
+        requests_departure_releases:
+          type: boolean
+        receives_departure_releases:
+          type: boolean
+        sends_prenotes:
+          type: boolean
+        receives_prenotes:
+          type: boolean
+
+    ControllerPositionDependency:
+      type: object
+      properties:
+        id:
+          type: integer
+        callsign:
+          type: string
+          example: LON_S_CTR
+        frequency:
+          type: number
+          format: float
+          example: 126.12
+        top_down:
+          type: array
+          items:
+            type: string
+          description: Airfield ICAO codes this position has top-down control of
+          example:
+            - EGLL
+            - EGKK
+        requests_departure_releases:
+          type: boolean
+        receives_departure_releases:
+          type: boolean
+        sends_prenotes:
+          type: boolean
+        receives_prenotes:
+          type: boolean
+
+    # ── Airfields ─────────────────────────────────────────────
+    Airfield:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+          example: EGLL
+        elevation:
+          type: integer
+        transition_altitude:
+          type: integer
+        standard_high:
+          type: boolean
+        wake_category_scheme_id:
+          type: integer
+          nullable: true
+        handoff_id:
+          type: integer
+          nullable: true
+        controllers:
+          type: array
+          items:
+            type: integer
+          description: Ordered list of controller position IDs
+        pairing-prenotes:
+          type: object
+          description: Map of destination airfield ID to prenote IDs
+          additionalProperties:
+            type: array
+            items:
+              type: integer
+
+    AirfieldDependency:
+      type: object
+      properties:
+        id:
+          type: integer
+        identifier:
+          type: string
+          example: EGLL
+        wake_scheme:
+          type: integer
+          nullable: true
+          description: Wake category scheme ID
+        departure_speed_groups:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              aircraft_types:
+                type: array
+                items:
+                  type: string
+              engine_types:
+                type: array
+                items:
+                  type: string
+              related_groups:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    following_interval_penalty:
+                      type: integer
+                    set_following_interval_to:
+                      type: integer
+                      nullable: true
+        top_down_controller_positions:
+          type: array
+          items:
+            type: integer
+          description: Ordered list of controller position IDs
+        pairing_prenotes:
+          type: array
+          items:
+            type: object
+            properties:
+              airfield_id:
+                type: integer
+              flight_rule_id:
+                type: integer
+              prenote_id:
+                type: integer
+        handoff_id:
+          type: integer
+          nullable: true
+
+    SidDepartureIntervalGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        related_groups:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              key:
+                type: string
+              description:
+                type: string
+              created_at:
+                type: string
+                format: date-time
+              updated_at:
+                type: string
+                format: date-time
+              pivot:
+                type: object
+                properties:
+                  interval_group_id:
+                    type: integer
+                  related_group_id:
+                    type: integer
+                  interval:
+                    type: integer
+
+    # ── Flight Rules ──────────────────────────────────────────
+    FlightRule:
+      type: object
+      properties:
+        id:
+          type: integer
+        euroscope_key:
+          type: string
+          example: I
+        description:
+          type: string
+          example: IFR
+
+    # ── Holds ─────────────────────────────────────────────────
+    Hold:
+      type: object
+      properties:
+        id:
+          type: integer
+        navaid_id:
+          type: integer
+        inbound_heading:
+          type: integer
+        minimum_altitude:
+          type: integer
+        maximum_altitude:
+          type: integer
+        turn_direction:
+          type: string
+          enum:
+            - left
+            - right
+        outbound_leg_value:
+          type: number
+          format: float
+        description:
+          type: string
+        restrictions:
+          type: object
+          description: Key-value pairs of restriction data
+        deemed_separated_holds:
+          type: array
+          items:
+            type: object
+            properties:
+              hold_id:
+                type: integer
+              vsl_insert_distance:
+                type: integer
+        fix:
+          type: string
+          description: Navaid identifier
+        outbound_leg_unit:
+          type: string
+          nullable: true
+
+    AssignedHold:
+      type: object
+      properties:
+        callsign:
+          type: string
+          example: BAW123
+        navaid:
+          type: string
+          description: Navaid identifier
+          example: BNN
+
+    ProximityHold:
+      type: object
+      properties:
+        callsign:
+          type: string
+          example: BAW123
+        navaid_id:
+          type: integer
+        entered_at:
+          type: string
+          format: date-time
+
+    # ── Handoffs ──────────────────────────────────────────────
+    Handoff:
+      type: object
+      properties:
+        id:
+          type: integer
+        controller_positions:
+          type: array
+          items:
+            type: integer
+          description: Ordered list of controller position IDs
+
+    # ── Prenotes ──────────────────────────────────────────────
+    Prenote:
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        controller_positions:
+          type: array
+          items:
+            type: integer
+          description: Ordered list of controller position IDs
+
+    # ── Regional Pressure ─────────────────────────────────────
+    AltimeterSettingRegion:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: London
+        key:
+          type: string
+          example: LONDON
+        adjustment:
+          type: integer
+          example: -1
+
+    # ── METAR ─────────────────────────────────────────────────
+    Metar:
+      type: object
+      properties:
+        airfield_id:
+          type: integer
+        raw:
+          type: string
+          example: EGLL 101520Z 18010KT 9999 FEW020 15/10 Q1013
+        parsed:
+          type: object
+          description: Parsed METAR data
+          example:
+            qnh: 1013
+            wind_direction: 180
+            wind_speed: 10
+
+    # ── Navaids ───────────────────────────────────────────────
+    Navaid:
+      type: object
+      properties:
+        id:
+          type: integer
+        identifier:
+          type: string
+          example: BNN
+        latitude:
+          type: string
+          description: Sectorfile-formatted latitude
+          example: N051.28.21.000
+        longitude:
+          type: string
+          description: Sectorfile-formatted longitude
+          example: W000.27.42.000
+
+    # ── Releases ──────────────────────────────────────────────
+    EnrouteReleaseType:
+      type: object
+      properties:
+        id:
+          type: integer
+        tag_string:
+          type: string
+          example: COH
+        description:
+          type: string
+          example: Crossover Hold
+
+    # ── SIDs ──────────────────────────────────────────────────
+    Sid:
+      type: object
+      properties:
+        id:
+          type: integer
+        airfield:
+          type: string
+          example: EGLL
+        runway_id:
+          type: integer
+        identifier:
+          type: string
+          example: BNN1B
+        departure_interval_group:
+          type: integer
+          nullable: true
+        initial_altitude:
+          type: integer
+          nullable: true
+          example: 5000
+        initial_heading:
+          type: integer
+          nullable: true
+          example: 270
+        handoff:
+          type: integer
+          nullable: true
+        prenotes:
+          type: array
+          items:
+            type: integer
+
+    # ── Stands ────────────────────────────────────────────────
+    StandStatus:
+      type: object
+      properties:
+        identifier:
+          type: string
+          example: 1L
+        type:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: decimal
+        longitude:
+          type: number
+          format: decimal
+        airlines:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: Map of airline ICAO codes to destination arrays
+        aerodrome_reference_code:
+          type: string
+          nullable: true
+        max_aircraft:
+          type: object
+          properties:
+            wingspan:
+              type: number
+              format: double
+              nullable: true
+            length:
+              type: number
+              format: double
+              nullable: true
+        status:
+          type: string
+          enum:
+            - available
+            - occupied
+            - assigned
+            - reserved
+            - reserved_soon
+            - unavailable
+            - requested
+            - closed
+        callsign:
+          type: string
+          nullable: true
+        reserved_at:
+          type: string
+          format: date-time
+          nullable: true
+        requested_by:
+          type: array
+          items:
+            type: string
+          nullable: true
+
+    StandBasicInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        identifier:
+          type: string
+          example: 1L
+
+    StandAssignment:
+      type: object
+      properties:
+        callsign:
+          type: string
+          example: BAW123
+        stand_id:
+          type: integer
+        assignment_source:
+          type: string
+          enum:
+            - user
+            - reservation_allocator
+            - vaa_allocator
+            - system_auto
+          example: user
+
+    StandAssignmentDetail:
+      type: object
+      properties:
+        callsign:
+          type: string
+          example: BAW123
+        id:
+          type: integer
+          description: Stand ID
+        airfield:
+          type: string
+          example: EGLL
+        identifier:
+          type: string
+          example: 1L
+        assignment_source:
+          type: string
+          enum:
+            - user
+            - reservation_allocator
+            - vaa_allocator
+            - system_auto
+
+    # ── Wake Schemes ──────────────────────────────────────────
+    WakeCategoryScheme:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+          example: UK
+        name:
+          type: string
+          example: UK Wake Turbulence Categories
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              code:
+                type: string
+                example: M
+              description:
+                type: string
+                example: Medium
+              relative_weighting:
+                type: integer
+              departure_intervals:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    code:
+                      type: string
+                    relative_weighting:
+                      type: integer
+                    subsequent_departure_intervals:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        interval:
+                          type: object
+                          properties:
+                            value:
+                              type: integer
+                            unit:
+                              type: string
+              arrival_intervals:
+                type: array
+                items:
+                  type: object
+
+    # ── SRD ───────────────────────────────────────────────────
+    SrdRoute:
+      type: object
+      properties:
+        minimum_level:
+          type: integer
+          nullable: true
+          example: 6000
+        maximum_level:
+          type: integer
+          nullable: true
+          example: 35000
+        route_string:
+          type: string
+          example: BNN1B BNN
+        notes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              text:
+                type: string
+
+    # ── Version ───────────────────────────────────────────────
+    VersionDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        version:
+          type: string
+          example: 2.0.0
+        updater_download_url:
+          type: string
+          format: uri
+          example: https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/v2.0.0/UKControllerPluginUpdater.dll
+        core_download_url:
+          type: string
+          format: uri
+          example: https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/v2.0.0/UKControllerPluginCore.dll
+        loader_download_url:
+          type: string
+          format: uri
+          example: https://github.com/VATSIM-UK/uk-controller-plugin/releases/download/v2.0.0/UKControllerPlugin.dll
