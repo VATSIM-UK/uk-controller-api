@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.66.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.10...6.66.0) (2026-05-31)
+
+### Features
+
+* Add public API docs ([a7822a7](https://github.com/VATSIM-UK/uk-controller-api/commit/a7822a7b3afbf23c8c5d1983bd7311f441f756a9))
+
 ## [6.65.10](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.9...6.65.10) (2026-05-06)
 
 ### Miscellaneous Chores
