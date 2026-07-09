@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.66.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.66.0...6.66.1) (2026-07-09)
+
+### Bug Fixes
+
+* Allow multiple attachments on terminal + airlines ([5faadf9](https://github.com/VATSIM-UK/uk-controller-api/commit/5faadf9c23ccb0d80cfb244cdc14d4655ef50faf))
+
 ## [6.66.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.65.10...6.66.0) (2026-05-31)
 
 ### Features
