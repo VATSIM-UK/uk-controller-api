@@ -13,6 +13,7 @@ use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -35,6 +36,7 @@ class StandsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->allowDuplicates()
             ->columns([
                 TextColumn::make('stand_id')
                     ->formatStateUsing(fn (Stand $record) => $record->airfieldIdentifier)
@@ -48,7 +50,12 @@ class StandsRelationManager extends RelationManager
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action): array => [
                         $action
-                            ->recordTitle(fn (Stand $record):string => $record->airfieldIdentifier)
+                            ->recordTitle(fn (Stand $record): string => $record->airfieldIdentifier)
+                            ->recordSelectOptionsQueryUsing(function (Builder $query) {
+                                return $query->leftJoin('airfield', 'airfield.id', '=', 'stands.airfield_id')
+                                    ->select('stands.*');
+                            })
+                            ->recordSelectSearchColumns(['identifier', 'airfield.code'])
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),

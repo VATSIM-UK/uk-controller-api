@@ -36,6 +36,7 @@ class TerminalsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->allowDuplicates()
             ->columns([
                 TextColumn::make('terminal_id')
                     ->formatStateUsing(
@@ -62,6 +63,11 @@ class TerminalsRelationManager extends RelationManager
                     ->form(fn (AttachAction $action): array => [
                         $action
                             ->recordTitle(fn (Terminal $record): string => $record->airfieldDescription)
+                            ->recordSelectOptionsQueryUsing(function (Builder $query) {
+                                return $query->leftJoin('airfield', 'airfield.id', '=', 'terminals.airfield_id')
+                                    ->select('terminals.*');
+                            })
+                            ->recordSelectSearchColumns(['description', 'airfield.code'])
                             ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
