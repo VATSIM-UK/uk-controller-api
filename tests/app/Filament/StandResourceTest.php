@@ -840,11 +840,16 @@ class StandResourceTest extends BaseFilamentTestCase
     {
         Stand::findOrFail(1)->airlines()->sync([1]);
 
+        $pivotId = DB::table('airline_stand')
+            ->where('stand_id', 1)
+            ->where('airline_id', 1)
+            ->value('id');
+
         Livewire::test(
             AirlinesRelationManager::class,
             ['ownerRecord' => Stand::findOrFail(1), 'pageClass' => EditStand::class]
         )
-            ->assertCanSeeTableRecords([Airline::findOrFail(1)]);
+            ->assertCanSeeTableRecords([$pivotId]);
     }
 
     public function testItAllowsAirlinePairingWithMinimalData()
