@@ -694,11 +694,16 @@ class AirlineResourceTest extends BaseFilamentTestCase
 
         Airline::findOrFail(1)->terminals()->sync([2, 1, $newTerminal->id]);
 
+        $pivotId = DB::table('airline_terminal')
+            ->where('airline_id', 1)
+            ->where('terminal_id', $newTerminal->id)
+            ->value('id');
+
         Livewire::test(
             TerminalsRelationManager::class,
             ['ownerRecord' => Airline::findOrFail(1), 'pageClass' => EditAirline::class]
         )
-            ->callTableAction('unpair-terminal', $newTerminal->id)
+            ->callTableAction('unpair-terminal', $pivotId)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
         $this->assertEquals([1, 2], Airline::findOrFail(1)->terminals->pluck('id')->sort()->values()->toArray());
@@ -797,7 +802,7 @@ class AirlineResourceTest extends BaseFilamentTestCase
             StandsRelationManager::class,
             ['ownerRecord' => Airline::findOrFail(1), 'pageClass' => EditAirline::class]
         )
-            ->assertCanSeeTableRecords([1]);
+            ->assertCanSeeTableRecords([Stand::findOrFail(1)]);
     }
 
     public function testItAllowsStandPairingWithMinimalData()
@@ -900,11 +905,16 @@ class AirlineResourceTest extends BaseFilamentTestCase
 
         Airline::findOrFail(1)->stands()->sync([2, 1, $newStand->id]);
 
+        $pivotId = DB::table('airline_stand')
+            ->where('airline_id', 1)
+            ->where('stand_id', $newStand->id)
+            ->value('id');
+
         Livewire::test(
             StandsRelationManager::class,
             ['ownerRecord' => Airline::findOrFail(1), 'pageClass' => EditAirline::class]
         )
-            ->callTableAction('unpair-stand', $newStand->id)
+            ->callTableAction('unpair-stand', $pivotId)
             ->assertSuccessful()
             ->assertHasNoTableActionErrors();
         $this->assertEquals([1, 2], Airline::findOrFail(1)->stands->pluck('id')->sort()->values()->toArray());

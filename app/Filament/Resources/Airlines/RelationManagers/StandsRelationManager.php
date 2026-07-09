@@ -51,7 +51,7 @@ class StandsRelationManager extends RelationManager
                     ->form(fn (AttachAction $action): array => [
                         $action
                             ->recordTitle(fn (Stand $record): string => $record->airfieldIdentifier)
-                            ->recordSelectOptionsQueryUsing(function (Builder $query) {
+                            ->recordSelectOptionsQuery(function (Builder $query) {
                                 return $query->leftJoin('airfield', 'airfield.id', '=', 'stands.airfield_id')
                                     ->select('stands.*');
                             })
