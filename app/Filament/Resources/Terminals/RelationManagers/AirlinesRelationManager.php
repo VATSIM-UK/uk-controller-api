@@ -43,7 +43,9 @@ class AirlinesRelationManager extends RelationManager
                 AttachAction::make('pair-airline')
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action): array => [
-                        $action->getRecordSelect()
+                        $action
+                            ->recordSelectSearchColumns(['icao_code', 'name'])
+                            ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         ...self::airlineTerminalPairingFormFields(),

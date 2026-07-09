@@ -33,6 +33,7 @@ class AirlinesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->allowDuplicates()
             ->columns([
                 TextColumn::make('icao_code')
                     ->label(self::translateTablePath('columns.icao'))
@@ -44,7 +45,9 @@ class AirlinesRelationManager extends RelationManager
                 AttachAction::make('pair-airline')
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('attach'))
                     ->form(fn (AttachAction $action): array => [
-                        $action->getRecordSelect()
+                        $action
+                            ->recordSelectSearchColumns(['icao_code', 'name'])
+                            ->getRecordSelect()
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         ...self::airlineStandPairingFormFields(),
