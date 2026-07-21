@@ -4,15 +4,15 @@
             {{ __('widgets.roles.heading') }}
         </div>
 
-        
+
         <div class="prose dark:prose-invert">
             <ul>
                 @forelse ($user->roles as $role)
-                    <li>
-                        {{ $role->description }}
-                    </li>
+                <li>
+                    {{ $role->description }}
+                </li>
                 @empty
-                    <li>Member</li>
+                <li>Member</li>
                 @endforelse
             </ul>
         </div>

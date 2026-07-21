@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CcamsSquawkRanges;
 
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\CcamsSquawkRanges\Pages\ManageCcamsSquawkRange;

@@ -72,7 +72,7 @@ class SrdRouteResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('route_segment')
                     ->label(self::translateTablePath('columns.route_segment'))
-                    ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record))
+                    ->formatStateUsing(fn(SrdRoute $record) => self::buildFullSrdRouteString($record))
                     ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('notes.id')
@@ -83,26 +83,26 @@ class SrdRouteResource extends Resource
                 Filter::make('origin')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn (Builder $query, array $data) => isset($data['isActive'])
-                        ? $query->where('origin', $data['isActive'])
-                        : $query
+                        fn(Builder $query, array $data) => isset($data['isActive'])
+                            ? $query->where('origin', $data['isActive'])
+                            : $query
                     ),
                 Filter::make('destination')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn (Builder $query, array $data) => isset($data['isActive'])
-                        ? $query->where('destination', $data['isActive'])
-                        : $query
+                        fn(Builder $query, array $data) => isset($data['isActive'])
+                            ? $query->where('destination', $data['isActive'])
+                            : $query
                     ),
                 Filter::make('level')
                     ->formComponent(TextInput::class)
                     ->query(
-                        fn (Builder $query, array $data) => isset($data['isActive'])
-                        ? $query->where(function (Builder $query) use ($data) {
-                            return $query->where('minimum_level', '<=', $data['isActive'])
-                                ->orWhereNull('minimum_level');
-                        })->where('maximum_level', '>=', $data['isActive'])
-                        : $query
+                        fn(Builder $query, array $data) => isset($data['isActive'])
+                            ? $query->where(function (Builder $query) use ($data) {
+                                return $query->where('minimum_level', '<=', $data['isActive'])
+                                    ->orWhereNull('minimum_level');
+                            })->where('maximum_level', '>=', $data['isActive'])
+                            : $query
                     ),
             ])
             ->recordActions([

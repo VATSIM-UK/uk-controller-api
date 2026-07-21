@@ -8,4 +8,3 @@
         The current time is <strong>{{ Carbon::now()->format('H:i') }}Z</strong>.
     </p>
 </div>
-
