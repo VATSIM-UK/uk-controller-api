@@ -23,14 +23,19 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
         parent::setUp();
 
         $this->icaoCode = 'EGXY';
-        $this->airfield = Airfield::factory()->create(['code' => $this->icaoCode]);
-        $this->aircraft = Aircraft::create([
-            'code' => 'B738',
-            'aerodrome_reference_code' => 'C',
-            'wingspan' => 35.8,
-            'length' => 39.5,
-            'allocate_stands' => true,
-        ]);
+        $this->airfield = Airfield::firstOrCreate(
+            ['code' => $this->icaoCode],
+            ['latitude' => 0, 'longitude' => 0, 'elevation' => 0, 'transition_altitude' => 3000, 'standard_high' => 1]
+        );
+        $this->aircraft = Aircraft::firstOrCreate(
+            ['code' => 'B73X'],
+            [
+                'aerodrome_reference_code' => 'C',
+                'wingspan' => 35.8,
+                'length' => 39.5,
+                'allocate_stands' => true,
+            ]
+        );
     }
 
     public function testItRenders()
@@ -49,7 +54,7 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'flight_plan' => [
                         'departure' => $this->icaoCode,
                         'arrival' => 'EDDF',
-                        'aircraft_short' => 'B738',
+                        'aircraft_short' => 'B73X',
                     ],
                 ],
             ],
@@ -63,7 +68,7 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                 'callsign' => 'BAW123',
                 'departure' => $this->icaoCode,
                 'arrival' => 'EDDF',
-                'aircraft_short' => 'B738',
+                'aircraft_short' => 'B73X',
             ]);
     }
 
@@ -137,7 +142,7 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
             ->call('submit')
             ->assertHasNoErrors()
             ->assertDispatched('departureStandFinderFormSubmitted', [
-                'error' => 'No available stand found at EGXY that fits the B738.',
+                'error' => 'No available stand found at EGXY that fits the B73X.',
             ]);
     }
 
