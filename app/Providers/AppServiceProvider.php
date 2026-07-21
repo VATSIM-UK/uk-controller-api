@@ -84,6 +84,6 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('departure-stand-finder-form', DepartureStandFinderForm::class);
 
         // Hoppie ACARS must limit requests to 1 every 10+ seconds
-        RateLimiter::for('hoppie', fn() => Limit::perMinute(5));
+        RateLimiter::for('hoppie', fn () => Limit::perMinute(5));
     }
 }
