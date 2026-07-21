@@ -93,7 +93,8 @@ class ControllerPositionResource extends Resource
                     ->searchable(),
                 TextColumn::make('topDownAirfields.code')
                     ->label(self::translateTablePath('columns.top_down'))
-                    ->badge(),
+                    ->badge()
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

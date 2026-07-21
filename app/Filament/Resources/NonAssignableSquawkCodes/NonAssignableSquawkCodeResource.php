@@ -44,7 +44,8 @@ class NonAssignableSquawkCodeResource extends Resource
             ->columns([
                 self::squawkCodeTableColumn(),
                 TextColumn::make('description')
-                    ->label(self::translateTablePath('columns.description')),
+                    ->label(self::translateTablePath('columns.description'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make(),

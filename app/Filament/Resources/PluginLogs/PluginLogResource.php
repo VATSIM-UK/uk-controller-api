@@ -53,7 +53,9 @@ class PluginLogResource extends Resource
                 TextColumn::make('type')
                     ->label(self::translateTablePath('columns.type')),
                 TextColumn::make('created_at')
-                    ->label(self::translateTablePath('columns.created_at')),
+                    ->label(self::translateTablePath('columns.created_at'))
+                    ->dateTime()
+                    ->toggleable(),
             ])->defaultSort('id', 'desc');
     }
 

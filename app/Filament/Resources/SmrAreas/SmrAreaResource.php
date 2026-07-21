@@ -89,7 +89,8 @@ class SmrAreaResource extends Resource
                     ->searchable(),
                 TextColumn::make('source')
                     ->label(self::translateTablePath('columns.source'))
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -30,8 +30,9 @@ class DependencyResource extends Resource
                 TextColumn::make('local_file')
                     ->label(self::translateTablePath('columns.local_file')),
                 TextColumn::make('updated_at')
-                    ->label(self::translateTablePath('columns.updated_at')),
-
+                    ->label(self::translateTablePath('columns.updated_at'))
+                    ->since()
+                    ->toggleable(),
             ])
             ->recordActions([
                 Action::make('download-dependency')

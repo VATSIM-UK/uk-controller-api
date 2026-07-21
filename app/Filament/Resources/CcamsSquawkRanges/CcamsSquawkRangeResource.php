@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CcamsSquawkRanges;
 
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\CcamsSquawkRanges\Pages\ManageCcamsSquawkRange;
@@ -35,7 +36,13 @@ class CcamsSquawkRangeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns(self::squawkRangeTableColumns())
+            ->columns([
+                TextColumn::make('first')
+                    ->label(self::translateTablePath('columns.first')),
+                TextColumn::make('last')
+                    ->label(self::translateTablePath('columns.last'))
+                    ->toggleable(),
+            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),

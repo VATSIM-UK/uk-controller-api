@@ -77,7 +77,8 @@ class FirExitPointResource extends Resource
                 TextColumn::make('exit_direction_start')
                     ->label(self::translateTablePath('columns.exit_direction_start')),
                 TextColumn::make('exit_direction_end')
-                    ->label(self::translateTablePath('columns.exit_direction_end')),
+                    ->label(self::translateTablePath('columns.exit_direction_end'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -196,23 +196,28 @@ class StandResource extends Resource
                     ->sortable(),
                 TextColumn::make('terminal.description')
                     ->label(self::translateTablePath('columns.terminal'))
-                    ->default(self::DEFAULT_COLUMN_VALUE),
+                    ->default(self::DEFAULT_COLUMN_VALUE)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('identifier')
                     ->label(__('table.stands.columns.identifier'))
                     ->searchable(),
                 TextColumn::make('aerodrome_reference_code')
-                    ->label(self::translateTablePath('columns.aerodrome_reference_code')),
+                    ->label(self::translateTablePath('columns.aerodrome_reference_code'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('max_aircraft_wingspan')
                     ->label(self::translateTablePath('columns.max_size_wingspan'))
-                    ->default(self::DEFAULT_COLUMN_VALUE),
+                    ->default(self::DEFAULT_COLUMN_VALUE)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('max_aircraft_length')
                     ->label(self::translateTablePath('columns.max_size_length'))
-                    ->default(self::DEFAULT_COLUMN_VALUE),
+                    ->default(self::DEFAULT_COLUMN_VALUE)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('uniqueAirlines.icao_code')
                     ->label(self::translateTablePath('columns.airlines'))
                     ->default([self::DEFAULT_COLUMN_VALUE])
                     ->badge()
-                    ->wrap(),
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('closed_at')
                     ->label(self::translateTablePath('columns.used'))
                     ->getStateUsing(function (IconColumn $column) {

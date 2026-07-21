@@ -17,10 +17,21 @@
     @endif
 
     <form wire:submit.prevent="submit">
-        {{ $this->form }}
+        <x-filament::section>
+            <x-slot:heading>
+                Aircraft Details
+            </x-slot:heading>
+            <x-slot:description>
+                Enter the aircraft details to find a suitable departure stand.
+            </x-slot:description>
 
-        <x-filament::button type="submit" color="primary" style="margin-top: 25px">
-            Find Stand
-        </x-filament::button>
+            {{ $this->form }}
+
+            <div class="mt-6">
+                <x-filament::button type="submit" color="primary">
+                    Find Stand
+                </x-filament::button>
+            </div>
+        </x-filament::section>
     </form>
 </div>

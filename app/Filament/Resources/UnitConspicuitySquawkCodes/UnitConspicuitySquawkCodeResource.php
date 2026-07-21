@@ -49,7 +49,9 @@ class UnitConspicuitySquawkCodeResource extends Resource
             ->columns([
                 TextColumn::make('unit')
                     ->label(self::translateTablePath('columns.unit')),
-                self::squawkCodeTableColumn(),
+                TextColumn::make('code')
+                    ->label(self::translateTablePath('columns.code'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make()

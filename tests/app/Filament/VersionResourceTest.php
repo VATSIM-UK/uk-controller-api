@@ -19,7 +19,7 @@ class VersionResourceTest extends BaseFilamentTestCase
 
     protected function getIndexText(): array
     {
-        return ['Versions', '2.0.1', 'Stable', 'Mon 04 Dec 2017, 00:00:00'];
+        return ['Versions', '2.0.1', 'Stable', 'ago'];
     }
 
     protected static function resourceClass(): string

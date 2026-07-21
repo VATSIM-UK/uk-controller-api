@@ -49,7 +49,8 @@ class UnitDiscreteSquawkRangeGuestResource extends Resource
                 TextColumn::make('primary_unit')
                     ->label(self::translateTablePath('columns.primary_unit')),
                 TextColumn::make('guest_unit')
-                    ->label(self::translateTablePath('columns.guest_unit')),
+                    ->label(self::translateTablePath('columns.guest_unit'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -53,7 +53,8 @@ class PrenoteResource extends Resource
                     ->label(self::translateTablePath('columns.controllers'))
                     ->searchable()
                     ->badge()
-                    ->wrap(),
+                    ->wrap()
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

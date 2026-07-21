@@ -90,7 +90,8 @@ class RunwayResource extends Resource
                     ->label(self::translateTablePath('columns.heading')),
                 TextColumn::make('sids.identifier')
                     ->label(self::translateTablePath('columns.sids'))
-                    ->badge(),
+                    ->badge()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('airfield')

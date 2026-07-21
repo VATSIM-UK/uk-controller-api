@@ -62,8 +62,8 @@ class HandoffResource extends Resource
                 TextColumn::make('controllers.callsign')
                     ->label(self::translateTablePath('columns.controllers'))
                     ->badge()
-                    ->wrap(),
-
+                    ->wrap()
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

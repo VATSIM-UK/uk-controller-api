@@ -26,6 +26,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use App\Filament\Resources\TranslatesStrings;
 
 class AirlineResource extends Resource
@@ -84,12 +85,18 @@ class AirlineResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
-                    ->label(self::translateTablePath('columns.name')),
+                    ->label(self::translateTablePath('columns.name'))
+                    ->toggleable(),
                 TextColumn::make('callsign')
-                    ->label(self::translateTablePath('columns.callsign')),
+                    ->label(self::translateTablePath('columns.callsign'))
+                    ->toggleable(),
                 IconColumn::make('is_cargo')
                     ->label(self::translateTablePath('columns.is_cargo'))
                     ->boolean(),
+            ])
+            ->filters([
+                \Filament\Tables\Filters\TernaryFilter::make('is_cargo')
+                    ->label(self::translateTablePath('columns.is_cargo')),
             ])
             ->recordActions([
                 ViewAction::make(),
