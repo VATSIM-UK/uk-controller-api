@@ -22,10 +22,6 @@ class DepartureStandFinder extends Page
         return true;
     }
 
-    public function mount(): void
-    {
-    }
-
     public function departureStandFinderFormSubmitted(array $data): void
     {
         $this->result = $data;
