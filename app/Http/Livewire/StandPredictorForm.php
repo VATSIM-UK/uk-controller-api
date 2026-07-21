@@ -53,7 +53,7 @@ class StandPredictorForm extends Component implements HasForms
                         ->helperText('ICAO code of the origin airfield, e.g. EGLL.'),
                     Select::make('arrivalAirfield')
                         ->label('Arrival Airfield')
-                        ->options(Airfield::all()->mapWithKeys(fn($airfield) => [$airfield->code => $airfield->code]))
+                        ->options(Airfield::all()->mapWithKeys(fn ($airfield) => [$airfield->code => $airfield->code]))
                         ->required()
                         ->searchable()
                         ->helperText('The destination airfield within the UK.'),
