@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.67.0](https://github.com/VATSIM-UK/uk-controller-api/compare/6.66.1...6.67.0) (2026-07-21)
+
+### Features
+
+* Add departure stand finder ([d859013](https://github.com/VATSIM-UK/uk-controller-api/commit/d8590136ba08bb967f0471116b387b0d90b4a776))
+
 ## [6.66.1](https://github.com/VATSIM-UK/uk-controller-api/compare/6.66.0...6.66.1) (2026-07-09)
 
 ### Bug Fixes
