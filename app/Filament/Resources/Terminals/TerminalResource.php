@@ -66,7 +66,8 @@ class TerminalResource extends Resource
                     ->label(self::translateTablePath('columns.description')),
                 TextColumn::make('airlines_count')
                     ->label(self::translateTablePath('columns.airlines'))
-                    ->counts('airlines'),
+                    ->counts('airlines')
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

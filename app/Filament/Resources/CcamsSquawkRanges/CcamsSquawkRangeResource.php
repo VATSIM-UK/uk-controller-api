@@ -35,7 +35,13 @@ class CcamsSquawkRangeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns(self::squawkRangeTableColumns())
+            ->columns([
+                TextColumn::make('first')
+                    ->label(self::translateTablePath('columns.first')),
+                TextColumn::make('last')
+                    ->label(self::translateTablePath('columns.last'))
+                    ->toggleable(),
+            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),

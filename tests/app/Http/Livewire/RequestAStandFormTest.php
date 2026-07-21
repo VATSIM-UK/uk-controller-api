@@ -147,8 +147,8 @@ class RequestAStandFormTest extends BaseFilamentTestCase
             ->assertOk()
             ->assertSeeHtml(
                 [
-                    'Your request will expire at <b>16:00Z</b> and will be considered by',
-                    'the stand allocator from <b>15:00Z</b>.',
+                    'Your request will expire at <strong>16:00Z</strong> and will be considered by',
+                    'the stand allocator from <strong>15:00Z</strong>.',
                 ]
             );
     }

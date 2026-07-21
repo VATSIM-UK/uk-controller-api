@@ -97,7 +97,8 @@ class StandAssignmentsHistoryResource extends Resource
                     ->label(static::translateTablePath('columns.deleted_at'))
                     ->dateTime(),
                 TextColumn::make('type')
-                    ->label(static::translateTablePath('columns.type')),
+                    ->label(static::translateTablePath('columns.type'))
+                    ->toggleable(),
             ])
             ->defaultSort('id', 'desc')
             ->recordActions([

@@ -57,21 +57,27 @@ class SrdRouteResource extends Resource
                     ->label(self::translateTablePath('columns.destination'))
                     ->searchable(),
                 TextColumn::make('minimum_level')
-                    ->label(self::translateTablePath('columns.minimum_level')),
+                    ->label(self::translateTablePath('columns.minimum_level'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('maximum_level')
-                    ->label(self::translateTablePath('columns.maximum_level')),
+                    ->label(self::translateTablePath('columns.maximum_level'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sid')
                     ->default('--')
-                    ->label(self::translateTablePath('columns.sid')),
+                    ->label(self::translateTablePath('columns.sid'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('star')
                     ->default('--')
-                    ->label(self::translateTablePath('columns.star')),
+                    ->label(self::translateTablePath('columns.star'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('route_segment')
                     ->label(self::translateTablePath('columns.route_segment'))
                     ->formatStateUsing(fn (SrdRoute $record) => self::buildFullSrdRouteString($record))
-                    ->limit(50),
+                    ->limit(50)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('notes.id')
-                    ->label(self::translateTablePath('columns.notes')),
+                    ->label(self::translateTablePath('columns.notes'))
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Filter::make('origin')

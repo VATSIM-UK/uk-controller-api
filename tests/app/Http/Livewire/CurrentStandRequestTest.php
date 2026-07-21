@@ -39,8 +39,9 @@ class CurrentStandRequestTest extends BaseFilamentTestCase
             ->assertOk()
             ->assertSeeHtml(
                 [
-                    'You have currently requested Stand <b>EGLL / 1L</b> at',
-                    '<b>18:23Z</b>.',
+                    'You have currently requested',
+                    '<strong>EGLL / 1L</strong>',
+                    '<strong>18:23Z</strong>.',
                 ]
             );
     }
@@ -51,8 +52,8 @@ class CurrentStandRequestTest extends BaseFilamentTestCase
             ->assertOk()
             ->assertSeeHtml(
                 [
-                    'Your request will expire at <b>18:43Z</b> and will be considered by',
-                    'the stand allocator from <b>17:43Z</b>.',
+                    'Your request will expire at <strong>18:43Z</strong> and will be considered by',
+                    'the stand allocator from <strong>17:43Z</strong>.',
                 ]
             );
     }

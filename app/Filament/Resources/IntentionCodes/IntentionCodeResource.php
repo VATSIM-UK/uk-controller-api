@@ -114,8 +114,8 @@ class IntentionCodeResource extends Resource
                     ->label(self::translateTablePath('columns.description')),
                 TextColumn::make('code')
                     ->formatStateUsing(fn (IntentionCode $record) => self::formatCodeColumn($record))
-                    ->label(self::translateTablePath('columns.code')),
-
+                    ->label(self::translateTablePath('columns.code'))
+                    ->toggleable(),
             ])
             ->defaultSort('priority')
             ->recordActions([

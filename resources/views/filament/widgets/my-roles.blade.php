@@ -6,13 +6,15 @@
 
         
         <div class="prose dark:prose-invert">
-            @forelse ($user->roles as $role)
-                <li>
-                    {{ $role->description }}
-                </li>
-            @empty
-                <li>Member</li>
-            @endforelse
+            <ul>
+                @forelse ($user->roles as $role)
+                    <li>
+                        {{ $role->description }}
+                    </li>
+                @empty
+                    <li>Member</li>
+                @endforelse
+            </ul>
         </div>
     </x-filament::card>
 </x-filament::widget>

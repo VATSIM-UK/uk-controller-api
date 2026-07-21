@@ -53,7 +53,8 @@ class AirfieldPairingSquawkRangeResource extends Resource
                 TextColumn::make('origin')
                     ->label(self::translateTablePath('columns.origin')),
                 TextColumn::make('destination')
-                    ->label(self::translateTablePath('columns.destination')),
+                    ->label(self::translateTablePath('columns.destination'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make(),

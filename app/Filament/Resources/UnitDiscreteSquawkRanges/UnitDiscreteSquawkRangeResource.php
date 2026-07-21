@@ -49,7 +49,11 @@ class UnitDiscreteSquawkRangeResource extends Resource
             ->columns([
                 TextColumn::make('unit')
                     ->label(self::translateTablePath('columns.unit')),
-                ...self::squawkRangeTableColumns(),
+                TextColumn::make('first')
+                    ->label(self::translateTablePath('columns.first')),
+                TextColumn::make('last')
+                    ->label(self::translateTablePath('columns.last'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make()

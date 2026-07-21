@@ -9,6 +9,7 @@ use App\Models\Squawk\SquawkAssignment;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use App\Filament\Resources\TranslatesStrings;
 
 class SquawkAssignmentResource extends Resource
@@ -26,14 +27,27 @@ class SquawkAssignmentResource extends Resource
                 TextColumn::make('callsign')
                     ->label(self::translateTablePath('columns.callsign'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('Search by callsign...'),
                 TextColumn::make('code')
                     ->label(self::translateTablePath('columns.code'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('assignment_type')
                     ->label(self::translateTablePath('columns.type'))
-                    ->formatStateUsing(fn (string $state) => self::mapAssignmentTypeToString($state)),
+                    ->formatStateUsing(fn (string $state) => self::mapAssignmentTypeToString($state))
+                    ->toggleable(),
+            ])
+            ->filters([
+                \Filament\Tables\Filters\SelectFilter::make('assignment_type')
+                    ->options([
+                        'NON_UKCP' => 'Not assigned by UKCP',
+                        'AIRFIELD_PAIR' => 'Airfield pairing',
+                        'CCAMS' => 'CCAMS',
+                        'ORCAM' => 'ORCAM',
+                        'UNIT_DISCRETE' => 'ATC unit discrete',
+                    ])
+                    ->label(self::translateTablePath('columns.type')),
             ]);
     }
 

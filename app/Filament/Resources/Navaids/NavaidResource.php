@@ -73,7 +73,8 @@ class NavaidResource extends Resource
                         return $record->holds->isNotEmpty();
                     })
                     ->label(self::translateTablePath('columns.published_holds'))
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -109,7 +109,8 @@ class SidResource extends Resource
                 TextColumn::make('identifier')
                     ->label(self::translateTablePath('columns.identifier')),
                 TextColumn::make('initial_altitude')
-                    ->label(self::translateTablePath('columns.initial_altitude')),
+                    ->label(self::translateTablePath('columns.initial_altitude'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

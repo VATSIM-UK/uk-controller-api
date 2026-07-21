@@ -96,7 +96,8 @@ class AirfieldResource extends Resource
                     ->label(self::translateTablePath('columns.top_down'))
                     ->badge()
                     ->wrap()
-                    ->default(['--']),
+                    ->default(['--'])
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -43,7 +43,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
         );
         Livewire::test(PilotRequestAStand::class)
             ->assertOk()
-            ->assertSeeHtml('You have currently requested Stand <b>EGLL / 1L</b>');
+            ->assertSeeHtml('You have currently requested Stand <strong>EGLL / 1L</strong>');
     }
 
     public function testItShowsTheFormIfNoCurrentRequest()
@@ -99,7 +99,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
 
         // Emit the event and check we now see the status
         $test->fireEvent('requestAStandFormSubmitted');
-        $test->assertSeeHtml('You have currently requested Stand <b>EGLL / 1L</b>');
+        $test->assertSeeHtml('You have currently requested Stand <strong>EGLL / 1L</strong>');
     }
 
     public function testItRelinquishesTheStandRequestAndReturnsToFormPage()
@@ -115,7 +115,7 @@ class PilotRequestAStandTest extends BaseFilamentTestCase
         );
         $test = Livewire::test(PilotRequestAStand::class)
             ->assertOk()
-            ->assertSeeHtml('You have currently requested Stand <b>EGLL / 1L</b>');
+            ->assertSeeHtml('You have currently requested Stand <strong>EGLL / 1L</strong>');
 
         // Delete the request (emitting the delete event) and check we now see the form
         $request->delete();

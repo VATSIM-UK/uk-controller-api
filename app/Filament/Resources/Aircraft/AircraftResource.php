@@ -98,9 +98,11 @@ class AircraftResource extends Resource
                     ->label(self::translateTablePath('columns.aerodrome_reference_code'))
                     ->sortable(),
                 TextColumn::make('wingspan')
-                    ->label(self::translateTablePath('columns.wingspan')),
+                    ->label(self::translateTablePath('columns.wingspan'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('length')
-                    ->label(self::translateTablePath('columns.length')),
+                    ->label(self::translateTablePath('columns.length'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('wakeCategories')
                     ->label(self::translateTablePath('columns.wake_categories'))
                     ->badge()
@@ -115,10 +117,12 @@ class AircraftResource extends Resource
                     ),
                 IconColumn::make('allocate_stands')
                     ->label(self::translateTablePath('columns.allocate_stands'))
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('is_business_aviation')
                     ->label(self::translateTablePath('columns.is_business_aviation'))
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->recordActions([
                 ViewAction::make(),

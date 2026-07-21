@@ -74,7 +74,8 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('id')
                     ->label(self::translateTablePath('columns.id'))
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('Search by CID...'),
                 TextColumn::make('name')
                     ->label(self::translateTablePath('columns.name'))
                     ->searchable(['user.first_name', 'user.last_name']),
@@ -83,7 +84,8 @@ class UserResource extends Resource
                     ->formatStateUsing(fn (int $state) => UserStatus::find($state)?->statusMessage()),
                 TextColumn::make('roles.description')
                     ->label(self::translateTablePath('columns.roles'))
-                    ->badge(),
+                    ->badge()
+                    ->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),

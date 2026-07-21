@@ -46,7 +46,8 @@ class OrcamSquawkRangeResource extends Resource
             ->columns([
                 ...self::squawkRangeTableColumns(),
                 TextColumn::make('origin')
-                    ->label(self::translateTablePath('columns.origin')),
+                    ->label(self::translateTablePath('columns.origin'))
+                    ->toggleable(),
             ])
             ->recordActions([
                 EditAction::make(),

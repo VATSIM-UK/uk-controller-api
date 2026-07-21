@@ -6,34 +6,32 @@
 
         @if ($controller)
             @if ($controller->controller_position_id)
-                <h1>Controlling As:</h1>
+                <strong class="block mt-3 text-sm font-medium text-gray-500 dark:text-gray-400">Controlling As:</strong>
             @else
-                <h1>Logged In As:</h1>
+                <strong class="block mt-3 text-sm font-medium text-gray-500 dark:text-gray-400">Logged In As:</strong>
             @endif
-            <p><b>{{$controller->callsign}} - {{$controller->frequency}}</b></p>
+            <p class="mt-1"><strong>{{ $controller->callsign }} - {{ $controller->frequency }}</strong></p>
         @elseif($aircraft)
-            <h1>Flying As:</h1>
-            <p><b>{{$aircraft->callsign}} ({{$aircraft->planned_depairport}} - {{$aircraft->planned_destairport}})</b></p>
+            <strong class="block mt-3 text-sm font-medium text-gray-500 dark:text-gray-400">Flying As:</strong>
+            <p class="mt-1"><strong>{{ $aircraft->callsign }} ({{ $aircraft->planned_depairport }} - {{ $aircraft->planned_destairport }})</strong></p>
 
             @if($aircraft->destinationAirfield)
+                <strong class="block mt-4 text-sm font-medium text-gray-500 dark:text-gray-400">Assigned Arrival Stand:</strong>
                 @if($aircraft?->assignedStand)
-                    <h1>Assigned Arrival Stand:</h1>
                     @if($aircraft->destinationAirfield->code === $aircraft?->assignedStand?->stand->airfield->code)
-                        <p><b>{{$aircraft->assignedStand->stand->airfieldIdentifier}}</b></p>
+                        <p class="mt-1"><strong>{{ $aircraft->assignedStand->stand->airfieldIdentifier }}</strong></p>
                     @else
-                        <p>--</p>
+                        <p class="mt-1">--</p>
                     @endif
                 @elseif($standRequest)
-                        <h1>Assigned Arrival Stand:</h1>
-                        <p>You have requested <b>{{$standRequest->stand->airfieldIdentifier}}</b>.</p>
-                        <p>This will be confirmed when you are closer to your destination.</p>
+                    <p class="mt-1">You have requested <strong>{{ $standRequest->stand->airfieldIdentifier }}</strong>.</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">This will be confirmed when you are closer to your destination.</p>
                 @else
-                    <h1>Assigned Arrival Stand:</h1>
-                    <p>--</p>
+                    <p class="mt-1">--</p>
                 @endif
             @endif
         @else
-            <p>Not tracked.</p>
+            <p class="mt-3">Not tracked.</p>
         @endif
 
     </x-filament::card>

@@ -93,7 +93,8 @@ class NotificationResource extends Resource
                     ->getStateUsing(
                         fn (Notification $record) => $record->readBy()->where('user.id', Auth::id())->exists()
                     )
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(),
             ])
             ->filters([
                 Filter::make('unread')

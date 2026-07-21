@@ -1,12 +1,11 @@
 @php use Carbon\Carbon; @endphp
-<div id="request_time">
+<div class="text-sm text-gray-600 dark:text-gray-400 space-y-2">
     <p>
-        Your request will expire at <b>{{$endTime->format('H:i')}}Z</b> and will be considered by
-        the stand allocator from <b>{{$startTime->format('H:i')}}Z</b>.
+        Your request will expire at <strong>{{ $endTime->format('H:i') }}Z</strong> and will be considered by
+        the stand allocator from <strong>{{ $startTime->format('H:i') }}Z</strong>.
     </p>
-    <br>
     <p>
-        The current time is <b>{{Carbon::now()->format('H:i')}}Z</b>.
+        The current time is <strong>{{ Carbon::now()->format('H:i') }}Z</strong>.
     </p>
 </div>
 
