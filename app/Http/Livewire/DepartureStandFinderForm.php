@@ -15,7 +15,6 @@ use Filament\Forms\Contracts\HasForms;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -37,20 +36,6 @@ class DepartureStandFinderForm extends Component implements HasForms
     {
         $cid = Auth::id();
         $rawData = Cache::get('vatsim_raw_data');
-
-        if (!$rawData) {
-            try {
-                $response = Http::withUserAgent('UKCP API')
-                    ->timeout(10)
-                    ->get('https://data.vatsim.net/v3/vatsim-data.json');
-                if ($response->successful()) {
-                    $rawData = $response->json();
-                    Cache::put('vatsim_raw_data', $rawData, 120);
-                }
-            } catch (\Exception) {
-                return;
-            }
-        }
 
         if (!$rawData) {
             return;
@@ -83,10 +68,10 @@ class DepartureStandFinderForm extends Component implements HasForms
                 ->label('Callsign')
                 ->placeholder('BAW123')
                 ->required()
-                ->afterStateUpdated(fn () => $this->resetValidation('callsign')),
+                ->afterStateUpdated(fn() => $this->resetValidation('callsign')),
             Select::make('departureAirfield')
                 ->label('Departure Airfield')
-                ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->code => $airfield->code]))
+                ->options(Airfield::all()->mapWithKeys(fn(Airfield $airfield) => [$airfield->code => $airfield->code]))
                 ->required()
                 ->searchable(),
             Select::make('aircraftType')
@@ -174,13 +159,13 @@ class DepartureStandFinderForm extends Component implements HasForms
         }
 
         $steps = [
-            fn (Builder $q) => $q->where('airline_stand.full_callsign', $slug),
-            fn (Builder $q) => $q->whereIn('airline_stand.callsign_slug', $slugs)
+            fn(Builder $q) => $q->where('airline_stand.full_callsign', $slug),
+            fn(Builder $q) => $q->whereIn('airline_stand.callsign_slug', $slugs)
                 ->orderByRaw('LENGTH(airline_stand.callsign_slug) DESC'),
-            fn (Builder $q) => $q->where('airline_stand.aircraft_id', $aircraft->id),
+            fn(Builder $q) => $q->where('airline_stand.aircraft_id', $aircraft->id),
         ];
 
-        $steps[] = fn (Builder $q) => $q->whereNull('airline_stand.destination')
+        $steps[] = fn(Builder $q) => $q->whereNull('airline_stand.destination')
             ->whereNull('airline_stand.callsign_slug')
             ->whereNull('airline_stand.full_callsign')
             ->whereNull('airline_stand.aircraft_id');
@@ -220,10 +205,7 @@ class DepartureStandFinderForm extends Component implements HasForms
     private function tryFallback(Airfield $airfield, Aircraft $aircraft): ?Stand
     {
         return $this->ordered(
-            Stand::where('airfield_id', $airfield->id)
-                ->available()
-                ->sizeAppropriate($aircraft)
-                ->notCargo()
+            $this->baseQuery($airfield, $aircraft)->notCargo()
         )->first();
     }
 

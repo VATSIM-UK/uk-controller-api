@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\BaseFilamentTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
+use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Cache;
@@ -49,7 +50,7 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
         Cache::put('vatsim_raw_data', [
             'pilots' => [
                 [
-                    'cid' => 1203533,
+                    'cid' => \Illuminate\Support\Facades\Auth::id(),
                     'callsign' => 'BAW123',
                     'flight_plan' => [
                         'departure' => $this->icaoCode,
@@ -169,5 +170,152 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
             ->call('submit')
             ->assertHasNoErrors()
             ->assertDispatched('departureStandFinderFormSubmitted');
+    }
+
+    public function testItPrefersAirlineAllocatedStandOverFallback()
+    {
+        $airline = Airline::factory()->create(['icao_code' => 'BAW']);
+        $airlineStand = Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'BAW1',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+        ]);
+        $airlineStand->airlines()->attach($airline->id, ['priority' => 1]);
+
+        Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'FALLBACK',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+        ]);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'BAW999')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'stand' => [
+                    'identifier' => 'BAW1',
+                    'airfield' => $this->icaoCode,
+                    'terminal' => null,
+                    'type' => null,
+                    'aerodrome_reference_code' => 'C',
+                    'max_aircraft_wingspan' => null,
+                    'max_aircraft_length' => null,
+                ],
+            ]);
+    }
+
+    public function testItPrefersAirlineCallsignMatchOverGeneralAirlineAllocation()
+    {
+        $airline = Airline::factory()->create(['icao_code' => 'BAW']);
+        $callsignStand = Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'CALLSIGN',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+        ]);
+        $callsignStand->airlines()->attach($airline->id, ['priority' => 1, 'full_callsign' => '999']);
+
+        $generalStand = Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'GENERAL',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+        ]);
+        $generalStand->airlines()->attach($airline->id, ['priority' => 10]);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'BAW999')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'stand' => [
+                    'identifier' => 'CALLSIGN',
+                    'airfield' => $this->icaoCode,
+                    'terminal' => null,
+                    'type' => null,
+                    'aerodrome_reference_code' => 'C',
+                    'max_aircraft_wingspan' => null,
+                    'max_aircraft_length' => null,
+                ],
+            ]);
+    }
+
+    public function testItPrefersOriginSlugStandOverFallback()
+    {
+        $originStand = Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'ORIGIN',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+            'origin_slug' => $this->icaoCode,
+        ]);
+
+        Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'FALLBACK',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+        ]);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'EZY456')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'stand' => [
+                    'identifier' => 'ORIGIN',
+                    'airfield' => $this->icaoCode,
+                    'terminal' => null,
+                    'type' => null,
+                    'aerodrome_reference_code' => 'C',
+                    'max_aircraft_wingspan' => null,
+                    'max_aircraft_length' => null,
+                ],
+            ]);
+    }
+
+    public function testItExcludesCargoStandsInFallback()
+    {
+        $nonCargoStand = Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'NONCARGO',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+        ]);
+
+        Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'CARGO',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+            'type_id' => \App\Models\Stand\StandType::firstOrCreate(['key' => 'CARGO'])->id,
+        ]);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'EZY456')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'stand' => [
+                    'identifier' => 'NONCARGO',
+                    'airfield' => $this->icaoCode,
+                    'terminal' => null,
+                    'type' => null,
+                    'aerodrome_reference_code' => 'C',
+                    'max_aircraft_wingspan' => null,
+                    'max_aircraft_length' => null,
+                ],
+            ]);
     }
 }

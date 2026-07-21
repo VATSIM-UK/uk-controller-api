@@ -17,10 +17,12 @@ class DepartureStandFinder extends Page
 
     public ?array $result = null;
 
-    public function mount(): void
+    public static function canAccess(): bool
     {
-        // No restrictions — accessible to all authenticated users.
+        return true;
     }
+
+    public function mount(): void {}
 
     public function departureStandFinderFormSubmitted(array $data): void
     {
