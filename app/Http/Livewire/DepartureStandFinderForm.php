@@ -68,10 +68,10 @@ class DepartureStandFinderForm extends Component implements HasForms
                 ->label('Callsign')
                 ->placeholder('BAW123')
                 ->required()
-                ->afterStateUpdated(fn() => $this->resetValidation('callsign')),
+                ->afterStateUpdated(fn () => $this->resetValidation('callsign')),
             Select::make('departureAirfield')
                 ->label('Departure Airfield')
-                ->options(Airfield::all()->mapWithKeys(fn(Airfield $airfield) => [$airfield->code => $airfield->code]))
+                ->options(Airfield::all()->mapWithKeys(fn (Airfield $airfield) => [$airfield->code => $airfield->code]))
                 ->required()
                 ->searchable(),
             Select::make('aircraftType')
@@ -159,13 +159,13 @@ class DepartureStandFinderForm extends Component implements HasForms
         }
 
         $steps = [
-            fn(Builder $q) => $q->where('airline_stand.full_callsign', $slug),
-            fn(Builder $q) => $q->whereIn('airline_stand.callsign_slug', $slugs)
+            fn (Builder $q) => $q->where('airline_stand.full_callsign', $slug),
+            fn (Builder $q) => $q->whereIn('airline_stand.callsign_slug', $slugs)
                 ->orderByRaw('LENGTH(airline_stand.callsign_slug) DESC'),
-            fn(Builder $q) => $q->where('airline_stand.aircraft_id', $aircraft->id),
+            fn (Builder $q) => $q->where('airline_stand.aircraft_id', $aircraft->id),
         ];
 
-        $steps[] = fn(Builder $q) => $q->whereNull('airline_stand.destination')
+        $steps[] = fn (Builder $q) => $q->whereNull('airline_stand.destination')
             ->whereNull('airline_stand.callsign_slug')
             ->whereNull('airline_stand.full_callsign')
             ->whereNull('airline_stand.aircraft_id');
