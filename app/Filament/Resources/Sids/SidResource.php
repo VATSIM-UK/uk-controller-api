@@ -57,19 +57,19 @@ class SidResource extends Resource
                     ->helperText(self::translateFormPath('runway.helper'))
                     ->hintIcon('heroicon-o-chevron-double-up')
                     ->options(SelectOptions::runways())
-                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->dehydrated(fn(Page $livewire) => $livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->searchable()
                     ->required(),
                 TextInput::make('identifier')
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
                     ->rule(
-                        fn(Get $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
+                        fn (Get $get, ?Model $record) => new SidIdentifiersMustBeUniqueForRunway(
                             Runway::findOrFail($get('runway_id')),
                             $record
                         ),
-                        fn(Get $get) => $get('runway_id')
+                        fn (Get $get) => $get('runway_id')
                     )
                     ->required(),
                 TextInput::make('initial_altitude')

@@ -47,7 +47,7 @@ class RunwayResource extends Resource
                     ->helperText(self::translateFormPath('airfield.helper'))
                     ->searchable()
                     ->options(SelectOptions::airfields())
-                    ->disabled(fn(Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
                     ->required(),
                 TextInput::make('identifier')
                     ->label(self::translateFormPath('identifier.label'))

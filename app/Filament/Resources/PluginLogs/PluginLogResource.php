@@ -38,7 +38,7 @@ class PluginLogResource extends Resource
                     ->required(),
                 Textarea::make('metadata')
                     ->columnSpan('full')
-                    ->formatStateUsing(fn(array|null $state) => json_encode($state, JSON_PRETTY_PRINT))
+                    ->formatStateUsing(fn (array|null $state) => json_encode($state, JSON_PRETTY_PRINT))
                     ->label(self::translateFormPath('metadata.label'))
                     ->required(),
             ]);

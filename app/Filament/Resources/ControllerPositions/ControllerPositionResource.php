@@ -86,7 +86,7 @@ class ControllerPositionResource extends Resource
                     ->searchable(),
                 TextColumn::make('description')
                     ->label(self::translateTablePath('columns.description'))
-                    ->formatStateUsing(fn(?string $state) => $state ?: '--')
+                    ->formatStateUsing(fn (?string $state) => $state ?: '--')
                     ->searchable(),
                 TextColumn::make('frequency')
                     ->label(self::translateTablePath('columns.frequency'))
