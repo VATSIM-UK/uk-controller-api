@@ -6,10 +6,8 @@ use App\BaseFilamentTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
-use App\Models\Stand\StandType;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
 
 class DepartureStandFinderFormTest extends BaseFilamentTestCase
@@ -26,15 +24,13 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
 
         $this->icaoCode = 'EGXY';
         $this->airfield = Airfield::factory()->create(['code' => $this->icaoCode]);
-        $this->aircraft = Aircraft::factory()->create([
+        $this->aircraft = Aircraft::create([
             'code' => 'B738',
             'aerodrome_reference_code' => 'C',
             'wingspan' => 35.8,
             'length' => 39.5,
+            'allocate_stands' => true,
         ]);
-
-        // Ensure we have a stand type for cargo stands, so notCargo() works
-        StandType::factory()->create(['key' => 'CARGO']);
     }
 
     public function testItRenders()
