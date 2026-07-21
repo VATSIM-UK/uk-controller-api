@@ -2,10 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
-use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
-use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
-use App\Allocator\Stand\OriginAirfieldStandAllocator;
 use App\BaseFilamentTestCase;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
@@ -81,30 +77,19 @@ class StandPredictorTest extends BaseFilamentTestCase
             )
             ->assertSeeHtmlInOrder(
                 [
-                    sprintf(
-                        'Allocator: %s',
-                        CargoAirlineFallbackStandAllocator::class
-                    ),
-                    'No stands for this allocator',
-                    sprintf(
-                        'Allocator: %s',
-                        OriginAirfieldStandAllocator::class
-                    )
+                    'allocator(s) returned stands',
+                    'Cargo Airline Fallback',
+                    'No stands assigned for this allocator',
+                    'Origin Airfield',
                 ]
             )->assertSeeHtml(
                 [
-                    sprintf(
-                        'Allocator: %s',
-                        AirlineCallsignArrivalStandAllocator::class
-                    ),
-                    'Rank 1',
-                    implode(',', [$stand1->identifier, $stand2->identifier]),
-                    'Rank 2',
+                    'Airline Callsign',
+                    'Rank',
+                    $stand1->identifier,
+                    $stand2->identifier,
                     $stand3->identifier,
-                    sprintf(
-                        'Allocator: %s',
-                        AirlineCallsignSlugArrivalStandAllocator::class
-                    )
+                    'Airline Callsign Slug',
                 ]
             );
     }

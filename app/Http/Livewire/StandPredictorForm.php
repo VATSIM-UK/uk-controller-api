@@ -37,22 +37,26 @@ class StandPredictorForm extends Component implements HasForms
                     TextInput::make('callsign')
                         ->placeholder('BAW123')
                         ->required()
-                        ->label('Callsign'),
+                        ->label('Callsign')
+                        ->helperText('The full callsign of the arrival aircraft, including airline code.'),
                     Select::make('aircraftType')
                         ->label('Aircraft Type')
                         ->options(SelectOptions::aircraftTypes())
                         ->required()
-                        ->searchable(),
+                        ->searchable()
+                        ->helperText('The aircraft type designator, e.g. B738, A320.'),
                     TextInput::make('departureAirfield')
                         ->label('Departure Airfield')
                         ->rule(new AirfieldIcao())
                         ->alpha()
-                        ->required(),
+                        ->required()
+                        ->helperText('ICAO code of the origin airfield, e.g. EGLL.'),
                     Select::make('arrivalAirfield')
                         ->label('Arrival Airfield')
-                        ->options(Airfield::all()->mapWithKeys(fn ($airfield) => [$airfield->code => $airfield->code]))
+                        ->options(Airfield::all()->mapWithKeys(fn($airfield) => [$airfield->code => $airfield->code]))
                         ->required()
-                        ->searchable(),
+                        ->searchable()
+                        ->helperText('The destination airfield within the UK.'),
                 ])
         ];
     }
