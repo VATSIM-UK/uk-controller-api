@@ -49,6 +49,9 @@ class NetworkDataDownloadService
             return new Collection();
         }
 
-        return collect($networkResponse->json());
+        $networkData = $networkResponse->json();
+        Cache::put('vatsim_raw_data', $networkData, 120);
+
+        return collect($networkData);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Livewire\CurrentStandRequest;
+use App\Http\Livewire\DepartureStandFinderForm;
 use App\Http\Livewire\RequestAStandForm;
 use App\Http\Livewire\StandPredictorForm;
 use App\SocialiteProviders\CoreProvider;
@@ -80,8 +81,9 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('request-a-stand-form', RequestAStandForm::class);
         Livewire::component('current-stand-request', CurrentStandRequest::class);
         Livewire::component('stand-predictor-form', StandPredictorForm::class);
+        Livewire::component('departure-stand-finder-form', DepartureStandFinderForm::class);
 
         // Hoppie ACARS must limit requests to 1 every 10+ seconds
-        RateLimiter::for('hoppie', fn () => Limit::perMinute(5));
+        RateLimiter::for('hoppie', fn() => Limit::perMinute(5));
     }
 }
