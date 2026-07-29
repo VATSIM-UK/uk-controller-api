@@ -54,10 +54,10 @@
   resolved "https://registry.yarnpkg.com/@conventional-changelog/template/-/template-1.2.1.tgz#8f673635d6ec8289bc5d5a1264629fd1e88b8d4f"
   integrity sha512-TzlTVpKPjaqW6qOYjQcYUDuGsLCNsvFHVBXkYGTAnf5V37jCWrE5haKNXzz0WZUtVHjrpV76L1buANjwXMfT8w==
 
-"@csstools/selector-resolve-nested@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@csstools/selector-resolve-nested/-/selector-resolve-nested-4.0.0.tgz#ccc38c2cdc14c3ddd1d94647803facef654d47e2"
-  integrity sha512-9vAPxmp+Dx3wQBIUwc1v7Mdisw1kbbaGqXUM8QLTgWg7SoPGYtXBsMXvsFs/0Bn5yoFhcktzxNZGNaUt0VjgjA==
+"@csstools/selector-resolve-nested@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@csstools/selector-resolve-nested/-/selector-resolve-nested-4.0.1.tgz#2b42c036c5ef3d400561458bdf1790466e0fe99a"
+  integrity sha512-j3vdQu0XwLME5qOTWxm8cnmvsf423R2YL6DbKklCHZwkDm7UdKNu6RPlw4REIJhSlKBICY3B70/7QZdicLqZgg==
 
 "@csstools/selector-specificity@^6.0.0":
   version "6.0.0"
@@ -2830,12 +2830,12 @@ postcss-import@^16.1.1:
     read-cache "^1.0.0"
     resolve "^1.1.7"
 
-postcss-nesting@^14.0.0:
-  version "14.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-nesting/-/postcss-nesting-14.0.0.tgz#5400139a425da2ca8228bc406e67e0e8d344b137"
-  integrity sha512-YGFOfVrjxYfeGTS5XctP1WCI5hu8Lr9SmntjfRC+iX5hCihEO+QZl9Ra+pkjqkgoVdDKvb2JccpElcowhZtzpw==
+postcss-nesting@^14.0.1:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/postcss-nesting/-/postcss-nesting-14.0.1.tgz#f5306f809faf9e70e9ab3b2fdc4dc627f1d72d4a"
+  integrity sha512-80MH7KcmMtb7ffSBX82uZwnogltubaXF0sagu+OGD8M9jViR3ngRgCdoTzKCvKEtllB0MW2U7Rgfcub5fR1Bug==
   dependencies:
-    "@csstools/selector-resolve-nested" "^4.0.0"
+    "@csstools/selector-resolve-nested" "^4.0.1"
     "@csstools/selector-specificity" "^6.0.0"
     postcss-selector-parser "^7.1.1"
 
