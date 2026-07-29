@@ -110,13 +110,21 @@ class DepartureStandFinderForm extends Component implements HasForms
             array_merge($prependOrders, [
                 'stands.aerodrome_reference_code',
                 'stands.assignment_priority',
-                'stands.identifier',
             ]) as $order
         ) {
             $query->orderBy($order);
         }
 
         return $query;
+    }
+
+    private function pickRandomStand(Builder $query): ?Stand
+    {
+        return $query
+            ->limit(10)
+            ->get()
+            ->shuffle()
+            ->first();
     }
 
     private function findStand(Airfield $airfield, Aircraft $aircraft, ?int $airlineId): array
@@ -171,11 +179,11 @@ class DepartureStandFinderForm extends Component implements HasForms
             ->whereNull('airline_stand.aircraft_id');
 
         foreach ($steps as $step) {
-            $stand = $this->ordered(
+            $stand = $this->pickRandomStand($this->ordered(
                 $step($this->baseQuery($airfield, $aircraft)->airline($airlineId))
                     ->orderBy('airline_stand.priority'),
                 ['airline_stand.priority']
-            )->first();
+            ));
 
             if ($stand) {
                 return $stand;
@@ -194,19 +202,19 @@ class DepartureStandFinderForm extends Component implements HasForms
             $this->departureAirfield,
         ];
 
-        return $this->ordered(
+        return $this->pickRandomStand($this->ordered(
             $this->baseQuery($airfield, $aircraft)
                 ->notCargo()
                 ->whereIn('stands.origin_slug', $originSlugs)
                 ->orderByRaw('LENGTH(stands.origin_slug) DESC')
-        )->first();
+        ));
     }
 
     private function tryFallback(Airfield $airfield, Aircraft $aircraft): ?Stand
     {
-        return $this->ordered(
-            $this->baseQuery($airfield, $aircraft)->notCargo()
-        )->first();
+        return $this->pickRandomStand(
+            $this->ordered($this->baseQuery($airfield, $aircraft)->notCargo())
+        );
     }
 
     public function render()
