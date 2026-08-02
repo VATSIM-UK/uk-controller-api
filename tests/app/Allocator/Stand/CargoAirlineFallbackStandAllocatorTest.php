@@ -7,6 +7,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
@@ -240,7 +241,7 @@ class CargoAirlineFallbackStandAllocatorTest extends BaseFunctionalTestCase
                 'airfield_id' => $airfieldId,
                 'identifier' => 'H1',
                 'aerodrome_reference_code' => 'E',
-                'closed_at' => Carbon::now(),
+                'allocation_status' => StandAllocationStatus::Unavailable,
                 'type_id' => 3,
             ]
         );

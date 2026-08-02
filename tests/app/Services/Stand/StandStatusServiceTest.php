@@ -5,6 +5,7 @@ namespace App\Services\Stand;
 use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
@@ -148,7 +149,7 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
                 'longitude' => -'6.22207000',
             ]
         );
-        $stand10->close();
+        $stand10->update(['allocation_status' => StandAllocationStatus::Unavailable]);
 
         // Stand 11 is requested
         $stand11 = Stand::create(
@@ -345,6 +346,24 @@ class StandStatusServiceTest extends BaseFunctionalTestCase
             ],
             StandStatusService::getAirfieldStandStatus('EGLL')
         );
+    }
+
+    public function testItReturnsClosedForArrivalsStandsAsAvailable()
+    {
+        $stand = Stand::create(
+            [
+                'airfield_id' => 1,
+                'identifier' => 'TESTCLOSED',
+                'latitude' => '54.65882800',
+                'longitude' => -'6.22207000',
+            ]
+        );
+        $stand->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $statuses = collect(StandStatusService::getAirfieldStandStatus('EGLL'))
+            ->firstWhere('identifier', 'TESTCLOSED');
+
+        $this->assertEquals('available', $statuses['status']);
     }
 
 

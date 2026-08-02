@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
 use App\Models\Stand\StandType;
@@ -447,7 +448,7 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'airfield_id' => $airfieldId,
                 'identifier' => 'H1',
                 'aerodrome_reference_code' => 'E',
-                'closed_at' => Carbon::now()
+                'allocation_status' => StandAllocationStatus::Unavailable
             ]
         );
 
@@ -467,6 +468,24 @@ class FallbackArrivalStandAllocatorTest extends BaseFunctionalTestCase
             ->toArray();
 
         $this->assertEquals($expectedRanks, $actualRanks);
+    }
+
+    public function testItDoesntRankClosedForArrivalsStands()
+    {
+        $airfield = Airfield::factory()->create(['code' => 'EXXX']);
+        $stand = Stand::factory()->create(
+            [
+                'airfield_id' => $airfield->id,
+                'identifier' => 'A1',
+                'allocation_status' => StandAllocationStatus::ClosedForArrivals,
+            ]
+        );
+
+        $ranks = $this->allocator->getRankedStandAllocation(
+            $this->newAircraft('VIR22F', 'B738', $airfield->code)
+        )->pluck('id')->toArray();
+
+        $this->assertNotContains($stand->id, $ranks);
     }
 
     private function createAircraft(

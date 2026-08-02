@@ -7,6 +7,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
@@ -112,6 +113,35 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
             'identifier' => '123',
             'aerodrome_reference_code' => 'C',
             'assignment_priority' => 1,
+        ]);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'BAW999')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'stand' => [
+                    'identifier' => '123',
+                    'airfield' => $this->icaoCode,
+                    'terminal' => null,
+                    'type' => null,
+                    'aerodrome_reference_code' => 'C',
+                    'max_aircraft_wingspan' => null,
+                    'max_aircraft_length' => null,
+                ],
+            ]);
+    }
+
+    public function testItFindsClosedForArrivalsStands()
+    {
+        $stand = Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => '123',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+            'allocation_status' => StandAllocationStatus::ClosedForArrivals,
         ]);
 
         Livewire::test(DepartureStandFinderForm::class)

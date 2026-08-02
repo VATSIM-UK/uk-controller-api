@@ -7,6 +7,7 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandReservation;
 use App\Models\Vatsim\NetworkAircraft;
@@ -469,7 +470,7 @@ class AirlineCallsignArrivalStandAllocatorTest extends BaseFunctionalTestCase
                 'airfield_id' => $airfieldId,
                 'identifier' => 'H1',
                 'aerodrome_reference_code' => 'C',
-                'closed_at' => Carbon::now(),
+                'allocation_status' => StandAllocationStatus::Unavailable,
             ]
         );
         $standH1->airlines()->sync([1 => ['full_callsign' => '23451']]);

@@ -9,7 +9,7 @@ return [
         'max_size_wingspan' => 'Max Wingspan(m)',
         'max_size_length' => 'Max Length(m)',
         'airlines' => 'Airlines',
-        'used' => 'Used',
+        'allocation_status' => 'Allocation Status',
         'priority' => 'Allocation Priority',
         'overnight_remote_preferred' => 'Overnight Remote Preferred',
     ],

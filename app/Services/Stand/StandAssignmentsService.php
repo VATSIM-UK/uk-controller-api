@@ -48,6 +48,10 @@ class StandAssignmentsService
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 
+        if ($stand->isUnavailable()) {
+            throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
+        }
+
         [$assignment, $existingAssignments] = DB::transaction(function () use ($callsign, $stand, $assignmentType) {
             // Remove assignments for this and paired stands
             $existingAssignments = StandAssignment::with('stand')

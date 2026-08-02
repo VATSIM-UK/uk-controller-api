@@ -6,6 +6,7 @@ use App\BaseApiTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Carbon\Carbon;
@@ -47,15 +48,46 @@ class StandControllerTest extends BaseApiTestCase
             ->assertStatus(200);
     }
 
-    public function testStandDependencyIgnoresClosedStands()
+    public function testStandDependencyIgnoresUnavailableStands()
     {
         Stand::where('identifier', '1L')
             ->airfield('EGLL')
             ->firstOrFail()
-            ->close();
+            ->update(['allocation_status' => StandAllocationStatus::Unavailable]);
 
         $expected = [
             'EGLL' => [
+                [
+                    'id' => 2,
+                    'identifier' => '251',
+                ],
+            ],
+            'EGBB' => [
+                [
+                    'id' => 3,
+                    'identifier' => '32',
+                ]
+            ],
+        ];
+
+        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'stand/dependency')
+            ->assertJson($expected)
+            ->assertStatus(200);
+    }
+
+    public function testStandDependencyIncludesClosedForArrivalsStands()
+    {
+        Stand::where('identifier', '1L')
+            ->airfield('EGLL')
+            ->firstOrFail()
+            ->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $expected = [
+            'EGLL' => [
+                [
+                    'id' => 1,
+                    'identifier' => '1L',
+                ],
                 [
                     'id' => 2,
                     'identifier' => '251',

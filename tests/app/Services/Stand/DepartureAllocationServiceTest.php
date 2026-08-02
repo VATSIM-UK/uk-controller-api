@@ -6,6 +6,7 @@ use App\BaseFunctionalTestCase;
 use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandAssignment;
 use App\Services\NetworkAircraftService;
 use Illuminate\Support\Facades\DB;
@@ -292,6 +293,48 @@ class DepartureAllocationServiceTest extends BaseFunctionalTestCase
         $this->service->assignStandsForDeparture();
         $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->exists());
         Event::assertNotDispatched(StandUnassignedEvent::class);
+    }
+
+    public function testItDoesntAssignUnavailableOccupiedStandsAtDepartureAirfields()
+    {
+        Stand::findOrFail(2)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
+
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft->occupiedStand()->sync([2]);
+        $this->service->assignStandsForDeparture();
+
+        $this->assertFalse(StandAssignment::where('callsign', 'RYR787')->exists());
+        Event::assertNotDispatched(StandAssignedEvent::class);
+    }
+
+    public function testItAssignsClosedForArrivalsOccupiedStandsAtDepartureAirfields()
+    {
+        Stand::findOrFail(2)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $aircraft = NetworkAircraftService::createOrUpdateNetworkAircraft(
+            'RYR787',
+            [
+                'latitude' => 51.47187222,
+                'longitude' => -0.48601389,
+                'groundspeed' => 0,
+                'altitude' => 0,
+                'planned_depairport' => 'EGLL',
+            ]
+        );
+        $aircraft->occupiedStand()->sync([2]);
+        $this->service->assignStandsForDeparture();
+
+        $this->assertTrue(StandAssignment::where('callsign', 'RYR787')->where('stand_id', 2)->exists());
+        Event::assertDispatched(StandAssignedEvent::class);
     }
 
     private function addStandAssignment(string $callsign, int $standId): void

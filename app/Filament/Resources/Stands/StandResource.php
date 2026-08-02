@@ -26,6 +26,7 @@ use App\Filament\Resources\StandResource\RelationManagers;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandType;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use App\Rules\Stand\StandIdentifierMustBeUniqueAtAirfield;
@@ -161,9 +162,21 @@ class StandResource extends Resource
                             ->reactive()
                             ->numeric()
                             ->minValue(1),
-                        Toggle::make('closed_at')
-                            ->label(self::translateFormPath('used_for_allocation.label'))
-                            ->helperText(self::translateFormPath('used_for_allocation.helper'))
+                        Select::make('allocation_status')
+                            ->label(self::translateFormPath('allocation_status.label'))
+                            ->helperText(self::translateFormPath('allocation_status.helper'))
+                            ->options(
+                                collect(StandAllocationStatus::cases())
+                                    ->mapWithKeys(
+                                        fn (StandAllocationStatus $status) => [
+                                            $status->value => self::translateFormPath(
+                                                sprintf('allocation_status.options.%s', $status->value)
+                                            ),
+                                        ]
+                                    )
+                                    ->toArray()
+                            )
+                            ->default(StandAllocationStatus::Open->value)
                             ->required(),
                         TextInput::make('assignment_priority')
                             ->label(self::translateFormPath('allocation_priority.label'))
@@ -218,12 +231,14 @@ class StandResource extends Resource
                     ->badge()
                     ->wrap()
                     ->toggleable(isToggledHiddenByDefault: true),
-                IconColumn::make('closed_at')
-                    ->label(self::translateTablePath('columns.used'))
-                    ->getStateUsing(function (IconColumn $column) {
-                        return $column->getRecord()->closed_at === null;
-                    })
-                    ->boolean(),
+                TextColumn::make('allocation_status')
+                    ->label(self::translateTablePath('columns.allocation_status'))
+                    ->badge()
+                    ->formatStateUsing(
+                        fn (StandAllocationStatus $state): string => self::translateFormPath(
+                            sprintf('allocation_status.options.%s', $state->value)
+                        )
+                    ),
                 TextColumn::make('assignment_priority')
                     ->label(self::translateTablePath('columns.priority'))
                     ->sortable()

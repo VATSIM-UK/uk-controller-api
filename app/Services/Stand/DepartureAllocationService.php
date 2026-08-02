@@ -2,6 +2,7 @@
 
 namespace App\Services\Stand;
 
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Database\Eloquent\Builder;
@@ -39,7 +40,7 @@ class DepartureAllocationService
     public function assignStandToDepartingAircraft(NetworkAircraft $aircraft): ?int
     {
         $occupiedStand = $this->standOccupationService->getOccupiedStand($aircraft);
-        if ($occupiedStand === null) {
+        if ($occupiedStand === null || $occupiedStand->isUnavailable()) {
             return null;
         }
 
@@ -66,6 +67,7 @@ class DepartureAllocationService
         return NetworkAircraft::join('aircraft_stand', 'network_aircraft.callsign', '=', 'aircraft_stand.callsign')
             ->join('stands', 'aircraft_stand.stand_id', '=', 'stands.id')
             ->join('airfield', 'airfield.id', '=', 'stands.airfield_id')
+            ->where('stands.allocation_status', '!=', StandAllocationStatus::Unavailable->value)
             ->leftJoin('stand_assignments', 'network_aircraft.callsign', '=', 'stand_assignments.callsign')
             ->where(function (Builder $subquery): void {
                 $subquery->whereRaw('aircraft_stand.stand_id <> stand_assignments.stand_id')

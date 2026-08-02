@@ -7,6 +7,7 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
+use App\Models\Stand\StandAllocationStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,7 @@ class Stand extends Model
         'assignment_priority',
         'overnight_remote_preferred',
         'closed_at',
+        'allocation_status',
         'isOpen',
     ];
 
@@ -51,6 +53,7 @@ class Stand extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'closed_at' => 'datetime',
+        'allocation_status' => StandAllocationStatus::class,
     ];
 
     public function assignment(): HasOne
@@ -127,7 +130,22 @@ class Stand extends Model
 
     public function scopeAvailable(Builder $builder): Builder
     {
-        return $this->scopeNotClosed($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
+        return $this->scopeNotUnavailable($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
+    }
+
+    public function scopeAvailableForArrival(Builder $builder): Builder
+    {
+        return $this->scopeAllocationOpen($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
+    }
+
+    public function scopeAllocationOpen(Builder $query): Builder
+    {
+        return $query->where('allocation_status', StandAllocationStatus::Open->value);
+    }
+
+    public function scopeNotUnavailable(Builder $query): Builder
+    {
+        return $query->where('allocation_status', '!=', StandAllocationStatus::Unavailable->value);
     }
 
     public function scopeAirline(Builder $builder, Airline|int $airline): Builder
@@ -280,26 +298,43 @@ class Stand extends Model
         return $this->hasMany(StandReservation::class)->upcoming(Carbon::now()->addHour());
     }
 
-    public function isClosed(): bool
+    public function isOpen(): bool
     {
-        return $this->closed_at !== null;
+        return $this->allocation_status === StandAllocationStatus::Open;
     }
 
+    public function isClosedForArrivals(): bool
+    {
+        return $this->allocation_status === StandAllocationStatus::ClosedForArrivals;
+    }
+
+    public function isUnavailable(): bool
+    {
+        return $this->allocation_status === StandAllocationStatus::Unavailable;
+    }
+
+    public function closeForArrivals(): Stand
+    {
+        $this->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+        return $this;
+    }
+
+    /**
+     * @deprecated Retained for historical data migrations. Use allocation_status instead.
+     */
     public function close(): Stand
     {
         $this->update(['closed_at' => Carbon::now()]);
         return $this;
     }
 
+    /**
+     * @deprecated Retained for historical data migrations. Use allocation_status instead.
+     */
     public function open(): Stand
     {
         $this->update(['closed_at' => null]);
         return $this;
-    }
-
-    public function scopeNotClosed(Builder $query): Builder
-    {
-        return $query->whereNull('closed_at');
     }
 
     public function getAirfieldIdentifierAttribute(): string

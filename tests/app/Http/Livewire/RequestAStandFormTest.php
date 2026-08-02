@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\BaseFilamentTestCase;
 use App\Models\Aircraft\Aircraft;
+use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandAssignment;
 use App\Models\Stand\StandRequest;
 use App\Models\Stand\StandRequestHistory;
@@ -59,6 +61,15 @@ class RequestAStandFormTest extends BaseFilamentTestCase
         Livewire::test(RequestAStandForm::class)
             ->assertOk()
             ->assertSeeHtml('There are no stands available for assignment at your destination airfield.');
+    }
+
+    public function testItDoesntOfferClosedForArrivalsStands()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        Livewire::test(RequestAStandForm::class)
+            ->assertOk()
+            ->assertSet('stands', [2 => 'EGLL / 251']);
     }
 
     public function testItRenders()
