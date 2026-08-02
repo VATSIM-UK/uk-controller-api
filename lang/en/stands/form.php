@@ -39,10 +39,14 @@ return [
         'label' => 'Maximum Aircraft Wingspan',
         'helper' => 'Maximum aircraft size that can be assigned to the stand. Overrides maximum aerodrome reference code.',
     ],
-    'used_for_allocation' => [
-        'label' => 'Used for Allocation',
-        'helper' => 'Stands not used for allocation will not be allocated by the automatic allocator ' .
-            'or be available for controllers to assign.',
+    'allocation_status' => [
+        'label' => 'Allocation Status',
+        'helper' => 'Controls how the stand is used for allocation. Stands closed for arrivals will not be allocated to arriving aircraft but remain available for departure allocation and manual assignment. Unavailable stands are effectively draft stands and will not be allocated in any case.',
+        'options' => [
+            'open' => 'Used for allocation',
+            'closed_for_arrivals' => 'Closed for arrivals',
+            'unavailable' => 'Unavailable',
+        ],
     ],
     'allocation_priority' => [
         'label' => 'Allocation Priority',

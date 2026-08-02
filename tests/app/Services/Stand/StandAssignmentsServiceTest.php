@@ -7,6 +7,7 @@ use App\Events\StandAssignedEvent;
 use App\Events\StandUnassignedEvent;
 use App\Exceptions\Stand\StandNotFoundException;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandAssignment;
 use App\Models\Vatsim\NetworkAircraft;
 use Illuminate\Support\Facades\Event;
@@ -105,6 +106,32 @@ class StandAssignmentsServiceTest extends BaseFunctionalTestCase
         $this->mockHistoryService->shouldReceive('createHistoryItem')
             ->never();
         $this->service->createStandAssignment('BAW123', 999, 'test');
+    }
+
+    public function testCreatingAStandAssignmentThrowsExceptionIfStandUnavailable()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
+
+        $this->expectException(StandNotFoundException::class);
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->never();
+        $this->service->createStandAssignment('BAW123', 1, 'test');
+    }
+
+    public function testItCreatesAnAssignmentForClosedForArrivalsStands()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $this->mockHistoryService->shouldReceive('createHistoryItem')
+            ->once();
+        $this->service->createStandAssignment('BAW123', 1, 'User');
+        $this->assertDatabaseHas(
+            'stand_assignments',
+            [
+                'callsign' => 'BAW123',
+                'stand_id' => 1,
+            ]
+        );
     }
 
     public function testItCreatesAnAssignment()

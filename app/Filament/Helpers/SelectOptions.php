@@ -173,7 +173,7 @@ class SelectOptions
             self::airfieldStandsCacheKey($airfield),
             fn (): Collection => Stand::with('airfield')
                 ->where('airfield_id', $airfield->id)
-                ->notClosed()
+                ->notUnavailable()
                 ->get()
                 ->mapWithKeys(fn (Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])
         );

@@ -67,7 +67,7 @@ class RequestAStandForm extends Component implements HasForms
         $this->stands = $userDestinationAirfield && $this->userAircraftType
             ? Stand::with('airfield')
                 ->where('airfield_id', $userDestinationAirfield->id)
-                ->notClosed()
+                ->open()
                 ->sizeAppropriate($this->userAircraftType)
                 ->get()
                 ->mapWithKeys(fn (Stand $stand): array => [$stand->id => $stand->airfieldIdentifier])

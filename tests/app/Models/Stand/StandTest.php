@@ -53,7 +53,7 @@ class StandTest extends BaseFunctionalTestCase
 
         $closedStand = Stand::find(1)->replicate();
         $closedStand->identifier = 'CLOSED';
-        $closedStand->closed_at = Carbon::now();
+        $closedStand->allocation_status = StandAllocationStatus::Unavailable;
         $closedStand->save();
 
         $stands = Stand::available()->get()->pluck('id')->toArray();
@@ -441,5 +441,71 @@ class StandTest extends BaseFunctionalTestCase
 
         $stands = Stand::orderByAerodromeReferenceCode('desc')->get()->pluck('id')->toArray();
         $this->assertEquals([1, 3, 2], $stands);
+    }
+
+    public function testAvailableIncludesClosedForArrivalsStands()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $stands = Stand::available()->get()->pluck('id')->toArray();
+        $this->assertContains(1, $stands);
+    }
+
+    public function testAvailableForArrivalExcludesClosedForArrivalsStands()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $stands = Stand::availableForArrival()->get()->pluck('id')->toArray();
+        $this->assertNotContains(1, $stands);
+    }
+
+    public function testOpenOnlyReturnsOpenStands()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
+        Stand::findOrFail(2)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $stands = Stand::open()->get()->pluck('id')->toArray();
+        $this->assertEquals([3], $stands);
+    }
+
+    public function testNotUnavailableExcludesOnlyUnavailableStands()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
+        Stand::findOrFail(2)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $stands = Stand::notUnavailable()->orderBy('id')->get()->pluck('id')->toArray();
+        $this->assertEquals([2, 3], $stands);
+    }
+
+    public function testIsOpen()
+    {
+        $this->assertTrue(Stand::findOrFail(1)->isOpen());
+        $this->assertFalse(Stand::findOrFail(1)->isClosedForArrivals());
+        $this->assertFalse(Stand::findOrFail(1)->isUnavailable());
+    }
+
+    public function testIsClosedForArrivals()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
+        $this->assertFalse(Stand::findOrFail(1)->isOpen());
+        $this->assertTrue(Stand::findOrFail(1)->isClosedForArrivals());
+        $this->assertFalse(Stand::findOrFail(1)->isUnavailable());
+    }
+
+    public function testIsUnavailable()
+    {
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
+
+        $this->assertFalse(Stand::findOrFail(1)->isOpen());
+        $this->assertFalse(Stand::findOrFail(1)->isClosedForArrivals());
+        $this->assertTrue(Stand::findOrFail(1)->isUnavailable());
+    }
+
+    public function testCloseForArrivals()
+    {
+        Stand::findOrFail(1)->closeForArrivals();
+
+        $this->assertTrue(Stand::findOrFail(1)->isClosedForArrivals());
     }
 }

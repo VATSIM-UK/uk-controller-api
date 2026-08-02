@@ -12,6 +12,7 @@ use App\Filament\Resources\Stands\RelationManagers\PairedStandsRelationManager;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandAllocationStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -74,7 +75,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_wingspan', 1)
             ->assertSet('data.max_aircraft_length', 2)
-            ->assertSet('data.closed_at', true);
+            ->assertSet('data.allocation_status', StandAllocationStatus::Open->value);
     }
 
     public function testItRetrievesDataForViewOfClosedStands()
@@ -89,7 +90,7 @@ class StandResourceTest extends BaseFilamentTestCase
                     'max_aircraft_length' => 2,
                 ]
             );
-        Stand::findOrFail(1)->close();
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
 
         Livewire::test(ViewStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
@@ -103,7 +104,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_wingspan', 1)
             ->assertSet('data.max_aircraft_length', 2)
-            ->assertSet('data.closed_at', false);
+            ->assertSet('data.allocation_status', StandAllocationStatus::Unavailable->value);
     }
 
     public function testItCreatesAStandWithMinimalData()
@@ -131,7 +132,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'max_aircraft_wingspan' => null,
                 'max_aircraft_length' => null,
                 'assignment_priority' => 100,
-                'closed_at' => Carbon::now(),
+                'allocation_status' => StandAllocationStatus::Open->value,
             ]
         );
     }
@@ -162,7 +163,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'max_aircraft_wingspan' => null,
                 'max_aircraft_length' => null,
                 'assignment_priority' => 100,
-                'closed_at' => Carbon::now(),
+                'allocation_status' => StandAllocationStatus::Open->value,
             ]
         );
     }
@@ -181,7 +182,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.max_aircraft_wingspan', 1)
             ->set('data.max_aircraft_length', 2)
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasNoErrors();
 
@@ -199,7 +200,28 @@ class StandResourceTest extends BaseFilamentTestCase
                 'max_aircraft_wingspan' => 1,
                 'max_aircraft_length' => 2,
                 'assignment_priority' => 100,
-                'closed_at' => null,
+                'allocation_status' => StandAllocationStatus::Open->value,
+            ]
+        );
+    }
+
+    public function testItCreatesAStandClosedForArrivals()
+    {
+        Livewire::test(CreateStand::class)
+            ->set('data.airfield_id', 1)
+            ->set('data.identifier', '33L')
+            ->set('data.latitude', 4.5)
+            ->set('data.longitude', 5.6)
+            ->set('data.aerodrome_reference_code', 'D')
+            ->set('data.allocation_status', StandAllocationStatus::ClosedForArrivals->value)
+            ->call('create')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas(
+            'stands',
+            [
+                'identifier' => '33L',
+                'allocation_status' => StandAllocationStatus::ClosedForArrivals->value,
             ]
         );
     }
@@ -214,7 +236,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.airfield_id' => 'required']);
     }
@@ -229,7 +251,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.identifier' => 'required']);
     }
@@ -245,7 +267,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.identifier' => 'required']);
     }
@@ -261,7 +283,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.identifier']);
     }
@@ -277,7 +299,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.latitude']);
     }
@@ -293,7 +315,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.longitude']);
     }
@@ -309,7 +331,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 'abc')
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.assignment_priority']);
     }
@@ -325,7 +347,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 0)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.assignment_priority']);
     }
@@ -341,7 +363,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 99999)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.assignment_priority']);
     }
@@ -358,7 +380,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.origin_slug', 'EGLLLL')
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 100)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.origin_slug']);
     }
@@ -377,7 +399,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assignment_priority', 100)
             ->set('data.max_aircraft_wingspan', "abc")
             ->set('data.max_aircraft_length', 1)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.max_aircraft_wingspan']);
     }
@@ -396,7 +418,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assignment_priority', 100)
             ->set('data.max_aircraft_wingspan', 1)
             ->set('data.max_aircraft_length', "abc")
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('create')
             ->assertHasErrors(['data.max_aircraft_length']);
     }
@@ -426,7 +448,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_wingspan', 1)
             ->assertSet('data.max_aircraft_length', 2)
-            ->assertSet('data.closed_at', true);
+            ->assertSet('data.allocation_status', StandAllocationStatus::Open->value);
     }
 
     public function testItRetrievesDataForEditOfClosedStands()
@@ -442,7 +464,7 @@ class StandResourceTest extends BaseFilamentTestCase
                     'origin_slug' => 'EGGD',
                 ]
             );
-        Stand::findOrFail(1)->close();
+        Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
 
         Livewire::test(EditStand::class, ['record' => 1])
             ->assertSet('data.airfield_id', 1)
@@ -456,7 +478,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->assertSet('data.assignment_priority', 100)
             ->assertSet('data.max_aircraft_wingspan', 1)
             ->assertSet('data.max_aircraft_length', 2)
-            ->assertSet('data.closed_at', false);
+            ->assertSet('data.allocation_status', StandAllocationStatus::Unavailable->value);
     }
 
     public function testItEditsAStandWithMinimalData()
@@ -485,7 +507,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'max_aircraft_wingspan' => null,
                 'max_aircraft_length' => null,
                 'assignment_priority' => 100,
-                'closed_at' => null,
+                'allocation_status' => StandAllocationStatus::Open->value,
             ]
         );
     }
@@ -516,7 +538,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'max_aircraft_wingspan' => null,
                 'max_aircraft_length' => null,
                 'assignment_priority' => 100,
-                'closed_at' => null,
+                'allocation_status' => StandAllocationStatus::Open->value,
             ]
         );
     }
@@ -553,7 +575,7 @@ class StandResourceTest extends BaseFilamentTestCase
                 'max_aircraft_wingspan' => 1,
                 'max_aircraft_length' => 2,
                 'assignment_priority' => 100,
-                'closed_at' => null,
+                'allocation_status' => StandAllocationStatus::Open->value,
             ]
         );
     }
@@ -569,7 +591,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.identifier' => 'required']);
     }
@@ -585,7 +607,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.identifier']);
     }
@@ -601,7 +623,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.latitude']);
     }
@@ -617,7 +639,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assigment_priority', 99)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.longitude']);
     }
@@ -633,7 +655,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 'abc')
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.assignment_priority']);
     }
@@ -649,7 +671,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 0)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.assignment_priority']);
     }
@@ -665,7 +687,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.type_id', 3)
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 99999)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.assignment_priority']);
     }
@@ -682,7 +704,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.origin_slug', 'EGGGG')
             ->set('data.aerodrome_reference_code', 'D')
             ->set('data.assignment_priority', 100)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.origin_slug']);
     }
@@ -701,7 +723,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assignment_priority', 100)
             ->set('data.max_aircraft_length', "abc")
             ->set('data.max_aircraft_wingspan', 1)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.max_aircraft_length']);
     }
@@ -720,7 +742,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assignment_priority', 100)
             ->set('data.max_aircraft_length', 1)
             ->set('data.max_aircraft_wingspan', "abc")
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.max_aircraft_wingspan']);
     }
@@ -739,7 +761,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assignment_priority', 100)
             ->set('data.max_aircraft_length', -1)
             ->set('data.max_aircraft_wingspan', 1)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.max_aircraft_length']);
     }
@@ -758,7 +780,7 @@ class StandResourceTest extends BaseFilamentTestCase
             ->set('data.assignment_priority', 100)
             ->set('data.max_aircraft_length', 1)
             ->set('data.max_aircraft_wingspan', -1)
-            ->set('data.closed_at', true)
+            ->set('data.allocation_status', StandAllocationStatus::Open->value)
             ->call('save')
             ->assertHasErrors(['data.max_aircraft_wingspan']);
     }

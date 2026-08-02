@@ -12,7 +12,7 @@ use App\Models\Controller\Handoff;
 use App\Models\IntentionCode\FirExitPoint;
 use App\Models\Runway\Runway;
 use App\Models\Stand\Stand;
-use Carbon\Carbon;
+use App\Models\Stand\StandAllocationStatus;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -844,8 +844,8 @@ class SelectOptionsTest extends BaseFunctionalTestCase
 
     public function testItGetsAndCachesStands()
     {
-        // Stand is closed, shouldn't show
-        Stand::factory()->create(['airfield_id' => 1, 'closed_at' => Carbon::now()]);
+        // Stand is unavailable, shouldn't show
+        Stand::factory()->create(['airfield_id' => 1, 'allocation_status' => StandAllocationStatus::Unavailable]);
         $expected = collect([
             1 => 'EGLL / 1L',
             2 => 'EGLL / 251',
@@ -853,6 +853,20 @@ class SelectOptionsTest extends BaseFunctionalTestCase
 
         $this->assertEquals($expected, SelectOptions::standsForAirfield(Airfield::find(1)));
         $this->assertEquals($expected, Cache::get('SELECT_OPTIONS_STANDS_EGLL'));
+    }
+
+    public function testItIncludesClosedForArrivalsStandsForAirfield()
+    {
+        $stand = Stand::factory()->create(
+            [
+                'airfield_id' => 1,
+                'allocation_status' => StandAllocationStatus::ClosedForArrivals,
+            ]
+        );
+
+        $this->assertTrue(
+            SelectOptions::standsForAirfield(Airfield::findOrFail(1))->has($stand->id)
+        );
     }
 
     public function testItGetsCachedStandsWithoutQuerying()

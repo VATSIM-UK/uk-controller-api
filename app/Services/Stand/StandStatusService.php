@@ -60,7 +60,7 @@ class StandStatusService
             ],
         ];
 
-        if ($stand->isClosed()) {
+        if ($stand->isUnavailable()) {
             $standData['status'] = 'closed';
         } elseif ($stand->occupier->first()) {
             $standData['status'] = 'occupied';
