@@ -135,10 +135,10 @@ class Stand extends Model
 
     public function scopeAvailableForArrival(Builder $builder): Builder
     {
-        return $this->scopeOpen($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
+        return $this->scopeAllocationOpen($this->scopeNotReserved($this->scopeUnassigned($this->scopeUnoccupied($builder))));
     }
 
-    public function scopeOpen(Builder $query): Builder
+    public function scopeAllocationOpen(Builder $query): Builder
     {
         return $query->where('allocation_status', StandAllocationStatus::Open->value);
     }

@@ -464,7 +464,7 @@ class StandTest extends BaseFunctionalTestCase
         Stand::findOrFail(1)->update(['allocation_status' => StandAllocationStatus::Unavailable]);
         Stand::findOrFail(2)->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
 
-        $stands = Stand::open()->get()->pluck('id')->toArray();
+        $stands = Stand::allocationOpen()->get()->pluck('id')->toArray();
         $this->assertEquals([3], $stands);
     }
 

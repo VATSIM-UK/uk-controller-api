@@ -28,7 +28,7 @@ trait SelectsFromSizeAppropriateAvailableStands
             $query->where('code', $aircraft->planned_destairport);
         })
             ->sizeAppropriate($aircraft->aircraft)
-            ->open()
+            ->allocationOpen()
             ->select('stands.*');
     }
 }
