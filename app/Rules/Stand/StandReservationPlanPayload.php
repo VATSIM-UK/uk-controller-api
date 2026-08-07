@@ -326,21 +326,13 @@ class StandReservationPlanPayload implements InvokableRule
             return null;
         }
 
-        if ($eventAirports === []) {
-            return null;
-        }
+        $resolvedAirport = $eventAirports === []
+            ? null
+            : $this->resolveReservationAirport($itemPath, $reservation, $eventAirports, $fail);
 
-        $resolvedAirport = $this->resolveReservationAirport($itemPath, $reservation, $eventAirports, $fail);
-
-        if (is_null($resolvedAirport)) {
-            return null;
-        }
-
-        return sprintf(
-            'code:%s:%s',
-            $resolvedAirport,
-            strtoupper(trim($stand))
-        );
+        return is_null($resolvedAirport)
+            ? null
+            : sprintf('code:%s:%s', $resolvedAirport, strtoupper(trim($stand)));
     }
 
     /**
@@ -359,30 +351,38 @@ class StandReservationPlanPayload implements InvokableRule
         $providedAirport = $reservation['airport'] ?? null;
 
         if (is_null($providedAirport)) {
-            if (count($eventAirports) > 1) {
-                $fail(
-                    "$itemPath.airport is required when event_airports contains multiple airports and stand is used."
-                );
-
-                return null;
-            }
-
-            return $eventAirports[0];
+            return $this->inferReservationAirport($itemPath, $eventAirports, $fail);
         }
 
         $resolvedAirport = $this->normalizeAirportCode($providedAirport);
 
         if (is_null($resolvedAirport)) {
             $fail("$itemPath.airport must be a UK or Irish 4-letter ICAO code, such as EGLL or EIDW.");
-            return null;
-        }
-
-        if (!in_array($resolvedAirport, $eventAirports, true)) {
+        } elseif (!in_array($resolvedAirport, $eventAirports, true)) {
             $fail("$itemPath.airport must be one of the event's airports.");
-            return null;
+            $resolvedAirport = null;
         }
 
         return $resolvedAirport;
+    }
+
+    /**
+     * @param string $itemPath
+     * @param array<int, string> $eventAirports
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @return ?string
+     */
+    private function inferReservationAirport(string $itemPath, array $eventAirports, Closure $fail): ?string
+    {
+        $airport = null;
+
+        if (count($eventAirports) > 1) {
+            $fail("$itemPath.airport is required when event_airports contains multiple airports and stand is used.");
+        } else {
+            $airport = $eventAirports[0];
+        }
+
+        return $airport;
     }
 
     /**
