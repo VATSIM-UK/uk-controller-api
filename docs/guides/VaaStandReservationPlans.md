@@ -38,8 +38,8 @@ A stand reservation plan submission contains:
 
 Use exactly one of the following airport scope fields:
 
-- `event_airport` (string, required if single-airport event): 4-letter ICAO.
-- `event_airports` (array of strings, required if multi-airport event): non-empty, unique 4-letter ICAOs.
+- `event_airport` (string, required if single-airport event): UK or Irish 4-letter ICAO, meaning it must start with `EG` or `EI` (for example `EGLL` or `EIDW`). Any other ICAO prefix is rejected.
+- `event_airports` (array of strings, required if multi-airport event): non-empty, unique 4-letter ICAOs, each in the same `EG`/`EI` format as `event_airport`.
 
 ## Reservation Schema
 
@@ -56,7 +56,7 @@ Use exactly one stand reference mode:
 
 Optional field:
 
-- `airport` (string): 4-letter ICAO for stand identifier mode.
+- `airport` (string): 4-letter ICAO for stand identifier mode, in the same `EG`/`EI` format as `event_airport`. It must be one of the event's airports.
 
 `airport` inference rule:
 

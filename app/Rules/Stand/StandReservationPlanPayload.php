@@ -326,28 +326,63 @@ class StandReservationPlanPayload implements InvokableRule
             return null;
         }
 
-        if ($eventAirports !== []) {
-            $resolvedAirport = $this->normalizeAirportCode($reservation['airport'] ?? null);
-            if (is_null($resolvedAirport) && count($eventAirports) === 1) {
-                $resolvedAirport = $eventAirports[0];
-            }
-
-            if (is_null($resolvedAirport) || !in_array($resolvedAirport, $eventAirports, true)) {
-                $fail(
-                    is_null($resolvedAirport)
-                        ? "$itemPath.airport is required when event_airports contains multiple airports and stand is used."
-                        : "$itemPath.airport must be one of the event's airports."
-                );
-            } else {
-                return sprintf(
-                    'code:%s:%s',
-                    $resolvedAirport,
-                    strtoupper(trim($stand))
-                );
-            }
+        if ($eventAirports === []) {
+            return null;
         }
 
-        return null;
+        $resolvedAirport = $this->resolveReservationAirport($itemPath, $reservation, $eventAirports, $fail);
+
+        if (is_null($resolvedAirport)) {
+            return null;
+        }
+
+        return sprintf(
+            'code:%s:%s',
+            $resolvedAirport,
+            strtoupper(trim($stand))
+        );
+    }
+
+    /**
+     * @param string $itemPath
+     * @param array<string, mixed> $reservation
+     * @param array<int, string> $eventAirports
+     * @param Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @return ?string
+     */
+    private function resolveReservationAirport(
+        string $itemPath,
+        array $reservation,
+        array $eventAirports,
+        Closure $fail
+    ): ?string {
+        $providedAirport = $reservation['airport'] ?? null;
+
+        if (is_null($providedAirport)) {
+            if (count($eventAirports) > 1) {
+                $fail(
+                    "$itemPath.airport is required when event_airports contains multiple airports and stand is used."
+                );
+
+                return null;
+            }
+
+            return $eventAirports[0];
+        }
+
+        $resolvedAirport = $this->normalizeAirportCode($providedAirport);
+
+        if (is_null($resolvedAirport)) {
+            $fail("$itemPath.airport must be a UK or Irish 4-letter ICAO code, such as EGLL or EIDW.");
+            return null;
+        }
+
+        if (!in_array($resolvedAirport, $eventAirports, true)) {
+            $fail("$itemPath.airport must be one of the event's airports.");
+            return null;
+        }
+
+        return $resolvedAirport;
     }
 
     /**
@@ -400,7 +435,7 @@ class StandReservationPlanPayload implements InvokableRule
         $airport = $this->normalizeAirportCode($payload['event_airport']);
 
         if (!$airport) {
-            $fail("$attribute.event_airport must be a UK 4-letter ICAO code.");
+            $fail("$attribute.event_airport must be a UK or Irish 4-letter ICAO code, such as EGLL or EIDW.");
             return [];
         }
 
@@ -416,7 +451,10 @@ class StandReservationPlanPayload implements InvokableRule
     private function validateMultipleEventAirports(string $attribute, array $payload, Closure $fail): array
     {
         if (!is_array($payload['event_airports']) || count($payload['event_airports']) === 0) {
-            $fail("$attribute.event_airports must be a non-empty array of UK 4-letter ICAO codes.");
+            $fail(
+                "$attribute.event_airports must be a non-empty array of UK or Irish 4-letter ICAO codes, "
+                    . "such as EGLL or EIDW."
+            );
             return [];
         }
 
@@ -424,7 +462,9 @@ class StandReservationPlanPayload implements InvokableRule
         foreach ($payload['event_airports'] as $index => $airport) {
             $normalizedAirport = $this->normalizeAirportCode($airport);
             if (!$normalizedAirport) {
-                $fail("$attribute.event_airports.$index must be a UK 4-letter ICAO code.");
+                $fail(
+                    "$attribute.event_airports.$index must be a UK or Irish 4-letter ICAO code, such as EGLL or EIDW."
+                );
                 continue;
             }
 

@@ -147,6 +147,81 @@ class StandReservationPlanPayloadTest extends BaseUnitTestCase
         );
     }
 
+    public function testItRejectsAStandIdentifierPlanWhenAirportIsNotAUkOrIrishIcao(): void
+    {
+        $payload = [
+            'event_start' => '2026-06-12T08:00:00Z',
+            'event_end' => '2026-06-12T20:00:00Z',
+            'event_airport' => 'EGLL',
+            'reservations' => [
+                [
+                    'airport' => 'LFPG',
+                    'stand' => 'A23',
+                    'cid' => 1203533,
+                    'timefrom' => '2026-06-12T09:00:00Z',
+                    'timeto' => '2026-06-12T10:00:00Z',
+                ],
+            ],
+        ];
+
+        $validator = Validator::make(['payload' => $payload], ['payload' => $this->rule]);
+
+        $this->assertFalse($validator->passes());
+        $this->assertContains(
+            'payload.reservations.0.airport must be a UK or Irish 4-letter ICAO code, such as EGLL or EIDW.',
+            $validator->errors()->all()
+        );
+    }
+
+    public function testItDoesNotReportAnInvalidAirportAsMissingForMultiAirportEvents(): void
+    {
+        $payload = [
+            'event_start' => '2026-06-12T08:00:00Z',
+            'event_end' => '2026-06-12T20:00:00Z',
+            'event_airports' => ['EGLL', 'EGKK'],
+            'reservations' => [
+                [
+                    'airport' => 'LFPG',
+                    'stand' => 'A23',
+                    'cid' => 1203533,
+                    'timefrom' => '2026-06-12T09:00:00Z',
+                    'timeto' => '2026-06-12T10:00:00Z',
+                ],
+            ],
+        ];
+
+        $validator = Validator::make(['payload' => $payload], ['payload' => $this->rule]);
+
+        $this->assertFalse($validator->passes());
+        $this->assertContains(
+            'payload.reservations.0.airport must be a UK or Irish 4-letter ICAO code, such as EGLL or EIDW.',
+            $validator->errors()->all()
+        );
+        $this->assertNotContains(
+            'payload.reservations.0.airport is required when event_airports contains multiple airports and stand is used.',
+            $validator->errors()->all()
+        );
+    }
+
+    public function testItInfersTheAirportForSingleAirportEventsWhenAirportIsOmitted(): void
+    {
+        $payload = [
+            'event_start' => '2026-06-12T08:00:00Z',
+            'event_end' => '2026-06-12T20:00:00Z',
+            'event_airport' => 'EGLL',
+            'reservations' => [
+                [
+                    'stand' => 'A23',
+                    'cid' => 1203533,
+                    'timefrom' => '2026-06-12T09:00:00Z',
+                    'timeto' => '2026-06-12T10:00:00Z',
+                ],
+            ],
+        ];
+
+        $this->assertTrue($this->validatePayload($payload));
+    }
+
     public function testItAcceptsEiPrefixedUkIcaoCodes(): void
     {
         $payload = [
@@ -188,7 +263,8 @@ class StandReservationPlanPayloadTest extends BaseUnitTestCase
 
         $this->assertFalse($validator->passes());
         $this->assertContains(
-            'payload.event_airports must be a non-empty array of UK 4-letter ICAO codes.',
+            'payload.event_airports must be a non-empty array of UK or Irish 4-letter ICAO codes, '
+                . 'such as EGLL or EIDW.',
             $validator->errors()->all()
         );
         $this->assertNotContains(
