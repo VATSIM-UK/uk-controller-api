@@ -76,6 +76,32 @@ class StandReservationPlanPayloadTest extends BaseUnitTestCase
 
         $this->assertFalse($this->validatePayload($payload));
     }
+
+    public function testItRejectsAPlanWhereEventEndCannotBeParsed(): void
+    {
+        $payload = $this->validSingleAirportPayload();
+        $payload['event_end'] = 'not-a-time';
+
+        $this->assertFalse($this->validatePayload($payload));
+    }
+
+    public function testItRejectsAPlanWhereEventStartCannotBeParsed(): void
+    {
+        $payload = $this->validSingleAirportPayload();
+        $payload['event_start'] = 'not-a-time';
+
+        $this->assertFalse($this->validatePayload($payload));
+    }
+
+    public function testItRejectsAPlanWhereNeitherEventTimeCanBeParsed(): void
+    {
+        $payload = $this->validSingleAirportPayload();
+        $payload['event_start'] = 'not-a-time';
+        $payload['event_end'] = 'also-not-a-time';
+
+        $this->assertFalse($this->validatePayload($payload));
+    }
+
     public function testItAcceptsAValidStandIdentifierPlan(): void
     {
         $payload = [
