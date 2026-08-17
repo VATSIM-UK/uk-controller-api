@@ -18,10 +18,8 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableAr
      * - Orders by common conditions (see OrdersStandsByCommonConditions)
      * - Selects the first available stand (see SelectsFirstApplicableStand)
      */
-    public function allocate(
-        NetworkAircraft $aircraft,
-        StandAllocationType $type = StandAllocationType::Arrival
-    ): ?int {
+    public function allocate(NetworkAircraft $aircraft): ?int
+    {
         if ($aircraft->aircraft_id === null) {
             return null;
         }
@@ -29,9 +27,6 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableAr
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
             $this->filterQuery(),
-            [],
-            true,
-            $type
         );
     }
 

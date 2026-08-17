@@ -31,20 +31,15 @@ class CargoFlightArrivalStandAllocator implements ArrivalStandAllocator
      * - Orders by common conditions (see OrdersStandsByCommonConditions)
      * - Selects the first available stand (see SelectsFirstApplicableStand)
      */
-    public function allocate(
-        NetworkAircraft $aircraft,
-        StandAllocationType $type = StandAllocationType::Arrival
-    ): ?int {
+    public function allocate(NetworkAircraft $aircraft): ?int
+    {
         if (! $this->isCargoFlight($aircraft)) {
             return null;
         }
 
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            $this->queryFilter(),
-            [],
-            true,
-            $type
+            $this->queryFilter()
         );
     }
 
