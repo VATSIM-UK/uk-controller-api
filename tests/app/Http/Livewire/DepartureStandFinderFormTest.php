@@ -282,17 +282,17 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
             ]);
     }
 
-    public function testItPrefersOriginSlugStandOverFallback()
+    public function testItDoesNotPreferOriginSlugStandOverFallbackForDepartures()
     {
         $originStand = Stand::factory()->create([
             'airfield_id' => $this->airfield->id,
             'identifier' => 'ORIGIN',
             'aerodrome_reference_code' => 'C',
-            'assignment_priority' => 1,
+            'assignment_priority' => 10,
             'origin_slug' => $this->icaoCode,
         ]);
 
-        Stand::factory()->create([
+        $fallbackStand = Stand::factory()->create([
             'airfield_id' => $this->airfield->id,
             'identifier' => 'FALLBACK',
             'aerodrome_reference_code' => 'C',
@@ -307,7 +307,7 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
             ->assertHasNoErrors()
             ->assertDispatched('departureStandFinderFormSubmitted', [
                 'stand' => [
-                    'identifier' => 'ORIGIN',
+                    'identifier' => 'FALLBACK',
                     'airfield' => $this->icaoCode,
                     'terminal' => null,
                     'type' => null,
