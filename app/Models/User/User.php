@@ -2,11 +2,11 @@
 
 namespace App\Models\User;
 
-use Filament\Panel;
 use App\Models\Dependency\Dependency;
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -24,13 +24,12 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * Model for a user of the plugin.
  *
  * Class User
- * @package App\Models
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName
 {
-    use HasApiTokens;
     use Authenticatable;
     use Authorizable;
+    use HasApiTokens;
     use HasFactory;
     use LogsActivity;
 
@@ -64,8 +63,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     /**
      * Returns the relation to the users status
-     *
-     * @return HasOne
      */
     public function accountStatus(): HasOne
     {
@@ -74,56 +71,50 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     /**
      * Sets the last login time of the user
-     *
-     * @return User
      */
     public function touchLastLogin(): User
     {
         $this->last_login = Carbon::now();
         $this->save();
+
         return $this;
     }
 
     /**
      * Marks the user as banned
-     *
-     * @return User
      */
     public function ban(): User
     {
         $this->status = UserStatus::BANNED;
         $this->save();
+
         return $this;
     }
 
     /**
      * Marks the user as disabled
-     *
-     * @return User
      */
     public function disable(): User
     {
         $this->status = UserStatus::DISABLED;
         $this->save();
+
         return $this;
     }
 
     /**
      * Marks the user as active
-     *
-     * @return User
      */
     public function activate(): User
     {
         $this->status = UserStatus::ACTIVE;
         $this->save();
+
         return $this;
     }
 
     /**
      * Converts the model to JSON
-     *
-     * @return array
      */
     public function jsonSerialize(): array
     {

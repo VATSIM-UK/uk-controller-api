@@ -10,8 +10,8 @@ use Illuminate\Support\Collection;
 
 class AirlineDestinationTerminalArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
-    use UsesDestinationStrings;
     use SelectsStandsFromAirlineSpecificTerminals;
+    use UsesDestinationStrings;
 
     private const ORDER_BYS = [
         'airline_terminal.destination IS NOT NULL',

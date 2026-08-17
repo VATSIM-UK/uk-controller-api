@@ -9,7 +9,5 @@ class SectorFileIssuesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-    }
+    public function run() {}
 }

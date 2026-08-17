@@ -2,20 +2,6 @@
 
 namespace App\Filament\Resources\Navaids\RelationManagers;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\Builder;
-use Filament\Forms\Components\Builder\Block;
-use Filament\Forms\Components\Hidden;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Forms\Components\Repeater;
-use Filament\Actions\CreateAction;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
@@ -23,21 +9,36 @@ use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
 use App\Models\Measurement\MeasurementUnit;
 use App\Models\Runway\Runway;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\Builder\Block;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class HoldsRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
-
     use TranslatesStrings;
 
     protected static string $relationship = 'holds';
+
     protected static ?string $recordTitleAttribute = 'description';
+
     protected static ?string $title = 'Published Holds';
 
     public function form(Schema $schema): Schema
@@ -87,13 +88,13 @@ class HoldsRelationManager extends RelationManager
                             ->helperText(self::translateFormPath('outbound_leg_value.helper'))
                             ->numeric()
                             ->reactive()
-                            ->required(fn (Get $get): bool => (bool)$get('outbound_leg_unit'))
+                            ->required(fn (Get $get): bool => (bool) $get('outbound_leg_unit'))
                             ->minValue(0.5)
                             ->maxValue(100),
                         Select::make('outbound_leg_unit')
                             ->label(self::translateFormPath('outbound_leg_unit.label'))
                             ->helperText(self::translateFormPath('outbound_leg_unit.helper'))
-                            ->required(fn (Get $get): bool => (bool)$get('outbound_leg_value'))
+                            ->required(fn (Get $get): bool => (bool) $get('outbound_leg_value'))
                             ->reactive()
                             ->options(
                                 MeasurementUnit::whereIn('unit', ['nm', 'min'])
@@ -138,8 +139,9 @@ class HoldsRelationManager extends RelationManager
                                             ->reactive()
                                             ->afterStateUpdated(function (Get $get, Set $set) {
                                                 $target = $get('target');
-                                                if (!$target || !$get('runway.designator')) {
+                                                if (! $target || ! $get('runway.designator')) {
                                                     $set('runway.designator', null);
+
                                                     return;
                                                 }
 
@@ -254,7 +256,7 @@ class HoldsRelationManager extends RelationManager
         ];
 
         if (isset($restriction['data']['override'])) {
-            $data['override'] = (int)$restriction['data']['override'];
+            $data['override'] = (int) $restriction['data']['override'];
         }
 
         if (isset($restriction['data']['runway']['designator'])) {
@@ -272,7 +274,7 @@ class HoldsRelationManager extends RelationManager
         return [
             'type' => $restriction['type'],
             'levels' => array_map(
-                fn (array $level) => (int)$level['level'],
+                fn (array $level) => (int) $level['level'],
                 $restriction['data']['levels']
             ),
         ];
@@ -351,7 +353,7 @@ class HoldsRelationManager extends RelationManager
                 $record,
                 array_filter(
                     $restrictions,
-                    fn (array $restriction) => !isset($restriction['data']['id'])
+                    fn (array $restriction) => ! isset($restriction['data']['id'])
                 )
             );
         });

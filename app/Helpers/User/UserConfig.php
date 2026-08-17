@@ -19,8 +19,6 @@ class UserConfig implements JsonSerializable
 
     /**
      * Constructor
-     *
-     * @param string $accessToken
      */
     public function __construct(string $accessToken)
     {
@@ -29,8 +27,6 @@ class UserConfig implements JsonSerializable
 
     /**
      * Returns the api key associated with this config
-     *
-     * @return string
      */
     public function apiKey(): string
     {
@@ -39,8 +35,6 @@ class UserConfig implements JsonSerializable
 
     /**
      * Returns the API url for the config
-     *
-     * @return string
      */
     public function apiUrl(): string
     {
@@ -55,7 +49,7 @@ class UserConfig implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return  [
+        return [
             'api-url' => config('app.url'),
             'api-key' => $this->accessToken,
         ];

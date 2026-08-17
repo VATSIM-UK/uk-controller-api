@@ -18,7 +18,7 @@ class AirfieldPairingPrenotesTidy extends Migration
             ->update(
                 [
                     'flight_rule_id' => DB::table('flight_rules')->where('euroscope_key', 'I')->first()->id,
-                    'updated_at' => Carbon::now()
+                    'updated_at' => Carbon::now(),
                 ]
             );
         DB::statement('ALTER TABLE airfield_pairing_prenotes MODIFY COLUMN flight_rule_id BIGINT UNSIGNED NOT NULL');

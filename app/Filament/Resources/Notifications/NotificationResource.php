@@ -2,28 +2,28 @@
 
 namespace App\Filament\Resources\Notifications;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Notifications\RelationManagers\ControllersRelationManager;
-use App\Filament\Resources\Notifications\Pages\ListNotifications;
-use App\Filament\Resources\Notifications\Pages\CreateNotification;
-use App\Filament\Resources\Notifications\Pages\ViewNotification;
-use App\Filament\Resources\Notifications\Pages\EditNotification;
 use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\Notifications\Pages\CreateNotification;
+use App\Filament\Resources\Notifications\Pages\EditNotification;
+use App\Filament\Resources\Notifications\Pages\ListNotifications;
+use App\Filament\Resources\Notifications\Pages\ViewNotification;
+use App\Filament\Resources\Notifications\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Notification\Notification;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use App\Filament\Resources\TranslatesStrings;
 
 class NotificationResource extends Resource
 {
@@ -32,8 +32,11 @@ class NotificationResource extends Resource
     private const DATE_FORMAT = 'd M Y H:i';
 
     protected static ?string $model = Notification::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bell';
+
     protected static ?string $recordTitleAttribute = 'title';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Controller';
 
     public static function form(Schema $schema): Schema

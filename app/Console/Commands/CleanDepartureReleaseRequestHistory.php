@@ -20,6 +20,7 @@ class CleanDepartureReleaseRequestHistory extends Command
             Carbon::now()->subMonths(3)->toDateTimeString()
         )->forceDelete();
         $this->info('Departure release request history cleaned successfully');
+
         return 0;
     }
 }

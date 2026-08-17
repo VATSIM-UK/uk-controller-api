@@ -39,9 +39,6 @@ class StandAssignedEvent extends HighPriorityBroadcastEvent
         return [new PrivateChannel(self::CHANNEL)];
     }
 
-    /**
-     * @return StandAssignment
-     */
     public function getStandAssignment(): StandAssignment
     {
         return $this->standAssignment;

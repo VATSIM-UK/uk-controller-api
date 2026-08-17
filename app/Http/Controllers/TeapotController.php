@@ -8,8 +8,6 @@ use Illuminate\Http\JsonResponse;
  * A very basic controller for simply utils connectivity and middleware.
  *
  * Class DefaultController
- *
- * @package App\Http\Controllers
  */
 class TeapotController
 {

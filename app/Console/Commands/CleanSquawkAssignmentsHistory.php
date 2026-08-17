@@ -20,6 +20,7 @@ class CleanSquawkAssignmentsHistory extends Command
             Carbon::now()->subMonths(3)->toDateTimeString()
         )->forceDelete();
         $this->info('Squawk assignment audit history cleaned successfully');
+
         return 0;
     }
 }

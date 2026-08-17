@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddAircraftDimensions extends Migration
 {
-    public const DIMENSIONS_FILE = __DIR__ . '/../data/stands/2020/aircraftdimensions.csv';
+    public const DIMENSIONS_FILE = __DIR__.'/../data/stands/2020/aircraftdimensions.csv';
 
     /**
      * Run the migrations.

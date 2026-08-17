@@ -39,7 +39,7 @@ class AircraftTableSeeder extends Seeder
                 'allocate_stands' => true,
                 'aerodrome_reference_code' => 'E',
                 'wingspan' => 197.83,
-                'length' => 208.99
+                'length' => 208.99,
             ],
         );
         $a333->wakeCategories()->sync(

@@ -53,11 +53,6 @@ class AddBasicHoldProfilesForAllUsers extends Migration
         });
     }
 
-    /**
-     * @param int $userId
-     * @param string $profileName
-     * @param array $profileHolds
-     */
     private function createHoldProfile(int $userId, string $profileName, array $profileHolds)
     {
         $profile = HoldProfile::create(
@@ -72,7 +67,7 @@ class AddBasicHoldProfilesForAllUsers extends Migration
             HoldProfileHold::create(
                 [
                     'hold_profile_id' => $profile->id,
-                    'hold_id' => $hold
+                    'hold_id' => $hold,
                 ]
             );
         }

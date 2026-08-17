@@ -105,7 +105,7 @@ class EastMidlandsStands extends Migration
                 ]
             );
 
-            if (!empty($details[1])) {
+            if (! empty($details[1])) {
                 $stand->pairedStands()->sync(Stand::whereIn('identifier', $details[1])->airfield('EGNX')->pluck('id'));
             }
         }

@@ -21,9 +21,6 @@ class AircraftDisconnected implements ShouldQueue
         $this->aircraft = $aircraft;
     }
 
-    /**
-     * @param Collection $subtasks
-     */
     public function handle(Collection $subtasks): void
     {
         DB::transaction(function () use ($subtasks) {

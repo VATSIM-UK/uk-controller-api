@@ -11,8 +11,8 @@ use Illuminate\Support\Collection;
 
 class UpdateMinimumStackLevels implements ShouldQueue
 {
-    use Queueable;
     use Dispatchable;
+    use Queueable;
     use SerializesModels;
 
     private Collection $metars;

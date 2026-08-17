@@ -2,23 +2,23 @@
 
 namespace App\Filament\Resources\FirExitPoints;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\FirExitPoints\Pages\ManageFirExitPoints;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\IntentionCode\ConditionType;
 use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Heading\ValidHeading;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\TranslatesStrings;
+use Filament\Tables\Table;
 
 class FirExitPointResource extends Resource
 {
@@ -26,8 +26,9 @@ class FirExitPointResource extends Resource
 
     protected static ?string $model = FirExitPoint::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-x-mark';
-    protected static string | \UnitEnum | null $navigationGroup = 'Intention Codes';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-x-mark';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Intention Codes';
 
     public static function form(Schema $schema): Schema
     {
@@ -49,12 +50,12 @@ class FirExitPointResource extends Resource
                     ->schema([
                         TextInput::make('exit_direction_start')
                             ->required()
-                            ->rule(new ValidHeading())
+                            ->rule(new ValidHeading)
                             ->label(self::translateFormPath('exit_direction_start.label'))
                             ->helperText(self::translateFormPath('exit_direction_start.helper')),
                         TextInput::make('exit_direction_end')
                             ->required()
-                            ->rule(new ValidHeading())
+                            ->rule(new ValidHeading)
                             ->label(self::translateFormPath('exit_direction_end.label'))
                             ->helperText(self::translateFormPath('exit_direction_end.helper')),
                     ]),

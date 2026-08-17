@@ -4,18 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\Version\ReleaseChannelNotFoundException;
 use App\Exceptions\Version\VersionAlreadyExistsException;
+use App\Exceptions\Version\VersionNotFoundException;
 use App\Models\Version\Version;
 use App\Services\VersionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Exceptions\Version\VersionNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
  * Controller for handling plugin version checks.
- *
- * @package App\Http\Controllers
  */
 class VersionController extends BaseController
 {
@@ -28,8 +26,6 @@ class VersionController extends BaseController
 
     /**
      * Constructor
-     *
-     * @param VersionService $versionService
      */
     public function __construct(VersionService $versionService)
     {
@@ -38,9 +34,6 @@ class VersionController extends BaseController
 
     /**
      * Returns information about a version
-     *
-     * @param Version $version
-     * @return JsonResponse
      */
     public function getVersion(Version $version): JsonResponse
     {

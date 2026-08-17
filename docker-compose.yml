@@ -84,7 +84,7 @@ services:
     networks:
       - ukcp-network
     environment:
-      ADMINER_DEFAULT_SERVER: mysql 
+      ADMINER_DEFAULT_SERVER: mysql
 
 # Netwokring
 networks:

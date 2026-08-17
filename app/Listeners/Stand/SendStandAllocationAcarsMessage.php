@@ -26,16 +26,16 @@ class SendStandAllocationAcarsMessage
 
     public function handle(StandAssignedEvent $assignedEvent)
     {
-        if (!$this->standAcarsMessagesAreEnabled()) {
+        if (! $this->standAcarsMessagesAreEnabled()) {
             return;
         }
 
         $standAssignment = $assignedEvent->getStandAssignment();
-        if (!$this->userAllowsStandAllocationMessages($standAssignment)) {
+        if (! $this->userAllowsStandAllocationMessages($standAssignment)) {
             return;
         }
 
-        if (!$this->meetsSendingConditions($standAssignment)) {
+        if (! $this->meetsSendingConditions($standAssignment)) {
             return;
         }
 
@@ -69,10 +69,11 @@ class SendStandAllocationAcarsMessage
     {
         $aircraft = $assignment->aircraft;
         $airfield = $assignment->stand->airfield;
+
         return $airfield && $aircraft && LocationService::metersToNauticalMiles(
             $airfield->coordinate->getDistance(
                 $aircraft->latLong,
-                new Haversine()
+                new Haversine
             )
         ) > self::MIN_ASSIGNMENT_DISTANCE_NAUTICAL_MILES;
     }
@@ -94,7 +95,7 @@ class SendStandAllocationAcarsMessage
 
     private function userAllowsStandAllocationMessages(StandAssignment $standAssignment): bool
     {
-        return (bool)$standAssignment->aircraft?->user?->send_stand_acars_messages;
+        return (bool) $standAssignment->aircraft?->user?->send_stand_acars_messages;
     }
 
     private function airfieldIsControlledOrUserAllowsMessagesForUncontrolledAirfields(StandAssignment $assignment): bool
@@ -104,6 +105,7 @@ class SendStandAllocationAcarsMessage
         }
 
         $airfield = $assignment->stand->airfield;
+
         return NetworkControllerPosition::whereIn(
             'controller_position_id',
             $airfield->controllers->reject(fn (ControllerPosition $position) => $position->isDelivery())->pluck('id')

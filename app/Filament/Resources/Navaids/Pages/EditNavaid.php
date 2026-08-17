@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Navaids\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Navaids\NavaidResource;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditNavaid extends EditRecord

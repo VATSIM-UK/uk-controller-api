@@ -12,6 +12,7 @@ class SidController extends BaseController
      * @var SidService
      */
     private $sidService;
+
     /**
      * @var HandoffService
      */
@@ -19,7 +20,6 @@ class SidController extends BaseController
 
     /**
      * SidController constructor.
-     * @param SidService $sidService
      */
     public function __construct(SidService $sidService, HandoffService $handoffService)
     {

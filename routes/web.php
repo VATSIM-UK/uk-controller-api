@@ -35,7 +35,7 @@ Route::prefix('api/documentation')->group(function () {
     Route::get('openapi.yaml', function () {
         $specPath = base_path('docs/openapi.yaml');
 
-        if (!file_exists($specPath)) {
+        if (! file_exists($specPath)) {
             abort(404);
         }
 

@@ -36,7 +36,7 @@ class NewHandoffs extends Migration
             'LON_S_CTR',
             'LON_SC_CTR',
             'LON_CTR',
-            'EGLF_APP'
+            'EGLF_APP',
         ];
 
         $i = 0;

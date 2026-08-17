@@ -3,8 +3,8 @@
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\Prenote;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddAirfieldPairingPrenoteData extends Migration
 {

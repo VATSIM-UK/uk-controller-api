@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\Notifications\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\AttachAction;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Actions\DetachAction;
-use Filament\Actions\DetachBulkAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\ControllerPosition;
 use Carbon\Carbon;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -23,10 +23,10 @@ use Illuminate\Support\Facades\DB;
 class ControllersRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
-
     use TranslatesStrings;
 
     protected static string $relationship = 'controllers';
+
     protected static ?string $recordTitleAttribute = 'callsign';
 
     public function table(Table $table): Table
@@ -83,7 +83,7 @@ class ControllersRelationManager extends RelationManager
                                     )
                             )
                             ->hidden(fn (Get $get) => $get('global') || $get('position_level'))
-                            ->required(fn (Get $get) => !$get('global') && !$get('position_level')),
+                            ->required(fn (Get $get) => ! $get('global') && ! $get('position_level')),
                     ])
                     ->action(function (AttachAction $action) {
                         $action->process( // NOSONAR
@@ -133,10 +133,10 @@ class ControllersRelationManager extends RelationManager
             return ControllerPosition::all()->pluck('id');
         }
 
-        if (!empty($data['position_level'])) {
+        if (! empty($data['position_level'])) {
             $query = array_reduce(
                 array_map(
-                    fn (string $level) => ControllerPosition::where('callsign', 'like', '%' . $level),
+                    fn (string $level) => ControllerPosition::where('callsign', 'like', '%'.$level),
                     $data['position_level']
                 ),
                 fn (?Builder $carry, Builder $positionQuery) => $carry ? $carry->union($positionQuery) : $positionQuery

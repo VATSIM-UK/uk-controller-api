@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Aircraft\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Filament\Resources\Aircraft\AircraftResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListAircraft extends ListRecords

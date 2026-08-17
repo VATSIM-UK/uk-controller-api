@@ -117,7 +117,7 @@ class ScottishTmaHandoffs extends Migration
                 'SCO_W_CTR',
                 'SCO_WD_CTR',
                 'SCO_CTR',
-                'EGPK_APP'
+                'EGPK_APP',
             ]
         );
 

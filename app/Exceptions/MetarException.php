@@ -9,8 +9,5 @@ use Exception;
  * with the provided METAR.
  *
  * Class MetarException
- * @package App\Exceptions
  */
-class MetarException extends Exception
-{
-}
+class MetarException extends Exception {}

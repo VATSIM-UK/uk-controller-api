@@ -3,9 +3,9 @@
 use App\Http\Controllers\MissedApproachController;
 use App\Http\Controllers\PluginLogController;
 use App\Http\Controllers\PrenoteMessageController;
+use App\Http\Middleware\MiddlewareKeys;
 use App\Rules\VatsimCallsign;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\MiddlewareKeys;
 
 // Routes that the plugin user will use
 Route::middleware('api')
@@ -124,7 +124,6 @@ Route::middleware('api')
                     }
                 );
 
-
             // Routes for user administration
             Route::middleware('admin.user')->group(
                 function () {
@@ -218,7 +217,7 @@ Route::middleware('api')
                             'uses' => 'UserController@markNotificationAsReadForUser',
                         ]
                     )->where('cid', '[0-9]+')->where('notificationId', '[0-9]+');
-                    ;
+
                 }
             );
 

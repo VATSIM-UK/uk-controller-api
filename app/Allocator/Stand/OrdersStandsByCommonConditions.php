@@ -7,15 +7,17 @@ namespace App\Allocator\Stand;
  *
  * Any class that uses this trait must also use the ConsidersStandRequests trait and call
  * joinOtherStandRequests() on the query before applying the ordering.
- *
  */
 trait OrdersStandsByCommonConditions
 {
     use ConsidersStandRequests;
 
     private string $aerodromeReferenceCode = 'aerodrome_reference_code ASC';
+
     private string $assignmentPriority = 'assignment_priority ASC';
+
     private string $otherStandRequests = 'other_stand_requests.id ASC';
+
     private string $random = 'RAND() ASC';
 
     private function commonOrderByConditions(): array
@@ -45,7 +47,6 @@ trait OrdersStandsByCommonConditions
             $this->random,
         ];
     }
-
 
     private function commonOrderByConditionsWithoutRequestsOrAssignmentPriority(): array
     {

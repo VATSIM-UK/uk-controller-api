@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\UnitDiscreteSquawkRanges;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Helpers\HasUnitSquawkRangeRules;
+use App\Filament\Resources\TranslatesStrings;
 use App\Filament\Resources\UnitDiscreteSquawkRanges\Pages\ManageUnitDiscreteSquawkRanges;
 use App\Filament\Resources\UnitDiscreteSquawkRanges\Traits\MutatesRuleData;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRange;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class UnitDiscreteSquawkRangeResource extends Resource
 {
@@ -24,9 +24,12 @@ class UnitDiscreteSquawkRangeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = UnitDiscreteSquawkRange::class;
-    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Squawk Ranges';
+
     protected static ?string $navigationLabel = 'Unit Discrete';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wifi';
 
     public static function form(Schema $schema): Schema
     {
@@ -73,8 +76,6 @@ class UnitDiscreteSquawkRangeResource extends Resource
     /**
      * Returns the root of the translation path for the relations manager, to build
      * labels etc.
-     *
-     * @return string
      */
     protected static function translationPathRoot(): string
     {

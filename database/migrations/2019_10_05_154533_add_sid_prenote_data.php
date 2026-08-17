@@ -2,9 +2,9 @@
 
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Migrations\Migration;
 
 class AddSidPrenoteData extends Migration
 {

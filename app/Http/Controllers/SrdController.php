@@ -67,7 +67,7 @@ class SrdController
                 'notes' => $route->notes->map(function (SrdNote $note) {
                     return [
                         'id' => $note->id,
-                        'text' => $note->note_text
+                        'text' => $note->note_text,
                     ];
                 }),
             ];

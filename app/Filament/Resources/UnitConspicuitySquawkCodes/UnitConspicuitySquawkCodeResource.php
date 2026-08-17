@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\UnitConspicuitySquawkCodes;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use App\Filament\Helpers\HasSquawkRanges;
 use App\Filament\Helpers\HasUnitSquawkRangeRules;
+use App\Filament\Resources\TranslatesStrings;
 use App\Filament\Resources\UnitConspicuitySquawkCodes\Pages\ManageUnitConspicuitySquawkCodes;
 use App\Filament\Resources\UnitDiscreteSquawkRanges\Traits\MutatesRuleData;
 use App\Models\Squawk\UnitConspicuity\UnitConspicuitySquawkCode;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class UnitConspicuitySquawkCodeResource extends Resource
 {
@@ -24,9 +24,12 @@ class UnitConspicuitySquawkCodeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = UnitConspicuitySquawkCode::class;
-    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Squawk Ranges';
+
     protected static ?string $navigationLabel = 'Unit Conspicuity';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wifi';
 
     public static function form(Schema $schema): Schema
     {
@@ -71,8 +74,6 @@ class UnitConspicuitySquawkCodeResource extends Resource
     /**
      * Returns the root of the translation path for the relations manager, to build
      * labels etc.
-     *
-     * @return string
      */
     protected static function translationPathRoot(): string
     {

@@ -389,7 +389,6 @@ class AddGeneralRanges extends Migration
                 'stop' => '3747',
             ],
 
-
             // CCAMS - ala, the last resort
             [
                 'departure_ident' => 'CCAMS',
@@ -658,9 +657,9 @@ class AddGeneralRanges extends Migration
         // Process the ranges
         foreach ($rangeInfo as $range) {
             // If we don't yet have range owner, create one. There should be one range owner per combination of arr/dep
-            if (!isset($processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']])) {
+            if (! isset($processedOwners[$range['departure_ident'].'|'.$range['arrival_ident']])) {
                 // Create the range owner and range information
-                $processedOwners[$range['departure_ident'] . '|' . $range['arrival_ident']] =
+                $processedOwners[$range['departure_ident'].'|'.$range['arrival_ident']] =
                     DB::table('squawk_general')->insertGetId(
                         [
                             'departure_ident' => $range['departure_ident'],
@@ -678,7 +677,7 @@ class AddGeneralRanges extends Migration
                     'rules' => $range['rules'],
                     'allow_duplicate' => false,
                     'squawk_range_owner_id' => $processedOwners[
-                        $range['departure_ident'] . '|' . $range['arrival_ident']
+                        $range['departure_ident'].'|'.$range['arrival_ident']
                     ],
                 ]
             );

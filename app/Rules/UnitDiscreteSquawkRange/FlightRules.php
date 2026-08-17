@@ -19,8 +19,8 @@ class FlightRules implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return bool
      */
     public function passes($attribute, $value)
@@ -39,9 +39,6 @@ class FlightRules implements Rule
         return 'Flight rules do not match';
     }
 
-    /**
-     * @return string
-     */
     public function getFlightRules(): string
     {
         return $this->flightRules;

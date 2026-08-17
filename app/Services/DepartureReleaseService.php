@@ -9,8 +9,8 @@ use App\Events\DepartureReleaseRequestCancelledEvent;
 use App\Events\DepartureReleaseRequestedEvent;
 use App\Exceptions\Release\Departure\DepartureReleaseAlreadyDecidedException;
 use App\Exceptions\Release\Departure\DepartureReleaseDecisionNotAllowedException;
-use Carbon\Carbon;
 use App\Models\Release\Departure\DepartureReleaseRequest;
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 
 class DepartureReleaseService
@@ -31,16 +31,18 @@ class DepartureReleaseService
                 'user_id' => $requestingUserId,
                 'controller_position_id' => $requestingController,
                 'target_controller_position_id' => $targetController,
-                'expires_at' => Carbon::now()->addSeconds($expiresInSeconds)
+                'expires_at' => Carbon::now()->addSeconds($expiresInSeconds),
             ]
         );
 
         event(new DepartureReleaseRequestedEvent($releaseRequest));
+
         return $releaseRequest->id;
     }
 
     /**
      * Approve a departure release on behalf of a single controller.
+     *
      * @throws DepartureReleaseDecisionNotAllowedException|DepartureReleaseAlreadyDecidedException
      */
     public function approveReleaseRequest(
@@ -59,6 +61,7 @@ class DepartureReleaseService
 
     /**
      * Reject a departure release on behalf of a single controller.
+     *
      * @throws DepartureReleaseDecisionNotAllowedException|DepartureReleaseAlreadyDecidedException
      */
     public function rejectReleaseRequest(
@@ -75,6 +78,7 @@ class DepartureReleaseService
 
     /**
      * Acknowledge a departure release as received on behalf of a single controller
+     *
      * @throws DepartureReleaseDecisionNotAllowedException|DepartureReleaseAlreadyDecidedException
      */
     public function acknowledgeReleaseRequest(
@@ -90,6 +94,7 @@ class DepartureReleaseService
 
     /**
      * Acknowledge a departure release as received on behalf of a single controller
+     *
      * @throws DepartureReleaseDecisionNotAllowedException
      */
     public function cancelReleaseRequest(

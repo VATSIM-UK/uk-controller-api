@@ -165,7 +165,6 @@ class DatabaseSeeder extends Seeder
         'stand_request_history',
     ];
 
-
     /**
      * Run the database seeds.
      *
@@ -173,7 +172,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement("SET foreign_key_checks=0");
+        DB::statement('SET foreign_key_checks=0');
         // Truncate all tables
         foreach (self::SEEDERS as $tables) {
             foreach ($tables as $table) {
@@ -195,6 +194,6 @@ class DatabaseSeeder extends Seeder
             $this->call(DevUserSeeder::class);
         }
 
-        DB::statement("SET foreign_key_checks=1");
+        DB::statement('SET foreign_key_checks=1');
     }
 }

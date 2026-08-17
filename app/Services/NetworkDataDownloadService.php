@@ -13,12 +13,13 @@ class NetworkDataDownloadService
     use MakesHttpRequests;
 
     private NetworkMetadataService $metadataService;
+
     private Collection $networkData;
 
     public function __construct(NetworkMetadataService $metadataService)
     {
         $this->metadataService = $metadataService;
-        $this->networkData = new Collection();
+        $this->networkData = new Collection;
     }
 
     public function getNetworkData(): Collection
@@ -35,13 +36,15 @@ class NetworkDataDownloadService
         try {
             $networkResponse = $this->httpRequest()->get($this->metadataService->getNetworkDataUrl());
         } catch (Exception $exception) {
-            Log::warning('Failed to download network data, exception was ' . $exception->getMessage());
-            return new Collection();
+            Log::warning('Failed to download network data, exception was '.$exception->getMessage());
+
+            return new Collection;
         }
 
-        if (!$networkResponse->successful()) {
-            Log::warning('Failed to download network data, response was ' . $networkResponse->status());
-            return new Collection();
+        if (! $networkResponse->successful()) {
+            Log::warning('Failed to download network data, response was '.$networkResponse->status());
+
+            return new Collection;
         }
 
         $networkData = $networkResponse->json();

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Handoffs\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Handoffs\HandoffResource;
 use App\Models\Controller\ControllerPosition;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditHandoff extends EditRecord

@@ -2,14 +2,15 @@
 
 namespace App\Rules\Sid;
 
-use Illuminate\Translation\PotentiallyTranslatedString;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use Illuminate\Contracts\Validation\InvokableRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class SidIdentifiersMustBeUniqueForRunway implements InvokableRule
 {
     private readonly Runway $runway;
+
     private readonly ?Sid $existingSid;
 
     public function __construct(Runway $runway, ?Sid $existingSid)
@@ -21,9 +22,9 @@ class SidIdentifiersMustBeUniqueForRunway implements InvokableRule
     /**
      * Run the validation rule.
      *
-     * @param string $attribute
-     * @param mixed $value
-     * @param Closure(string):PotentiallyTranslatedString $fail
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  Closure(string):PotentiallyTranslatedString  $fail
      * @return void
      */
     public function __invoke($attribute, $value, $fail)

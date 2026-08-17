@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * Model for an Altimeter Setting Region and the airfields used to determine its pressure.
  *
  * Class AltimeterSettingRegion
- * @package App\Models\AltimeterSettingRegions
  */
 class AltimeterSettingRegion extends Model
 {

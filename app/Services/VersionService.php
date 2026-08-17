@@ -25,16 +25,16 @@ class VersionService
     /**
      * Return a version model based on the version string
      *
-     * @param string $versionString The version string
-     * @return Version
+     * @param  string  $versionString  The version string
+     *
      * @throws VersionNotFoundException
      */
     public function getVersion(string $versionString): Version
     {
         $version = Version::where('version', '=', $versionString)->withTrashed()->first();
 
-        if (!$version) {
-            throw new VersionNotFoundException('Version ' . $versionString . ' not found');
+        if (! $version) {
+            throw new VersionNotFoundException('Version '.$versionString.' not found');
         }
 
         return $version;
@@ -49,8 +49,8 @@ class VersionService
     {
         $version = Version::withTrashed()->where('version', '=', $versionString)->first();
 
-        if (!$version) {
-            throw new VersionNotFoundException('Version ' . $versionString . ' not found');
+        if (! $version) {
+            throw new VersionNotFoundException('Version '.$versionString.' not found');
         }
 
         $version->toggleAllowed();
@@ -63,22 +63,22 @@ class VersionService
     public function publishNewVersionFromGithub(string $tag): void
     {
         if (Version::withTrashed()->where('version', $tag)->exists()) {
-            throw new VersionAlreadyExistsException();
+            throw new VersionAlreadyExistsException;
         }
 
         try {
             $normalisedVersion = $this->versionParser->normalize($tag);
         } catch (UnexpectedValueException $exception) {
             Log::error(sprintf('Invalid release channel %s', $tag));
-            throw new ReleaseChannelNotFoundException();
+            throw new ReleaseChannelNotFoundException;
         }
 
         $releaseChannel = PluginReleaseChannel::where('name', VersionParser::parseStability($normalisedVersion))
             ->first();
 
-        if (!$releaseChannel) {
+        if (! $releaseChannel) {
             Log::error(sprintf('Invalid release channel %s', $tag));
-            throw new ReleaseChannelNotFoundException();
+            throw new ReleaseChannelNotFoundException;
         }
 
         // Create the version
@@ -94,15 +94,13 @@ class VersionService
      * The "latest version" on any release channel is the most recent version (in semver terms)
      * on any channel that is, or more stable than, the requested channel.
      *
-     * @param string $channel
-     * @return Version
      * @throws VersionNotFoundException
      */
     public function getLatestVersionForReleaseChannel(string $channel): Version
     {
         $relevantVersions = $this->getRelevantVersions(PluginReleaseChannel::where('name', $channel)->firstOrFail());
         if ($relevantVersions->isEmpty()) {
-            throw new VersionNotFoundException();
+            throw new VersionNotFoundException;
         }
 
         return $relevantVersions->reduce(function (?Version $selectedVersion, Version $version) {
@@ -124,6 +122,7 @@ class VersionService
     public function getFullVersionDetails(Version $version): array
     {
         $assetsUrl = sprintf('%s/%s', config('github.latest_release_assets_url'), $version->version);
+
         return [
             'id' => $version->id,
             'version' => $version->version,

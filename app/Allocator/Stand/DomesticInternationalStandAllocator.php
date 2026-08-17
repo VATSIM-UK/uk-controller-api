@@ -14,7 +14,7 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 
     public function allocate(NetworkAircraft $aircraft): ?int
     {
-        if (!$aircraft->planned_depairport || !$aircraft->aircraft_id) {
+        if (! $aircraft->planned_depairport || ! $aircraft->aircraft_id) {
             return null;
         }
 
@@ -26,7 +26,7 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
-        if (!$aircraft->planned_depairport || !$aircraft->aircraft_id) {
+        if (! $aircraft->planned_depairport || ! $aircraft->aircraft_id) {
             return collect();
         }
 

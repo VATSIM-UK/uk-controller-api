@@ -17,15 +17,13 @@ class DependencyController extends BaseController
 
     /**
      * Get all the downloadable dependency locations
-     *
-     * @return JsonResponse
      */
     public function getAllDependencies(): JsonResponse
     {
         $dependencies = Dependency::with('user')->get()->map(function (Dependency $dependency) {
             $updatedAt = $dependency->updated_at;
             if ($dependency->per_user) {
-                if (!$dependency->user->first()) {
+                if (! $dependency->user->first()) {
                     $dependency->user()->attach(
                         $dependency->id,
                         [
@@ -37,7 +35,7 @@ class DependencyController extends BaseController
                 }
 
                 $updatedAt = $dependency->user->first()->pivot->updated_at;
-            } elseif (!$updatedAt) {
+            } elseif (! $updatedAt) {
                 $dependency->updated_at = Carbon::now();
                 $dependency->save();
                 $updatedAt = $dependency->updated_at;
@@ -50,6 +48,7 @@ class DependencyController extends BaseController
                 'updated_at' => $updatedAt->timestamp,
             ];
         });
+
         return response()->json($dependencies);
     }
 }

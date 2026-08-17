@@ -12,9 +12,9 @@ class ControllerPositionFrequency implements InvokableRule
     {
         $matches = [];
         if (
-            !is_string($value) ||
+            ! is_string($value) ||
             empty($value) ||
-            !preg_match(self::FREQUENCY_REGEX, $value, $matches) ||
+            ! preg_match(self::FREQUENCY_REGEX, $value, $matches) ||
             (int) $matches[1] % 5 !== 0
         ) {
             $fail('validation.frequency')->translate();

@@ -37,7 +37,7 @@ trait MutatesRuleData
     private static function mutateRecordData(): callable
     {
         return function (array $data): array {
-            if (!$data['rules']) {
+            if (! $data['rules']) {
                 return $data;
             }
 

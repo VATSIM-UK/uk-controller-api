@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 class DeleteExpiredTokensTest extends BaseFunctionalTestCase
 {
     const SCOPES = '"[user]"';
-    
+
     public function testItDeletesExpiredTokens()
     {
         Token::create(

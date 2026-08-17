@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Navigation;
 
-use Illuminate\Support\Str;
 use App\Models\Navigation\Navaid;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class NavaidFactory extends Factory
 {
@@ -25,7 +25,7 @@ class NavaidFactory extends Factory
         return [
             'identifier' => Str::upper($this->faker->unique()->lexify('???')),
             'latitude' => $this->faker->latitude(),
-            'longitude' => $this->faker->longitude()
+            'longitude' => $this->faker->longitude(),
         ];
     }
 }

@@ -11,7 +11,7 @@ use Symfony\Component\Console\Exception\RuntimeException;
 class UserCreateTest extends BaseFunctionalTestCase
 {
     const ARTISAN_COMMAND = 'user:create';
-    
+
     public function testItConstructs()
     {
         $this->assertInstanceOf(UserCreate::class, $this->app->make(UserCreate::class));

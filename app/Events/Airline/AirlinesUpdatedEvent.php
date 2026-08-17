@@ -2,6 +2,4 @@
 
 namespace App\Events\Airline;
 
-class AirlinesUpdatedEvent
-{
-}
+class AirlinesUpdatedEvent {}

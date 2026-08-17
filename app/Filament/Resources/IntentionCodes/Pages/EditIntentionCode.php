@@ -2,16 +2,16 @@
 
 namespace App\Filament\Resources\IntentionCodes\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\IntentionCodes\IntentionCodeResource;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class EditIntentionCode extends EditRecord
 {
-    use MutatesIntentionCodes;
     use FillsIntentionCodeForms;
+    use MutatesIntentionCodes;
     use SavesIntentionCodes;
 
     protected static string $resource = IntentionCodeResource::class;

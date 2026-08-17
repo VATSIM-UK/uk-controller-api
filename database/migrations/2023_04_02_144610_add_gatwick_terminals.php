@@ -7,18 +7,27 @@ use App\Models\Stand\Stand;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-if (!class_exists(GatwickPiers::class)) {
+if (! class_exists(GatwickPiers::class)) {
     class GatwickPiers
     {
         public readonly int $gatwickAirfieldId;
+
         public readonly Terminal $pier1;
+
         public readonly Terminal $pier2South;
+
         public readonly Terminal $pier2North;
+
         public readonly Terminal $pier3;
+
         public readonly Terminal $pier4;
+
         public readonly Terminal $pier5;
+
         public readonly Terminal $pier6;
+
         public readonly Terminal $remote130s;
+
         public readonly Terminal $remote140s;
 
         public function __construct(int $gatwick)
@@ -82,7 +91,8 @@ if (!class_exists(GatwickPiers::class)) {
     }
 }
 
-return new class() extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */

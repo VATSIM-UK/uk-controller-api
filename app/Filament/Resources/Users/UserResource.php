@@ -2,22 +2,22 @@
 
 namespace App\Filament\Resources\Users;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Users\RelationManagers\RolesRelationManager;
-use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\TranslatesStrings;
 use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
+use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Pages\ViewUser;
+use App\Filament\Resources\Users\RelationManagers\RolesRelationManager;
 use App\Models\User\User;
 use App\Models\User\UserStatus;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class UserResource extends Resource
 {
@@ -26,6 +26,7 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function canGloballySearch(): bool

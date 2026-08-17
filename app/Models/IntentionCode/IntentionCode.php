@@ -13,7 +13,7 @@ class IntentionCode extends Model
         'description',
         'code',
         'conditions',
-        'priority'
+        'priority',
     ];
 
     protected $casts = [

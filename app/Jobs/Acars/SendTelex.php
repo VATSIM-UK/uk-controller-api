@@ -12,8 +12,8 @@ use Illuminate\Queue\SerializesModels;
 
 class SendTelex implements ShouldQueue
 {
-    use Queueable;
     use Dispatchable;
+    use Queueable;
     use SerializesModels;
 
     private TelexMessageInterface $telex;

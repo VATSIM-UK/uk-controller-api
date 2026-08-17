@@ -20,6 +20,7 @@ class CleanStandAssignmentsHistory extends Command
             Carbon::now()->subMonths(3)
         )->forceDelete();
         $this->info('Stand assignment audit history cleaned successfully');
+
         return 0;
     }
 }

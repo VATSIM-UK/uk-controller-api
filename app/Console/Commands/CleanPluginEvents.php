@@ -20,6 +20,7 @@ class CleanPluginEvents extends Command
             Carbon::now()->subHour()
         )->delete();
         $this->info('Plugin events cleaned successfully');
+
         return 0;
     }
 }

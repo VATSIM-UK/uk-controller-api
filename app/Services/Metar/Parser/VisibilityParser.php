@@ -20,7 +20,8 @@ class VisibilityParser implements MetarParser
                         return true;
                     }
 
-                    $parsedData->offsetSet('visibility', (int)$matches[0]);
+                    $parsedData->offsetSet('visibility', (int) $matches[0]);
+
                     return false;
                 });
             }

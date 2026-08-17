@@ -24,7 +24,7 @@ class TerminalFactory extends Factory
     {
         return [
             'airfield_id' => Airfield::factory()->create()->id,
-            'description' => $this->faker->sentence()
+            'description' => $this->faker->sentence(),
         ];
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddLocalRanges extends Migration
 {
@@ -292,7 +292,6 @@ class AddLocalRanges extends Migration
                 'stop' => '3657',
                 'allow_duplicate' => false,
             ],
-
 
             // Southampton / SOLENT
             [
@@ -811,7 +810,7 @@ class AddLocalRanges extends Migration
         // Process the ranges
         foreach ($rangeInfo as $range) {
             // Create the range owner and unit if we haven't already
-            if (!isset($processedOwners[$range['unit']])) {
+            if (! isset($processedOwners[$range['unit']])) {
                 // Create the range owner and unit range
                 $processedOwners[$range['unit']] = DB::table('squawk_unit')->insertGetId(
                     [

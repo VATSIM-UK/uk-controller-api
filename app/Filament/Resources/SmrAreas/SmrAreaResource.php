@@ -2,39 +2,44 @@
 
 namespace App\Filament\Resources\SmrAreas;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\TernaryFilter;
-use App\Filament\Resources\SmrAreas\Pages\ListSmrAreas;
-use App\Filament\Resources\SmrAreas\Pages\CreateSmrArea;
-use App\Filament\Resources\SmrAreas\Pages\ViewSmrArea;
-use App\Filament\Resources\SmrAreas\Pages\EditSmrArea;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\SmrAreas\Pages\CreateSmrArea;
+use App\Filament\Resources\SmrAreas\Pages\EditSmrArea;
+use App\Filament\Resources\SmrAreas\Pages\ListSmrAreas;
+use App\Filament\Resources\SmrAreas\Pages\ViewSmrArea;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\SmrArea;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
-use App\Filament\Resources\TranslatesStrings;
 
 class SmrAreaResource extends Resource
 {
-    use TranslatesStrings;
     use HasCoordinates;
+    use TranslatesStrings;
 
     protected static ?string $model = SmrArea::class;
+
     protected static ?string $modelLabel = 'SMR Area';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-exclamation-triangle';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-exclamation-triangle';
+
     protected static ?string $navigationLabel = 'SMR Areas';
+
     protected static ?string $pluralModelLabel = 'SMR Areas';
 
     public static function form(Schema $schema): Schema
@@ -45,7 +50,7 @@ class SmrAreaResource extends Resource
                     ->label(self::translateFormPath('airfield.label'))
                     ->helperText(self::translateFormPath('airfield.helper'))
                     ->options(SelectOptions::airfields())
-                    ->searchable(!App::runningUnitTests())
+                    ->searchable(! App::runningUnitTests())
                     ->required(),
                 TextInput::make('name')
                     ->label(self::translateFormPath('name.label'))

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Models\SectorFile\SectorFileIssue;
 use Exception;
 use Github\Client;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 class GithubController
 {
     public const CONFIG_KEY_PLUGIN_LABEL = 'github.plugin.label';
+
     public const CONFIG_KEY_API_LABEL = 'github.api.label';
 
     /**
@@ -30,12 +31,12 @@ class GithubController
     public function processGithubWebhook(Request $request)
     {
         $allValues = $request->json()->all();
-        if (!isset($allValues['issue'])) {
+        if (! isset($allValues['issue'])) {
             return response('', 422);
         }
 
         // Check for the events we care about
-        if (!in_array($request->json()->get('action'), ['created', 'labeled'])) {
+        if (! in_array($request->json()->get('action'), ['created', 'labeled'])) {
             return response('', 200);
         }
 
@@ -74,6 +75,7 @@ class GithubController
             } catch (QueryException $queryException) {
                 if ($queryException->errorInfo[1] === 1062) {
                     $response = response('', 200);
+
                     return;
                 }
 
@@ -90,8 +92,6 @@ class GithubController
      * Process the labels, returns a negative number if at least one creation fails. Returns 0 if
      * no issues created. Returns number of creations if all succeed.
      *
-     * @param SectorFileIssue $databaseIssue
-     * @param array $issue
      * @return ResponseFactory|Response
      */
     private function processLabels(SectorFileIssue $databaseIssue, array $issue)
@@ -99,13 +99,13 @@ class GithubController
         $labels = $issue['labels'] ?? [];
         $numCreated = 0;
         foreach ($labels as $label) {
-            if ($label['name'] == config(self::CONFIG_KEY_PLUGIN_LABEL) && !$databaseIssue->plugin) {
+            if ($label['name'] == config(self::CONFIG_KEY_PLUGIN_LABEL) && ! $databaseIssue->plugin) {
                 $createdPlugin = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
                 $databaseIssue->plugin = $createdPlugin;
                 $numCreated = $numCreated + ($createdPlugin ? 1 : -10);
             }
 
-            if ($label['name'] == config(self::CONFIG_KEY_API_LABEL) && !$databaseIssue->api) {
+            if ($label['name'] == config(self::CONFIG_KEY_API_LABEL) && ! $databaseIssue->api) {
                 $createdApi = $this->createGithubIssue($label['name'], $issue['title'], $issue['html_url']);
                 $databaseIssue->api = $createdApi;
                 $numCreated = $numCreated + ($createdApi ? 1 : -10);
@@ -121,10 +121,12 @@ class GithubController
 
         if ($numCreated < 0) {
             Log::error('Error creating github issue(s)');
+
             return response('', 502);
         }
 
         Log::info('Created GitHub issues');
+
         return response('', 201);
     }
 
@@ -138,7 +140,6 @@ class GithubController
         $pushRepo = $sourceLabel == config(self::CONFIG_KEY_PLUGIN_LABEL)
             ? config('github.plugin.repo')
             : config('github.api.repo');
-
 
         try {
             $this->client->authenticate(
@@ -155,17 +156,19 @@ class GithubController
                         'title' => $title,
                         'body' => $url,
                         'labels' => [
-                            'dependency'
+                            'dependency',
                         ],
                     ]
                 );
             Log::info('Created GitHub issue');
+
             return true;
         } catch (Exception $exception) {
             Log::error(
                 'Unable to create GitHub issue',
                 [$exception->getMessage()]
             );
+
             return false;
         }
     }

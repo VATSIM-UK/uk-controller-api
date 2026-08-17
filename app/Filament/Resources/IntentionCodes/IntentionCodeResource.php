@@ -2,41 +2,43 @@
 
 namespace App\Filament\Resources\IntentionCodes;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Section;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\IntentionCodes\Pages\ListIntentionCodes;
-use App\Filament\Resources\IntentionCodes\Pages\CreateIntentionCode;
-use App\Filament\Resources\IntentionCodes\Pages\ViewIntentionCode;
-use App\Filament\Resources\IntentionCodes\Pages\EditIntentionCode;
 use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\IntentionCodes\Pages\CreateIntentionCode;
+use App\Filament\Resources\IntentionCodes\Pages\EditIntentionCode;
+use App\Filament\Resources\IntentionCodes\Pages\ListIntentionCodes;
+use App\Filament\Resources\IntentionCodes\Pages\ViewIntentionCode;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\IntentionCode\ConditionType;
 use App\Models\IntentionCode\IntentionCode;
 use App\Rules\Airfield\AirfieldIcao;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use App\Rules\Controller\ControllerPositionPartialCallsign;
 use App\Services\IntentionCode\IntentionCodeService;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\TranslatesStrings;
+use Filament\Tables\Table;
 
 class IntentionCodeResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = IntentionCode::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-code-bracket';
-    protected static string | \UnitEnum | null $navigationGroup = 'Intention Codes';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-code-bracket';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Intention Codes';
 
     public static function form(Schema $schema): Schema
     {
@@ -64,7 +66,7 @@ class IntentionCodeResource extends Resource
                             ->maxLength(2)
                             ->hidden(fn (Get $get) => $get('code_type') !== 'single_code')
                             ->label(self::translateFormPath('single_code.label'))
-                            ->helperText(self::translateFormPath('single_code.helper'))
+                            ->helperText(self::translateFormPath('single_code.helper')),
                     ]),
                 Fieldset::make('priority')
                     ->label(self::translateFormPath('priority.label'))
@@ -89,7 +91,7 @@ class IntentionCodeResource extends Resource
                         Select::make('insert_position')
                             ->label(self::translateFormPath('before_after_position.label'))
                             ->helperText(self::translateFormPath('before_after_position.helper'))
-                            ->hidden(fn (Get $get) => !in_array($get('order_type'), ['before', 'after']))
+                            ->hidden(fn (Get $get) => ! in_array($get('order_type'), ['before', 'after']))
                             ->required(fn (Get $get) => in_array($get('order_type'), ['before', 'after']))
                             ->options(
                                 fn () => IntentionCode::all()->mapWithKeys(
@@ -171,7 +173,7 @@ class IntentionCodeResource extends Resource
                                     ->label(self::translateFormPath('conditions.arrival_airfields.label'))
                                     ->helperText(self::translateFormPath('conditions.arrival_airfields.helper'))
                                     ->required()
-                                    ->rule(new AirfieldIcao())
+                                    ->rule(new AirfieldIcao),
                             ])
                             ->required(),
                     ]),
@@ -182,12 +184,12 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('conditions.arrival_airfield_pattern.label'))
                             ->helperText(self::translateFormPath('conditions.arrival_airfield_pattern.helper'))
                             ->required()
-                            ->rule(new PartialAirfieldIcao()),
+                            ->rule(new PartialAirfieldIcao),
                     ]),
                 Block::make(ConditionType::ExitPoint->value)
                     ->label(self::translateFormPath('conditions.exit_point.menu_item'))
                     ->reactive()
-                    ->visible(!$disableExitPoint)
+                    ->visible(! $disableExitPoint)
                     ->schema([
                         Select::make('exit_point')
                             ->label(self::translateFormPath('conditions.exit_point.label'))
@@ -205,7 +207,7 @@ class IntentionCodeResource extends Resource
                             ->required()
                             ->integer()
                             ->minValue(1000)
-                            ->maxValue(60000)
+                            ->maxValue(60000),
                     ]),
                 Block::make(ConditionType::CruisingLevelAbove->value)
                     ->label(self::translateFormPath('conditions.cruising_level_above.menu_item'))
@@ -225,7 +227,7 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('conditions.routing_via.label'))
                             ->helperText(self::translateFormPath('conditions.routing_via.helper'))
                             ->required()
-                            ->maxLength(5)
+                            ->maxLength(5),
                     ]),
                 Block::make(ConditionType::ControllerPositionStartsWith->value)
                     ->label(self::translateFormPath('conditions.controller_position_starts_with.menu_item'))
@@ -234,7 +236,7 @@ class IntentionCodeResource extends Resource
                             ->label(self::translateFormPath('conditions.controller_position_starts_with.label'))
                             ->helperText(self::translateFormPath('conditions.controller_position_starts_with.helper'))
                             ->required()
-                            ->rule(new ControllerPositionPartialCallsign()),
+                            ->rule(new ControllerPositionPartialCallsign),
                     ]),
                 Block::make(ConditionType::Not->value)
                     ->label(self::translateFormPath('conditions.not.menu_item'))
@@ -244,7 +246,7 @@ class IntentionCodeResource extends Resource
                     ->schema(fn () => [self::conditions(true)]),
                 Block::make(ConditionType::AllOf->value)
                     ->label(self::translateFormPath('conditions.all_of.menu_item'))
-                    ->schema(fn () => [self::conditions(true)])
+                    ->schema(fn () => [self::conditions(true)]),
             ]);
     }
 

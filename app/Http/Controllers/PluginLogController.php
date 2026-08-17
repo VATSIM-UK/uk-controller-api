@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plugin\PluginLog;
 use App\Http\Requests\Plugin\PluginLog as PluginLogRequest;
+use App\Models\Plugin\PluginLog;
 use Illuminate\Http\JsonResponse;
 
 class PluginLogController extends BaseController
@@ -16,6 +16,7 @@ class PluginLogController extends BaseController
         }
 
         $pluginLog = PluginLog::create($validated);
+
         return response()->json(['id' => $pluginLog->id], 201);
     }
 }

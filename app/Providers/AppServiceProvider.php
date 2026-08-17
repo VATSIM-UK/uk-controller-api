@@ -6,15 +6,15 @@ use App\Http\Livewire\CurrentStandRequest;
 use App\Http\Livewire\DepartureStandFinderForm;
 use App\Http\Livewire\RequestAStandForm;
 use App\Http\Livewire\StandPredictorForm;
+use App\Services\SectorfileService;
 use App\SocialiteProviders\CoreProvider;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Validation\Rule;
-use App\Services\SectorfileService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rule;
 use Laravel\Socialite\Contracts\Factory;
 use Livewire\Livewire;
 
@@ -33,17 +33,17 @@ class AppServiceProvider extends ServiceProvider
 
                 $report->setUser([
                     'id' => $user->id,
-                    'name' => $user->name
+                    'name' => $user->name,
                 ]);
             }
         });
 
         Rule::macro('latitudeString', function () {
-            return 'regex:' . SectorfileService::SECTORFILE_LATITUDE_REGEX;
+            return 'regex:'.SectorfileService::SECTORFILE_LATITUDE_REGEX;
         });
 
         Rule::macro('longitudeString', function () {
-            return 'regex:' . SectorfileService::SECTORFILE_LONGITUDE_REGEX;
+            return 'regex:'.SectorfileService::SECTORFILE_LONGITUDE_REGEX;
         });
 
         // Register our custom VATSIM UK Core SSO Socialite Provider
@@ -71,7 +71,7 @@ class AppServiceProvider extends ServiceProvider
                     'Squawk Ranges',
                     'Plugin',
                     'Administration',
-                    'Documentation'
+                    'Documentation',
                 ]
             );
         });

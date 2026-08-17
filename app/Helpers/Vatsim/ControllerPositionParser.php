@@ -7,12 +7,13 @@ use Illuminate\Support\Str;
 class ControllerPositionParser
 {
     private const STANDARD_SEPARATOR_CHAR = '_';
+
     private const ALTERNATE_SEPARATOR_CHAR = '-';
 
     public function parse(ControllerPositionInterface $position): ?ParsedControllerPosition
     {
         $normalisedCallsign = $this->normaliseCallsign($position->getCallsign());
-        if (!Str::contains($normalisedCallsign, self::STANDARD_SEPARATOR_CHAR)) {
+        if (! Str::contains($normalisedCallsign, self::STANDARD_SEPARATOR_CHAR)) {
             return null;
         }
 
@@ -36,7 +37,8 @@ class ControllerPositionParser
     private function parseUnitType(string $callsign): string
     {
         $parts = $this->splitCallsignToParts($callsign);
-        return $parts[sizeof($parts) - 1];
+
+        return $parts[count($parts) - 1];
     }
 
     private function splitCallsignToParts(string $callsign): array

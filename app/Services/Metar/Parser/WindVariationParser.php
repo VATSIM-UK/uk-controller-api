@@ -19,6 +19,7 @@ class WindVariationParser implements MetarParser
 
                     if (preg_match(self::WIND_VARIATION_REGEX, $token, $tokenMatches) === 1) {
                         $parsedData->offsetSet('wind_variation', $tokenMatches[0]);
+
                         return false;
                     }
 

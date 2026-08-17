@@ -13,7 +13,7 @@ class NetworkAircraftTransponderUpdatedAtDefault extends Migration
     public function up()
     {
         DB::statement(
-            'ALTER TABLE `network_aircraft` 
+            'ALTER TABLE `network_aircraft`
                   CHANGE `transponder_last_updated_at` `transponder_last_updated_at` TIMESTAMP'
         );
     }
@@ -26,7 +26,7 @@ class NetworkAircraftTransponderUpdatedAtDefault extends Migration
     public function down()
     {
         DB::statement(
-            'ALTER TABLE `network_aircraft` 
+            'ALTER TABLE `network_aircraft`
                   CHANGE `transponder_last_updated_at` `transponder_last_updated_at` TIMESTAMP NOT NULL'
         );
     }

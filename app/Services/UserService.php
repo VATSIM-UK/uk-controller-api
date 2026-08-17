@@ -27,8 +27,6 @@ class UserService
 
     /**
      * Constructor
-     *
-     * @param UserConfigService $userConfig
      */
     public function __construct(UserConfigService $userConfig)
     {
@@ -38,9 +36,9 @@ class UserService
     /**
      * Sets the users account to active.
      *
-     * @param integer $userCid
-     * @throws ModelNotFoundException
      * @return void
+     *
+     * @throws ModelNotFoundException
      */
     public function reactivateUser(int $userCid)
     {
@@ -50,9 +48,9 @@ class UserService
     /**
      * Sets the users account to banned.
      *
-     * @param integer $userCid
-     * @throws ModelNotFoundException
      * @return void
+     *
+     * @throws ModelNotFoundException
      */
     public function banUser(int $userCid)
     {
@@ -62,9 +60,9 @@ class UserService
     /**
      * Sets the users account to disabled.
      *
-     * @param integer $userCid
-     * @throws ModelNotFoundException
      * @return void
+     *
+     * @throws ModelNotFoundException
      */
     public function disableUser(int $userCid)
     {
@@ -74,18 +72,19 @@ class UserService
     /**
      * Creates a user and generates their access tokens.
      *
-     * @param int $userId The VATSIM CID of the user
+     * @param  int  $userId  The VATSIM CID of the user
      * @return UserConfig The users personal configuration for their plugin instance
+     *
      * @throws UserAlreadyExistsException
      */
     public function createUser(int $userCid): void
     {
         if (User::find($userCid)) {
-            throw new UserAlreadyExistsException('User with VATSIM CID ' . $userCid . ' already exists');
+            throw new UserAlreadyExistsException('User with VATSIM CID '.$userCid.' already exists');
         }
 
         // Create the user
-        $user = new User();
+        $user = new User;
         $user->id = $userCid;
         $user->status = UserStatus::ACTIVE;
         $user->save();
@@ -94,20 +93,20 @@ class UserService
     /**
      * Creates a user and generates their access tokens.
      *
-     * @param int $userId The VATSIM CID of the user
+     * @param  int  $userId  The VATSIM CID of the user
      * @return UserConfig The users personal configuration for their plugin instance
+     *
      * @throws UserAlreadyExistsException
      */
     public function createUserWithConfig(int $userCid)
     {
         $this->createUser($userCid);
+
         return $this->userConfig->create($userCid);
     }
 
     /**
      * Creates an admin user and returns the token
-     *
-     * @return string
      */
     public function createAdminUser(): string
     {
@@ -115,7 +114,7 @@ class UserService
             'access',
             [
                 AuthServiceProvider::SCOPE_USER_ADMIN,
-                AuthServiceProvider::SCOPE_USER
+                AuthServiceProvider::SCOPE_USER,
             ]
         )->accessToken;
     }
@@ -123,9 +122,7 @@ class UserService
     /**
      * Retrieves the user from the database
      *
-     * @param int $userCid
      * @throws ModelNotFoundException
-     * @return User
      */
     public function getUser(int $userCid): User
     {
@@ -135,7 +132,6 @@ class UserService
     /**
      * Retrieves the user's unread notifications from the database. Creates the user if they do not exist.
      *
-     * @param int $userCid
      * @return Collection
      */
     public function getUnreadNotificationsForUser(int $userCid, bool $includeInactive = false)
@@ -144,7 +140,7 @@ class UserService
             ->with('controllers')
             ->unreadBy($this->firstOrCreateUser($userCid));
 
-        if (!$includeInactive) {
+        if (! $includeInactive) {
             $query->active();
         }
 
@@ -161,9 +157,9 @@ class UserService
     /**
      * Marks a notification as read for the given user
      *
-     * @param int $userCid
-     * @throws ModelNotFoundException
      * @return void
+     *
+     * @throws ModelNotFoundException
      */
     public function markNotificationAsReadForUser(int $userCid, int $notificationId)
     {
@@ -174,15 +170,13 @@ class UserService
 
     /**
      * Create a user model as a 'pseudo' admin user.
-     *
-     * @return User
      */
     private function createAdminUserModel(): User
     {
         $admins = User::where('id', '<', self::MINIMUM_VATSIM_CID);
         $newUserCid = $admins->exists() ? $admins->max('id') + 1 : 0;
 
-        $user = new User();
+        $user = new User;
         $user->id = $newUserCid;
         $user->status = UserStatus::ACTIVE;
         $user->save();

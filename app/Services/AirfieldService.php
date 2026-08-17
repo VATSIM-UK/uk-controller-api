@@ -26,9 +26,8 @@ class AirfieldService
                         'identifier' => $airfield->code,
                         'wake_scheme' => $airfield->wake_category_scheme_id,
                         'departure_speed_groups' => $this->getSpeedGroupsForAirfield($airfield),
-                        'top_down_controller_positions' =>
-                            $airfield->controllers()->orderBy('order')->pluck('controller_positions.id')
-                                ->toArray(),
+                        'top_down_controller_positions' => $airfield->controllers()->orderBy('order')->pluck('controller_positions.id')
+                            ->toArray(),
                         'pairing_prenotes' => $airfield->prenotePairings->map(function (Airfield $destination) {
                             return [
                                 'airfield_id' => $destination->id,
@@ -65,9 +64,6 @@ class AirfieldService
         return $speedGroups;
     }
 
-    /**
-     * @return array
-     */
     public function getAllAirfieldsWithRelations(): array
     {
         $airfields = [];
@@ -82,8 +78,7 @@ class AirfieldService
             $airfields[] = array_merge(
                 $airfield->makeHidden(['latitude', 'longitude'])->toArray(),
                 [
-                    'controllers' =>
-                        $airfield->controllers()->orderBy('order')->pluck('controller_position_id')->toArray(),
+                    'controllers' => $airfield->controllers()->orderBy('order')->pluck('controller_position_id')->toArray(),
                     'pairing-prenotes' => $airfieldArray,
                 ]
             );
@@ -121,6 +116,7 @@ class AirfieldService
                         $positionToAdd,
                         before: $positionToAddAdjacent
                     );
+
                     continue;
                 }
 

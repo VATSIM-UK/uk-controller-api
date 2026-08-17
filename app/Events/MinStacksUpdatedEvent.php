@@ -22,8 +22,6 @@ class MinStacksUpdatedEvent implements ShouldBroadcast
 
     /**
      * AirfieldMinStacksUpdatedEvent constructor.
-     * @param array $airfield
-     * @param array $tma
      */
     public function __construct(array $airfield, array $tma)
     {

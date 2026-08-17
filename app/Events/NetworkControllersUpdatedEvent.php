@@ -2,6 +2,4 @@
 
 namespace App\Events;
 
-class NetworkControllersUpdatedEvent
-{
-}
+class NetworkControllersUpdatedEvent {}

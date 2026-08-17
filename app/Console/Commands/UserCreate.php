@@ -13,7 +13,6 @@ use InvalidArgumentException;
  * Command to create a new user and generate their personal access token.
  *
  * Class UserCreate
- * @package App\Console\Commands
  */
 class UserCreate extends Command
 {
@@ -25,13 +24,15 @@ class UserCreate extends Command
 
     /**
      * Handles the command
-     * @param UserService $userService Service to do the user work.
+     *
+     * @param  UserService  $userService  Service to do the user work.
+     *
      * @throws UserAlreadyExistsException
      */
     public function handle(UserService $userService)
     {
         // Invalid VATSIM CID
-        if (!ctype_digit($this->argument('vatsim_cid')) || $this->argument('vatsim_cid') < 800000) {
+        if (! ctype_digit($this->argument('vatsim_cid')) || $this->argument('vatsim_cid') < 800000) {
             throw new InvalidArgumentException(self::INVALID_CID_MESSAGE);
         }
 
@@ -41,7 +42,7 @@ class UserCreate extends Command
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
 
-        Storage::disk('local')->put('access/api-settings-' . $userCid . '.txt', $userConfig);
-        $this->info('User ' . $userCid . ' successfully created');
+        Storage::disk('local')->put('access/api-settings-'.$userCid.'.txt', $userConfig);
+        $this->info('User '.$userCid.' successfully created');
     }
 }

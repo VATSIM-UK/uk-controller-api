@@ -36,9 +36,6 @@ class StandUnassignedEvent extends HighPriorityBroadcastEvent
         return [new PrivateChannel(self::CHANNEL)];
     }
 
-    /**
-     * @return string
-     */
     public function getCallsign(): string
     {
         return $this->callsign;

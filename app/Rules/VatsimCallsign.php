@@ -7,14 +7,16 @@ use Illuminate\Contracts\Validation\Rule;
 class VatsimCallsign implements Rule
 {
     public const CALLSIGN_REGEX = '^[A-Za-z0-9\-_]{1,20}$';
+
     public const REGEX_MATCHED = 1;
+
     public const DELIMITER = '/';
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return bool
      */
     public function passes($attribute, $value)

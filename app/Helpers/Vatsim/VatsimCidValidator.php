@@ -19,8 +19,7 @@ class VatsimCidValidator
     /**
      * Validates VATSIM CIDs
      *
-     * @param $cid The user CID
-     * @return bool
+     * @param  $cid  The user CID
      */
     public static function isValid(int $cid): bool
     {

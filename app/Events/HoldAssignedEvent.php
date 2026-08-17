@@ -38,9 +38,6 @@ class HoldAssignedEvent extends HighPriorityBroadcastEvent
         return [new PrivateChannel(self::CHANNEL)];
     }
 
-    /**
-     * @return AssignedHold
-     */
     public function getHold(): AssignedHold
     {
         return $this->hold;

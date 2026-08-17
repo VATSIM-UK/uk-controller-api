@@ -2,13 +2,13 @@
 
 namespace App\Filament\Helpers;
 
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Actions\DetachAction;
 use App\Filament\Resources\TranslatesStrings;
 use Carbon\Carbon;
 use Closure;
+use Filament\Actions\DetachAction;
 use Filament\Forms\Components\TimePicker;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +23,7 @@ trait PairsAirlinesWithStands
             ...self::commonPairingTableColumns(),
             TextColumn::make('not_before')
                 ->label(self::translateTablePath('columns.not_before'))
-                ->date('H:i')
+                ->date('H:i'),
         ];
     }
 

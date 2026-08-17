@@ -11,7 +11,6 @@ class RecordSquawkAssignmentHistory
     /**
      * Handle any squawk allocation event
      *
-     * @param SquawkAssignmentEvent $allocationEvent
      * @return bool
      */
     public function handle(SquawkAssignmentEvent $allocationEvent): void
@@ -21,7 +20,7 @@ class RecordSquawkAssignmentHistory
                 'callsign' => $allocationEvent->getAssignment()->getCallsign(),
                 'code' => $allocationEvent->getAssignment()->getCode(),
                 'type' => $allocationEvent->getAssignment()->getType(),
-                'user_id' => !is_null(Auth::user()) ? Auth::user()->id : null,
+                'user_id' => ! is_null(Auth::user()) ? Auth::user()->id : null,
             ]
         );
     }

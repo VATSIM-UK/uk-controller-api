@@ -4,7 +4,8 @@ use App\Models\Aircraft\Aircraft;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class() extends Migration {
+return new class extends Migration
+{
     public const WINGSPAN_UPDATES = [
         'IL62' => 140.0,
         'AT2P' => 100.0,

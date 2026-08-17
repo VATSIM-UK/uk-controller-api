@@ -18,7 +18,9 @@ class NetworkAircraftService
      * @var Coordinate[]
      */
     private Collection $measuringPoints;
+
     private NetworkDataService $dataService;
+
     private Collection $allAircraftBeforeUpdate;
 
     private readonly AircraftService $aircraftService;
@@ -46,7 +48,7 @@ class NetworkAircraftService
         $concernedPilots = $this->formatPilotData($this->dataService->getNetworkAircraftData());
         $this->processPilots($concernedPilots);
         $this->handleTimeouts();
-        event(new NetworkDataUpdatedEvent());
+        event(new NetworkDataUpdatedEvent);
     }
 
     private function formatPilotData(Collection $pilots): Collection
@@ -84,7 +86,7 @@ class NetworkAircraftService
     {
         return $this->measuringPoints->contains(function (Coordinate $coordinate) use ($pilot) {
             return LocationService::metersToNauticalMiles(
-                $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine())
+                $coordinate->getDistance(new Coordinate($pilot['latitude'], $pilot['longitude']), new Haversine)
             ) < self::MAX_PROCESSING_DISTANCE;
         });
     }
@@ -168,6 +170,7 @@ class NetworkAircraftService
             ['callsign'],
             array_merge(['callsign'], array_keys($details)),
         );
+
         return NetworkAircraft::find($callsign);
     }
 

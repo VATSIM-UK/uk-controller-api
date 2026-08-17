@@ -26,7 +26,6 @@ class DropAirfieldIdFromSidTable extends Migration
      */
     public function down()
     {
-        Schema::table('sid', function (Blueprint $table) {
-        });
+        Schema::table('sid', function (Blueprint $table) {});
     }
 }

@@ -21,7 +21,7 @@ class RequestDepartureRelease extends FormRequest
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    if (!ControllerPosition::where('id', $value)->canRequestDepartureReleases()->exists()) {
+                    if (! ControllerPosition::where('id', $value)->canRequestDepartureReleases()->exists()) {
                         $fail(sprintf('Controller position %d cannot request departure releases', $value));
                     }
                 },
@@ -31,7 +31,7 @@ class RequestDepartureRelease extends FormRequest
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    if (!ControllerPosition::where('id', $value)->canReceiveDepartureReleases()->exists()) {
+                    if (! ControllerPosition::where('id', $value)->canReceiveDepartureReleases()->exists()) {
                         $fail(sprintf('Controller position %d cannot receive departure releases', $value));
                     }
                 },
@@ -46,7 +46,7 @@ class RequestDepartureRelease extends FormRequest
         return $this->createDefaultValidator($this->container->make(ValidationFactory::class))->after(
             function (Validator $validator) {
                 $validated = $validator->validated();
-                if (!isset($validated['callsign'], $validated['target_controller_id'])) {
+                if (! isset($validated['callsign'], $validated['target_controller_id'])) {
                     return;
                 }
 

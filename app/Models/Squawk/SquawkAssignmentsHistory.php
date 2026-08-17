@@ -19,6 +19,6 @@ class SquawkAssignmentsHistory extends Model
         'callsign',
         'code',
         'type',
-        'user_id'
+        'user_id',
     ];
 }

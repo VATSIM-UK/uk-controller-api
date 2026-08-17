@@ -16,7 +16,7 @@ class RecordHoldUnassignment
                 [
                     'callsign' => $allocationEvent->getCallsign(),
                     'navaid_id' => null,
-                    'assigned_by' => !is_null(Auth::user()) ? Auth::user()->id : null,
+                    'assigned_by' => ! is_null(Auth::user()) ? Auth::user()->id : null,
                     'assigned_at' => Carbon::now(),
                 ]
             );

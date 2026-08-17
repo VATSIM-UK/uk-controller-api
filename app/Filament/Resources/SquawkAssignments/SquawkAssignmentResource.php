@@ -2,20 +2,23 @@
 
 namespace App\Filament\Resources\SquawkAssignments;
 
-use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\SquawkAssignments\Pages\ListSquawkAssignments;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Squawk\SquawkAssignment;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class SquawkAssignmentResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = SquawkAssignment::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
-    protected static string | \UnitEnum | null $navigationGroup = 'Enroute';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wifi';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Enroute';
 
     public static function table(Table $table): Table
     {
@@ -36,7 +39,7 @@ class SquawkAssignmentResource extends Resource
                     ->toggleable(),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('assignment_type')
+                SelectFilter::make('assignment_type')
                     ->options([
                         'NON_UKCP' => 'Not assigned by UKCP',
                         'AIRFIELD_PAIR' => 'Airfield pairing',

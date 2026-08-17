@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\IntentionCodes\Pages;
 
-use Filament\Actions\EditAction;
 use App\Filament\Resources\IntentionCodes\IntentionCodeResource;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewIntentionCode extends ViewRecord

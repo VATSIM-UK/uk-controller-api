@@ -26,13 +26,13 @@ class StandReservationsImport extends Command
     /**
      * Execute the console command.
      *
-     * @param Importer $importer
      * @return mixed
      */
     public function handle(Importer $importer)
     {
-        if (!Storage::disk('imports')->exists($this->argument('file_name'))) {
+        if (! Storage::disk('imports')->exists($this->argument('file_name'))) {
             $this->error(sprintf('Import file not found: %s', $this->argument('file_name')));
+
             return 1;
         }
 

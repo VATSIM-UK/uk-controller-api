@@ -4,6 +4,4 @@ namespace App\Exceptions;
 
 use InvalidArgumentException;
 
-class InvalidWakeImportException extends InvalidArgumentException
-{
-}
+class InvalidWakeImportException extends InvalidArgumentException {}

@@ -38,7 +38,7 @@ class NewBristolStand extends Migration
         DB::table('stands')
             ->where('identifier', '7N')
             ->where('airfield_id', DB::table('airfield')->where('code', 'EGGD')->first()->id)
-                ->delete();
+            ->delete();
 
         DependencyService::touchDependencyByKey('DEPENDENCY_STANDS');
     }

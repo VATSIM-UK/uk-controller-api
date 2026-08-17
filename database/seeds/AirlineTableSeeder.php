@@ -11,21 +11,21 @@ class AirlineTableSeeder extends Seeder
             [
                 'icao_code' => 'BAW',
                 'name' => 'British Airways',
-                'callsign' => 'SPEEDBIRD'
+                'callsign' => 'SPEEDBIRD',
             ]
         );
         Airline::create(
             [
                 'icao_code' => 'SHT',
                 'name' => 'British Airways Shuttle',
-                'callsign' => 'SHUTTLE'
+                'callsign' => 'SHUTTLE',
             ]
         );
         Airline::create(
             [
                 'icao_code' => 'VIR',
                 'name' => 'Virgin Atlantic Airways',
-                'callsign' => 'VIR'
+                'callsign' => 'VIR',
             ]
         );
     }

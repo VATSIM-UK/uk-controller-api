@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PrenoteMessage extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
 
     public const UPDATED_AT = null;
 
@@ -54,6 +54,7 @@ class PrenoteMessage extends Model
         $this->acknowledged_by = $userId;
         $this->acknowledged_at = Carbon::now();
         $this->save();
+
         return $this;
     }
 }

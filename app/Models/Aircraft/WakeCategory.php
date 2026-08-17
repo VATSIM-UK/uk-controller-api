@@ -14,7 +14,7 @@ class WakeCategory extends Model
         'code',
         'description',
         'relative_weighting',
-        'created_at'
+        'created_at',
     ];
 
     protected $hidden = [
@@ -41,7 +41,7 @@ class WakeCategory extends Model
                             'id' => $subsequent->id,
                             'interval' => $subsequent->pivot->interval,
                             'interval_unit' => $subsequent->pivot->measurementUnit->unit,
-                            'intermediate' => (bool)$subsequent->pivot->intermediate,
+                            'intermediate' => (bool) $subsequent->pivot->intermediate,
                         ];
                     }
                 )
@@ -57,7 +57,7 @@ class WakeCategory extends Model
                 ->map(
                     fn (WakeCategory $subsequent) => [
                         'id' => $subsequent->id,
-                        'interval' => $subsequent->pivot->interval
+                        'interval' => $subsequent->pivot->interval,
                     ]
                 )
                 ->values()

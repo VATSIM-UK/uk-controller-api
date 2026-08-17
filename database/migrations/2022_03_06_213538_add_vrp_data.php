@@ -32,7 +32,7 @@ class AddVrpData extends Migration
             'coordinate' => '532836.00N 0025635.00W',
             'airfields' => ['EGGP'],
         ],
-        ['name' => 'ALDERBURY', 'short_name' => 'Alder', 'coordinate' => '510255N 0014350W', 'airfields' => ['EGLS'],],
+        ['name' => 'ALDERBURY', 'short_name' => 'Alder', 'coordinate' => '510255N 0014350W', 'airfields' => ['EGLS']],
         [
             'name' => 'ALDERLEY EDGE HILL',
             'short_name' => 'Alderley',
@@ -57,9 +57,9 @@ class AddVrpData extends Migration
             'coordinate' => '513539.79N 0000746.90W',
             'airfields' => ['EGLC', 'EGLL'],
         ],
-        ['name' => 'ALSTON', 'short_name' => 'Alston', 'coordinate' => '544834N 0022638W', 'airfields' => ['EGNC'],],
-        ['name' => 'ALTON', 'short_name' => 'Alton', 'coordinate' => '510907N 0005758W', 'airfields' => ['EGLF'],],
-        ['name' => 'ANNAN', 'short_name' => 'Annan', 'coordinate' => '545923N 0031521W', 'airfields' => ['EGNC'],],
+        ['name' => 'ALSTON', 'short_name' => 'Alston', 'coordinate' => '544834N 0022638W', 'airfields' => ['EGNC']],
+        ['name' => 'ALTON', 'short_name' => 'Alton', 'coordinate' => '510907N 0005758W', 'airfields' => ['EGLF']],
+        ['name' => 'ANNAN', 'short_name' => 'Annan', 'coordinate' => '545923N 0031521W', 'airfields' => ['EGNC']],
         [
             'name' => 'ARDMORE POINT',
             'short_name' => 'Ard',
@@ -96,8 +96,8 @@ class AddVrpData extends Migration
             'coordinate' => '520015N 0001225E',
             'airfields' => ['EGSS'],
         ],
-        ['name' => 'AXMINSTER', 'short_name' => 'Axmin', 'coordinate' => '504654N 0025954W', 'airfields' => ['EGTE'],],
-        ['name' => 'AYLSHAM', 'short_name' => 'Ayls', 'coordinate' => '524704N 0011519E', 'airfields' => ['EGSH'],],
+        ['name' => 'AXMINSTER', 'short_name' => 'Axmin', 'coordinate' => '504654N 0025954W', 'airfields' => ['EGTE']],
+        ['name' => 'AYLSHAM', 'short_name' => 'Ayls', 'coordinate' => '524704N 0011519E', 'airfields' => ['EGSH']],
         [
             'name' => 'BAGSHOT',
             'short_name' => 'Bags',
@@ -162,7 +162,7 @@ class AddVrpData extends Migration
             'name' => 'BEAULIEU DISUSED AD',
             'short_name' => 'Beau',
             'coordinate' => '504815N 0013014W',
-            'airfields' => ['EGHI', 'EGHH',],
+            'airfields' => ['EGHI', 'EGHH'],
         ],
         [
             'name' => 'BECKTON ROUNDABOUT',
@@ -188,7 +188,7 @@ class AddVrpData extends Migration
             'coordinate' => '514549.40N 0001810.79E',
             'airfields' => ['EGSS'],
         ],
-        ['name' => 'BILLERICAY', 'short_name' => 'Bill', 'coordinate' => '513800N 0002500E', 'airfields' => ['EGMC'],],
+        ['name' => 'BILLERICAY', 'short_name' => 'Bill', 'coordinate' => '513800N 0002500E', 'airfields' => ['EGMC']],
         [
             'name' => 'BILLINGSHURST',
             'short_name' => 'Bill',
@@ -237,7 +237,7 @@ class AddVrpData extends Migration
             'coordinate' => '550724N 0012937W',
             'airfields' => ['EGNT'],
         ],
-        ['name' => 'BODAM', 'short_name' => 'Bodam', 'coordinate' => '595506N 0011606W', 'airfields' => ['EGPB'],],
+        ['name' => 'BODAM', 'short_name' => 'Bodam', 'coordinate' => '595506N 0011606W', 'airfields' => ['EGPB']],
         [
             'name' => 'BOLAM LAKE',
             'short_name' => 'Bolam',
@@ -256,7 +256,7 @@ class AddVrpData extends Migration
             'coordinate' => '525753.00N 0004654.00W',
             'airfields' => ['EGNX'],
         ],
-        ['name' => 'BRAE', 'short_name' => 'Brae', 'coordinate' => '602349N 0012114W', 'airfields' => ['EGPM'],],
+        ['name' => 'BRAE', 'short_name' => 'Brae', 'coordinate' => '602349N 0012114W', 'airfields' => ['EGPM']],
         [
             'name' => 'BRAINTREE',
             'short_name' => 'Brain',
@@ -269,7 +269,7 @@ class AddVrpData extends Migration
             'coordinate' => '513401.07N 0001521.93W',
             'airfields' => ['EGLC', 'EGLL'],
         ],
-        ['name' => 'BRIGG', 'short_name' => 'Brigg', 'coordinate' => '533312N 0002912W', 'airfields' => ['EGNJ'],],
+        ['name' => 'BRIGG', 'short_name' => 'Brigg', 'coordinate' => '533312N 0002912W', 'airfields' => ['EGNJ']],
         [
             'name' => 'BRIGHTON MARINA',
             'short_name' => 'Bri Mar',
@@ -282,15 +282,15 @@ class AddVrpData extends Migration
             'coordinate' => '562745N 0025211W',
             'airfields' => ['EGPN'],
         ],
-        ['name' => 'BRUNDALL', 'short_name' => 'Brund', 'coordinate' => '523704N 0012600E', 'airfields' => ['EGSH'],],
-        ['name' => 'BUCKLAND', 'short_name' => 'Buck', 'coordinate' => '511424N 0001445W', 'airfields' => ['EGKR'],],
+        ['name' => 'BRUNDALL', 'short_name' => 'Brund', 'coordinate' => '523704N 0012600E', 'airfields' => ['EGSH']],
+        ['name' => 'BUCKLAND', 'short_name' => 'Buck', 'coordinate' => '511424N 0001445W', 'airfields' => ['EGKR']],
         [
             'name' => 'BULLINGTON CROSS',
             'short_name' => 'Bulli',
             'coordinate' => '511030.61N 0012021.49W',
             'airfields' => ['EGHI'],
         ],
-        ['name' => 'BUNCRANA', 'short_name' => 'Bunc', 'coordinate' => '550800N 0072724W', 'airfields' => ['EGAE'],],
+        ['name' => 'BUNCRANA', 'short_name' => 'Bunc', 'coordinate' => '550800N 0072724W', 'airfields' => ['EGAE']],
         [
             'name' => 'BURFORD',
             'short_name' => 'Bur',
@@ -339,14 +339,14 @@ class AddVrpData extends Migration
             'coordinate' => '512023.47N 0002906.69W',
             'airfields' => ['EGLL'],
         ],
-        ['name' => 'CAISTOR', 'short_name' => 'Caist', 'coordinate' => '532946N 0001906W', 'airfields' => ['EGNJ'],],
+        ['name' => 'CAISTOR', 'short_name' => 'Caist', 'coordinate' => '532946N 0001906W', 'airfields' => ['EGNJ']],
         [
             'name' => 'CALSHOT',
             'short_name' => 'Cals',
             'coordinate' => '504904.00N 0011945.00W',
             'airfields' => ['EGHI'],
         ],
-        ['name' => 'CANAL BEND', 'short_name' => 'Canal', 'coordinate' => '513902N 0002537W', 'airfields' => ['EGTR'],],
+        ['name' => 'CANAL BEND', 'short_name' => 'Canal', 'coordinate' => '513902N 0002537W', 'airfields' => ['EGTR']],
         [
             'name' => 'CANFIELD A120/B1256 INT',
             'short_name' => 'Can',
@@ -365,7 +365,7 @@ class AddVrpData extends Migration
             'coordinate' => '512724.00N 0030906.00W',
             'airfields' => ['EGFF', 'EGSY'],
         ],
-        ['name' => 'CARROWKEEL', 'short_name' => 'Carro', 'coordinate' => '550730N 0071142W', 'airfields' => ['EGAE'],],
+        ['name' => 'CARROWKEEL', 'short_name' => 'Carro', 'coordinate' => '550730N 0071142W', 'airfields' => ['EGAE']],
         [
             'name' => 'CARTERET LIGHTHOUSE',
             'short_name' => 'Carter',
@@ -438,7 +438,7 @@ class AddVrpData extends Migration
             'coordinate' => '510422.78N 0032209.18W',
             'airfields' => ['EGFF', 'EGSY'],
         ],
-        ['name' => 'CLAUDY', 'short_name' => 'Claudy', 'coordinate' => '545442N 0070912W', 'airfields' => ['EGAE'],],
+        ['name' => 'CLAUDY', 'short_name' => 'Claudy', 'coordinate' => '545442N 0070912W', 'airfields' => ['EGAE']],
         [
             'name' => 'CLEVEDON',
             'short_name' => 'Cleve',
@@ -463,7 +463,7 @@ class AddVrpData extends Migration
             'coordinate' => '554828.00N 0033400.00W',
             'airfields' => ['EGPH'],
         ],
-        ['name' => 'COLERAINE', 'short_name' => 'Coler', 'coordinate' => '550754N 0064018W', 'airfields' => ['EGAE'],],
+        ['name' => 'COLERAINE', 'short_name' => 'Coler', 'coordinate' => '550754N 0064018W', 'airfields' => ['EGAE']],
         [
             'name' => 'COLTISHALL DISUSED',
             'short_name' => 'Colti',
@@ -494,15 +494,15 @@ class AddVrpData extends Migration
             'coordinate' => '504541.27N 0011735.13W',
             'airfields' => ['EGHI'],
         ],
-        ['name' => 'CREDITON', 'short_name' => 'Credi', 'coordinate' => '504726N 0033905W', 'airfields' => ['EGTE'],],
-        ['name' => 'CULLOMPTON', 'short_name' => 'Cullo', 'coordinate' => '505128N 0032338W', 'airfields' => ['EGTE'],],
+        ['name' => 'CREDITON', 'short_name' => 'Credi', 'coordinate' => '504726N 0033905W', 'airfields' => ['EGTE']],
+        ['name' => 'CULLOMPTON', 'short_name' => 'Cullo', 'coordinate' => '505128N 0032338W', 'airfields' => ['EGTE']],
         [
             'name' => 'CULZEAN BAY/CASTLE',
             'short_name' => 'Culze',
             'coordinate' => '552210N 0044605W',
             'airfields' => ['EGPK'],
         ],
-        ['name' => 'CUMNOCK', 'short_name' => 'Cumno', 'coordinate' => '552720N 0041527W', 'airfields' => ['EGPK'],],
+        ['name' => 'CUMNOCK', 'short_name' => 'Cumno', 'coordinate' => '552720N 0041527W', 'airfields' => ['EGPK']],
         [
             'name' => 'DALKEITH',
             'short_name' => 'Dalk',
@@ -515,7 +515,7 @@ class AddVrpData extends Migration
             'coordinate' => '551924N 0042350W',
             'airfields' => ['EGPK'],
         ],
-        ['name' => 'DALRYMPLE', 'short_name' => 'Dalry', 'coordinate' => '552350N 0043533W', 'airfields' => ['EGPK'],],
+        ['name' => 'DALRYMPLE', 'short_name' => 'Dalry', 'coordinate' => '552350N 0043533W', 'airfields' => ['EGPK']],
         [
             'name' => 'DANESHILL LAKES',
             'short_name' => 'Danes',
@@ -546,10 +546,10 @@ class AddVrpData extends Migration
             'coordinate' => '515240N 0001409E',
             'airfields' => ['EGSS'],
         ],
-        ['name' => 'DINGWALL', 'short_name' => 'Ding', 'coordinate' => '573558N 0042553W', 'airfields' => ['EGPE'],],
-        ['name' => 'DIVIS', 'short_name' => 'Div', 'coordinate' => '543627.00N 0060034.00W', 'airfields' => ['EGAA'],],
-        ['name' => 'DOONFOOT', 'short_name' => 'Doon', 'coordinate' => '552625N 0043903W', 'airfields' => ['EGPK'],],
-        ['name' => 'DORES', 'short_name' => 'Dores', 'coordinate' => '572255N 0041955W', 'airfields' => ['EGPE'],],
+        ['name' => 'DINGWALL', 'short_name' => 'Ding', 'coordinate' => '573558N 0042553W', 'airfields' => ['EGPE']],
+        ['name' => 'DIVIS', 'short_name' => 'Div', 'coordinate' => '543627.00N 0060034.00W', 'airfields' => ['EGAA']],
+        ['name' => 'DOONFOOT', 'short_name' => 'Doon', 'coordinate' => '552625N 0043903W', 'airfields' => ['EGPK']],
+        ['name' => 'DORES', 'short_name' => 'Dores', 'coordinate' => '572255N 0041955W', 'airfields' => ['EGPE']],
         [
             'name' => 'DORKING',
             'short_name' => 'Dork',
@@ -580,7 +580,7 @@ class AddVrpData extends Migration
             'coordinate' => '583838N 0030131W',
             'airfields' => ['EGPC'],
         ],
-        ['name' => 'DUNGIVEN', 'short_name' => 'Dungi', 'coordinate' => '545542N 0065530W', 'airfields' => ['EGAE'],],
+        ['name' => 'DUNGIVEN', 'short_name' => 'Dungi', 'coordinate' => '545542N 0065530W', 'airfields' => ['EGAE']],
         [
             'name' => 'DURHAM',
             'short_name' => 'Durh',
@@ -611,14 +611,14 @@ class AddVrpData extends Migration
             'coordinate' => '533631N 0002541W',
             'airfields' => ['EGNJ'],
         ],
-        ['name' => 'EPPING', 'short_name' => 'Epp', 'coordinate' => '514200.00N 0000640.00E', 'airfields' => ['EGSS'],],
+        ['name' => 'EPPING', 'short_name' => 'Epp', 'coordinate' => '514200.00N 0000640.00E', 'airfields' => ['EGSS']],
         [
             'name' => 'ERSKINE BRIDGE',
             'short_name' => 'Erski',
             'coordinate' => '555513.00N 0042746.00W',
             'airfields' => ['EGPF'],
         ],
-        ['name' => 'EXMOUTH', 'short_name' => 'Exmo', 'coordinate' => '503729N 0032408W', 'airfields' => ['EGTE'],],
+        ['name' => 'EXMOUTH', 'short_name' => 'Exmo', 'coordinate' => '503729N 0032408W', 'airfields' => ['EGTE']],
         [
             'name' => 'FARINGDON',
             'short_name' => 'Faring',
@@ -649,7 +649,7 @@ class AddVrpData extends Migration
             'coordinate' => '512232.00N 0030707.00W',
             'airfields' => ['EGFF', 'EGSY'],
         ],
-        ['name' => 'FLEET POND', 'short_name' => 'Fleet', 'coordinate' => '511719N 0004929W', 'airfields' => ['EGLF'],],
+        ['name' => 'FLEET POND', 'short_name' => 'Fleet', 'coordinate' => '511719N 0004929W', 'airfields' => ['EGLF']],
         [
             'name' => 'FLEETWOOD (GOLF COURSE)',
             'short_name' => 'Fleet',
@@ -662,7 +662,7 @@ class AddVrpData extends Migration
             'coordinate' => '531346N 0030400W',
             'airfields' => ['EGNR'],
         ],
-        ['name' => 'FOOT', 'short_name' => 'Foot', 'coordinate' => '590143N 0024823W', 'airfields' => ['EGPA'],],
+        ['name' => 'FOOT', 'short_name' => 'Foot', 'coordinate' => '590143N 0024823W', 'airfields' => ['EGPA']],
         [
             'name' => 'FORT LE MARCHANT',
             'short_name' => 'Fort',
@@ -699,7 +699,7 @@ class AddVrpData extends Migration
             'coordinate' => '531713.75N 0024329.27W',
             'airfields' => ['EGGP'],
         ],
-        ['name' => 'FUGLA', 'short_name' => 'Fugla', 'coordinate' => '602657N 0011926W', 'airfields' => ['EGPM'],],
+        ['name' => 'FUGLA', 'short_name' => 'Fugla', 'coordinate' => '602657N 0011926W', 'airfields' => ['EGPM']],
         [
             'name' => 'GAINSBOROUGH',
             'short_name' => 'Gains',
@@ -730,7 +730,7 @@ class AddVrpData extends Migration
             'coordinate' => '544050N 0055854W',
             'airfields' => ['EGAA'],
         ],
-        ['name' => 'GLOSSOP', 'short_name' => 'Gloss', 'coordinate' => '532626N 0015504W', 'airfields' => ['EGCC'],],
+        ['name' => 'GLOSSOP', 'short_name' => 'Gloss', 'coordinate' => '532626N 0015504W', 'airfields' => ['EGCC']],
         [
             'name' => 'GODSTONE (A25/B2236 JUNCTION)',
             'short_name' => 'Gods J.',
@@ -743,7 +743,7 @@ class AddVrpData extends Migration
             'coordinate' => '511305N 0000304W',
             'airfields' => ['EGKR'],
         ],
-        ['name' => 'GOLF COURSE', 'short_name' => 'Golf', 'coordinate' => '514000N 0001256W', 'airfields' => ['EGTR'],],
+        ['name' => 'GOLF COURSE', 'short_name' => 'Golf', 'coordinate' => '514000N 0001256W', 'airfields' => ['EGTR']],
         [
             'name' => 'GOOLE DOCKS',
             'short_name' => 'G. Dock',
@@ -756,7 +756,7 @@ class AddVrpData extends Migration
             'coordinate' => '555650.00N 0044505.00W',
             'airfields' => ['EGPF'],
         ],
-        ['name' => 'GRETNA', 'short_name' => 'Gret', 'coordinate' => '545944N 0030403W', 'airfields' => ['EGNC'],],
+        ['name' => 'GRETNA', 'short_name' => 'Gret', 'coordinate' => '545944N 0030403W', 'airfields' => ['EGNC']],
         [
             'name' => 'GRIMS TOWER',
             'short_name' => 'Grims',
@@ -775,7 +775,7 @@ class AddVrpData extends Migration
             'coordinate' => '511422.00N 0003506.00W',
             'airfields' => ['EGKK', 'EGLF'],
         ],
-        ['name' => 'HALTWHISTLE', 'short_name' => 'Halt', 'coordinate' => '545808N 0022744W', 'airfields' => ['EGNC'],],
+        ['name' => 'HALTWHISTLE', 'short_name' => 'Halt', 'coordinate' => '545808N 0022744W', 'airfields' => ['EGNC']],
         [
             'name' => 'HANDCROSS',
             'short_name' => 'Hand',
@@ -806,12 +806,12 @@ class AddVrpData extends Migration
             'coordinate' => '520457.00N 0002604.00E',
             'airfields' => ['EGSS'],
         ],
-        ['name' => 'HAXEY', 'short_name' => 'Haxey', 'coordinate' => '532925N 0005037W', 'airfields' => ['EGCN'],],
+        ['name' => 'HAXEY', 'short_name' => 'Haxey', 'coordinate' => '532925N 0005037W', 'airfields' => ['EGCN']],
         [
             'name' => 'HAYDOCK PARK RACECOURSE',
             'short_name' => 'Hay Race',
             'coordinate' => '532842N 0023720W',
-            'airfields' => ['airfields' => 'EGGP', 'EGCB', 'EGCC',],
+            'airfields' => ['airfields' => 'EGGP', 'EGCB', 'EGCC'],
         ],
         [
             'name' => 'HAYWARDS HEATH',
@@ -867,21 +867,21 @@ class AddVrpData extends Migration
             'coordinate' => '523345N 0011030E',
             'airfields' => ['EGSH'],
         ],
-        ['name' => 'HEXHAM', 'short_name' => 'Hex', 'coordinate' => '545815.00N 0020610.00W', 'airfields' => ['EGNT'],],
+        ['name' => 'HEXHAM', 'short_name' => 'Hex', 'coordinate' => '545815.00N 0020610.00W', 'airfields' => ['EGNT']],
         [
             'name' => 'HILLEND SKI SLOPE',
             'short_name' => 'Hill',
             'coordinate' => '555318.00N 0031230.00W',
             'airfields' => ['EGPH'],
         ],
-        ['name' => 'HILLSWICK', 'short_name' => 'Hill', 'coordinate' => '602833N 0012919W', 'airfields' => ['EGPM'],],
+        ['name' => 'HILLSWICK', 'short_name' => 'Hill', 'coordinate' => '602833N 0012919W', 'airfields' => ['EGPM']],
         [
             'name' => 'HILLTOP',
             'short_name' => 'Hill',
             'coordinate' => '532030.00N 0021027.00W',
             'airfields' => ['EGCC'],
         ],
-        ['name' => 'HOOK', 'short_name' => 'Hook', 'coordinate' => '511646N 0005743W', 'airfields' => ['EGLF'],],
+        ['name' => 'HOOK', 'short_name' => 'Hook', 'coordinate' => '511646N 0005743W', 'airfields' => ['EGLF']],
         [
             'name' => 'HULTON INDUSTRIAL ESTATE',
             'short_name' => 'Hulton',
@@ -894,7 +894,7 @@ class AddVrpData extends Migration
             'coordinate' => '504229N 0013301W',
             'airfields' => ['EGHH'],
         ],
-        ['name' => 'HYDE', 'short_name' => 'Hyde', 'coordinate' => '515039.00N 0002158.00W', 'airfields' => ['EGGW'],],
+        ['name' => 'HYDE', 'short_name' => 'Hyde', 'coordinate' => '515039.00N 0002158.00W', 'airfields' => ['EGGW']],
         [
             'name' => 'IMMINGHAM DOCKS',
             'short_name' => 'Immi',
@@ -1045,7 +1045,7 @@ class AddVrpData extends Migration
             'coordinate' => '585314N 0025336W',
             'airfields' => ['EGPA'],
         ],
-        ['name' => 'LANGHOLM', 'short_name' => 'Lang', 'coordinate' => '550911N 0030000W', 'airfields' => ['EGNC'],],
+        ['name' => 'LANGHOLM', 'short_name' => 'Lang', 'coordinate' => '550911N 0030000W', 'airfields' => ['EGNC']],
         [
             'name' => 'LARNE',
             'short_name' => 'Larne',
@@ -1124,15 +1124,15 @@ class AddVrpData extends Migration
             'coordinate' => '514129.72N 0025814.51W',
             'airfields' => ['EGFF', 'EGSY'],
         ],
-        ['name' => 'LOCH WATTEN', 'short_name' => 'Lock', 'coordinate' => '582900N 0032006W', 'airfields' => ['EGPC'],],
-        ['name' => 'LOCHINDORB', 'short_name' => 'Loch', 'coordinate' => '572410N 0034257W', 'airfields' => ['EGPE'],],
+        ['name' => 'LOCH WATTEN', 'short_name' => 'Lock', 'coordinate' => '582900N 0032006W', 'airfields' => ['EGPC']],
+        ['name' => 'LOCHINDORB', 'short_name' => 'Loch', 'coordinate' => '572410N 0034257W', 'airfields' => ['EGPE']],
         [
             'name' => 'LOCHMADDY PIER',
             'short_name' => 'Loch',
             'coordinate' => '573546N 0070924W',
             'airfields' => ['EGPL'],
         ],
-        ['name' => 'LOCKERBIE', 'short_name' => 'Lock', 'coordinate' => '550714N 0032124W', 'airfields' => ['EGNC'],],
+        ['name' => 'LOCKERBIE', 'short_name' => 'Lock', 'coordinate' => '550714N 0032124W', 'airfields' => ['EGNC']],
         [
             'name' => 'LONDON EYE',
             'short_name' => 'Eye',
@@ -1145,7 +1145,7 @@ class AddVrpData extends Migration
             'coordinate' => '560256N 0034057W',
             'airfields' => ['EGPH'],
         ],
-        ['name' => 'LUNNA HOLM', 'short_name' => 'Lunna', 'coordinate' => '602715N 0010234W', 'airfields' => ['EGPM'],],
+        ['name' => 'LUNNA HOLM', 'short_name' => 'Lunna', 'coordinate' => '602715N 0010234W', 'airfields' => ['EGPM']],
         [
             'name' => 'LYBSTER VILLAGE',
             'short_name' => 'Lybst',
@@ -1258,7 +1258,7 @@ class AddVrpData extends Migration
             'name' => 'M5 AVON BRIDGE',
             'short_name' => 'M5 Av',
             'coordinate' => '512920.06N 0024134.59W',
-            'airfields' => ['EGGD']
+            'airfields' => ['EGGD'],
         ],
         [
             'name' => 'M5 SEDGEMOOR SERVICES',
@@ -1276,7 +1276,7 @@ class AddVrpData extends Migration
             'name' => 'M55 JUNCTION 3',
             'short_name' => 'M55 J3',
             'coordinate' => '534825.00N 0025323.00W',
-            'airfields' => ['EGNH', 'EGNO']
+            'airfields' => ['EGNH', 'EGNO'],
         ],
         [
             'name' => 'M55 JUNCTION 4',
@@ -1344,7 +1344,7 @@ class AddVrpData extends Migration
             'coordinate' => '513746.00N 0003015.00W',
             'airfields' => ['EGLD'],
         ],
-        ['name' => 'MAUCHLINE', 'short_name' => 'Mauch', 'coordinate' => '553057N 0042245W', 'airfields' => ['EGPK'],],
+        ['name' => 'MAUCHLINE', 'short_name' => 'Mauch', 'coordinate' => '553057N 0042245W', 'airfields' => ['EGPK']],
         [
             'name' => 'MELDRUM TV MAST',
             'short_name' => 'Meld',
@@ -1405,8 +1405,8 @@ class AddVrpData extends Migration
             'coordinate' => '600000.00N 0010936.00W',
             'airfields' => ['EGPB'],
         ],
-        ['name' => 'MOVILLE', 'short_name' => 'Movil', 'coordinate' => '551124N 0070224W', 'airfields' => ['EGAE'],],
-        ['name' => 'MULL OF OA', 'short_name' => 'Mull', 'coordinate' => '553530N 0062018W', 'airfields' => ['EGPI'],],
+        ['name' => 'MOVILLE', 'short_name' => 'Movil', 'coordinate' => '551124N 0070224W', 'airfields' => ['EGAE']],
+        ['name' => 'MULL OF OA', 'short_name' => 'Mull', 'coordinate' => '553530N 0062018W', 'airfields' => ['EGPI']],
         [
             'name' => 'MUSSELBURGH RACECOURSE',
             'short_name' => 'Mussl',
@@ -1435,7 +1435,7 @@ class AddVrpData extends Migration
             'name' => 'NEEDLES LIGHTHOUSE',
             'short_name' => 'Needl',
             'coordinate' => '503945N 0013529W',
-            'airfields' => ['EGHI', 'EGHH',],
+            'airfields' => ['EGHI', 'EGHH'],
         ],
         [
             'name' => 'NESTON',
@@ -1533,7 +1533,7 @@ class AddVrpData extends Migration
             'coordinate' => '513640.00N 0023837.00W',
             'airfields' => ['EGGD', 'EGFF', 'EGSY'],
         ],
-        ['name' => 'OLNEY TOWN', 'short_name' => 'Olney', 'coordinate' => '520912N 0004206W', 'airfields' => ['EGTC'],],
+        ['name' => 'OLNEY TOWN', 'short_name' => 'Olney', 'coordinate' => '520912N 0004206W', 'airfields' => ['EGTC']],
         [
             'name' => 'OLYMPIC',
             'short_name' => 'Olympic',
@@ -1558,12 +1558,12 @@ class AddVrpData extends Migration
             'coordinate' => '530916N 0030342W',
             'airfields' => ['EGNR'],
         ],
-        ['name' => 'PEEL', 'short_name' => 'Peel', 'coordinate' => '541320.00N 0044130.00W', 'airfields' => ['EGNS'],],
+        ['name' => 'PEEL', 'short_name' => 'Peel', 'coordinate' => '541320.00N 0044130.00W', 'airfields' => ['EGNS']],
         [
             'name' => 'PENDEEN LIGHTHOUSE',
             'short_name' => 'Pende',
             'coordinate' => '500955N 0054019W',
-            'airfields' => ['EGHE']
+            'airfields' => ['EGHE'],
         ],
         [
             'name' => 'PENICUIK',
@@ -1571,7 +1571,7 @@ class AddVrpData extends Migration
             'coordinate' => '554955.00N 0031325.00W',
             'airfields' => ['EGPH'],
         ],
-        ['name' => 'PENRITH', 'short_name' => 'Penri', 'coordinate' => '543952N 0024501W', 'airfields' => ['EGNC'],],
+        ['name' => 'PENRITH', 'short_name' => 'Penri', 'coordinate' => '543952N 0024501W', 'airfields' => ['EGNC']],
         [
             'name' => 'PETERHEAD',
             'short_name' => 'Peter',
@@ -1590,7 +1590,7 @@ class AddVrpData extends Migration
             'coordinate' => '515818.00N 0001954.00W',
             'airfields' => ['EGGW'],
         ],
-        ['name' => 'PLADDA', 'short_name' => 'Plad', 'coordinate' => '552535N 0050704W', 'airfields' => ['EGPK'],],
+        ['name' => 'PLADDA', 'short_name' => 'Plad', 'coordinate' => '552535N 0050704W', 'airfields' => ['EGPK']],
         [
             'name' => 'POINT DE ROZEL',
             'short_name' => 'P De R',
@@ -1639,7 +1639,7 @@ class AddVrpData extends Migration
             'coordinate' => '515306.00N 0000016.00E',
             'airfields' => ['EGSS'],
         ],
-        ['name' => 'QEII', 'short_name' => 'QEII', 'coordinate' => '512754.51N 0001532.85E', 'airfields' => ['EGLC'],],
+        ['name' => 'QEII', 'short_name' => 'QEII', 'coordinate' => '512754.51N 0001532.85E', 'airfields' => ['EGLC']],
         [
             'name' => 'RADSTOCK',
             'short_name' => 'Radst',
@@ -1712,9 +1712,9 @@ class AddVrpData extends Migration
             'coordinate' => '543845N 0012806W',
             'airfields' => ['EGNV'],
         ],
-        ['name' => 'SEVENOAKS', 'short_name' => 'Seven', 'coordinate' => '511636N 0001054E', 'airfields' => ['EGKB'],],
-        ['name' => 'SHEERNESS', 'short_name' => 'Sheer', 'coordinate' => '512649N 0004441E', 'airfields' => ['EGMC'],],
-        ['name' => 'SILLOTH', 'short_name' => 'Sillo', 'coordinate' => '545205N 0032341W', 'airfields' => ['EGNC'],],
+        ['name' => 'SEVENOAKS', 'short_name' => 'Seven', 'coordinate' => '511636N 0001054E', 'airfields' => ['EGKB']],
+        ['name' => 'SHEERNESS', 'short_name' => 'Sheer', 'coordinate' => '512649N 0004441E', 'airfields' => ['EGMC']],
+        ['name' => 'SILLOTH', 'short_name' => 'Sillo', 'coordinate' => '545205N 0032341W', 'airfields' => ['EGNC']],
         [
             'name' => 'SOUTH EAST CORNER',
             'short_name' => 'SE Cor',
@@ -1727,7 +1727,7 @@ class AddVrpData extends Migration
             'coordinate' => '513841N 0003606E',
             'airfields' => ['EGMC'],
         ],
-        ['name' => 'SOUTHAM', 'short_name' => 'Southam', 'coordinate' => '521621N 0012304W', 'airfields' => ['EGBE'],],
+        ['name' => 'SOUTHAM', 'short_name' => 'Southam', 'coordinate' => '521621N 0012304W', 'airfields' => ['EGBE']],
         [
             'name' => 'SOUTHEND PIER',
             'short_name' => 'S Pier',
@@ -1768,7 +1768,7 @@ class AddVrpData extends Migration
             'name' => 'ST CATHERINES POINT',
             'short_name' => 'St Cat',
             'coordinate' => '503435N 0011753W',
-            'airfields' => ['EGHI', 'EGHH',],
+            'airfields' => ['EGHI', 'EGHH'],
         ],
         [
             'name' => 'ST GERMAIN',
@@ -1776,7 +1776,7 @@ class AddVrpData extends Migration
             'coordinate' => '491400N 0013800W',
             'airfields' => ['EGJJ', 'EGJB'],
         ],
-        ['name' => 'ST GILES', 'short_name' => 'St Gi', 'coordinate' => '513802N 0003401W', 'airfields' => ['EGLD'],],
+        ['name' => 'ST GILES', 'short_name' => 'St Gi', 'coordinate' => '513802N 0003401W', 'airfields' => ['EGLD']],
         [
             'name' => 'ST HILARY TV MAST',
             'short_name' => 'St Hil',
@@ -1831,14 +1831,14 @@ class AddVrpData extends Migration
             'coordinate' => '505442.00N 0013925.00W',
             'airfields' => ['EGHH'],
         ],
-        ['name' => 'STRABANE', 'short_name' => 'Strab', 'coordinate' => '544925N 0072753W', 'airfields' => ['EGAE'],],
+        ['name' => 'STRABANE', 'short_name' => 'Strab', 'coordinate' => '544925N 0072753W', 'airfields' => ['EGAE']],
         [
             'name' => 'STRETTON AERODROME',
             'short_name' => 'Stret',
             'coordinate' => '532046.00N 0023135.00W',
             'airfields' => ['EGGP', 'EGCC'],
         ],
-        ['name' => 'STROMBERRY', 'short_name' => 'Strom', 'coordinate' => '590149N 0025601W', 'airfields' => ['EGPA'],],
+        ['name' => 'STROMBERRY', 'short_name' => 'Strom', 'coordinate' => '590149N 0025601W', 'airfields' => ['EGPA']],
         [
             'name' => 'STUDLEY',
             'short_name' => 'Studl',
@@ -1911,7 +1911,7 @@ class AddVrpData extends Migration
             'coordinate' => '532326.00N 0023021.00W',
             'airfields' => ['EGCC', 'EGCB'],
         ],
-        ['name' => 'THORPE', 'short_name' => 'Thorpe', 'coordinate' => '523737N 0012242E', 'airfields' => ['EGSH'],],
+        ['name' => 'THORPE', 'short_name' => 'Thorpe', 'coordinate' => '523737N 0012242E', 'airfields' => ['EGSH']],
         [
             'name' => 'THORSBY LAKE',
             'short_name' => 'Thors',
@@ -1924,14 +1924,14 @@ class AddVrpData extends Migration
             'coordinate' => '582337N 0030727W',
             'airfields' => ['EGPC'],
         ],
-        ['name' => 'TOMATIN', 'short_name' => 'Tomat', 'coordinate' => '572002N 0035930W', 'airfields' => ['EGPE'],],
+        ['name' => 'TOMATIN', 'short_name' => 'Tomat', 'coordinate' => '572002N 0035930W', 'airfields' => ['EGPE']],
         [
             'name' => 'TOOME (DISUSED AD)',
             'short_name' => 'Toome',
             'coordinate' => '544528.00N 0062940.00W',
             'airfields' => ['EGAA'],
         ],
-        ['name' => 'TOPSHAM', 'short_name' => 'Tops', 'coordinate' => '504123N 0032849W', 'airfields' => ['EGTE'],],
+        ['name' => 'TOPSHAM', 'short_name' => 'Tops', 'coordinate' => '504123N 0032849W', 'airfields' => ['EGTE']],
         [
             'name' => 'TROWELL (M1 SERVICE)',
             'short_name' => 'Trow',
@@ -1944,15 +1944,15 @@ class AddVrpData extends Migration
             'coordinate' => '510800.00N 0001554.00E',
             'airfields' => ['EGKK'],
         ],
-        ['name' => 'TURRIFF', 'short_name' => 'Turr', 'coordinate' => '573219N 0022736W', 'airfields' => ['EGPD'],],
+        ['name' => 'TURRIFF', 'short_name' => 'Turr', 'coordinate' => '573219N 0022736W', 'airfields' => ['EGPD']],
         [
             'name' => 'TYNE BRIDGES',
             'short_name' => 'Tyne B',
             'coordinate' => '545803.00N 0013625.00W',
             'airfields' => ['EGNT'],
         ],
-        ['name' => 'VOE', 'short_name' => 'VOE', 'coordinate' => '602100N 0011558W', 'airfields' => ['EGPM'],],
-        ['name' => 'WARE', 'short_name' => 'Ware', 'coordinate' => '514842.00N 0000136.00W', 'airfields' => ['EGSS'],],
+        ['name' => 'VOE', 'short_name' => 'VOE', 'coordinate' => '602100N 0011558W', 'airfields' => ['EGPM']],
+        ['name' => 'WARE', 'short_name' => 'Ware', 'coordinate' => '514842.00N 0000136.00W', 'airfields' => ['EGSS']],
         [
             'name' => 'WASHINGTON INTERSECTION (A24/A283)',
             'short_name' => 'Wash',
@@ -2025,7 +2025,7 @@ class AddVrpData extends Migration
             'coordinate' => '533116.81N 0023740.26W',
             'airfields' => ['EGCC', 'EGCB', 'EGGP'],
         ],
-        ['name' => 'WIGTON', 'short_name' => 'Wigton', 'coordinate' => '544929N 0030940W', 'airfields' => ['EGNC'],],
+        ['name' => 'WIGTON', 'short_name' => 'Wigton', 'coordinate' => '544929N 0030940W', 'airfields' => ['EGNC']],
         [
             'name' => 'WINSFORD FLASH',
             'short_name' => 'Wins',
@@ -2044,7 +2044,7 @@ class AddVrpData extends Migration
             'coordinate' => '515924N 0003709W',
             'airfields' => ['EGTC'],
         ],
-        ['name' => 'WORKINGTON', 'short_name' => 'Worki', 'coordinate' => '543906N 0033440W', 'airfields' => ['EGNC'],],
+        ['name' => 'WORKINGTON', 'short_name' => 'Worki', 'coordinate' => '543906N 0033440W', 'airfields' => ['EGNC']],
         [
             'name' => 'WORPLESDON STATION',
             'short_name' => 'Worple',
@@ -2068,7 +2068,7 @@ class AddVrpData extends Migration
                     'name' => ucwords(strtolower($vrpData['name']), ' /('),
                     'short_name' => $vrpData['short_name'],
                     'latitude' => $coordinate->getLat(),
-                    'longitude' => $coordinate->getLng()
+                    'longitude' => $coordinate->getLng(),
                 ]
             );
 

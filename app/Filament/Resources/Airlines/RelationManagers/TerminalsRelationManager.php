@@ -2,18 +2,18 @@
 
 namespace App\Filament\Resources\Airlines\RelationManagers;
 
-use Filament\Actions\AttachAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DetachAction;
-use Filament\Actions\BulkAction;
 use App\Filament\Helpers\PairsAirlinesWithTerminals;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
+use Filament\Actions\AttachAction;
+use Filament\Actions\BulkAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -24,8 +24,11 @@ class TerminalsRelationManager extends RelationManager
     use TranslatesStrings;
 
     protected bool $allowsDuplicates = true;
+
     protected static string $relationship = 'terminals';
+
     protected static ?string $inverseRelationship = 'airlines';
+
     protected static ?string $recordTitleAttribute = 'description';
 
     protected function getTableDescription(): ?string
@@ -48,11 +51,11 @@ class TerminalsRelationManager extends RelationManager
                         query: fn (Builder $query, string $search) => $query->where(
                             'description',
                             'like',
-                            '%' . $search . '%'
+                            '%'.$search.'%'
                         )
                             ->orWhereIn(
                                 'airfield_id',
-                                Airfield::where('code', 'like', '%' . $search . '%')->pluck('id')
+                                Airfield::where('code', 'like', '%'.$search.'%')->pluck('id')
                             )
                     ),
                 ...self::airlineTerminalPairingTableColumns(),

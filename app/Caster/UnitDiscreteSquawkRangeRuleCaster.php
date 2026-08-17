@@ -2,11 +2,11 @@
 
 namespace App\Caster;
 
-use InvalidArgumentException;
 use App\Rules\UnitDiscreteSquawkRange\FlightRules;
-use App\Rules\UnitDiscreteSquawkRange\UnitType;
 use App\Rules\UnitDiscreteSquawkRange\Service;
+use App\Rules\UnitDiscreteSquawkRange\UnitType;
 use Illuminate\Contracts\Validation\Rule;
+use InvalidArgumentException;
 
 class UnitDiscreteSquawkRangeRuleCaster
 {

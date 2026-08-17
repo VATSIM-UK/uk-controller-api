@@ -20,7 +20,7 @@ return [
             'app_id' => env('PUSHER_APP_ID', 'ukcpwebsocket'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'encrypted' =>  env('APP_ENV') !== 'local',
+                'encrypted' => env('APP_ENV') !== 'local',
                 'host' => env('WEBSOCKET_BROADCAST_HOST', '127.0.0.1'),
                 'port' => 6001,
                 'scheme' => env('WEBSOCKET_ENV', 'https'),
@@ -32,6 +32,6 @@ return [
         ],
         'plugin-events' => [
             'driver' => 'plugin-events',
-        ]
+        ],
     ],
 ];

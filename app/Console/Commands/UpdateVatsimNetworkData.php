@@ -24,7 +24,6 @@ class UpdateVatsimNetworkData extends Command
     /**
      * Execute the console command.
      *
-     * @param NetworkAircraftService $dataService
      * @return mixed
      */
     public function handle(NetworkAircraftService $dataService)

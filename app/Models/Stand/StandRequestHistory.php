@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class StandRequestHistory extends Model
 {
     use MassPrunable;
+
     protected $table = 'stand_request_history';
 
     protected $fillable = [

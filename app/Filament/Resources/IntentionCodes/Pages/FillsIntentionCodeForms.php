@@ -26,7 +26,7 @@ trait FillsIntentionCodeForms
             $filledConditions[] = [
                 'type' => $condition['type'],
                 'data' => [
-                    ... match (ConditionType::from($condition['type'])) {
+                    ...match (ConditionType::from($condition['type'])) {
                         ConditionType::ArrivalAirfields => $this->fillArrivalAirfieldsCondition($condition),
                         ConditionType::ArrivalAirfieldPattern => $this->fillArrivalAirfieldPatternCondition($condition),
                         ConditionType::ExitPoint => $this->fillExitPointCondition($condition),
@@ -39,7 +39,7 @@ trait FillsIntentionCodeForms
                         ConditionType::Not, ConditionType::AnyOf, ConditionType::AllOf => $this->fillNestedCondition(
                             $condition
                         ),
-                    }
+                    },
                 ],
             ];
         }

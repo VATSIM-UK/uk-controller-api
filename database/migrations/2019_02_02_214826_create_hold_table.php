@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateHoldTable extends Migration
 {
@@ -22,7 +22,7 @@ class CreateHoldTable extends Migration
             $table->enum('turn_direction', ['left', 'right'])->comment('The turn direction at the holding fix');
             $table->string('description')
                 ->comment(
-                    'How the hold should be described, usually the holding fix, ' .
+                    'How the hold should be described, usually the holding fix, '.
                     'but may be different in the event of multi-purpose holds'
                 );
             $table->timestamps();

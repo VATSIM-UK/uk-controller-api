@@ -2,37 +2,40 @@
 
 namespace App\Filament\Resources\Runways;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Runways\Pages\ListRunways;
-use App\Filament\Resources\Runways\Pages\CreateRunway;
-use App\Filament\Resources\Runways\Pages\ViewRunway;
-use App\Filament\Resources\Runways\Pages\EditRunway;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\Runways\Pages\CreateRunway;
+use App\Filament\Resources\Runways\Pages\EditRunway;
+use App\Filament\Resources\Runways\Pages\ListRunways;
+use App\Filament\Resources\Runways\Pages\ViewRunway;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Runway\Runway;
 use App\Rules\Heading\ValidHeading;
 use App\Rules\Runway\RunwayIdentifier;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\TranslatesStrings;
 
 class RunwayResource extends Resource
 {
-    use TranslatesStrings;
     use HasCoordinates;
+    use TranslatesStrings;
 
     protected static ?string $model = Runway::class;
+
     protected static ?string $recordTitleAttribute = 'identifier';
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-up';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function form(Schema $schema): Schema
@@ -44,13 +47,13 @@ class RunwayResource extends Resource
                     ->helperText(self::translateFormPath('airfield.helper'))
                     ->searchable()
                     ->options(SelectOptions::airfields())
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => ! $livewire instanceof CreateRecord)
                     ->required(),
                 TextInput::make('identifier')
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
                     ->required()
-                    ->rule(new RunwayIdentifier()),
+                    ->rule(new RunwayIdentifier),
                 ...self::coordinateInputs('threshold_latitude', 'threshold_longitude'),
                 TextInput::make('threshold_elevation')
                     ->label(self::translateFormPath('threshold_elevation.label'))
@@ -62,7 +65,7 @@ class RunwayResource extends Resource
                     ->label(self::translateFormPath('heading.label'))
                     ->helperText(self::translateFormPath('heading.helper'))
                     ->required()
-                    ->rule(new ValidHeading()),
+                    ->rule(new ValidHeading),
                 TextInput::make('glideslope_angle')
                     ->label(self::translateFormPath('glideslope_angle.label'))
                     ->helperText(self::translateFormPath('glideslope_angle.helper'))

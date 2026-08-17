@@ -2,37 +2,40 @@
 
 namespace App\Filament\Resources\Airfields;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Airfields\Pages\ListAirfields;
-use App\Filament\Resources\Airfields\Pages\CreateAirfield;
-use App\Filament\Resources\Airfields\Pages\ViewAirfield;
-use App\Filament\Resources\Airfields\Pages\EditAirfield;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\Airfields\Pages\CreateAirfield;
+use App\Filament\Resources\Airfields\Pages\EditAirfield;
+use App\Filament\Resources\Airfields\Pages\ListAirfields;
+use App\Filament\Resources\Airfields\Pages\ViewAirfield;
 use App\Filament\Resources\Airfields\RelationManagers\ControllersRelationManager;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Rules\Airfield\AirfieldIcao;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Pages\Page;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class AirfieldResource extends Resource
 {
-    use TranslatesStrings;
     use HasCoordinates;
+    use TranslatesStrings;
 
     protected static ?string $model = Airfield::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-x-circle';
+
     protected static ?string $recordTitleAttribute = 'code';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function form(Schema $schema): Schema
@@ -44,11 +47,11 @@ class AirfieldResource extends Resource
                     ->schema([
                         TextInput::make('code')
                             ->unique(ignoreRecord: true)
-                            ->rule(new AirfieldIcao())
+                            ->rule(new AirfieldIcao)
                             ->required()
                             ->label(self::translateFormPath('code.label'))
                             ->helperText(self::translateFormPath('code.helper'))
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
+                            ->disabled(fn (Page $livewire) => ! $livewire instanceof CreateRecord),
                         ...self::coordinateInputs(),
                         TextInput::make('elevation')
                             ->required()

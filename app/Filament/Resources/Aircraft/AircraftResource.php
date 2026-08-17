@@ -2,25 +2,25 @@
 
 namespace App\Filament\Resources\Aircraft;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\Aircraft\Pages\ListAircraft;
-use App\Filament\Resources\Aircraft\Pages\CreateAircraft;
-use App\Filament\Resources\Aircraft\Pages\ViewAircraft;
-use App\Filament\Resources\Aircraft\Pages\EditAircraft;
 use App\Events\Aircraft\AircraftDataUpdatedEvent;
+use App\Filament\Resources\Aircraft\Pages\CreateAircraft;
+use App\Filament\Resources\Aircraft\Pages\EditAircraft;
+use App\Filament\Resources\Aircraft\Pages\ListAircraft;
+use App\Filament\Resources\Aircraft\Pages\ViewAircraft;
 use App\Filament\Resources\Aircraft\RelationManagers\WakeCategoriesRelationManager;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -31,7 +31,9 @@ class AircraftResource extends Resource
     protected static ?string $model = Aircraft::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-paper-airplane';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Airline';
+
     protected static ?string $recordTitleAttribute = 'code';
 
     public static function getEloquentQuery(): Builder
@@ -128,7 +130,7 @@ class AircraftResource extends Resource
                 EditAction::make(),
                 DeleteAction::make()
                     ->after(function () {
-                        event(new AircraftDataUpdatedEvent());
+                        event(new AircraftDataUpdatedEvent);
                     }),
             ])
             ->defaultSort('code');

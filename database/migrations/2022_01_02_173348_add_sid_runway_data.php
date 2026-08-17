@@ -15,7 +15,7 @@ class AddSidRunwayData extends Migration
      */
     public function up()
     {
-        $file = fopen(__DIR__ . '/../data/runway/2022-runway-sids.csv', 'r+');
+        $file = fopen(__DIR__.'/../data/runway/2022-runway-sids.csv', 'r+');
         while ($line = fgetcsv($file)) {
             $airfieldId = Airfield::where('code', $line[0])->firstOrFail()->id;
             Sid::where('airfield_id', $airfieldId)
@@ -26,7 +26,7 @@ class AddSidRunwayData extends Migration
                         'runway_id' => Runway::where('airfield_id', $airfieldId)->where(
                             'identifier',
                             $line[1]
-                        )->firstOrFail()->id
+                        )->firstOrFail()->id,
                     ]
                 );
         }

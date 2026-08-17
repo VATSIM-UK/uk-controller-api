@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\SmrAreas\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\SmrAreas\SmrAreaResource;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditSmrArea extends EditRecord

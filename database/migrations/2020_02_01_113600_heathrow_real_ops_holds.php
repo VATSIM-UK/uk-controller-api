@@ -1,8 +1,8 @@
 <?php
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class HeathrowRealOpsHolds extends Migration
 {
@@ -21,7 +21,7 @@ class HeathrowRealOpsHolds extends Migration
             'minimum_altitude' => 23000,
             'maximum_altitude' => 30000,
             'turn_direction' => 'right',
-            'description' => 'DOMUT - LL/KK Inbounds'
+            'description' => 'DOMUT - LL/KK Inbounds',
         ],
         [
             'fix' => 'KATHY',
@@ -29,7 +29,7 @@ class HeathrowRealOpsHolds extends Migration
             'minimum_altitude' => 16000,
             'maximum_altitude' => 19000,
             'turn_direction' => 'left',
-            'description' => 'KATHY - LL/KK Inbounds'
+            'description' => 'KATHY - LL/KK Inbounds',
         ],
         [
             'fix' => 'TIGER',
@@ -37,7 +37,7 @@ class HeathrowRealOpsHolds extends Migration
             'minimum_altitude' => 15000,
             'maximum_altitude' => 24000,
             'turn_direction' => 'right',
-            'description' => 'TIGER - LL Inbounds'
+            'description' => 'TIGER - LL Inbounds',
         ],
         [
             'fix' => 'WCO',
@@ -45,7 +45,7 @@ class HeathrowRealOpsHolds extends Migration
             'minimum_altitude' => 16000,
             'maximum_altitude' => 30000,
             'turn_direction' => 'left',
-            'description' => 'WCO - LL Inbounds'
+            'description' => 'WCO - LL Inbounds',
         ],
         [
             'fix' => 'HON',
@@ -53,7 +53,7 @@ class HeathrowRealOpsHolds extends Migration
             'minimum_altitude' => 16000,
             'maximum_altitude' => 20000,
             'turn_direction' => 'left',
-            'description' => 'HON - LL Inbounds Left Low'
+            'description' => 'HON - LL Inbounds Left Low',
         ],
         [
             'fix' => 'HON',
@@ -61,7 +61,7 @@ class HeathrowRealOpsHolds extends Migration
             'minimum_altitude' => 20000,
             'maximum_altitude' => 30000,
             'turn_direction' => 'right',
-            'description' => 'HON - LL Inbounds Right High'
+            'description' => 'HON - LL Inbounds Right High',
         ],
     ];
 

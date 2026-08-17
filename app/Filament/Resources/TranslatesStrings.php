@@ -32,8 +32,6 @@ trait TranslatesStrings
     /**
      * Returns the root of the translation path for the relations manager, to build
      * labels etc.
-     *
-     * @return string
      */
     abstract protected static function translationPathRoot(): string;
 }

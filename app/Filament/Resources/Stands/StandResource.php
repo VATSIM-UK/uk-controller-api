@@ -2,23 +2,14 @@
 
 namespace App\Filament\Resources\Stands;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Tables\Filters\SelectFilter;
-use App\Filament\Resources\Stands\RelationManagers\AirlinesRelationManager;
-use App\Filament\Resources\Stands\RelationManagers\PairedStandsRelationManager;
-use App\Filament\Resources\Stands\Pages\ListStands;
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\Stands\Pages\CreateStand;
 use App\Filament\Resources\Stands\Pages\EditStand;
+use App\Filament\Resources\Stands\Pages\ListStands;
 use App\Filament\Resources\Stands\Pages\ViewStand;
-use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\Stands\RelationManagers\AirlinesRelationManager;
+use App\Filament\Resources\Stands\RelationManagers\PairedStandsRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
@@ -26,17 +17,26 @@ use App\Models\Stand\StandAllocationStatus;
 use App\Models\Stand\StandType;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use App\Rules\Stand\StandIdentifierMustBeUniqueAtAirfield;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
-use App\Filament\Resources\TranslatesStrings;
 
 class StandResource extends Resource
 {
@@ -45,8 +45,11 @@ class StandResource extends Resource
     private const DEFAULT_COLUMN_VALUE = '--';
 
     protected static ?string $model = Stand::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $recordTitleAttribute = 'identifier';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function getGlobalSearchEloquentQuery(): Builder
@@ -74,8 +77,8 @@ class StandResource extends Resource
 
                                 $set('terminal_id', null);
                             })
-                            ->searchable(!App::runningUnitTests())
-                            ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                            ->searchable(! App::runningUnitTests())
+                            ->disabled(fn (Page $livewire) => ! $livewire instanceof CreateRecord)
                             ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                             ->required(),
                         Select::make('terminal_id')
@@ -90,7 +93,7 @@ class StandResource extends Resource
                                     )
                             )
                             ->disabled(
-                                fn (Page $livewire, Get $get) => !Terminal::where(
+                                fn (Page $livewire, Get $get) => ! Terminal::where(
                                     'airfield_id',
                                     $get('airfield_id')
                                 )->exists()
@@ -187,7 +190,7 @@ class StandResource extends Resource
                         TextInput::make('origin_slug')
                             ->label(self::translateFormPath('origin_slug.label'))
                             ->helperText(self::translateFormPath('origin_slug.helper'))
-                            ->rule(new PartialAirfieldIcao()),
+                            ->rule(new PartialAirfieldIcao),
                     ]
                 ),
             ]);

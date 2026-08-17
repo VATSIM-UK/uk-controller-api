@@ -8,7 +8,7 @@ abstract class Coordinate implements Rule
 {
     public function passes($attribute, $value): bool
     {
-        return is_numeric($value) && $this->validFloat((float)$value);
+        return is_numeric($value) && $this->validFloat((float) $value);
     }
 
     private function validFloat(float $value): bool

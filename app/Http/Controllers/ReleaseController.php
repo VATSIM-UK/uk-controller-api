@@ -23,7 +23,7 @@ class ReleaseController extends BaseController
         $invalidData = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['required', 'string', new VatsimCallsign()],
+                'callsign' => ['required', 'string', new VatsimCallsign],
                 'type' => 'required|integer',
                 'initiating_controller' => 'required|string',
                 'target_controller' => 'required|string',
@@ -35,7 +35,7 @@ class ReleaseController extends BaseController
             return $invalidData;
         }
 
-        if (!EnrouteReleaseType::find($request->json('type'))) {
+        if (! EnrouteReleaseType::find($request->json('type'))) {
             return response()->json([], 404);
         }
 
@@ -52,6 +52,7 @@ class ReleaseController extends BaseController
         );
 
         event(new EnrouteReleaseEvent($release));
+
         return response()->json([], 201);
     }
 }

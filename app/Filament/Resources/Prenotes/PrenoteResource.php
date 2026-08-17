@@ -2,28 +2,31 @@
 
 namespace App\Filament\Resources\Prenotes;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Prenotes\RelationManagers\ControllersRelationManager;
-use App\Filament\Resources\Prenotes\Pages\ListPrenotes;
 use App\Filament\Resources\Prenotes\Pages\CreatePrenote;
-use App\Filament\Resources\Prenotes\Pages\ViewPrenote;
 use App\Filament\Resources\Prenotes\Pages\EditPrenote;
+use App\Filament\Resources\Prenotes\Pages\ListPrenotes;
+use App\Filament\Resources\Prenotes\Pages\ViewPrenote;
+use App\Filament\Resources\Prenotes\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\Prenote;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class PrenoteResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = Prenote::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $recordTitleAttribute = 'description';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function form(Schema $schema): Schema

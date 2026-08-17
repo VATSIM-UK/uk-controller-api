@@ -2,8 +2,8 @@
 
 use App\Models\Airfield\Airfield;
 use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddAirfieldsToAsrs extends Migration
 {

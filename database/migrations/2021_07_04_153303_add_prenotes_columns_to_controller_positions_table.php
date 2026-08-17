@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class AddPrenotesColumnsToControllerPositionsTable extends Migration
                 [
                     'sends_prenotes' => DB::raw('`requests_departure_releases`'),
                     'receives_prenotes' => DB::raw('`receives_departure_releases`'),
-                    'updated_at' => \Carbon\Carbon::now(),
+                    'updated_at' => Carbon::now(),
                 ]
             );
     }

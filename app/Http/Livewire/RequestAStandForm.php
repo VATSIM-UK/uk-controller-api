@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\View;
 use App\Filament\Helpers\DisplaysStandStatus;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
@@ -21,6 +19,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\View;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -31,11 +31,17 @@ class RequestAStandForm extends Component implements HasForms
     use ShowsRequestTimeInformation;
 
     public ?NetworkAircraft $userAircraft;
+
     public ?Aircraft $userAircraftType;
+
     public array $stands = [];
+
     public array $recommendedStands = [];
+
     public ?int $requestedStand = null;
+
     public ?string $requestedTime = null;
+
     public ?StandAssignment $existingAssignment = null;
 
     protected $messages = [
@@ -74,7 +80,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->toArray()
             : [];
 
-        $this->recommendedStands = !empty($this->stands)
+        $this->recommendedStands = ! empty($this->stands)
             ? app()->make(ArrivalAllocationService::class)
                 ->recommendStand(5, $this->userAircraft)
             : [];
@@ -134,7 +140,7 @@ class RequestAStandForm extends Component implements HasForms
                     }
 
                     // If the time is not valid, fail.
-                    if (!$this->requestedTimeValid()) {
+                    if (! $this->requestedTimeValid()) {
                         $fail('');
                     }
                 })
@@ -147,7 +153,7 @@ class RequestAStandForm extends Component implements HasForms
                 ->reactive()
                 ->required(),
             View::make('livewire.stand-booking-applicability')
-                ->hidden(!$this->requestedTimeValid())
+                ->hidden(! $this->requestedTimeValid())
                 ->viewData($this->getRequestTimeViewData($requestedTime)),
         ];
     }
@@ -215,7 +221,7 @@ class RequestAStandForm extends Component implements HasForms
 
     private function requestedTimeValid(): bool
     {
-        if (!$this->requestedTime) {
+        if (! $this->requestedTime) {
             return false;
         }
 

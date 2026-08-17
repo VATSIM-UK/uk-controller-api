@@ -5,7 +5,8 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Migrations\Migration;
 
-return new class() extends Migration {
+return new class extends Migration
+{
     public const USERS = [1203533, 1258635, 1169992, 1294298];
 
     /**
@@ -18,7 +19,7 @@ return new class() extends Migration {
         $webRole = Role::where('key', RoleKeys::WEB_TEAM)->firstOrFail()->id;
         foreach (self::USERS as $cid) {
             $user = User::find($cid);
-            if (!$user) {
+            if (! $user) {
                 continue;
             }
 

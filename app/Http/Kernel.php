@@ -2,16 +2,9 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\EncryptCookies;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Http\Middleware\HandleCors;
-use Bugsnag\BugsnagLaravel\OomBootstrapper;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\ControllingOnLiveNetwork;
+use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\GithubAuth;
 use App\Http\Middleware\LogAdminAction;
 use App\Http\Middleware\MiddlewareKeys;
@@ -20,8 +13,15 @@ use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
 use App\Http\Middleware\UserLastLogin;
 use App\Http\Middleware\VatsimCid;
+use App\Http\Middleware\VerifyCsrfToken;
 use App\Providers\AuthServiceProvider;
+use Bugsnag\BugsnagLaravel\OomBootstrapper;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Http\Middleware\HandleCors;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CheckForAnyScope;
 use Laravel\Passport\Http\Middleware\CheckScopes;
 
@@ -46,14 +46,14 @@ class Kernel extends HttpKernel
 
     protected $middlewareGroups = [
         'plugin.user' => [
-            MiddlewareKeys::AUTH . ':api',
+            MiddlewareKeys::AUTH.':api',
             MiddlewareKeys::USER_BANNED,
             MiddlewareKeys::USER_DISABLED,
-            MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_USER,
+            MiddlewareKeys::SCOPES.':'.AuthServiceProvider::SCOPE_USER,
         ],
         'admin.user' => [
-            MiddlewareKeys::AUTH . ':api',
-            MiddlewareKeys::SCOPES . ':' . AuthServiceProvider::SCOPE_USER_ADMIN,
+            MiddlewareKeys::AUTH.':api',
+            MiddlewareKeys::SCOPES.':'.AuthServiceProvider::SCOPE_USER_ADMIN,
             MiddlewareKeys::ADMIN_LOG,
         ],
         'admin.github' => [
@@ -71,7 +71,7 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
         ],
         'web_auth' => [
-            MiddlewareKeys::AUTH . ':web',
+            MiddlewareKeys::AUTH.':web',
         ],
         'public' => [
             HandleCors::class,

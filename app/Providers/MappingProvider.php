@@ -14,7 +14,7 @@ class MappingProvider extends ServiceProvider
         $this->app->singleton(MappingService::class, function (Application $application) {
             return new MappingService(
                 [
-                    $application->make(VrpService::class)
+                    $application->make(VrpService::class),
                 ]
             );
         });

@@ -27,7 +27,6 @@ class UserController extends BaseController
      */
     private $userConfigService;
 
-
     /**
      * Administers users tokens
      *
@@ -37,8 +36,6 @@ class UserController extends BaseController
 
     /**
      * Constructor
-     *
-     * @param UserService $userService
      */
     public function __construct(
         UserService $userService,
@@ -52,17 +49,16 @@ class UserController extends BaseController
 
     /**
      * Bans the given user
-     *
-     * @param integer $cid
-     * @return JsonResponse
      */
     public function banUser(int $cid): JsonResponse
     {
         try {
             $this->userService->banUser($cid);
+
             return response()->json()->setStatusCode(204);
         } catch (ModelNotFoundException $e) {
-            Log::error('Attempted to ban user with CID ' . $cid . ' which does not exist.');
+            Log::error('Attempted to ban user with CID '.$cid.' which does not exist.');
+
             return response()->json(
                 [
                     'message' => $this->getNotExistsMessage($cid),
@@ -74,9 +70,6 @@ class UserController extends BaseController
     /**
      * Creates a user with the given CID and also
      * returns their plugin config.
-     *
-     * @param integer $cid
-     * @return JsonResponse
      */
     public function createUserWithPluginConfig(int $cid): JsonResponse
     {
@@ -85,10 +78,11 @@ class UserController extends BaseController
                 $this->userService->createUserWithConfig($cid)
             )->setStatusCode(201);
         } catch (UserAlreadyExistsException $e) {
-            Log::error('Unable to create user with CID ' . $cid . ', already exists');
+            Log::error('Unable to create user with CID '.$cid.', already exists');
+
             return response()->json(
                 [
-                    'message' => 'User with CID ' . $cid . ' already exists',
+                    'message' => 'User with CID '.$cid.' already exists',
                 ]
             )->setStatusCode(422);
         }
@@ -98,8 +92,7 @@ class UserController extends BaseController
      * Creates a user with the given CID and also
      * returns their plugin config.
      *
-     * @param integer $cid
-     * @return JsonResponse
+     * @param  int  $cid
      */
     public function createUser(CreateUser $request): JsonResponse
     {
@@ -109,10 +102,11 @@ class UserController extends BaseController
                 $this->userService->createUser($cid)
             )->setStatusCode(201);
         } catch (UserAlreadyExistsException $e) {
-            Log::error('Unable to create user with CID ' . $cid . ', already exists');
+            Log::error('Unable to create user with CID '.$cid.', already exists');
+
             return response()->json(
                 [
-                    'message' => 'User with CID ' . $cid . ' already exists',
+                    'message' => 'User with CID '.$cid.' already exists',
                 ]
             )->setStatusCode(422);
         }
@@ -120,9 +114,6 @@ class UserController extends BaseController
 
     /**
      * Creates a token for the given user
-     *
-     * @param integer $cid
-     * @return JsonResponse
      */
     public function createUserToken(int $cid): JsonResponse
     {
@@ -141,9 +132,6 @@ class UserController extends BaseController
 
     /**
      * Creates a token for the given user
-     *
-     * @param string $tokenId
-     * @return JsonResponse
      */
     public function deleteUserToken(string $tokenId): JsonResponse
     {
@@ -162,17 +150,16 @@ class UserController extends BaseController
 
     /**
      * Disables the given user account
-     *
-     * @param integer $cid
-     * @return JsonResponse
      */
     public function disableUser(int $cid): JsonResponse
     {
         try {
             $this->userService->banUser($cid);
+
             return response()->json()->setStatusCode(204);
         } catch (ModelNotFoundException $e) {
-            Log::error('Attempted to disable user with CID ' . $cid . ' which does not exist.');
+            Log::error('Attempted to disable user with CID '.$cid.' which does not exist.');
+
             return response()->json(
                 [
                     'message' => $this->getNotExistsMessage($cid),
@@ -183,9 +170,6 @@ class UserController extends BaseController
 
     /**
      * Returns the user as JSON
-     *
-     * @param integer $cid
-     * @return JsonResponse
      */
     public function getUser(int $cid): JsonResponse
     {
@@ -202,17 +186,16 @@ class UserController extends BaseController
 
     /**
      * Reactivates the given user account
-     *
-     * @param integer $cid
-     * @return JsonResponse
      */
     public function reactivateUser(int $cid): JsonResponse
     {
         try {
             $this->userService->reactivateUser($cid);
+
             return response()->json()->setStatusCode(204);
         } catch (ModelNotFoundException $e) {
-            Log::error('Unable to reactivate user with CID ' . $cid . ', does not exists');
+            Log::error('Unable to reactivate user with CID '.$cid.', does not exists');
+
             return response()->json(
                 [
                     'message' => $this->getNotExistsMessage($cid),
@@ -224,7 +207,6 @@ class UserController extends BaseController
     /**
      * Get the unread notifications for the given user
      *
-     * @param integer $cid
      * @return JsonResponse
      */
     public function getUnreadNotificationsForUser(int $cid)
@@ -236,7 +218,8 @@ class UserController extends BaseController
                     request()->get('inactive', false)
                 ));
         } catch (ModelNotFoundException $e) {
-            Log::error('Unable to reactivate user with CID ' . $cid . ', does not exists');
+            Log::error('Unable to reactivate user with CID '.$cid.', does not exists');
+
             return response()->json(
                 [
                     'message' => $this->getNotExistsMessage($cid),
@@ -248,21 +231,21 @@ class UserController extends BaseController
     /**
      * Marks a notification as read for the given user
      *
-     * @param integer $cid
-     * @param integer $notificationId
      * @return JsonResponse
      */
     public function markNotificationAsReadForUser(int $cid, int $notificationId)
     {
         try {
             $this->userService->markNotificationAsReadForUser($cid, $notificationId);
+
             return response()->json(['message' => 'ok']);
         } catch (ModelNotFoundException $e) {
             Log::error(
-                'Unable to mark notification id ' . $notificationId
-                . ' as read for CID ' . $cid
-                . ', one does not exists'
+                'Unable to mark notification id '.$notificationId
+                .' as read for CID '.$cid
+                .', one does not exists'
             );
+
             return response()->json(
                 [
                     'message' => 'Either the user or notification does not exist.',

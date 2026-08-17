@@ -35,7 +35,7 @@ class AllowPrenotesToTower extends Migration
             ->update(
                 [
                     'controller_positions.receives_prenotes' => $receivesPrenotes,
-                    'controller_positions.updated_at' => Carbon::now()
+                    'controller_positions.updated_at' => Carbon::now(),
                 ]
             );
     }

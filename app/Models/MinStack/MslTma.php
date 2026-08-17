@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MslTma extends Model
 {
     public const CREATED_AT = null;
+
     public const UPDATED_AT = 'generated_at';
 
     protected $primaryKey = 'tma_id';

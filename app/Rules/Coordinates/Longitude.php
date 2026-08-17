@@ -11,6 +11,6 @@ class Longitude extends Coordinate
 
     public function getTypeForMessage(): string
     {
-        return "longitude";
+        return 'longitude';
     }
 }

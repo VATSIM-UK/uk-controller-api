@@ -2,18 +2,18 @@
 
 namespace App\Filament\Resources\OrcamSquawkRanges;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\OrcamSquawkRanges\Pages\ManageOrcamSquawkRanges;
 use App\Filament\Helpers\HasSquawkRanges;
+use App\Filament\Resources\OrcamSquawkRanges\Pages\ManageOrcamSquawkRanges;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Rules\Airfield\PartialAirfieldIcao;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class OrcamSquawkRangeResource extends Resource
 {
@@ -21,9 +21,12 @@ class OrcamSquawkRangeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = OrcamSquawkRange::class;
-    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Squawk Ranges';
+
     protected static ?string $navigationLabel = 'ORCAM';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wifi';
 
     public static function form(Schema $schema): Schema
     {
@@ -34,7 +37,7 @@ class OrcamSquawkRangeResource extends Resource
                     ->label(self::translateFormPath('origin.label'))
                     ->helperText(self::translateFormPath('origin.helper'))
                     ->required()
-                    ->rule(new PartialAirfieldIcao()),
+                    ->rule(new PartialAirfieldIcao),
             ]);
     }
 
@@ -64,8 +67,6 @@ class OrcamSquawkRangeResource extends Resource
     /**
      * Returns the root of the translation path for the relations manager, to build
      * labels etc.
-     *
-     * @return string
      */
     protected static function translationPathRoot(): string
     {

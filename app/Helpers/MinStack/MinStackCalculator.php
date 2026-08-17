@@ -6,13 +6,9 @@ class MinStackCalculator
 {
     // Pressure boundaries in MSL calculations
     public const STANDARD_PRESSURE = 1013;
+
     public const LOW_PRESSURE_BOUNDARY = 978;
 
-    /**
-     * @param MinStackDataProviderInterface $dataProvider
-     * @param int $qnh
-     * @return int
-     */
     public static function calculateMinStack(MinStackDataProviderInterface $dataProvider, int $qnh): int
     {
         if ($qnh > self::STANDARD_PRESSURE ||

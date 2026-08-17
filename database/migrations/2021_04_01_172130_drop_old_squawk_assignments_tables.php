@@ -45,7 +45,7 @@ class DropOldSquawkAssignmentsTables extends Migration
 
     private function transferSquawks()
     {
-        $squawks = new Collection();
+        $squawks = new Collection;
         foreach (self::TABLES as $type => $table) {
             $squawks = $squawks->merge($this->getAssignmentsToInsertFromTable($type, $table));
         }

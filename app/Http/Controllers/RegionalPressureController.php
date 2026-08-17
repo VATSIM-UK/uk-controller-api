@@ -10,7 +10,6 @@ use Illuminate\Http\JsonResponse;
  * A controller for handling requests in relation to regional pressure settings.
  *
  * Class RegionalPressureController
- * @package App\Http\Controllers
  */
 class RegionalPressureController extends BaseController
 {
@@ -21,7 +20,6 @@ class RegionalPressureController extends BaseController
 
     /**
      * RegionalPressureController constructor.
-     * @param RegionalPressureService $regionalPressureService
      */
     public function __construct(RegionalPressureService $regionalPressureService)
     {

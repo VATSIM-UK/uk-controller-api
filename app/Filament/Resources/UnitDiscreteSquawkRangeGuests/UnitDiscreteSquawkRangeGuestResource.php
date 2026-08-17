@@ -2,25 +2,28 @@
 
 namespace App\Filament\Resources\UnitDiscreteSquawkRangeGuests;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
+use App\Filament\Resources\TranslatesStrings;
 use App\Filament\Resources\UnitDiscreteSquawkRangeGuests\Pages\ManageUnitDiscreteSquawkRangeGuests;
 use App\Models\Squawk\UnitDiscrete\UnitDiscreteSquawkRangeGuest;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class UnitDiscreteSquawkRangeGuestResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = UnitDiscreteSquawkRangeGuest::class;
-    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Squawk Ranges';
+
     protected static ?string $navigationLabel = 'Unit Discrete Guests';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wifi';
 
     public static function form(Schema $schema): Schema
     {
@@ -68,8 +71,6 @@ class UnitDiscreteSquawkRangeGuestResource extends Resource
     /**
      * Returns the root of the translation path for the relations manager, to build
      * labels etc.
-     *
-     * @return string
      */
     protected static function translationPathRoot(): string
     {

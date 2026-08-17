@@ -2,25 +2,28 @@
 
 namespace App\Filament\Resources\Versions;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\RestoreAction;
+use App\Filament\Resources\TranslatesStrings;
 use App\Filament\Resources\Versions\Pages\ListVersions;
 use App\Models\Version\Version;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\TranslatesStrings;
 
 class VersionResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = Version::class;
+
     protected static ?string $navigationLabel = 'Plugin Versions';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-puzzle-piece';
-    protected static string | \UnitEnum | null $navigationGroup = 'Plugin';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-puzzle-piece';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Plugin';
 
     public static function getEloquentQuery(): Builder
     {
@@ -43,7 +46,7 @@ class VersionResource extends Resource
                     ->searchable(),
                 IconColumn::make('is_active')
                     ->boolean()
-                    ->getStateUsing(fn (Version $record) => !$record->trashed())
+                    ->getStateUsing(fn (Version $record) => ! $record->trashed())
                     ->label(self::translateTablePath('columns.is_active'))
                     ->toggleable(),
             ])

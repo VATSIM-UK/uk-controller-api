@@ -30,7 +30,7 @@ class MetarsUpdatedEvent extends HighPriorityBroadcastEvent
                         'raw' => $metar->raw,
                         'parsed' => $metar->parsed,
                     ];
-                })->toArray()
+                })->toArray(),
             ];
     }
 
@@ -41,6 +41,6 @@ class MetarsUpdatedEvent extends HighPriorityBroadcastEvent
 
     public function broadcastAs()
     {
-        return "metars.updated";
+        return 'metars.updated';
     }
 }

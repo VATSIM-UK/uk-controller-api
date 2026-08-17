@@ -2,8 +2,8 @@
 
 use App\Models\Controller\Handoff;
 use App\Models\Sid;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddSidHandoffData extends Migration
 {

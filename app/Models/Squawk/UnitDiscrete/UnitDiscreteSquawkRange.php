@@ -36,13 +36,13 @@ class UnitDiscreteSquawkRange extends AbstractSquawkRange
         return tap(
             collect(),
             function (Collection $rules) {
-                if (!$this->rules) {
+                if (! $this->rules) {
                     return;
                 }
 
                 foreach ($this->rules as $rule) {
                     $rules->add(
-                        (new UnitDiscreteSquawkRangeRuleCaster())->get(
+                        (new UnitDiscreteSquawkRangeRuleCaster)->get(
                             $rule,
                         )
                     );

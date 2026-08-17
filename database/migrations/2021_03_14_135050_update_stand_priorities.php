@@ -53,7 +53,7 @@ class UpdateStandPriorities extends Migration
                 '524',
                 '525',
                 '526',
-                '527'
+                '527',
             ],
         ],
         'EGLC' => [
@@ -66,7 +66,7 @@ class UpdateStandPriorities extends Migration
             100 => [
                 '15',
             ],
-        ]
+        ],
     ];
 
     /**

@@ -11,8 +11,8 @@ use Illuminate\Support\Collection;
 
 class UpdateRegionalPressureSettings implements ShouldQueue
 {
-    use Queueable;
     use Dispatchable;
+    use Queueable;
     use SerializesModels;
 
     private Collection $metars;

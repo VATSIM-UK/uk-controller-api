@@ -8,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class RenameStands extends Migration
 {
-    public const STANDS_TO_RENAME_FILE = __DIR__ . '/../data/stands/2020/torename.csv';
+    public const STANDS_TO_RENAME_FILE = __DIR__.'/../data/stands/2020/torename.csv';
 
     /**
      * Run the migrations.

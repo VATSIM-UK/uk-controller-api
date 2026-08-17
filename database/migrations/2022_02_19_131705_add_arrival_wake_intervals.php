@@ -88,7 +88,7 @@ class AddArrivalWakeIntervals extends Migration
                             $categories->firstOrFail(
                                 'code',
                                 $followingCategory
-                            )->id => ['interval' => $interval]
+                            )->id => ['interval' => $interval],
                         ]
                     )
                 );

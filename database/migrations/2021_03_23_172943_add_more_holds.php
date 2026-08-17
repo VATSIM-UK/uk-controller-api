@@ -182,7 +182,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 3000,
                 'turn_direction' => 'left',
                 'description' => 'TOMPO',
-            ]
+            ],
         ],
         'SAM' => [
             [
@@ -191,7 +191,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 10000,
                 'turn_direction' => 'right',
                 'description' => 'SAM',
-            ]
+            ],
         ],
         'NEDUL' => [
             [
@@ -200,7 +200,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 15000,
                 'turn_direction' => 'right',
                 'description' => 'NEDUL',
-            ]
+            ],
         ],
         'SPEAR' => [
             [
@@ -209,7 +209,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 7000,
                 'turn_direction' => 'right',
                 'description' => 'SPEAR',
-            ]
+            ],
         ],
         'GEGMU' => [
             [
@@ -218,7 +218,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 6000,
                 'turn_direction' => 'right',
                 'description' => 'GEGMU',
-            ]
+            ],
         ],
         'NWI' => [
             [
@@ -245,7 +245,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 6000,
                 'turn_direction' => 'right',
                 'description' => 'IOM',
-            ]
+            ],
         ],
         'RWY' => [
             [
@@ -270,7 +270,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 6000,
                 'turn_direction' => 'right',
                 'description' => 'Teeside',
-            ]
+            ],
         ],
         'NT' => [
             [
@@ -279,7 +279,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 6000,
                 'turn_direction' => 'left',
                 'description' => 'Newcastle',
-            ]
+            ],
         ],
         'ETSES' => [
             [
@@ -288,7 +288,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 10000,
                 'turn_direction' => 'left',
                 'description' => 'ETSES',
-            ]
+            ],
         ],
         'TRN' => [
             [
@@ -297,7 +297,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 9000,
                 'turn_direction' => 'left',
                 'description' => 'TRN',
-            ]
+            ],
         ],
         'SUMIN' => [
             [
@@ -306,7 +306,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 9000,
                 'turn_direction' => 'left',
                 'description' => 'SUMIN',
-            ]
+            ],
         ],
         'ADN' => [
             [
@@ -315,7 +315,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 11000,
                 'turn_direction' => 'left',
                 'description' => 'ADN',
-            ]
+            ],
         ],
         'ATF' => [
             [
@@ -324,7 +324,7 @@ class AddMoreHolds extends Migration
                 'maximum_altitude' => 11000,
                 'turn_direction' => 'right',
                 'description' => 'ATF',
-            ]
+            ],
         ],
     ];
 

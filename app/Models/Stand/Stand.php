@@ -9,13 +9,13 @@ use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Location\Coordinate;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stand extends Model
 {
@@ -315,6 +315,7 @@ class Stand extends Model
     public function closeForArrivals(): Stand
     {
         $this->update(['allocation_status' => StandAllocationStatus::ClosedForArrivals]);
+
         return $this;
     }
 
@@ -324,6 +325,7 @@ class Stand extends Model
     public function close(): Stand
     {
         $this->update(['closed_at' => Carbon::now()]);
+
         return $this;
     }
 
@@ -333,6 +335,7 @@ class Stand extends Model
     public function open(): Stand
     {
         $this->update(['closed_at' => null]);
+
         return $this;
     }
 

@@ -12,27 +12,26 @@ use Illuminate\Support\Facades\Log;
  */
 class UserIsBanned
 {
-    public const FAILURE_MESSAGE = 'Your plugin account has been banned. ' .
+    public const FAILURE_MESSAGE = 'Your plugin account has been banned. '.
         'If you believe this to be an error, please contact VATSIM UK support.';
 
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
      * @return Response
      */
     public function handle(Request $request, Closure $next)
     {
         if (auth()->user()->accountStatus->banned) {
             Log::info(
-                'Banned user ' . $request->user()->id . " attempted access but was blocked.",
+                'Banned user '.$request->user()->id.' attempted access but was blocked.',
                 [
                     'route' => $request->getRequestUri(),
                     'type' => $request->header('Content-Type'),
                     'data' => $request->getContent(),
                 ]
             );
+
             return response()->json(
                 [
                     'message' => self::FAILURE_MESSAGE,

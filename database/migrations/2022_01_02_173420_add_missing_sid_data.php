@@ -92,31 +92,31 @@ class AddMissingSidData extends Migration
                 'FRANE1W',
                 '08L',
                 '4000',
-                'EGKK_SID_EAST'
+                'EGKK_SID_EAST',
             ],
             [
                 'DVR2W',
                 '08L',
                 '6000',
-                'EGKK_SID_EAST'
+                'EGKK_SID_EAST',
             ],
             [
                 'NOVMA1M',
                 '26L',
                 '4000',
-                'EGKK_SID_WEST'
+                'EGKK_SID_WEST',
             ],
             [
                 'NOVMA1M',
                 '26R',
                 '4000',
-                'EGKK_SID_WEST'
+                'EGKK_SID_WEST',
             ],
             [
                 'CLN5W',
                 '08L',
                 '4000',
-                'EGKK_SID_EAST'
+                'EGKK_SID_EAST',
             ],
         ],
     ];

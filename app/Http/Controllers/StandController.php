@@ -28,10 +28,15 @@ use Illuminate\Support\Facades\Validator;
 class StandController extends BaseController
 {
     public const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
+
     private readonly StandAssignmentsService $assignmentsService;
+
     private readonly AirfieldStandService $airfieldStandService;
+
     private readonly ArrivalAllocationService $arrivalAllocationService;
+
     private readonly DepartureAllocationService $departureAllocationService;
+
     private readonly AirlineService $airlineService;
 
     public function __construct(
@@ -86,7 +91,7 @@ class StandController extends BaseController
         $invalidRequest = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['string', 'required', new VatsimCallsign()],
+                'callsign' => ['string', 'required', new VatsimCallsign],
                 'stand_id' => 'integer|required',
             ]
         );
@@ -101,6 +106,7 @@ class StandController extends BaseController
                 (int) $request->json('stand_id'),
                 'User'
             );
+
             return response()->json([], 201);
         } catch (StandNotFoundException) {
             return response()->json([], 404);
@@ -110,12 +116,13 @@ class StandController extends BaseController
     public function deleteStandAssignment(string $callsign): JsonResponse
     {
         $this->assignmentsService->deleteAssignmentIfExists(NetworkAircraft::find($callsign));
+
         return response()->json([], 204);
     }
 
     public function getAirfieldStandStatus(Request $request): JsonResponse
     {
-        if (!$airfield = Airfield::where('code', $request->query('airfield'))->first()) {
+        if (! $airfield = Airfield::where('code', $request->query('airfield'))->first()) {
             return response()->json([], 404);
         }
 
@@ -125,11 +132,13 @@ class StandController extends BaseController
     private function getAirfieldStandStatusData(Airfield $airfield): array
     {
         $cacheRefreshTime = $this->getStandStatusRefreshTime();
+
         return Cache::remember(
             $this->getStandStatusCacheKey($airfield),
             $cacheRefreshTime,
             function () use ($airfield, $cacheRefreshTime) {
                 $standStatuses = StandStatusService::getAirfieldStandStatus($airfield->code);
+
                 return [
                     'stands' => $standStatuses,
                     'generated_at' => Carbon::now()->toIso8601String(),
@@ -154,7 +163,7 @@ class StandController extends BaseController
     {
         $assignment = $this->assignmentsService->assignmentForCallsign($aircraft);
 
-        if (!$assignment) {
+        if (! $assignment) {
             return response()->json([], 404);
         }
 
@@ -174,27 +183,27 @@ class StandController extends BaseController
         $validated = Validator::make(
             $request->json()->all(),
             [
-                'callsign' => ['string', 'required', new VatsimCallsign()],
+                'callsign' => ['string', 'required', new VatsimCallsign],
                 'assignment_type' => ['string', 'required', 'in:departure,arrival'],
-                'departure_airfield' => ['string', 'required', new AirfieldIcao()],
-                'arrival_airfield' => ['string', 'required_if:assignment_type,arrival', new AirfieldIcao()],
+                'departure_airfield' => ['string', 'required', new AirfieldIcao],
+                'arrival_airfield' => ['string', 'required_if:assignment_type,arrival', new AirfieldIcao],
                 'aircraft_type' => ['string', 'required_if:assignment_type,arrival'],
-                'latitude' => ['numeric', 'required_if:assignment_type,departure', new Latitude()],
-                'longitude' => ['numeric', 'required_if:assignment_type,departure', new Longitude()],
+                'latitude' => ['numeric', 'required_if:assignment_type,departure', new Latitude],
+                'longitude' => ['numeric', 'required_if:assignment_type,departure', new Longitude],
             ]
         )->validate();
 
         $aircraftTypeId = null;
         if ($validated['assignment_type'] === 'arrival') {
             $aircraftTypeId = Aircraft::where('code', $validated['aircraft_type'])->first()?->id;
-            if (!$aircraftTypeId) {
+            if (! $aircraftTypeId) {
                 return response()->json(['message' => 'Invalid aircraft type'], 422);
             }
         }
 
         // Grab aircraft from the network, if it doesn't exist, create a placeholder.
         $aircraft = NetworkAircraft::find($validated['callsign']);
-        if (!$aircraft) {
+        if (! $aircraft) {
             NetworkAircraftService::createPlaceholderAircraft($validated['callsign']);
             $aircraft = new NetworkAircraft(['callsign' => $validated['callsign']]);
         }

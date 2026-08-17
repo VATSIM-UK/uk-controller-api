@@ -11,14 +11,14 @@ class ValidHeading implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return bool
      */
     public function passes($attribute, $value)
     {
-        return preg_match(self::HEADING_REGEX, (string)$value) === 1 &&
-            (int)$value >= 0 && (int)$value <= 360;
+        return preg_match(self::HEADING_REGEX, (string) $value) === 1 &&
+            (int) $value >= 0 && (int) $value <= 360;
     }
 
     /**

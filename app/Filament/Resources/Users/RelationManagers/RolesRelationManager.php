@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\AttachAction;
-use Filament\Actions\DetachAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Closure;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,7 +39,7 @@ class RolesRelationManager extends RelationManager
                     ->modalButton(self::translateTablePath('attach_action.confirm_button'))
                     ->hidden(self::hideActionsClosure())
                     ->disableAttachAnother()
-                    ->preloadRecordSelect()
+                    ->preloadRecordSelect(),
             ])
             ->recordActions([
                 DetachAction::make()

@@ -11,7 +11,7 @@ class TcMidlandsTcNorthWestUpdates extends Migration
     public const AIRFIELDS = [
         'EGGW',
         'EGSS',
-        'EGSC'
+        'EGSC',
     ];
 
     // The callsign of TC Midlands
@@ -45,7 +45,6 @@ class TcMidlandsTcNorthWestUpdates extends Migration
         foreach (self::HANDOFFS as $handoff) {
             HandoffService::insertIntoOrderAfter($handoff, self::POSITION_TO_ADD, self::POSITION_TO_ADD_AFTER);
         }
-
 
         // Handle dependencies
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');

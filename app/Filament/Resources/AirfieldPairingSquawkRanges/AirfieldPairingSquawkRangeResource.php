@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources\AirfieldPairingSquawkRanges;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\AirfieldPairingSquawkRanges\Pages\ManageAirfieldPairingSquawkRange;
 use App\Filament\Helpers\HasSquawkRanges;
+use App\Filament\Resources\AirfieldPairingSquawkRanges\Pages\ManageAirfieldPairingSquawkRange;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Rules\Airfield\PartialAirfieldIcao;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class AirfieldPairingSquawkRangeResource extends Resource
@@ -21,9 +21,12 @@ class AirfieldPairingSquawkRangeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = AirfieldPairingSquawkRange::class;
-    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Squawk Ranges';
+
     protected static ?string $navigationLabel = 'Airfield Pairs';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wifi';
 
     public static function form(Schema $schema): Schema
     {
@@ -34,12 +37,12 @@ class AirfieldPairingSquawkRangeResource extends Resource
                     ->label(self::translateFormPath('origin.label'))
                     ->helperText(self::translateFormPath('origin.helper'))
                     ->required()
-                    ->rule(new PartialAirfieldIcao()),
+                    ->rule(new PartialAirfieldIcao),
                 TextInput::make('destination')
                     ->label(self::translateFormPath('destination.label'))
                     ->helperText(self::translateFormPath('destination.helper'))
                     ->required()
-                    ->rule(new PartialAirfieldIcao()),
+                    ->rule(new PartialAirfieldIcao),
             ]);
     }
 
@@ -71,8 +74,6 @@ class AirfieldPairingSquawkRangeResource extends Resource
     /**
      * Returns the root of the translation path for the relations manager, to build
      * labels etc.
-     *
-     * @return string
      */
     protected static function translationPathRoot(): string
     {

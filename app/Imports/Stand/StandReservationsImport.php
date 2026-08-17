@@ -33,15 +33,16 @@ class StandReservationsImport implements ToCollection
      * 3 - Start datetime
      * 4 - End datetime
      *
-     * @param Collection[] $rows
+     * @param  Collection[]  $rows
      */
     public function collection(Collection $rows)
     {
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
-            if (!$this->rowValid($row)) {
+            if (! $this->rowValid($row)) {
                 $this->output->warning(sprintf('Invalid reservation: %s', implode(', ', $row->toArray())));
                 $this->output->progressAdvance();
+
                 continue;
             }
 

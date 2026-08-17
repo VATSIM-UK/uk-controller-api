@@ -14,7 +14,7 @@ class AddRunwayData extends Migration
      */
     public function up()
     {
-        $file = fopen(__DIR__ . '/../data/runway/2022-runways.csv', 'r+');
+        $file = fopen(__DIR__.'/../data/runway/2022-runways.csv', 'r+');
         while (($runwayLine = fgets($file)) !== false) {
             $exploded = explode(' ', $runwayLine);
             RunwayService::addRunwayPair(

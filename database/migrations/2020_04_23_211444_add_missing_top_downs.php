@@ -68,16 +68,16 @@ class AddMissingTopDowns extends Migration
         AirfieldService::createNewTopDownOrder(
             'EGTO',
             [
-            'EGTO_I_TWR',
-            'THAMES_APP',
-            'LTC_SE_CTR',
-            'LTC_S_CTR',
-            'LTC_CTR',
-            'LON_D_CTR',
-            'LON_S_CTR',
-            'LON_SC_CTR',
-            'LON_CTR',
-        ]
+                'EGTO_I_TWR',
+                'THAMES_APP',
+                'LTC_SE_CTR',
+                'LTC_S_CTR',
+                'LTC_CTR',
+                'LON_D_CTR',
+                'LON_S_CTR',
+                'LON_SC_CTR',
+                'LON_CTR',
+            ]
         );
         AirfieldService::createNewTopDownOrder('EGOV', ['EGOV_TWR', 'EGOV_P_APP', 'EGOV_R_APP', 'EGVV_CTR']);
         AirfieldService::createNewTopDownOrder('EGXC', ['EGXC_GND', 'EGXC_TWR', 'EGXC_P_APP', 'EGXC_APP', 'EGVV_CTR']);

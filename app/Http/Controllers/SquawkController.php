@@ -12,15 +12,13 @@ use Illuminate\Support\Facades\Log;
  * Handles requests for the allocation and deallocation of squawks.
  *
  * Class SquawkController
- *
- * @package App\Http\Controllers
  */
 class SquawkController extends BaseController
 {
     /**
      * The squawk to assign if something goes wrong.
      *
-     * @var String
+     * @var string
      */
     public const FAILURE_SQUAWK = '7000';
 
@@ -28,38 +26,32 @@ class SquawkController extends BaseController
     public const DEALLOCATE_SUCCESS_PREFIX = 'Squawk successfully de-allocated for ';
 
     // Message prefix for unsuccessful squawk de-allocation.
-    public const DEALLOCATE_FAILURE_PREFIX =  'Squawk de-allocation unsuccessful for ';
+    public const DEALLOCATE_FAILURE_PREFIX = 'Squawk de-allocation unsuccessful for ';
 
     /**
      * Service for allocating squawks
      *
      * @var SquawkService
-     *
      */
     private $squawkService;
 
-    /**
-     * @param SquawkService $squawkService
-     */
     public function __construct(SquawkService $squawkService)
     {
         $this->squawkService = $squawkService;
     }
 
-
     /**
      * Returns the squawk assigned to the given callsign.
      *
-     * @param string $callsign Callsign to check
-     * @return JsonResponse
+     * @param  string  $callsign  Callsign to check
      */
     public function getSquawkAssignment(string $callsign): JsonResponse
     {
         $assignment = $this->squawkService->getAssignedSquawk($callsign);
-        if (!$assignment) {
+        if (! $assignment) {
             return response()->json(
                 [
-                    'message' => 'Assignment not found for ' . $callsign,
+                    'message' => 'Assignment not found for '.$callsign,
                 ]
             )->setStatusCode(404);
         }
@@ -75,9 +67,8 @@ class SquawkController extends BaseController
      * Works out what type of assignment to do and defers to
      * the appropriate method.
      *
-     * @param Request $request Request object
-     * @param string $callsign The callsign to assign for
-     * @return JsonResponse
+     * @param  Request  $request  Request object
+     * @param  string  $callsign  The callsign to assign for
      */
     public function assignSquawk(Request $request, string $callsign): JsonResponse
     {
@@ -101,9 +92,8 @@ class SquawkController extends BaseController
     /**
      * Gets a general squawk to use for a particular callsign.
      *
-     * @param Request $request The HTTP Request Object
-     * @param string $callsign The callsign to allocate the squawk to
-     * @return JsonResponse
+     * @param  Request  $request  The HTTP Request Object
+     * @param  string  $callsign  The callsign to allocate the squawk to
      */
     private function assignGeneralSquawk(Request $request, string $callsign): JsonResponse
     {
@@ -126,14 +116,15 @@ class SquawkController extends BaseController
             $request->json('destination')
         );
 
-        if (!$assignment) {
+        if (! $assignment) {
             Log::warning(
-                'Unable to allocate general squawk for ' . $callsign,
+                'Unable to allocate general squawk for '.$callsign,
                 $request->json()->all()
             );
+
             return response()->json(
                 [
-                    'message' => 'Unable to allocate general squawk for ' . $callsign,
+                    'message' => 'Unable to allocate general squawk for '.$callsign,
                     'squawk' => self::FAILURE_SQUAWK,
                 ]
             )->setStatusCode(500);
@@ -149,9 +140,8 @@ class SquawkController extends BaseController
     /**
      * Gets a squawk local to a particular ATC unit or airfield.
      *
-     * @param Request $request Request object
-     * @param string $callsign The callsign to allocate the squawk to
-     * @return JsonResponse
+     * @param  Request  $request  Request object
+     * @param  string  $callsign  The callsign to allocate the squawk to
      */
     public function assignLocalSquawk(Request $request, string $callsign): JsonResponse
     {
@@ -176,14 +166,15 @@ class SquawkController extends BaseController
             $request->json('unit'),
             $request->json('rules')
         );
-        if (!$assignment) {
+        if (! $assignment) {
             Log::info(
-                'Unable to allocate local squawk for ' . $callsign,
+                'Unable to allocate local squawk for '.$callsign,
                 $request->json()->all()
             );
+
             return response()->json(
                 [
-                    'message' => 'Unable to allocate local squawk for ' . $callsign,
+                    'message' => 'Unable to allocate local squawk for '.$callsign,
                     'squawk' => self::FAILURE_SQUAWK,
                 ]
             )->setStatusCode(500);
@@ -199,13 +190,13 @@ class SquawkController extends BaseController
     /**
      * De-allocates a given squawk from a given aircraft.
      *
-     * @param string $callsign The callsign to deallocate for
-     * @param SquawkService $squawkService Service for squawk things.
-     * @return Response
+     * @param  string  $callsign  The callsign to deallocate for
+     * @param  SquawkService  $squawkService  Service for squawk things.
      */
     public function deleteSquawkAssignment(string $callsign, SquawkService $squawkService): Response
     {
         $squawkService->deleteSquawkAssignment($callsign);
+
         return response('', 204);
     }
 }

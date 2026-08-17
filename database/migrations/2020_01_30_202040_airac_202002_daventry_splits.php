@@ -31,7 +31,7 @@ class Airac202002DaventrySplits extends Migration
             'prenote' => [
                 'EGSS_SID_NUGBO' => 'LON_C_CTR',
                 'PAIRING_ESSEX_LTMA_NORTH_WEST' => 'LON_C_CTR',
-            ]
+            ],
         ],
         [
             'callsign' => 'LON_CW_CTR',
@@ -42,7 +42,7 @@ class Airac202002DaventrySplits extends Migration
             ],
             'handoff' => [
                 'EGBB_SID' => 'LON_C_CTR',
-            ]
+            ],
         ],
         [
             'callsign' => 'LON_CL_CTR',
@@ -65,7 +65,7 @@ class Airac202002DaventrySplits extends Migration
             'prenote' => [
                 'EGSS_SID_NUGBO' => 'LON_CE_CTR',
                 'PAIRING_ESSEX_LTMA_NORTH_WEST' => 'LON_CE_CTR',
-            ]
+            ],
         ],
         [
             'callsign' => 'LTC_M_CTR',
@@ -122,7 +122,7 @@ class Airac202002DaventrySplits extends Migration
                 ControllerPosition::create(
                     [
                         'callsign' => $position['callsign'],
-                        'frequency' => $position['frequency']
+                        'frequency' => $position['frequency'],
                     ]
                 );
 

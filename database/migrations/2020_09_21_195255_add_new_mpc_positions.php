@@ -47,7 +47,7 @@ class AddNewMpcPositions extends Migration
                 'MAN_CTR',
                 'LON_N_CTR',
                 'LON_CTR',
-                'EGCC_N_APP'
+                'EGCC_N_APP',
             ]
         );
 

@@ -9,8 +9,8 @@ use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
 use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
 use App\Services\SquawkService;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
 
 class SquawkServiceProvider extends ServiceProvider implements DeferrableProvider
 {

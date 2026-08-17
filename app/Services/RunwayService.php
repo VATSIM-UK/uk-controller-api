@@ -34,14 +34,14 @@ class RunwayService
     ): void {
         $airfieldModel = Airfield::where('code', $airfield)
             ->first();
-        if (!$airfieldModel) {
+        if (! $airfieldModel) {
             throw AirfieldNotFoundException::fromIcao($airfield);
         }
 
         self::validateRunway($firstIdentifier, $firstHeading, $firstThreshold);
         self::validateRunway($secondIdentifier, $secondHeading, $secondThreshold);
 
-        if (!self::headingsMatch($firstHeading, $secondHeading)) {
+        if (! self::headingsMatch($firstHeading, $secondHeading)) {
             throw RunwayHeadingInvalidException::forHeadings($firstHeading, $secondHeading);
         }
 
@@ -70,11 +70,11 @@ class RunwayService
         int $heading,
         Coordinate $threshold
     ) {
-        if (!self::runwayIdentifierValid($identifier)) {
+        if (! self::runwayIdentifierValid($identifier)) {
             throw RunwayIdentifierInvalidException::forIdentifier($identifier);
         }
 
-        if (!self::headingValid($heading)) {
+        if (! self::headingValid($heading)) {
             throw RunwayHeadingInvalidException::forHeading($heading);
         }
 
@@ -87,7 +87,7 @@ class RunwayService
 
     private static function runwayIdentifierValid(string $identifier): bool
     {
-        return (new RunwayIdentifier())->passes('', $identifier);
+        return (new RunwayIdentifier)->passes('', $identifier);
     }
 
     private static function headingValid(int $heading): bool
@@ -110,6 +110,7 @@ class RunwayService
             $threshold->getLatitude(),
             $threshold->getLongitude()
         );
+
         return Runway::create(
             [
                 'airfield_id' => $airfield->id,
@@ -140,7 +141,7 @@ class RunwayService
 
     public static function inverseRunwayIdentifier(string $identifier): string
     {
-        if (!self::runwayIdentifierValid($identifier)) {
+        if (! self::runwayIdentifierValid($identifier)) {
             throw RunwayIdentifierInvalidException::forIdentifier($identifier);
         }
 
@@ -151,7 +152,7 @@ class RunwayService
             $matches
         );
 
-        $directionComponent = (int)$matches[1];
+        $directionComponent = (int) $matches[1];
         $newDirectionComponent = $directionComponent === 18
             ? 36
             : ($directionComponent + 18) % 36;

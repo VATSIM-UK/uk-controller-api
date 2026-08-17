@@ -81,6 +81,7 @@ class ArrivalAllocationService
                     $allocation,
                     get_class($allocator)
                 );
+
                 return $allocation;
             }
         }
@@ -136,15 +137,11 @@ class ArrivalAllocationService
      * When allocating arrival stands, we only want to do it if the aircraft is close to its arrival airfield.
      *
      * Ground speed is kts (nautical miles per hour), so for minutes multiply that by 60.
-     *
-     * @param NetworkAircraft $aircraft
-     * @param Airfield $airfield
-     * @return float
      */
     private function getTimeFromAirfieldInMinutes(NetworkAircraft $aircraft, Airfield $airfield): float
     {
         $distanceToAirfieldInNm = LocationService::metersToNauticalMiles(
-            $aircraft->latLong->getDistance($airfield->coordinate, new Haversine())
+            $aircraft->latLong->getDistance($airfield->coordinate, new Haversine)
         );
         $groundspeed = $aircraft->groundspeed === 0 ? 1 : $aircraft->groundspeed;
 
@@ -161,7 +158,7 @@ class ArrivalAllocationService
         $ranking = collect();
 
         foreach ($this->allocators as $allocator) {
-            if (!$allocator instanceof RankableArrivalStandAllocator) {
+            if (! $allocator instanceof RankableArrivalStandAllocator) {
                 continue;
             }
 
@@ -195,7 +192,7 @@ class ArrivalAllocationService
 
                 $recommendations = $recommendations->merge(
                     $stands->shuffle()
-                        ->filter(fn (Stand $stand) => !$recommendations->contains($stand->identifier))
+                        ->filter(fn (Stand $stand) => ! $recommendations->contains($stand->identifier))
                         ->take($number - count($recommendations))
                         ->pluck('identifier')
                 );

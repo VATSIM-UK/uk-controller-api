@@ -17,7 +17,7 @@ class ControllerFrequencyConversions extends Migration
         $toUpdate = [];
         foreach (ControllerPosition::all() as $position) {
             $matches = [];
-            if (preg_match(self::TO_UPDATE_PATTERN, (string)$position->frequency, $matches) !== 1) {
+            if (preg_match(self::TO_UPDATE_PATTERN, (string) $position->frequency, $matches) !== 1) {
                 continue;
             }
 

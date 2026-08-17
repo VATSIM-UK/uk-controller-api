@@ -21,6 +21,7 @@ class WindParser implements MetarParser
                         $parsedData->offsetSet('wind_direction', $tokenMatches[1]);
                         $parsedData->offsetSet('wind_speed', $tokenMatches[2]);
                         $parsedData->offsetSet('wind_gust', $tokenMatches[4] ?? null);
+
                         return false;
                     }
 

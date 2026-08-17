@@ -56,8 +56,8 @@ class EastMidlandsStandRefresh extends Migration
                 'identifier' => 'MAINT3',
                 'latitude' => 52.82585485023592,
                 'longitude' => -1.3380254318220857,
-            ]
-        ]
+            ],
+        ],
     ];
 
     /**

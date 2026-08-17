@@ -2,8 +2,8 @@ openapi: 3.0.0
 info:
   title: UK Controller Plugin API
   description: |
-    API for the VATSIM UK Controller Plugin. This document describes the public-facing endpoints that do not require plugin authentication. 
-    
+    API for the VATSIM UK Controller Plugin. This document describes the public-facing endpoints that do not require plugin authentication.
+
     _Endpoints used by the plugin remain undocumented as they should never really be used externally._
 
     Base URL: `/api`

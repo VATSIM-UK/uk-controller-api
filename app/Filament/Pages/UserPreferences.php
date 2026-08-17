@@ -2,14 +2,14 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\User\User;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 
 class UserPreferences extends Page implements HasForms
@@ -17,10 +17,14 @@ class UserPreferences extends Page implements HasForms
     use InteractsWithForms;
     use TranslatesStrings;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
-    protected static string | \UnitEnum | null $navigationGroup = 'Preferences';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Preferences';
+
     protected static ?string $navigationLabel = 'My Preferences';
+
     protected static ?string $title = 'My Preferences';
+
     protected static ?string $slug = 'my-preferences';
 
     protected string $view = 'filament.pages.user-preferences';

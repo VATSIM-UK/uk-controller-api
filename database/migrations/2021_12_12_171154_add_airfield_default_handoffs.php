@@ -35,6 +35,7 @@ class AddAirfieldDefaultHandoffs extends Migration
 
                 $airfield->handoff_id = Handoff::where('key', $handoffKey)->firstOrFail()->id;
                 $airfield->save();
+
                 return true;
             });
         });
@@ -53,7 +54,7 @@ class AddAirfieldDefaultHandoffs extends Migration
     private function getApplicableControllers(Collection $controllers): Collection
     {
         return $controllers->reject(function (ControllerPosition $controllerPosition) {
-            return !$controllerPosition->isApproach() && !$controllerPosition->isEnroute();
+            return ! $controllerPosition->isApproach() && ! $controllerPosition->isEnroute();
         })->sortBy(function (ControllerPosition $position) {
             return $position->pivot->order;
         })->values();

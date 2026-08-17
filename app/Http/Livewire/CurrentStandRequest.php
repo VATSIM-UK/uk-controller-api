@@ -24,7 +24,7 @@ class CurrentStandRequest extends Component
                 ->where('id', $id)
                 ->first();
 
-            if (!$request) {
+            if (! $request) {
                 return;
             }
 

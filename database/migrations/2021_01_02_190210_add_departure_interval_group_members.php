@@ -226,7 +226,7 @@ class AddDepartureIntervalGroupMembers extends Migration
             'CLN5P',
             'FRANE1Z',
             'ODVIK1Z',
-            'DVR2P'
+            'DVR2P',
         ],
         'EGKK_BIG_08' => [
             'BIG3P',
@@ -324,7 +324,7 @@ class AddDepartureIntervalGroupMembers extends Migration
             'LAMIX2X',
         ],
         'EGNM_SID_NELSA' => [
-            'NELSA3W'
+            'NELSA3W',
         ],
         'EGNM_SID_POL' => [
             'POL2X',
@@ -351,7 +351,7 @@ class AddDepartureIntervalGroupMembers extends Migration
         ],
         'EGPF_FOYLE' => [
             'FOYLE3A',
-            'FOYLE3B'
+            'FOYLE3B',
         ],
         'EGPF_LOMON' => [
             'LOMON3A',

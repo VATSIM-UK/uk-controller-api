@@ -70,7 +70,7 @@ class AddMoreDeemedSeparatedHolds extends Migration
                     'first_hold_id' => $secondHoldId,
                     'second_hold_id' => $firstHoldId,
                     'vsl_insert_distance' => $vslInsertDistance,
-                ]
+                ],
             ]
         );
     }

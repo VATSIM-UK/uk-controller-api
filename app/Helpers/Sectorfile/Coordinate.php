@@ -5,6 +5,7 @@ namespace App\Helpers\Sectorfile;
 class Coordinate
 {
     private string $latitude;
+
     private string $longitude;
 
     public function __construct(string $latitude, string $longitude)

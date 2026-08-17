@@ -2,16 +2,16 @@
 
 namespace App\Filament\Resources\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\AttachAction;
-use Filament\Forms\Components\Select;
-use Filament\Actions\Action;
-use Filament\Actions\DetachAction;
 use App\Filament\Resources\TranslatesStrings;
 use App\Helpers\Controller\FrequencyFormatter;
 use App\Models\Controller\ControllerPosition;
 use App\Services\ControllerPositionHierarchyService;
+use Filament\Actions\Action;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +25,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
     use TranslatesStrings;
 
     protected static string $relationship = 'controllers';
+
     protected static ?string $recordTitleAttribute = 'callsign';
 
     public function table(Table $table): Table
@@ -51,8 +52,7 @@ abstract class AbstractControllersRelationManager extends RelationManager
                                 $livewire->getOwnerRecord()
                                     ->controllers
                                     ->mapWithKeys(
-                                        fn (ControllerPosition $controller) =>
-                                            [$controller->id => $controller->callsign]
+                                        fn (ControllerPosition $controller) => [$controller->id => $controller->callsign]
                                     )
                             ),
                     ])
@@ -125,7 +125,5 @@ abstract class AbstractControllersRelationManager extends RelationManager
         });
     }
 
-    protected static function postUpdate(Model $ownerRecord): void
-    {
-    }
+    protected static function postUpdate(Model $ownerRecord): void {}
 }

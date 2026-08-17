@@ -8,12 +8,21 @@ use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
 use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
 use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator;
 use App\Allocator\Stand\BusinessAviationFlightArrivalStandAllocator;
-use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
+use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
+use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
 use App\Allocator\Stand\CargoFlightArrivalStandAllocator;
+use App\Allocator\Stand\CargoFlightPreferredArrivalStandAllocator;
 use App\Allocator\Stand\CidReservedArrivalStandAllocator;
+use App\Allocator\Stand\DomesticInternationalStandAllocator;
+use App\Allocator\Stand\FallbackArrivalStandAllocator;
+use App\Allocator\Stand\OriginAirfieldStandAllocator;
 use App\Allocator\Stand\UserRequestedArrivalStandAllocator;
+use App\Imports\Stand\StandReservationsImport;
 use App\Services\Stand\AirfieldStandService;
 use App\Services\Stand\ArrivalAllocationService;
 use App\Services\Stand\RecordsAssignmentHistory;
@@ -21,15 +30,6 @@ use App\Services\Stand\StandAssignmentsHistoryService;
 use App\Services\Stand\StandAssignmentsService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use App\Imports\Stand\StandReservationsImport;
-use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
-use App\Allocator\Stand\AirlineGeneralArrivalStandAllocator;
-use App\Allocator\Stand\FallbackArrivalStandAllocator;
-use App\Allocator\Stand\CallsignFlightplanReservedArrivalStandAllocator;
-use App\Allocator\Stand\DomesticInternationalStandAllocator;
-use App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator;
-use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
-use App\Allocator\Stand\OriginAirfieldStandAllocator;
 
 class StandServiceProvider extends ServiceProvider
 {

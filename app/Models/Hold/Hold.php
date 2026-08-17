@@ -4,9 +4,9 @@ namespace App\Models\Hold;
 
 use App\Models\Measurement\MeasurementUnit;
 use App\Models\Navigation\Navaid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Model for a hold
  *
  * Class Hold
- * @package App\Models\Squawks
  */
 class Hold extends Model
 {

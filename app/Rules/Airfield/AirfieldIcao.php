@@ -7,13 +7,14 @@ use Illuminate\Contracts\Validation\Rule;
 class AirfieldIcao implements Rule
 {
     public const AIRFIELD_REGEX = '/^[0-9A-Z]{4}$/';
+
     public const REGEX_MATCHED = 1;
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return bool
      */
     public function passes($attribute, $value)

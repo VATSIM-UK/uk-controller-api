@@ -2,15 +2,16 @@
 
 namespace App\Rules\Stand;
 
-use Illuminate\Translation\PotentiallyTranslatedString;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use Closure;
 use Illuminate\Contracts\Validation\InvokableRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class StandIdentifierMustBeUniqueAtAirfield implements InvokableRule
 {
     private readonly Airfield $airfield;
+
     private readonly ?Stand $existingStand;
 
     public function __construct(Airfield $airfield, ?Stand $existingStand)
@@ -22,9 +23,9 @@ class StandIdentifierMustBeUniqueAtAirfield implements InvokableRule
     /**
      * Run the validation rule.
      *
-     * @param string $attribute
-     * @param mixed $value
-     * @param Closure(string):PotentiallyTranslatedString $fail
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  Closure(string):PotentiallyTranslatedString  $fail
      * @return void
      */
     public function __invoke($attribute, $value, $fail)

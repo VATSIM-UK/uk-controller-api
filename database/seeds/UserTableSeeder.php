@@ -7,8 +7,11 @@ class UserTableSeeder extends Seeder
 {
     // CID constants so that they can be used around
     public const ADMIN_USER_CID = 1;
+
     public const ACTIVE_USER_CID = 1203533;
+
     public const BANNED_USER_CID = 1203534;
+
     public const DISABLED_USER_CID = 1203535;
 
     /**

@@ -12,7 +12,7 @@ class SouthamptonStandardDepartures extends Migration
         'NORRY',
         'KENET',
         'GWC',
-        'NEDUL'
+        'NEDUL',
     ];
 
     /**

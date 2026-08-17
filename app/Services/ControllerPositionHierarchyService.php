@@ -69,7 +69,7 @@ class ControllerPositionHierarchyService
         ?ControllerPosition $after = null
     ): void {
         DB::transaction(function () use ($ownerRecord, $position, $before, $after) {
-            if (!$before && !$after) {
+            if (! $before && ! $after) {
                 $ownerRecord->controllers()
                     ->attach($position, ['order' => $ownerRecord->controllers()->count() + 1]);
 
@@ -83,7 +83,7 @@ class ControllerPositionHierarchyService
             $controllerToWorkFrom = $ownerRecord->controllers()
                 ->find($before ?? $after);
 
-            if (!$controllerToWorkFrom) {
+            if (! $controllerToWorkFrom) {
                 throw new InvalidArgumentException('Relative controller is not part of hierarchy');
             }
 
@@ -93,7 +93,7 @@ class ControllerPositionHierarchyService
                 ->keyBy('id')
                 ->map(
                     fn (ControllerPosition $position) => [
-                        'order' => static::getNewOrder($position, $controllerToWorkFrom, (bool)$before),
+                        'order' => static::getNewOrder($position, $controllerToWorkFrom, (bool) $before),
                     ]
                 )
                 ->toArray();
@@ -107,11 +107,12 @@ class ControllerPositionHierarchyService
         ControllerPosition $positionToInsertAround,
         bool $before
     ): int {
-        if (!$position->pivot) {
+        if (! $position->pivot) {
             return $positionToInsertAround->pivot->order + ($before ? 0 : 1);
         }
 
         $includeCurrentOffset = $before ? 0 : 1;
+
         return $position->pivot->order >= $positionToInsertAround->pivot->order + $includeCurrentOffset
             ? $position->pivot->order + 1
             : $position->pivot->order;
@@ -165,7 +166,7 @@ class ControllerPositionHierarchyService
         if (
             count($arrayPositions) === 1 ||
             $up && $positionToSwap === 0 ||
-            !$up && $positionToSwap === count($arrayPositions) - 1
+            ! $up && $positionToSwap === count($arrayPositions) - 1
         ) {
             return;
         }

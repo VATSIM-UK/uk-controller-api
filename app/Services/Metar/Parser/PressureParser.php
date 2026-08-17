@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 class PressureParser implements MetarParser
 {
     public const QNH_PATTERN = '/^Q(\d{4})$/';
+
     public const ALTIMETER_PATTERN = '/^A(\d{4})$/';
 
     public function parse(Airfield $airfield, Collection $metarTokens): Collection
@@ -19,9 +20,11 @@ class PressureParser implements MetarParser
                 $metarTokens->each(function (string $token) use ($parsedData) {
                     if ($this->tokenIsQnh($token)) {
                         $this->parsePressureFromQnh($token, $parsedData);
+
                         return false;
                     } elseif ($this->tokenIsAltimeter($token)) {
                         $this->parsePressureFromAltimeter($token, $parsedData);
+
                         return false;
                     }
 
@@ -35,11 +38,11 @@ class PressureParser implements MetarParser
 
     private function calculateQfe(Airfield $airfield, Collection $parsedData): void
     {
-        if (!$parsedData->offsetExists('qnh')) {
+        if (! $parsedData->offsetExists('qnh')) {
             return;
         }
 
-        $parsedData->offsetSet('qfe', (int)($parsedData->offsetGet('qnh') - ($airfield->elevation / 30)));
+        $parsedData->offsetSet('qfe', (int) ($parsedData->offsetGet('qnh') - ($airfield->elevation / 30)));
         $parsedData->offsetSet('qfe_inhg', $this->getAltimeterFromQnh($parsedData->get('qfe')));
     }
 
@@ -47,7 +50,7 @@ class PressureParser implements MetarParser
     {
         $qnh = Str::substr($qnhToken, 1);
         $parsedData->offsetSet('pressure_format', 'hpa');
-        $parsedData->offsetSet('qnh', (int)($qnh[0] === '0' ? Str::substr($qnh, 1) : $qnh));
+        $parsedData->offsetSet('qnh', (int) ($qnh[0] === '0' ? Str::substr($qnh, 1) : $qnh));
         $parsedData->offsetSet('qnh_inhg', $this->getAltimeterFromQnh($parsedData->offsetGet('qnh')));
     }
 
@@ -65,12 +68,12 @@ class PressureParser implements MetarParser
 
     private function getQnhFromAltimeter(float $altimeter): int
     {
-        return (int)($altimeter * 33.86389);
+        return (int) ($altimeter * 33.86389);
     }
 
     private function altimeterStringToFloat(string $altimeter): float
     {
-        return (float)sprintf('%s.%s', Str::substr($altimeter, 0, 2), Str::substr($altimeter, 2));
+        return (float) sprintf('%s.%s', Str::substr($altimeter, 0, 2), Str::substr($altimeter, 2));
     }
 
     private function tokenIsQnh(string $token): bool

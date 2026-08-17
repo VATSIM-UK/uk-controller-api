@@ -2,38 +2,42 @@
 
 namespace App\Filament\Resources\Airlines;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\Airlines\Pages\ListAirlines;
-use App\Filament\Resources\Airlines\Pages\CreateAirline;
-use App\Filament\Resources\Airlines\Pages\ViewAirline;
-use App\Filament\Resources\Airlines\Pages\EditAirline;
 use App\Events\Airline\AirlinesUpdatedEvent;
 use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\Airlines\Pages\CreateAirline;
+use App\Filament\Resources\Airlines\Pages\EditAirline;
+use App\Filament\Resources\Airlines\Pages\ListAirlines;
+use App\Filament\Resources\Airlines\Pages\ViewAirline;
 use App\Filament\Resources\Airlines\RelationManagers\StandsRelationManager;
 use App\Filament\Resources\Airlines\RelationManagers\TerminalsRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airline\Airline;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\TranslatesStrings;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
 
 class AirlineResource extends Resource
 {
     use TranslatesStrings;
 
-    public static string | \BackedEnum | null $navigationIcon = 'heroicon-o-paper-airplane';
+    public static string|\BackedEnum|null $navigationIcon = 'heroicon-o-paper-airplane';
+
     protected static ?string $recordTitleAttribute = 'icao_code';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airline';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Airline';
+
     protected static ?string $model = Airline::class;
 
     public static function form(Schema $schema): Schema
@@ -65,11 +69,11 @@ class AirlineResource extends Resource
                                 ->options(SelectOptions::airlines())
                                 ->searchable()
                                 ->label(self::translateFormPath('copy_stand_assignments.label'))
-                                ->helperText(self::translateFormPath('copy_stand_assignments.helper'))
+                                ->helperText(self::translateFormPath('copy_stand_assignments.helper')),
                         ]
                     )
-                    ->hidden(fn (Page $livewire) => !$livewire instanceof CreateRecord)
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->hidden(fn (Page $livewire) => ! $livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => ! $livewire instanceof CreateRecord)
                     ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord),
             ]);
     }
@@ -93,7 +97,7 @@ class AirlineResource extends Resource
                     ->boolean(),
             ])
             ->filters([
-                \Filament\Tables\Filters\TernaryFilter::make('is_cargo')
+                TernaryFilter::make('is_cargo')
                     ->label(self::translateTablePath('columns.is_cargo')),
             ])
             ->recordActions([
@@ -101,7 +105,7 @@ class AirlineResource extends Resource
                 EditAction::make(),
                 DeleteAction::make()
                     ->after(function () {
-                        event(new AirlinesUpdatedEvent());
+                        event(new AirlinesUpdatedEvent);
                     }),
             ]);
     }

@@ -46,13 +46,13 @@ class NetworkServiceProvider extends ServiceProvider implements DeferrableProvid
             function (AircraftDisconnected $job, Application $application) {
                 $job->handle(
                     collect([
-                                $application->make(UnassignHoldOnDisconnect::class),
-                                $application->make(MarkAssignmentDeletedOnDisconnect::class),
-                                $application->make(TriggerUnassignmentOnDisconnect::class),
-                                $application->make(CancelOutstandingDepartureReleaseRequests::class),
-                                $application->make(CancelOutstandingPrenoteMessages::class),
-                                $application->make(DeleteNetworkAircraft::class),
-                            ])
+                        $application->make(UnassignHoldOnDisconnect::class),
+                        $application->make(MarkAssignmentDeletedOnDisconnect::class),
+                        $application->make(TriggerUnassignmentOnDisconnect::class),
+                        $application->make(CancelOutstandingDepartureReleaseRequests::class),
+                        $application->make(CancelOutstandingPrenoteMessages::class),
+                        $application->make(DeleteNetworkAircraft::class),
+                    ])
                 );
             }
         );

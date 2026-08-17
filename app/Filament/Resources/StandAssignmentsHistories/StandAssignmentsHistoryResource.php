@@ -2,39 +2,41 @@
 
 namespace App\Filament\Resources\StandAssignmentsHistories;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ViewAction;
-use Filament\Schemas\Components\Utilities\Get;
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\StandAssignmentsHistories\Pages\ListStandAssignmentsHistories;
 use App\Filament\Resources\StandAssignmentsHistories\Pages\ViewAssignmentContext;
-use App\Filament\Helpers\SelectOptions;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAssignmentsHistory;
 use App\Models\User\RoleKeys;
 use App\Policies\ChecksUserRoles;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\TranslatesStrings;
 
 class StandAssignmentsHistoryResource extends Resource
 {
-    use TranslatesStrings;
     use ChecksUserRoles;
+    use TranslatesStrings;
 
     protected static ?string $model = StandAssignmentsHistory::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationLabel = 'Stand Assignment History';
+
     protected static ?string $label = 'Stand Assignment History';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function getEloquentQuery(): Builder
     {
@@ -127,15 +129,15 @@ class StandAssignmentsHistoryResource extends Resource
                             )
                             ->searchable()
                             ->label('Stand')
-                            ->hidden(fn (Get $get) => !$get('airfield')),
+                            ->hidden(fn (Get $get) => ! $get('airfield')),
                     ])
                     ->indicateUsing(function (array $data) {
                         if (isset($data['stand'])) {
-                            return 'Stand: ' . Stand::find($data['stand'])->airfieldIdentifier;
+                            return 'Stand: '.Stand::find($data['stand'])->airfieldIdentifier;
                         }
 
                         if (isset($data['airfield'])) {
-                            return 'Airfield: ' . Airfield::find($data['airfield'])->code;
+                            return 'Airfield: '.Airfield::find($data['airfield'])->code;
                         }
 
                         return null;

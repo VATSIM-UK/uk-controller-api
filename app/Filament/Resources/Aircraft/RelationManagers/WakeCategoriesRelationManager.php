@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\Aircraft\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\AttachAction;
-use Filament\Actions\DetachAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Aircraft\WakeCategory;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class WakeCategoriesRelationManager extends RelationManager
@@ -17,7 +17,9 @@ class WakeCategoriesRelationManager extends RelationManager
     use TranslatesStrings;
 
     protected static string $relationship = 'wakeCategories';
+
     protected static ?string $inverseRelationship = 'aircraft';
+
     protected static ?string $recordTitleAttribute = 'description';
 
     public function table(Table $table): Table

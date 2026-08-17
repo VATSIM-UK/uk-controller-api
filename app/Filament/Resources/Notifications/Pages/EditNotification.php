@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Notifications\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Notifications\NotificationResource;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditNotification extends EditRecord

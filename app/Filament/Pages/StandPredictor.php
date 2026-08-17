@@ -2,6 +2,20 @@
 
 namespace App\Filament\Pages;
 
+use App\Allocator\Stand\AirlineAircraftArrivalStandAllocator;
+use App\Allocator\Stand\AirlineAircraftTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationArrivalStandAllocator;
+use App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralArrivalStandAllocator;
+use App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator;
+use App\Allocator\Stand\CargoAirlineFallbackStandAllocator;
+use App\Allocator\Stand\DomesticInternationalStandAllocator;
+use App\Allocator\Stand\FallbackArrivalStandAllocator;
+use App\Allocator\Stand\OriginAirfieldStandAllocator;
 use App\Models\Stand\Stand;
 use App\Models\User\RoleKeys;
 use App\Models\Vatsim\NetworkAircraft;
@@ -12,31 +26,35 @@ use Illuminate\Support\Facades\Auth;
 
 class StandPredictor extends Page
 {
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
+
     protected static ?string $navigationLabel = 'Stand Predictor';
+
     protected static ?string $slug = 'stand-predictor';
+
     protected string $view = 'filament.pages.stand-predictor';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     protected $listeners = ['standPredictorFormSubmitted'];
 
     private ?array $currentPrediction = null;
 
     private const ALLOCATOR_LABELS = [
-        \App\Allocator\Stand\AirlineAircraftArrivalStandAllocator::class => 'Airline & Aircraft Type',
-        \App\Allocator\Stand\AirlineAircraftTerminalArrivalStandAllocator::class => 'Airline & Aircraft Type Terminal',
-        \App\Allocator\Stand\AirlineCallsignArrivalStandAllocator::class => 'Airline Callsign',
-        \App\Allocator\Stand\AirlineCallsignSlugArrivalStandAllocator::class => 'Airline Callsign Slug',
-        \App\Allocator\Stand\AirlineCallsignSlugTerminalArrivalStandAllocator::class => 'Airline Callsign Slug Terminal',
-        \App\Allocator\Stand\AirlineCallsignTerminalArrivalStandAllocator::class => 'Airline Callsign Terminal',
-        \App\Allocator\Stand\AirlineDestinationArrivalStandAllocator::class => 'Airline Destination',
-        \App\Allocator\Stand\AirlineDestinationTerminalArrivalStandAllocator::class => 'Airline Destination Terminal',
-        \App\Allocator\Stand\AirlineGeneralArrivalStandAllocator::class => 'Airline General',
-        \App\Allocator\Stand\AirlineGeneralTerminalArrivalStandAllocator::class => 'Airline General Terminal',
-        \App\Allocator\Stand\CargoAirlineFallbackStandAllocator::class => 'Cargo Airline Fallback',
-        \App\Allocator\Stand\DomesticInternationalStandAllocator::class => 'Domestic / International',
-        \App\Allocator\Stand\FallbackArrivalStandAllocator::class => 'Fallback',
-        \App\Allocator\Stand\OriginAirfieldStandAllocator::class => 'Origin Airfield',
+        AirlineAircraftArrivalStandAllocator::class => 'Airline & Aircraft Type',
+        AirlineAircraftTerminalArrivalStandAllocator::class => 'Airline & Aircraft Type Terminal',
+        AirlineCallsignArrivalStandAllocator::class => 'Airline Callsign',
+        AirlineCallsignSlugArrivalStandAllocator::class => 'Airline Callsign Slug',
+        AirlineCallsignSlugTerminalArrivalStandAllocator::class => 'Airline Callsign Slug Terminal',
+        AirlineCallsignTerminalArrivalStandAllocator::class => 'Airline Callsign Terminal',
+        AirlineDestinationArrivalStandAllocator::class => 'Airline Destination',
+        AirlineDestinationTerminalArrivalStandAllocator::class => 'Airline Destination Terminal',
+        AirlineGeneralArrivalStandAllocator::class => 'Airline General',
+        AirlineGeneralTerminalArrivalStandAllocator::class => 'Airline General Terminal',
+        CargoAirlineFallbackStandAllocator::class => 'Cargo Airline Fallback',
+        DomesticInternationalStandAllocator::class => 'Domestic / International',
+        FallbackArrivalStandAllocator::class => 'Fallback',
+        OriginAirfieldStandAllocator::class => 'Origin Airfield',
     ];
 
     private const RANK_COLORS = ['primary', 'success', 'warning', 'danger', 'info'];
@@ -67,10 +85,8 @@ class StandPredictor extends Page
         $this->currentPrediction = app()->make(ArrivalAllocationService::class)
             ->getAllocationRankingForAircraft(new NetworkAircraft($data))
             ->map(
-                fn (Collection $stands) =>
-                $stands->map(
-                    fn (Collection $standsForRank) =>
-                    $standsForRank->sortBy('identifier', SORT_NATURAL)
+                fn (Collection $stands) => $stands->map(
+                    fn (Collection $standsForRank) => $standsForRank->sortBy('identifier', SORT_NATURAL)
                         ->map(fn (Stand $stand) => $stand->identifier)->values()
                 )
             )->toArray();

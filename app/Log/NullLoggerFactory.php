@@ -11,13 +11,13 @@ class NullLoggerFactory
     /**
      * Creates a NullLogger
      *
-     * @param array $config Config array
-     * @return LoggerInterface
+     * @param  array  $config  Config array
      */
     public function __invoke(array $config): LoggerInterface
     {
         $monolog = new Logger($config['name']);
-        $monolog->pushHandler(new NullHandler());
+        $monolog->pushHandler(new NullHandler);
+
         return $monolog;
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddStandAirlines extends Migration
 {
-    public const STAND_AIRLINES_FILE = __DIR__ . '/../data/stands/2020/standairlines.csv';
+    public const STAND_AIRLINES_FILE = __DIR__.'/../data/stands/2020/standairlines.csv';
 
     /**
      * Run the migrations.
@@ -30,8 +30,8 @@ class AddStandAirlines extends Migration
             $stand->airlines()->attach(
                 [
                     $airlineId => [
-                        'destination' => !empty($line[3]) ? $line[3] : null,
-                        'not_before' => !empty($line[4]) ? $line[4] : null,
+                        'destination' => ! empty($line[3]) ? $line[3] : null,
+                        'not_before' => ! empty($line[4]) ? $line[4] : null,
                     ],
                 ]
             );

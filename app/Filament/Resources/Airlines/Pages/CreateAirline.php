@@ -22,7 +22,7 @@ class CreateAirline extends CreateRecord
             return tap(
                 static::getModel()::create($data),
                 function (Airline $newAirline) use ($data): void {
-                    if (!$data['copy_stand_assignments']) {
+                    if (! $data['copy_stand_assignments']) {
                         return;
                     }
 
@@ -35,7 +35,7 @@ class CreateAirline extends CreateRecord
                         $newAirline->terminals()->sync(
                             $copyFromAirline->terminals->mapWithKeys(
                                 fn (Terminal $terminal) => [
-                                    $terminal->id => $this->getCopyablePivotAttributes('terminal_id', $terminal->pivot)
+                                    $terminal->id => $this->getCopyablePivotAttributes('terminal_id', $terminal->pivot),
                                 ]
                             )
                         );
@@ -46,7 +46,7 @@ class CreateAirline extends CreateRecord
                         $newAirline->stands()->sync(
                             $copyFromAirline->stands->mapWithKeys(
                                 fn (Stand $stand) => [
-                                    $stand->id => $this->getCopyablePivotAttributes('stand_id', $stand->pivot)
+                                    $stand->id => $this->getCopyablePivotAttributes('stand_id', $stand->pivot),
                                 ]
                             )
                         );
@@ -66,19 +66,19 @@ class CreateAirline extends CreateRecord
                 'airline_id',
             ],
             [
-                $localModelColumn
+                $localModelColumn,
             ]
         );
 
         return array_filter(
             $pivot->getAttributes(),
-            fn (mixed $value, string $key) => !in_array($key, $keysToRemove),
+            fn (mixed $value, string $key) => ! in_array($key, $keysToRemove),
             ARRAY_FILTER_USE_BOTH
         );
     }
 
     protected function afterCreate(): void
     {
-        event(new AirlinesUpdatedEvent());
+        event(new AirlinesUpdatedEvent);
     }
 }

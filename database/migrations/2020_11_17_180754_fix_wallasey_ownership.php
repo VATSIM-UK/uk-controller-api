@@ -14,6 +14,7 @@ class FixWallaseyOwnership extends Migration
 
     // The callsign of PC Wallasey
     public const POSITION_WALLASEY = 'MAN_WL_CTR';
+
     public const POSITION_WALLASEY_PENIL = 'MAN_WP_CTR';
 
     // The position

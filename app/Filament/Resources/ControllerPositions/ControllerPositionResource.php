@@ -2,31 +2,34 @@
 
 namespace App\Filament\Resources\ControllerPositions;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\ControllerPositions\Pages\ListControllerPositions;
 use App\Filament\Resources\ControllerPositions\Pages\CreateControllerPosition;
-use App\Filament\Resources\ControllerPositions\Pages\ViewControllerPosition;
 use App\Filament\Resources\ControllerPositions\Pages\EditControllerPosition;
+use App\Filament\Resources\ControllerPositions\Pages\ListControllerPositions;
+use App\Filament\Resources\ControllerPositions\Pages\ViewControllerPosition;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\ControllerPosition;
 use App\Rules\Controller\ControllerPositionCallsign;
 use App\Rules\Controller\ControllerPositionFrequency;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use App\Filament\Resources\TranslatesStrings;
 
 class ControllerPositionResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = ControllerPosition::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-microphone';
+
     protected static ?string $recordTitleAttribute = 'callsign';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Controller';
 
     public static function form(Schema $schema): Schema
@@ -41,14 +44,14 @@ class ControllerPositionResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->label(self::translateFormPath('callsign.label'))
                             ->helperText(self::translateFormPath('callsign.helper'))
-                            ->rule(new ControllerPositionCallsign()),
+                            ->rule(new ControllerPositionCallsign),
                         TextInput::make('description')
                             ->maxLength(255)
                             ->label(self::translateFormPath('description.label'))
                             ->helperText(self::translateFormPath('description.helper')),
                         TextInput::make('frequency')
                             ->required()
-                            ->rule(new ControllerPositionFrequency())
+                            ->rule(new ControllerPositionFrequency)
                             ->label(self::translateFormPath('frequency.label'))
                             ->helperText(self::translateFormPath('frequency.helper'))
                             ->length(7),

@@ -11,7 +11,7 @@ class AcknowledgeMissedApproach extends FormRequest
         return [
             'remarks' => [
                 'required',
-                'string'
+                'string',
             ],
         ];
     }
