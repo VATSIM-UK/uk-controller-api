@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ArrivalsBoard extends BaseWidget
 {
-    protected int | string | array $columnSpan = 1;
+    protected int|string|array $columnSpan = 1;
 
     protected function getTableDescription(): ?string
     {
@@ -29,6 +29,7 @@ class ArrivalsBoard extends BaseWidget
             })
             ->select('network_aircraft.*');
     }
+
     protected function getDefaultTableSortColumn(): ?string
     {
         return 'network_aircraft.callsign';

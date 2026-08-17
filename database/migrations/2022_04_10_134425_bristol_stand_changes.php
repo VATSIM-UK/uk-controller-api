@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class BristolStandChanges extends Migration
 {
-    const STANDS_TO_CLOSE = [
+    public const STANDS_TO_CLOSE = [
         '32L',
         '32R',
         '32',
@@ -13,7 +13,7 @@ class BristolStandChanges extends Migration
         '7N',
     ];
 
-    const STANDS_TO_RENAME = [
+    public const STANDS_TO_RENAME = [
         'W8E' => '8',
         'W9E' => '9',
         'W10E' => '10',

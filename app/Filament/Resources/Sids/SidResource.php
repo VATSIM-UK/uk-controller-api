@@ -2,46 +2,46 @@
 
 namespace App\Filament\Resources\Sids;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Tables\Filters\SelectFilter;
-use App\Filament\Resources\Sids\RelationManagers\PrenotesRelationManager;
-use App\Filament\Resources\Sids\Pages\ListSids;
-use App\Filament\Resources\Sids\Pages\CreateSid;
-use App\Filament\Resources\Sids\Pages\ViewSid;
-use App\Filament\Resources\Sids\Pages\EditSid;
 use App\Filament\Helpers\SelectOptions;
-use App\Filament\Resources\SidResource\Pages;
-use App\Filament\Resources\SidResource\RelationManagers;
+use App\Filament\Resources\Sids\Pages\CreateSid;
+use App\Filament\Resources\Sids\Pages\EditSid;
+use App\Filament\Resources\Sids\Pages\ListSids;
+use App\Filament\Resources\Sids\Pages\ViewSid;
+use App\Filament\Resources\Sids\RelationManagers\PrenotesRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Runway\Runway;
 use App\Models\Sid;
 use App\Rules\Sid\SidIdentifiersMustBeUniqueForRunway;
-use Closure;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Pages\Page;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use App\Filament\Resources\TranslatesStrings;
 
 class SidResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = Sid::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-map';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map';
+
     protected static ?string $recordRouteKeyName = 'sid.id';
+
     protected static ?string $recordTitleAttribute = 'identifier';
+
     protected static ?string $navigationLabel = 'SIDs';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function getPluralModelLabel(): string
     {
@@ -57,7 +57,7 @@ class SidResource extends Resource
                     ->helperText(self::translateFormPath('runway.helper'))
                     ->hintIcon('heroicon-o-chevron-double-up')
                     ->options(SelectOptions::runways())
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->disabled(fn (Page $livewire) => ! $livewire instanceof CreateRecord)
                     ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->searchable()
                     ->required(),
@@ -134,7 +134,7 @@ class SidResource extends Resource
                                 }
                             );
                         }
-                    )
+                    ),
 
             ])
             ->defaultSort('runway.airfield.code', 'asc');

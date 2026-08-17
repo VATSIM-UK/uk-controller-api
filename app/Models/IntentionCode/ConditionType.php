@@ -2,7 +2,7 @@
 
 namespace App\Models\IntentionCode;
 
-enum ConditionType:string
+enum ConditionType: string
 {
     case ArrivalAirfields = 'arrival_airfields';
     case ArrivalAirfieldPattern = 'arrival_airfield_pattern';

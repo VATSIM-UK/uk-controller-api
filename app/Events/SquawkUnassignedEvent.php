@@ -14,9 +14,6 @@ class SquawkUnassignedEvent
         $this->callsign = $callsign;
     }
 
-    /**
-     * @return string
-     */
     public function getCallsign(): string
     {
         return $this->callsign;

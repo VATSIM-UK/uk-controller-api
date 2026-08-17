@@ -38,7 +38,7 @@ class AirfieldFactory extends Factory
     private function getValidAirfieldCode(): string
     {
         while (true) {
-            if (!in_array($icao = $this->getAirfieldIcao($this->faker), self::SEEDED_AIRFIELDS)) {
+            if (! in_array($icao = $this->getAirfieldIcao($this->faker), self::SEEDED_AIRFIELDS)) {
                 return $icao;
             }
         }

@@ -4,6 +4,4 @@ namespace App\Exceptions\Prenote;
 
 use InvalidArgumentException;
 
-class PrenoteAlreadyAcknowledgedException extends InvalidArgumentException
-{
-}
+class PrenoteAlreadyAcknowledgedException extends InvalidArgumentException {}

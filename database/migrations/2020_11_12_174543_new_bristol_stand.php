@@ -3,9 +3,7 @@
 use App\Services\DependencyService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class NewBristolStand extends Migration
 {
@@ -40,7 +38,7 @@ class NewBristolStand extends Migration
         DB::table('stands')
             ->where('identifier', '7N')
             ->where('airfield_id', DB::table('airfield')->where('code', 'EGGD')->first()->id)
-                ->delete();
+            ->delete();
 
         DependencyService::touchDependencyByKey('DEPENDENCY_STANDS');
     }

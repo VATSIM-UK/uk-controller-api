@@ -4,6 +4,4 @@ namespace App\Exceptions\Stand;
 
 use Exception;
 
-class StandAlreadyAssignedException extends Exception
-{
-}
+class StandAlreadyAssignedException extends Exception {}

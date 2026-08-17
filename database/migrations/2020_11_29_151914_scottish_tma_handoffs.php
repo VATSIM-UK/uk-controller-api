@@ -4,9 +4,7 @@ use App\Services\DependencyService;
 use App\Services\HandoffService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class ScottishTmaHandoffs extends Migration
 {
@@ -119,7 +117,7 @@ class ScottishTmaHandoffs extends Migration
                 'SCO_W_CTR',
                 'SCO_WD_CTR',
                 'SCO_CTR',
-                'EGPK_APP'
+                'EGPK_APP',
             ]
         );
 

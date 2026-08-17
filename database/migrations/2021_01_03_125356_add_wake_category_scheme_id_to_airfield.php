@@ -41,7 +41,7 @@ class AddWakeCategorySchemeIdToAirfield extends Migration
             ->update(
                 [
                     'wake_category_scheme_id' => $recatSchemeId,
-                    'updated_at' => Carbon::now()
+                    'updated_at' => Carbon::now(),
                 ]
             );
     }

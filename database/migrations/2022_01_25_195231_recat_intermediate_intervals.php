@@ -24,7 +24,7 @@ class RecatIntermediateIntervals extends Migration
                                 'interval' => $relatedCategory->pivot->interval,
                                 'measurement_unit_id' => $relatedCategory->pivot->measurement_unit_id,
                                 'intermediate' => true,
-                            ]
+                            ],
                         ]
                     );
                 });

@@ -20,8 +20,6 @@ class UserConfigService implements UserConfigCreatorInterface
 
     /**
      * Constructor
-     *
-     * @param UserTokenService $tokenService
      */
     public function __construct(UserTokenService $tokenService)
     {
@@ -31,11 +29,11 @@ class UserConfigService implements UserConfigCreatorInterface
     /**
      * Creates a new user configuration
      *
-     * @param integer $cid
+     * @param  int  $cid
+     *
      * @throws ModelNotFoundException
-     * @return UserConfig
      */
-    public function create(int $userCid) : UserConfig
+    public function create(int $userCid): UserConfig
     {
         return new UserConfig(
             $this->tokenService->create($userCid)

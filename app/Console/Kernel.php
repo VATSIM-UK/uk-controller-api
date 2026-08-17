@@ -2,8 +2,6 @@
 
 namespace App\Console;
 
-use Bugsnag\BugsnagLaravel\OomBootstrapper;
-use App\Console\Commands\AllocateStandForArrival;
 use App\Console\Commands\CheckForKeyTableUpdates;
 use App\Console\Commands\CleanDepartureReleaseRequestHistory;
 use App\Console\Commands\CleanMissedApproachNotifications;
@@ -12,6 +10,9 @@ use App\Console\Commands\CleanPrenoteMessageHistory;
 use App\Console\Commands\CleanSquawkAssignmentsHistory;
 use App\Console\Commands\CleanStandAssignmentsHistory;
 use App\Console\Commands\ClearAssignedHoldsHistory;
+use App\Console\Commands\CreateUserToken;
+use App\Console\Commands\DeleteExpiredTokens;
+use App\Console\Commands\DeleteUserTokens;
 use App\Console\Commands\OptimiseTables;
 use App\Console\Commands\RecatCategoriesImport;
 use App\Console\Commands\StandReservationsImport;
@@ -23,11 +24,9 @@ use App\Console\Commands\UserCreate;
 use App\Console\Commands\WakeCategoriesImport;
 use App\Jobs\Acars\UpdateOnlineCallsigns;
 use Bugsnag\BugsnagLaravel\Commands\DeployCommand as BugsnagDeployCommand;
+use Bugsnag\BugsnagLaravel\OomBootstrapper;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Console\Commands\DeleteExpiredTokens;
-use App\Console\Commands\DeleteUserTokens;
-use App\Console\Commands\CreateUserToken;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTaskLogItem;
 
 class Kernel extends ConsoleKernel
@@ -66,8 +65,8 @@ class Kernel extends ConsoleKernel
      * Define the application's command schedule.
      *
      * @codeCoverageIgnore
-     * @param Schedule $schedule
-     * @return             void
+     *
+     * @return void
      */
     protected function schedule(Schedule $schedule)
     {

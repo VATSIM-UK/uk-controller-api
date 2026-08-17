@@ -15,7 +15,7 @@ class AddHeathrowRealopsDepartureStandReservations extends Migration
      */
     public function up()
     {
-        $reservationFile = fopen(__DIR__ . '/../data/stands/heathrow-realops-2022/realops-departures.csv', 'r+');
+        $reservationFile = fopen(__DIR__.'/../data/stands/heathrow-realops-2022/realops-departures.csv', 'r+');
         DB::transaction(function () use ($reservationFile) {
             while ($reservation = fgetcsv($reservationFile)) {
                 StandReservationService::createStandReservation(

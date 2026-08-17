@@ -20,7 +20,7 @@ class AddDaventryStandalonePosition extends Migration
         DB::table('controller_positions')->insert(
             [
                 'callsign' => 'LON_M_CTR',
-                'frequency' => '120.020'
+                'frequency' => '120.020',
             ]
         );
 

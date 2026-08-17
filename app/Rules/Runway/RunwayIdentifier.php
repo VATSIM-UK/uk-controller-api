@@ -6,14 +6,15 @@ use Illuminate\Contracts\Validation\Rule;
 
 class RunwayIdentifier implements Rule
 {
-    const RUNWAY_REGEX = '/^(0[1-9]|[1-2]\d|3[0-6])[LCRG]?$/';
-    const REGEX_MATCHED = 1;
+    public const RUNWAY_REGEX = '/^(0[1-9]|[1-2]\d|3[0-6])[LCRG]?$/';
+
+    public const REGEX_MATCHED = 1;
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return bool
      */
     public function passes($attribute, $value)

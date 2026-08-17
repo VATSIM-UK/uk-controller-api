@@ -1,20 +1,27 @@
 <?php
 
 use App\Models\IntentionCode\IntentionCode;
-use App\Services\IntentionCode\Builder\IntentionCodeBuilder;
 use App\Services\IntentionCode\Builder\CodeBuilder;
 use App\Services\IntentionCode\Builder\ConditionBuilder;
+use App\Services\IntentionCode\Builder\IntentionCodeBuilder;
 use Illuminate\Database\Migrations\Migration;
 
 class AddIntentionCodeData extends Migration
 {
     private const NORTH = [305, 55];
+
     private const NORTH_EAST = [0, 125];
+
     private const EAST = [35, 145];
+
     private const SOUTH_EAST = [55, 180];
+
     private const SOUTH = [125, 235];
+
     private const SOUTH_WEST = [180, 305];
+
     private const WEST = [215, 325];
+
     private const NORTH_WEST = [260, 360];
 
     private const AMSTERDAM_AIRFIELDS = [
@@ -56,7 +63,7 @@ class AddIntentionCodeData extends Migration
         'EIWT',
         'EINC',
         'EITM',
-        'EITT'
+        'EITT',
     ];
 
     private const SCOTTISH_ONLY_EXIT_POINTS = [
@@ -146,7 +153,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const EAST_SOUTH_EAST_EXIT_POINTS = [
+    public const EAST_SOUTH_EAST_EXIT_POINTS = [
         [
             'fix' => 'TRACA',
             'code' => 'D2',
@@ -157,136 +164,136 @@ class AddIntentionCodeData extends Migration
         ],
         [
             'fix' => 'LONAM',
-            'code' => 'F'
+            'code' => 'F',
         ],
         [
             'fix' => 'INKOB',
-            'code' => 'E4'
+            'code' => 'E4',
         ],
         [
             'fix' => 'SOSIM',
-            'code' => 'E5'
+            'code' => 'E5',
         ],
         [
             'fix' => 'KELLY',
-            'code' => 'E7'
+            'code' => 'E7',
         ],
         [
             'fix' => 'TUPEM',
-            'code' => 'E8'
+            'code' => 'E8',
         ],
         [
             'fix' => 'BELOX',
-            'code' => 'E9'
+            'code' => 'E9',
         ],
     ];
 
-    const SOUTH_EAST_EXIT_POINTS = [
+    public const SOUTH_EAST_EXIT_POINTS = [
         [
             'fix' => 'RINTI',
-            'code' => 'D4'
-        ]
+            'code' => 'D4',
+        ],
     ];
 
-    const EAST_EXIT_POINTS = [
+    public const EAST_EXIT_POINTS = [
         [
             'fix' => 'SOMVA',
-            'code' => 'C1'
+            'code' => 'C1',
         ],
         [
             'fix' => 'REDFA',
-            'code' => 'C2'
+            'code' => 'C2',
         ],
         [
             'fix' => 'SASKI',
-            'code' => 'C3'
+            'code' => 'C3',
         ],
         [
             'fix' => 'TOPPA',
-            'code' => 'F'
+            'code' => 'F',
         ],
         [
             'fix' => 'ROKAN',
-            'code' => 'F'
+            'code' => 'F',
         ],
         [
             'fix' => 'LAMSO',
-            'code' => 'F'
+            'code' => 'F',
         ],
         [
             'fix' => 'GODOS',
-            'code' => 'F'
+            'code' => 'F',
         ],
         [
             'fix' => 'MOLIX',
-            'code' => 'F'
+            'code' => 'F',
         ],
     ];
 
-    const EAST_NORTH_EAST_EXIT_POINTS = [
+    public const EAST_NORTH_EAST_EXIT_POINTS = [
         [
             'fix' => 'VAXIT',
-            'code' => 'K1'
+            'code' => 'K1',
         ],
         [
             'fix' => 'TINAC',
-            'code' => 'K2'
+            'code' => 'K2',
         ],
         [
             'fix' => 'GOREV',
-            'code' => 'K2'
+            'code' => 'K2',
         ],
         [
             'fix' => 'PETIL',
-            'code' => 'K2'
+            'code' => 'K2',
         ],
         [
             'fix' => 'INBOB',
-            'code' => 'K3'
+            'code' => 'K3',
         ],
         [
             'fix' => 'LESRA',
-            'code' => 'K3'
+            'code' => 'K3',
         ],
         [
             'fix' => 'SOPTO',
-            'code' => 'K3'
+            'code' => 'K3',
         ],
         [
             'fix' => 'GOLUM',
-            'code' => 'K3'
+            'code' => 'K3',
         ],
         [
             'fix' => 'PEPIN',
-            'code' => 'Z1'
+            'code' => 'Z1',
         ],
         [
             'fix' => 'ORVIK',
-            'code' => 'Z2'
+            'code' => 'Z2',
         ],
         [
             'fix' => 'KLONN',
-            'code' => 'Z3'
+            'code' => 'Z3',
         ],
         [
             'fix' => 'ALOTI',
-            'code' => 'Z4'
+            'code' => 'Z4',
         ],
         [
             'fix' => 'NIVUN',
-            'code' => 'Z5'
+            'code' => 'Z5',
         ],
         [
             'fix' => 'BEREP',
-            'code' => 'Z6'
+            'code' => 'Z6',
         ],
         [
             'fix' => 'RIGVU',
-            'code' => 'Z7'
+            'code' => 'Z7',
         ],
     ];
 
-    const NORTH_EXIT_POINTS = [
+    public const NORTH_EXIT_POINTS = [
         [
             'fix' => 'MATIK',
             'code' => 'R1',
@@ -317,18 +324,18 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const NORTH_NORTH_WEST_EXIT_POINTS = [
+    public const NORTH_NORTH_WEST_EXIT_POINTS = [
         [
             'fix' => 'RATSU',
             'code' => 'R',
         ],
         [
             'fix' => 'LUSEN',
-            'code' => 'Y8'
-        ]
+            'code' => 'Y8',
+        ],
     ];
 
-    const WEST_NORTH_WEST_EXIT_POINTS = [
+    public const WEST_NORTH_WEST_EXIT_POINTS = [
         [
             'fix' => 'ATSIX',
             'code' => 'Y7',
@@ -359,7 +366,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const WEST_EXIT_POINTS = [
+    public const WEST_EXIT_POINTS = [
         [
             'fix' => 'IBROD',
             'code' => 'N7',
@@ -478,7 +485,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const WEST_SOUTH_WEST_EXIT_POINTS = [
+    public const WEST_SOUTH_WEST_EXIT_POINTS = [
         [
             'fix' => 'ARKIL',
             'code' => 'A1',
@@ -505,7 +512,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const SOUTH_EXIT_POINTS = [
+    public const SOUTH_EXIT_POINTS = [
         [
             'fix' => 'ANNET',
             'code' => 'B4',
@@ -859,9 +866,8 @@ class AddIntentionCodeData extends Migration
         array $airfields,
         ?callable $otherConditions = null
     ) {
-        if (!$otherConditions) {
-            $otherConditions = function (ConditionBuilder $conditionBuilder) {
-            };
+        if (! $otherConditions) {
+            $otherConditions = function (ConditionBuilder $conditionBuilder) {};
         }
 
         IntentionCodeBuilder::begin()

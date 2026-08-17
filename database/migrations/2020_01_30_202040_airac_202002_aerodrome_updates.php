@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Services\AirfieldService;
 use Illuminate\Database\Migrations\Migration;

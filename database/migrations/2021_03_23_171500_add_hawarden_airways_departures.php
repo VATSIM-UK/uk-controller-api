@@ -45,7 +45,7 @@ class AddHawardenAirwaysDepartures extends Migration
                 'LON_N_CTR',
                 'LON_CTR',
                 'EGGP_APP',
-                'EGNR_APP'
+                'EGNR_APP',
             ]
         );
         HandoffService::setHandoffForSid('EGNR', 'REXAM5', 'EGNR_DEPARTURE');

@@ -35,6 +35,7 @@ class AddStandsData extends Migration
                 if (count($exploded) != 4) {
                     dd($exploded);
                 }
+
                 return [
                     'airfield_id' => Airfield::where('code', $exploded[0])->first()->id,
                     'identifier' => $exploded[1],

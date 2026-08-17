@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Controller\ControllerPosition;
 use App\Services\HandoffService;
 use App\Services\PrenoteService;
 use Illuminate\Database\Migrations\Migration;

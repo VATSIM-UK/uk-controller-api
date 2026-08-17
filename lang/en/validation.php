@@ -9,7 +9,7 @@ return [
     'heading' => 'Headings must be between 1 and 360 degrees (inclusive).',
     'after' => 'End date must be after start date.',
     'airfield_icao' => 'Invalid airfield ICAO Code',
-    'runways' => require_once __DIR__ . '/runways/validation.php',
-    'stands' => require_once __DIR__ . '/stands/validation.php',
-    'sids' => require_once __DIR__ . '/sids/validation.php',
+    'runways' => require_once __DIR__.'/runways/validation.php',
+    'stands' => require_once __DIR__.'/stands/validation.php',
+    'sids' => require_once __DIR__.'/sids/validation.php',
 ];

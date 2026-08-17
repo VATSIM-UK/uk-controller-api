@@ -2,41 +2,41 @@
 
 namespace App\Filament\Resources\Navaids;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BooleanColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Navaids\RelationManagers\HoldsRelationManager;
-use App\Filament\Resources\Navaids\Pages\ListNavaids;
-use App\Filament\Resources\Navaids\Pages\CreateNavaid;
-use App\Filament\Resources\Navaids\Pages\ViewNavaid;
-use App\Filament\Resources\Navaids\Pages\EditNavaid;
 use App\Filament\Helpers\HasCoordinates;
-use App\Filament\Resources\NavaidResource\Pages;
-use App\Filament\Resources\NavaidResource\RelationManagers;
+use App\Filament\Resources\Navaids\Pages\CreateNavaid;
+use App\Filament\Resources\Navaids\Pages\EditNavaid;
+use App\Filament\Resources\Navaids\Pages\ListNavaids;
+use App\Filament\Resources\Navaids\Pages\ViewNavaid;
+use App\Filament\Resources\Navaids\RelationManagers\HoldsRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Navigation\Navaid;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\TranslatesStrings;
 
 class NavaidResource extends Resource
 {
-    use TranslatesStrings;
     use HasCoordinates;
+    use TranslatesStrings;
 
     protected static ?string $model = Navaid::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map-pin';
+
     protected static ?string $recordTitleAttribute = 'identifier';
+
     protected static ?string $navigationLabel = 'Navaids and Holds';
+
     protected static ?string $label = 'Navaids and Holds';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Enroute';
 
     public static function getEloquentQuery(): Builder
@@ -54,7 +54,7 @@ class NavaidResource extends Resource
                     ->maxLength(5)
                     ->label(self::translateFormPath('identifier.label'))
                     ->helperText(self::translateFormPath('identifier.helper'))
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord),
+                    ->disabled(fn (Page $livewire) => ! $livewire instanceof CreateRecord),
                 self::latitudeInput(),
                 self::longitudeInput(),
             ]);

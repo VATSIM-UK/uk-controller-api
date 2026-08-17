@@ -17,7 +17,7 @@ trait UsesDestinationStrings
             Str::substr($destination, 0, 1),
             Str::substr($destination, 0, 2),
             Str::substr($destination, 0, 3),
-            $destination
+            $destination,
         ];
     }
 }

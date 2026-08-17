@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class RecordHoldAssignment
 {
-    public function handle(HoldAssignedEvent $allocationEvent) : bool
+    public function handle(HoldAssignedEvent $allocationEvent): bool
     {
         DB::table('assigned_holds_history')
             ->insert(

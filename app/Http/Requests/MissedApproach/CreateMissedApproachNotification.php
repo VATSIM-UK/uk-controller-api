@@ -11,7 +11,7 @@ class CreateMissedApproachNotification extends FormRequest
         return [
             'callsign' => [
                 'required',
-                'string'
+                'string',
             ],
         ];
     }

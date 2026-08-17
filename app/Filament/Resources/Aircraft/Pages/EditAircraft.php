@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources\Aircraft\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Events\Aircraft\AircraftDataUpdatedEvent;
 use App\Filament\Resources\Aircraft\AircraftResource;
-use Filament\Pages\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditAircraft extends EditRecord

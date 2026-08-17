@@ -11,18 +11,15 @@ class LoggerFactory
 {
     /**
      * Creates a logger
-     *
-     * @param array $config
-     * @return LoggerInterface
      */
-    public function __invoke(array $config) : LoggerInterface
+    public function __invoke(array $config): LoggerInterface
     {
         $monolog = new Logger($config['name']);
         $maxFiles = 7;
-        $problemHandler = (new RotatingFileHandler(storage_path("logs/error.log"), $maxFiles, Logger::WARNING, false))
+        $problemHandler = (new RotatingFileHandler(storage_path('logs/error.log'), $maxFiles, Logger::WARNING, false))
             ->setFormatter(new LineFormatter(null, null, true, true));
 
-        $debugHandler = (new RotatingFileHandler(storage_path("logs/debug.log"), $maxFiles, LOGGER::DEBUG))
+        $debugHandler = (new RotatingFileHandler(storage_path('logs/debug.log'), $maxFiles, Logger::DEBUG))
             ->setFormatter(new LineFormatter(null, null, true, true));
 
         $monolog->pushHandler($debugHandler);

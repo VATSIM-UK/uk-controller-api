@@ -28,15 +28,15 @@ class HoldRestrictionFactory extends Factory
             'restriction' => [
                 'type' => 'level-block',
                 'levels' => $levels,
-            ]
+            ],
         ]);
     }
 
     public function withMinimumLevelRestriction(
         string $level,
         string $target,
-        int $override = null,
-        string $runway = null
+        ?int $override = null,
+        ?string $runway = null
     ): static {
         return $this->state(function () use ($level, $target, $override, $runway) {
             $data = [

@@ -44,7 +44,7 @@ class StandAssignmentsService
      */
     public function createStandAssignment(string $callsign, int $standId, string $assignmentType): void
     {
-        if (!($stand = Stand::with('pairedStands')->find($standId))) {
+        if (! ($stand = Stand::with('pairedStands')->find($standId))) {
             throw new StandNotFoundException(sprintf('Stand with id %d not found', $standId));
         }
 

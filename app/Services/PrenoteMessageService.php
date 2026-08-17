@@ -30,6 +30,7 @@ class PrenoteMessageService
         );
 
         event(new NewPrenoteMessageEvent($prenoteMessage));
+
         return $prenoteMessage->id;
     }
 

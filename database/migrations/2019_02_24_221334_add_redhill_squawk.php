@@ -1,10 +1,6 @@
 <?php
 
 use App\Models\Squawks\Range;
-use App\Models\Squawks\SquawkRangeOwner;
-use App\Models\Squawks\SquawkUnit;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddRedhillSquawk extends Migration

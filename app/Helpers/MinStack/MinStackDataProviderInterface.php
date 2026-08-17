@@ -12,23 +12,17 @@ interface MinStackDataProviderInterface
 {
     /**
      * The facility against which the MSL should be calculated
-     *
-     * @return string
      */
-    public function calculationFacility() : string;
+    public function calculationFacility(): string;
 
     /**
      * The transition altitude for the facility in question
-     *
-     * @return int
      */
-    public function transitionAltitude() : int;
+    public function transitionAltitude(): int;
 
     /**
      * True if the facility considers standard pressure (1013) to be
      * high
-     *
-     * @return bool
      */
-    public function standardPressureHigh() : bool;
+    public function standardPressureHigh(): bool;
 }

@@ -17,9 +17,6 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableAr
      * - Only allocates stands that are not cargo
      * - Orders by common conditions (see OrdersStandsByCommonConditions)
      * - Selects the first available stand (see SelectsFirstApplicableStand)
-     *
-     * @param NetworkAircraft $aircraft
-     * @return integer|null
      */
     public function allocate(NetworkAircraft $aircraft): ?int
     {

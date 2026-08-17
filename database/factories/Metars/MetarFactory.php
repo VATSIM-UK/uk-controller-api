@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MetarFactory extends Factory
 {
-    const VALID_METARS = [
+    public const VALID_METARS = [
         '041450Z AUTO 26015KT 9999 BKN036 08/01 Q0998',
         '041450Z AUTO 29019KT 9999 BKN030 BKN046 07/03 Q1000',
         '041450Z 33010KT 9999 VCSH SCT020CB FEW025 04/02 Q0998',

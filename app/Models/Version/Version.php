@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Model for a plugin version.
  *
  * Class Version
- * @package App\Models
  */
 class Version extends Model
 {

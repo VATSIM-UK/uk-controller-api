@@ -2,8 +2,6 @@
 
 namespace App\Rules\Coordinates;
 
-use App\Rules\Coordinates\Coordinate;
-
 class Longitude extends Coordinate
 {
     protected function maximumAllowedValue(): float
@@ -13,6 +11,6 @@ class Longitude extends Coordinate
 
     public function getTypeForMessage(): string
     {
-        return "longitude";
+        return 'longitude';
     }
 }

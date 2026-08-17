@@ -6,5 +6,5 @@ return [
         'identifier' => 'Identifier',
         'heading' => 'Heading',
         'sids' => 'SIDs',
-    ]
+    ],
 ];

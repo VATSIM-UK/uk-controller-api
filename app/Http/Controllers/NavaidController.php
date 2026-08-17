@@ -15,6 +15,7 @@ class NavaidController extends BaseController
                 $navaid->latitude,
                 $navaid->longitude
             );
+
             return [
                 'id' => $navaid->id,
                 'identifier' => $navaid->identifier,
@@ -22,6 +23,7 @@ class NavaidController extends BaseController
                 'longitude' => $sectorfileCoordinate->getLongitude(),
             ];
         });
+
         return response()->json($navaids);
     }
 }

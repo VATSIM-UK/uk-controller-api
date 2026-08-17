@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class GravityVaStands extends Migration
 {
-    const STANDS = [
+    public const STANDS = [
         '351',
         '353',
         '355',

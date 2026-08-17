@@ -12,6 +12,7 @@ class FlightRulesController extends BaseController
         $flightRules = FlightRules::all()->each(function (FlightRules $flightRules) {
             $flightRules->makeHidden(['created_at', 'updated_at']);
         });
+
         return response()->json($flightRules);
     }
 }

@@ -9,7 +9,7 @@ class IntentionCodeFactory extends Factory
 {
     protected $model = IntentionCode::class;
 
-    const CODES = [
+    public const CODES = [
         'D1',
         'D2',
         'LL',
@@ -17,7 +17,7 @@ class IntentionCodeFactory extends Factory
         'C2',
     ];
 
-    const CONDITIONS = [
+    public const CONDITIONS = [
         [
             'type' => 'arrival_airfields',
             'airfields' => ['EGLL'],
@@ -25,7 +25,7 @@ class IntentionCodeFactory extends Factory
         [
             'type' => 'arrival_airfield_pattern',
             'pattern' => 'EG',
-        ]
+        ],
     ];
 
     public function definition(): array
@@ -37,7 +37,7 @@ class IntentionCodeFactory extends Factory
                 'code' => $this->faker->randomElement(self::CODES),
             ],
             'conditions' => [
-                $this->faker->randomElement(self::CONDITIONS)
+                $this->faker->randomElement(self::CONDITIONS),
             ],
             'priority' => $this->faker->unique()->numberBetween(0, 99999),
         ];

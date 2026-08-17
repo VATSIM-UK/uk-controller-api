@@ -12,7 +12,7 @@ class ManageAirfieldPairingSquawkRange extends ManageRecords
     use LimitsTableRecordListingOptions;
 
     protected static string $resource = AirfieldPairingSquawkRangeResource::class;
-    
+
     protected function getHeaderActions(): array
     {
         return [

@@ -13,6 +13,5 @@ class StandAssignmentContext
         public readonly string $assignmentType,
         public readonly Collection $removedAssignments,
         public readonly NetworkAircraft $aircraft
-    ) {
-    }
+    ) {}
 }

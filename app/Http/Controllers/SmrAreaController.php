@@ -12,9 +12,9 @@ class SmrAreaController extends Controller
         return response(
             // backwards-compatible format for vSMR: sline-format coordinates on
             // each line, with polygons separated by at least one blank line
-            SmrArea::active()->pluck("coordinates")->join("\n\n"),
+            SmrArea::active()->pluck('coordinates')->join("\n\n"),
             200,
-            ["Content-Type" => "text/plain"],
+            ['Content-Type' => 'text/plain'],
         );
     }
 }

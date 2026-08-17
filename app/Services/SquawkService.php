@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\DB;
  * a response.
  *
  * Class SquawkServiceProvider
- * @package App\Providers
  */
 class SquawkService
 {
@@ -36,8 +35,8 @@ class SquawkService
     /**
      * Constructor
      *
-     * @param SquawkAllocatorInterface[] $generalAllocators
-     * @param SquawkAllocatorInterface[] $localAllocators
+     * @param  SquawkAllocatorInterface[]  $generalAllocators
+     * @param  SquawkAllocatorInterface[]  $localAllocators
      */
     public function __construct(
         array $generalAllocators,
@@ -50,7 +49,7 @@ class SquawkService
     /**
      * De-allocates a squawk for the given callsign, freeing up the squawk for use again.
      *
-     * @param string $callsign The callsign to deallocate for
+     * @param  string  $callsign  The callsign to deallocate for
      * @return bool True if successful, false otherwise.
      */
     public function deleteSquawkAssignment(string $callsign): bool
@@ -65,8 +64,7 @@ class SquawkService
     /**
      * Returns the squawk allocated to the given callsign.
      *
-     * @param string $callsign The callsign to check
-     * @return SquawkAssignmentInterface|null
+     * @param  string  $callsign  The callsign to check
      */
     public function getAssignedSquawk(string $callsign): ?SquawkAssignmentInterface
     {
@@ -76,10 +74,9 @@ class SquawkService
     /**
      * Get a local (unit or airfield specific squawk) for a given aircraft.
      *
-     * @param string $callsign Aircraft callsign
-     * @param string $unit The ATC unit to search for squawks in
-     * @param string $rules The flight rules
-     * @return SquawkAssignmentInterface|null
+     * @param  string  $callsign  Aircraft callsign
+     * @param  string  $unit  The ATC unit to search for squawks in
+     * @param  string  $rules  The flight rules
      */
     public function assignLocalSquawk(string $callsign, string $unit, string $rules): ?SquawkAssignmentInterface
     {
@@ -93,10 +90,9 @@ class SquawkService
     /**
      * Searches for a general squawk based on origin and destination and allocates if found.
      *
-     * @param string $callsign The aircraft's callsign
-     * @param string $origin The origin ICAO
-     * @param string $destination The destination ICAO
-     * @return SquawkAssignmentInterface
+     * @param  string  $callsign  The aircraft's callsign
+     * @param  string  $origin  The origin ICAO
+     * @param  string  $destination  The destination ICAO
      */
     public function assignGeneralSquawk(
         string $callsign,
@@ -125,7 +121,7 @@ class SquawkService
         );
 
         // If a squawk has been assigned, let the rest of the app know so it can be audited etc
-        if (!is_null($assignment)) {
+        if (! is_null($assignment)) {
             event(new SquawkAssignmentEvent($assignment));
         }
 

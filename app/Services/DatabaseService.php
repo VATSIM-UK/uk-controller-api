@@ -61,7 +61,8 @@ class DatabaseService
      */
     public function getLiveTableStatistics(Collection $tables): Collection
     {
-        DB::connection('mysql_analyze')->statement('ANALYZE TABLE ' . $tables->implode(','));
+        DB::connection('mysql_analyze')->statement('ANALYZE TABLE '.$tables->implode(','));
+
         return $this->informationSchemaService->getInformationSchemaTables($tables->toArray())
             ->mapWithKeys(function (object $table) {
                 return [

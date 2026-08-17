@@ -4,6 +4,4 @@ namespace App\Exceptions\Version;
 
 use Exception;
 
-class VersionNotFoundException extends Exception
-{
-}
+class VersionNotFoundException extends Exception {}

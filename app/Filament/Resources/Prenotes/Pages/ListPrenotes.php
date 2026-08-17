@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources\Prenotes\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\Prenotes\PrenoteResource;
-use Filament\Pages\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPrenotes extends ListRecords

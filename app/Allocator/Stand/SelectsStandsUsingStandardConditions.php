@@ -3,17 +3,17 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
-use Closure;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 trait SelectsStandsUsingStandardConditions
 {
-    use SelectsFromSizeAppropriateAvailableStands;
-    use OrdersStandsByCommonConditions;
     use AppliesOrdering;
+    use OrdersStandsByCommonConditions;
     use SelectsFirstApplicableStand;
+    use SelectsFromSizeAppropriateAvailableStands;
 
     private function selectStandsUsingStandardConditions(
         NetworkAircraft $aircraft,
@@ -118,7 +118,7 @@ trait SelectsStandsUsingStandardConditions
         $config = config('stands.night_remote_stand_weighting');
 
         // Feature flag: if disabled or misconfigured, do not apply any bias.
-        if (!(bool) ($config['enabled'] ?? false)) {
+        if (! (bool) ($config['enabled'] ?? false)) {
             return null;
         }
 

@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -14,7 +15,7 @@ return new class extends Migration {
             $table->boolean('stand_acars_messages_uncontrolled_airfield')
                 ->default(false)
                 ->comment(
-                    'Whether the user wants to be sent acars messages related to stand assignments at uncontrolled ' .
+                    'Whether the user wants to be sent acars messages related to stand assignments at uncontrolled '.
                     'airfields'
                 );
         });

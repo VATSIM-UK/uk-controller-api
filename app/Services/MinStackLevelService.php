@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Event;
 
 class MinStackLevelService
 {
-    /**
-     * @param string $icao
-     * @return int|null
-     */
     public function getMinStackLevelForAirfield(string $icao): ?int
     {
         $airfield = Airfield::where('code', $icao)->first();
@@ -28,10 +24,6 @@ class MinStackLevelService
         return $airfield->msl->msl;
     }
 
-    /**
-     * @param string $name
-     * @return int|null
-     */
     public function getMinStackLevelForTma(string $name): ?int
     {
         $tma = Tma::where('name', $name)->first();
@@ -42,9 +34,6 @@ class MinStackLevelService
         return $tma->msl->msl;
     }
 
-    /**
-     * @return array
-     */
     public function getAllAirfieldMinStackLevels(): array
     {
         return MslAirfield::with('airfield')
@@ -53,9 +42,6 @@ class MinStackLevelService
             ->toArray();
     }
 
-    /**
-     * @return array
-     */
     public function getAllTmaMinStackLevels(): array
     {
         return MslTma::with('tma')
@@ -97,7 +83,7 @@ class MinStackLevelService
         );
 
         // Get new minimum stack levels
-        $newMinimumStackLevels = new Collection();
+        $newMinimumStackLevels = new Collection;
         foreach (Airfield::with('mslCalculationAirfields')->get() as $airfield) {
             $relevantMetars = $metars->whereIn('airfield_id', $airfield->mslCalculationAirfields->pluck('id'))
                 ->whereNotNull('qnh');
@@ -137,9 +123,9 @@ class MinStackLevelService
         Collection $newMinimumStackLevels,
         Collection $currentMinimumStackLevels
     ): Collection {
-        $updated = new Collection();
+        $updated = new Collection;
         foreach ($newMinimumStackLevels as $key => $newMsl) {
-            if (!isset($currentMinimumStackLevels[$key]) || $currentMinimumStackLevels[$key] !== $newMsl) {
+            if (! isset($currentMinimumStackLevels[$key]) || $currentMinimumStackLevels[$key] !== $newMsl) {
                 $updated->put($key, $newMsl);
             }
         }

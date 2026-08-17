@@ -33,7 +33,7 @@ class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator, Ranka
      */
     public function allocate(NetworkAircraft $aircraft): ?int
     {
-        if ($aircraft->aircraft_id === null || !$this->isCargoAirline($aircraft)) {
+        if ($aircraft->aircraft_id === null || ! $this->isCargoAirline($aircraft)) {
             return null;
         }
 
@@ -45,7 +45,7 @@ class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator, Ranka
 
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
-        if ($aircraft->aircraft_id === null || !$this->isCargoAirline($aircraft)) {
+        if ($aircraft->aircraft_id === null || ! $this->isCargoAirline($aircraft)) {
             return collect();
         }
 

@@ -19,11 +19,12 @@ class IntentionCodeService
         DB::transaction(function () use ($code, $previousPriority) {
             if ($code->priority === $previousPriority) {
                 $code->save();
+
                 return;
             }
 
             // If its not an existing position being updated, we just move things up one.
-            if (!$previousPriority) {
+            if (! $previousPriority) {
                 IntentionCode::where('priority', '>=', $code->priority)
                     ->orderByDesc('priority')
                     ->each(
@@ -33,6 +34,7 @@ class IntentionCodeService
                     );
 
                 $code->save();
+
                 return;
             }
 

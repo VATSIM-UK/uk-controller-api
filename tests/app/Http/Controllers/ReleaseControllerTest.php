@@ -279,7 +279,7 @@ class ReleaseControllerTest extends BaseApiTestCase
             ]
         )
             ->assertStatus(404);
-            
+
         Event::assertNotDispatched(EnrouteReleaseEvent::class);
 
         $this->assertDatabaseMissing(

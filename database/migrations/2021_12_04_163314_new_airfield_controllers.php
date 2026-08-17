@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class NewAirfieldControllers extends Migration
 {
-    const AIRFIELDS = [
+    public const AIRFIELDS = [
         [
             'EGPG_R_TWR',
             '120.6',

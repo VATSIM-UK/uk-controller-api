@@ -22,7 +22,7 @@ class FixCardiffRadarHandoffs extends Migration
                 'EGGD_APP',
                 'LON_WN_CTR',
                 'LON_W_CTR',
-                'LON_CTR'
+                'LON_CTR',
             ]
         );
 
@@ -33,7 +33,7 @@ class FixCardiffRadarHandoffs extends Migration
                 'EGGD_APP',
                 'LON_WN_CTR',
                 'LON_W_CTR',
-                'LON_CTR'
+                'LON_CTR',
             ]
         );
 

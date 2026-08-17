@@ -16,8 +16,8 @@ class UserLastLogin
     /**
      * Handles the request
      *
-     * @param Request $request The request
-     * @param Closure $next The next middleware to run
+     * @param  Request  $request  The request
+     * @param  Closure  $next  The next middleware to run
      * @return Response
      */
     public function handle(Request $request, Closure $next)
@@ -30,7 +30,7 @@ class UserLastLogin
             $user->last_login_ip = $request->ip();
             $user->save();
         }
-        
+
         return $next($request);
     }
 }

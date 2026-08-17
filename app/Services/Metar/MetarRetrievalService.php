@@ -12,7 +12,7 @@ class MetarRetrievalService
     public function retrieveMetars(Collection $airfields): Collection
     {
         $metarResponse = Http::get($this->getMetarUrl($airfields));
-        if (!$metarResponse->ok()) {
+        if (! $metarResponse->ok()) {
             Log::error(
                 sprintf(
                     'Metar download failed, endpoint returned %d: %s',
@@ -40,7 +40,7 @@ class MetarRetrievalService
         return sprintf(
             '%s%s%s',
             config('metar.vatsim_url'),
-            "?id=",
+            '?id=',
             $this->getMetarQueryString($airfields)
         );
     }

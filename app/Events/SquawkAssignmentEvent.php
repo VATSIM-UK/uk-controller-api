@@ -16,9 +16,6 @@ class SquawkAssignmentEvent
         $this->assignment = $assignment;
     }
 
-    /**
-     * @return SquawkAssignmentInterface
-     */
     public function getAssignment(): SquawkAssignmentInterface
     {
         return $this->assignment;

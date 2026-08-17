@@ -7,13 +7,10 @@ use App\Allocator\Squawk\General\CcamsSquawkAllocator;
 use App\Allocator\Squawk\General\OrcamSquawkAllocator;
 use App\Allocator\Squawk\Local\UnitDiscreteSquawkAllocator;
 use App\Jobs\Squawk\MarkAssignmentDeletedOnDisconnect;
-use App\Listeners\Squawk\ReclaimIfLeftFirProximity;
-use App\Listeners\Squawk\ReserveInFirProximity;
-use App\Models\FlightInformationRegion\FlightInformationRegion;
 use App\Services\SquawkService;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
 
 class SquawkServiceProvider extends ServiceProvider implements DeferrableProvider
 {

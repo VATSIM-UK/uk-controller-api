@@ -24,7 +24,7 @@ trait HasSquawkRanges
     {
         return TextInput::make($name)
             ->required()
-            ->rule(new SqauwkCode())
+            ->rule(new SqauwkCode)
             ->label(self::translateFormPath(sprintf('%s.label', $labelName)))
             ->helperText(self::translateFormPath(sprintf('%s.helper', $labelName)));
     }

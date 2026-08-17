@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class SrdService
 {
     private const SRD_CURRENT_FILE = 'current-srd.xlsx';
+
     private const SRD_VERSION_CACHE_KEY = 'SRD_VERSION';
 
     /**
@@ -34,12 +35,12 @@ class SrdService
     {
         $srdContent = Http::get($this->srdDownloadUrl());
 
-        if (!$srdContent->ok()) {
+        if (! $srdContent->ok()) {
             Log::critical(
-                sprintf("SRD download failed, status code %d", $srdContent->status()),
+                sprintf('SRD download failed, status code %d', $srdContent->status()),
                 [$srdContent->body()]
             );
-            throw new SrdUpdateFailedException();
+            throw new SrdUpdateFailedException;
         }
 
         $this->getImportsFilesystem()->put(self::SRD_CURRENT_FILE, $srdContent->body());

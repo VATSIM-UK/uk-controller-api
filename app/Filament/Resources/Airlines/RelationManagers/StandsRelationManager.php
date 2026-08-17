@@ -2,19 +2,18 @@
 
 namespace App\Filament\Resources\Airlines\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\AttachAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DetachAction;
-use Filament\Actions\BulkAction;
 use App\Filament\Helpers\PairsAirlinesWithStands;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
+use Filament\Actions\AttachAction;
+use Filament\Actions\BulkAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Collection;
 
 class StandsRelationManager extends RelationManager
@@ -24,8 +23,11 @@ class StandsRelationManager extends RelationManager
     use TranslatesStrings;
 
     protected bool $allowsDuplicates = true;
+
     protected static string $relationship = 'stands';
+
     protected static ?string $inverseRelationship = 'airlines';
+
     protected static ?string $recordTitleAttribute = 'identifier';
 
     protected function getTableDescription(): ?string
@@ -60,7 +62,7 @@ class StandsRelationManager extends RelationManager
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         ...self::airlineStandPairingFormFields(),
-                    ])
+                    ]),
             ])
             ->recordActions([
                 EditAction::make('edit-stand-pairing')

@@ -141,6 +141,7 @@ class DepartureReleaseController
             $responseCode = 409;
             $responseData = ['message' => 'You cannot %s this release'];
         }
+
         return response()->json($responseData, $responseCode);
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class Heathrow2022StandAllocations extends Migration
 {
-    const ALLOCATION_DATA_FILE = __DIR__ . '/../data/stands/heathrow-2022-refresh/stand-refresh.csv';
+    public const ALLOCATION_DATA_FILE = __DIR__.'/../data/stands/heathrow-2022-refresh/stand-refresh.csv';
 
     /**
      * Run the migrations.

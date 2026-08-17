@@ -2,36 +2,36 @@
 
 namespace App\Filament\Resources\Terminals;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Terminals\Pages\ListTerminals;
+use App\Filament\Helpers\SelectOptions;
 use App\Filament\Resources\Terminals\Pages\CreateTerminal;
 use App\Filament\Resources\Terminals\Pages\EditTerminal;
+use App\Filament\Resources\Terminals\Pages\ListTerminals;
 use App\Filament\Resources\Terminals\Pages\ViewTerminal;
-use App\Filament\Helpers\SelectOptions;
-use App\Filament\Resources\TerminalResource\Pages;
 use App\Filament\Resources\Terminals\RelationManagers\AirlinesRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Terminal;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
-use App\Filament\Resources\TranslatesStrings;
 
 class TerminalResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = Terminal::class;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-command-line';
-    protected static string | \UnitEnum | null $navigationGroup = 'Airfield';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-command-line';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
+
     protected static ?string $recordTitleAttribute = 'description';
 
     public static function form(Schema $schema): Schema
@@ -42,8 +42,8 @@ class TerminalResource extends Resource
                     ->required()
                     ->label(self::translateFormPath('airfield.label'))
                     ->options(SelectOptions::airfields())
-                    ->searchable(!App::runningUnitTests())
-                    ->disabled(fn (Page $livewire) => !$livewire instanceof CreateRecord)
+                    ->searchable(! App::runningUnitTests())
+                    ->disabled(fn (Page $livewire) => ! $livewire instanceof CreateRecord)
                     ->dehydrated(fn (Page $livewire) => $livewire instanceof CreateRecord)
                     ->required(),
                 TextInput::make('description')

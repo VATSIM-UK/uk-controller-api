@@ -2,25 +2,26 @@
 
 namespace App\Filament\Resources\Stands\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\AttachAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DetachAction;
 use App\Filament\Helpers\PairsAirlinesWithStands;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class AirlinesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
-    use TranslatesStrings;
     use PairsAirlinesWithStands;
-    
+    use TranslatesStrings;
+
     protected bool $allowsDuplicates = true;
+
     protected static string $relationship = 'airlines';
+
     protected static ?string $inverseRelationship = 'stands';
 
     protected static ?string $recordTitleAttribute = 'icao_code';
@@ -51,7 +52,7 @@ class AirlinesRelationManager extends RelationManager
                             ->label(self::translateFormPath('icao.label'))
                             ->required(),
                         ...self::airlineStandPairingFormFields(),
-                    ])
+                    ]),
             ])
             ->recordActions([
                 EditAction::make('edit-airline-pairing')
@@ -60,7 +61,7 @@ class AirlinesRelationManager extends RelationManager
                 DetachAction::make('unpair-airline')
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
                     ->label(self::translateFormPath('remove.label'))
-                    ->using(self::unpairingClosure())
+                    ->using(self::unpairingClosure()),
             ]);
     }
 

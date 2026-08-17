@@ -58,13 +58,15 @@ class DependencyService
     {
         $dependency = Dependency::where('key', $key)->first();
 
-        if (!$dependency) {
+        if (! $dependency) {
             Log::error(sprintf('Dependency %s not found to update', $key));
+
             return;
         }
 
         if ($dependency->per_user && $user === null) {
             Log::error(sprintf('Dependency %s is per user but user was not specified', $key));
+
             return;
         }
 
@@ -82,7 +84,6 @@ class DependencyService
 
     /**
      * Update the time on the dependency and re-cache it
-     * @param Dependency $dependency
      */
     public static function touchGlobalDependency(Dependency $dependency): void
     {
@@ -103,7 +104,7 @@ class DependencyService
             throw new LogicException('User dependencies can only be updated by logged in users');
         }
 
-        if (!$dependency->per_user) {
+        if (! $dependency->per_user) {
             throw new LogicException(sprintf('Dependency %s is not a per-user dependency', $dependency->key));
         }
 
@@ -142,14 +143,14 @@ class DependencyService
     public static function setConcernedTablesForDependency(string $dependencyKey, array $concernedTables): void
     {
         foreach ($concernedTables as $concernedTable) {
-            if (!Schema::hasTable($concernedTable)) {
+            if (! Schema::hasTable($concernedTable)) {
                 throw new InvalidArgumentException(
                     sprintf('Database table %s does not exist for dependency', $concernedTable)
                 );
             }
 
             // Add to the tables list, if it's not there
-            if (!DatabaseTable::where('name', $concernedTable)->exists()) {
+            if (! DatabaseTable::where('name', $concernedTable)->exists()) {
                 DatabaseTable::create(
                     [
                         'name' => $concernedTable,

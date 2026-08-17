@@ -14,6 +14,7 @@ class AirlineService
     public function getAirlineForAircraft(NetworkAircraft $aircraft): ?Airline
     {
         $airlineId = $this->airlineIdForCallsign($aircraft->callsign);
+
         return $airlineId
             ? Airline::find($airlineId)
             : null;

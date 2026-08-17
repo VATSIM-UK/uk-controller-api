@@ -2,8 +2,8 @@
 
 use App\Models\Aircraft\Aircraft;
 use App\Models\Aircraft\WakeCategory;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Carbon;
 
 class AddAircraft extends Migration
 {

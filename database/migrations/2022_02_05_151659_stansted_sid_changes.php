@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class StanstedSidChanges extends Migration
 {
-    const CHANGES = [
+    public const CHANGES = [
         'CLN4S' => 'CLN5S',
         'CLN1E' => 'CLN2E',
         'CLN8R' => 'CLN9R',

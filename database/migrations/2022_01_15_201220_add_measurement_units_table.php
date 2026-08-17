@@ -31,7 +31,7 @@ class AddMeasurementUnitsTable extends Migration
                     [
                         'unit' => 'nm',
                         'created_at' => Carbon::now(),
-                    ]
+                    ],
                 ]
             );
     }

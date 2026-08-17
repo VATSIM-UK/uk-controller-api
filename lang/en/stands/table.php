@@ -27,7 +27,7 @@ return [
         ],
     ],
     'paired' => [
-        'description' => 'Stands that are paired cannot be simultaneously assigned to aircraft. ' .
+        'description' => 'Stands that are paired cannot be simultaneously assigned to aircraft. '.
             'Note, this does not prevent aircraft from spawning up on a stand!',
         'columns' => [
             'id' => 'Id',

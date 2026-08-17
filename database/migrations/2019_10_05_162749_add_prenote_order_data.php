@@ -3,8 +3,8 @@
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Prenote;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddPrenoteOrderData extends Migration
 {
@@ -38,7 +38,7 @@ class AddPrenoteOrderData extends Migration
         DB::table('prenote_orders')->truncate();
     }
 
-    private function getOrderData(array $prenotes, array $controllers) : array
+    private function getOrderData(array $prenotes, array $controllers): array
     {
         return [
 

@@ -21,7 +21,6 @@ class CreateNetworkAircraftFirEventsTable extends Migration
             $table->json('metadata')->comment('Any other data, position entered etc');
             $table->timestamp('created_at');
 
-
             $table->foreign('callsign')
                 ->references('callsign')
                 ->on('network_aircraft')

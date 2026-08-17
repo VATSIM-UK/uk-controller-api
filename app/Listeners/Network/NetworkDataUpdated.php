@@ -15,7 +15,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Bus;
 
-class NetworkDataUpdated implements ShouldQueue, ShouldBeUnique
+class NetworkDataUpdated implements ShouldBeUnique, ShouldQueue
 {
     // This listener should be unique for 5 minutes.
     public $uniqueFor = 300;
@@ -24,17 +24,18 @@ class NetworkDataUpdated implements ShouldQueue, ShouldBeUnique
     {
         Bus::chain(
             [
-                new OccupyStands(),
-                new AssignStandsForDeparture(),
-                new RemoveDisconnectedArrivalStands(),
-                new AssignStandsForArrival(),
-                new ReserveActiveSquawks(),
-                new RemoveAssignmentsForAircraftLeavingHold(),
-                new CancelRequestsForDepartedAircraft(),
-                new CancelMessagesForDepartedAircraft(),
-                new DetectProximityToHolds(),
+                new OccupyStands,
+                new AssignStandsForDeparture,
+                new RemoveDisconnectedArrivalStands,
+                new AssignStandsForArrival,
+                new ReserveActiveSquawks,
+                new RemoveAssignmentsForAircraftLeavingHold,
+                new CancelRequestsForDepartedAircraft,
+                new CancelMessagesForDepartedAircraft,
+                new DetectProximityToHolds,
             ]
         )->dispatch();
+
         return true;
     }
 }

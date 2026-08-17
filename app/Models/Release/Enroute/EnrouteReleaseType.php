@@ -10,6 +10,6 @@ class EnrouteReleaseType extends Model
 
     protected $fillable = [
         'tag_string',
-        'description'
+        'description',
     ];
 }

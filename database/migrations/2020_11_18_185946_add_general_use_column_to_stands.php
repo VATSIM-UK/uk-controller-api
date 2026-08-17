@@ -18,7 +18,7 @@ class AddGeneralUseColumnToStands extends Migration
                 ->after('wake_category_id')
                 ->default(false)
                 ->comment(
-                    'Whether the stand should be available for general use, ' .
+                    'Whether the stand should be available for general use, '.
                     'for example Cargo stands would not be, nor would Heathrow T5 as this is purely for BA'
                 );
         });

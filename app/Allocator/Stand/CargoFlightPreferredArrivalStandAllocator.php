@@ -17,8 +17,8 @@ use Illuminate\Support\Collection;
  */
 class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use SelectsFromAirlineSpecificStands;
     use ChecksForCargoAirlines;
+    use SelectsFromAirlineSpecificStands;
 
     private AirlineService $airlineService;
 
@@ -30,7 +30,7 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
     public function allocate(NetworkAircraft $aircraft): ?int
     {
         // If the aircraft isn't a cargo airline or a cargo flight, this rule doesn't apply
-        if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
+        if (! $this->isCargoAirline($aircraft) && ! $this->isCargoFlight($aircraft)) {
             return null;
         }
 
@@ -48,10 +48,10 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
         // If the aircraft doesnt have an airline, we cant allocate a stand
-        if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
+        if (! $this->isCargoAirline($aircraft) && ! $this->isCargoFlight($aircraft)) {
             return collect();
         }
-        
+
         return $this->selectRankedAirlineSpecificStands(
             $aircraft,
             $this->queryFilter()

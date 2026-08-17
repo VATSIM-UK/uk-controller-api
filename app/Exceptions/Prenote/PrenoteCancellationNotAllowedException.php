@@ -4,6 +4,4 @@ namespace App\Exceptions\Prenote;
 
 use InvalidArgumentException;
 
-class PrenoteCancellationNotAllowedException extends InvalidArgumentException
-{
-}
+class PrenoteCancellationNotAllowedException extends InvalidArgumentException {}

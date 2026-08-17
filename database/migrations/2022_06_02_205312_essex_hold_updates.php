@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class EssexHoldUpdates extends Migration
 {
-    const HOLDS = [
+    public const HOLDS = [
         [
             'identifier' => 'ZAGZO',
             'latitude' => 'N052.18.12.970',

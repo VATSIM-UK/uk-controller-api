@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class RefactorSquawkRangeTables extends Migration
 {
@@ -85,7 +85,6 @@ class RefactorSquawkRangeTables extends Migration
             $table->text('start', 4);
             $table->text('stop', 4);
         });
-
 
         // Drop the range owner table
         Schema::dropIfExists('squawk_range_owner');

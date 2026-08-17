@@ -29,7 +29,7 @@ class ConvertNavaidCoordinateFormat extends Migration
                 ->update(
                     [
                         'latitude_new' => $coordinate->getLat(),
-                        'longitude_new' => $coordinate->getLng()
+                        'longitude_new' => $coordinate->getLng(),
                     ]
                 );
         });

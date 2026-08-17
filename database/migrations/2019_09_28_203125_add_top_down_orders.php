@@ -2,8 +2,8 @@
 
 use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Carbon;
 
 class AddTopDownOrders extends Migration
 {

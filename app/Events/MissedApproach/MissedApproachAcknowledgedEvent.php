@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 class MissedApproachAcknowledgedEvent extends HighPriorityBroadcastEvent
 {
     private MissedApproachNotification $missedApproach;
+
     private string $acknowledgedBy;
 
     public function __construct(MissedApproachNotification $missedApproach, string $acknowledgedBy)

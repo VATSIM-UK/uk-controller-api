@@ -30,7 +30,7 @@ class HoldFactory extends Factory
             'turn_direction' => $this->faker->randomElement(['left', 'right']),
             'outbound_leg_value' => $this->faker->randomFloat(1, 0.5, 100.5),
             'outbound_leg_unit' => 2,
-            'description' => $this->faker->word
+            'description' => $this->faker->word,
         ];
     }
 }

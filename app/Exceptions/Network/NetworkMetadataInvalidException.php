@@ -4,6 +4,4 @@ namespace App\Exceptions\Network;
 
 use Exception;
 
-class NetworkMetadataInvalidException extends Exception
-{
-}
+class NetworkMetadataInvalidException extends Exception {}

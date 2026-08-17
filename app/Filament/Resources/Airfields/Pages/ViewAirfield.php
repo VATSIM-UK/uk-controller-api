@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Airfields\Pages;
 
-use Filament\Actions\EditAction;
 use App\Filament\Resources\Airfields\AirfieldResource;
-use Filament\Pages\Actions;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewAirfield extends ViewRecord

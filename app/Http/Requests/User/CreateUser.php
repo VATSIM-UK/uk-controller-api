@@ -12,7 +12,7 @@ class CreateUser extends FormRequest
         return [
             'cid' => [
                 'required',
-                new VatsimCid(),
+                new VatsimCid,
             ],
         ];
     }

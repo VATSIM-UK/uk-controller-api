@@ -1,15 +1,15 @@
 <?php
 
+use App\Services\DependencyService;
 use App\Services\SectorfileService;
+use App\Services\Stand\StandService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
-use App\Services\DependencyService;
-use App\Services\Stand\StandService;
 
 class AddMissingHeathrowStands extends Migration
 {
-    const STANDS = [
+    public const STANDS = [
         '209' => [
             'latitude' => 'N051.28.25.980',
             'longitude' => 'W000.26.59.030',
@@ -19,13 +19,13 @@ class AddMissingHeathrowStands extends Migration
             'latitude' => 'N051.28.27.080',
             'longitude' => 'W000.26.57.900',
             'wtc' => 'LM',
-            'pair' => '209'
+            'pair' => '209',
         ],
         '209R' => [
             'latitude' => 'N051.28.26.090',
             'longitude' => 'W000.27.00.170',
             'wtc' => 'LM',
-            'pair' => '209'
+            'pair' => '209',
         ],
         '210' => [
             'latitude' => 'N051.28.25.990',
@@ -36,13 +36,13 @@ class AddMissingHeathrowStands extends Migration
             'latitude' => 'N051.28.27.100',
             'longitude' => 'W000.26.53.290',
             'wtc' => 'LM',
-            'pair' => '210'
+            'pair' => '210',
         ],
         '210R' => [
             'latitude' => 'N051.28.26.100',
             'longitude' => 'W000.26.55.560',
             'wtc' => 'LM',
-            'pair' => '210'
+            'pair' => '210',
         ],
         '211' => [
             'latitude' => 'N051.28.27.340',
@@ -58,13 +58,13 @@ class AddMissingHeathrowStands extends Migration
             'latitude' => 'N051.28.23.680',
             'longitude' => 'W000.26.49.380',
             'wtc' => 'LM',
-            'pair' => '212'
+            'pair' => '212',
         ],
         '212R' => [
             'latitude' => 'N051.28.25.090',
             'longitude' => 'W000.26.50.990',
             'wtc' => 'LM',
-            'pair' => '212'
+            'pair' => '212',
         ],
         '213' => [
             'latitude' => 'N051.28.21.500',
@@ -75,13 +75,13 @@ class AddMissingHeathrowStands extends Migration
             'latitude' => 'N051.28.20.790',
             'longitude' => 'W000.26.49.360',
             'wtc' => 'LM',
-            'pair' => '213'
+            'pair' => '213',
         ],
         '213R' => [
             'latitude' => 'N051.28.22.210',
             'longitude' => 'W000.26.50.960',
             'wtc' => 'LM',
-            'pair' => '213'
+            'pair' => '213',
         ],
     ];
 
@@ -125,7 +125,7 @@ class AddMissingHeathrowStands extends Migration
                 );
             }
         }
-        
+
         DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 

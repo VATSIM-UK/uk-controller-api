@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Log;
 
 class MissedApproachService
 {
-    const MESSAGE_ACTIVE_MINUTES = 3;
+    public const MESSAGE_ACTIVE_MINUTES = 3;
 
     public function sendMissedApproachNotification(string $callsign): MissedApproachNotification
     {
         if ($this->missedApproachActive($callsign)) {
-            throw new MissedApproachAlreadyActiveException('Missed approach already active for ' . $callsign);
+            throw new MissedApproachAlreadyActiveException('Missed approach already active for '.$callsign);
         }
 
         return tap(
@@ -29,7 +29,7 @@ class MissedApproachService
                 [
                     'callsign' => $callsign,
                     'user_id' => Auth::id(),
-                    'expires_at' => Carbon::now()->addMinutes(self::MESSAGE_ACTIVE_MINUTES)
+                    'expires_at' => Carbon::now()->addMinutes(self::MESSAGE_ACTIVE_MINUTES),
                 ]
             ),
             function (MissedApproachNotification $notification) {
@@ -44,7 +44,7 @@ class MissedApproachService
             Log::warning(
                 sprintf('User %d is trying to acknowledge a missed approach but is already done', Auth::id())
             );
-            throw new CannotAcknowledgeMissedApproachException();
+            throw new CannotAcknowledgeMissedApproachException;
         }
 
         // Check if they're on a position that's allowed to.
@@ -53,21 +53,21 @@ class MissedApproachService
             ->where('cid', Auth::id())
             ->first();
 
-        if (!$userPosition) {
+        if (! $userPosition) {
             Log::warning(
                 sprintf('User %d is trying to acknowledge a missed approach but is not controlling', Auth::id())
             );
-            throw new CannotAcknowledgeMissedApproachException();
+            throw new CannotAcknowledgeMissedApproachException;
         }
 
-        if (!$this->userPositionCanAcknowledge($missedApproachNotification, $userPosition->controllerPosition)) {
+        if (! $this->userPositionCanAcknowledge($missedApproachNotification, $userPosition->controllerPosition)) {
             Log::warning(
                 sprintf(
                     'User %d is trying to acknowledge a missed approach but is not on a position that can',
                     Auth::id()
                 )
             );
-            throw new CannotAcknowledgeMissedApproachException();
+            throw new CannotAcknowledgeMissedApproachException;
         }
 
         $missedApproachNotification->acknowledge(Auth::id(), $remarks);

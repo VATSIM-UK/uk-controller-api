@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Services\DependencyService;
 use App\Services\Stand\StandService;
@@ -9,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class RenameStands extends Migration
 {
-    const STANDS_TO_RENAME_FILE = __DIR__ . '/../data/stands/2020/torename.csv';
+    public const STANDS_TO_RENAME_FILE = __DIR__.'/../data/stands/2020/torename.csv';
 
     /**
      * Run the migrations.

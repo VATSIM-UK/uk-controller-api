@@ -2,32 +2,32 @@
 
 namespace App\Filament\Resources\Handoffs;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TagsColumn;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\Handoffs\Pages\ListHandoffs;
 use App\Filament\Resources\Handoffs\Pages\CreateHandoff;
-use App\Filament\Resources\Handoffs\Pages\ViewHandoff;
 use App\Filament\Resources\Handoffs\Pages\EditHandoff;
-use App\Filament\Resources\HandoffResource\Pages;
+use App\Filament\Resources\Handoffs\Pages\ListHandoffs;
+use App\Filament\Resources\Handoffs\Pages\ViewHandoff;
 use App\Filament\Resources\Handoffs\RelationManagers\ControllersRelationManager;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Controller\Handoff;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\TranslatesStrings;
 
 class HandoffResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = Handoff::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $recordTitleAttribute = 'description';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Airfield';
 
     public static function getEloquentQuery(): Builder

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddSpeedGroupData extends Migration
 {
-    const SPEED_GROUPS = [
+    public const SPEED_GROUPS = [
         'EGKK' => [
             '1' => [
                 'aircraft' => [
@@ -81,7 +81,7 @@ class AddSpeedGroupData extends Migration
                     'C551',
                     'C560',
                     'C650',
-                ]
+                ],
             ],
             '5' => [
                 'aircraft' => [
@@ -95,7 +95,7 @@ class AddSpeedGroupData extends Migration
             ],
             '6' => [
                 'aircraft' => [
-                    'CONC'
+                    'CONC',
                 ],
             ],
         ],
@@ -156,7 +156,7 @@ class AddSpeedGroupData extends Migration
                     'L328',
                     'DH8D',
                     'SB20',
-                ]
+                ],
             ],
             '3' => [
                 'engines' => [
@@ -194,7 +194,7 @@ class AddSpeedGroupData extends Migration
                     'E135',
                     'E145',
                     'SB20',
-                ]
+                ],
             ],
             '2' => [
                 'aircraft' => [
@@ -221,7 +221,7 @@ class AddSpeedGroupData extends Migration
                     'JS32',
                     'JS41',
                     'SF34',
-                ]
+                ],
             ],
             '3' => [
                 'aircraft' => [
@@ -232,7 +232,7 @@ class AddSpeedGroupData extends Migration
                     'PA23',
                     'PA31',
                     'PA34',
-                ]
+                ],
             ],
         ],
         'EGSS' => [
@@ -289,7 +289,7 @@ class AddSpeedGroupData extends Migration
                     'J328',
                 ],
                 'engines' => [
-                    'Jet'
+                    'Jet',
                 ],
             ],
             '4' => [
@@ -364,7 +364,7 @@ class AddSpeedGroupData extends Migration
                     'DHC6',
                     'E110',
                     'SH36',
-                ]
+                ],
             ],
             '1' => [
                 'aircraft' => [
@@ -417,13 +417,13 @@ class AddSpeedGroupData extends Migration
             ],
             '3' => [
                 'engines' => [
-                    'Jet'
+                    'Jet',
                 ],
             ],
             '4' => [
                 'aircraft' => [
                     'CONC',
-                ]
+                ],
             ],
         ],
         'EGGP' => [
@@ -469,7 +469,7 @@ class AddSpeedGroupData extends Migration
             ],
             '3' => [
                 'engines' => [
-                    'Jet'
+                    'Jet',
                 ],
             ],
             '4' => [
@@ -541,11 +541,11 @@ class AddSpeedGroupData extends Migration
                     'CRJ7',
                     'CRJ9',
                     'L188',
-                ]
+                ],
             ],
             '4' => [
                 'engines' => [
-                    'Jet'
+                    'Jet',
                 ],
             ],
         ],
@@ -637,7 +637,7 @@ class AddSpeedGroupData extends Migration
             '6' => [
                 'aircraft' => [
                     'CONC',
-                ]
+                ],
             ],
         ],
         'EGPH' => [
@@ -645,7 +645,7 @@ class AddSpeedGroupData extends Migration
                 'aircraft' => [
                     'DHC6',
                     'L410',
-                ]
+                ],
             ],
             '2' => [
                 'aircraft' => [
@@ -657,7 +657,7 @@ class AddSpeedGroupData extends Migration
                     'TBM7',
                     'TBM8',
                     'E120',
-                ]
+                ],
             ],
             '3' => [
                 'aircraft' => [
@@ -684,7 +684,7 @@ class AddSpeedGroupData extends Migration
                     'SF34',
                     'SW3',
                     'SW4',
-                ]
+                ],
             ],
             '4' => [
                 'aircraft' => [
@@ -711,7 +711,7 @@ class AddSpeedGroupData extends Migration
                     'C551',
                     'C560',
                     'C650',
-                ]
+                ],
             ],
             '5' => [
                 'engines' => [
@@ -784,7 +784,7 @@ class AddSpeedGroupData extends Migration
                     'CONC',
                 ],
             ],
-        ]
+        ],
     ];
 
     /**

@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 class DevUserSeeder extends Seeder
 {
     // .docker/web/sso/index.php
-    const DEV_USER_CID = 1234;
+    public const DEV_USER_CID = 1234;
 
     /**
      * Run the database seeds.

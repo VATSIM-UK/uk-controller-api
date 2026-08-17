@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Prenotes\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Prenotes\PrenoteResource;
-use Filament\Pages\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewPrenote extends ViewRecord

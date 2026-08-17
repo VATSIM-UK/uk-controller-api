@@ -20,6 +20,7 @@ class CleanPrenoteMessageHistory extends Command
             Carbon::now()->subMonths(3)->toDateTimeString()
         )->forceDelete();
         $this->info('Prenote message history cleaned successfully');
+
         return 0;
     }
 }

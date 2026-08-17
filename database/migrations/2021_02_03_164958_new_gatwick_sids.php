@@ -16,7 +16,7 @@ class NewGatwickSids extends Migration
         'DVR1M' => 'MIMFO1M',
         'DVR1V' => 'MIMFO1V',
     ];
-    
+
     /**
      * Run the migrations.
      *

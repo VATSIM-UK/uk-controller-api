@@ -28,7 +28,7 @@ class AddPrenotes extends Migration
         });
     }
 
-    private function getPrenoteData() : array
+    private function getPrenoteData(): array
     {
         return [
             [

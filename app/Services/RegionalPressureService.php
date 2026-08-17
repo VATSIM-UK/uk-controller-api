@@ -28,7 +28,7 @@ class RegionalPressureService
         );
 
         // Get the latest values
-        $newRegionalPressures = new Collection();
+        $newRegionalPressures = new Collection;
         foreach (AltimeterSettingRegion::with('airfields')->get() as $altimeterSettingRegion) {
             $relevantMetars = $metars->whereIn('airfield_id', $altimeterSettingRegion->airfields->pluck('id'))
                 ->whereNotNull('qnh');
@@ -74,9 +74,9 @@ class RegionalPressureService
         Collection $newRegionalPressures,
         Collection $currentRegionalPressures
     ): Collection {
-        $updated = new Collection();
+        $updated = new Collection;
         foreach ($newRegionalPressures as $key => $newRegionalPressure) {
-            if (!isset($currentRegionalPressures[$key]) || $currentRegionalPressures[$key] !== $newRegionalPressure) {
+            if (! isset($currentRegionalPressures[$key]) || $currentRegionalPressures[$key] !== $newRegionalPressure) {
                 $updated->put($key, $newRegionalPressure);
             }
         }
@@ -93,6 +93,7 @@ class RegionalPressureService
         Collection $relevantMetars
     ): int {
         $rps = $relevantMetars->pluck('qnh')->min() + $altimeterSettingRegion->adjustment;
+
         return $rps < 0 ? 0 : $rps;
     }
 

@@ -3,8 +3,6 @@
 use App\Services\DependencyService;
 use App\Services\VrpService;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class AddVrpDependency extends Migration
 {

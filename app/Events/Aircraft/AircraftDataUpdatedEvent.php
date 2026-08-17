@@ -2,6 +2,4 @@
 
 namespace App\Events\Aircraft;
 
-class AircraftDataUpdatedEvent
-{
-}
+class AircraftDataUpdatedEvent {}

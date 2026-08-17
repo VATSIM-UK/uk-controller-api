@@ -2,17 +2,22 @@
 
 namespace App\Helpers\Prenote;
 
-use App\Http\Requests\Prenote\CreatePrenoteMessage;
-
 final class CreatePrenoteMessageData
 {
     private string $callsign;
+
     private string $departureAirfield;
+
     private ?string $departureSid;
+
     private ?string $destinationAirfield;
+
     private int $userId;
+
     private int $requestingControllerId;
+
     private int $targetControllerId;
+
     private int $expiresInSeconds;
 
     protected function __construct(array $validatedData, int $userId)
@@ -31,7 +36,7 @@ final class CreatePrenoteMessageData
         array $validatedData,
         int $userId
     ): CreatePrenoteMessageData {
-        return new static($validatedData, $userId);
+        return new self($validatedData, $userId);
     }
 
     public function getCallsign(): string

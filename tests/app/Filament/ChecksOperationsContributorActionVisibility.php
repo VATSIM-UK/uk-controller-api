@@ -7,7 +7,7 @@ use App\Models\User\RoleKeys;
 trait ChecksOperationsContributorActionVisibility
 {
     use BaseChecksActionVisibility;
-   
+
     private static function readOnlyRoles(): array
     {
         return [

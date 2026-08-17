@@ -31,6 +31,7 @@ class Notification extends Model
     public function toArray(): array
     {
         $this->setHidden(['created_at', 'updated_at']);
+
         return array_merge(
             parent::toArray(),
             [

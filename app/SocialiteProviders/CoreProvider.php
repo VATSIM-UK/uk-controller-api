@@ -20,7 +20,7 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase($this->ssoBaseUrl() . '/oauth/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->ssoBaseUrl().'/oauth/authorize', $state);
     }
 
     /**
@@ -30,7 +30,7 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenUrl()
     {
-        return $this->ssoBaseUrl() . '/oauth/token';
+        return $this->ssoBaseUrl().'/oauth/token';
     }
 
     /**
@@ -41,7 +41,7 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get($this->ssoBaseUrl() . '/api/user', [
+        $response = $this->getHttpClient()->get($this->ssoBaseUrl().'/api/user', [
             'headers' => [
                 'Authorization' => 'Bearer '.$token,
             ],
@@ -66,17 +66,16 @@ class CoreProvider extends AbstractProvider implements ProviderInterface
     /**
      * Map the raw user array to a Socialite User instance.
      *
-     * @param  array  $user
      * @return User
      */
     protected function mapUserToObject(array $user)
     {
         $data = Arr::get($user, 'data', []);
 
-        return (new User())->setRaw($data)->map([
-            'id'       => $data['cid'],
-            'name'     => $data['name_full'],
-            'email'    => $data['email'],
+        return (new User)->setRaw($data)->map([
+            'id' => $data['cid'],
+            'name' => $data['name_full'],
+            'email' => $data['email'],
             'first_name' => $data['name_first'],
             'last_name' => $data['name_last'],
         ]);

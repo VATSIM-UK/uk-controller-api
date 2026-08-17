@@ -64,9 +64,9 @@ class HandoffService
                         $positionToAdd,
                         before: $positionToAddAdjacent
                     );
+
                     continue;
                 }
-
 
                 ControllerPositionHierarchyService::insertPositionIntoHierarchy(
                     $handoff,

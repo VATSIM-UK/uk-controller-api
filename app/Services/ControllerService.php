@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Helpers\Vatsim\ControllerPositionParser;
-use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\ControllerPositionAlternativeCallsign;
 use Illuminate\Support\Collection;
@@ -57,6 +56,7 @@ class ControllerService
             $parsedPosition = $this->controllerPositionParser->parse($position);
             if ($parsedPosition === null) {
                 Log::error(sprintf('Invalid controller position when parsed: %s/%d', $position->callsign, $position->id));
+
                 return [$position->id => null];
             }
 
@@ -64,9 +64,10 @@ class ControllerService
                 $position->id => collect([$parsedPosition])->concat(
                     $position->alternativeCallsigns->map(function (ControllerPositionAlternativeCallsign $alternativeCallsign) use ($position) {
                         $position->callsign = $alternativeCallsign->callsign;
+
                         return $this->controllerPositionParser->parse($position);
                     })
-                )->filter()
+                )->filter(),
             ];
         })->filter();
     }

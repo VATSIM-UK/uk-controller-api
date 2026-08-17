@@ -2,16 +2,15 @@
 
 namespace App\Filament\Resources\Stands\RelationManagers;
 
-use Filament\Actions\AttachAction;
-use Filament\Actions\DetachAction;
-use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Stand\Stand;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +19,9 @@ class PairedStandsRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
     use TranslatesStrings;
-    
+
     protected static string $relationship = 'pairedStands';
+
     protected static ?string $inverseRelationship = 'pairedStands';
 
     protected static ?string $recordTitleAttribute = 'identifier';
@@ -74,7 +74,7 @@ class PairedStandsRelationManager extends RelationManager
                                     ]
                                 )
                         )
-                        ->searchable(!App::runningUnitTests())
+                        ->searchable(! App::runningUnitTests())
                         ->label(self::translateFormPath('stand.label'))
                         ->helperText(self::translateFormPath('stand.helper'))
                         ->disableLabel(false),
@@ -89,7 +89,7 @@ class PairedStandsRelationManager extends RelationManager
                             return $data;
                         });
                     })
-                    ->label(self::translateFormPath('add.label'))
+                    ->label(self::translateFormPath('add.label')),
             ])
             ->recordActions([
                 $detachAction->using(

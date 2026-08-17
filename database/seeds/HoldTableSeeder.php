@@ -40,7 +40,7 @@ class HoldTableSeeder extends Seeder
                 'turn_direction' => 'right',
                 'description' => 'Mayfield Low',
                 'created_at' => Carbon::now()->toDateTimeString(),
-            ]
+            ],
         ];
 
         Hold::insert($holds);

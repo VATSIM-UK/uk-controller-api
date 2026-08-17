@@ -5,7 +5,8 @@ use App\Models\IntentionCode\IntentionCode;
 use App\Services\IntentionCode\IntentionCodeService;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -34,7 +35,7 @@ return new class extends Migration {
                     [
                         'type' => 'exit_point',
                         'exit_point' => $larga->id,
-                    ]
+                    ],
                 ],
                 'priority' => 64,
             ]
@@ -67,7 +68,6 @@ return new class extends Migration {
         IntentionCode::findOrFail(58)
             ->update(['code' => ['type' => 'single_code', 'code' => 'F1'], 'description' => 'F1 (GODOS)']);
 
-
         // Reneq
         $reneq = FirExitPoint::create(
             [
@@ -89,7 +89,7 @@ return new class extends Migration {
                     [
                         'type' => 'exit_point',
                         'exit_point' => $reneq->id,
-                    ]
+                    ],
                 ],
                 'priority' => 60,
             ]

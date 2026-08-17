@@ -10,7 +10,7 @@ use App\Providers\AuthServiceProvider;
 class DeleteUserTokensTest extends BaseFunctionalTestCase
 {
     const ARTISAN_COMMAND = 'tokens:delete-user';
-    
+
     public function testItConstructs()
     {
         $command = new DeleteUserTokens();

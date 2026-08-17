@@ -15,8 +15,10 @@ class NetworkMetadataService
     use MakesHttpRequests;
 
     private const DATA_URL_CACHE_DURATION = 600;
+
     private const DATA_URL_CACHE_KEY = 'NETWORK_DATA_URL';
-    private const NETWORK_METADATA_URL = "https://status.vatsim.net/status.json";
+
+    private const NETWORK_METADATA_URL = 'https://status.vatsim.net/status.json';
 
     public function getNetworkDataUrl(): string
     {
@@ -28,20 +30,20 @@ class NetworkMetadataService
                     $networkResponse = $this->httpRequest()->get(self::NETWORK_METADATA_URL);
                 } catch (Exception $exception) {
                     throw new NetworkMetadataInvalidException(
-                        'Network metadata download failed: ' . $exception->getMessage()
+                        'Network metadata download failed: '.$exception->getMessage()
                     );
                 }
 
-                if (!$networkResponse->successful()) {
+                if (! $networkResponse->successful()) {
                     throw new NetworkMetadataInvalidException(
-                        'Network metadata response unsuccessful: ' . $networkResponse->status()
+                        'Network metadata response unsuccessful: '.$networkResponse->status()
                     );
                 }
 
                 $metadataValidator = $this->networkDataResponseValidator($networkResponse);
                 if ($metadataValidator->fails()) {
                     throw new NetworkMetadataInvalidException(
-                        'Network metadata invalid, messages: ' . json_encode(
+                        'Network metadata invalid, messages: '.json_encode(
                             $metadataValidator->errors()->toArray()
                         )
                     );
@@ -59,7 +61,7 @@ class NetworkMetadataService
             [
                 'data' => 'required|array',
                 'data.v3' => 'required|array',
-                'data.v3.*' => 'url'
+                'data.v3.*' => 'url',
             ]
         );
     }

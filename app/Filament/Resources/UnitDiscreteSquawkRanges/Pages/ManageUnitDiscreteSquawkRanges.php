@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\UnitDiscreteSquawkRanges\Pages;
 
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
-use App\Filament\Resources\UnitDiscreteSquawkRanges\UnitDiscreteSquawkRangeResource;
 use App\Filament\Resources\UnitDiscreteSquawkRanges\Traits\MutatesRuleData;
-use Filament\Resources\Pages\ManageRecords;
+use App\Filament\Resources\UnitDiscreteSquawkRanges\UnitDiscreteSquawkRangeResource;
 use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ManageRecords;
 
 class ManageUnitDiscreteSquawkRanges extends ManageRecords
 {

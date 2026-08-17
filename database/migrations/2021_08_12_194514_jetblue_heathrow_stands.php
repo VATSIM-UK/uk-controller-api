@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class JetblueHeathrowStands extends Migration
 {
-    const STANDS = [
+    public const STANDS = [
         '218',
         '218L',
         '218R',

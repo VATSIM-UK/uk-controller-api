@@ -16,7 +16,7 @@ class FirProximityMeasuringPoint extends Model
 
     protected $casts = [
         'latitude' => 'float',
-        'longitude' => 'float'
+        'longitude' => 'float',
     ];
 
     public function getLatLongAttribute(): Coordinate

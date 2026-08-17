@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class RoyalSuiteAssignments extends Migration
 {
-    const STAND_PRIORITIES = [
+    public const STAND_PRIORITIES = [
         '450' => 100,
         '451' => 101, // Should always be lowest priority
         '452' => 99,
@@ -19,7 +19,7 @@ class RoyalSuiteAssignments extends Migration
         '457L' => 94,
     ];
 
-    const AIRLINES = [
+    public const AIRLINES = [
         'AF1',
         'BAE',
         'BRO',

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddAirfieldElevations extends Migration
 {
-    const AIRFIELD_MAP = [
+    public const AIRFIELD_MAP = [
         'EGPD' => 215,
         'EGJA' => 290,
         'EGSL' => 286,

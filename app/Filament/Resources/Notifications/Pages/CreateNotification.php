@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Notifications\Pages;
 
 use App\Filament\Resources\Notifications\NotificationResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateNotification extends CreateRecord

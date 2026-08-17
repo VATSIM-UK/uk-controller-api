@@ -14,8 +14,8 @@ use Illuminate\Support\Collection;
  */
 class CargoFlightArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use SelectsStandsUsingStandardConditions;
     use ChecksForCargoAirlines;
+    use SelectsStandsUsingStandardConditions;
 
     private AirlineService $airlineService;
 
@@ -33,7 +33,7 @@ class CargoFlightArrivalStandAllocator implements ArrivalStandAllocator
      */
     public function allocate(NetworkAircraft $aircraft): ?int
     {
-        if (!$this->isCargoFlight($aircraft)) {
+        if (! $this->isCargoFlight($aircraft)) {
             return null;
         }
 
@@ -45,7 +45,7 @@ class CargoFlightArrivalStandAllocator implements ArrivalStandAllocator
 
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
-        if (!$this->isCargoFlight($aircraft)) {
+        if (! $this->isCargoFlight($aircraft)) {
             return collect();
         }
 

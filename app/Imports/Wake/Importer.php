@@ -10,14 +10,15 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class Importer implements WithHeadingRow, ToCollection
+class Importer implements ToCollection, WithHeadingRow
 {
     use Importable;
 
-    const TYPE_DESIGNATOR_COLUMN = 'icao_type_designator';
-    const WAKE_CATEGORY_COLUMN = 'uk_arrival_wtc';
+    public const TYPE_DESIGNATOR_COLUMN = 'icao_type_designator';
 
-    const WAKE_CATEGORY_MAP = [
+    public const WAKE_CATEGORY_COLUMN = 'uk_arrival_wtc';
+
+    public const WAKE_CATEGORY_MAP = [
         'LIGHT' => 'L',
         'SMALL' => 'S',
         'LOWER MEDIUM' => 'LM',
@@ -31,16 +32,17 @@ class Importer implements WithHeadingRow, ToCollection
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
             // Check for the data
-            if (!isset($row[self::WAKE_CATEGORY_COLUMN], $row[self::TYPE_DESIGNATOR_COLUMN])) {
+            if (! isset($row[self::WAKE_CATEGORY_COLUMN], $row[self::TYPE_DESIGNATOR_COLUMN])) {
                 throw new InvalidWakeImportException('Invalid row format');
             }
 
             // Get the wake category
             if (($wakeCategory = $this->getWakeCategory($row[self::WAKE_CATEGORY_COLUMN])) === null) {
                 $this->output->warning(
-                    'Invalid UK wake category for aircraft type ' . $row[self::TYPE_DESIGNATOR_COLUMN]
+                    'Invalid UK wake category for aircraft type '.$row[self::TYPE_DESIGNATOR_COLUMN]
                 );
                 $this->output->progressAdvance();
+
                 continue;
             }
 
@@ -57,7 +59,7 @@ class Importer implements WithHeadingRow, ToCollection
             );
 
             $categoriesToKeep = $aircraft->wakeCategories->filter(function (WakeCategory $category) {
-                return !$category->scheme->isUk();
+                return ! $category->scheme->isUk();
             })->pluck('id')->toArray();
             $aircraft->wakeCategories()->sync(array_merge($categoriesToKeep, [$wakeCategory->id]));
 
@@ -71,7 +73,7 @@ class Importer implements WithHeadingRow, ToCollection
     {
         if (
             $categoryFromDocument === null ||
-            !array_key_exists($categoryFromDocument, self::WAKE_CATEGORY_MAP)
+            ! array_key_exists($categoryFromDocument, self::WAKE_CATEGORY_MAP)
         ) {
             return null;
         }

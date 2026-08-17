@@ -6,7 +6,7 @@ return [
     ],
     'terminal' => [
         'label' => 'Terminal',
-        'helper' => 'Some airfields allocate airlines by terminal rather than specific stands. You can assign stands ' .
+        'helper' => 'Some airfields allocate airlines by terminal rather than specific stands. You can assign stands '.
             'to terminals here.',
     ],
     'identifier' => [
@@ -15,8 +15,8 @@ return [
     ],
     'type' => [
         'label' => 'Type',
-        'helper' => 'At airfields where certain stands are designated for only domestic or international flights, ' .
-            'this option can be selected to designate the type of stand. It can also be used to designate stands as Cargo only. ' .
+        'helper' => 'At airfields where certain stands are designated for only domestic or international flights, '.
+            'this option can be selected to designate the type of stand. It can also be used to designate stands as Cargo only. '.
             'NOTE that you should only set this to "domestic" or "international" if you plan to do this for all stands at an airfield.',
     ],
     'latitude' => [
@@ -66,7 +66,7 @@ return [
         ],
         'aircraft' => [
             'label' => 'Aircraft Type',
-            'helper' => 'The aircraft type that this airline will use when using this stand.'
+            'helper' => 'The aircraft type that this airline will use when using this stand.',
         ],
         'destination' => [
             'label' => 'Destination',
@@ -74,15 +74,15 @@ return [
         ],
         'full_callsign' => [
             'label' => 'Callsign',
-            'helper' => 'The part of the callsign after the ICAO code for this allocation. Must be an exact match.'
+            'helper' => 'The part of the callsign after the ICAO code for this allocation. Must be an exact match.',
         ],
         'callsign_slug' => [
             'label' => 'Partial Callsign',
-            'helper' => 'The part of the callsign after the ICAO code for this allocation. Can be partial matches.'
+            'helper' => 'The part of the callsign after the ICAO code for this allocation. Can be partial matches.',
         ],
         'priority' => [
             'label' => 'Allocation Priority',
-            'helper' => 'Priority for allocating this stand, lower value is higher priority. ' .
+            'helper' => 'Priority for allocating this stand, lower value is higher priority. '.
                 'Considered before general allocation priority. Minimum 1, maximum 9999.',
         ],
         'not_before' => [
@@ -111,7 +111,7 @@ return [
         ],
         'acars' => [
             'label' => 'Send ACARS messages for arrival stands',
-            'helper' => 'If this setting is turned on, then you will automatically be sent an ACARS message via Hoppie whenever an arrival stand is allocated for you. ' .
+            'helper' => 'If this setting is turned on, then you will automatically be sent an ACARS message via Hoppie whenever an arrival stand is allocated for you. '.
                 'Messages will be sent only if the airfield is controlled by Ground or higher.',
         ],
         'acars_uncontrolled' => [

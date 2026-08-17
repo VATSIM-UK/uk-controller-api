@@ -11,7 +11,9 @@ use Illuminate\Support\Collection;
 class DepartureAllocationService
 {
     private const DEPARTURE_DISCONNECTION_TIMEOUT_MINUTES = 5;
+
     private readonly StandAssignmentsService $assignmentsService;
+
     private readonly StandOccupationService $standOccupationService;
 
     public function __construct(
@@ -45,6 +47,7 @@ class DepartureAllocationService
         }
 
         $this->assignmentsService->createStandAssignment($aircraft->callsign, $occupiedStand->id, 'Departure');
+
         return $occupiedStand->id;
     }
 

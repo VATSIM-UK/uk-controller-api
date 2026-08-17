@@ -2,23 +2,23 @@
 
 namespace App\Models\Airfield;
 
+use App\Helpers\MinStack\MinStackDataProviderInterface;
+use App\Models\Aircraft\SpeedGroup;
+use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\Handoff;
 use App\Models\Controller\HasControllerHierarchy;
-use App\Models\Runway\Runway;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Location\Coordinate;
-use App\Models\Stand\Stand;
-use App\Models\Aircraft\SpeedGroup;
 use App\Models\MinStack\MslAirfield;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Controller\ControllerPosition;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Runway\Runway;
+use App\Models\Stand\Stand;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Helpers\MinStack\MinStackDataProviderInterface;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Location\Coordinate;
 
-class Airfield extends Model implements MinStackDataProviderInterface, HasControllerHierarchy
+class Airfield extends Model implements HasControllerHierarchy, MinStackDataProviderInterface
 {
     use HasFactory;
 
@@ -63,15 +63,11 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
         return $this->hasMany(Runway::class);
     }
 
-
     public function handoff(): BelongsTo
     {
         return $this->belongsTo(Handoff::class);
     }
 
-    /**
-     * @return HasOne
-     */
     public function msl(): HasOne
     {
         return $this->hasOne(MslAirfield::class);
@@ -89,8 +85,6 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
 
     /**
      * The facility against which the MSL should be calculated
-     *
-     * @return string
      */
     public function calculationFacility(): string
     {
@@ -99,8 +93,6 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
 
     /**
      * The transition altitude for the facility in question
-     *
-     * @return int
      */
     public function transitionAltitude(): int
     {
@@ -110,8 +102,6 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
     /**
      * True if the facility considers standard pressure (1013) to be
      * high
-     *
-     * @return bool
      */
     public function standardPressureHigh(): bool
     {
@@ -140,7 +130,6 @@ class Airfield extends Model implements MinStackDataProviderInterface, HasContro
             'destination_airfield_id'
         )->withPivot('prenote_id', 'flight_rule_id');
     }
-
 
     public function stands(): HasMany
     {

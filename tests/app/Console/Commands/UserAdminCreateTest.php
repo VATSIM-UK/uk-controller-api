@@ -10,7 +10,7 @@ use Laravel\Passport\PersonalAccessClient;
 class UserAdminCreateTest extends BaseFunctionalTestCase
 {
     const ARTISAN_COMMAND = 'user:create-admin';
-    
+
     public function testItConstructs()
     {
         $instance = new UserAdminCreate();

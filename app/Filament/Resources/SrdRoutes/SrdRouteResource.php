@@ -2,31 +2,30 @@
 
 namespace App\Filament\Resources\SrdRoutes;
 
+use App\Filament\Resources\SrdRoutes\Pages\ListSrdRoutes;
+use App\Filament\Resources\SrdRoutes\Pages\ViewSrdRoute;
+use App\Filament\Resources\SrdRoutes\RelationManagers\NotesRelationManager;
+use App\Filament\Resources\TranslatesStrings;
+use App\Models\Srd\SrdRoute;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
-use Filament\Actions\ViewAction;
-use App\Filament\Resources\SrdRoutes\Pages\ListSrdRoutes;
-use App\Filament\Resources\SrdRoutes\Pages\ViewSrdRoute;
-use App\Filament\Resources\SrdRouteResource\Pages;
-use App\Filament\Resources\SrdRoutes\RelationManagers\NotesRelationManager;
-use App\Models\Srd\SrdNote;
-use App\Models\Srd\SrdRoute;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use App\Filament\Resources\TranslatesStrings;
 
 class SrdRouteResource extends Resource
 {
     use TranslatesStrings;
 
     protected static ?string $model = SrdRoute::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map';
+
     protected static ?string $navigationLabel = 'SRD Routes';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Enroute';
 
     public static function form(Schema $schema): Schema

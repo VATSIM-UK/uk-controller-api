@@ -141,7 +141,7 @@ class SelectOptions
 
     public static function clearCache(string $class): void
     {
-        if (!array_key_exists($class, self::MODEL_CACHE_KEYS)) {
+        if (! array_key_exists($class, self::MODEL_CACHE_KEYS)) {
             throw new LogicException(sprintf('No select option for class %s', $class));
         }
 
