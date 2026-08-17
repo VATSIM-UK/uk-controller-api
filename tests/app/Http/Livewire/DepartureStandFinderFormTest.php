@@ -2,15 +2,19 @@
 
 namespace App\Http\Livewire;
 
+use App\Allocator\Stand\ArrivalStandAllocator;
 use App\BaseFilamentTestCase;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Airline\Airline;
 use App\Models\Stand\Stand;
 use App\Models\Stand\StandAllocationStatus;
+use App\Models\Vatsim\NetworkAircraft;
+use App\Services\Stand\ArrivalAllocationService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
+use Mockery;
 
 class DepartureStandFinderFormTest extends BaseFilamentTestCase
 {
@@ -346,6 +350,33 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'max_aircraft_wingspan' => null,
                     'max_aircraft_length' => null,
                 ],
+            ]);
+    }
+
+    public function testItDelegatesStandAllocationToTheArrivalAllocationService()
+    {
+        $allocator = Mockery::mock(ArrivalStandAllocator::class);
+        $allocator->shouldReceive('allocate')
+            ->once()
+            ->with(Mockery::on(function (NetworkAircraft $aircraft) {
+                return $aircraft->planned_depairport === $this->icaoCode
+                    && $aircraft->isForDeparture === true;
+            }))
+            ->andReturn(null);
+
+        $allocationService = Mockery::mock(ArrivalAllocationService::class);
+        $allocationService->shouldReceive('getAllocators')->once()->andReturn([$allocator]);
+
+        $this->app->instance(ArrivalAllocationService::class, $allocationService);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'BAW999')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'error' => 'No available stand found at EGXY that fits the B73X.',
             ]);
     }
 }
