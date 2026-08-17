@@ -21,8 +21,10 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableAr
      * @param NetworkAircraft $aircraft
      * @return integer|null
      */
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
         if ($aircraft->aircraft_id === null) {
             return null;
         }
@@ -30,6 +32,9 @@ class FallbackArrivalStandAllocator implements ArrivalStandAllocator, RankableAr
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
             $this->filterQuery(),
+            [],
+            true,
+            $type
         );
     }
 

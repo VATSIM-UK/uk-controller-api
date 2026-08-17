@@ -27,8 +27,10 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
         $this->airlineService = $airlineService;
     }
 
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
         // If the aircraft isn't a cargo airline or a cargo flight, this rule doesn't apply
         if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
             return null;
@@ -41,7 +43,9 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
 
         return $this->selectAirlineSpecificStands(
             $aircraft,
-            $this->queryFilter()
+            $this->queryFilter(),
+            [],
+            $type
         );
     }
 
@@ -51,7 +55,7 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
         if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
             return collect();
         }
-        
+
         return $this->selectRankedAirlineSpecificStands(
             $aircraft,
             $this->queryFilter()

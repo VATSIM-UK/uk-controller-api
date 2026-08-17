@@ -18,8 +18,10 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
     use SelectsFromAirlineSpecificStands;
     use ChecksForBusinessAviationAircraft;
 
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
         // If the aircraft isn't a business aviation aircraft, this rule doesn't apply
         if (!$this->isBusinessAviationAircraft($aircraft)) {
             return null;
@@ -27,7 +29,10 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
 
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            $this->queryFilter()
+            $this->queryFilter(),
+            [],
+            true,
+            $type
         );
     }
 
@@ -42,7 +47,7 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
         if (!$this->isBusinessAviationAircraft($aircraft)) {
             return collect();
         }
-        
+
         return $this->selectRankedStandsUsingStandardConditions(
             $aircraft,
             $this->queryFilter()

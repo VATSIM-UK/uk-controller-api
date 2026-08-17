@@ -31,15 +31,20 @@ class CargoAirlineFallbackStandAllocator implements ArrivalStandAllocator, Ranka
      * - Orders by common conditions (see OrdersStandsByCommonConditions)
      * - Selects the first available stand (see SelectsFirstApplicableStand)
      */
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
         if ($aircraft->aircraft_id === null || !$this->isCargoAirline($aircraft)) {
             return null;
         }
 
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            $this->queryFilter()
+            $this->queryFilter(),
+            [],
+            true,
+            $type
         );
     }
 

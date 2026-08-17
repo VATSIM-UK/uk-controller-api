@@ -19,7 +19,8 @@ trait SelectsStandsUsingStandardConditions
         NetworkAircraft $aircraft,
         Closure $specificFilters,
         array $specificOrders = [],
-        bool $includeAssignmentPriority = true
+        bool $includeAssignmentPriority = true,
+        StandAllocationType $type = StandAllocationType::Arrival
     ): ?int {
         return $this->selectFirstStand(
             $this->standardConditionsStandQuery(
@@ -27,7 +28,8 @@ trait SelectsStandsUsingStandardConditions
                 $specificFilters,
                 $specificOrders,
                 $includeAssignmentPriority,
-                false
+                false,
+                $type
             )
         );
     }
@@ -59,14 +61,15 @@ trait SelectsStandsUsingStandardConditions
         Closure $specificFilters,
         array $specificOrders = [],
         bool $includeAssignmentPriority = true,
-        bool $isRanking = false
+        bool $isRanking = false,
+        StandAllocationType $type = StandAllocationType::Arrival
     ): Builder {
         return $this->applyOrderingToStandsQuery(
             $this->joinOtherStandRequests(
                 $specificFilters(
                     $isRanking
                     ? $this->sizeAppropriateAvailableStandsAtAirfieldForRanking($aircraft)
-                    : $this->sizeAppropriateAvailableStandsAtAirfield($aircraft)
+                    : $this->sizeAppropriateAvailableStandsAtAirfield($aircraft, $type)
                 ),
                 $aircraft
             ),

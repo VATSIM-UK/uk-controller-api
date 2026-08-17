@@ -21,8 +21,10 @@ class AirlineGeneralArrivalStandAllocator implements ArrivalStandAllocator, Rank
      * (see OrdersStandsByCommonConditions)
      * - Selects the first stand that pops up
      */
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
         // We can only allocate a stand if we know the airline
         if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
             return null;
@@ -30,7 +32,9 @@ class AirlineGeneralArrivalStandAllocator implements ArrivalStandAllocator, Rank
 
         return $this->selectAirlineSpecificStands(
             $aircraft,
-            $this->queryFilter()
+            $this->queryFilter(),
+            [],
+            $type
         );
     }
 

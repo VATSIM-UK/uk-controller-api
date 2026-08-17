@@ -18,8 +18,14 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator, RankableArr
         'LENGTH(origin_slug) DESC',
     ];
 
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
+        if ($type === StandAllocationType::Departure) {
+            return null;
+        }
+
         if (!$aircraft->planned_depairport) {
             return null;
         }
@@ -28,6 +34,8 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator, RankableArr
             $aircraft,
             $this->filterQuery($aircraft),
             self::ORDER_BYS,
+            true,
+            $type
         );
     }
 

@@ -35,8 +35,10 @@ class AirlineCallsignSlugArrivalStandAllocator implements ArrivalStandAllocator,
      * (see OrdersStandsByCommonConditions)
      * - Selects the first stand that pops up
      */
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
         // We can't allocate a stand if we don't know the airline
         if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
             return null;
@@ -45,7 +47,8 @@ class AirlineCallsignSlugArrivalStandAllocator implements ArrivalStandAllocator,
         return $this->selectAirlineSpecificStands(
             $aircraft,
             $this->queryFilter($aircraft),
-            self::ORDER_BYS
+            self::ORDER_BYS,
+            $type
         );
     }
 
