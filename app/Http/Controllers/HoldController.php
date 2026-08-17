@@ -57,7 +57,7 @@ class HoldController extends BaseController
         $invalidRequest = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['string', 'required', new VatsimCallsign],
+                'callsign' => ['string', 'required', new VatsimCallsign()],
                 'navaid' => 'alpha|required',
             ]
         );

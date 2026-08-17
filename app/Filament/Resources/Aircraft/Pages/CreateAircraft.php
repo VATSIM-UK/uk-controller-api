@@ -12,6 +12,6 @@ class CreateAircraft extends CreateRecord
 
     protected function afterCreate(): void
     {
-        event(new AircraftDataUpdatedEvent);
+        event(new AircraftDataUpdatedEvent());
     }
 }

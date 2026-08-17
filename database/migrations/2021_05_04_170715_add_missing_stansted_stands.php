@@ -10,7 +10,7 @@ use App\Services\Stand\StandService;
 
 class AddMissingStanstedStands extends Migration
 {
-    const STANDS_TO_DEPRIORITISE = [
+    public const STANDS_TO_DEPRIORITISE = [
         '1',
         '9',
         '11',
@@ -36,7 +36,7 @@ class AddMissingStanstedStands extends Migration
         '64',
     ];
 
-    const NEW_MAIN_STANDS_TO_ADD = [
+    public const NEW_MAIN_STANDS_TO_ADD = [
         '1L N051.53.10.280 E000.15.10.990',
         '1R N051.53.11.000 E000.15.09.250',
         '9L N051.53.17.390 E000.14.59.460',
@@ -154,7 +154,7 @@ class AddMissingStanstedStands extends Migration
                     ];
                 })
                 ->toArray();
-            
+
             if (!empty($airlinePairings)) {
                 DB::table('airline_stand')->insert($airlinePairings);
             }
@@ -165,7 +165,7 @@ class AddMissingStanstedStands extends Migration
         DB::table('stands')
             ->whereIn('id', array_column($mappedStandsToDeprioritise, 'id'))
             ->update(['assignment_priority' => DB::raw('`assignment_priority` + 1')]);
-        
+
         DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 

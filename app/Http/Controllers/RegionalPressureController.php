@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
@@ -27,12 +28,12 @@ class RegionalPressureController extends BaseController
         $this->regionalPressureService = $regionalPressureService;
     }
 
-    public function getRegionalPressures() : JsonResponse
+    public function getRegionalPressures(): JsonResponse
     {
         return response()->json($this->regionalPressureService->getRegionalPressureArray());
     }
 
-    public function getAltimeterSettingRegions() : JsonResponse
+    public function getAltimeterSettingRegions(): JsonResponse
     {
         return response()->json(AltimeterSettingRegion::all());
     }

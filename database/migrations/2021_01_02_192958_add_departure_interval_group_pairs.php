@@ -12,7 +12,7 @@ class AddDepartureIntervalGroupPairs extends Migration
      * 1 - Second group name
      * 2 - Interval in seconds when going First group -> second group
      */
-    const PAIRS = [
+    public const PAIRS = [
         [
             'EGBB_SID',
             'EGBB_SID',

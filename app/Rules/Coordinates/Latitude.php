@@ -2,8 +2,6 @@
 
 namespace App\Rules\Coordinates;
 
-use Illuminate\Contracts\Validation\Rule;
-
 class Latitude extends Coordinate
 {
     protected function maximumAllowedValue(): float

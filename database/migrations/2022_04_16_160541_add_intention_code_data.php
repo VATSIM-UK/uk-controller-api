@@ -146,7 +146,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const EAST_SOUTH_EAST_EXIT_POINTS = [
+    public const EAST_SOUTH_EAST_EXIT_POINTS = [
         [
             'fix' => 'TRACA',
             'code' => 'D2',
@@ -181,14 +181,14 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const SOUTH_EAST_EXIT_POINTS = [
+    public const SOUTH_EAST_EXIT_POINTS = [
         [
             'fix' => 'RINTI',
             'code' => 'D4'
         ]
     ];
 
-    const EAST_EXIT_POINTS = [
+    public const EAST_EXIT_POINTS = [
         [
             'fix' => 'SOMVA',
             'code' => 'C1'
@@ -223,7 +223,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const EAST_NORTH_EAST_EXIT_POINTS = [
+    public const EAST_NORTH_EAST_EXIT_POINTS = [
         [
             'fix' => 'VAXIT',
             'code' => 'K1'
@@ -286,7 +286,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const NORTH_EXIT_POINTS = [
+    public const NORTH_EXIT_POINTS = [
         [
             'fix' => 'MATIK',
             'code' => 'R1',
@@ -317,7 +317,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const NORTH_NORTH_WEST_EXIT_POINTS = [
+    public const NORTH_NORTH_WEST_EXIT_POINTS = [
         [
             'fix' => 'RATSU',
             'code' => 'R',
@@ -328,7 +328,7 @@ class AddIntentionCodeData extends Migration
         ]
     ];
 
-    const WEST_NORTH_WEST_EXIT_POINTS = [
+    public const WEST_NORTH_WEST_EXIT_POINTS = [
         [
             'fix' => 'ATSIX',
             'code' => 'Y7',
@@ -359,7 +359,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const WEST_EXIT_POINTS = [
+    public const WEST_EXIT_POINTS = [
         [
             'fix' => 'IBROD',
             'code' => 'N7',
@@ -478,7 +478,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const WEST_SOUTH_WEST_EXIT_POINTS = [
+    public const WEST_SOUTH_WEST_EXIT_POINTS = [
         [
             'fix' => 'ARKIL',
             'code' => 'A1',
@@ -505,7 +505,7 @@ class AddIntentionCodeData extends Migration
         ],
     ];
 
-    const SOUTH_EXIT_POINTS = [
+    public const SOUTH_EXIT_POINTS = [
         [
             'fix' => 'ANNET',
             'code' => 'B4',

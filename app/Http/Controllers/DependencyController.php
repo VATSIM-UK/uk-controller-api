@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Dependency\Dependency;
@@ -19,7 +20,7 @@ class DependencyController extends BaseController
      *
      * @return JsonResponse
      */
-    public function getAllDependencies() : JsonResponse
+    public function getAllDependencies(): JsonResponse
     {
         $dependencies = Dependency::with('user')->get()->map(function (Dependency $dependency) {
             $updatedAt = $dependency->updated_at;

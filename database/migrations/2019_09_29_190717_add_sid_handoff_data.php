@@ -30,7 +30,7 @@ class AddSidHandoffData extends Migration
         DB::table('sid')->update(['handoff_id' => null]);
     }
 
-    private function getHandoffData() : array
+    private function getHandoffData(): array
     {
         return [
             // EGKK

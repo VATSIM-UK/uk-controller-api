@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Helpers\Vatsim\ControllerPositionParser;
-use App\Models\Airfield\Airfield;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\ControllerPositionAlternativeCallsign;
 use Illuminate\Support\Collection;

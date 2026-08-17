@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class MissedApproachService
 {
-    const MESSAGE_ACTIVE_MINUTES = 3;
+    public const MESSAGE_ACTIVE_MINUTES = 3;
 
     public function sendMissedApproachNotification(string $callsign): MissedApproachNotification
     {

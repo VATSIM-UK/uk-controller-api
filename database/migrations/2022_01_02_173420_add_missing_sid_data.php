@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddMissingSidData extends Migration
 {
-    const DATA = [
+    public const DATA = [
         'EGBB' => [
             [
                 'LUXTO15',

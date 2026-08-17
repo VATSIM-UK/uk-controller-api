@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use Bugsnag\BugsnagLaravel\OomBootstrapper;
-use App\Console\Commands\AllocateStandForArrival;
 use App\Console\Commands\CheckForKeyTableUpdates;
 use App\Console\Commands\CleanDepartureReleaseRequestHistory;
 use App\Console\Commands\CleanMissedApproachNotifications;

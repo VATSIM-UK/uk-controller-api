@@ -32,7 +32,7 @@ class UserConfig implements JsonSerializable
      *
      * @return string
      */
-    public function apiKey() : string
+    public function apiKey(): string
     {
         return $this->accessToken;
     }
@@ -42,7 +42,7 @@ class UserConfig implements JsonSerializable
      *
      * @return string
      */
-    public function apiUrl() : string
+    public function apiUrl(): string
     {
         return config('app.url');
     }

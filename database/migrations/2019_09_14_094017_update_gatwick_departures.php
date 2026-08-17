@@ -52,7 +52,7 @@ class UpdateGatwickDepartures extends Migration
         }
     }
 
-    private function updateSid(int $gatwickAirfieldId, string $oldIdentifier, string $newIdentifier) : void
+    private function updateSid(int $gatwickAirfieldId, string $oldIdentifier, string $newIdentifier): void
     {
         Sid::where('airfield_id', $gatwickAirfieldId)
             ->where('identifier', $oldIdentifier)

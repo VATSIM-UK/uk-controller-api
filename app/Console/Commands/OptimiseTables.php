@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class OptimiseTables extends Command
 {
-    const TABLES_TO_OPTIMISE = [
+    public const TABLES_TO_OPTIMISE = [
         'squawk_assignments_history',
         'assigned_holds',
         'assigned_holds_history',

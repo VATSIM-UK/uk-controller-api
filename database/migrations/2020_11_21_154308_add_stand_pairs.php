@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddStandPairs extends Migration
 {
-    const STAND_PAIRS_FILE = __DIR__ . '/../data/stands/2020/standpairs.csv';
+    public const STAND_PAIRS_FILE = __DIR__ . '/../data/stands/2020/standpairs.csv';
 
     /**
      * Run the migrations.

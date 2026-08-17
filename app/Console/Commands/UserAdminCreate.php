@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands;
 
 use App\Exceptions\UserAlreadyExistsException;

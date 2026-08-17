@@ -14,7 +14,7 @@ class NullLoggerFactory
      * @param array $config Config array
      * @return LoggerInterface
      */
-    public function __invoke(array $config) : LoggerInterface
+    public function __invoke(array $config): LoggerInterface
     {
         $monolog = new Logger($config['name']);
         $monolog->pushHandler(new NullHandler());

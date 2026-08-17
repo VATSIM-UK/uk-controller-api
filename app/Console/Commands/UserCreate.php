@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands;
 
 use App\Exceptions\UserAlreadyExistsException;
@@ -16,7 +17,7 @@ use InvalidArgumentException;
  */
 class UserCreate extends Command
 {
-    const INVALID_CID_MESSAGE = 'Invalid VATSIM CID provided.';
+    public const INVALID_CID_MESSAGE = 'Invalid VATSIM CID provided.';
 
     protected $signature = 'user:create {vatsim_cid}';
 

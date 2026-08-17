@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Aircraft;
 
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
@@ -129,7 +128,7 @@ class AircraftResource extends Resource
                 EditAction::make(),
                 DeleteAction::make()
                     ->after(function () {
-                        event(new AircraftDataUpdatedEvent);
+                        event(new AircraftDataUpdatedEvent());
                     }),
             ])
             ->defaultSort('code');

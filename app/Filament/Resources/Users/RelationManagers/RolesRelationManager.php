@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
-use App\Filament\Resources\Users\RelationManagers\RolesRelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
@@ -11,14 +10,13 @@ use App\Filament\Resources\TranslatesStrings;
 use Closure;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Support\Facades\Auth;
 
 class RolesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
     use TranslatesStrings;
-    
+
     protected static string $relationship = 'roles';
 
     protected static ?string $recordTitleAttribute = 'description';

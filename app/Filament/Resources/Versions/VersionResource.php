@@ -7,11 +7,9 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\RestoreAction;
 use App\Filament\Resources\Versions\Pages\ListVersions;
-use App\Filament\Resources\VersionResource\Pages;
 use App\Models\Version\Version;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TranslatesStrings;
 

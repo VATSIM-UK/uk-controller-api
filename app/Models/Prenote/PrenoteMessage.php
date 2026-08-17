@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PrenoteMessage extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes;
+    use HasFactory;
 
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     protected $fillable = [
         'callsign',

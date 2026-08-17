@@ -9,7 +9,7 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     // The seeders and the tables they affect
-    const SEEDERS = [
+    public const SEEDERS = [
         VersionTableSeeder::class => [
             'version',
         ],
@@ -155,7 +155,7 @@ class DatabaseSeeder extends Seeder
         ],
     ];
 
-    const OTHER_TABLES_TO_TRUNCATE = [
+    public const OTHER_TABLES_TO_TRUNCATE = [
         'metars',
         'missed_approach_notifications',
         'network_controller_positions',

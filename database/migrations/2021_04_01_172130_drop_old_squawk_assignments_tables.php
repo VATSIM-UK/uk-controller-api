@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 class DropOldSquawkAssignmentsTables extends Migration
 {
-    const TABLES = [
+    public const TABLES = [
         'AIRFIELD_PAIR' => 'airfield_pairing_squawk_assignments',
         'CCAMS' => 'ccams_squawk_assignments',
         'ORCAM' => 'orcam_squawk_assignments',

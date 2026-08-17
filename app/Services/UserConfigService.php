@@ -35,7 +35,7 @@ class UserConfigService implements UserConfigCreatorInterface
      * @throws ModelNotFoundException
      * @return UserConfig
      */
-    public function create(int $userCid) : UserConfig
+    public function create(int $userCid): UserConfig
     {
         return new UserConfig(
             $this->tokenService->create($userCid)

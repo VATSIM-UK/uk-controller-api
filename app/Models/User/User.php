@@ -28,7 +28,11 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName
 {
-    use HasApiTokens, Authenticatable, Authorizable, HasFactory, LogsActivity;
+    use HasApiTokens;
+    use Authenticatable;
+    use Authorizable;
+    use HasFactory;
+    use LogsActivity;
 
     // The table name
     protected $table = 'user';
@@ -49,7 +53,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'send_stand_acars_messages',
         'stand_acars_messages_uncontrolled_airfield',
     ];
-    
+
     protected $hidden = [
         'last_login_ip',
     ];

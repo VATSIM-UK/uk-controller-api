@@ -14,7 +14,7 @@ class RecordSquawkAssignmentHistory
      * @param SquawkAssignmentEvent $allocationEvent
      * @return bool
      */
-    public function handle(SquawkAssignmentEvent $allocationEvent) : void
+    public function handle(SquawkAssignmentEvent $allocationEvent): void
     {
         SquawkAssignmentsHistory::create(
             [

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Helpers\Vatsim;
 
 class ParsedControllerPosition
@@ -15,12 +14,12 @@ class ParsedControllerPosition
         $this->unitType = $unitType;
         $this->frequency = $frequency;
     }
-    
+
     public function getFacility(): string
     {
         return $this->facility;
     }
-    
+
     public function getUnitType(): string
     {
         return $this->unitType;

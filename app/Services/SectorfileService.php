@@ -9,12 +9,12 @@ use Location\Coordinate;
 
 class SectorfileService
 {
-    const SECTORFILE_LATITUDE_REGEX = "/^([N,S])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
-    const SECTORFILE_LONGITUDE_REGEX = "/^([E,W])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
-    const NATS_LATITUDE_REGEX = "/^(\\d{2})(\\d{2})(\\d{2})(\.\\d{2})?([N,S])$/";
-    const NATS_LONGITUDE_REGEX = "/^(\\d{3})(\\d{2})(\\d{2})(\.\\d{2})?([E,W])$/";
-    const MULTIPLIER_NEGATIVE = -1;
-    const MULTIPLIER_POSITIVE = 1;
+    public const SECTORFILE_LATITUDE_REGEX = "/^([N,S])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
+    public const SECTORFILE_LONGITUDE_REGEX = "/^([E,W])(\\d{3})\\.(\\d{2})\\.(\\d{2})\\.(\\d{3})$/";
+    public const NATS_LATITUDE_REGEX = "/^(\\d{2})(\\d{2})(\\d{2})(\.\\d{2})?([N,S])$/";
+    public const NATS_LONGITUDE_REGEX = "/^(\\d{3})(\\d{2})(\\d{2})(\.\\d{2})?([E,W])$/";
+    public const MULTIPLIER_NEGATIVE = -1;
+    public const MULTIPLIER_POSITIVE = 1;
 
     public static function coordinateFromNats(string $latitude, string $longitude): Coordinate
     {

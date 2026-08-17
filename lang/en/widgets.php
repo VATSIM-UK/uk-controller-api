@@ -2,9 +2,9 @@
 
 return [
     'roles' => [
-        'heading' => 'My Roles'
+        'heading' => 'My Roles',
     ],
     'status' => [
         'heading' => 'My Status',
-    ]
+    ],
 ];

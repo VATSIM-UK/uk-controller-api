@@ -82,7 +82,7 @@ class TerminalsRelationManager extends RelationManager
                     ->authorize(fn (RelationManager $livewire) => $livewire->can('detach'))
                     ->label(self::translateFormPath('remove.label'))
                     ->using(self::unpairingClosure()),
-                
+
             ])
             ->toolbarActions([
                 BulkAction::make('bulk-unpair-terminal')

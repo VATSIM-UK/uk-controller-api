@@ -12,7 +12,7 @@ use Location\Distance\Haversine;
 
 class NetworkAircraftService
 {
-    const MAX_PROCESSING_DISTANCE = 700;
+    public const MAX_PROCESSING_DISTANCE = 700;
 
     /**
      * @var Coordinate[]

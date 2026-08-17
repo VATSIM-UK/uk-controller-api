@@ -7,7 +7,7 @@ use App\Services\IntentionCode\IntentionCodeService;
 
 trait SavesIntentionCodes
 {
-    private function saveIntentionCode(array $data, ? IntentionCode $existing = null): IntentionCode
+    private function saveIntentionCode(array $data, ?IntentionCode $existing = null): IntentionCode
     {
         $previousPriority = $existing?->priority;
         $code = $existing

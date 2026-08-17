@@ -8,14 +8,12 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\AirfieldPairingSquawkRanges\Pages\ManageAirfieldPairingSquawkRange;
 use App\Filament\Helpers\HasSquawkRanges;
-use App\Filament\Resources\AirfieldPairingSquawkRangeResource\Pages;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Squawk\AirfieldPairing\AirfieldPairingSquawkRange;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class AirfieldPairingSquawkRangeResource extends Resource
 {
@@ -36,12 +34,12 @@ class AirfieldPairingSquawkRangeResource extends Resource
                     ->label(self::translateFormPath('origin.label'))
                     ->helperText(self::translateFormPath('origin.helper'))
                     ->required()
-                    ->rule(new PartialAirfieldIcao),
+                    ->rule(new PartialAirfieldIcao()),
                 TextInput::make('destination')
                     ->label(self::translateFormPath('destination.label'))
                     ->helperText(self::translateFormPath('destination.helper'))
                     ->required()
-                    ->rule(new PartialAirfieldIcao),
+                    ->rule(new PartialAirfieldIcao()),
             ]);
     }
 

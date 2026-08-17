@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class LutonSidUpdates extends Migration
 {
-    const SIDS = [
+    public const SIDS = [
         'CPT3B' => 'CPT4B',
         'CPT6C' => 'CPT7C',
         'DET2Y' => 'DET3Y',

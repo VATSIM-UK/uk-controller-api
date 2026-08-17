@@ -11,7 +11,8 @@ use TestingUtils\Traits\WithSeedUsers;
 
 class PrenoteMessageFactory extends Factory
 {
-    use WithSeedUsers, UsesAirfieldIcaoCodes;
+    use WithSeedUsers;
+    use UsesAirfieldIcaoCodes;
 
     /**
      * The name of the factory's corresponding model.

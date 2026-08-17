@@ -79,6 +79,6 @@ class CreateAirline extends CreateRecord
 
     protected function afterCreate(): void
     {
-        event(new AirlinesUpdatedEvent);
+        event(new AirlinesUpdatedEvent());
     }
 }

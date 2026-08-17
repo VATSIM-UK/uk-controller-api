@@ -4,7 +4,6 @@ namespace Database\Factories\Airfield;
 
 use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
-use App\Models\AppModelsAirfieldTerminal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TerminalFactory extends Factory

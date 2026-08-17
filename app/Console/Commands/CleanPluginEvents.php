@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Plugin\PluginEvent;
-use App\Models\Stand\StandAssignmentsHistory;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 

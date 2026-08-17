@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Terminals\Pages;
 
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Terminals\TerminalResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditTerminal extends EditRecord

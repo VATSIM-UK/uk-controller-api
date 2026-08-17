@@ -6,9 +6,9 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ControllerPositionCallsign implements Rule
 {
-    const CALLSIGN_REGEX = '^[A-Z]+(_[A-Z0-9]+)?_(DEL|GND|TWR|APP|CTR|FSS)$';
-    const REGEX_MATCHED = 1;
-    const DELIMITER = '/';
+    public const CALLSIGN_REGEX = '^[A-Z]+(_[A-Z0-9]+)?_(DEL|GND|TWR|APP|CTR|FSS)$';
+    public const REGEX_MATCHED = 1;
+    public const DELIMITER = '/';
 
     /**
      * Determine if the validation rule passes.

@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\DB;
 
 class AddHoldRestrictions extends Migration
 {
-    const MSL = 'MSL';
-    const MSLP1 = 'MSL+1';
-    const MSLP2 = 'MSL+2';
+    public const MSL = 'MSL';
+    public const MSLP1 = 'MSL+1';
+    public const MSLP2 = 'MSL+2';
 
     /**
      * Run the migrations.

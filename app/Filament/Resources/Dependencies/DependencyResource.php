@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Dependencies;
 
 use Filament\Actions\Action;
 use App\Filament\Resources\Dependencies\Pages\ListDependencies;
-use App\Filament\Resources\DependencyResource\Pages;
 use App\Models\Dependency\Dependency;
 use App\Services\DependencyService;
 use Filament\Resources\Resource;

@@ -11,10 +11,8 @@ use App\Filament\Resources\TranslatesStrings;
 use App\Helpers\Controller\FrequencyFormatter;
 use App\Models\Controller\ControllerPosition;
 use App\Services\ControllerPositionHierarchyService;
-use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 

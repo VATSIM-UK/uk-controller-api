@@ -38,7 +38,7 @@ class AddSidPrenoteData extends Migration
         DB::table('sid_prenotes')->truncate();
     }
 
-    private function getPrenoteData(array $sids, array $prenotes) : array
+    private function getPrenoteData(array $sids, array $prenotes): array
     {
         return [
             [

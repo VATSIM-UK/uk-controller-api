@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Database\DatabaseTable;
 use App\Services\DependencyService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
@@ -8,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddDependencyConcernedTables extends Migration
 {
-    const DEPENDENCY_MAP = [
+    public const DEPENDENCY_MAP = [
         'DEPENDENCY_HOLDS' => [
             'holds',
             'deemed_separated_holds',

@@ -11,7 +11,9 @@ use Illuminate\Queue\SerializesModels;
 
 class UpdateOnlineCallsigns implements ShouldQueue
 {
-    use Queueable, Dispatchable, SerializesModels;
+    use Queueable;
+    use Dispatchable;
+    use SerializesModels;
 
     public function handle(HoppieAcarsProvider $hoppie): void
     {

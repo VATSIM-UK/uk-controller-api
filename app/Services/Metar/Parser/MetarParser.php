@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services\Metar\Parser;
 
 use App\Models\Airfield\Airfield;

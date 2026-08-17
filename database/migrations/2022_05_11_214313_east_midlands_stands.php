@@ -11,7 +11,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class EastMidlandsStands extends Migration
 {
-    const STANDS_TO_ADD = [
+    public const STANDS_TO_ADD = [
         '81' => [
             '524940.68N 0011900.05W',
             'LM',
@@ -44,7 +44,7 @@ class EastMidlandsStands extends Migration
         ],
     ];
 
-    const STANDS_TO_UPDATE = [
+    public const STANDS_TO_UPDATE = [
         '20' => [
             '524943.55N 0011944.91W',
             ['21'],
@@ -71,7 +71,7 @@ class EastMidlandsStands extends Migration
         ],
     ];
 
-    const OTHER_PAIRS = [
+    public const OTHER_PAIRS = [
         '80' => [
             '81',
         ],

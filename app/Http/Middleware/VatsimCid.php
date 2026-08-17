@@ -12,7 +12,7 @@ use App\Helpers\Vatsim\VatsimCidValidator;
 class VatsimCid
 {
     // The failure message
-    const FAILURE_MESSAGE = 'Invalid VATSIM Certificate ID provided';
+    public const FAILURE_MESSAGE = 'Invalid VATSIM Certificate ID provided';
 
     /**
      * Handles the request

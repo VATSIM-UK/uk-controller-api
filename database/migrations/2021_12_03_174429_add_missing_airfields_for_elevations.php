@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddMissingAirfieldsForElevations extends Migration
 {
-    const AIRFIELDS = [
+    public const AIRFIELDS = [
         [
             'EGSL',
             '515342N',

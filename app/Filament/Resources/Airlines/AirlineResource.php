@@ -13,7 +13,6 @@ use App\Filament\Resources\Airlines\Pages\ViewAirline;
 use App\Filament\Resources\Airlines\Pages\EditAirline;
 use App\Events\Airline\AirlinesUpdatedEvent;
 use App\Filament\Helpers\SelectOptions;
-use App\Filament\Resources\AirlineResource\Pages;
 use App\Filament\Resources\Airlines\RelationManagers\StandsRelationManager;
 use App\Filament\Resources\Airlines\RelationManagers\TerminalsRelationManager;
 use App\Models\Airline\Airline;
@@ -26,7 +25,6 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TernaryFilter;
 use App\Filament\Resources\TranslatesStrings;
 
 class AirlineResource extends Resource
@@ -103,7 +101,7 @@ class AirlineResource extends Resource
                 EditAction::make(),
                 DeleteAction::make()
                     ->after(function () {
-                        event(new AirlinesUpdatedEvent);
+                        event(new AirlinesUpdatedEvent());
                     }),
             ]);
     }

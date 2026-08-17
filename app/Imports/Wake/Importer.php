@@ -14,10 +14,10 @@ class Importer implements WithHeadingRow, ToCollection
 {
     use Importable;
 
-    const TYPE_DESIGNATOR_COLUMN = 'icao_type_designator';
-    const WAKE_CATEGORY_COLUMN = 'uk_arrival_wtc';
+    public const TYPE_DESIGNATOR_COLUMN = 'icao_type_designator';
+    public const WAKE_CATEGORY_COLUMN = 'uk_arrival_wtc';
 
-    const WAKE_CATEGORY_MAP = [
+    public const WAKE_CATEGORY_MAP = [
         'LIGHT' => 'L',
         'SMALL' => 'S',
         'LOWER MEDIUM' => 'LM',

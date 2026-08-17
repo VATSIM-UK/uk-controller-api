@@ -13,7 +13,6 @@ use App\Filament\Resources\Airfields\Pages\ViewAirfield;
 use App\Filament\Resources\Airfields\Pages\EditAirfield;
 use App\Filament\Helpers\HasCoordinates;
 use App\Filament\Helpers\SelectOptions;
-use App\Filament\Resources\AirfieldResource\Pages;
 use App\Filament\Resources\Airfields\RelationManagers\ControllersRelationManager;
 use App\Filament\Resources\TranslatesStrings;
 use App\Models\Airfield\Airfield;
@@ -25,7 +24,6 @@ use Filament\Pages\Page;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class AirfieldResource extends Resource
 {

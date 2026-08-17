@@ -8,11 +8,9 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\CcamsSquawkRanges\Pages\ManageCcamsSquawkRange;
 use App\Filament\Helpers\HasSquawkRanges;
-use App\Filament\Resources\CcamsSquawkRangeResource\Pages;
 use App\Models\Squawk\Ccams\CcamsSquawkRange;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use App\Filament\Resources\TranslatesStrings;
 
 class CcamsSquawkRangeResource extends Resource

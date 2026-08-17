@@ -30,7 +30,7 @@ class UserLastLogin
             $user->last_login_ip = $request->ip();
             $user->save();
         }
-        
+
         return $next($request);
     }
 }

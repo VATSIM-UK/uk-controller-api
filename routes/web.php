@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\CoreAuthController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------

@@ -12,7 +12,7 @@ class RegionalPressureSetting extends Model
         'value',
     ];
 
-    public function altimeterSettingRegion() : BelongsTo
+    public function altimeterSettingRegion(): BelongsTo
     {
         return $this->belongsTo(AltimeterSettingRegion::class);
     }

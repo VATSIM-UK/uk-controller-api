@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Log;
 
 class GithubController
 {
-    const CONFIG_KEY_PLUGIN_LABEL = 'github.plugin.label';
-    const CONFIG_KEY_API_LABEL = 'github.api.label';
-    
+    public const CONFIG_KEY_PLUGIN_LABEL = 'github.plugin.label';
+    public const CONFIG_KEY_API_LABEL = 'github.api.label';
+
     /**
      * @var Client
      */

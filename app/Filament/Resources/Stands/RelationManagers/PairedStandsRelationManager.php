@@ -11,7 +11,6 @@ use App\Models\Stand\Stand;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +19,7 @@ class PairedStandsRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
     use TranslatesStrings;
-    
+
     protected static string $relationship = 'pairedStands';
     protected static ?string $inverseRelationship = 'pairedStands';
 

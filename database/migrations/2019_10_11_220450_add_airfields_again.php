@@ -1,15 +1,11 @@
 <?php
 
 use App\Models\Airfield\Airfield;
-use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddAirfieldsAgain extends Migration
 {
-    const AIRFIELDS = [
+    public const AIRFIELDS = [
         'EGEO',
         'EGPU',
         'EGPR',

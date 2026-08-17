@@ -21,7 +21,7 @@ class Handoff extends Model implements HasControllerHierarchy
         'updated_at',
     ];
 
-    public function controllers() : BelongsToMany
+    public function controllers(): BelongsToMany
     {
         return $this->belongsToMany(
             ControllerPosition::class,

@@ -13,7 +13,7 @@ class StandAssignment extends Model
     public const SOURCE_VAA_ALLOCATOR = 'vaa_allocator';
     public const SOURCE_SYSTEM = 'system_auto';
 
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     public $incrementing = false;
 

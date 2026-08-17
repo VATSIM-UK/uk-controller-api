@@ -2,25 +2,22 @@
 
 use App\Services\AirfieldService;
 use App\Services\DependencyService;
-use App\Services\HandoffService;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class FixWallaseyOwnership extends Migration
 {
     // The airfields whose top-downs are affected
-    const AIRFIELDS = [
+    public const AIRFIELDS = [
         'EGGP',
         'EGNR',
     ];
 
     // The callsign of PC Wallasey
-    const POSITION_WALLASEY = 'MAN_WL_CTR';
-    const POSITION_WALLASEY_PENIL = 'MAN_WP_CTR';
+    public const POSITION_WALLASEY = 'MAN_WL_CTR';
+    public const POSITION_WALLASEY_PENIL = 'MAN_WP_CTR';
 
     // The position
-    const POSITION_TO_ADD_BEFORE = 'MAN_W_CTR';
+    public const POSITION_TO_ADD_BEFORE = 'MAN_W_CTR';
 
     /**
      * Run the migrations.

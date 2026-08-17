@@ -11,7 +11,7 @@ class SquawkAssignment extends Model implements SquawkAssignmentInterface
 
     protected $keyType = 'string';
 
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     public $incrementing = false;
 

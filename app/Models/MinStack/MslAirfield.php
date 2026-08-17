@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MslAirfield extends Model
 {
-    const CREATED_AT = null;
-    const UPDATED_AT = 'generated_at';
+    public const CREATED_AT = null;
+    public const UPDATED_AT = 'generated_at';
 
     protected $primaryKey = 'airfield_id';
 

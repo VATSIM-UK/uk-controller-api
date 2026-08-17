@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddStandAirlines extends Migration
 {
-    const STAND_AIRLINES_FILE = __DIR__ . '/../data/stands/2020/standairlines.csv';
+    public const STAND_AIRLINES_FILE = __DIR__ . '/../data/stands/2020/standairlines.csv';
 
     /**
      * Run the migrations.

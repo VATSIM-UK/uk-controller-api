@@ -4,12 +4,9 @@ namespace App\Filament\Resources\SquawkAssignments;
 
 use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\SquawkAssignments\Pages\ListSquawkAssignments;
-use App\Filament\Resources\SquawkAssignmentResource\Pages;
 use App\Models\Squawk\SquawkAssignment;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
-use Filament\Tables\Filters\SelectFilter;
 use App\Filament\Resources\TranslatesStrings;
 
 class SquawkAssignmentResource extends Resource

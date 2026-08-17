@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Airfield\Airfield;
 use App\Models\Airfield\VisualReferencePoint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

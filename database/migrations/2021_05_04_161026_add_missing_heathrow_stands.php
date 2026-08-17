@@ -9,7 +9,7 @@ use App\Services\Stand\StandService;
 
 class AddMissingHeathrowStands extends Migration
 {
-    const STANDS = [
+    public const STANDS = [
         '209' => [
             'latitude' => 'N051.28.25.980',
             'longitude' => 'W000.26.59.030',
@@ -125,7 +125,7 @@ class AddMissingHeathrowStands extends Migration
                 );
             }
         }
-        
+
         DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 

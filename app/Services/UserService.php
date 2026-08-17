@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
 class UserService
 {
     // The minimum possible VATSIM CID
-    const MINIMUM_VATSIM_CID = 800000;
+    public const MINIMUM_VATSIM_CID = 800000;
 
     /**
      * Service for creating User Configuration
@@ -46,7 +46,7 @@ class UserService
     {
         User::findOrFail($userCid)->activate();
     }
-    
+
     /**
      * Sets the users account to banned.
      *
@@ -78,7 +78,7 @@ class UserService
      * @return UserConfig The users personal configuration for their plugin instance
      * @throws UserAlreadyExistsException
      */
-    public function createUser(int $userCid) : void
+    public function createUser(int $userCid): void
     {
         if (User::find($userCid)) {
             throw new UserAlreadyExistsException('User with VATSIM CID ' . $userCid . ' already exists');
@@ -109,7 +109,7 @@ class UserService
      *
      * @return string
      */
-    public function createAdminUser() : string
+    public function createAdminUser(): string
     {
         return $this->createAdminUserModel()->createToken(
             'access',
@@ -127,7 +127,7 @@ class UserService
      * @throws ModelNotFoundException
      * @return User
      */
-    public function getUser(int $userCid) : User
+    public function getUser(int $userCid): User
     {
         return User::findOrFail($userCid);
     }

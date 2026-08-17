@@ -18,7 +18,7 @@ class GroundAndDeliveryPrenotes extends Migration
             ->where('callsign', 'LIKE', '%_GND')
             ->orWhere('callsign', 'LIKE', '%_DEL')
             ->update(['sends_prenotes' => true, 'updated_at' => Carbon::now()]);
-        
+
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS_V2');
     }
 

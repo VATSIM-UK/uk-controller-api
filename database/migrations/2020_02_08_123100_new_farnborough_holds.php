@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\Airfield;
-use App\Models\Hold\Hold;
-use App\Models\Hold\HoldRestriction;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;

@@ -30,7 +30,7 @@ class AddMissingAirfields extends Migration
         }
     }
 
-    private function getAirfieldData() : array
+    private function getAirfieldData(): array
     {
         return [
             [

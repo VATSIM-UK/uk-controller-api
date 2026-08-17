@@ -11,7 +11,6 @@ use App\Filament\Resources\Terminals\Pages\CreateTerminal;
 use App\Filament\Resources\Terminals\Pages\EditTerminal;
 use App\Filament\Resources\Terminals\Pages\ViewTerminal;
 use App\Filament\Helpers\SelectOptions;
-use App\Filament\Resources\TerminalResource\Pages;
 use App\Filament\Resources\Terminals\RelationManagers\AirlinesRelationManager;
 use App\Models\Airfield\Terminal;
 use Filament\Forms\Components\Select;
@@ -20,8 +19,6 @@ use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use App\Filament\Resources\TranslatesStrings;
 

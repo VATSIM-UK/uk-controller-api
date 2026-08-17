@@ -24,7 +24,7 @@ class MinStackController extends BaseController
     /**
      * @return JsonResponse
      */
-    public function getAirfieldMinStackLevels() : JsonResponse
+    public function getAirfieldMinStackLevels(): JsonResponse
     {
         return response()->json($this->minStackLevelService->getAllAirfieldMinStackLevels());
     }
@@ -32,7 +32,7 @@ class MinStackController extends BaseController
     /**
      * @return JsonResponse
      */
-    public function getTmaMinStackLevels() : JsonResponse
+    public function getTmaMinStackLevels(): JsonResponse
     {
         return response()->json($this->minStackLevelService->getAllTmaMinStackLevels());
     }
@@ -40,7 +40,7 @@ class MinStackController extends BaseController
     /**
      * @return JsonResponse
      */
-    public function getAllMinStackLevels() : JsonResponse
+    public function getAllMinStackLevels(): JsonResponse
     {
         $return = [
             'airfield' => $this->minStackLevelService->getAllAirfieldMinStackLevels(),
@@ -54,7 +54,7 @@ class MinStackController extends BaseController
      * @param string $icao
      * @return JsonResponse
      */
-    public function getMslForAirfield(string $icao) : JsonResponse
+    public function getMslForAirfield(string $icao): JsonResponse
     {
         $msl = $this->minStackLevelService->getMinStackLevelForAirfield($icao);
 
@@ -69,7 +69,7 @@ class MinStackController extends BaseController
      * @param string $tma
      * @return JsonResponse
      */
-    public function getMslForTma(string $tma) : JsonResponse
+    public function getMslForTma(string $tma): JsonResponse
     {
         $msl = $this->minStackLevelService->getMinStackLevelForTma($tma);
 

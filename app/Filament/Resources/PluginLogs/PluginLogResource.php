@@ -5,7 +5,6 @@ namespace App\Filament\Resources\PluginLogs;
 use Filament\Schemas\Schema;
 use App\Filament\Resources\PluginLogs\Pages\ListPluginLogs;
 use App\Filament\Resources\PluginLogs\Pages\ViewPluginLog;
-use App\Filament\Resources\PluginLogResource\Pages;
 use App\Models\Plugin\PluginLog;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;

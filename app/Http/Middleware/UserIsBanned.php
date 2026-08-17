@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
  */
 class UserIsBanned
 {
-    const FAILURE_MESSAGE = 'Your plugin account has been banned. ' .
+    public const FAILURE_MESSAGE = 'Your plugin account has been banned. ' .
         'If you believe this to be an error, please contact VATSIM UK support.';
 
     /**

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateStandPriorities extends Migration
 {
-    const STANDS = [
+    public const STANDS = [
         'EGKK' => [
             // Not connected to any terminals
             50 => [

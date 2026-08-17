@@ -52,10 +52,10 @@ use Spatie\Activitylog\Models\Activity;
 class AuthServiceProvider extends ServiceProvider
 {
     // Scopes
-    const SCOPE_USER = 'user';
-    const SCOPE_USER_ADMIN = 'user-admin';
+    public const SCOPE_USER = 'user';
+    public const SCOPE_USER_ADMIN = 'user-admin';
 
-    const AUTH_SCOPES = [
+    public const AUTH_SCOPES = [
         self::SCOPE_USER => 'Can perform plugin user functions',
         self::SCOPE_USER_ADMIN => 'Can perform user administration functions',
     ];

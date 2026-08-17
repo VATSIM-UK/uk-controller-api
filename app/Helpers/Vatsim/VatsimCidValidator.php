@@ -8,13 +8,13 @@ namespace App\Helpers\Vatsim;
 class VatsimCidValidator
 {
     // The minimum possible CID
-    const MINIMUM_CID = 800000;
+    public const MINIMUM_CID = 800000;
 
     // The maximum realistic founder CID
-    const MAXIMUM_FOUNDER_CID = 800150;
+    public const MAXIMUM_FOUNDER_CID = 800150;
 
     // The minimum "normal" CID
-    const MINIMUM_MEMBER_CID = 810000;
+    public const MINIMUM_MEMBER_CID = 810000;
 
     /**
      * Validates VATSIM CIDs
@@ -22,7 +22,7 @@ class VatsimCidValidator
      * @param $cid The user CID
      * @return bool
      */
-    public static function isValid(int $cid) : bool
+    public static function isValid(int $cid): bool
     {
         return $cid >= self::MINIMUM_MEMBER_CID ||
             ($cid >= self::MINIMUM_CID && $cid <= self::MAXIMUM_FOUNDER_CID);

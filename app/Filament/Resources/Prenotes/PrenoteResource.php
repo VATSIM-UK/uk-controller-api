@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Prenotes;
 
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TagsColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use App\Filament\Resources\Prenotes\RelationManagers\ControllersRelationManager;
@@ -12,13 +11,10 @@ use App\Filament\Resources\Prenotes\Pages\ListPrenotes;
 use App\Filament\Resources\Prenotes\Pages\CreatePrenote;
 use App\Filament\Resources\Prenotes\Pages\ViewPrenote;
 use App\Filament\Resources\Prenotes\Pages\EditPrenote;
-use App\Filament\Resources\PrenoteResource\Pages;
-use App\Filament\Resources\PrenoteResource\RelationManagers;
 use App\Models\Controller\Prenote;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use App\Filament\Resources\TranslatesStrings;
 
 class PrenoteResource extends Resource

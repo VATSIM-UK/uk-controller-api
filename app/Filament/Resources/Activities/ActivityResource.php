@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Activities;
 
 use App\Filament\Resources\Activities\Pages\ListActivities;
-
 use Jacobtims\FilamentLogger\Resources\ActivityResource as BaseResource;
 use Jacobtims\FilamentLogger\Resources\ActivityResource\Pages\ViewActivity;
 

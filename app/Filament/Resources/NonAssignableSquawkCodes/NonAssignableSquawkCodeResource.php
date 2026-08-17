@@ -12,7 +12,6 @@ use App\Models\Squawk\Reserved\NonAssignableSquawkCode;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use App\Filament\Resources\TranslatesStrings;
 
 class NonAssignableSquawkCodeResource extends Resource

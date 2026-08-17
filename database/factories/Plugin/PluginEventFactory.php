@@ -3,10 +3,8 @@
 namespace Database\Factories\Plugin;
 
 use App\Models\Model;
-use App\Models\Airfield\Airfield;
 use App\Models\Plugin\PluginEvent;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class PluginEventFactory extends Factory
 {

@@ -1,8 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Exceptions\SquawkNotAllocatedException;
-use App\Exceptions\SquawkNotAssignedException;
 use App\Services\SquawkService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,13 +22,13 @@ class SquawkController extends BaseController
      *
      * @var String
      */
-    const FAILURE_SQUAWK = '7000';
+    public const FAILURE_SQUAWK = '7000';
 
     // Message prefix for successful squawk de-allocation
-    const DEALLOCATE_SUCCESS_PREFIX = 'Squawk successfully de-allocated for ';
+    public const DEALLOCATE_SUCCESS_PREFIX = 'Squawk successfully de-allocated for ';
 
     // Message prefix for unsuccessful squawk de-allocation.
-    const DEALLOCATE_FAILURE_PREFIX =  'Squawk de-allocation unsuccessful for ';
+    public const DEALLOCATE_FAILURE_PREFIX =  'Squawk de-allocation unsuccessful for ';
 
     /**
      * Service for allocating squawks
@@ -54,7 +53,7 @@ class SquawkController extends BaseController
      * @param string $callsign Callsign to check
      * @return JsonResponse
      */
-    public function getSquawkAssignment(string $callsign) : JsonResponse
+    public function getSquawkAssignment(string $callsign): JsonResponse
     {
         $assignment = $this->squawkService->getAssignedSquawk($callsign);
         if (!$assignment) {
@@ -80,7 +79,7 @@ class SquawkController extends BaseController
      * @param string $callsign The callsign to assign for
      * @return JsonResponse
      */
-    public function assignSquawk(Request $request, string $callsign) : JsonResponse
+    public function assignSquawk(Request $request, string $callsign): JsonResponse
     {
         // Check that we have a valid squawk type
         $typeCheck = $this->checkForSuppliedData(
@@ -106,7 +105,7 @@ class SquawkController extends BaseController
      * @param string $callsign The callsign to allocate the squawk to
      * @return JsonResponse
      */
-    private function assignGeneralSquawk(Request $request, string $callsign) : JsonResponse
+    private function assignGeneralSquawk(Request $request, string $callsign): JsonResponse
     {
         // Missing data check
         $check = $this->checkForSuppliedData(
@@ -154,7 +153,7 @@ class SquawkController extends BaseController
      * @param string $callsign The callsign to allocate the squawk to
      * @return JsonResponse
      */
-    public function assignLocalSquawk(Request $request, string $callsign) : JsonResponse
+    public function assignLocalSquawk(Request $request, string $callsign): JsonResponse
     {
         // Missing data check
         $check = $this->checkForSuppliedData(
@@ -204,7 +203,7 @@ class SquawkController extends BaseController
      * @param SquawkService $squawkService Service for squawk things.
      * @return Response
      */
-    public function deleteSquawkAssignment(string $callsign, SquawkService $squawkService) : Response
+    public function deleteSquawkAssignment(string $callsign, SquawkService $squawkService): Response
     {
         $squawkService->deleteSquawkAssignment($callsign);
         return response('', 204);

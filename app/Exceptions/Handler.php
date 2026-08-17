@@ -11,7 +11,6 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Throwable;
 
 /**
  * Exception handler class.

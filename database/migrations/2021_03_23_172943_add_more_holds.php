@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddMoreHolds extends Migration
 {
-    const NAVAIDS = [
+    public const NAVAIDS = [
         [
             'identifier' => 'NQY',
             'latitude' => 'N050.26.33.160',
@@ -140,7 +140,7 @@ class AddMoreHolds extends Migration
         ],
     ];
 
-    const HOLDS = [
+    public const HOLDS = [
         'NQY' => [
             [
                 'inbound_heading' => 281,

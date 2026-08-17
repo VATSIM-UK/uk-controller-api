@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class WindVariationParser implements MetarParser
 {
-    const WIND_VARIATION_REGEX = '/^(\\d{3})V(\\d{3})$/';
+    public const WIND_VARIATION_REGEX = '/^(\\d{3})V(\\d{3})$/';
 
     public function parse(Airfield $airfield, Collection $metarTokens): Collection
     {

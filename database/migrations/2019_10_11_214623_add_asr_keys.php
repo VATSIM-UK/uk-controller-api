@@ -44,7 +44,7 @@ class AddAsrKeys extends Migration
         });
     }
 
-    private function updateAsrKeys() : void
+    private function updateAsrKeys(): void
     {
         AltimeterSettingRegion::all()->each(function (AltimeterSettingRegion $asr) {
             $asr->key = 'ASR_' . strtoupper($asr->name);

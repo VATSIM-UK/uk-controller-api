@@ -15,7 +15,7 @@ class LoggerFactory
      * @param array $config
      * @return LoggerInterface
      */
-    public function __invoke(array $config) : LoggerInterface
+    public function __invoke(array $config): LoggerInterface
     {
         $monolog = new Logger($config['name']);
         $maxFiles = 7;

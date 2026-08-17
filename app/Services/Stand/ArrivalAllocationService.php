@@ -19,7 +19,7 @@ class ArrivalAllocationService
      * How many minutes before arrival the stand should be assigned
      */
     private const ASSIGN_STAND_MINUTES_BEFORE = 15.0;
-    
+
     /**
      * How recently an aircraft should have been seen to be considered for stand assignment.
      */

@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class AircraftDisconnected implements ShouldQueue
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     public NetworkAircraft $aircraft;
 

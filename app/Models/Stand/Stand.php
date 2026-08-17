@@ -7,7 +7,6 @@ use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Airline\Airline;
 use App\Models\Vatsim\NetworkAircraft;
-use App\Models\Stand\StandAllocationStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +21,7 @@ class Stand extends Model
 {
     use HasFactory;
 
-    const QUERY_AIRLINE_ID_COLUMN = 'airlines.id';
+    public const QUERY_AIRLINE_ID_COLUMN = 'airlines.id';
 
     protected $fillable = [
         'airfield_id',

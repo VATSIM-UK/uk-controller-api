@@ -8,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddMissingStands extends Migration
 {
-    const MISSING_STANDS_FILE = __DIR__ . '/../data/stands/2020/missingstands.csv';
+    public const MISSING_STANDS_FILE = __DIR__ . '/../data/stands/2020/missingstands.csv';
 
     /**
      * Run the migrations.

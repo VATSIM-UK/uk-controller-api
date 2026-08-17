@@ -11,14 +11,13 @@ use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\TranslatesStrings;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class AirlinesRelationManager extends RelationManager
 {
     use LimitsTableRecordListingOptions;
     use TranslatesStrings;
     use PairsAirlinesWithStands;
-    
+
     protected bool $allowsDuplicates = true;
     protected static string $relationship = 'airlines';
     protected static ?string $inverseRelationship = 'stands';

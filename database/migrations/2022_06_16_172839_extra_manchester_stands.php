@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class ExtraManchesterStands extends Migration
 {
-    const PIER_1_HEAVY_STANDS = [
+    public const PIER_1_HEAVY_STANDS = [
         [
             '104',
             '532208.78N 0021707.94W',
@@ -55,7 +55,7 @@ class ExtraManchesterStands extends Migration
         ],
     ];
 
-    const PIER_1_STAND_PAIRINGS = [
+    public const PIER_1_STAND_PAIRINGS = [
         '106' => [
             '108',
         ],
@@ -78,7 +78,7 @@ class ExtraManchesterStands extends Migration
         ],
     ];
 
-    const PIER_1_LOWER_MEDIUM_STANDS = [
+    public const PIER_1_LOWER_MEDIUM_STANDS = [
         [
             '101',
             '532210.66N 0021710.66W',
@@ -111,7 +111,7 @@ class ExtraManchesterStands extends Migration
         ],
     ];
 
-    const REMOTE_STANDS = [
+    public const REMOTE_STANDS = [
         [
             '905',
             '532212.97N 0021721.19W',

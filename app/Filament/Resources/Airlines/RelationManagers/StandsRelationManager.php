@@ -14,7 +14,6 @@ use App\Models\Stand\Stand;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Collection;
 
 class StandsRelationManager extends RelationManager

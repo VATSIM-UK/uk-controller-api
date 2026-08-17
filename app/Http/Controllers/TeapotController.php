@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Auth;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -19,7 +19,7 @@ class TeapotController
      *
      * @return Response
      */
-    public function normalTeapots() : JsonResponse
+    public function normalTeapots(): JsonResponse
     {
         return response()->json(
             [

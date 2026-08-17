@@ -2,9 +2,7 @@
 
 namespace App\Models\Squawk\UnitConspicuity;
 
-use App\Caster\UnitDiscreteSquawkRangeRuleCaster;
 use App\Models\Squawk\AbstractSquawkRange;
-use Illuminate\Contracts\Validation\Rule;
 
 class UnitConspicuitySquawkCode extends AbstractSquawkRange
 {

@@ -2,16 +2,11 @@
 
 namespace App\Services;
 
-use App\Exceptions\Network\NetworkMetadataInvalidException;
 use App\Helpers\Http\MakesHttpRequests;
 use Exception;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class NetworkDataDownloadService
 {

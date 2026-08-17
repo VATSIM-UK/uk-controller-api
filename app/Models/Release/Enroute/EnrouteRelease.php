@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class EnrouteRelease extends Model
 {
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
-    const CREATED_AT = 'released_at';
+    public const CREATED_AT = 'released_at';
 
     protected $fillable = [
         'callsign',

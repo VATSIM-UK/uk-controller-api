@@ -2,8 +2,6 @@
 
 namespace App\Helpers\Prenote;
 
-use App\Http\Requests\Prenote\CreatePrenoteMessage;
-
 final class CreatePrenoteMessageData
 {
     private string $callsign;

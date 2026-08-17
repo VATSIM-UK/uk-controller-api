@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Stands\Pages;
 
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Stands\StandResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditStand extends EditRecord

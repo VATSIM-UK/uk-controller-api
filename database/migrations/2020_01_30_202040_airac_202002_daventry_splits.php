@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class Airac202002DaventrySplits extends Migration
 {
-    const POSITION_DATA = [
+    public const POSITION_DATA = [
         [
             'callsign' => 'LON_CE_CTR',
             'frequency' => 127.87,

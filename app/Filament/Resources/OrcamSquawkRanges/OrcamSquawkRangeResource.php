@@ -8,13 +8,11 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\OrcamSquawkRanges\Pages\ManageOrcamSquawkRanges;
 use App\Filament\Helpers\HasSquawkRanges;
-use App\Filament\Resources\OrcamSquawkRangeResource\Pages;
 use App\Models\Squawk\Orcam\OrcamSquawkRange;
 use App\Rules\Airfield\PartialAirfieldIcao;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use App\Filament\Resources\TranslatesStrings;
 
 class OrcamSquawkRangeResource extends Resource
@@ -36,7 +34,7 @@ class OrcamSquawkRangeResource extends Resource
                     ->label(self::translateFormPath('origin.label'))
                     ->helperText(self::translateFormPath('origin.helper'))
                     ->required()
-                    ->rule(new PartialAirfieldIcao),
+                    ->rule(new PartialAirfieldIcao()),
             ]);
     }
 

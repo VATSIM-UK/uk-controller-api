@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddAirlineTerminalData extends Migration
 {
-    const AIRLINE_TERMINAL_FILE = __DIR__ . '/../data/stands/2020/terminalairlines.csv';
+    public const AIRLINE_TERMINAL_FILE = __DIR__ . '/../data/stands/2020/terminalairlines.csv';
 
     /**
      * Run the migrations.

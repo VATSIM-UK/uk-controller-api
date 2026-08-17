@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
-    const DATA = [
+return new class () extends Migration {
+    public const DATA = [
         ["code" => "CRJ1", "wingspan" => "21.23", "length" => "26.77"],
         ["code" => "CRJ2", "wingspan" => "21.23", "length" => "26.77"],
         ["code" => "CRJ7", "wingspan" => "23.25", "length" => "32.48"],
@@ -88,7 +88,7 @@ return new class extends Migration {
         ["code" => "B748", "wingspan" => "68.40", "length" => "76.25"],
         ["code" => "A388", "wingspan" => "79.75", "length" => "72.73"],
     ];
-    
+
 
     /**
      * Run the migrations.

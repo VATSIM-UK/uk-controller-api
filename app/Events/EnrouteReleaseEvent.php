@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 
 class EnrouteReleaseEvent extends HighPriorityBroadcastEvent
 {
-    const CHANNEL = 'enroute-releases';
+    public const CHANNEL = 'enroute-releases';
 
     /**
      * @var EnrouteRelease

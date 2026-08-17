@@ -12,7 +12,6 @@ use Filament\Facades\Filament;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
-use Laravel\Passport\Passport;
 use Illuminate\Validation\Rule;
 use App\Services\SectorfileService;
 use Illuminate\Support\ServiceProvider;

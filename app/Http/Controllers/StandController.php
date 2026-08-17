@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Validator;
 
 class StandController extends BaseController
 {
-    const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
+    public const AIRFIELD_STAND_STATUS_CACHE_MINUTES = 5;
     private readonly StandAssignmentsService $assignmentsService;
     private readonly AirfieldStandService $airfieldStandService;
     private readonly ArrivalAllocationService $arrivalAllocationService;
@@ -86,7 +86,7 @@ class StandController extends BaseController
         $invalidRequest = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['string', 'required', new VatsimCallsign],
+                'callsign' => ['string', 'required', new VatsimCallsign()],
                 'stand_id' => 'integer|required',
             ]
         );
@@ -174,13 +174,13 @@ class StandController extends BaseController
         $validated = Validator::make(
             $request->json()->all(),
             [
-                'callsign' => ['string', 'required', new VatsimCallsign],
+                'callsign' => ['string', 'required', new VatsimCallsign()],
                 'assignment_type' => ['string', 'required', 'in:departure,arrival'],
-                'departure_airfield' => ['string', 'required', new AirfieldIcao],
-                'arrival_airfield' => ['string', 'required_if:assignment_type,arrival', new AirfieldIcao],
+                'departure_airfield' => ['string', 'required', new AirfieldIcao()],
+                'arrival_airfield' => ['string', 'required_if:assignment_type,arrival', new AirfieldIcao()],
                 'aircraft_type' => ['string', 'required_if:assignment_type,arrival'],
-                'latitude' => ['numeric', 'required_if:assignment_type,departure', new Latitude],
-                'longitude' => ['numeric', 'required_if:assignment_type,departure', new Longitude],
+                'latitude' => ['numeric', 'required_if:assignment_type,departure', new Latitude()],
+                'longitude' => ['numeric', 'required_if:assignment_type,departure', new Longitude()],
             ]
         )->validate();
 

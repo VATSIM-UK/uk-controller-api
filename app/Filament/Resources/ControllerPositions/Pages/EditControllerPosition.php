@@ -4,7 +4,6 @@ namespace App\Filament\Resources\ControllerPositions\Pages;
 
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\ControllerPositions\ControllerPositionResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditControllerPosition extends EditRecord

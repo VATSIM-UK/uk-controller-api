@@ -2,12 +2,10 @@
 
 use App\Models\Controller\ControllerPosition;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class LondonMidlandsCallsigns extends Migration
 {
-    const CHANGES = [
+    public const CHANGES = [
         'LON_CE_CTR' => 'LON_ME_CTR',
         'LON_CW_CTR' => 'LON_MW_CTR',
         'LON_CL_CTR' => 'LON_ML_CTR',

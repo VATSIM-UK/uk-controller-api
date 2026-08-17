@@ -4,7 +4,7 @@ use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      *

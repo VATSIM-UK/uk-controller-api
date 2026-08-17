@@ -31,7 +31,7 @@ class UserPreferences extends Page implements HasForms
     {
         $this->form->fill(Auth::user()->toArray());
     }
-    
+
     public function form(Schema $schema): Schema
     {
         return $schema->components([
@@ -56,8 +56,8 @@ class UserPreferences extends Page implements HasForms
                 ]),
         ])->statePath('data');
     }
-    
-    protected function submit() : void
+
+    protected function submit(): void
     {
         Auth::user()->update($this->form->getState());
     }

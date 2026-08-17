@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class ObservationTimeParser implements MetarParser
 {
-    const TIME_PATTERN = '/^(\\d{2})(\\d{4})Z$/';
+    public const TIME_PATTERN = '/^(\\d{2})(\\d{4})Z$/';
 
     public function parse(Airfield $airfield, Collection $metarTokens): Collection
     {

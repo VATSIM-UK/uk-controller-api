@@ -7,7 +7,7 @@ return [
     'priority' => [
         'label' => 'Priority',
     ],
-        'description' => [
+    'description' => [
         'label' => 'Description',
         'helper' => 'Description of the intention code.',
     ],
@@ -25,11 +25,11 @@ return [
     ],
     'code_type' => [
         'label' => 'Code Type',
-        'helper' => 'Can either be a set code, or the last two characters of the airfield identifier.'
+        'helper' => 'Can either be a set code, or the last two characters of the airfield identifier.',
     ],
     'single_code' => [
         'label' => 'Single Code',
-        'helper' => 'For example, D1.'
+        'helper' => 'For example, D1.',
     ],
     'conditions' => [
         'conditions' => [

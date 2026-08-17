@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class EastMidlandsCargoPriority extends Migration
 {
-    const STANDS = [
+    public const STANDS = [
         '70',
         '70L',
         '70R',

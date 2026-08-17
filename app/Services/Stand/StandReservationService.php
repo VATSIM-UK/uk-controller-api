@@ -39,7 +39,7 @@ class StandReservationService
         if (!self::cidValid($vatsimCid)) {
             throw StandReservationCidNotValidException::forCid($vatsimCid);
         }
-      
+
         if (!Stand::where('id', $standId)->exists()) {
             throw StandNotFoundException::forId($standId);
         }

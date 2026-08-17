@@ -14,7 +14,7 @@ class ManageUnitConspicuitySquawkCodes extends ManageRecords
     use MutatesRuleData;
 
     protected static string $resource = UnitConspicuitySquawkCodeResource::class;
-    
+
     protected function getHeaderActions(): array
     {
         return [

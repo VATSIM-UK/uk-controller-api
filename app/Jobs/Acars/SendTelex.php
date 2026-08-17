@@ -12,7 +12,9 @@ use Illuminate\Queue\SerializesModels;
 
 class SendTelex implements ShouldQueue
 {
-    use Queueable, Dispatchable, SerializesModels;
+    use Queueable;
+    use Dispatchable;
+    use SerializesModels;
 
     private TelexMessageInterface $telex;
 

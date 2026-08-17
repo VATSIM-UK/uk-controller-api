@@ -136,7 +136,7 @@ class BaseCrudPolicy
             $this->roles
         );
     }
-    
+
     public function deleteAny(): bool
     {
         return false;

@@ -29,7 +29,7 @@ class AltimeterSettingRegion extends Model
         'adjustment',
     ];
 
-    public function airfields() : BelongsToMany
+    public function airfields(): BelongsToMany
     {
         return $this->belongsToMany(
             Airfield::class,

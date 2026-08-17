@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class SouthamptonStandardDepartures extends Migration
 {
-    const SIDS = [
+    public const SIDS = [
         'NORRY',
         'KENET',
         'GWC',

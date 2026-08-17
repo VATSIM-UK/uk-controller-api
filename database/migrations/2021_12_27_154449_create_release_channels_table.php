@@ -36,7 +36,7 @@ class CreateReleaseChannelsTable extends Migration
                 'relative_stability' => 2,
             ]
         );
-        
+
         PluginReleaseChannel::create(
             [
                 'name' => 'alpha',

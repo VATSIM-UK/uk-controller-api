@@ -2,13 +2,11 @@
 
 use App\Services\DependencyService;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class FarnboroughSidUpdates extends Migration
 {
-    const SIDS = [
+    public const SIDS = [
         'GWC1F' => 'GWC2F',
         'GWC1L' => 'GWC2L',
         'HAZEL1F' => 'HAZEL2F',

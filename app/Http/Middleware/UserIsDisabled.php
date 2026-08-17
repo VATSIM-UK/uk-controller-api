@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
  */
 class UserIsDisabled
 {
-    const FAILURE_MESSAGE = 'Your plugin account has been disabled. Please contact VATSIM UK Support.';
+    public const FAILURE_MESSAGE = 'Your plugin account has been disabled. Please contact VATSIM UK Support.';
 
     /**
      * Handle an incoming request.

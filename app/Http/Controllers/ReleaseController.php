@@ -23,7 +23,7 @@ class ReleaseController extends BaseController
         $invalidData = $this->checkForSuppliedData(
             $request,
             [
-                'callsign' => ['required', 'string', new VatsimCallsign],
+                'callsign' => ['required', 'string', new VatsimCallsign()],
                 'type' => 'required|integer',
                 'initiating_controller' => 'required|string',
                 'target_controller' => 'required|string',

@@ -8,8 +8,8 @@ use Illuminate\Support\Str;
 
 class PressureParser implements MetarParser
 {
-    const QNH_PATTERN = '/^Q(\d{4})$/';
-    const ALTIMETER_PATTERN = '/^A(\d{4})$/';
+    public const QNH_PATTERN = '/^Q(\d{4})$/';
+    public const ALTIMETER_PATTERN = '/^A(\d{4})$/';
 
     public function parse(Airfield $airfield, Collection $metarTokens): Collection
     {

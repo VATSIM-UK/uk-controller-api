@@ -5,8 +5,8 @@ use App\Models\User\RoleKeys;
 use App\Models\User\User;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
-    const USERS = [1203533, 1258635, 1169992, 1294298];
+return new class () extends Migration {
+    public const USERS = [1203533, 1258635, 1169992, 1294298];
 
     /**
      * Run the migrations.

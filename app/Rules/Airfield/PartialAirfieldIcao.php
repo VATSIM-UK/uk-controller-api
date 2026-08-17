@@ -6,8 +6,8 @@ use Illuminate\Contracts\Validation\Rule;
 
 class PartialAirfieldIcao implements Rule
 {
-    const AIRFIELD_REGEX = '/^[0-9A-Z]{1,4}$/';
-    const REGEX_MATCHED = 1;
+    public const AIRFIELD_REGEX = '/^[0-9A-Z]{1,4}$/';
+    public const REGEX_MATCHED = 1;
 
     /**
      * Determine if the validation rule passes.

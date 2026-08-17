@@ -30,7 +30,7 @@ class Tma extends Model implements MinStackDataProviderInterface
     /**
      * @return HasOne
      */
-    public function mslAirfield() : HasOne
+    public function mslAirfield(): HasOne
     {
         return $this->hasOne(Airfield::class, 'id', 'msl_airfield_id');
     }
@@ -38,7 +38,7 @@ class Tma extends Model implements MinStackDataProviderInterface
     /**
      * @return HasOne
      */
-    public function msl() : HasOne
+    public function msl(): HasOne
     {
         return $this->hasOne(MslTma::class);
     }

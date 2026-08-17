@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
@@ -9,7 +8,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class RegionalPressuresUpdatedEvent implements ShouldBroadcast
 {
-    const CHANNEL = 'rps-updates';
+    public const CHANNEL = 'rps-updates';
 
     /**
      * @var array
@@ -30,7 +29,7 @@ class RegionalPressuresUpdatedEvent implements ShouldBroadcast
      *
      * @return Channel[]
      */
-    public function broadcastOn() : array
+    public function broadcastOn(): array
     {
         return [new PrivateChannel(self::CHANNEL)];
     }

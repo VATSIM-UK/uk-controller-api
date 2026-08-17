@@ -9,7 +9,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 class RemoveDisconnectedArrivalStands implements ShouldQueue
 {
-    use Dispatchable, Queueable;
+    use Dispatchable;
+    use Queueable;
 
     public function handle(ArrivalAllocationService $arrivalAllocationService): void
     {

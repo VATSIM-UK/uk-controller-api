@@ -9,8 +9,6 @@ use App\Models\Version\PluginReleaseChannel;
 use App\Models\Version\Version;
 use Composer\Semver\Comparator;
 use Composer\Semver\VersionParser;
-use Http\Client\Common\Plugin;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use UnexpectedValueException;

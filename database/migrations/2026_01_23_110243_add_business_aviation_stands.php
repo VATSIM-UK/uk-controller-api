@@ -1,10 +1,9 @@
 <?php
 
-use App\Models\Stand\StandType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration {
+return new class () extends Migration {
     private array $businessAviationStands = [
         'EGLL' => ['449', '450', '451', '452', '453', '454', '455', '456', '457', '457L', '457R'],
         'EGKK' => ['150', '150R', '150L', '151', '152R', '152L', '160', '160R', '160L', '161', '234L','235R', '235L', '170', '171L', '171R', '172', '172L', '172R', '173', '174', '175', '175L', '175R', '176', '176L', '176R', '177', '178', '178L', '178R', '180', '180R'],

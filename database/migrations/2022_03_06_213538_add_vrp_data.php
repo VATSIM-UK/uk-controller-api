@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddVrpData extends Migration
 {
-    const VRPS = [
+    public const VRPS = [
         [
             'name' => 'A1(M) JUNCTION 4',
             'short_name' => 'A1 J4',

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Terminal extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'airfield_id',
         'key',

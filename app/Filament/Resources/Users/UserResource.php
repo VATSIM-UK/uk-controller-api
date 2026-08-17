@@ -2,10 +2,8 @@
 
 namespace App\Filament\Resources\Users;
 
-use App\Filament\Resources\Users\UserResource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TagsColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use App\Filament\Resources\Users\RelationManagers\RolesRelationManager;
@@ -13,15 +11,12 @@ use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ViewUser;
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User\User;
 use App\Models\User\UserStatus;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use App\Filament\Resources\TranslatesStrings;
 
 class UserResource extends Resource

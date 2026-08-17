@@ -9,7 +9,7 @@ class IntentionCodeFactory extends Factory
 {
     protected $model = IntentionCode::class;
 
-    const CODES = [
+    public const CODES = [
         'D1',
         'D2',
         'LL',
@@ -17,7 +17,7 @@ class IntentionCodeFactory extends Factory
         'C2',
     ];
 
-    const CONDITIONS = [
+    public const CONDITIONS = [
         [
             'type' => 'arrival_airfields',
             'airfields' => ['EGLL'],

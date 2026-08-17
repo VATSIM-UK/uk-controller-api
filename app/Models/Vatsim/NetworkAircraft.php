@@ -26,9 +26,9 @@ class NetworkAircraft extends Model
 
     private const TIME_OUT_MINUTES = 20;
 
-    const AIRCRAFT_TYPE_REGEX = '/^[0-9A-Z]{4}/';
+    public const AIRCRAFT_TYPE_REGEX = '/^[0-9A-Z]{4}/';
 
-    const AIRCRAFT_TYPE_SEPARATOR = '/';
+    public const AIRCRAFT_TYPE_SEPARATOR = '/';
 
     protected $primaryKey = 'callsign';
 

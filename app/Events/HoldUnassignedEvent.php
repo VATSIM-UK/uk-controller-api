@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 
 class HoldUnassignedEvent extends HighPriorityBroadcastEvent
 {
-    const CHANNEL = 'hold-assignments';
+    public const CHANNEL = 'hold-assignments';
 
     /**
      * @var string
@@ -31,7 +31,7 @@ class HoldUnassignedEvent extends HighPriorityBroadcastEvent
      *
      * @return Channel[]
      */
-    public function broadcastOn() : array
+    public function broadcastOn(): array
     {
         return [new PrivateChannel(self::CHANNEL)];
     }

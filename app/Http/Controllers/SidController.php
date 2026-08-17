@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\HandoffService;
 use App\Services\SidService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class SidController extends BaseController
 {

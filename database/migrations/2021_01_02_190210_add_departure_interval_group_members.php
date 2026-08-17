@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddDepartureIntervalGroupMembers extends Migration
 {
-    const GROUPS = [
+    public const GROUPS = [
         'EGBB_SID' => [
             'ADMEX1D',
             'ADMEX1M',

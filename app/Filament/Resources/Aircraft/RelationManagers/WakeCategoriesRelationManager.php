@@ -10,7 +10,6 @@ use App\Filament\Resources\TranslatesStrings;
 use App\Models\Aircraft\WakeCategory;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class WakeCategoriesRelationManager extends RelationManager
 {

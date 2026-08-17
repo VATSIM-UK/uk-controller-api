@@ -1,0 +1,5 @@
+[[repos]]
+repo = "local"
+hooks = [
+  { id = "pint", name = "Laravel Pint", entry = "vendor/bin/pint", language = "system", args = ["--preset", "psr12"], files = "\\.php$", exclude = "^tests/" },
+]

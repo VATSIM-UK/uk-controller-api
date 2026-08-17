@@ -9,7 +9,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 class OccupyStands implements ShouldQueue
 {
-    use Dispatchable, Queueable;
+    use Dispatchable;
+    use Queueable;
 
     public function handle(StandOccupationService $standService): void
     {

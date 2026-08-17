@@ -11,9 +11,9 @@ class StandAssignmentsHistory extends Model
 
     protected $table = 'stand_assignments_history';
 
-    const CREATED_AT = 'assigned_at';
+    public const CREATED_AT = 'assigned_at';
 
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     protected $fillable = [
         'callsign',

@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Navaids\RelationManagers;
 
-use App\Filament\Resources\Navaids\RelationManagers\HoldsRelationManager;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Forms\Components\TextInput;
@@ -13,7 +12,6 @@ use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Hidden;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Forms\Components\Repeater;
-use Filament\Tables\Columns\BooleanColumn;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
@@ -25,12 +23,9 @@ use App\Models\Hold\Hold;
 use App\Models\Hold\HoldRestriction;
 use App\Models\Measurement\MeasurementUnit;
 use App\Models\Runway\Runway;
-use Closure;
-use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

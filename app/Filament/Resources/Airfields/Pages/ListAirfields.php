@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Airfields\Pages;
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\Airfields\AirfieldResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListAirfields extends ListRecords

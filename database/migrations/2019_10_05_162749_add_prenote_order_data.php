@@ -38,7 +38,7 @@ class AddPrenoteOrderData extends Migration
         DB::table('prenote_orders')->truncate();
     }
 
-    private function getOrderData(array $prenotes, array $controllers) : array
+    private function getOrderData(array $prenotes, array $controllers): array
     {
         return [
 

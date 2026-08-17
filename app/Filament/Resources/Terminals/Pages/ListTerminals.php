@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Terminals\Pages;
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\Terminals\TerminalResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTerminals extends ListRecords

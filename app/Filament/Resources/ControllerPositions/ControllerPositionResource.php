@@ -7,21 +7,17 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TagsColumn;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use App\Filament\Resources\ControllerPositions\Pages\ListControllerPositions;
 use App\Filament\Resources\ControllerPositions\Pages\CreateControllerPosition;
 use App\Filament\Resources\ControllerPositions\Pages\ViewControllerPosition;
 use App\Filament\Resources\ControllerPositions\Pages\EditControllerPosition;
-use App\Filament\Resources\ControllerPositionResource\Pages;
 use App\Models\Controller\ControllerPosition;
 use App\Rules\Controller\ControllerPositionCallsign;
 use App\Rules\Controller\ControllerPositionFrequency;
-use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use App\Filament\Resources\TranslatesStrings;
 
 class ControllerPositionResource extends Resource

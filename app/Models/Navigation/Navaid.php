@@ -23,12 +23,12 @@ class Navaid extends Model
         'longitude' => 'double'
     ];
 
-    public function holds() : HasMany
+    public function holds(): HasMany
     {
         return $this->hasMany(Hold::class);
     }
 
-    public function getRouteKeyName() : string
+    public function getRouteKeyName(): string
     {
         return 'identifier';
     }

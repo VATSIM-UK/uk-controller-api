@@ -6,7 +6,6 @@ use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Illuminate\Contracts\Support\Htmlable;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Schemas\Schema;
 
 /**
  * @property \Filament\Schemas\Schema $form

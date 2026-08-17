@@ -1,12 +1,11 @@
 <?php
 
 use App\Models\Aircraft\Aircraft;
-use App\Models\Aircraft\WakeCategory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration {
-    const WINGSPAN_UPDATES = [
+return new class () extends Migration {
+    public const WINGSPAN_UPDATES = [
         'IL62' => 140.0,
         'AT2P' => 100.0,
         'AT5P' => 100.0,

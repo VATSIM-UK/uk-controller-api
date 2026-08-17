@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\TooManyTokensException;
 use App\Exceptions\UserAlreadyExistsException;
 use App\Http\Requests\User\CreateUser;
-use App\Models\User\Admin;
-use App\Providers\AuthServiceProvider;
 use App\Services\UserConfigService;
 use App\Services\UserService;
 use App\Services\UserTokenService;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends BaseController
@@ -62,7 +56,7 @@ class UserController extends BaseController
      * @param integer $cid
      * @return JsonResponse
      */
-    public function banUser(int $cid) : JsonResponse
+    public function banUser(int $cid): JsonResponse
     {
         try {
             $this->userService->banUser($cid);
@@ -84,7 +78,7 @@ class UserController extends BaseController
      * @param integer $cid
      * @return JsonResponse
      */
-    public function createUserWithPluginConfig(int $cid) : JsonResponse
+    public function createUserWithPluginConfig(int $cid): JsonResponse
     {
         try {
             return response()->json(
@@ -107,7 +101,7 @@ class UserController extends BaseController
      * @param integer $cid
      * @return JsonResponse
      */
-    public function createUser(CreateUser $request) : JsonResponse
+    public function createUser(CreateUser $request): JsonResponse
     {
         $cid = $request->validated('cid');
         try {
@@ -130,7 +124,7 @@ class UserController extends BaseController
      * @param integer $cid
      * @return JsonResponse
      */
-    public function createUserToken(int $cid) : JsonResponse
+    public function createUserToken(int $cid): JsonResponse
     {
         try {
             return response()->json(
@@ -151,7 +145,7 @@ class UserController extends BaseController
      * @param string $tokenId
      * @return JsonResponse
      */
-    public function deleteUserToken(string $tokenId) : JsonResponse
+    public function deleteUserToken(string $tokenId): JsonResponse
     {
         try {
             return response()->json(
@@ -172,7 +166,7 @@ class UserController extends BaseController
      * @param integer $cid
      * @return JsonResponse
      */
-    public function disableUser(int $cid) : JsonResponse
+    public function disableUser(int $cid): JsonResponse
     {
         try {
             $this->userService->banUser($cid);
@@ -193,7 +187,7 @@ class UserController extends BaseController
      * @param integer $cid
      * @return JsonResponse
      */
-    public function getUser(int $cid) : JsonResponse
+    public function getUser(int $cid): JsonResponse
     {
         try {
             return response()->json($this->userService->getUser($cid));
@@ -212,7 +206,7 @@ class UserController extends BaseController
      * @param integer $cid
      * @return JsonResponse
      */
-    public function reactivateUser(int $cid) : JsonResponse
+    public function reactivateUser(int $cid): JsonResponse
     {
         try {
             $this->userService->reactivateUser($cid);

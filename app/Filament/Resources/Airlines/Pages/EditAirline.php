@@ -13,12 +13,12 @@ class EditAirline extends EditRecord
 
     protected function afterSave(): void
     {
-        event(new AirlinesUpdatedEvent);
+        event(new AirlinesUpdatedEvent());
     }
 
     protected function afterDelete(): void
     {
-        event(new AirlinesUpdatedEvent);
+        event(new AirlinesUpdatedEvent());
     }
 
     protected function getHeaderActions(): array
@@ -26,7 +26,7 @@ class EditAirline extends EditRecord
         return [
             DeleteAction::make()
                 ->after(function () {
-                    event(new AirlinesUpdatedEvent);
+                    event(new AirlinesUpdatedEvent());
                 }),
         ];
     }

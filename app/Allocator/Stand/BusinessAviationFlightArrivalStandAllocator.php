@@ -3,7 +3,6 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -42,7 +41,7 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
         if (!$this->isBusinessAviationAircraft($aircraft)) {
             return collect();
         }
-        
+
         return $this->selectRankedStandsUsingStandardConditions(
             $aircraft,
             $this->queryFilter()

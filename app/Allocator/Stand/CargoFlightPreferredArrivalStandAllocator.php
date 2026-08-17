@@ -51,7 +51,7 @@ class CargoFlightPreferredArrivalStandAllocator implements ArrivalStandAllocator
         if (!$this->isCargoAirline($aircraft) && !$this->isCargoFlight($aircraft)) {
             return collect();
         }
-        
+
         return $this->selectRankedAirlineSpecificStands(
             $aircraft,
             $this->queryFilter()

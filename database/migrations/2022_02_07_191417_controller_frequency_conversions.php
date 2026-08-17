@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class ControllerFrequencyConversions extends Migration
 {
-    const TO_UPDATE_PATTERN = '/^(\d{3})\.(\d)([27])$/';
+    public const TO_UPDATE_PATTERN = '/^(\d{3})\.(\d)([27])$/';
 
     /**
      * Run the migrations.

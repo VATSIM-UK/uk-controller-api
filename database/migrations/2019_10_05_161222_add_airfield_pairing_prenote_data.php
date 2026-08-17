@@ -38,7 +38,7 @@ class AddAirfieldPairingPrenoteData extends Migration
         DB::table('airfield_pairing_prenotes')->truncate();
     }
 
-    private function getPairingData(array $airfields, array $prenotes) : array
+    private function getPairingData(array $airfields, array $prenotes): array
     {
         return [
             [

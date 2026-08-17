@@ -16,7 +16,7 @@ class UserTokenService
      * @throws ModelNotFoundException
      * @return string
      */
-    public function create(int $userCid) : string
+    public function create(int $userCid): string
     {
         $user = User::findOrFail($userCid);
 
@@ -29,7 +29,7 @@ class UserTokenService
      * @param string $tokenId
      * @return bool
      */
-    public function delete(string $tokenId) : bool
+    public function delete(string $tokenId): bool
     {
         $token = Token::findOrFail($tokenId);
         return $token->delete();
