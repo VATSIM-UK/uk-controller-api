@@ -15,8 +15,10 @@ class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator, Ran
      * This allocator uses the standard SelectsFromAirlineSpecificStands trait to generate a stand query,
      * with additional filters that only stands for a specific aircraft type are selected.
      */
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
         // We cant allocate a stand if we don't know the airline or aircraft type
         if ($aircraft->airline_id === null || $aircraft->aircraft_id === null) {
             return null;
@@ -24,7 +26,9 @@ class AirlineAircraftArrivalStandAllocator implements ArrivalStandAllocator, Ran
 
         return $this->selectAirlineSpecificStands(
             $aircraft,
-            $this->queryFilter($aircraft)
+            $this->queryFilter($aircraft),
+            [],
+            $type
         );
     }
 

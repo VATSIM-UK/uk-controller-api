@@ -11,5 +11,8 @@ use App\Models\Vatsim\NetworkAircraft;
  */
 interface ArrivalStandAllocator
 {
-    public function allocate(NetworkAircraft $aircraft): ?int;
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int;
 }

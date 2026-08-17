@@ -26,7 +26,8 @@ trait SelectsFromAirlineSpecificStands
     private function selectAirlineSpecificStands(
         NetworkAircraft $aircraft,
         Closure $specificFilters,
-        array $specificOrders = []
+        array $specificOrders = [],
+        StandAllocationType $type = StandAllocationType::Arrival
     ): ?int {
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
@@ -35,7 +36,8 @@ trait SelectsFromAirlineSpecificStands
                 $specificOrders,
                 ['airline_stand.priority ASC'],
             ),
-            false
+            false,
+            $type
         );
     }
 

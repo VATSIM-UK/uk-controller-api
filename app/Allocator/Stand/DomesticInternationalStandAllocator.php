@@ -12,44 +12,61 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 {
     use SelectsStandsUsingStandardConditions;
 
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
-        if (! $aircraft->planned_depairport || ! $aircraft->aircraft_id) {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
+        if ($this->comparisonAirfield($aircraft, $type) === null || ! $aircraft->aircraft_id) {
             return null;
         }
 
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            $this->queryFilter($aircraft)
+            $this->queryFilter($aircraft, $type),
+            [],
+            true,
+            $type
         );
     }
 
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
-        if (! $aircraft->planned_depairport || ! $aircraft->aircraft_id) {
+        if ($this->comparisonAirfield($aircraft, StandAllocationType::Arrival) === null || ! $aircraft->aircraft_id) {
             return collect();
         }
 
         return $this->selectRankedStandsUsingStandardConditions(
             $aircraft,
-            $this->queryFilter($aircraft)
+            $this->queryFilter($aircraft, StandAllocationType::Arrival)
         );
     }
 
-    private function queryFilter(NetworkAircraft $aircraft): Closure
+    private function queryFilter(NetworkAircraft $aircraft, StandAllocationType $type): Closure
     {
-        return fn (Builder $query) => $this->getDomesticInternationalScope($aircraft, $query);
+        return fn (Builder $query) => $this->getDomesticInternationalScope($aircraft, $query, $type);
     }
 
-    protected function getDomesticInternationalScope(NetworkAircraft $aircraft, Builder $builder): Builder
-    {
-        return $this->isDomestic($aircraft)
+    protected function getDomesticInternationalScope(
+        NetworkAircraft $aircraft,
+        Builder $builder,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): Builder {
+        return $this->isDomestic($aircraft, $type)
             ? $builder->domestic()
             : $builder->international();
     }
 
-    private function isDomestic(NetworkAircraft $aircraft): bool
+    private function isDomestic(NetworkAircraft $aircraft, StandAllocationType $type): bool
     {
-        return Str::startsWith($aircraft->planned_depairport, ['EG', 'EI']);
+        return Str::startsWith($this->comparisonAirfield($aircraft, $type), ['EG', 'EI']);
+    }
+
+    private function comparisonAirfield(NetworkAircraft $aircraft, StandAllocationType $type): ?string
+    {
+        $airfield = $type === StandAllocationType::Arrival
+            ? $aircraft->planned_depairport
+            : $aircraft->planned_destairport;
+
+        return $airfield ?: null;
     }
 }

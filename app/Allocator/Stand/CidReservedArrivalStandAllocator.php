@@ -12,8 +12,14 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class CidReservedArrivalStandAllocator implements ArrivalStandAllocator
 {
-    public function allocate(NetworkAircraft $aircraft): ?int
-    {
+    public function allocate(
+        NetworkAircraft $aircraft,
+        StandAllocationType $type = StandAllocationType::Arrival
+    ): ?int {
+        if ($type === StandAllocationType::Departure) {
+            return null;
+        }
+
         $reservation = StandReservation::with('stand')
             ->whereHas('stand', function (Builder $standQuery) {
                 $standQuery->unoccupied()->unassigned();
