@@ -14,13 +14,15 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 
     public function allocate(NetworkAircraft $aircraft): ?int
     {
-        if (! $aircraft->planned_depairport || ! $aircraft->aircraft_id) {
+        $isForDeparture = $aircraft->isForDeparture ?? false;
+
+        if ($this->comparisonAirfield($aircraft, $isForDeparture) === null || ! $aircraft->aircraft_id) {
             return null;
         }
 
         return $this->selectStandsUsingStandardConditions(
             $aircraft,
-            $this->queryFilter($aircraft)
+            $this->queryFilter($aircraft, $isForDeparture)
         );
     }
 
@@ -32,24 +34,36 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 
         return $this->selectRankedStandsUsingStandardConditions(
             $aircraft,
-            $this->queryFilter($aircraft)
+            $this->queryFilter($aircraft, false)
         );
     }
 
-    private function queryFilter(NetworkAircraft $aircraft): Closure
+    private function queryFilter(NetworkAircraft $aircraft, bool $isForDeparture): Closure
     {
-        return fn (Builder $query) => $this->getDomesticInternationalScope($aircraft, $query);
+        return fn (Builder $query) => $this->getDomesticInternationalScope($aircraft, $query, $isForDeparture);
     }
 
-    protected function getDomesticInternationalScope(NetworkAircraft $aircraft, Builder $builder): Builder
-    {
-        return $this->isDomestic($aircraft)
+    protected function getDomesticInternationalScope(
+        NetworkAircraft $aircraft,
+        Builder $builder,
+        bool $isForDeparture = false
+    ): Builder {
+        return $this->isDomestic($aircraft, $isForDeparture)
             ? $builder->domestic()
             : $builder->international();
     }
 
-    private function isDomestic(NetworkAircraft $aircraft): bool
+    private function isDomestic(NetworkAircraft $aircraft, bool $isForDeparture): bool
     {
-        return Str::startsWith($aircraft->planned_depairport, ['EG', 'EI']);
+        return Str::startsWith($this->comparisonAirfield($aircraft, $isForDeparture), ['EG', 'EI']);
+    }
+
+    private function comparisonAirfield(NetworkAircraft $aircraft, bool $isForDeparture): ?string
+    {
+        $airfield = $isForDeparture
+            ? $aircraft->planned_destairport
+            : $aircraft->planned_depairport;
+
+        return $airfield ?: null;
     }
 }
