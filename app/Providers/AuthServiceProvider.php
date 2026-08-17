@@ -44,18 +44,19 @@ use App\Policies\ReadOnlyWithRolePolicy;
 use App\Policies\UserPolicy;
 use App\Services\UserConfigCreatorInterface;
 use App\Services\UserConfigService;
-use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Carbon;
 use Laravel\Passport\Passport;
 use Spatie\Activitylog\Models\Activity;
 
 class AuthServiceProvider extends ServiceProvider
 {
     // Scopes
-    const SCOPE_USER = 'user';
-    const SCOPE_USER_ADMIN = 'user-admin';
+    public const SCOPE_USER = 'user';
 
-    const AUTH_SCOPES = [
+    public const SCOPE_USER_ADMIN = 'user-admin';
+
+    public const AUTH_SCOPES = [
         self::SCOPE_USER => 'Can perform plugin user functions',
         self::SCOPE_USER_ADMIN => 'Can perform user administration functions',
     ];
@@ -111,9 +112,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
-    }
+    public function register() {}
 
     /**
      * Bootstrap services.

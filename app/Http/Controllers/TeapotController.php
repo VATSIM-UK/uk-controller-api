@@ -1,15 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Auth;
 use Illuminate\Http\JsonResponse;
 
 /**
  * A very basic controller for simply utils connectivity and middleware.
  *
  * Class DefaultController
- *
- * @package App\Http\Controllers
  */
 class TeapotController
 {
@@ -19,7 +17,7 @@ class TeapotController
      *
      * @return Response
      */
-    public function normalTeapots() : JsonResponse
+    public function normalTeapots(): JsonResponse
     {
         return response()->json(
             [

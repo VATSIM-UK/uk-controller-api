@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use Filament\Schemas\Components\Grid;
 use App\Filament\Helpers\SelectOptions;
 use App\Models\Airfield\Airfield;
 use App\Rules\Airfield\AirfieldIcao;
@@ -11,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Schemas\Components\Grid;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -21,7 +21,9 @@ class StandPredictorForm extends Component implements HasForms
     public ?string $callsign = null;
 
     public ?string $arrivalAirfield = null;
+
     public ?string $departureAirfield = null;
+
     public ?int $aircraftType = null;
 
     protected $messages = [
@@ -47,7 +49,7 @@ class StandPredictorForm extends Component implements HasForms
                         ->helperText('The aircraft type designator, e.g. B738, A320.'),
                     TextInput::make('departureAirfield')
                         ->label('Departure Airfield')
-                        ->rule(new AirfieldIcao())
+                        ->rule(new AirfieldIcao)
                         ->alpha()
                         ->required()
                         ->helperText('ICAO code of the origin airfield, e.g. EGLL.'),
@@ -57,7 +59,7 @@ class StandPredictorForm extends Component implements HasForms
                         ->required()
                         ->searchable()
                         ->helperText('The destination airfield within the UK.'),
-                ])
+                ]),
         ];
     }
 

@@ -7,7 +7,7 @@ return [
     ],
     'aerodrome_reference_code' => [
         'label' => 'Aerodrome Reference',
-        'helper' => 'Used to determine which stands this aircraft type can use.'
+        'helper' => 'Used to determine which stands this aircraft type can use.',
     ],
     'wingspan' => [
         'label' => 'Wingspan (m)',
@@ -22,10 +22,10 @@ return [
     'wake_categories' => [
         'category' => [
             'label' => 'Category',
-        ]
+        ],
     ],
     'is_business_aviation' => [
         'label' => 'Is Business Aviation',
         'helper' => 'Aircraft designated as business aviation will always be assigned business aviation stands in lieu of specific airline assignments',
-    ]
+    ],
 ];

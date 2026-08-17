@@ -2,15 +2,14 @@
 
 namespace App\Filament\Resources\Dependencies;
 
-use Filament\Actions\Action;
 use App\Filament\Resources\Dependencies\Pages\ListDependencies;
-use App\Filament\Resources\DependencyResource\Pages;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Dependency\Dependency;
 use App\Services\DependencyService;
+use Filament\Actions\Action;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\TranslatesStrings;
+use Filament\Tables\Table;
 
 class DependencyResource extends Resource
 {
@@ -18,8 +17,9 @@ class DependencyResource extends Resource
 
     protected static ?string $model = Dependency::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = 'Plugin';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Plugin';
 
     public static function table(Table $table): Table
     {

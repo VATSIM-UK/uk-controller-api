@@ -9,7 +9,7 @@ class AddSpeedGroupLinks extends Migration
     /*
      * Lead group => follow group => penalty
      */
-    const PENALTY_GROUPS = [
+    public const PENALTY_GROUPS = [
         'EGKK_GROUP_1' => [
             'EGKK_GROUP_6' => 300,
             'EGKK_GROUP_5' => 240,
@@ -269,7 +269,7 @@ class AddSpeedGroupLinks extends Migration
     /**
      * Lead group => follow group => set interval to
      */
-    const SET_INTERVAL_GROUPS = [
+    public const SET_INTERVAL_GROUPS = [
         'EGGW_GROUP_2' => [
             'EGGW_GROUP_0' => 60,
         ],

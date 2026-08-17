@@ -23,8 +23,7 @@ class AddFirProximityMeasuringPoints extends Migration
                     ->get()
                     ->map(function ($point) use ($egtt, $egpx) {
                         return [
-                            'flight_information_region_id' =>
-                                Str::contains($point->description, 'EGTT') ? $egtt : $egpx,
+                            'flight_information_region_id' => Str::contains($point->description, 'EGTT') ? $egtt : $egpx,
                             'latitude' => $point->latitude,
                             'longitude' => $point->longitude,
                             'description' => $point->description,

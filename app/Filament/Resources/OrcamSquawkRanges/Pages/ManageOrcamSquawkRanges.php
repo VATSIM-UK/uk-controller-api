@@ -4,8 +4,8 @@ namespace App\Filament\Resources\OrcamSquawkRanges\Pages;
 
 use App\Filament\Resources\OrcamSquawkRanges\OrcamSquawkRangeResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
-use Filament\Resources\Pages\ManageRecords;
 use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ManageRecords;
 
 class ManageOrcamSquawkRanges extends ManageRecords
 {

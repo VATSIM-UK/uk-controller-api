@@ -5,9 +5,7 @@ use App\Services\DependencyService;
 use App\Services\HandoffService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AddNewMpcPositions extends Migration
 {
@@ -49,7 +47,7 @@ class AddNewMpcPositions extends Migration
                 'MAN_CTR',
                 'LON_N_CTR',
                 'LON_CTR',
-                'EGCC_N_APP'
+                'EGCC_N_APP',
             ]
         );
 

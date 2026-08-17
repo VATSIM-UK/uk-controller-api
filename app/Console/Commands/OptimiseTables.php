@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class OptimiseTables extends Command
 {
-    const TABLES_TO_OPTIMISE = [
+    public const TABLES_TO_OPTIMISE = [
         'squawk_assignments_history',
         'assigned_holds',
         'assigned_holds_history',
@@ -45,12 +45,12 @@ class OptimiseTables extends Command
     {
         $this->info('Optimising database tables');
         foreach (self::TABLES_TO_OPTIMISE as $table) {
-            if (!Schema::hasTable($table)) {
-                throw new TableDoesNotExistException('Table doesnt exist to be optimised ' . $table);
+            if (! Schema::hasTable($table)) {
+                throw new TableDoesNotExistException('Table doesnt exist to be optimised '.$table);
             }
 
-            DB::statement('OPTIMIZE TABLE ' . $table);
-            $this->info('Optimised ' . $table);
+            DB::statement('OPTIMIZE TABLE '.$table);
+            $this->info('Optimised '.$table);
         }
         $this->info('Finished optimising tables');
     }

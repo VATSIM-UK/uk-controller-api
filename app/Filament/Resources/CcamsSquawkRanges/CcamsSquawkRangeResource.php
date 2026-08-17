@@ -2,18 +2,16 @@
 
 namespace App\Filament\Resources\CcamsSquawkRanges;
 
+use App\Filament\Helpers\HasSquawkRanges;
+use App\Filament\Resources\CcamsSquawkRanges\Pages\ManageCcamsSquawkRange;
+use App\Filament\Resources\TranslatesStrings;
+use App\Models\Squawk\Ccams\CcamsSquawkRange;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\CcamsSquawkRanges\Pages\ManageCcamsSquawkRange;
-use App\Filament\Helpers\HasSquawkRanges;
-use App\Filament\Resources\CcamsSquawkRangeResource\Pages;
-use App\Models\Squawk\Ccams\CcamsSquawkRange;
-use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
-use App\Filament\Resources\TranslatesStrings;
 
 class CcamsSquawkRangeResource extends Resource
 {
@@ -21,9 +19,12 @@ class CcamsSquawkRangeResource extends Resource
     use TranslatesStrings;
 
     protected static ?string $model = CcamsSquawkRange::class;
-    protected static string | \UnitEnum | null $navigationGroup = 'Squawk Ranges';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Squawk Ranges';
+
     protected static ?string $navigationLabel = 'CCAMS';
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-wifi';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wifi';
 
     public static function form(Schema $schema): Schema
     {

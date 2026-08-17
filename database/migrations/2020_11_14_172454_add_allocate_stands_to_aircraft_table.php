@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 class AddAllocateStandsToAircraftTable extends Migration
 {
-    const LIGHT_STAND_ALLOCATIONS = [
+    public const LIGHT_STAND_ALLOCATIONS = [
         'DH8A',
         'DH8B',
         'DH8C',

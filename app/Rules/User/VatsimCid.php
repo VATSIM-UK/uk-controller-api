@@ -2,29 +2,27 @@
 
 namespace App\Rules\User;
 
-use Illuminate\Translation\PotentiallyTranslatedString;
 use App\Helpers\Vatsim\VatsimCidValidator;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class VatsimCid implements ValidationRule
 {
     /**
      * Run the validation rule.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param Closure(string):PotentiallyTranslatedString $fail
-     * @return void
+     * @param  Closure(string):PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!is_integer($value)) {
+        if (! is_int($value)) {
             $fail('CID is not an integer');
+
             return;
         }
 
-        if (!VatsimCidValidator::isValid($value)) {
+        if (! VatsimCidValidator::isValid($value)) {
             $fail('CID is invalid');
         }
     }

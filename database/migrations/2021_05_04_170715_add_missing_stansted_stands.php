@@ -1,16 +1,16 @@
 <?php
 
+use App\Services\DependencyService;
 use App\Services\SectorfileService;
+use App\Services\Stand\StandService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Services\DependencyService;
-use App\Services\Stand\StandService;
 
 class AddMissingStanstedStands extends Migration
 {
-    const STANDS_TO_DEPRIORITISE = [
+    public const STANDS_TO_DEPRIORITISE = [
         '1',
         '9',
         '11',
@@ -36,7 +36,7 @@ class AddMissingStanstedStands extends Migration
         '64',
     ];
 
-    const NEW_MAIN_STANDS_TO_ADD = [
+    public const NEW_MAIN_STANDS_TO_ADD = [
         '1L N051.53.10.280 E000.15.10.990',
         '1R N051.53.11.000 E000.15.09.250',
         '9L N051.53.17.390 E000.14.59.460',
@@ -101,7 +101,7 @@ class AddMissingStanstedStands extends Migration
                             'id' => $stand->id,
                             'assignment_priority' => $stand->assignment_priority,
                             'type_id' => $stand->type_id,
-                        ]
+                        ],
                     ];
                 }
             )
@@ -122,7 +122,7 @@ class AddMissingStanstedStands extends Migration
                     'longitude' => $coordinate->getLng(),
                     'assignment_priority' => $relatedStand['assignment_priority'],
                     'wake_category_id' => $lowerMedium,
-                    'type_id' => $relatedStand['type_id']
+                    'type_id' => $relatedStand['type_id'],
                 ]
             );
 
@@ -154,18 +154,17 @@ class AddMissingStanstedStands extends Migration
                     ];
                 })
                 ->toArray();
-            
-            if (!empty($airlinePairings)) {
+
+            if (! empty($airlinePairings)) {
                 DB::table('airline_stand')->insert($airlinePairings);
             }
         }
-
 
         // Deprioritise the non L/R stands
         DB::table('stands')
             ->whereIn('id', array_column($mappedStandsToDeprioritise, 'id'))
             ->update(['assignment_priority' => DB::raw('`assignment_priority` + 1')]);
-        
+
         DependencyService::touchDependencyByKey(StandService::STAND_DEPENDENCY_KEY);
     }
 

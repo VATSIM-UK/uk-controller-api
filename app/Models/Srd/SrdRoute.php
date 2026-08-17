@@ -21,7 +21,7 @@ class SrdRoute extends Model
 
     protected $casts = [
         'minimum_level' => 'integer',
-        'maximum_level' => 'integer'
+        'maximum_level' => 'integer',
     ];
 
     public function notes(): BelongsToMany

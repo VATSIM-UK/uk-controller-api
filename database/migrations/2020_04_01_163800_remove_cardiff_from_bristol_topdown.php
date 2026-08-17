@@ -1,9 +1,7 @@
 <?php
 
 use App\Services\AirfieldService;
-use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 
 class RemoveCardiffFromBristolTopdown extends Migration
 {

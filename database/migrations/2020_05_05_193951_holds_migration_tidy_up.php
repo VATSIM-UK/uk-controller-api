@@ -37,7 +37,7 @@ class HoldsMigrationTidyUp extends Migration
             ->get()
             ->mapWithKeys(function ($result) {
                 return [
-                    $result->id => $result->identifier
+                    $result->id => $result->identifier,
                 ];
             });
 

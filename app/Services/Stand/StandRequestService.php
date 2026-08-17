@@ -10,7 +10,7 @@ class StandRequestService
 {
     public function activeRequestForAircraft(NetworkAircraft $aircraft): ?StandRequest
     {
-        if (!$aircraft->cid) {
+        if (! $aircraft->cid) {
             return null;
         }
 

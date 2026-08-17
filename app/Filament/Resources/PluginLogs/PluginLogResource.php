@@ -2,17 +2,16 @@
 
 namespace App\Filament\Resources\PluginLogs;
 
-use Filament\Schemas\Schema;
 use App\Filament\Resources\PluginLogs\Pages\ListPluginLogs;
 use App\Filament\Resources\PluginLogs\Pages\ViewPluginLog;
-use App\Filament\Resources\PluginLogResource\Pages;
+use App\Filament\Resources\TranslatesStrings;
 use App\Models\Plugin\PluginLog;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\TranslatesStrings;
+use Filament\Tables\Table;
 
 class PluginLogResource extends Resource
 {
@@ -20,8 +19,9 @@ class PluginLogResource extends Resource
 
     protected static ?string $model = PluginLog::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rss';
-    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rss';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     public static function form(Schema $schema): Schema
     {
@@ -38,7 +38,7 @@ class PluginLogResource extends Resource
                     ->required(),
                 Textarea::make('metadata')
                     ->columnSpan('full')
-                    ->formatStateUsing(fn (array|null $state) => json_encode($state, JSON_PRETTY_PRINT))
+                    ->formatStateUsing(fn (?array $state) => json_encode($state, JSON_PRETTY_PRINT))
                     ->label(self::translateFormPath('metadata.label'))
                     ->required(),
             ]);

@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Pages\Dashboard;
 use App\Filament\Pages\Login;
 use App\Filament\Widgets\ArrivalsBoard;
 use App\Filament\Widgets\MyRoles;
@@ -11,15 +10,12 @@ use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
-use Filament\Pages;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Facades\FilamentColor;
 use Filament\View\PanelsRenderHook;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -60,7 +56,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->plugins([
-                //FilamentLoggerPlugin::make(),
+                // FilamentLoggerPlugin::make(),
             ])
             ->default()
             ->id('admin')

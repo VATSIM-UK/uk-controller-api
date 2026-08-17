@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAdminTable extends Migration
 {
@@ -12,7 +13,7 @@ class CreateAdminTable extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\DB::statement(
+        DB::statement(
             "CREATE TABLE `admin` (
                 `user_id` INT(10) UNSIGNED NOT NULL,
                 `email` VARCHAR(255) NOT NULL COMMENT 'Email address for user, used as username' COLLATE 'utf8mb4_unicode_ci',

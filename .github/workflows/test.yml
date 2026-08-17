@@ -9,6 +9,38 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          coverage: none
+
+      - name: Composer Cache
+        uses: actions/cache@v6
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ matrix.php }}-
+            composer-
+
+      - name: Install PHP dependencies
+        uses: ramsey/composer-install@v4
+
+      - name: Run Prek
+        uses: j178/prek-action@v2
+
   test:
     name: PHP ${{ matrix.php }} / Composer ${{ matrix.composer }}
     runs-on: ubuntu-latest

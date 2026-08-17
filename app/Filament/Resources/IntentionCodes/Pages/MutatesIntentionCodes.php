@@ -37,7 +37,7 @@ trait MutatesIntentionCodes
         foreach ($data['conditions'] as $condition) {
             $mutatedConditions[] = [
                 'type' => $condition['type'],
-                ... match (ConditionType::from($condition['type'])) {
+                ...match (ConditionType::from($condition['type'])) {
                     ConditionType::ArrivalAirfields => $this->mutateArrivalAirfields($condition),
                     ConditionType::ArrivalAirfieldPattern => $this->mutateArrivalAirfieldPattern($condition),
                     ConditionType::ExitPoint => $this->mutateExitPoint($condition),
@@ -50,7 +50,7 @@ trait MutatesIntentionCodes
                     ConditionType::Not, ConditionType::AnyOf, ConditionType::AllOf => $this->mutateNestedConditions(
                         $condition
                     ),
-                }
+                },
             ];
         }
 
@@ -125,6 +125,7 @@ trait MutatesIntentionCodes
     private function getFixedInsertPosition(int $position): int
     {
         $maxInsertPosition = IntentionCode::max('priority') + 1;
+
         return $position > $maxInsertPosition ? $maxInsertPosition : $position;
     }
 }

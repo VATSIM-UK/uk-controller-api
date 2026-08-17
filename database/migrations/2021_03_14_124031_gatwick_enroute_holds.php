@@ -119,14 +119,14 @@ class GatwickEnrouteHolds extends Migration
             [
                 [
                     'first_hold_id' => $firstHold,
-                    'second_hold_id'=> $secondHold,
+                    'second_hold_id' => $secondHold,
                     'vsl_insert_distance' => $vslInsertDistance,
                 ],
                 [
                     'first_hold_id' => $secondHold,
-                    'second_hold_id'=> $firstHold,
+                    'second_hold_id' => $firstHold,
                     'vsl_insert_distance' => $vslInsertDistance,
-                ]
+                ],
             ]
         );
     }

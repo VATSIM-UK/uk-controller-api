@@ -4,7 +4,8 @@ use App\Models\IntentionCode\FirExitPoint;
 use App\Models\IntentionCode\IntentionCode;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -20,7 +21,6 @@ return new class extends Migration {
                         'type' => 'exit_point',
                         'exit_point' => FirExitPoint::where('exit_point', $newConditions[0]['exit_point'])->firstOrFail()->id,
                     ];
-
 
                     $intentionCode->conditions = $newConditions;
                 }
@@ -39,7 +39,7 @@ return new class extends Migration {
             return $code;
         }
 
-        return $code . ' (' . FirExitPoint::findOrFail($conditions[0]['exit_point'])->exit_point . ')';
+        return $code.' ('.FirExitPoint::findOrFail($conditions[0]['exit_point'])->exit_point.')';
     }
 
     /**

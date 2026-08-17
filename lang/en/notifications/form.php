@@ -9,7 +9,7 @@ return [
     ],
     'link' => [
         'label' => 'Link',
-        'helper' => 'An optional link to additional resources, e.g. a forum post.'
+        'helper' => 'An optional link to additional resources, e.g. a forum post.',
     ],
     'valid_from' => [
         'label' => 'Valid from',

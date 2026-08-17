@@ -3,13 +3,14 @@
 namespace Database\Factories\Stand;
 
 use App\Models\Stand\Stand;
+use App\Models\Stand\StandRequest;
 use App\Models\User\User;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Stand\StandRequest>
+ * @extends Factory<StandRequest>
  */
 class StandRequestFactory extends Factory
 {

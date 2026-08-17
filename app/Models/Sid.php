@@ -34,17 +34,17 @@ class Sid extends Model
         'updated_at',
     ];
 
-    public function runway() : BelongsTo
+    public function runway(): BelongsTo
     {
         return $this->belongsTo(Runway::class);
     }
 
-    public function handoff() : HasOne
+    public function handoff(): HasOne
     {
         return $this->hasOne(Handoff::class);
     }
 
-    public function prenotes() : BelongsToMany
+    public function prenotes(): BelongsToMany
     {
         return $this->belongsToMany(
             Prenote::class,

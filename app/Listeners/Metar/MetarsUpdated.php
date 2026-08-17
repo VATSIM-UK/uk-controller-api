@@ -13,6 +13,7 @@ class MetarsUpdated implements ShouldQueue
     {
         UpdateMinimumStackLevels::dispatch($event->getMetars());
         UpdateRegionalPressureSettings::dispatch($event->getMetars());
+
         return true;
     }
 }

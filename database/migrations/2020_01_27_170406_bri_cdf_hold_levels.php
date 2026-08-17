@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class BriCdfHoldLevels extends Migration
 {
@@ -23,7 +23,6 @@ class BriCdfHoldLevels extends Migration
 
         DB::table('hold_restriction')->where('hold_id', $bristol->id)
             ->update(['restriction' => json_encode($bristolRestriction)]);
-
 
         $cardiffRestriction = [
             'type' => 'minimum_level',

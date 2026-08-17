@@ -40,9 +40,7 @@ class RecatEuCodeChanges extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-    }
+    public function down() {}
 
     private function updateDescriptions(): void
     {

@@ -32,7 +32,7 @@ class PluginEventBroadcaster extends Broadcaster
                     'channel' => (string) $channels[0],
                     'event' => $event,
                     'data' => $payload,
-                ]
+                ],
             ]
         );
     }

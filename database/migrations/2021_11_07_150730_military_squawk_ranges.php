@@ -18,10 +18,10 @@ class MilitarySquawkRanges extends Migration
             ->update(['last' => '0437', 'updated_at' => Carbon::now()]);
 
         DB::table('unit_discrete_squawk_ranges')
-            ->insert(['unit' => 'EGDR', 'first' => '7356','last' => '7356', 'created_at' => Carbon::now()]);
+            ->insert(['unit' => 'EGDR', 'first' => '7356', 'last' => '7356', 'created_at' => Carbon::now()]);
 
         DB::table('unit_discrete_squawk_ranges')
-            ->insert(['unit' => 'EGDR', 'first' => '7360','last' => '7367', 'created_at' => Carbon::now()]);
+            ->insert(['unit' => 'EGDR', 'first' => '7360', 'last' => '7367', 'created_at' => Carbon::now()]);
     }
 
     /**

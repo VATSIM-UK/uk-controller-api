@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Controller\Handoff;
 use App\Services\HandoffService;
 use Illuminate\Http\JsonResponse;
 

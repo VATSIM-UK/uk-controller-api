@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class EastMidlandsStandRefresh extends Migration
 {
-    const MAPPINGS = [
+    public const MAPPINGS = [
         'ABR' => ['EGNX_E'],
         'AEA' => ['EGNX_C'],
         'BAW' => ['EGNX_W'],
@@ -23,7 +23,7 @@ class EastMidlandsStandRefresh extends Migration
         'HLE' => ['EGNX_MAINT'],
     ];
 
-    const TERMINALS_STANDS = [
+    public const TERMINALS_STANDS = [
         'EGNX_RVL' => [
             [
                 'identifier' => 'RVL1',
@@ -56,8 +56,8 @@ class EastMidlandsStandRefresh extends Migration
                 'identifier' => 'MAINT3',
                 'latitude' => 52.82585485023592,
                 'longitude' => -1.3380254318220857,
-            ]
-        ]
+            ],
+        ],
     ];
 
     /**

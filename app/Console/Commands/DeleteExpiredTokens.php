@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Laravel\Passport\Token;
-use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+use Laravel\Passport\Token;
 
 /**
  * Command that deletes all expired access tokens
@@ -20,6 +20,6 @@ class DeleteExpiredTokens extends Command
         $tokens = Token::where('expires_at', '<', Carbon::now());
         $count = $tokens->count();
         $tokens->delete();
-        $this->info('Deleted ' . $count . ' expired access tokens');
+        $this->info('Deleted '.$count.' expired access tokens');
     }
 }

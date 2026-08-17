@@ -7,17 +7,15 @@ use App\Exceptions\Stand\StandNotFoundException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Throwable;
 
 /**
  * Exception handler class.
  *
  * Class Handler
- * @package App\Exceptions
  */
 class Handler extends ExceptionHandler
 {
@@ -33,6 +31,6 @@ class Handler extends ExceptionHandler
         ValidationException::class,
         OAuthServerException::class,
         StandNotFoundException::class,
-        StandAlreadyAssignedException::class
+        StandAlreadyAssignedException::class,
     ];
 }

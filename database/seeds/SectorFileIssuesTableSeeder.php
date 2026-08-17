@@ -1,8 +1,6 @@
 <?php
 
-use App\Models\User\Admin;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class SectorFileIssuesTableSeeder extends Seeder
 {
@@ -11,7 +9,5 @@ class SectorFileIssuesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-    }
+    public function run() {}
 }

@@ -23,6 +23,7 @@ class MissedApproachController
     {
         try {
             $notification = $this->service->sendMissedApproachNotification($request->validated()['callsign']);
+
             return response()->json(
                 ['id' => $notification['id'], 'expires_at' => $notification->expires_at->toDateTimeString()],
                 201

@@ -3,7 +3,6 @@
 namespace App\Allocator\Stand;
 
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -15,15 +14,15 @@ use Illuminate\Support\Collection;
  */
 class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocator
 {
-    use SelectsFromAirlineSpecificStands;
     use ChecksForBusinessAviationAircraft;
+    use SelectsFromAirlineSpecificStands;
 
     public function allocate(
         NetworkAircraft $aircraft,
         StandAllocationType $type = StandAllocationType::Arrival
     ): ?int {
         // If the aircraft isn't a business aviation aircraft, this rule doesn't apply
-        if (!$this->isBusinessAviationAircraft($aircraft)) {
+        if (! $this->isBusinessAviationAircraft($aircraft)) {
             return null;
         }
 
@@ -39,12 +38,12 @@ class BusinessAviationFlightArrivalStandAllocator implements ArrivalStandAllocat
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
         // If the aircraft is unknown, we can't do the ranking
-        if (!$aircraft->aircraft) {
+        if (! $aircraft->aircraft) {
             return collect();
         }
 
         // If the aircraft isn't a business aviation aircraft, we cant allocate a stand
-        if (!$this->isBusinessAviationAircraft($aircraft)) {
+        if (! $this->isBusinessAviationAircraft($aircraft)) {
             return collect();
         }
 

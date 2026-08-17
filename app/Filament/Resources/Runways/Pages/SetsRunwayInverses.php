@@ -14,8 +14,9 @@ trait SetsRunwayInverses
             ->where('identifier', RunwayService::inverseRunwayIdentifier($runway->identifier))
             ->first();
 
-        if (!$inverseRunway) {
+        if (! $inverseRunway) {
             $runway->inverses()->sync([]);
+
             return;
         }
 

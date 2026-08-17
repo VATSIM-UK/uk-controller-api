@@ -39,9 +39,6 @@ class UnitType implements Rule
         return 'Unit type does not match';
     }
 
-    /**
-     * @return string
-     */
     public function getUnitType(): string
     {
         return $this->unitType;

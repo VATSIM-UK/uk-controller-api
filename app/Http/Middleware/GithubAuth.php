@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -12,8 +11,6 @@ class GithubAuth
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -21,6 +18,7 @@ class GithubAuth
         $signatureParts = explode('=', $request->header('X-Hub-Signature'));
         if (count($signatureParts) != 2) {
             Log::error('Invalid GitHub request signature format');
+
             return response()->json(['message' => 'Invalid request signature format'])->setStatusCode(400);
         }
 
@@ -30,6 +28,7 @@ class GithubAuth
             config('github.secret')
         ) !== $signatureParts[1]) {
             Log::error('Invalid GitHub request signature');
+
             return response()->json(['message' => 'Invalid request signature'])->setStatusCode(403);
         }
 

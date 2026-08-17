@@ -13,6 +13,6 @@ class OperationsContributorPolicy extends BaseCrudPolicy
         RoleKeys::DIVISION_STAFF_GROUP,
         RoleKeys::WEB_TEAM,
         RoleKeys::OPERATIONS_TEAM,
-        RoleKeys::OPERATIONS_CONTRIBUTOR
+        RoleKeys::OPERATIONS_CONTRIBUTOR,
     ];
 }

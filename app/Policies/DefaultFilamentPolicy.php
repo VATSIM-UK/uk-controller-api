@@ -12,6 +12,6 @@ class DefaultFilamentPolicy extends BaseCrudPolicy
     protected $roles = [
         RoleKeys::DIVISION_STAFF_GROUP,
         RoleKeys::WEB_TEAM,
-        RoleKeys::OPERATIONS_TEAM
+        RoleKeys::OPERATIONS_TEAM,
     ];
 }

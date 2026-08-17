@@ -191,8 +191,7 @@ class AddScottishFlightInformationRegionData extends Migration
                     'start_longitude' => 'W010.00.00.000',
                     'finish_latitude' => 'N061.00.00.000',
                     'finish_longitude' => 'W010.00.00.000',
-                    'description' =>
-                        'NIBOG, LUTOV, KUGUR, APSOV, MIMKU, AMLAD, IBROD, GOMUP, ETILO, ERAKA, ADODO, BALIX, ATSIX, LUSEN, RATSU',
+                    'description' => 'NIBOG, LUTOV, KUGUR, APSOV, MIMKU, AMLAD, IBROD, GOMUP, ETILO, ERAKA, ADODO, BALIX, ATSIX, LUSEN, RATSU',
                     'created_at' => Carbon::now(),
                 ],
             ]

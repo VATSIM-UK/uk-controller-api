@@ -10,5 +10,5 @@ updates:
       interval: "weekly"
   - package-ecosystem: "npm"
     directory: "/"
-    schedule: 
+    schedule:
       interval: "weekly"

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\DB;
 
 class AddHoldRestrictions extends Migration
 {
-    const MSL = 'MSL';
-    const MSLP1 = 'MSL+1';
-    const MSLP2 = 'MSL+2';
+    public const MSL = 'MSL';
+
+    public const MSLP1 = 'MSL+1';
+
+    public const MSLP2 = 'MSL+2';
 
     /**
      * Run the migrations.
@@ -225,7 +227,6 @@ class AddHoldRestrictions extends Migration
     /**
      * Create a level block restriction
      *
-     * @param array $levels
      * @return false|string
      */
     private function createLevelBlockRestriction(array $levels)
@@ -237,23 +238,22 @@ class AddHoldRestrictions extends Migration
         return json_encode($data);
     }
 
-
     /**
      * Create a minimum level restriction
      *
-     * @param string $level The level restriction
-     * @param string $mslTarget The airfield to use the MSL at if not
-     * @param null|string $activeRunway The active runway designation
-     * @param null|string $runwayType The type of runway, either arrival, departure or any
-     * @param null|int $override The overriding level
+     * @param  string  $level  The level restriction
+     * @param  string  $mslTarget  The airfield to use the MSL at if not
+     * @param  null|string  $activeRunway  The active runway designation
+     * @param  null|string  $runwayType  The type of runway, either arrival, departure or any
+     * @param  null|int  $override  The overriding level
      * @return false|string
      */
     private function createMinimumRestriction(
         string $level,
         string $mslTarget,
-        string $activeRunway = null,
-        string $runwayType = null,
-        int $override = null
+        ?string $activeRunway = null,
+        ?string $runwayType = null,
+        ?int $override = null
     ) {
         $data = [];
         $data['type'] = 'minimum-level';

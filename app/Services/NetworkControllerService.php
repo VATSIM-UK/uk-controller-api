@@ -11,7 +11,9 @@ use Illuminate\Support\Collection;
 class NetworkControllerService
 {
     private NetworkDataService $dataService;
+
     private ControllerPositionParser $positionParser;
+
     private ControllerService $controllerService;
 
     public function __construct(
@@ -28,7 +30,7 @@ class NetworkControllerService
     {
         $this->updateDatabaseControllers();
         $this->processTimeouts();
-        event(new NetworkControllersUpdatedEvent());
+        event(new NetworkControllersUpdatedEvent);
     }
 
     private function updateDatabaseControllers(): void
@@ -62,8 +64,9 @@ class NetworkControllerService
         $recognisedPositions = $this->controllerService->getParsedControllerPositionsWithAlternatives();
         NetworkControllerPosition::all()->each(function (NetworkControllerPosition $position) use ($recognisedPositions) {
             $parsedPosition = $this->positionParser->parse($position);
-            if (!$parsedPosition) {
+            if (! $parsedPosition) {
                 $position->clearActiveControllerPosition();
+
                 return;
             }
 
@@ -72,6 +75,7 @@ class NetworkControllerService
             });
             if ($matchedPosition === false) {
                 $position->clearActiveControllerPosition();
+
                 return;
             }
 

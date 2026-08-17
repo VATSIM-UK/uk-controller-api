@@ -21,7 +21,7 @@ class CreatePrenoteMessage extends FormRequest
             'departure_airfield' => [
                 'required',
                 'string',
-                new AirfieldIcao(),
+                new AirfieldIcao,
             ],
             'departure_sid' => [
                 'present',
@@ -32,13 +32,13 @@ class CreatePrenoteMessage extends FormRequest
                 'present',
                 'string',
                 'nullable',
-                new AirfieldIcao(),
+                new AirfieldIcao,
             ],
             'requesting_controller_id' => [
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    if (!ControllerPosition::where('id', $value)->canSendPrenotes()->exists()) {
+                    if (! ControllerPosition::where('id', $value)->canSendPrenotes()->exists()) {
                         $fail(sprintf('Controller position %d cannot send prenotes', $value));
                     }
                 },
@@ -48,7 +48,7 @@ class CreatePrenoteMessage extends FormRequest
                 'required',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    if (!ControllerPosition::where('id', $value)->canReceivePrenotes()->exists()) {
+                    if (! ControllerPosition::where('id', $value)->canReceivePrenotes()->exists()) {
                         $fail(sprintf('Controller position %d cannot receive prenotes', $value));
                     }
                 },
@@ -63,7 +63,7 @@ class CreatePrenoteMessage extends FormRequest
         return $this->createDefaultValidator($this->container->make(ValidationFactory::class))->after(
             function (Validator $validator) {
                 $validated = $validator->validated();
-                if (!isset($validated['callsign'], $validated['target_controller_id'])) {
+                if (! isset($validated['callsign'], $validated['target_controller_id'])) {
                     return;
                 }
 

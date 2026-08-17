@@ -28,39 +28,39 @@ class StandReservationService
         ?string $destination,
         ?int $vatsimCid
     ): void {
-        if (!VatsimCallsign::callsignValid($callsign)) {
+        if (! VatsimCallsign::callsignValid($callsign)) {
             throw StandReservationCallsignNotValidException::forCallsign($callsign);
         }
 
         if (self::dataInvalidForCidReservation($vatsimCid, $origin, $destination)) {
-            throw new StandReservationMissingMetadataException();
+            throw new StandReservationMissingMetadataException;
         }
 
-        if (!self::cidValid($vatsimCid)) {
+        if (! self::cidValid($vatsimCid)) {
             throw StandReservationCidNotValidException::forCid($vatsimCid);
         }
-      
-        if (!Stand::where('id', $standId)->exists()) {
+
+        if (! Stand::where('id', $standId)->exists()) {
             throw StandNotFoundException::forId($standId);
         }
 
-        if (!$endTime->isAfter($startTime)) {
-            throw new StandReservationTimeInvalidException();
+        if (! $endTime->isAfter($startTime)) {
+            throw new StandReservationTimeInvalidException;
         }
 
         if (self::callsignHasClashingReservation($callsign, $startTime, $endTime)) {
             throw CallsignHasClashingReservationException::forCallsign($callsign);
         }
 
-        if (!self::airfieldsSet($origin, $destination)) {
+        if (! self::airfieldsSet($origin, $destination)) {
             throw StandReservationAirfieldsInvalidException::forBoth();
         }
 
-        if (!self::airfieldValid($origin)) {
+        if (! self::airfieldValid($origin)) {
             throw StandReservationAirfieldsInvalidException::forOrigin($origin);
         }
 
-        if (!self::airfieldValid($destination)) {
+        if (! self::airfieldValid($destination)) {
             throw StandReservationAirfieldsInvalidException::forDestination($destination);
         }
 
@@ -79,17 +79,17 @@ class StandReservationService
 
     private static function airfieldsSet(?string $origin, ?string $destination): bool
     {
-        return !($origin xor $destination);
+        return ! ($origin xor $destination);
     }
 
     private static function airfieldValid(?string $airfield): bool
     {
-        return is_null($airfield) || (new AirfieldIcao())->passes('', $airfield);
+        return is_null($airfield) || (new AirfieldIcao)->passes('', $airfield);
     }
 
     private static function callsignValid(string $callsign): bool
     {
-        return (new VatsimCallsign())->passes('', $callsign);
+        return (new VatsimCallsign)->passes('', $callsign);
     }
 
     private static function applyTimePeriodToQuery(
@@ -124,6 +124,6 @@ class StandReservationService
 
     private static function dataInvalidForCidReservation(?int $cid, ?string $origin, ?string $destination): bool
     {
-        return !is_null($cid) && !($origin && $destination);
+        return ! is_null($cid) && ! ($origin && $destination);
     }
 }

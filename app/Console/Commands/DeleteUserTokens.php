@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\UserTokenService;
+use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -18,25 +18,27 @@ class DeleteUserTokens extends Command
     /**
      * Run the command
      *
-     * @param UserTokenService $userTokenService
-     * @return integer
+     * @return int
      */
     public function handle(UserTokenService $userTokenService)
     {
-        if (!ctype_digit($this->argument('vatsim_cid'))) {
+        if (! ctype_digit($this->argument('vatsim_cid'))) {
             $this->error('Invalid VATSIM CID');
+
             return 1;
         }
 
         try {
             $userTokenService->deleteAllForUser($this->argument('vatsim_cid'));
-            $this->info('All access tokens deleted for user ' . $this->argument('vatsim_cid'));
+            $this->info('All access tokens deleted for user '.$this->argument('vatsim_cid'));
+
             return 0;
         } catch (ModelNotFoundException $e) {
             // Nothing to catch
         }
 
-        $this->error('User ' . $this->argument('vatsim_cid') . ' not found');
+        $this->error('User '.$this->argument('vatsim_cid').' not found');
+
         return 2;
     }
 }

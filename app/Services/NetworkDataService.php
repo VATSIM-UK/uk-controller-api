@@ -26,10 +26,12 @@ class NetworkDataService
         $fieldValidator = $this->getFieldValidator('pilots');
         if ($fieldValidator->fails()) {
             Log::warning('Invalid network aircraft data, pilots field missing');
+
             return collect();
         }
 
         $validatedData = collect($fieldValidator->validated()['pilots']);
+
         return $validatedData->reject(function (array $data) {
             return $this->getAircraftValidator($data)->fails();
         });
@@ -40,10 +42,12 @@ class NetworkDataService
         $fieldValidator = $this->getFieldValidator('controllers');
         if ($fieldValidator->fails()) {
             Log::warning('Invalid network controller data, controllers field missing');
+
             return collect();
         }
 
         $validatedData = collect($fieldValidator->validated()['controllers']);
+
         return $validatedData->reject(function (array $data) {
             return $this->getControllerValidator($data)->fails();
         });
@@ -54,7 +58,7 @@ class NetworkDataService
         return Validator::make(
             $this->downloadService->getNetworkData()->toArray(),
             [
-                $field => 'array|required'
+                $field => 'array|required',
             ]
         );
     }
@@ -66,30 +70,30 @@ class NetworkDataService
             [
                 'callsign' => [
                     'required',
-                    new VatsimCallsign(),
+                    new VatsimCallsign,
                 ],
                 'latitude' => [
                     'required',
-                    new Latitude(),
+                    new Latitude,
                 ],
                 'longitude' => [
                     'required',
-                    new Longitude(),
+                    new Longitude,
                 ],
                 'altitude' => 'required|integer',
                 'groundspeed' => 'required|integer',
                 'transponder' => [
                     'required',
-                    new SqauwkCode(),
+                    new SqauwkCode,
                 ],
                 'flight_plan.aircraft' => 'nullable|string',
                 'flight_plan.departure' => [
                     'nullable',
-                    new AirfieldIcao(),
+                    new AirfieldIcao,
                 ],
                 'flight_plan.arrival' => [
                     'nullable',
-                    new AirfieldIcao(),
+                    new AirfieldIcao,
                 ],
                 'flight_plan.altitude' => 'nullable|string',
                 'flight_plan.flight_rules' => 'nullable|string',
@@ -104,7 +108,7 @@ class NetworkDataService
             [
                 'callsign' => [
                     'required',
-                    new VatsimCallsign(),
+                    new VatsimCallsign,
                 ],
                 'frequency' => 'required|numeric|min:100|max:200',
                 'cid' => 'integer|required',

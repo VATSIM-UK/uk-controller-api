@@ -4,8 +4,6 @@ use App\Models\Hold\HoldProfile;
 use App\Models\Hold\HoldProfileHold;
 use App\Models\User\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddBasicHoldProfilesForAllUsers extends Migration
@@ -55,11 +53,6 @@ class AddBasicHoldProfilesForAllUsers extends Migration
         });
     }
 
-    /**
-     * @param int $userId
-     * @param string $profileName
-     * @param array $profileHolds
-     */
     private function createHoldProfile(int $userId, string $profileName, array $profileHolds)
     {
         $profile = HoldProfile::create(
@@ -74,7 +67,7 @@ class AddBasicHoldProfilesForAllUsers extends Migration
             HoldProfileHold::create(
                 [
                     'hold_profile_id' => $profile->id,
-                    'hold_id' => $hold
+                    'hold_id' => $hold,
                 ]
             );
         }

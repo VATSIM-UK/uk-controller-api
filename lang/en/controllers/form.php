@@ -1,18 +1,17 @@
 <?php
 
-
 return [
     'callsign' => [
         'label' => 'Callsign',
-        'helper' => 'e.g. EGLL_S_TWR'
+        'helper' => 'e.g. EGLL_S_TWR',
     ],
     'description' => [
         'label' => 'Description',
-        'helper' => 'e.g. TC VATON'
+        'helper' => 'e.g. TC VATON',
     ],
     'frequency' => [
         'label' => 'Frequency',
-        'helper' => 'The full, six digit, frequency. E.g. 129.425'
+        'helper' => 'The full, six digit, frequency. E.g. 129.425',
     ],
     'requests_departure_releases' => [
         'label' => 'Request departure releases',
@@ -30,7 +29,7 @@ return [
         'label' => 'Receive prenotes',
         'helper' => 'Can this controller receive a prenote message from another controller',
     ],
-    'identifiers_section'=> [
+    'identifiers_section' => [
         'label' => 'Identifiers',
     ],
     'coordination_section' => [

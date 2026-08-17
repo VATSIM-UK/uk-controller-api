@@ -25,8 +25,6 @@ class HoldService
     /**
      * Returns the current holds in a format
      * that may be converted to a JSON array.
-     *
-     * @return array
      */
     public function getHolds(): array
     {
@@ -54,8 +52,8 @@ class HoldService
                 // Set the outbound leg unit#
                 $data['outbound_leg_unit'] = $hold->outboundLegUnit?->unit;
 
-
                 unset($data['navaid']);
+
                 return $data;
             })
             ->toArray();
@@ -68,7 +66,7 @@ class HoldService
                 ->filter(
                     function (AssignedHold $hold) {
                         return ($hold->aircraft->groundspeed === 0 && $hold->aircraft->altitude < 1000) ||
-                            $hold->aircraft->latLong->getDistance($hold->navaid->coordinate, new Haversine()) > 55000;
+                            $hold->aircraft->latLong->getDistance($hold->navaid->coordinate, new Haversine) > 55000;
                     }
                 );
 
@@ -102,7 +100,7 @@ class HoldService
     private function setProximityHoldsForAirborneAircraft(): void
     {
         $navaids = Navaid::all();
-        $distanceCalculator = new Haversine();
+        $distanceCalculator = new Haversine;
 
         $this->getAircraftEligibleForProximityHolding()->each(
             function (NetworkAircraft $aircraft) use ($navaids, $distanceCalculator) {
@@ -129,7 +127,7 @@ class HoldService
                             fn (Navaid $navaid) => [
                                 $navaid->id => [
                                     'entered_at' => Carbon::now()->utc(),
-                                ]
+                                ],
                             ]
                         )
                     );

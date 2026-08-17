@@ -9,7 +9,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 class CancelRequestsForDepartedAircraft implements ShouldQueue
 {
-    use Dispatchable, Queueable;
+    use Dispatchable;
+    use Queueable;
 
     public function handle(DepartureReleaseService $releaseService): void
     {

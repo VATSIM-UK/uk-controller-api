@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands;
 
 use App\Exceptions\UserAlreadyExistsException;
@@ -9,7 +10,6 @@ use Illuminate\Console\Command;
  * Command to create a new admin user and generate their personal access token.
  *
  * Class UserAdminCreate
- * @package App\Console\Commands
  */
 class UserAdminCreate extends Command
 {
@@ -19,7 +19,9 @@ class UserAdminCreate extends Command
 
     /**
      * Handles the command
-     * @param UserService $userService Service to do the user work.
+     *
+     * @param  UserService  $userService  Service to do the user work.
+     *
      * @throws UserAlreadyExistsException
      */
     public function handle(UserService $userService)

@@ -17,11 +17,11 @@ class BroadcastServiceProvider extends ServiceProvider
         $broadcastManager->extend(
             'plugin-events',
             function () {
-                return new PluginEventBroadcaster();
+                return new PluginEventBroadcaster;
             }
         );
 
         Broadcast::routes(['middleware' => 'auth.api:api']);
-        require_once __DIR__ . '/../../routes/channels.php';
+        require_once __DIR__.'/../../routes/channels.php';
     }
 }

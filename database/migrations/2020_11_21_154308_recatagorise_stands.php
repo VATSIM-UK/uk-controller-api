@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class RecatagoriseStands extends Migration
 {
-    private const STAND_DATA_CSV = __DIR__ . '/../data/stands/2020/standcats.csv';
+    private const STAND_DATA_CSV = __DIR__.'/../data/stands/2020/standcats.csv';
 
     /**
      * Run the migrations.
@@ -29,42 +29,42 @@ class RecatagoriseStands extends Migration
 
         $file = fopen(self::STAND_DATA_CSV, 'r');
         while (($line = fgetcsv($file))) {
-            if (!isset($airfields[$line[0]])) {
-                throw new InvalidArgumentException('Invalid airfield ' . $line[0]);
+            if (! isset($airfields[$line[0]])) {
+                throw new InvalidArgumentException('Invalid airfield '.$line[0]);
             }
 
             $airfieldId = $airfields[$line[0]];
 
-            if (!isset($wakeCategories[$line[3]])) {
-                throw new InvalidArgumentException('Invalid wake category ' . $line[3]);
+            if (! isset($wakeCategories[$line[3]])) {
+                throw new InvalidArgumentException('Invalid wake category '.$line[3]);
             }
 
             $wakeCategoryId = $wakeCategories[$line[3]];
 
-            if (!in_array($line[2], ['DOMESTIC', 'INTERNATIONAL', 'CARGO', ''])) {
-                throw new InvalidArgumentException('Invalid stand type ' . $line[2]);
+            if (! in_array($line[2], ['DOMESTIC', 'INTERNATIONAL', 'CARGO', ''])) {
+                throw new InvalidArgumentException('Invalid stand type '.$line[2]);
             }
 
             $standType = StandType::where('key', $line[2])->first();
             $standTypeId = $standType ? $standType->id : null;
 
-            if (!in_array($line[4], ['0', '1'])) {
-                throw new InvalidArgumentException('Invalid general use value ' . $line[4]);
+            if (! in_array($line[4], ['0', '1'])) {
+                throw new InvalidArgumentException('Invalid general use value '.$line[4]);
             }
 
             $generalUse = $line[4] === '1';
 
             $terminalId = null;
-            if (!empty($line[5])) {
+            if (! empty($line[5])) {
                 $terminal = Terminal::where('key', $line[5])->first();
-                if (!$terminal) {
-                    throw new InvalidArgumentException('Invalid terminal ' . $line[5]);
+                if (! $terminal) {
+                    throw new InvalidArgumentException('Invalid terminal '.$line[5]);
                 }
                 $terminalId = $terminal->id;
             }
 
             $maxAircraftTypeId = null;
-            if (!empty($line[6])) {
+            if (! empty($line[6])) {
                 $aircraftType = Aircraft::where('code', $line[6])->first();
                 if ($aircraftType) {
                     $maxAircraftTypeId = $aircraftType->id;
@@ -75,7 +75,7 @@ class RecatagoriseStands extends Migration
                 ->where('identifier', $line[1])
                 ->first();
 
-            if (!$stand) {
+            if (! $stand) {
                 throw new InvalidArgumentException(sprintf('Invalid stand %s/%s', $line[0], $line[1]));
             }
 

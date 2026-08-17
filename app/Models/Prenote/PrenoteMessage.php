@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PrenoteMessage extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory;
+    use SoftDeletes;
 
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     protected $fillable = [
         'callsign',
@@ -53,6 +54,7 @@ class PrenoteMessage extends Model
         $this->acknowledged_by = $userId;
         $this->acknowledged_at = Carbon::now();
         $this->save();
+
         return $this;
     }
 }

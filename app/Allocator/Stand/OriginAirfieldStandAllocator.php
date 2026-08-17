@@ -26,7 +26,7 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator, RankableArr
             return null;
         }
 
-        if (!$aircraft->planned_depairport) {
+        if (! $aircraft->planned_depairport) {
             return null;
         }
 
@@ -41,7 +41,7 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator, RankableArr
 
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
-        if (!$aircraft->planned_depairport) {
+        if (! $aircraft->planned_depairport) {
             return collect();
         }
 
@@ -54,7 +54,6 @@ class OriginAirfieldStandAllocator implements ArrivalStandAllocator, RankableArr
 
     private function filterQuery(NetworkAircraft $aircraft): Closure
     {
-        return fn (Builder $query)
-            => $query->notCargo()->whereIn('origin_slug', $this->getDestinationStrings($aircraft));
+        return fn (Builder $query) => $query->notCargo()->whereIn('origin_slug', $this->getDestinationStrings($aircraft));
     }
 }

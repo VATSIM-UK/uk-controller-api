@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
  * Model for a restriction on a hold
  *
  * Class HoldRestriction
- * @package App\Models\Hold
  */
 class HoldRestriction extends Model
 {

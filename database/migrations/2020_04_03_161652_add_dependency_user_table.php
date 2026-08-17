@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddDependencyUserTable extends Migration
@@ -12,7 +13,7 @@ class AddDependencyUserTable extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\DB::statement(
+        DB::statement(
             "CREATE TABLE `dependency_user` (
                 `dependency_id` MEDIUMINT(7) UNSIGNED NOT NULL COMMENT 'The dependency',
                 `user_id` INT(10) UNSIGNED NOT NULL COMMENT 'The user the dependency belongs to',

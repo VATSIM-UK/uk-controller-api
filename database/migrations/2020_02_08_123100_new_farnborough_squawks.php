@@ -22,7 +22,7 @@ class NewFarnboroughSquawks extends Migration
                 [
                     'squawk_range_owner_id' => $rangeOwnerId,
                     'start' => '0430',
-                    'stop' => '0446'
+                    'stop' => '0446',
                 ]
             )
             ->update(['stop' => '0456']);
@@ -32,7 +32,7 @@ class NewFarnboroughSquawks extends Migration
                 [
                     'squawk_range_owner_id' => $rangeOwnerId,
                     'start' => '0450',
-                    'stop' => '0456'
+                    'stop' => '0456',
                 ]
             )
             ->delete();
@@ -55,7 +55,7 @@ class NewFarnboroughSquawks extends Migration
                 [
                     'squawk_range_owner_id' => $rangeOwnerId,
                     'start' => '0430',
-                    'stop' => '0456'
+                    'stop' => '0456',
                 ]
             )
             ->update(['stop' => '0446']);
@@ -65,7 +65,7 @@ class NewFarnboroughSquawks extends Migration
                 [
                     'squawk_range_owner_id' => $rangeOwnerId,
                     'start' => '0450',
-                    'stop' => '0456'
+                    'stop' => '0456',
                 ]
             );
     }

@@ -8,8 +8,8 @@ use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
 use App\Models\Vatsim\NetworkAircraft;
-use App\Services\AirlineService;
 use App\Services\AircraftService;
+use App\Services\AirlineService;
 use App\Services\Stand\ArrivalAllocationService;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -24,8 +24,11 @@ class DepartureStandFinderForm extends Component implements HasForms
     use InteractsWithForms;
 
     public ?string $callsign = null;
+
     public ?string $departureAirfield = null;
+
     public ?int $aircraftType = null;
+
     public ?array $prefiledFlightplan = null;
 
     public function mount(): void
@@ -38,12 +41,12 @@ class DepartureStandFinderForm extends Component implements HasForms
         $cid = Auth::id();
         $rawData = Cache::get('vatsim_raw_data');
 
-        if (!$rawData) {
+        if (! $rawData) {
             return;
         }
 
         foreach ($rawData['pilots'] ?? [] as $pilot) {
-            if (($pilot['cid'] ?? null) == $cid && !empty($pilot['flight_plan'])) {
+            if (($pilot['cid'] ?? null) == $cid && ! empty($pilot['flight_plan'])) {
                 $fp = $pilot['flight_plan'];
                 $this->prefiledFlightplan = [
                     'callsign' => $pilot['callsign'] ?? null,
@@ -57,6 +60,7 @@ class DepartureStandFinderForm extends Component implements HasForms
                 if ($aircraftId) {
                     $this->aircraftType = $aircraftId;
                 }
+
                 return;
             }
         }
@@ -111,7 +115,7 @@ class DepartureStandFinderForm extends Component implements HasForms
 
         $stand = $this->findDepartureStand($networkAircraft);
 
-        if (!$stand) {
+        if (! $stand) {
             return [
                 'error' => sprintf(
                     'No available stand found at %s that fits the %s.',

@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class FixHeathrowTcNorthWestDepartureHandoffs extends Migration
 {
-    const HANDOFFS = [
+    public const HANDOFFS = [
         'EGWU_SID_WEST',
         'EGLL_SID_NORTH_WEST',
     ];

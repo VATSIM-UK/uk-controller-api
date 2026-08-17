@@ -14,6 +14,7 @@
 		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/www/.ssh,type=bind,consistency=cached"
 	],
     "remoteUser": "www",
+    "postCreateCommand": "prek install",
     // "forwardPorts": [],
     // "runServices": [],
     "shutdownAction": "stopCompose",

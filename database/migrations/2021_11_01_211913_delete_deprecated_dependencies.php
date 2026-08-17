@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class DeleteDeprecatedDependencies extends Migration
 {
-    const DEPENDENCIES_TO_DELETE = [
+    public const DEPENDENCIES_TO_DELETE = [
         'DEPENDENCY_AIRFIELD_OWNERSHIP',
         'DEPENDENCY_PRENOTE',
         'DEPENDENCY_HANDOFF',

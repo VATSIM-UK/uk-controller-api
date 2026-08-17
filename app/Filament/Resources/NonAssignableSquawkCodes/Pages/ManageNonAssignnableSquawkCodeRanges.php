@@ -4,8 +4,8 @@ namespace App\Filament\Resources\NonAssignableSquawkCodes\Pages;
 
 use App\Filament\Resources\NonAssignableSquawkCodes\NonAssignableSquawkCodeResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
-use Filament\Resources\Pages\ManageRecords;
 use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ManageRecords;
 
 class ManageNonAssignnableSquawkCodeRanges extends ManageRecords
 {

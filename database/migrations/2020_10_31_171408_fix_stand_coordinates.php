@@ -1,15 +1,12 @@
 <?php
 
-use App\Services\SectorfileService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class FixStandCoordinates extends Migration
 {
-    const LATITUDES_TO_FIX = [
+    public const LATITUDES_TO_FIX = [
         'N051.34.9.445' => 'N051.34.09.445',
         'N051.34.8.064' => 'N051.34.08.064',
         'N051.34.6.908' => 'N051.34.06.908',
@@ -28,7 +25,7 @@ class FixStandCoordinates extends Migration
         'N55.56.50.47' => 'N055.56.50.470',
     ];
 
-    const LONGITUDES_TO_FIX = [
+    public const LONGITUDES_TO_FIX = [
         'W001.44.9.080' => 'W001.44.09.080',
         'W001.44.9.871' => 'W001.44.09.871',
         'W00.22.23.870' => 'W000.22.23.870',

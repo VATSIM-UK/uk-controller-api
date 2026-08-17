@@ -4,8 +4,6 @@ use App\Services\AirfieldService;
 use App\Services\DependencyService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class SwanwickMilSectorisationUpdate extends Migration
 {
@@ -65,11 +63,11 @@ class SwanwickMilSectorisationUpdate extends Migration
         DB::table('controller_positions')
             ->where('callsign', 'EGVV_CTR')
             ->update(['frequency' => '135.15']);
-        
+
         DB::table('controller_positions')
             ->where('callsign', 'EGVV_E_CTR')
             ->delete();
-        
+
         DB::table('controller_positions')
             ->where('callsign', 'EGVV_W_CTR')
             ->delete();

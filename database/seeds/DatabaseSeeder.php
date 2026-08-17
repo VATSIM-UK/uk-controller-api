@@ -9,7 +9,7 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     // The seeders and the tables they affect
-    const SEEDERS = [
+    public const SEEDERS = [
         VersionTableSeeder::class => [
             'version',
         ],
@@ -155,7 +155,7 @@ class DatabaseSeeder extends Seeder
         ],
     ];
 
-    const OTHER_TABLES_TO_TRUNCATE = [
+    public const OTHER_TABLES_TO_TRUNCATE = [
         'metars',
         'missed_approach_notifications',
         'network_controller_positions',
@@ -165,7 +165,6 @@ class DatabaseSeeder extends Seeder
         'stand_request_history',
     ];
 
-
     /**
      * Run the database seeds.
      *
@@ -173,7 +172,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement("SET foreign_key_checks=0");
+        DB::statement('SET foreign_key_checks=0');
         // Truncate all tables
         foreach (self::SEEDERS as $tables) {
             foreach ($tables as $table) {
@@ -195,6 +194,6 @@ class DatabaseSeeder extends Seeder
             $this->call(DevUserSeeder::class);
         }
 
-        DB::statement("SET foreign_key_checks=1");
+        DB::statement('SET foreign_key_checks=1');
     }
 }

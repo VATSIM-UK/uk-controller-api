@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\Airfield\AirfieldIcao;
 use App\Services\DepartureService;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class DepartureController extends BaseController
 {

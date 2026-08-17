@@ -6,8 +6,9 @@ use Illuminate\Contracts\Validation\Rule;
 
 class SqauwkCode implements Rule
 {
-    const SQUAWK_REGEX = '/^[0-7]{4}$/';
-    const REGEX_MATCHED = 1;
+    public const SQUAWK_REGEX = '/^[0-7]{4}$/';
+
+    public const REGEX_MATCHED = 1;
 
     /**
      * Determine if the validation rule passes.

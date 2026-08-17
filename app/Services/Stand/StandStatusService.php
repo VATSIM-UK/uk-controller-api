@@ -68,22 +68,22 @@ class StandStatusService
         } elseif ($stand->assignment) {
             $standData['status'] = 'assigned';
             $standData['callsign'] = $stand->assignment->callsign;
-        } elseif (!$stand->activeReservations->isEmpty()) {
+        } elseif (! $stand->activeReservations->isEmpty()) {
             $standData['status'] = 'reserved';
             $standData['callsign'] = $stand->activeReservations->first()->callsign;
-        } elseif (!$stand->reservationsInNextHour->isEmpty()) {
+        } elseif (! $stand->reservationsInNextHour->isEmpty()) {
             $standData['status'] = 'reserved_soon';
             $standData['reserved_at'] = $stand->reservationsInNextHour->first()->start;
             $standData['callsign'] = $stand->reservationsInNextHour->first()->callsign;
         } elseif (
-            !$stand->pairedStands->filter(function (Stand $stand) {
+            ! $stand->pairedStands->filter(function (Stand $stand) {
                 return $stand->assignment ||
-                    !$stand->occupier->isEmpty() ||
-                    !$stand->activeReservations->isEmpty();
+                    ! $stand->occupier->isEmpty() ||
+                    ! $stand->activeReservations->isEmpty();
             })->isEmpty()
         ) {
             $standData['status'] = 'unavailable';
-        } elseif (!$stand->activeRequests->isEmpty()) {
+        } elseif (! $stand->activeRequests->isEmpty()) {
             $standData['status'] = 'requested';
             $standData['requested_by'] = $stand->activeRequests->pluck('callsign');
         } else {

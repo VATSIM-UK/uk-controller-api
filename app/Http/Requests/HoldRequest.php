@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class HoldRequest extends FormRequest
 {
@@ -28,11 +28,11 @@ class HoldRequest extends FormRequest
             'inbound_heading' => 'required|integer|gt:0|lte:360',
             'turn_direction' => [
                 'required',
-                Rule::in(['left', 'right'])
+                Rule::in(['left', 'right']),
             ],
             'minimum_altitude' => 'required|integer|digits_between:4,5',
             'maximum_altitude' => 'required|integer|digits_between:4,5',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
         ];
     }
 }

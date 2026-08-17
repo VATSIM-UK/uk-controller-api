@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class HeathrowTerminals2022 extends Migration
 {
-    const TERMINALS = [
+    public const TERMINALS = [
         'EGLL_T2A' => [
             'AEE',
             'AMC',

@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 
 class HoldAssignedEvent extends HighPriorityBroadcastEvent
 {
-    const CHANNEL = 'hold-assignments';
+    public const CHANNEL = 'hold-assignments';
 
     /**
      * @var AssignedHold
@@ -33,14 +33,11 @@ class HoldAssignedEvent extends HighPriorityBroadcastEvent
      *
      * @return Channel[]
      */
-    public function broadcastOn() : array
+    public function broadcastOn(): array
     {
         return [new PrivateChannel(self::CHANNEL)];
     }
 
-    /**
-     * @return AssignedHold
-     */
     public function getHold(): AssignedHold
     {
         return $this->hold;

@@ -66,7 +66,7 @@ class DependencyTableSeeder extends Seeder
                     'dependency_id' => 4,
                     'user_id' => UserTableSeeder::ACTIVE_USER_CID,
                     'updated_at' => '2020-04-05 21:00:00',
-                ]
+                ],
             ]
         );
     }

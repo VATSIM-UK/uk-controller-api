@@ -4,8 +4,8 @@ namespace App\Filament\Resources\UnitDiscreteSquawkRangeGuests\Pages;
 
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use App\Filament\Resources\UnitDiscreteSquawkRangeGuests\UnitDiscreteSquawkRangeGuestResource;
-use Filament\Resources\Pages\ManageRecords;
 use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ManageRecords;
 
 class ManageUnitDiscreteSquawkRangeGuests extends ManageRecords
 {

@@ -2,8 +2,6 @@
 
 use App\Models\Airfield\Airfield;
 use App\Models\Tma;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddTmas extends Migration

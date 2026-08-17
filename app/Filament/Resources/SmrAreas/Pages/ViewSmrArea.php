@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\SmrAreas\Pages;
 
-use Filament\Actions\EditAction;
 use App\Filament\Resources\SmrAreas\SmrAreaResource;
-use Filament\Pages\Actions;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewSmrArea extends ViewRecord

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Plugin\PluginEvent;
-use App\Models\Stand\StandAssignmentsHistory;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -21,6 +20,7 @@ class CleanPluginEvents extends Command
             Carbon::now()->subHour()
         )->delete();
         $this->info('Plugin events cleaned successfully');
+
         return 0;
     }
 }

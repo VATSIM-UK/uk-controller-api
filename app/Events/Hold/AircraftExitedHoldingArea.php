@@ -10,6 +10,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 class AircraftExitedHoldingArea extends HighPriorityBroadcastEvent
 {
     private NetworkAircraft $aircraft;
+
     private Navaid $navaid;
 
     public function __construct(NetworkAircraft $aircraft, Navaid $navaid)

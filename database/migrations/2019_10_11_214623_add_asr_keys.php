@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\AltimeterSettingRegions\AltimeterSettingRegion;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddAsrKeys extends Migration
 {
@@ -44,10 +44,10 @@ class AddAsrKeys extends Migration
         });
     }
 
-    private function updateAsrKeys() : void
+    private function updateAsrKeys(): void
     {
         AltimeterSettingRegion::all()->each(function (AltimeterSettingRegion $asr) {
-            $asr->key = 'ASR_' . strtoupper($asr->name);
+            $asr->key = 'ASR_'.strtoupper($asr->name);
             $asr->save();
         });
     }

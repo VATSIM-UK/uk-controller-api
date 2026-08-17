@@ -91,7 +91,7 @@ class PluginVersionPolicy
     {
         return false;
     }
-    
+
     public function deleteAny(): bool
     {
         return false;

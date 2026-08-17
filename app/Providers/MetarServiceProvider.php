@@ -25,7 +25,7 @@ class MetarServiceProvider extends ServiceProvider
                     $this->app->make(PressureParser::class),
                     $this->app->make(WindParser::class),
                     $this->app->make(WindVariationParser::class),
-                    $this->app->make(VisibilityParser::class)
+                    $this->app->make(VisibilityParser::class),
                 ])
             );
         });

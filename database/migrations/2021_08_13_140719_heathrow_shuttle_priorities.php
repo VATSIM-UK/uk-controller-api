@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class HeathrowShuttlePriorities extends Migration
 {
-    const PRIORITIES_TO_CHECK = [
+    public const PRIORITIES_TO_CHECK = [
         '501' => 100,
         '502' => 100,
         '503' => 100,
@@ -15,7 +15,7 @@ class HeathrowShuttlePriorities extends Migration
         '507' => 100,
     ];
 
-    const NEW_STANDS = [
+    public const NEW_STANDS = [
         '508' => 100,
         '524' => 101,
         '525' => 101,

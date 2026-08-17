@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddArrivalWakeIntervals extends Migration
 {
-    const INTERVALS = [
+    public const INTERVALS = [
         'A' => [
             'A' => 4,
             'B' => 4,
@@ -88,7 +88,7 @@ class AddArrivalWakeIntervals extends Migration
                             $categories->firstOrFail(
                                 'code',
                                 $followingCategory
-                            )->id => ['interval' => $interval]
+                            )->id => ['interval' => $interval],
                         ]
                     )
                 );

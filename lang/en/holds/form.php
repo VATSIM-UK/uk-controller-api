@@ -20,7 +20,7 @@ return [
         'helper' => 'The maximum altitude (in feet) that the published hold covers. Minimum is 2000.',
     ],
     'turn_direction' => [
-        'label' => 'Turn direction'
+        'label' => 'Turn direction',
     ],
     'outbound_leg_value' => [
         'label' => 'Outbound Leg Value',
@@ -31,7 +31,7 @@ return [
         'helper' => 'The unit of the outbound leg, e.g. minutes, nautical miles.',
     ],
     'restrictions' => [
-        'label' => 'Restrictions'
+        'label' => 'Restrictions',
     ],
     'add_restriction' => [
         'label' => 'Add restriction',

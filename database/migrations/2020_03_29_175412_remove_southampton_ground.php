@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Airfield\Airfield;
 use App\Services\AirfieldService;
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;

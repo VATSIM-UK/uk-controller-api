@@ -20,9 +20,6 @@ class HoldController extends BaseController
      */
     private $holdService;
 
-    /**
-     * @param HoldService $holdService
-     */
     public function __construct(HoldService $holdService)
     {
         $this->holdService = $holdService;
@@ -30,8 +27,6 @@ class HoldController extends BaseController
 
     /**
      * Return the hold data as JSON
-     *
-     * @return JsonResponse
      */
     public function getAllHolds(): JsonResponse
     {
@@ -77,18 +72,19 @@ class HoldController extends BaseController
             ['callsign' => $callsign],
             [
                 'callsign' => $callsign,
-                'navaid_id' => $navaid->id
+                'navaid_id' => $navaid->id,
             ]
         );
 
         event(new HoldAssignedEvent($assignedHold));
+
         return response()->json([], 201);
     }
 
     public function deleteAssignedHold(Request $request): JsonResponse
     {
         $hold = AssignedHold::where('callsign', $request->route('callsign'))->first();
-        if (!is_null($hold)) {
+        if (! is_null($hold)) {
             $hold->delete();
             event(new HoldUnassignedEvent($request->route('callsign')));
         }
@@ -104,10 +100,10 @@ class HoldController extends BaseController
                 ->get()
                 ->map(
                     fn (NetworkAircraft $aircraft) => $aircraft->proximityNavaids->map(fn (Navaid $navaid) => [
-                    'callsign' => $aircraft->callsign,
-                    'navaid_id' => $navaid->id,
-                    'entered_at' => $navaid->pivot->entered_at,
-                ])
+                        'callsign' => $aircraft->callsign,
+                        'navaid_id' => $navaid->id,
+                        'entered_at' => $navaid->pivot->entered_at,
+                    ])
                 )->flatten(1)
         );
     }

@@ -42,7 +42,7 @@ class ControllerPosition extends Model implements ControllerPositionInterface
         'receives_prenotes' => 'boolean',
     ];
 
-    public function topDownAirfields() : BelongsToMany
+    public function topDownAirfields(): BelongsToMany
     {
         return $this->belongsToMany(
             Airfield::class,
@@ -52,7 +52,7 @@ class ControllerPosition extends Model implements ControllerPositionInterface
         );
     }
 
-    public function handoffs() : BelongsToMany
+    public function handoffs(): BelongsToMany
     {
         return $this->belongsToMany(
             Handoff::class,
@@ -65,7 +65,7 @@ class ControllerPosition extends Model implements ControllerPositionInterface
             ->withTimestamps();
     }
 
-    public function prenotes() : BelongsToMany
+    public function prenotes(): BelongsToMany
     {
         return $this->belongsToMany(
             Prenote::class,

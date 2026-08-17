@@ -13,7 +13,7 @@ class AcknowledgeDepartureRelease extends FormRequest
             'controller_position_id' => [
                 'required',
                 'integer',
-                new ControllerPositionValid(),
+                new ControllerPositionValid,
             ],
         ];
     }

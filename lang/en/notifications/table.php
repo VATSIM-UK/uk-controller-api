@@ -21,7 +21,7 @@ return [
             'global' => [
                 'label' => 'Global',
                 'helper' => 'A global notification is applicable to all controllers.',
-            ]
-        ]
+            ],
+        ],
     ],
 ];

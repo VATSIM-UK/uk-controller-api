@@ -148,7 +148,7 @@ components:
           type: string
         description:
           type: string
-          nullable: true  
+          nullable: true
     HoldModel:
       allOf:
         - $ref: '#/components/schemas/HoldRequest'
@@ -428,7 +428,7 @@ paths:
       responses:
         '200':
           description: List of terminals for airfield
-          content: 
+          content:
             'application/json':
               schema:
                 properties:
@@ -438,30 +438,30 @@ paths:
                       $ref: '#/components/schemas/Terminal'
         '404':
           description: Terminals not found or configured for airfield
-          content: 
+          content:
             'application/json':
               schema:
                 properties:
                   message:
                     type: string
                     example: Airfield does not have terminals configured
-  
+
   /airfields/{identifier}/terminals/{terminal_key}/stands:
     get:
-      tags: 
+      tags:
         - "stands"
       responses:
         '200':
           description: List of stands in a configured terminal
           content:
             'application/json':
-              schema: 
+              schema:
                 properties:
                   stands:
                     type: array
                     items:
                       $ref: '#/components/schemas/StandDetailed'
-        '404': 
+        '404':
           $ref: '#/components/responses/AirfieldNotFound'
 
   /navaids:
@@ -557,13 +557,13 @@ paths:
       responses:
         '200':
           description: Holds associated with the specified Navaid.
-          content: 
+          content:
             'application/json':
               schema:
                 properties:
                   holds:
                     type: array
-                    items: 
+                    items:
                       $ref:  "#/components/schemas/HoldModel"
         '404':
           description: Not found
@@ -583,7 +583,7 @@ paths:
               schema:
                 properties:
                   hold_id:
-                    type: integer 
+                    type: integer
                     example: 1
         '422':
           description: Validation errors

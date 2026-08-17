@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 class DropOldSquawkAssignmentsTables extends Migration
 {
-    const TABLES = [
+    public const TABLES = [
         'AIRFIELD_PAIR' => 'airfield_pairing_squawk_assignments',
         'CCAMS' => 'ccams_squawk_assignments',
         'ORCAM' => 'orcam_squawk_assignments',
@@ -45,7 +45,7 @@ class DropOldSquawkAssignmentsTables extends Migration
 
     private function transferSquawks()
     {
-        $squawks = new Collection();
+        $squawks = new Collection;
         foreach (self::TABLES as $type => $table) {
             $squawks = $squawks->merge($this->getAssignmentsToInsertFromTable($type, $table));
         }

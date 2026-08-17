@@ -22,14 +22,14 @@ class Airac202002ClactonSplits extends Migration
             ControllerPosition::create(
                 [
                     'callsign' => 'LON_EN_CTR',
-                    'frequency' => 133.95
+                    'frequency' => 133.95,
                 ]
             );
 
             ControllerPosition::create(
                 [
                     'callsign' => 'LON_ES_CTR',
-                    'frequency' => 133.95
+                    'frequency' => 133.95,
                 ]
             );
 

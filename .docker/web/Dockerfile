@@ -73,6 +73,19 @@ RUN chown www:www /run/supervisor
 # Copy supervisor scripts
 COPY ./etc/supervisor /etc/supervisor/
 
+# Install prek (git hook manager)
+RUN ARCH=$(uname -m) \
+    && case "$ARCH" in \
+         x86_64)  BIN="x86_64" ;; \
+         aarch64) BIN="aarch64" ;; \
+         *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
+       esac \
+    && curl -sL --proto '=https' --tlsv1.2 \
+         -o /tmp/prek.tar.gz \
+         "https://github.com/j178/prek/releases/download/v0.4.14/prek-${BIN}-unknown-linux-gnu.tar.gz" \
+    && tar -xzf /tmp/prek.tar.gz -C /usr/local/bin --strip-components=1 \
+    && rm /tmp/prek.tar.gz
+
 # Change current user to www
 USER www
 

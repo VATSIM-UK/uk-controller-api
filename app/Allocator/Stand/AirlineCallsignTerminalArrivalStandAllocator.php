@@ -10,8 +10,8 @@ use Illuminate\Support\Collection;
 
 class AirlineCallsignTerminalArrivalStandAllocator implements ArrivalStandAllocator, RankableArrivalStandAllocator
 {
-    use UsesCallsignSlugs;
     use SelectsStandsFromAirlineSpecificTerminals;
+    use UsesCallsignSlugs;
 
     private AirlineService $airlineService;
 
@@ -63,7 +63,6 @@ class AirlineCallsignTerminalArrivalStandAllocator implements ArrivalStandAlloca
 
     private function queryFilter(NetworkAircraft $aircraft): Closure
     {
-        return fn (Builder $query)
-            => $query->where('airline_terminal.full_callsign', $this->getFullCallsignSlug($aircraft));
+        return fn (Builder $query) => $query->where('airline_terminal.full_callsign', $this->getFullCallsignSlug($aircraft));
     }
 }

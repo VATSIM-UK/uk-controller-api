@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\HandoffService;
 use App\Services\SidService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class SidController extends BaseController
 {
@@ -13,6 +12,7 @@ class SidController extends BaseController
      * @var SidService
      */
     private $sidService;
+
     /**
      * @var HandoffService
      */
@@ -20,7 +20,6 @@ class SidController extends BaseController
 
     /**
      * SidController constructor.
-     * @param SidService $sidService
      */
     public function __construct(SidService $sidService, HandoffService $handoffService)
     {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class NavaidRequest extends FormRequest
 {
@@ -29,9 +29,9 @@ class NavaidRequest extends FormRequest
             Rule::unique('navaids', 'identifier')->ignore($this->identifier, 'identifier');
 
         return [
-            'identifier' => ["required", "string", "max:5", $uniqueRule],
-            'latitude' => ["required", "numeric"],
-            'longitude' => ["required", "numeric"]
+            'identifier' => ['required', 'string', 'max:5', $uniqueRule],
+            'latitude' => ['required', 'numeric'],
+            'longitude' => ['required', 'numeric'],
         ];
     }
 }

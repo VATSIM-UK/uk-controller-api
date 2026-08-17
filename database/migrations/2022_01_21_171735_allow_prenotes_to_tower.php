@@ -2,9 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class AllowPrenotesToTower extends Migration
 {
@@ -37,7 +35,7 @@ class AllowPrenotesToTower extends Migration
             ->update(
                 [
                     'controller_positions.receives_prenotes' => $receivesPrenotes,
-                    'controller_positions.updated_at' => Carbon::now()
+                    'controller_positions.updated_at' => Carbon::now(),
                 ]
             );
     }

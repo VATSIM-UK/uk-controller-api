@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class VisibilityParser implements MetarParser
 {
-    const VISIBLITY_PATTERN = '/^\\d{4}$/';
+    public const VISIBLITY_PATTERN = '/^\\d{4}$/';
 
     public function parse(Airfield $airfield, Collection $metarTokens): Collection
     {
@@ -20,7 +20,8 @@ class VisibilityParser implements MetarParser
                         return true;
                     }
 
-                    $parsedData->offsetSet('visibility', (int)$matches[0]);
+                    $parsedData->offsetSet('visibility', (int) $matches[0]);
+
                     return false;
                 });
             }

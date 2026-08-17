@@ -9,8 +9,7 @@ class NotifyAirlineServiceOfDataUpdate
 {
     public function __construct(
         private readonly AirlineService $airlineService
-    ) {
-    }
+    ) {}
 
     public function handle(AirlinesUpdatedEvent $event)
     {

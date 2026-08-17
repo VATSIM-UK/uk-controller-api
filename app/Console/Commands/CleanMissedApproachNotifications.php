@@ -20,6 +20,7 @@ class CleanMissedApproachNotifications extends Command
             Carbon::now()->subMonths(3)->toDateTimeString()
         )->delete();
         $this->info('Missed approach history cleaned successfully');
+
         return 0;
     }
 }

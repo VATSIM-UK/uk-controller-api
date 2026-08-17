@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Stand;
 
+use App\Models\Airfield\Airfield;
 use App\Models\Airfield\Terminal;
 use App\Models\Stand\Stand;
-use App\Models\Airfield\Airfield;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StandFactory extends Factory
@@ -52,7 +52,7 @@ class StandFactory extends Factory
             );
 
             // These stands are in our seeders, so avoid them, there's bound to be another.
-            if (!in_array($stand, ['1L', '251', '32'])) {
+            if (! in_array($stand, ['1L', '251', '32'])) {
                 return $stand;
             }
         }

@@ -21,7 +21,6 @@ class UpdateVatsimControllerData extends Command
      */
     protected $description = 'Update the VATSIM network controller data';
 
-
     public function handle(NetworkControllerService $dataService)
     {
         $this->info('Starting network controller data update');

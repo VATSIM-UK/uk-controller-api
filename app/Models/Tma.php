@@ -24,21 +24,15 @@ class Tma extends Model implements MinStackDataProviderInterface
         'standard_high',
         'msl_airfield_id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
-    /**
-     * @return HasOne
-     */
-    public function mslAirfield() : HasOne
+    public function mslAirfield(): HasOne
     {
         return $this->hasOne(Airfield::class, 'id', 'msl_airfield_id');
     }
 
-    /**
-     * @return HasOne
-     */
-    public function msl() : HasOne
+    public function msl(): HasOne
     {
         return $this->hasOne(MslTma::class);
     }
@@ -46,7 +40,6 @@ class Tma extends Model implements MinStackDataProviderInterface
     /**
      * The facility against which the MSL should be calculated
      *
-     * @return string
      * @codeCoverageIgnore
      */
     public function calculationFacility(): string
@@ -57,7 +50,6 @@ class Tma extends Model implements MinStackDataProviderInterface
     /**
      * The transition altitude for the facility in question
      *
-     * @return int
      * @codeCoverageIgnore
      */
     public function transitionAltitude(): int
@@ -69,7 +61,6 @@ class Tma extends Model implements MinStackDataProviderInterface
      * True if the facility considers standard pressure (1013) to be
      * high
      *
-     * @return bool
      * @codeCoverageIgnore
      */
     public function standardPressureHigh(): bool

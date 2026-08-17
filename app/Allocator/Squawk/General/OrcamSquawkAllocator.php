@@ -17,7 +17,7 @@ class OrcamSquawkAllocator extends AbstractSquawkAllocator
             substr($origin, 0, 1),
             substr($origin, 0, 2),
             substr($origin, 0, 3),
-            $origin
+            $origin,
         ];
     }
 

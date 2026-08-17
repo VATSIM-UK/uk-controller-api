@@ -4,7 +4,7 @@ $uri = urldecode($_SERVER['REQUEST_URI']);
 $method = urldecode($_SERVER['REQUEST_METHOD']);
 
 if ($method === 'GET' && str_starts_with($uri, '/oauth/authorize')) {
-    header('Location: ' . $_GET['redirect_uri'] . '?code=12345&state=' . $_GET['state']);
+    header('Location: '.$_GET['redirect_uri'].'?code=12345&state='.$_GET['state']);
 } else {
     if ($method === 'POST' && str_starts_with($uri, '/oauth/token')) {
         echo json_encode(

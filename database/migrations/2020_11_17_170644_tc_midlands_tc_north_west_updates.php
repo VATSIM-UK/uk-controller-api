@@ -8,20 +8,20 @@ use Illuminate\Database\Migrations\Migration;
 class TcMidlandsTcNorthWestUpdates extends Migration
 {
     // The airfields whose top-downs are affected
-    const AIRFIELDS = [
+    public const AIRFIELDS = [
         'EGGW',
         'EGSS',
-        'EGSC'
+        'EGSC',
     ];
 
     // The callsign of TC Midlands
-    const POSITION_TO_ADD = 'LTC_M_CTR';
+    public const POSITION_TO_ADD = 'LTC_M_CTR';
 
     // The position after which to add TC Midlands
-    const POSITION_TO_ADD_AFTER = 'LTC_CTR';
+    public const POSITION_TO_ADD_AFTER = 'LTC_CTR';
 
     // The handoff orders affected
-    const HANDOFFS = [
+    public const HANDOFFS = [
         'EGWU_SID_WEST',
         'EGSS_SID_WEST',
         'EGLL_SID_NORTH_WEST',
@@ -45,7 +45,6 @@ class TcMidlandsTcNorthWestUpdates extends Migration
         foreach (self::HANDOFFS as $handoff) {
             HandoffService::insertIntoOrderAfter($handoff, self::POSITION_TO_ADD, self::POSITION_TO_ADD_AFTER);
         }
-
 
         // Handle dependencies
         DependencyService::touchDependencyByKey('DEPENDENCY_CONTROLLER_POSITIONS');

@@ -12,7 +12,7 @@ class CopyRecatToNewTable extends Migration
      */
     public function up()
     {
-        $recatScheme = DB::table('wake_category_schemes')#
+        $recatScheme = DB::table('wake_category_schemes')//
             ->where('key', 'RECAT_EU')
             ->first()
             ->id;
@@ -42,7 +42,5 @@ class CopyRecatToNewTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

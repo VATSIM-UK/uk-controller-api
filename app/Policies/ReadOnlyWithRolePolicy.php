@@ -2,16 +2,16 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\User\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
  * Policy that allows read only access only to users with a role.
  */
 class ReadOnlyWithRolePolicy
 {
-    use HandlesAuthorization;
     use ChecksUserRoles;
+    use HandlesAuthorization;
     use RejectsNonReadOnlyActions;
 
     public function view(?User $user): bool

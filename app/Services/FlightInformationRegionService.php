@@ -14,22 +14,22 @@ class FlightInformationRegionService
             ->firstOrFail();
 
         $addedPoints = [];
-        $polygon = new Polygon();
+        $polygon = new Polygon;
         $fir->boundaries()->orderBy('id', 'ASC')->get()->each(function (FlightInformationRegionBoundary $boundary) use (
             $polygon,
             &$addedPoints
         ) {
-            $firstPointKey = $boundary->start_latitude . ' ' . $boundary->start_longitude;
+            $firstPointKey = $boundary->start_latitude.' '.$boundary->start_longitude;
 
-            if (!in_array($firstPointKey, $addedPoints)) {
+            if (! in_array($firstPointKey, $addedPoints)) {
                 $addedPoints[] = $firstPointKey;
                 $polygon->addPoint(
                     SectorfileService::coordinateFromSectorfile($boundary->start_latitude, $boundary->start_longitude)
                 );
             }
 
-            $secondPointKey = $boundary->finish_latitude . ' ' . $boundary->finish_longitude;
-            if (!in_array($secondPointKey, $addedPoints)) {
+            $secondPointKey = $boundary->finish_latitude.' '.$boundary->finish_longitude;
+            if (! in_array($secondPointKey, $addedPoints)) {
                 $addedPoints[] = $secondPointKey;
                 $polygon->addPoint(
                     SectorfileService::coordinateFromSectorfile($boundary->finish_latitude, $boundary->finish_longitude)

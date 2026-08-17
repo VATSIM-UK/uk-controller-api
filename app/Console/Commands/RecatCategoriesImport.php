@@ -32,7 +32,7 @@ class RecatCategoriesImport extends Command
      */
     public function handle(RecatImporter $importer)
     {
-        if (!Storage::disk('imports')->exists($this->argument('file_name'))) {
+        if (! Storage::disk('imports')->exists($this->argument('file_name'))) {
             throw new InvalidArgumentException(sprintf('Import file not found: %s', $this->argument('file_name')));
         }
 

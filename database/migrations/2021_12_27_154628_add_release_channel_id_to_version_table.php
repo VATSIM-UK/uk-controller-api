@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Version\PluginReleaseChannel;
-use App\Models\Version\Version;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

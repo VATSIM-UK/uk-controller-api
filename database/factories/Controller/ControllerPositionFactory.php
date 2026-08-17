@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ControllerPositionFactory extends Factory
 {
-    const CALLSIGNS = [
+    public const CALLSIGNS = [
         'EGKK_GND',
         'EGKK_TWR',
         'EGLL_N_TWR',

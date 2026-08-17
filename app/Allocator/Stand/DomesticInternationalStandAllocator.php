@@ -16,7 +16,7 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
         NetworkAircraft $aircraft,
         StandAllocationType $type = StandAllocationType::Arrival
     ): ?int {
-        if ($this->comparisonAirfield($aircraft, $type) === null || !$aircraft->aircraft_id) {
+        if ($this->comparisonAirfield($aircraft, $type) === null || ! $aircraft->aircraft_id) {
             return null;
         }
 
@@ -31,7 +31,7 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 
     public function getRankedStandAllocation(NetworkAircraft $aircraft): Collection
     {
-        if ($this->comparisonAirfield($aircraft, StandAllocationType::Arrival) === null || !$aircraft->aircraft_id) {
+        if ($this->comparisonAirfield($aircraft, StandAllocationType::Arrival) === null || ! $aircraft->aircraft_id) {
             return collect();
         }
 

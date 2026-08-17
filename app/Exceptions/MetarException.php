@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Exceptions;
 
 use Exception;
@@ -8,8 +9,5 @@ use Exception;
  * with the provided METAR.
  *
  * Class MetarException
- * @package App\Exceptions
  */
-class MetarException extends Exception
-{
-}
+class MetarException extends Exception {}

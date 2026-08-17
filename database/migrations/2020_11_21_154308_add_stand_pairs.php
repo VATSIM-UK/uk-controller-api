@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddStandPairs extends Migration
 {
-    const STAND_PAIRS_FILE = __DIR__ . '/../data/stands/2020/standpairs.csv';
+    public const STAND_PAIRS_FILE = __DIR__.'/../data/stands/2020/standpairs.csv';
 
     /**
      * Run the migrations.
@@ -19,13 +19,13 @@ class AddStandPairs extends Migration
         while ($line = fgetcsv($pairs)) {
             $airfieldId = Airfield::where('code', $line[0])->first()->id;
             $firstStand = Stand::where('airfield_id', $airfieldId)
-                    ->where('identifier', $line[1])
-                    ->first();
+                ->where('identifier', $line[1])
+                ->first();
             $secondStand = Stand::where('airfield_id', $airfieldId)
-                    ->where('identifier', $line[2])
-                    ->first();
+                ->where('identifier', $line[2])
+                ->first();
 
-            if (!$firstStand || !$secondStand) {
+            if (! $firstStand || ! $secondStand) {
                 dd($firstStand, $secondStand, $line);
             }
 

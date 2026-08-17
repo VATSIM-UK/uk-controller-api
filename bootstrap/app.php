@@ -1,6 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+use App\Console\Kernel;
+use App\Exceptions\Handler;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Foundation\Application;
+
+require_once __DIR__.'/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +18,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 |
 */
 
-$app = new \Illuminate\Foundation\Application(
-    realpath(__DIR__ . '/../')
+$app = new Application(
+    realpath(__DIR__.'/../')
 );
 
 /*
@@ -29,13 +34,13 @@ $app = new \Illuminate\Foundation\Application(
 */
 
 $app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    ExceptionHandler::class,
+    Handler::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
+    Kernel::class
 );
 
 $app->singleton(

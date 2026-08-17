@@ -16,18 +16,16 @@ use Illuminate\Support\Str;
 class HoppieAcarsProvider implements AcarsProviderInterface
 {
     private const ONLINE_CALLSIGNS_CACHE_KEY = 'HOPPIE_ACARS_ONLINE_CALLSIGNS';
+
     private const VATUK_STATION_IDENTIFIER = 'VATSIMUK';
 
     /**
      * Dispatches a job to send a telex message. We dispatch a job because we need to avoid
      * Hoppie rate limiting.
-     *
-     * @param TelexMessageInterface $message
-     * @return void
      */
     public function sendTelex(TelexMessageInterface $message): void
     {
-        if (!$this->getOnlineCallsigns()->contains($message->getTarget())) {
+        if (! $this->getOnlineCallsigns()->contains($message->getTarget())) {
             return;
         }
 
@@ -62,6 +60,7 @@ class HoppieAcarsProvider implements AcarsProviderInterface
     private function makeRequest(string $messageType, string $target, string $data): Response
     {
         $message = $this->buildRequestBody($messageType, $target, $data);
+
         return tap(
             Http::asForm()->timeout(3)->post(
                 config('acars.hoppie.url'),
@@ -82,7 +81,7 @@ class HoppieAcarsProvider implements AcarsProviderInterface
                     ]
                 );
 
-                if (!$success) {
+                if (! $success) {
                     $errorMessage = sprintf('Acars request failed, response: %s', $response->body());
                     Log::error($errorMessage);
                     throw new AcarsRequestException($errorMessage);
@@ -117,6 +116,7 @@ class HoppieAcarsProvider implements AcarsProviderInterface
         $responseBody = $this->getResponseBody(
             $this->makeRequest('ping', self::VATUK_STATION_IDENTIFIER, 'ALL-CALLSIGNS')
         );
+
         return collect($responseBody === '' ? [] : explode(' ', $responseBody));
     }
 }

@@ -36,7 +36,7 @@ class StandAssignmentsHistoryService implements RecordsAssignmentHistory
                     'callsign' => $assignment->callsign,
                     'stand_id' => $assignment->stand_id,
                     'type' => $context->assignmentType,
-                    'user_id' => !is_null(Auth::user()) ? Auth::user()->id : null,
+                    'user_id' => ! is_null(Auth::user()) ? Auth::user()->id : null,
                     'context' => $this->generateContext($context),
                 ]
             );

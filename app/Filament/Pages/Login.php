@@ -2,14 +2,14 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Auth\Http\Responses\Contracts\LoginResponse;
-use Illuminate\Contracts\Support\Htmlable;
 use Filament\Actions\Action;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Schemas\Schema;
+use Illuminate\Contracts\Support\Htmlable;
 
 /**
- * @property \Filament\Schemas\Schema $form
+ * @property Schema $form
  */
 class Login extends \Filament\Auth\Pages\Login
 {
@@ -18,6 +18,7 @@ class Login extends \Filament\Auth\Pages\Login
     public function authenticate(): ?LoginResponse
     {
         $this->redirectRoute('vatsimuk.redirect');
+
         return null;
     }
 

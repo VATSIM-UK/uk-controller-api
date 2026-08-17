@@ -4,6 +4,4 @@ namespace App\Exceptions\Version;
 
 use InvalidArgumentException;
 
-class ReleaseChannelNotFoundException extends InvalidArgumentException
-{
-}
+class ReleaseChannelNotFoundException extends InvalidArgumentException {}

@@ -16,7 +16,7 @@ class UserConfigCollection implements JsonSerializable
     /**
      * Constuctor.
      *
-     * @param array $userConfigs
+     * @param  array  $userConfigs
      */
     public function __construct(UserConfig ...$userConfigs)
     {

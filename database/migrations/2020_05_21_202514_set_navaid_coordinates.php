@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 class SetNavaidCoordinates extends Migration
 {
-    const NAVAIDS = [
+    public const NAVAIDS = [
         'WILLO' => [
             'N050.59.06.000',
             'W000.11.30.000',

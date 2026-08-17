@@ -21,7 +21,7 @@ class NewquayStandardDepartureRoutes extends Migration
             [
                 'EGHQ_APP',
                 'LON_W_CTR',
-                'LON_CTR'
+                'LON_CTR',
             ]
         );
 

@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 
 class StandAssignedEvent extends HighPriorityBroadcastEvent
 {
-    const CHANNEL = 'stand-assignments';
+    public const CHANNEL = 'stand-assignments';
 
     /**
      * @var StandAssignment
@@ -34,14 +34,11 @@ class StandAssignedEvent extends HighPriorityBroadcastEvent
      *
      * @return Channel[]
      */
-    public function broadcastOn() : array
+    public function broadcastOn(): array
     {
         return [new PrivateChannel(self::CHANNEL)];
     }
 
-    /**
-     * @return StandAssignment
-     */
     public function getStandAssignment(): StandAssignment
     {
         return $this->standAssignment;

@@ -4,6 +4,4 @@ namespace App\Exceptions;
 
 use Exception;
 
-class SquawkNotAssignedException extends Exception
-{
-}
+class SquawkNotAssignedException extends Exception {}

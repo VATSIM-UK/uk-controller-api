@@ -2,9 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class StanstedAirlineStandRearrangements extends Migration
 {
@@ -51,7 +49,7 @@ class StanstedAirlineStandRearrangements extends Migration
                     '53',
                     '61',
                     '62',
-                    '63'
+                    '63',
                 ]
             )
             ->update(['assignment_priority' => 5, 'updated_at' => Carbon::now()]);
@@ -62,7 +60,6 @@ class StanstedAirlineStandRearrangements extends Migration
             ->where('airline_id', $easyJet)
             ->whereIn('stand_id', $allStanstedStands)
             ->delete();
-
 
         $newStandPriorities = [];
 

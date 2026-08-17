@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddAirlineTerminalData extends Migration
 {
-    const AIRLINE_TERMINAL_FILE = __DIR__ . '/../data/stands/2020/terminalairlines.csv';
+    public const AIRLINE_TERMINAL_FILE = __DIR__.'/../data/stands/2020/terminalairlines.csv';
 
     /**
      * Run the migrations.
@@ -17,10 +17,10 @@ class AddAirlineTerminalData extends Migration
     {
         $pairs = fopen(self::AIRLINE_TERMINAL_FILE, 'r');
         while ($line = fgetcsv($pairs)) {
-            $airline =             Airline::where('icao_code', $line[1])
+            $airline = Airline::where('icao_code', $line[1])
                 ->first();
 
-            if (!$airline) {
+            if (! $airline) {
                 dd($line);
             }
             Airline::where('icao_code', $line[1])

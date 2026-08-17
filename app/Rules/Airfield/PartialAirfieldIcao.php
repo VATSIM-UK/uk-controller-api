@@ -6,15 +6,15 @@ use Illuminate\Contracts\Validation\Rule;
 
 class PartialAirfieldIcao implements Rule
 {
-    const AIRFIELD_REGEX = '/^[0-9A-Z]{1,4}$/';
-    const REGEX_MATCHED = 1;
+    public const AIRFIELD_REGEX = '/^[0-9A-Z]{1,4}$/';
+
+    public const REGEX_MATCHED = 1;
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed $value
-     * @return bool
+     * @param  string  $attribute
+     * @param  mixed  $value
      */
     public function passes($attribute, $value): bool
     {

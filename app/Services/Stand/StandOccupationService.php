@@ -36,8 +36,8 @@ class StandOccupationService
      */
     private const DISTANCE_FROM_AIRFIELD_TO_CHECK_STANDS = 5000;
 
-
     private readonly StandAssignmentsService $assignmentsService;
+
     private readonly AirfieldStandService $airfieldStandService;
 
     public function __construct(StandAssignmentsService $assignmentsService, AirfieldStandService $airfieldStandService)
@@ -96,7 +96,7 @@ class StandOccupationService
     {
         $occupiedStandsToRemove = $this->getAircraftWithOccupiedStandsThatCanNoLongerOccupyThem();
         $aircraftThatCanOccupyStands = $this->getAircraftThatCanOccupyStands();
-        $standOccupationsToUpdate = new Collection();
+        $standOccupationsToUpdate = new Collection;
 
         foreach ($aircraftThatCanOccupyStands as $aircraft) {
             // Still occupying that same stand, nothing to do.
@@ -191,7 +191,7 @@ class StandOccupationService
      */
     private function occupiedStandShouldBeUpdated(?Stand $currentStand, ?Stand $selectedStand): bool
     {
-        return (!$currentStand && $selectedStand) ||
+        return (! $currentStand && $selectedStand) ||
             ($currentStand && $selectedStand && $currentStand->id !== $selectedStand->id);
     }
 
@@ -200,7 +200,7 @@ class StandOccupationService
      */
     private function occupiedStandShouldBeRemoved(?Stand $currentStand, ?Stand $selectedStand): bool
     {
-        return $currentStand && !$selectedStand;
+        return $currentStand && ! $selectedStand;
     }
 
     /**
@@ -212,13 +212,13 @@ class StandOccupationService
         $selectedStandDistance = PHP_INT_MAX;
 
         foreach ($this->airfieldStandService->getAllStandsByAirfield() as $airfield) {
-            $distanceFromAirfield = $airfield->coordinate->getDistance($aircraft->latLong, new Haversine());
+            $distanceFromAirfield = $airfield->coordinate->getDistance($aircraft->latLong, new Haversine);
             if ($distanceFromAirfield > self::DISTANCE_FROM_AIRFIELD_TO_CHECK_STANDS) {
                 continue;
             }
 
             foreach ($airfield->stands as $stand) {
-                $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+                $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine);
                 if (
                     $this->standOccupied($aircraft, $stand) &&
                     $distanceFromStand < $selectedStandDistance
@@ -234,7 +234,8 @@ class StandOccupationService
 
     private function standOccupied(NetworkAircraft $aircraft, Stand $stand): bool
     {
-        $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine());
+        $distanceFromStand = $stand->coordinate->getDistance($aircraft->latLong, new Haversine);
+
         return $distanceFromStand < self::MAX_OCCUPANCY_DISTANCE_METERS;
     }
 }

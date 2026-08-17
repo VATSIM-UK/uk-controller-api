@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\CoreAuthController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +35,7 @@ Route::prefix('api/documentation')->group(function () {
     Route::get('openapi.yaml', function () {
         $specPath = base_path('docs/openapi.yaml');
 
-        if (!file_exists($specPath)) {
+        if (! file_exists($specPath)) {
             abort(404);
         }
 

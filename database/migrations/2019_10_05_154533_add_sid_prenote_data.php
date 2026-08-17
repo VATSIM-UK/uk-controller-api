@@ -2,9 +2,9 @@
 
 use App\Models\Controller\Prenote;
 use App\Models\Sid;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Migrations\Migration;
 
 class AddSidPrenoteData extends Migration
 {
@@ -38,7 +38,7 @@ class AddSidPrenoteData extends Migration
         DB::table('sid_prenotes')->truncate();
     }
 
-    private function getPrenoteData(array $sids, array $prenotes) : array
+    private function getPrenoteData(array $sids, array $prenotes): array
     {
         return [
             [

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
@@ -9,7 +8,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class MinStacksUpdatedEvent implements ShouldBroadcast
 {
-    const CHANNEL = 'minstack-updates';
+    public const CHANNEL = 'minstack-updates';
 
     /**
      * @var array
@@ -23,8 +22,6 @@ class MinStacksUpdatedEvent implements ShouldBroadcast
 
     /**
      * AirfieldMinStacksUpdatedEvent constructor.
-     * @param array $airfield
-     * @param array $tma
      */
     public function __construct(array $airfield, array $tma)
     {
@@ -37,7 +34,7 @@ class MinStacksUpdatedEvent implements ShouldBroadcast
      *
      * @return Channel[]
      */
-    public function broadcastOn() : array
+    public function broadcastOn(): array
     {
         return [new PrivateChannel(self::CHANNEL)];
     }

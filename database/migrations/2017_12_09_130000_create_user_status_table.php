@@ -1,9 +1,8 @@
 <?php
 
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
 class CreateUserStatusTable extends Migration
 {
@@ -26,15 +25,15 @@ class CreateUserStatusTable extends Migration
             [
                 [
                     'id' => 1,
-                    'status' => 'Active'
+                    'status' => 'Active',
                 ],
                 [
                     'id' => 2,
-                    'status' => 'Banned'
+                    'status' => 'Banned',
                 ],
                 [
                     'id' => 3,
-                    'status' => 'Disabled'
+                    'status' => 'Disabled',
                 ],
             ]
         );

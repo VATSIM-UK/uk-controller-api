@@ -29,13 +29,13 @@ class RecatImporter implements ToCollection
 
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
-            if (!isset($row[0], $row[1])) {
+            if (! isset($row[0], $row[1])) {
                 throw new InvalidArgumentException(
                     sprintf('Invalid RECAT import data: %s', is_array($row) ? implode(',', $row) : 'Not an array')
                 );
             }
 
-            if (!array_key_exists($row[1], $categories)) {
+            if (! array_key_exists($row[1], $categories)) {
                 throw new InvalidArgumentException(
                     sprintf('RECAT category not found: %s', is_array($row) ? implode(',', $row) : 'Not an array')
                 );
@@ -43,7 +43,7 @@ class RecatImporter implements ToCollection
 
             if ($aircraft = Aircraft::where('code', $row[0])->first()) {
                 $categoriesToKeep = $aircraft->wakeCategories->filter(function (WakeCategory $category) {
-                    return !$category->scheme->isRecat();
+                    return ! $category->scheme->isRecat();
                 })->pluck('id')->toArray();
 
                 $aircraft->wakeCategories()->sync(array_merge($categoriesToKeep, [$categories[$row[1]]]));

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class UserCreateKey extends Page
 {
     protected static ?string $slug = 'user-create-api-key';
+
     protected static bool $shouldRegisterNavigation = false;
 
     public function mount(Request $request, UserConfigCreatorInterface $configCreator): void

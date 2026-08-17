@@ -12,11 +12,11 @@ class AddDepartureIntervalGroupPairs extends Migration
      * 1 - Second group name
      * 2 - Interval in seconds when going First group -> second group
      */
-    const PAIRS = [
+    public const PAIRS = [
         [
             'EGBB_SID',
             'EGBB_SID',
-            120
+            120,
         ],
         [
             'EGCC_EKLAD_KUXEM_23',
@@ -966,7 +966,7 @@ class AddDepartureIntervalGroupPairs extends Migration
         [
             'EGLF_SID',
             'EGLF_SID',
-            120
+            120,
         ],
         [
             'EGNM_DOPEK_LAMIX',
@@ -1151,12 +1151,12 @@ class AddDepartureIntervalGroupPairs extends Migration
         [
             'EGPH_SID',
             'EGPH_SID',
-            120
+            120,
         ],
         [
             'EGPK_SID',
             'EGPK_SID',
-            120
+            120,
         ],
         [
             'EGSS_NUGBO',
@@ -1206,12 +1206,12 @@ class AddDepartureIntervalGroupPairs extends Migration
         [
             'EGVA_SID',
             'EGVA_SID',
-            120
+            120,
         ],
         [
             'EGWU_SID',
             'EGWU_SID',
-            120
+            120,
         ],
     ];
 
@@ -1232,9 +1232,9 @@ class AddDepartureIntervalGroupPairs extends Migration
             DB::table('sid_departure_interval_group_sid_departure_interval_group')
                 ->insert(
                     [
-                        'lead_group_id' =>  $groups[$pair[0]],
-                        'follow_group_id' =>  $groups[$pair[1]],
-                        'interval' =>  $pair[2],
+                        'lead_group_id' => $groups[$pair[0]],
+                        'follow_group_id' => $groups[$pair[1]],
+                        'interval' => $pair[2],
                     ]
                 );
         }

@@ -13,13 +13,11 @@ class ControllingOnLiveNetwork
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
      * @return Response
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$this->userLoggedInAndControlling()) {
+        if (! $this->userLoggedInAndControlling()) {
             return response()->json(
                 ['message' => 'You must be controlling on the live network to perform this action']
             )->setStatusCode(403);

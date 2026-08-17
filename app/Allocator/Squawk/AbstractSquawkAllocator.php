@@ -17,7 +17,7 @@ abstract class AbstractSquawkAllocator implements SquawkAllocatorInterface
     final public function allocate(string $callsign, array $details): ?SquawkAssignmentInterface
     {
         // Check if the allocator can actually allocate a squawk
-        if (!$this->canAllocateSquawk($details)) {
+        if (! $this->canAllocateSquawk($details)) {
             return null;
         }
 
