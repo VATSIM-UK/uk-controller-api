@@ -4,7 +4,7 @@ use App\Services\DependencyService;
 use App\Services\IntentionCode\FirExitPointService;
 use Illuminate\Database\Migrations\Migration;
 
-return new class () extends Migration {
+return new class() extends Migration {
     private const DEPENDENCY_KEY = 'DEPENDENCY_FIR_EXIT_POINTS';
 
     /**
