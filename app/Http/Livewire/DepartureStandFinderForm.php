@@ -2,21 +2,20 @@
 
 namespace App\Http\Livewire;
 
-use App\Allocator\Stand\StandAllocationType;
 use App\Filament\Helpers\SelectOptions;
 use App\Models\Aircraft\Aircraft;
 use App\Models\Airfield\Airfield;
 use App\Models\Stand\Stand;
-use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AircraftService;
 use App\Services\AirlineService;
-use App\Services\Stand\ArrivalAllocationService;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class DepartureStandFinderForm extends Component implements HasForms
@@ -101,19 +100,43 @@ class DepartureStandFinderForm extends Component implements HasForms
         $this->dispatch('departureStandFinderFormSubmitted', $this->findStand($airfield, $aircraft, $airlineId));
     }
 
+    private function baseQuery(Airfield $airfield, Aircraft $aircraft): Builder
+    {
+        return Stand::where('airfield_id', $airfield->id)
+            ->available()
+            ->sizeAppropriate($aircraft)
+            ->select('stands.*');
+    }
+
+    private function ordered(Builder $query, array $prependOrders = []): Builder
+    {
+        foreach (
+            array_merge($prependOrders, [
+                'stands.aerodrome_reference_code',
+                'stands.assignment_priority',
+            ]) as $order
+        ) {
+            $query->orderBy($order);
+        }
+
+        return $query;
+    }
+
+    private function pickRandomStand(Builder $query): ?Stand
+    {
+        return $query
+            ->limit(10)
+            ->get()
+            ->shuffle()
+            ->first();
+    }
+
     private function findStand(Airfield $airfield, Aircraft $aircraft, ?int $airlineId): array
     {
-        $networkAircraft = new NetworkAircraft([
-            'callsign' => $this->callsign,
-            'cid' => Auth::id(),
-            'planned_depairport' => $airfield->code,
-            'planned_destairport' => $this->prefiledFlightplan['arrival'] ?? null,
-            'planned_aircraft_short' => $aircraft->code,
-            'aircraft_id' => $aircraft->id,
-            'airline_id' => $airlineId,
-        ]);
+        $stand = $airlineId ? $this->tryAirlineAllocators($airfield, $aircraft, $airlineId) : null;
 
-        $stand = $this->findDepartureStand($networkAircraft);
+        $stand ??= $this->tryOriginSlug($airfield, $aircraft);
+        $stand ??= $this->tryFallback($airfield, $aircraft);
 
         if (! $stand) {
             return [
@@ -138,15 +161,64 @@ class DepartureStandFinderForm extends Component implements HasForms
         ];
     }
 
-    private function findDepartureStand(NetworkAircraft $aircraft): ?Stand
+    private function tryAirlineAllocators(Airfield $airfield, Aircraft $aircraft, int $airlineId): ?Stand
     {
-        foreach (app()->make(ArrivalAllocationService::class)->getAllocators() as $allocator) {
-            if ($standId = $allocator->allocate($aircraft, StandAllocationType::Departure)) {
-                return Stand::find($standId);
+        $slug = app()->make(AirlineService::class)->getCallsignSlugForAircraft($this->callsign);
+
+        $slugs = [];
+        for ($i = 0; $i < Str::length($slug); $i++) {
+            $slugs[] = Str::substr($slug, 0, $i + 1);
+        }
+
+        $steps = [
+            fn (Builder $q) => $q->where('airline_stand.full_callsign', $slug),
+            fn (Builder $q) => $q->whereIn('airline_stand.callsign_slug', $slugs)
+                ->orderByRaw('LENGTH(airline_stand.callsign_slug) DESC'),
+            fn (Builder $q) => $q->where('airline_stand.aircraft_id', $aircraft->id),
+        ];
+
+        $steps[] = fn (Builder $q) => $q->whereNull('airline_stand.destination')
+            ->whereNull('airline_stand.callsign_slug')
+            ->whereNull('airline_stand.full_callsign')
+            ->whereNull('airline_stand.aircraft_id');
+
+        foreach ($steps as $step) {
+            $stand = $this->pickRandomStand($this->ordered(
+                $step($this->baseQuery($airfield, $aircraft)->airline($airlineId))
+                    ->orderBy('airline_stand.priority'),
+                ['airline_stand.priority']
+            ));
+
+            if ($stand) {
+                return $stand;
             }
         }
 
         return null;
+    }
+
+    private function tryOriginSlug(Airfield $airfield, Aircraft $aircraft): ?Stand
+    {
+        $originSlugs = [
+            Str::substr($this->departureAirfield, 0, 1),
+            Str::substr($this->departureAirfield, 0, 2),
+            Str::substr($this->departureAirfield, 0, 3),
+            $this->departureAirfield,
+        ];
+
+        return $this->pickRandomStand($this->ordered(
+            $this->baseQuery($airfield, $aircraft)
+                ->notCargo()
+                ->whereIn('stands.origin_slug', $originSlugs)
+                ->orderByRaw('LENGTH(stands.origin_slug) DESC')
+        ));
+    }
+
+    private function tryFallback(Airfield $airfield, Aircraft $aircraft): ?Stand
+    {
+        return $this->pickRandomStand(
+            $this->ordered($this->baseQuery($airfield, $aircraft)->notCargo())
+        );
     }
 
     public function render()

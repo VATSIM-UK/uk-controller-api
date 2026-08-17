@@ -13,14 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class CallsignFlightplanReservedArrivalStandAllocator implements ArrivalStandAllocator
 {
-    public function allocate(
-        NetworkAircraft $aircraft,
-        StandAllocationType $type = StandAllocationType::Arrival
-    ): ?int {
-        if ($type === StandAllocationType::Departure) {
-            return null;
-        }
-
+    public function allocate(NetworkAircraft $aircraft): ?int
+    {
         $reservation = StandReservation::with('stand')
             ->whereHas('stand', function (Builder $standQuery) {
                 $standQuery->unoccupied()->unassigned();
