@@ -60,8 +60,10 @@ class DomesticInternationalStandAllocator implements ArrivalStandAllocator, Rank
 
     private function comparisonAirfield(NetworkAircraft $aircraft, bool $isForDeparture): ?string
     {
-        return ($isForDeparture
+        $airfield = $isForDeparture
             ? $aircraft->planned_destairport
-            : $aircraft->planned_depairport) ?: null;
+            : $aircraft->planned_depairport;
+
+        return $airfield ?: null;
     }
 }
