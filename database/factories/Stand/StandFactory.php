@@ -24,7 +24,7 @@ class StandFactory extends Factory
     public function definition()
     {
         return [
-            'airfield_id' => Airfield::factory()->create()->id,
+            'airfield_id' => Airfield::factory(),
             'identifier' => $this->standIdentifier(),
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
