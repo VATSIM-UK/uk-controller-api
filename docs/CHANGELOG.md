@@ -1,5 +1,14 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.3...6.68.4) (2026-09-26)
+
+### Bug Fixes
+
+* Add airfield occupancy on departure stand finder ([54f0b11](https://github.com/VATSIM-UK/uk-controller-api/commit/54f0b1118aa49227cc12f3519c1ea6b52592796d))
+* avoid eager airfield creation in stand factory ([dfe8f0a](https://github.com/VATSIM-UK/uk-controller-api/commit/dfe8f0a0b3d70012578ad1042cd2d8ca6174901a))
+* downgrade conventional changelog preset to stable v9 ([8e83a69](https://github.com/VATSIM-UK/uk-controller-api/commit/8e83a698a1c47c4965ff60917e2b855f77305d9f))
+* use latest stable v9 changelog preset ([c27a5ff](https://github.com/VATSIM-UK/uk-controller-api/commit/c27a5ff87fecad85264121a5f547882153cb7080))
+
 ## [6.68.3](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.2...6.68.3) (2026-08-17)
 
 ## [6.68.2](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.1...6.68.2) (2026-08-17)
