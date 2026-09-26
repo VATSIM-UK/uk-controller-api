@@ -10,6 +10,7 @@ use App\Models\Vatsim\NetworkAircraft;
 use App\Services\AircraftService;
 use App\Services\AirlineService;
 use App\Services\Stand\ArrivalAllocationService;
+use App\Services\Stand\StandStatusService;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -97,7 +98,10 @@ class DepartureStandFinderForm extends Component implements HasForms
         $aircraft = Aircraft::findOrFail($this->aircraftType);
         $airlineId = app()->make(AirlineService::class)->airlineIdForCallsign($this->callsign);
 
-        $this->dispatch('departureStandFinderFormSubmitted', $this->findStand($airfield, $aircraft, $airlineId));
+        $result = $this->findStand($airfield, $aircraft, $airlineId);
+        $result['occupancy'] = $this->getOccupancy($airfield);
+
+        $this->dispatch('departureStandFinderFormSubmitted', $result);
     }
 
     private function findStand(Airfield $airfield, Aircraft $aircraft, ?int $airlineId): array
@@ -135,6 +139,20 @@ class DepartureStandFinderForm extends Component implements HasForms
                 'max_aircraft_wingspan' => $stand->max_aircraft_wingspan,
                 'max_aircraft_length' => $stand->max_aircraft_length,
             ],
+        ];
+    }
+
+    private function getOccupancy(Airfield $airfield): array
+    {
+        $statuses = collect(StandStatusService::getAirfieldStandStatus($airfield->code));
+        $total = $statuses->count();
+        $occupied = $statuses->where('status', '!=', 'available')->count();
+
+        return [
+            'airfield' => $airfield->code,
+            'occupied' => $occupied,
+            'total' => $total,
+            'percentage' => $total > 0 ? (int) round($occupied / $total * 100) : 0,
         ];
     }
 

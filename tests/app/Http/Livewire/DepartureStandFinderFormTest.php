@@ -135,6 +135,12 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'max_aircraft_wingspan' => null,
                     'max_aircraft_length' => null,
                 ],
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 1,
+                    'percentage' => 0,
+                ],
             ]);
     }
 
@@ -164,6 +170,12 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'max_aircraft_wingspan' => null,
                     'max_aircraft_length' => null,
                 ],
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 1,
+                    'percentage' => 0,
+                ],
             ]);
     }
 
@@ -178,6 +190,12 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
             ->assertHasNoErrors()
             ->assertDispatched('departureStandFinderFormSubmitted', [
                 'error' => 'No available stand found at EGXY that fits the B73X.',
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 0,
+                    'percentage' => 0,
+                ],
             ]);
     }
 
@@ -240,6 +258,12 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'max_aircraft_wingspan' => null,
                     'max_aircraft_length' => null,
                 ],
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 2,
+                    'percentage' => 0,
+                ],
             ]);
     }
 
@@ -278,6 +302,12 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'max_aircraft_wingspan' => null,
                     'max_aircraft_length' => null,
                 ],
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 2,
+                    'percentage' => 0,
+                ],
             ]);
     }
 
@@ -313,6 +343,12 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'aerodrome_reference_code' => 'C',
                     'max_aircraft_wingspan' => null,
                     'max_aircraft_length' => null,
+                ],
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 2,
+                    'percentage' => 0,
                 ],
             ]);
     }
@@ -350,6 +386,12 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
                     'max_aircraft_wingspan' => null,
                     'max_aircraft_length' => null,
                 ],
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 2,
+                    'percentage' => 0,
+                ],
             ]);
     }
 
@@ -377,6 +419,84 @@ class DepartureStandFinderFormTest extends BaseFilamentTestCase
             ->assertHasNoErrors()
             ->assertDispatched('departureStandFinderFormSubmitted', [
                 'error' => 'No available stand found at EGXY that fits the B73X.',
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 0,
+                    'total' => 0,
+                    'percentage' => 0,
+                ],
+            ]);
+    }
+
+    public function testItShowsOccupancyOnSuccessfulFind()
+    {
+        Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => '123',
+            'aerodrome_reference_code' => 'C',
+            'assignment_priority' => 1,
+        ]);
+        Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'U1',
+            'aerodrome_reference_code' => 'C',
+            'allocation_status' => StandAllocationStatus::Unavailable,
+        ]);
+        Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'U2',
+            'aerodrome_reference_code' => 'C',
+            'allocation_status' => StandAllocationStatus::Unavailable,
+        ]);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'BAW999')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'stand' => [
+                    'identifier' => '123',
+                    'airfield' => $this->icaoCode,
+                    'terminal' => null,
+                    'type' => null,
+                    'aerodrome_reference_code' => 'C',
+                    'max_aircraft_wingspan' => null,
+                    'max_aircraft_length' => null,
+                ],
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 2,
+                    'total' => 3,
+                    'percentage' => 67,
+                ],
+            ]);
+    }
+
+    public function testItShowsOccupancyWhenOnlyUnavailableStandsExist()
+    {
+        Stand::factory()->create([
+            'airfield_id' => $this->airfield->id,
+            'identifier' => 'U1',
+            'aerodrome_reference_code' => 'C',
+            'allocation_status' => StandAllocationStatus::Unavailable,
+        ]);
+
+        Livewire::test(DepartureStandFinderForm::class)
+            ->set('callsign', 'BAW999')
+            ->set('departureAirfield', $this->icaoCode)
+            ->set('aircraftType', $this->aircraft->id)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertDispatched('departureStandFinderFormSubmitted', [
+                'error' => 'No available stand found at EGXY that fits the B73X.',
+                'occupancy' => [
+                    'airfield' => $this->icaoCode,
+                    'occupied' => 1,
+                    'total' => 1,
+                    'percentage' => 100,
+                ],
             ]);
     }
 }
