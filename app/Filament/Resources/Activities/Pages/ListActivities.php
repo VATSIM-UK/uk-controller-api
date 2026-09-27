@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Activities\Pages;
 
+use App\Filament\Resources\Activities\ActivityResource;
 use App\Filament\Resources\Pages\LimitsTableRecordListingOptions;
 use Filament\Resources\Pages\ListRecords;
-use Jacobtims\FilamentLogger\Resources\ActivityResource;
 
 class ListActivities extends ListRecords
 {
