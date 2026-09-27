@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.5](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.4...6.68.5) (2026-09-27)
+
+### Miscellaneous Chores
+
+* dependency superbump ([6298b1b](https://github.com/VATSIM-UK/uk-controller-api/commit/6298b1bf4d727bf3839cc0a62adfd9636ba19a1b))
+
 ## [6.68.4](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.3...6.68.4) (2026-09-26)
 
 ### Bug Fixes
