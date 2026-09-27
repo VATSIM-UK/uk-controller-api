@@ -1,8 +1,8 @@
 [[repos]]
 repo = "builtin"
 hooks = [
-  { id = "trailing-whitespace" },
-  { id = "end-of-file-fixer" },
+  { id = "trailing-whitespace", exclude = "^public/fonts/filament/" },
+  { id = "end-of-file-fixer", exclude = "^public/fonts/filament/" },
   { id = "check-yaml" },
   { id = "check-toml" },
   { id = "check-merge-conflict" },
