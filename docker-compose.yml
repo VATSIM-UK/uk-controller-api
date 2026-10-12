@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   # Webserver running PHP-FPM and nginx
   web:
@@ -22,6 +21,23 @@ services:
       - ./.docker/web/sso:/var/www/sso
       - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
       - ./.docker/web/mysql-client:/etc/mysql/conf.d/
+      # Keep dependencies and token/config off the bind mount so they persist
+      # across rebuilds and stay owned by the container user.
+      - vendor:/var/www/ukcp/vendor
+      - node_modules:/var/www/ukcp/node_modules
+      - gh-config:/home/www/.config/gh
+      - composer-cache:/home/www/.cache/composer
+      - yarn-cache:/home/www/.cache/yarn
+      - npm-cache:/home/www/.npm
+      # SSH: forward the host agent and expose host keys read-only.
+      - ${HOME}/.ssh:/home/www/.ssh:ro
+      - ${SSH_AUTH_SOCK:-/dev/null}:/ssh-agent:ro
+    environment:
+      SSH_AUTH_SOCK: /ssh-agent
+      COMPOSER_CACHE_DIR: /home/www/.cache/composer
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - ukcp-network
 
@@ -40,6 +56,12 @@ services:
       MYSQL_DATABASE: uk_plugin
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-psecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
     networks:
       - ukcp-network
 
@@ -96,4 +118,16 @@ volumes:
   mysqldata:
     driver: local
   mysqltestdata:
+    driver: local
+  gh-config:
+    driver: local
+  vendor:
+    driver: local
+  node_modules:
+    driver: local
+  composer-cache:
+    driver: local
+  yarn-cache:
+    driver: local
+  npm-cache:
     driver: local

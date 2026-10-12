@@ -38,6 +38,12 @@ COPY ./usr/local/etc/php/conf.d/local.ini /usr/local/etc/php/conf.d/local.ini
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# System-wide git defaults. These deliberately live in /etc/gitconfig rather than
+# ~/.gitconfig: the Dev Containers extension copies the host's ~/.gitconfig in
+# after postCreateCommand, but skips it if ~/.gitconfig already exists.
+RUN git config --system --add safe.directory /var/www/ukcp \
+    && git config --system push.autoSetupRemote true
+
 # Upgrade node to latest version and install things
 RUN npm install -g yarn
 RUN apt-get remove npm -y
@@ -48,6 +54,18 @@ RUN yarn global add cross-env
 # Add user for laravel application and websockets
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
+
+# Pre-create directories that are backed by named volumes (composer/npm caches,
+# gh config, vendor, node_modules). Docker copies this ownership into a fresh
+# named volume, which matters because the container has no sudo to chown later.
+RUN mkdir -p \
+        /home/www/.config/gh \
+        /home/www/.cache/composer \
+        /home/www/.cache/yarn \
+        /home/www/.npm \
+        /var/www/ukcp/vendor \
+        /var/www/ukcp/node_modules \
+    && chown -R www:www /home/www /var/www/ukcp
 
 # Setup nginx directories
 RUN mkdir -p /var/log/nginx
