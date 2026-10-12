@@ -38,6 +38,12 @@ COPY ./usr/local/etc/php/conf.d/local.ini /usr/local/etc/php/conf.d/local.ini
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# System-wide git defaults. These deliberately live in /etc/gitconfig rather than
+# ~/.gitconfig: the Dev Containers extension copies the host's ~/.gitconfig in
+# after postCreateCommand, but skips it if ~/.gitconfig already exists.
+RUN git config --system --add safe.directory /var/www/ukcp \
+    && git config --system push.autoSetupRemote true
+
 # Upgrade node to latest version and install things
 RUN npm install -g yarn
 RUN apt-get remove npm -y

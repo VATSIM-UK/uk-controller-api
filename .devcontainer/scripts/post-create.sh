@@ -9,8 +9,18 @@ step() {
     echo "==> $1"
 }
 
-git config --global --add safe.directory /var/www/ukcp
-git config --global push.autoSetupRemote true
+# NB: deliberately no `git config --global` here. The Dev Containers extension
+# copies the host's ~/.gitconfig into the container *after* this script runs,
+# but skips that copy if ~/.gitconfig already exists. System-scope defaults
+# (safe.directory / push.autoSetupRemote) are set in the Dockerfile instead.
+if [ -z "$(git config user.email 2>/dev/null || true)" ]; then
+    echo
+    echo "warning: git user.email is not set, so commits will fail. VS Code copies it"
+    echo "         from your host ~/.gitconfig when the container starts; if that did"
+    echo "         not happen, set it once with:"
+    echo "           git config --global user.name  \"Your Name\""
+    echo "           git config --global user.email \"you@example.com\""
+fi
 
 if [ ! -f .env ]; then
     step "Creating .env"
