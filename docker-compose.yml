@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   # Webserver running PHP-FPM and nginx
   web:
