@@ -35,7 +35,7 @@ class StandReservationsImport implements ToCollection
      *
      * @param  Collection[]  $rows
      */
-    public function collection(Collection $rows)
+    public function collection(Collection $rows): void
     {
         $this->output->progressStart($rows->count());
         foreach ($rows as $row) {
