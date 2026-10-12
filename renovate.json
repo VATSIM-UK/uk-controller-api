@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "schedule:weekly",
+    ":semanticCommitTypeAll(build)"
+  ],
+  "enabledManagers": ["composer", "npm", "github-actions", "nvm"],
+  "timezone": "Europe/London",
+  "rangeStrategy": "bump",
+  "platformAutomerge": false,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch"],
+      "groupName": "patch dependencies",
+      "automerge": true
+    },
+    {
+      "matchManagers": ["composer", "npm"],
+      "matchDepTypes": ["require", "dependencies"],
+      "semanticCommitScope": "deps"
+    },
+    {
+      "matchManagers": ["composer", "npm"],
+      "matchDepTypes": ["require-dev", "devDependencies"],
+      "semanticCommitScope": "deps-dev"
+    }
+  ]
+}
