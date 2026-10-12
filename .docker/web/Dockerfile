@@ -49,6 +49,9 @@ RUN yarn global add cross-env
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
+# Persist GitHub CLI configuration across container rebuilds (mounted as a named volume)
+RUN mkdir -p /home/www/.config/gh && chown -R www:www /home/www/.config
+
 # Setup nginx directories
 RUN mkdir -p /var/log/nginx
 RUN touch /var/log/nginx/access.log

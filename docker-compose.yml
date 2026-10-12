@@ -22,6 +22,7 @@ services:
       - ./.docker/web/sso:/var/www/sso
       - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
       - ./.docker/web/mysql-client:/etc/mysql/conf.d/
+      - gh-config:/home/www/.config/gh
     networks:
       - ukcp-network
 
@@ -96,4 +97,6 @@ volumes:
   mysqldata:
     driver: local
   mysqltestdata:
+    driver: local
+  gh-config:
     driver: local
