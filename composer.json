@@ -22,7 +22,7 @@
         "bugsnag/bugsnag-laravel": "^2.31.0",
         "composer/semver": "^3.5.1",
         "filament/filament": "^4.11.2",
-        "guzzlehttp/guzzle": "^7.15.5",
+        "guzzlehttp/guzzle": "^8.2.0",
         "jacobtims/filament-logger": "^1.2",
         "knplabs/github-api": "^3.16.1",
         "laravel/framework": "^12",
