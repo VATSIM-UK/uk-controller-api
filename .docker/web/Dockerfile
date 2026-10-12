@@ -49,8 +49,17 @@ RUN yarn global add cross-env
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
-# Persist GitHub CLI configuration across container rebuilds (mounted as a named volume)
-RUN mkdir -p /home/www/.config/gh && chown -R www:www /home/www/.config
+# Pre-create directories that are backed by named volumes (composer/npm caches,
+# gh config, vendor, node_modules). Docker copies this ownership into a fresh
+# named volume, which matters because the container has no sudo to chown later.
+RUN mkdir -p \
+        /home/www/.config/gh \
+        /home/www/.cache/composer \
+        /home/www/.cache/yarn \
+        /home/www/.npm \
+        /var/www/ukcp/vendor \
+        /var/www/ukcp/node_modules \
+    && chown -R www:www /home/www /var/www/ukcp
 
 # Setup nginx directories
 RUN mkdir -p /var/log/nginx

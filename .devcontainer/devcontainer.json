@@ -53,6 +53,6 @@
             "label": "MySQL"
         }
     },
-    "postCreateCommand": "prek install",
+    "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
     "shutdownAction": "stopCompose"
 }
