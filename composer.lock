@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74de879bc4c4649f135d30a284da8878",
+    "content-hash": "d03f77ddd836a530c2a5f678a7956890",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -11629,12 +11629,12 @@
             "version": "v5.7.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/vlucas/phpdotenv.git",
+                "url": "https://github.com/phpdotenv/phpdotenv.git",
                 "reference": "301c07936b16d88628b126b01d082ba153cf4c40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
+                "url": "https://api.github.com/repos/phpdotenv/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
                 "reference": "301c07936b16d88628b126b01d082ba153cf4c40",
                 "shasum": ""
             },
@@ -14368,5 +14368,8 @@
         "ext-simplexml": "*"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.4.24"
+    },
     "plugin-api-version": "2.9.0"
 }
