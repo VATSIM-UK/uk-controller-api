@@ -23,6 +23,10 @@ services:
       - ./.docker/web/etc/nginx/conf.d:/etc/nginx/conf.d
       - ./.docker/web/mysql-client:/etc/mysql/conf.d/
       - gh-config:/home/www/.config/gh
+      - ${HOME}/.ssh:/home/www/.ssh:ro
+      - ${SSH_AUTH_SOCK:-/dev/null}:/ssh-agent:ro
+    environment:
+      SSH_AUTH_SOCK: /ssh-agent
     networks:
       - ukcp-network
 
