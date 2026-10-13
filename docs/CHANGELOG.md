@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.8](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.7...6.68.8) (2026-10-13)
+
+### Bug Fixes
+
+* **passport:** stop enforcing OAuth key file permissions ([140c6dc](https://github.com/VATSIM-UK/uk-controller-api/commit/140c6dc9632b7814c4b1e94c4a0247085dc89610))
+
 ## [6.68.7](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.6...6.68.7) (2026-10-13)
 
 ### Miscellaneous Chores
