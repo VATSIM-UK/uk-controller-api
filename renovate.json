@@ -19,7 +19,8 @@
     {
       "matchManagers": ["composer"],
       "matchPackageNames": ["phpunit/phpunit", "brianium/paratest"],
-      "groupName": "phpunit + paratest"
+      "groupName": "phpunit + paratest",
+      "separateMajorMinor": false
     },
     {
       "matchManagers": ["composer", "npm"],
