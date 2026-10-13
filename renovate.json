@@ -17,6 +17,11 @@
       "automerge": true
     },
     {
+      "matchManagers": ["composer"],
+      "matchPackageNames": ["phpunit/phpunit", "brianium/paratest"],
+      "groupName": "phpunit + paratest"
+    },
+    {
       "matchManagers": ["composer", "npm"],
       "matchDepTypes": ["require", "dependencies"],
       "semanticCommitScope": "deps"
