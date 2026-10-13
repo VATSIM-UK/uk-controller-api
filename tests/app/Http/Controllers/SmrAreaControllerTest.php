@@ -29,14 +29,18 @@ class SmrAreaControllerTest extends BaseApiTestCase
             'end_date'    => Carbon::now()->subDay(),
         ]);
 
-        $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'smr-areas')
-            ->assertOk()
-            ->assertSeeText('COORD:ACTIVE:AREA1')
-            ->assertSeeText('COORD:ACTIVE:AREA2')
-            ->assertDontSeeText('INACTIVE')
-            ->assertDontSeeText("1\nCOORD")
-            ->assertDontSeeText('1COORD')
-            ->assertDontSeeText("2\nCOORD")
-            ->assertDontSeeText('2COORD');
+        $response = $this->makeUnauthenticatedApiRequest(self::METHOD_GET, 'smr-areas');
+        $response->assertOk();
+
+        // assertSeeText normalises whitespace in Laravel 13, so assert on the raw body.
+        $content = $response->getContent();
+
+        $this->assertStringContainsString('COORD:ACTIVE:AREA1', $content);
+        $this->assertStringContainsString('COORD:ACTIVE:AREA2', $content);
+        $this->assertStringNotContainsString('INACTIVE', $content);
+        $this->assertStringNotContainsString("1\nCOORD", $content);
+        $this->assertStringNotContainsString('1COORD', $content);
+        $this->assertStringNotContainsString("2\nCOORD", $content);
+        $this->assertStringNotContainsString('2COORD', $content);
     }
 }

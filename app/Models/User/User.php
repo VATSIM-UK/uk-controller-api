@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -25,7 +26,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  *
  * Class User
  */
-class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName
+class User extends Model implements AuthenticatableContract, AuthorizableContract, FilamentUser, HasName, OAuthenticatable
 {
     use Authenticatable;
     use Authorizable;

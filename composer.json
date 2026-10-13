@@ -13,7 +13,7 @@
     "license": "GPL 3.0",
     "type": "project",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-curl": "*",
         "ext-intl": "*",
         "ext-json": "*",
@@ -25,9 +25,9 @@
         "guzzlehttp/guzzle": "^7.15.5",
         "jacobtims/filament-logger": "^1.2",
         "knplabs/github-api": "^3.16.1",
-        "laravel/framework": "^12",
+        "laravel/framework": "^13.0",
         "laravel/horizon": "^5.50.0",
-        "laravel/passport": "^12.4.3",
+        "laravel/passport": "^13.0",
         "laravel/socialite": "^5.5",
         "maatwebsite/excel": "^4.0.4",
         "mjaschen/phpgeo": "^6.0.4",
@@ -41,11 +41,11 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.4.4",
-        "brianium/paratest": "^7.8",
+        "brianium/paratest": "^7.26.1",
         "fakerphp/faker": "^1.24.1",
         "mockery/mockery": "^1.6.15",
         "nunomaduro/collision": "^8.9.5",
-        "phpunit/phpunit": "11.5.57"
+        "phpunit/phpunit": "^13.4"
     },
     "autoload": {
         "psr-4": {
