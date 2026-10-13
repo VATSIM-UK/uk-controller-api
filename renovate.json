@@ -29,6 +29,13 @@
       "separateMajorMinor": false
     },
     {
+      "description": "spatie/laravel-activitylog + jacobtims/filament-logger",
+      "matchManagers": ["composer"],
+      "matchPackageNames": ["spatie/laravel-activitylog", "jacobtims/filament-logger"],
+      "groupName": "spatie/laravel-activitylog + jacobtims/filament-logger",
+      "separateMajorMinor": false
+    },
+    {
       "matchManagers": ["composer", "npm"],
       "matchDepTypes": ["require", "dependencies"],
       "semanticCommitScope": "deps"
