@@ -45,7 +45,7 @@ class VersionResourceTest extends BaseFilamentTestCase
             );
     }
 
-    #[DataProvider('rolesProvider')]
+    #[DataProvider('displaysActionProvider')]
     public function testItDoesntDisplayRestoreActionOnActiveVersions(?RoleKeys $role)
     {
         $user = User::factory()->create();
@@ -80,7 +80,7 @@ class VersionResourceTest extends BaseFilamentTestCase
             );
     }
 
-    #[DataProvider('rolesProvider')]
+    #[DataProvider('displaysActionProvider')]
     public function testItDoesntDisplayDeleteActionOnDeletedVersions(?RoleKeys $role)
     {
         $user = User::factory()->create();
@@ -105,17 +105,6 @@ class VersionResourceTest extends BaseFilamentTestCase
             'Operations' => [RoleKeys::OPERATIONS_TEAM, false],
             'DSG' => [RoleKeys::DIVISION_STAFF_GROUP, false],
             'Web' => [RoleKeys::WEB_TEAM, true],
-        ];
-    }
-
-    public static function rolesProvider(): array
-    {
-        return [
-            'None' => [null],
-            'Contributor' => [RoleKeys::OPERATIONS_CONTRIBUTOR],
-            'Operations' => [RoleKeys::OPERATIONS_TEAM],
-            'DSG' => [RoleKeys::DIVISION_STAFF_GROUP],
-            'Web' => [RoleKeys::WEB_TEAM],
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\BaseFunctionalTestCase;
 use App\Models\User\User;
 use Illuminate\Support\Facades\Artisan;
-use Laravel\Passport\Client;
+use Laravel\Passport\PersonalAccessClient;
 
 class UserAdminCreateTest extends BaseFunctionalTestCase
 {
@@ -24,10 +24,7 @@ class UserAdminCreateTest extends BaseFunctionalTestCase
 
     public function testItCreatesAUser()
     {
-        $personalAccessClientId = Client::query()
-            ->get()
-            ->first(fn (Client $client) => $client->hasGrantType('personal_access'))
-            ->id;
+        $personalAccessClientId = PersonalAccessClient::latest()->firstOrFail()->client_id;
 
         Artisan::call(self::ARTISAN_COMMAND);
         $userId = User::where('id', 2)->first()->id;

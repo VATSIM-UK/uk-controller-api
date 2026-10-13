@@ -8,12 +8,12 @@ use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\GithubAuth;
 use App\Http\Middleware\LogAdminAction;
 use App\Http\Middleware\MiddlewareKeys;
-use App\Http\Middleware\PreventRequestForgery;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\UserIsBanned;
 use App\Http\Middleware\UserIsDisabled;
 use App\Http\Middleware\UserLastLogin;
 use App\Http\Middleware\VatsimCid;
+use App\Http\Middleware\VerifyCsrfToken;
 use App\Providers\AuthServiceProvider;
 use Bugsnag\BugsnagLaravel\OomBootstrapper;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -22,8 +22,8 @@ use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Laravel\Passport\Http\Middleware\CheckToken;
-use Laravel\Passport\Http\Middleware\CheckTokenForAnyScope;
+use Laravel\Passport\Http\Middleware\CheckForAnyScope;
+use Laravel\Passport\Http\Middleware\CheckScopes;
 
 class Kernel extends HttpKernel
 {
@@ -38,8 +38,8 @@ class Kernel extends HttpKernel
         MiddlewareKeys::USER_BANNED => UserIsBanned::class,
         MiddlewareKeys::USER_DISABLED => UserIsDisabled::class,
         MiddlewareKeys::USER_LASTLOGIN => UserLastLogin::class,
-        MiddlewareKeys::SCOPES => CheckToken::class,
-        MiddlewareKeys::SCOPE => CheckTokenForAnyScope::class,
+        MiddlewareKeys::SCOPES => CheckScopes::class,
+        MiddlewareKeys::SCOPE => CheckForAnyScope::class,
         MiddlewareKeys::VATSIM_CID => VatsimCid::class,
         MiddlewareKeys::CONTROLLING_LIVE => ControllingOnLiveNetwork::class,
     ];
@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
             AddQueuedCookiesToResponse::class,
             StartSession::class,
             ShareErrorsFromSession::class,
-            PreventRequestForgery::class,
+            VerifyCsrfToken::class,
             SubstituteBindings::class,
         ],
         'api' => [

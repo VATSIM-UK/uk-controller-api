@@ -11,7 +11,7 @@ use App\Models\User\UserStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
-use Laravel\Passport\Client;
+use Laravel\Passport\PersonalAccessClient;
 use TestingUtils\Traits\WithSeedUsers;
 
 class UserServiceTest extends BaseFunctionalTestCase
@@ -31,10 +31,7 @@ class UserServiceTest extends BaseFunctionalTestCase
     {
         parent::setUp();
         $this->service = $this->app->make(UserService::class);
-        $this->personalAccessClientId = Client::query()
-            ->get()
-            ->first(fn (Client $client) => $client->hasGrantType('personal_access'))
-            ->id;
+        $this->personalAccessClientId = PersonalAccessClient::latest()->firstOrFail()->client_id;
     }
 
     public function testItConstructs()

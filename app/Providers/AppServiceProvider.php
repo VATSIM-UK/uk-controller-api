@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rule;
-use Laravel\Passport\Passport;
 use Laravel\Socialite\Contracts\Factory;
 use Livewire\Livewire;
 
@@ -28,9 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Passport 13 defaults to UUID client IDs; this app uses integer IDs.
-        Passport::$clientUuids = false;
-
         Bugsnag::registerCallback(function ($report) {
             if (Auth::check()) {
                 $user = Auth::user();
