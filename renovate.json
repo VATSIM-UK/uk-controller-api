@@ -17,6 +17,12 @@
       "automerge": true
     },
     {
+      "description": "Keep the devcontainer/test MySQL image on v8 (no v9+)",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["mysql"],
+      "allowedVersions": "<9"
+    },
+    {
       "matchManagers": ["composer"],
       "matchPackageNames": ["phpunit/phpunit", "brianium/paratest"],
       "groupName": "phpunit + paratest",
