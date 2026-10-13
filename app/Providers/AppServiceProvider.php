@@ -31,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
         // Passport 13 defaults to UUID client IDs; this app uses integer IDs.
         Passport::$clientUuids = false;
 
+        // Passport 13 validates the OAuth key file permissions (600 private / 660 public)
+        // and refuses to start the OAuth servers otherwise. The deployed key files are
+        // not guaranteed to be that strict, so don't enforce the check here.
+        Passport::$validateKeyPermissions = false;
+
         Bugsnag::registerCallback(function ($report) {
             if (Auth::check()) {
                 $user = Auth::user();
