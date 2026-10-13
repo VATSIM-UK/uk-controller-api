@@ -3467,16 +3467,16 @@
         },
         {
             "name": "laravel/prompts",
-            "version": "v0.3.25",
+            "version": "v0.3.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/prompts.git",
-                "reference": "21b7b49d60fcb700016dd27b582ae739c75de816"
+                "reference": "2d1e9bf6bab8d3f383c254db7f2b4ea8816d55e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/prompts/zipball/21b7b49d60fcb700016dd27b582ae739c75de816",
-                "reference": "21b7b49d60fcb700016dd27b582ae739c75de816",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/2d1e9bf6bab8d3f383c254db7f2b4ea8816d55e0",
+                "reference": "2d1e9bf6bab8d3f383c254db7f2b4ea8816d55e0",
                 "shasum": ""
             },
             "require": {
@@ -3519,9 +3519,9 @@
             ],
             "description": "Add beautiful and user-friendly forms to your command-line applications.",
             "support": {
-                "source": "https://github.com/laravel/prompts/tree/v0.3.25"
+                "source": "https://github.com/laravel/prompts/tree/v0.3.26"
             },
-            "time": "2026-10-06T02:25:49+00:00"
+            "time": "2026-10-09T14:45:13+00:00"
         },
         {
             "name": "laravel/sentinel",
@@ -7917,16 +7917,16 @@
         },
         {
             "name": "saloonphp/saloon",
-            "version": "v4.3.0",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/saloonphp/saloon.git",
-                "reference": "8476092949f1b544b2a04d7ecaa71d98c3c2f7fe"
+                "reference": "2f45e526f9d1d10a138f864492b074b046d2e52e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/saloonphp/saloon/zipball/8476092949f1b544b2a04d7ecaa71d98c3c2f7fe",
-                "reference": "8476092949f1b544b2a04d7ecaa71d98c3c2f7fe",
+                "url": "https://api.github.com/repos/saloonphp/saloon/zipball/2f45e526f9d1d10a138f864492b074b046d2e52e",
+                "reference": "2f45e526f9d1d10a138f864492b074b046d2e52e",
                 "shasum": ""
             },
             "require": {
@@ -7934,6 +7934,7 @@
                 "guzzlehttp/promises": "^1.5 || ^2.0 || ^3.0",
                 "guzzlehttp/psr7": "^2.0 || ^3.0",
                 "php": "^8.2",
+                "psr/clock": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.1 || ^2.0"
             },
@@ -7986,7 +7987,7 @@
             ],
             "support": {
                 "issues": "https://github.com/saloonphp/saloon/issues",
-                "source": "https://github.com/saloonphp/saloon/tree/v4.3.0"
+                "source": "https://github.com/saloonphp/saloon/tree/v4.5.0"
             },
             "funding": [
                 {
@@ -7994,7 +7995,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-18T21:37:59+00:00"
+            "time": "2026-10-03T14:00:29+00:00"
         },
         {
             "name": "scrivo/highlight.php",
@@ -8551,16 +8552,16 @@
         },
         {
             "name": "spatie/laravel-package-tools",
-            "version": "1.93.2",
+            "version": "1.93.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-package-tools.git",
-                "reference": "e927d5b5b05e9fecae098e559e51918aa608ad02"
+                "reference": "7aeef26bd8d4909bec744dbf47aee7d1395588c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/e927d5b5b05e9fecae098e559e51918aa608ad02",
-                "reference": "e927d5b5b05e9fecae098e559e51918aa608ad02",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/7aeef26bd8d4909bec744dbf47aee7d1395588c1",
+                "reference": "7aeef26bd8d4909bec744dbf47aee7d1395588c1",
                 "shasum": ""
             },
             "require": {
@@ -8600,7 +8601,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-package-tools/issues",
-                "source": "https://github.com/spatie/laravel-package-tools/tree/1.93.2"
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.93.3"
             },
             "funding": [
                 {
@@ -8608,7 +8609,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-26T09:13:25+00:00"
+            "time": "2026-09-28T07:16:50+00:00"
         },
         {
             "name": "spatie/laravel-schedule-monitor",
@@ -9387,16 +9388,16 @@
         },
         {
             "name": "symfony/html-sanitizer",
-            "version": "v8.1.7",
+            "version": "v8.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/html-sanitizer.git",
-                "reference": "3d79bdecd01f71bccc45ddfa1d33c024df347a1f"
+                "reference": "c67061a71d3f8b55f899faee3167422efa4db027"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/html-sanitizer/zipball/3d79bdecd01f71bccc45ddfa1d33c024df347a1f",
-                "reference": "3d79bdecd01f71bccc45ddfa1d33c024df347a1f",
+                "url": "https://api.github.com/repos/symfony/html-sanitizer/zipball/c67061a71d3f8b55f899faee3167422efa4db027",
+                "reference": "c67061a71d3f8b55f899faee3167422efa4db027",
                 "shasum": ""
             },
             "require": {
@@ -9435,7 +9436,7 @@
                 "sanitizer"
             ],
             "support": {
-                "source": "https://github.com/symfony/html-sanitizer/tree/v8.1.7"
+                "source": "https://github.com/symfony/html-sanitizer/tree/v8.1.8"
             },
             "funding": [
                 {
@@ -9455,7 +9456,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-04T10:14:04+00:00"
+            "time": "2026-09-28T08:00:04+00:00"
         },
         {
             "name": "symfony/http-foundation",
