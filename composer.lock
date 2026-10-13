@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4acaba930a868522b8202b0ff56aab9c",
+    "content-hash": "5819ac49e823abef7c0c3d9b1597d49c",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -12009,16 +12009,16 @@
         },
         {
             "name": "brianium/paratest",
-            "version": "v7.26.1",
+            "version": "v7.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paratestphp/paratest.git",
-                "reference": "4660303009de20706b71d2df487bb89fb4d8a4c2"
+                "reference": "9ac7ab32637db3cd4b6451183214ac330aa16d85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paratestphp/paratest/zipball/4660303009de20706b71d2df487bb89fb4d8a4c2",
-                "reference": "4660303009de20706b71d2df487bb89fb4d8a4c2",
+                "url": "https://api.github.com/repos/paratestphp/paratest/zipball/9ac7ab32637db3cd4b6451183214ac330aa16d85",
+                "reference": "9ac7ab32637db3cd4b6451183214ac330aa16d85",
                 "shasum": ""
             },
             "require": {
@@ -12086,7 +12086,7 @@
             ],
             "support": {
                 "issues": "https://github.com/paratestphp/paratest/issues",
-                "source": "https://github.com/paratestphp/paratest/tree/v7.26.1"
+                "source": "https://github.com/paratestphp/paratest/tree/v7.27.0"
             },
             "funding": [
                 {
@@ -12098,7 +12098,7 @@
                     "type": "paypal"
                 }
             ],
-            "time": "2026-10-10T20:10:31+00:00"
+            "time": "2026-10-13T19:05:35+00:00"
         },
         {
             "name": "fakerphp/faker",
