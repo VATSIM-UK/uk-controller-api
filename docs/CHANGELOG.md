@@ -1,5 +1,12 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.7](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.6...6.68.7) (2026-10-13)
+
+### Miscellaneous Chores
+
+* require php 8.4 ([153971d](https://github.com/VATSIM-UK/uk-controller-api/commit/153971d5967a707ee848c5cfa1f5b82f8bf49898))
+* update to laravel 13 ([a653843](https://github.com/VATSIM-UK/uk-controller-api/commit/a653843343d039ed0b01eadbdd15f34e0cbed8c3))
+
 ## [6.68.6](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.5...6.68.6) (2026-10-12)
 
 ### Miscellaneous Chores
