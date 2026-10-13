@@ -4,7 +4,8 @@
     "config:recommended",
     "schedule:weekly",
     ":semanticCommitTypeAll(build)",
-    ":approveMajorUpdates"
+    ":approveMajorUpdates",
+    ":enableVulnerabilityAlerts"
   ],
   "enabledManagers": ["composer", "npm", "github-actions", "nvm"],
   "timezone": "Europe/London",
