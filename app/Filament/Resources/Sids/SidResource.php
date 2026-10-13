@@ -35,8 +35,6 @@ class SidResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map';
 
-    protected static ?string $recordRouteKeyName = 'sid.id';
-
     protected static ?string $recordTitleAttribute = 'identifier';
 
     protected static ?string $navigationLabel = 'SIDs';
