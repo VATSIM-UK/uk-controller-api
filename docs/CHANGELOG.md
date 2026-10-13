@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.9](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.8...6.68.9) (2026-10-13)
+
+### Miscellaneous Chores
+
+* lock devcontainer mysql to v8 ([8444694](https://github.com/VATSIM-UK/uk-controller-api/commit/8444694d6463b84e90d73ec8340028babcde90b0))
+
 ## [6.68.8](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.7...6.68.8) (2026-10-13)
 
 ### Bug Fixes
