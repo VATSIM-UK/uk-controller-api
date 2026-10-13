@@ -11,6 +11,9 @@
   "timezone": "Europe/London",
   "rangeStrategy": "bump",
   "platformAutomerge": false,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "matchUpdateTypes": ["patch"],
