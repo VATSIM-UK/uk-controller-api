@@ -199,6 +199,15 @@ jobs:
             rm -rf $RELEASE_DIRECTORY/storage
             ln -s $SHARED_DIRECTORY/storage $RELEASE_DIRECTORY/storage
 
+            # Passport 13 validates the OAuth key file permissions (600 private / 660 public),
+            # so never let the blanket `chmod -R 775` above leave the keys looser than that.
+            if [ -f "$SHARED_DIRECTORY/storage/oauth-private.key" ]; then
+              chmod 600 "$SHARED_DIRECTORY/storage/oauth-private.key"
+            fi
+            if [ -f "$SHARED_DIRECTORY/storage/oauth-public.key" ]; then
+              chmod 660 "$SHARED_DIRECTORY/storage/oauth-public.key"
+            fi
+
             # Update the current link to point to this release
             ln -sfn $RELEASE_DIRECTORY $APPLICATION_ROOT/current
           envs: RELEASE_DIRECTORY,SHARED_DIRECTORY,APPLICATION_ROOT
