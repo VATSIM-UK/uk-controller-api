@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.11](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.10...6.68.11) (2026-10-13)
+
+### Miscellaneous Chores
+
+* couple activitylog + filament-logger for dep updates ([099e776](https://github.com/VATSIM-UK/uk-controller-api/commit/099e776c9329ed11dde668bcbd42c23384871bfc))
+
 ## [6.68.10](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.9...6.68.10) (2026-10-13)
 
 ### Miscellaneous Chores
