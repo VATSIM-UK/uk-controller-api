@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.10](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.9...6.68.10) (2026-10-13)
+
+### Miscellaneous Chores
+
+* force recreate paratest databases on startup ([9b65cfa](https://github.com/VATSIM-UK/uk-controller-api/commit/9b65cfaa1b5a32209167a02bef3ba182c1a16c31))
+
 ## [6.68.9](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.8...6.68.9) (2026-10-13)
 
 ### Miscellaneous Chores
