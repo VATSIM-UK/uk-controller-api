@@ -10,7 +10,7 @@
   "enabledManagers": ["composer", "npm", "github-actions", "nvm"],
   "timezone": "Europe/London",
   "rangeStrategy": "bump",
-  "platformAutomerge": false,
+  "platformAutomerge": true,
   "lockFileMaintenance": {
     "enabled": true
   },
