@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.12](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.11...6.68.12) (2026-10-15)
+
+### Miscellaneous Chores
+
+* enable platform automerge for renovate ([dcb5a7a](https://github.com/VATSIM-UK/uk-controller-api/commit/dcb5a7ada8441c3e5c2476b310d856a90a34877d))
+
 ## [6.68.11](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.10...6.68.11) (2026-10-13)
 
 ### Miscellaneous Chores
