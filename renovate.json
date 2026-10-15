@@ -11,6 +11,7 @@
   "timezone": "Europe/London",
   "rangeStrategy": "bump",
   "platformAutomerge": true,
+  "reviewers": ["kristiankunc"],
   "lockFileMaintenance": {
     "enabled": true
   },
