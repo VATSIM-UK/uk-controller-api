@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c860f921ea6209ba9ff59b1234b87c2d",
+    "content-hash": "4a5815cb00c85989428e4173db0b3f62",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -12010,16 +12010,16 @@
         },
         {
             "name": "brianium/paratest",
-            "version": "v7.27.1",
+            "version": "v7.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paratestphp/paratest.git",
-                "reference": "739b3b1b5065c52664ef5a77716593ab9d5e263d"
+                "reference": "3b1189e2e36ac3e958d8cb362433862123eb7566"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paratestphp/paratest/zipball/739b3b1b5065c52664ef5a77716593ab9d5e263d",
-                "reference": "739b3b1b5065c52664ef5a77716593ab9d5e263d",
+                "url": "https://api.github.com/repos/paratestphp/paratest/zipball/3b1189e2e36ac3e958d8cb362433862123eb7566",
+                "reference": "3b1189e2e36ac3e958d8cb362433862123eb7566",
                 "shasum": ""
             },
             "require": {
@@ -12033,7 +12033,7 @@
                 "phpunit/php-code-coverage": "^14.4.1",
                 "phpunit/php-file-iterator": "^7.0.2",
                 "phpunit/php-timer": "^9",
-                "phpunit/phpunit": "^13.4.1",
+                "phpunit/phpunit": "^13.4.2",
                 "sebastian/environment": "^9.3.3",
                 "symfony/console": "^7.4.20 || ^8.1.8",
                 "symfony/process": "^7.4.19 || ^8.1.7"
@@ -12087,7 +12087,7 @@
             ],
             "support": {
                 "issues": "https://github.com/paratestphp/paratest/issues",
-                "source": "https://github.com/paratestphp/paratest/tree/v7.27.1"
+                "source": "https://github.com/paratestphp/paratest/tree/v7.27.2"
             },
             "funding": [
                 {
@@ -12099,7 +12099,7 @@
                     "type": "paypal"
                 }
             ],
-            "time": "2026-10-14T05:58:28+00:00"
+            "time": "2026-10-16T12:01:22+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -13318,16 +13318,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.4.2",
+            "version": "13.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7b9ba83328f01ce299ef82161720195bd827a4bb"
+                "reference": "2180c47c4229e5da117ff248753370443c074f10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7b9ba83328f01ce299ef82161720195bd827a4bb",
-                "reference": "7b9ba83328f01ce299ef82161720195bd827a4bb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2180c47c4229e5da117ff248753370443c074f10",
+                "reference": "2180c47c4229e5da117ff248753370443c074f10",
                 "shasum": ""
             },
             "require": {
@@ -13398,7 +13398,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.3"
             },
             "funding": [
                 {
@@ -13406,7 +13406,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-12T15:29:04+00:00"
+            "time": "2026-10-16T05:56:47+00:00"
         },
         {
             "name": "sebastian/cli-parser",
