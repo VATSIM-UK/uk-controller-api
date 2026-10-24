@@ -39,7 +39,7 @@ jobs:
         uses: ramsey/composer-install@v4
 
       - name: Run Prek
-        uses: j178/prek-action@v3.0.1
+        uses: j178/prek-action@v3.1.0
 
   test:
     name: PHP ${{ matrix.php }} / Composer ${{ matrix.composer }}
