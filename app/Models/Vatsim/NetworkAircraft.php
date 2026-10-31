@@ -54,6 +54,10 @@ class NetworkAircraft extends Model
         'aircraft_id',
         'airline_id',
         'remarks',
+        'clearance_flag',
+        'ground_state',
+        'clearance_flag_updated_at',
+        'ground_state_updated_at',
     ];
 
     protected $casts = [
@@ -61,6 +65,10 @@ class NetworkAircraft extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'transponder_last_updated_at' => 'datetime',
+        'clearance_flag' => 'boolean',
+        'ground_state' => GroundState::class,
+        'clearance_flag_updated_at' => 'datetime',
+        'ground_state_updated_at' => 'datetime',
     ];
 
     public static function boot()
