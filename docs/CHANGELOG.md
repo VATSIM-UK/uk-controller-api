@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.13](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.12...6.68.13) (2026-11-02)
+
+### Miscellaneous Chores
+
+* create minor prs instantly ([bbe7dd3](https://github.com/VATSIM-UK/uk-controller-api/commit/bbe7dd3eafa6afd2e2840e54c64ba7dfc1f0273a))
+
 ## [6.68.12](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.11...6.68.12) (2026-10-15)
 
 ### Miscellaneous Chores
