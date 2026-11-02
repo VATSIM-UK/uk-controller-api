@@ -20,7 +20,7 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "bugsnag/bugsnag-laravel": "^2.31.0",
-        "composer/semver": "^3.5.2",
+        "composer/semver": "^3.6.0",
         "filament/filament": "^5.11.0",
         "guzzlehttp/guzzle": "^8.3.1",
         "jacobtims/filament-logger": "^1.2",
