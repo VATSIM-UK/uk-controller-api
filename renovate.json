@@ -2,7 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "schedule:weekly",
     ":semanticCommitTypeAll(build)",
     ":approveMajorUpdates",
     ":enableVulnerabilityAlerts"
@@ -13,11 +12,13 @@
   "platformAutomerge": true,
   "reviewers": ["kristiankunc"],
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "extends": ["schedule:weekly"]
   },
   "packageRules": [
     {
       "matchUpdateTypes": ["patch"],
+      "extends": ["schedule:weekly"],
       "groupName": "patch dependencies",
       "automerge": true
     },
