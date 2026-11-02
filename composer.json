@@ -21,7 +21,7 @@
         "ext-simplexml": "*",
         "bugsnag/bugsnag-laravel": "^2.31.0",
         "composer/semver": "^3.5.2",
-        "filament/filament": "^5.10.3",
+        "filament/filament": "^5.11.0",
         "guzzlehttp/guzzle": "^8.3.1",
         "jacobtims/filament-logger": "^1.2",
         "knplabs/github-api": "^3.16.1",
@@ -40,7 +40,7 @@
         "spatie/laravel-schedule-monitor": "^4.3.1"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^4.4.4",
+        "barryvdh/laravel-debugbar": "^4.4.5",
         "brianium/paratest": "^7.27.5",
         "fakerphp/faker": "^1.24.1",
         "mockery/mockery": "^1.6.15",
