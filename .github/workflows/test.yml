@@ -96,6 +96,9 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: "24.22.2"
+
+      - name: Enable Corepack
+        run: corepack enable
       #
       # COMPOSER DEPENDENICES
       #
@@ -134,7 +137,7 @@ jobs:
       # Restore Caches
       - name: Get Yarn Cache Directory
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
       - name: Load Yarn Cache
         uses: actions/cache@v6
@@ -153,7 +156,7 @@ jobs:
 
       # Install
       - name: Install Assets
-        run: yarn
+        run: yarn install --immutable
 
       - name: Compile Assets
         run: yarn run prod

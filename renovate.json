@@ -4,9 +4,11 @@
     "config:recommended",
     ":semanticCommitTypeAll(build)",
     ":approveMajorUpdates",
-    ":enableVulnerabilityAlerts"
+    ":enableVulnerabilityAlerts",
+    "helpers:pinGitHubActionDigestsToSemver"
   ],
-  "enabledManagers": ["composer", "npm", "github-actions", "nvm"],
+  "minimumReleaseAge": "3 days",
+  "enabledManagers": ["composer", "npm", "github-actions", "nvm", "dockerfile", "docker-compose", "devcontainer"],
   "timezone": "Europe/London",
   "rangeStrategy": "bump",
   "platformAutomerge": true,
@@ -17,16 +19,48 @@
   },
   "packageRules": [
     {
+      "description": "No age wait for pins, replacements and timestamp-less updates",
+      "matchUpdateTypes": ["pin", "pinDigest", "replacement", "bump", "lockfileUpdate", "rollback"],
+      "minimumReleaseAge": null
+    },
+    {
       "matchUpdateTypes": ["patch"],
       "extends": ["schedule:weekly"],
       "groupName": "patch dependencies",
       "automerge": true
     },
     {
-      "description": "Keep the devcontainer/test MySQL image on v8 (no v9+)",
+      "description": "Composer + npm minors: one weekly PR, manual merge",
+      "matchManagers": ["composer", "npm"],
+      "matchUpdateTypes": ["minor"],
+      "extends": ["schedule:weekly"],
+      "groupName": "minor dependencies"
+    },
+    {
+      "description": "GitHub Actions non-major: one weekly PR, manual merge (deploy.yml gets prod secrets)",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "extends": ["schedule:weekly"],
+      "groupName": "github actions",
+      "automerge": false
+    },
+    {
+      "description": "Docker images: one PR, manual merge",
+      "matchManagers": ["dockerfile", "docker-compose", "devcontainer"],
+      "groupName": "docker images",
+      "automerge": false
+    },
+    {
+      "description": "MySQL stays on v8",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["mysql"],
       "allowedVersions": "<9"
+    },
+    {
+      "description": "No PHP minor/major bumps (image and composer require); 8.4 moves by hand",
+      "matchDepNames": ["php"],
+      "matchUpdateTypes": ["minor", "major"],
+      "enabled": false
     },
     {
       "matchManagers": ["composer"],

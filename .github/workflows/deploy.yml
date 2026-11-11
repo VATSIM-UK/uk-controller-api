@@ -77,6 +77,9 @@ jobs:
         with:
           node-version: "24.22.2"
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Configure PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -117,7 +120,7 @@ jobs:
       # Restore Caches
       - name: Get Yarn Cache Directory
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
       - name: Restore Yarn Cache
         uses: actions/cache@v6
@@ -130,7 +133,7 @@ jobs:
 
       # Install node_modules
       - name: Install Assets
-        run: yarn
+        run: yarn install --immutable
 
       # Run Webpack
       - name: Compile Assets
@@ -138,7 +141,7 @@ jobs:
 
       # Not required for deployment
       - name: Remove node_modules
-        run: "rm -rf node_modules"
+        run: "rm -rf node_modules .yarn"
 
       - name: Reduce Composer Dependencies To Production
         run: composer install --no-interaction --no-dev --optimize-autoloader

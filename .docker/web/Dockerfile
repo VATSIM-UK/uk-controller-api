@@ -36,7 +36,7 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 COPY ./usr/local/etc/php/conf.d/local.ini /usr/local/etc/php/conf.d/local.ini
 
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer/composer:2.11.2-bin /composer /usr/local/bin/composer
 
 # System-wide git defaults. These deliberately live in /etc/gitconfig rather than
 # ~/.gitconfig: the Dev Containers extension copies the host's ~/.gitconfig in

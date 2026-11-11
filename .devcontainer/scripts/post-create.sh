@@ -45,7 +45,8 @@ if grep -qE '^APP_KEY=$' .env; then
 fi
 
 step "Installing frontend dependencies and building assets"
-yarn install --frozen-lockfile
+COREPACK_ENABLE_DOWNLOAD_PROMPT=0 corepack enable
+yarn install --immutable
 yarn build
 
 step "Running database migrations"
