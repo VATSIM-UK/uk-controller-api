@@ -32,9 +32,12 @@ jobs:
         with:
           node-version: "24.22.2"
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Get Yarn Cache Directory
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
       - name: Load Yarn Cache
         uses: actions/cache@v6
@@ -53,7 +56,7 @@ jobs:
 
       # Install yarn things
       - name: Install Assets
-        run: yarn
+        run: yarn install --immutable
 
       # Generate Release
       # This will trigger the deployment workflow
