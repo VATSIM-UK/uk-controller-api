@@ -13,7 +13,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Checkout Codes
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           ref: ${{ github.event.client_payload.ref }}
@@ -34,7 +34,7 @@ jobs:
       # DEPLOYMENT PARAMETERS
       #
       - name: Set additional deployment variables
-        uses: allenevans/set-env@v4.0.0
+        uses: allenevans/set-env@7ccfd08576e7096fe3b98928bd0320d2b9a65728 # v4.0.0
         with:
           APP_URL: https://ukcp.vatsim.uk
           APPLICATION_ROOT: ${{ secrets.APPLICATION_ROOT }}
@@ -60,7 +60,7 @@ jobs:
       #
       # GITHUB DEPLOYMENT JOB START
       #
-      - uses: chrnorm/deployment-action@releases/v1
+      - uses: chrnorm/deployment-action@fe2fba14b486343ce6893cff73b80e153063917a # releases/v1
         name: Create GitHub Deployment
         id: github_deployment
         with:
@@ -73,7 +73,7 @@ jobs:
       # BUILD DEPENDENCIES SETUP
       #
       - name: Setup Yarn
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: "24.22.2"
 
@@ -81,7 +81,7 @@ jobs:
         run: corepack enable
 
       - name: Configure PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
         with:
           php-version: 8.4
           tools: v2
@@ -97,7 +97,7 @@ jobs:
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Restore Composer Cache
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -105,7 +105,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Restore Vendor From Cache
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: vendor
           key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
@@ -123,7 +123,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
       - name: Restore Yarn Cache
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -151,7 +151,7 @@ jobs:
       # Prepare remote environment and deploy application
       #
       - name: Deploy application
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@7e85c2e09aa21988492acd66466b5d68bda49e2b # master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -165,7 +165,7 @@ jobs:
       # Conduct server-side post-deployment tasks and make application version live.
       #
       - name: (Remote) Setup .env & install composer dependencies
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@c4f70287fc37c43b14b30b407224bbbc8e8c6327 # master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER}}
@@ -186,7 +186,7 @@ jobs:
           envs: RELEASE_DIRECTORY,APPLICATION_ROOT,TAG,PHP_PATH
 
       - name: (Remote) Update symbolic links
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@c4f70287fc37c43b14b30b407224bbbc8e8c6327 # master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER}}
@@ -216,7 +216,7 @@ jobs:
           envs: RELEASE_DIRECTORY,SHARED_DIRECTORY,APPLICATION_ROOT
 
       - name: (Remote) Run migrations and deployment tasks
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@c4f70287fc37c43b14b30b407224bbbc8e8c6327 # master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER}}
@@ -261,7 +261,7 @@ jobs:
       # Create a Sentry release
       #
       - name: Create Sentry release
-        uses: getsentry/action-release@v3
+        uses: getsentry/action-release@e6703d0b00208e0b3687ba660d18ab5af7892821 # v3
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: vatsim-uk
@@ -275,7 +275,7 @@ jobs:
       # Perform post-deployment housekeeping actions (release history)
       #
       - name: Housekeeping
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@c4f70287fc37c43b14b30b407224bbbc8e8c6327 # master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER}}
@@ -303,7 +303,7 @@ jobs:
       #
       - name: Update Deployment Status (Failed)
         if: failure()
-        uses: chrnorm/deployment-status@releases/v1
+        uses: chrnorm/deployment-status@598d987f3a8dec3817b995f810e6de7c06c92106 # releases/v1
         with:
           token: ${{ github.token }}
           target_url: https://ukcp.vatsim.uk
@@ -312,7 +312,7 @@ jobs:
 
       - name: Update Deployment Status (Success)
         if: success()
-        uses: chrnorm/deployment-status@releases/v1
+        uses: chrnorm/deployment-status@598d987f3a8dec3817b995f810e6de7c06c92106 # releases/v1
         with:
           token: ${{ github.token }}
           target_url: https://ukcp.vatsim.uk
