@@ -11,7 +11,7 @@
         "ghcr.io/devcontainers/features/git:1": {},
         "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/devcontainers/features/node:1": {
-            "version": "24.21.0"
+            "version": "24.22.2"
         }
     },
     "postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
