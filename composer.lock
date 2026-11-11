@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b9a0aac1a6a2950eb53bf84365f7ff6",
+    "content-hash": "1ff7036eeab22865aace2675ba244f27",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -3369,16 +3369,16 @@
         },
         {
             "name": "laravel/passport",
-            "version": "v13.10.0",
+            "version": "v13.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "f5f5e9f64559dd52339daa0d6102cb1c30e4a0d7"
+                "reference": "cd4755d6b80b9eae0ae290909750e8e73e8a4752"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/f5f5e9f64559dd52339daa0d6102cb1c30e4a0d7",
-                "reference": "f5f5e9f64559dd52339daa0d6102cb1c30e4a0d7",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/cd4755d6b80b9eae0ae290909750e8e73e8a4752",
+                "reference": "cd4755d6b80b9eae0ae290909750e8e73e8a4752",
                 "shasum": ""
             },
             "require": {
@@ -3397,7 +3397,7 @@
                 "league/oauth2-server": "^9.2",
                 "php": "^8.2",
                 "php-http/discovery": "^1.20",
-                "phpseclib/phpseclib": "^4.0",
+                "phpseclib/phpseclib": "4.0.1",
                 "psr/http-factory-implementation": "*",
                 "symfony/console": "^7.1|^8.0",
                 "symfony/psr-http-message-bridge": "^7.1|^8.0"
@@ -3441,8 +3441,8 @@
                 "issues": "https://github.com/laravel/passport/issues",
                 "source": "https://github.com/laravel/passport"
             },
-            "time": "2026-10-08T20:13:55+00:00",
-            "published-time": "2026-10-13T15:17:52+00:00"
+            "time": "2026-10-14T20:09:36+00:00",
+            "published-time": "2026-11-10T16:08:11+00:00"
         },
         {
             "name": "laravel/pint",
@@ -6896,16 +6896,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "4.0.3",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "6077cecfed9e371993d3aa339b0afeb23f7bf636"
+                "reference": "bb7b959c8159957edae6f5084ebbac765d310e16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/6077cecfed9e371993d3aa339b0afeb23f7bf636",
-                "reference": "6077cecfed9e371993d3aa339b0afeb23f7bf636",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/bb7b959c8159957edae6f5084ebbac765d310e16",
+                "reference": "bb7b959c8159957edae6f5084ebbac765d310e16",
                 "shasum": ""
             },
             "require": {
@@ -6929,6 +6929,9 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "phpseclib/bootstrap.php"
+                ],
                 "psr-4": {
                     "phpseclib4\\": "phpseclib/"
                 }
@@ -6965,7 +6968,8 @@
                 },
                 {
                     "name": "Jack Worman",
-                    "email": "jack.worman@proton.me",
+                    "email": "jack.worman@gmail.com",
+                    "homepage": "https://jackworman.com",
                     "role": "Developer"
                 }
             ],
@@ -6992,7 +6996,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/4.0.3"
+                "source": "https://github.com/phpseclib/phpseclib/tree/4.0.1"
             },
             "funding": [
                 {
@@ -7008,8 +7012,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-02T10:46:03+00:00",
-            "published-time": "2026-11-02T10:50:47+00:00"
+            "time": "2026-08-26T12:15:13+00:00",
+            "published-time": "2026-08-26T12:17:11+00:00"
         },
         {
             "name": "pragmarx/google2fa",
