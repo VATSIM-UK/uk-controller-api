@@ -43,7 +43,7 @@ services:
 
   # Database
   mysql:
-    image: mysql:8.4
+    image: mysql:8.4@sha256:a81d043930e51745522bd5c430961cf8286f0a23f0a9a2a6e0108f7ea71b0902
     container_name: mysql
     restart: unless-stopped
     ports:
@@ -65,7 +65,7 @@ services:
 
   # Database for test suite
   mysql-test:
-    image: mysql:8.4
+    image: mysql:8.4@sha256:a81d043930e51745522bd5c430961cf8286f0a23f0a9a2a6e0108f7ea71b0902
     container_name: mysql-test
     restart: unless-stopped
     ports:
@@ -82,7 +82,7 @@ services:
 
   # Redis
   redis:
-    image: redis:alpine
+    image: redis:alpine@sha256:7958cfbb9d152f87dadfbc89f1b0b15938f0b81ff8982feb327476f4911935c3
     container_name: redis
     command: redis-server /usr/local/etc/redis/redis.conf
     ports:
@@ -94,7 +94,7 @@ services:
       - ukcp-network
 
   adminer:
-    image: adminer:latest
+    image: adminer:latest@sha256:3a07decd833c2375ea749aa8018250c1db4859a78bd55354f797bfb591733233
     container_name: adminer
     restart: unless-stopped
     ports:
