@@ -44,7 +44,7 @@
         "brianium/paratest": "^7.27.5",
         "fakerphp/faker": "^1.24.1",
         "mockery/mockery": "^1.6.15",
-        "nunomaduro/collision": "^8.9.5",
+        "nunomaduro/collision": "^8.9.6",
         "phpunit/phpunit": "^13.4.6"
     },
     "autoload": {
