@@ -5,7 +5,10 @@
     ":semanticCommitTypeAll(build)",
     ":approveMajorUpdates",
     ":enableVulnerabilityAlerts",
-    "helpers:pinGitHubActionDigestsToSemver"
+    ":configMigration",
+    "abandonments:recommended",
+    "helpers:pinGitHubActionDigestsToSemver",
+    "docker:pinDigests"
   ],
   "minimumReleaseAge": "3 days",
   "enabledManagers": ["composer", "npm", "github-actions", "nvm", "dockerfile", "docker-compose", "devcontainer"],
@@ -13,6 +16,10 @@
   "rangeStrategy": "bump",
   "platformAutomerge": true,
   "reviewers": ["kristiankunc"],
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboard": {
+    "osvVulnerabilitySummary": true
+  },
   "lockFileMaintenance": {
     "enabled": true,
     "extends": ["schedule:weekly"]
@@ -20,7 +27,7 @@
   "packageRules": [
     {
       "description": "No age wait for pins, replacements and timestamp-less updates",
-      "matchUpdateTypes": ["pin", "pinDigest", "replacement", "bump", "lockfileUpdate", "rollback"],
+      "matchUpdateTypes": ["pin", "pinDigest", "digest", "replacement", "bump", "lockfileUpdate", "rollback"],
       "minimumReleaseAge": null
     },
     {
