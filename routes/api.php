@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AircraftStateController;
 use App\Http\Controllers\MissedApproachController;
 use App\Http\Controllers\PluginLogController;
 use App\Http\Controllers\PrenoteMessageController;
@@ -93,6 +94,14 @@ Route::middleware('api')
                         Route::post('stand/assignment/requestauto', 'StandController@requestAutomaticStandAssignment');
                         Route::delete('stand/assignment/{callsign}', 'StandController@deleteStandAssignment')
                             ->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
+
+                        // Controller-assigned aircraft state
+                        Route::prefix('aircraft-state')
+                            ->controller(AircraftStateController::class)
+                            ->group(function () {
+                                Route::get('', 'getStates');
+                                Route::put('', 'updateStates');
+                            });
 
                         // Notifications
                         Route::get('notifications', 'NotificationController@getActiveNotifications');
