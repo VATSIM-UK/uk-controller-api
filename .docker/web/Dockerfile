@@ -44,11 +44,12 @@ COPY --from=composer/composer:2.11.2-bin /composer /usr/local/bin/composer
 RUN git config --system --add safe.directory /var/www/ukcp \
     && git config --system push.autoSetupRemote true
 
-# Upgrade node to latest version and install things
+# Install Node at the same version used by .nvmrc / CI, plus global tools
+ARG NODE_VERSION=24.22.2
 RUN npm install -g yarn
 RUN apt-get remove npm -y
 RUN yarn global add n
-RUN n latest
+RUN n "${NODE_VERSION}"
 RUN yarn global add cross-env
 
 # Add user for laravel application and websockets
