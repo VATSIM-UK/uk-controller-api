@@ -56,7 +56,7 @@ jobs:
         experimental: [false]
     services:
       mysql:
-        image: mysql:8.4
+        image: mysql:8.4@sha256:a81d043930e51745522bd5c430961cf8286f0a23f0a9a2a6e0108f7ea71b0902
         env:
           DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password
           MYSQL_ALLOW_EMPTY_PASSWORD: false
@@ -65,7 +65,7 @@ jobs:
           - 32574:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
       redis:
-        image: redis:alpine
+        image: redis:alpine@sha256:7958cfbb9d152f87dadfbc89f1b0b15938f0b81ff8982feb327476f4911935c3
         ports:
           - "32575:6379"
         options: >-
