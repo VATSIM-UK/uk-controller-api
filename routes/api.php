@@ -250,6 +250,10 @@ Route::middleware('api')
                             'controller-positions-v2',
                             'ControllerPositionController@getControllerPositionsDependency'
                         );
+                        Route::get(
+                            'controller/{callsign}/top-down',
+                            'ControllerPositionController@getTopDownForPosition'
+                        )->where('callsign', VatsimCallsign::CALLSIGN_REGEX);
 
                         // Airfields
                         Route::get('airfield', 'AirfieldController@getAllAirfields');

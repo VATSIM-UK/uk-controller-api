@@ -6,6 +6,7 @@ use App\Helpers\Vatsim\ControllerPositionParser;
 use App\Models\Controller\ControllerPosition;
 use App\Models\Controller\ControllerPositionAlternativeCallsign;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ControllerService
@@ -33,6 +34,27 @@ class ControllerService
                 ];
             }
         );
+    }
+
+    public function getTopDownPositionsForPosition(string $callsign): Collection
+    {
+        $position = ControllerPosition::fromCallsign($callsign);
+
+        $positionIds = DB::table('top_downs as target')
+            ->join('top_downs as below', function ($join) {
+                $join->on('below.airfield_id', '=', 'target.airfield_id')
+                    ->whereColumn('below.order', '<', 'target.order');
+            })
+            ->where('target.controller_position_id', $position->id)
+            ->orderByDesc('below.order')
+            ->orderBy('below.controller_position_id')
+            ->pluck('below.controller_position_id')
+            ->unique()
+            ->values();
+
+        $positions = ControllerPosition::whereIn('id', $positionIds)->get()->keyBy('id');
+
+        return $positionIds->map(fn ($id) => $positions->get($id))->filter()->values();
     }
 
     public static function getControllerLevelFromCallsign(string $callsign): string
