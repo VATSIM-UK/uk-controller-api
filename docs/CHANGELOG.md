@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.14](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.13...6.68.14) (2026-11-15)
+
+### Bug Fixes
+
+* add position topdown endpoint ([85ce8b0](https://github.com/VATSIM-UK/uk-controller-api/commit/85ce8b0e84dd7d22d05a88e82b3d81ca16673907))
+
 ## [6.68.13](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.12...6.68.13) (2026-11-02)
 
 ### Miscellaneous Chores
