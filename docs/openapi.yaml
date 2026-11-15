@@ -101,6 +101,32 @@ paths:
                 items:
                   $ref: '#/components/schemas/ControllerPositionDependency'
 
+  /controller/{callsign}/top-down:
+    get:
+      summary: Get top-down positions
+      description: Returns the controller positions below the given position in every top-down order it appears in.
+      tags:
+        - Controllers
+      parameters:
+        - name: callsign
+          in: path
+          required: true
+          schema:
+            type: string
+            example: LON_S_CTR
+          description: Controller position callsign
+      responses:
+        '200':
+          description: Controller positions below the given position
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ControllerPosition'
+        '404':
+          description: Controller position not found
+
   /airfield:
     get:
       summary: Get all airfields
