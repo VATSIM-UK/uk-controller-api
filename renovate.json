@@ -17,7 +17,9 @@
   "platformAutomerge": true,
   "reviewers": ["kristiankunc"],
   "osvVulnerabilityAlerts": true,
-  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "dependencyDashboard": {
+    "osvVulnerabilitySummary": "unresolved"
+  },
   "lockFileMaintenance": {
     "enabled": true,
     "extends": ["schedule:weekly"]
