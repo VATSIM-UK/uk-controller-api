@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.15](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.14...6.68.15) (2026-11-17)
+
+### Miscellaneous Chores
+
+* **config:** migrate config renovate.json ([f63bd4a](https://github.com/VATSIM-UK/uk-controller-api/commit/f63bd4add749df66336efc3afe60b4dc7b626e70))
+
 ## [6.68.14](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.13...6.68.14) (2026-11-15)
 
 ### Bug Fixes
