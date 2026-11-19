@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.16](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.15...6.68.16) (2026-11-19)
+
+### Bug Fixes
+
+* add runway dependency http controller ([e54c084](https://github.com/VATSIM-UK/uk-controller-api/commit/e54c08499c50351396e2eb83c34a88fd29ea94dd))
+
 ## [6.68.15](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.14...6.68.15) (2026-11-17)
 
 ### Miscellaneous Chores
