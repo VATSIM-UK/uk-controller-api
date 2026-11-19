@@ -576,6 +576,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/Sid'
 
+  /runway/dependency:
+    get:
+      summary: Get runways dependency
+      description: Returns all runways, allowing runway IDs returned by other endpoints such as /sid/dependency to be resolved to a runway designator.
+      tags:
+        - Runways
+      responses:
+        '200':
+          description: Runway dependency data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RunwayDependency'
+
   /stand/status:
     get:
       summary: Get airfield stand status
@@ -1182,6 +1198,7 @@ components:
           example: EGLL
         runway_id:
           type: integer
+          description: Runway ID, resolvable via /runway/dependency
         identifier:
           type: string
           example: BNN1B
@@ -1203,6 +1220,39 @@ components:
           type: array
           items:
             type: integer
+
+    # ── Runways ───────────────────────────────────────────────
+    RunwayDependency:
+      type: object
+      properties:
+        id:
+          type: integer
+        airfield_id:
+          type: integer
+        identifier:
+          type: string
+          example: 27L
+        heading:
+          type: integer
+          example: 270
+        threshold_latitude:
+          type: number
+          format: double
+          example: 51.4775
+        threshold_longitude:
+          type: number
+          format: double
+          example: -0.4614
+        threshold_elevation:
+          type: integer
+          example: 83
+        inverse_runway_id:
+          type: integer
+          nullable: true
+        glideslope_angle:
+          type: number
+          format: double
+          example: 3
 
     # ── Stands ────────────────────────────────────────────────
     StandStatus:
