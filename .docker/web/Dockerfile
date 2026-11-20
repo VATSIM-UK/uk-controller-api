@@ -1,4 +1,4 @@
-FROM php:8.4-fpm@sha256:212c3c9fc09d58f6b1a12b0b4a6a90fd44a209299a67633c2bccbc1dd53c55e0
+FROM php:8.4-fpm@sha256:89aa7c69dedff16e4076f955578547b62566b7f9aa6a0caa6b34b554490be4f0
 
 WORKDIR /var/www/ukcp
 
@@ -36,7 +36,7 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 COPY ./usr/local/etc/php/conf.d/local.ini /usr/local/etc/php/conf.d/local.ini
 
 # Install composer
-COPY --from=composer/composer:2.11.2-bin@sha256:269d47ef954e254227bccb35e3e40f642756abee44dded405e1fbb6f5e52af0c /composer /usr/local/bin/composer
+COPY --from=composer/composer:2.11.2-bin@sha256:4eaf89f62eb9504807f2828f1829a71b7fcd202e89abe2f41c1fb2136068fbfb /composer /usr/local/bin/composer
 
 # System-wide git defaults. These deliberately live in /etc/gitconfig rather than
 # ~/.gitconfig: the Dev Containers extension copies the host's ~/.gitconfig in
