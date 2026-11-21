@@ -20,6 +20,9 @@ return [
 
     'default' => env('CACHE_DRIVER', 'redis'),
 
+    // Health checks must keep answering when the cache (Redis) is down.
+    'limiter' => env('CACHE_LIMITER', 'file'),
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores
