@@ -4,6 +4,7 @@ use App\Providers\AcarsServiceProvider;
 use App\Providers\AppServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\HealthServiceProvider;
 use App\Providers\HorizonServiceProvider;
 use App\Providers\MappingProvider;
 use App\Providers\MetarServiceProvider;
@@ -249,6 +250,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         EventServiceProvider::class,
+        HealthServiceProvider::class,
         HorizonServiceProvider::class,
         MappingProvider::class,
         AdminPanelProvider::class,

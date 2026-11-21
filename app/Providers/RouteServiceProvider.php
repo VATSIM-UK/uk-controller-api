@@ -35,8 +35,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapHealthRoutes();
         $this->mapApiRoutes();
         $this->mapWebRoutes();
+    }
+
+    protected function mapHealthRoutes()
+    {
+        Route::middleware('throttle:30,1')
+            ->group(base_path('routes/health.php'));
     }
 
     /**

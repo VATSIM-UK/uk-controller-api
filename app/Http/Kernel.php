@@ -20,6 +20,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CheckToken;
@@ -42,6 +43,7 @@ class Kernel extends HttpKernel
         MiddlewareKeys::SCOPE => CheckTokenForAnyScope::class,
         MiddlewareKeys::VATSIM_CID => VatsimCid::class,
         MiddlewareKeys::CONTROLLING_LIVE => ControllingOnLiveNetwork::class,
+        'throttle' => ThrottleRequests::class,
     ];
 
     protected $middlewareGroups = [
