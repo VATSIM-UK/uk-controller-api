@@ -1,5 +1,11 @@
 # UK Controller Plugin API Changelog
 
+## [6.68.17](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.16...6.68.17) (2026-11-21)
+
+### Bug Fixes
+
+* add health/uptime endpoints ([d71b2b8](https://github.com/VATSIM-UK/uk-controller-api/commit/d71b2b85bbcab55837cb7ee03e3bac2575d0ae8d))
+
 ## [6.68.16](https://github.com/VATSIM-UK/uk-controller-api/compare/6.68.15...6.68.16) (2026-11-19)
 
 ### Bug Fixes
