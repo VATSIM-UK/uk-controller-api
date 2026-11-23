@@ -4535,12 +4535,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.34.1":
-  version: 5.34.1
-  resolution: "swagger-ui-dist@npm:5.34.1"
+"swagger-ui-dist@npm:^5.35.1":
+  version: 5.35.1
+  resolution: "swagger-ui-dist@npm:5.35.1"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/e840abba4c177facbc14d8e2f696aad36d951a94b8ec67e5affbf127bbb8dc31ba03bc6539877cb0f8a38626d9e8c6c01769025b08970076aa34429d41f244cd
+  checksum: 10c0/b355efaee103e063cc28a64d563978499104a87340cf20247d004a76fd706e227da9ed2e6135f439383f9e11fa33a2aef9eeb6e6903acadabbb61649e4c5ae11
   languageName: node
   linkType: hard
 
@@ -4772,7 +4772,7 @@ __metadata:
     postcss-import: "npm:^17.0.1"
     postcss-nesting: "npm:^14.0.3"
     semantic-release: "npm:^25.0.9"
-    swagger-ui-dist: "npm:^5.34.1"
+    swagger-ui-dist: "npm:^5.35.1"
     tailwindcss: "npm:^4.3.5"
     tippy.js: "npm:^6.3.7"
     vite: "npm:^8.3.8"
