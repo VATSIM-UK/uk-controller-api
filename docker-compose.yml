@@ -94,7 +94,7 @@ services:
       - ukcp-network
 
   adminer:
-    image: adminer:latest@sha256:1f04559230c07cb2999a06c637464daff5ef96b38f4957d1f721a6ac720351fd
+    image: adminer:latest@sha256:cb8e97bff72b58e911743a0609075446bc0881fb7eca79137d8bc73736840a2b
     container_name: adminer
     restart: unless-stopped
     ports:
