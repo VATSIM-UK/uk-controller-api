@@ -1,4 +1,4 @@
-FROM php:8.4-fpm@sha256:aef068ad72ec4430b5fcf04fc45c09ac354d6858ac1ee052b0e26bf1b64bd2f7
+FROM php:8.4-fpm@sha256:8374ec282efaccb7350fbea59c252fcd2e73a238b06b970e8f3c74fb605f1853
 
 WORKDIR /var/www/ukcp
 
