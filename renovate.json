@@ -7,9 +7,11 @@
     ":enableVulnerabilityAlerts",
     ":configMigration",
     "abandonments:recommended",
-    "helpers:pinGitHubActionDigestsToSemver",
-    "docker:pinDigests"
+    "helpers:pinGitHubActionDigestsToSemver"
   ],
+  "constraints": {
+    "php": "8.4"
+  },
   "minimumReleaseAge": "3 days",
   "enabledManagers": ["composer", "npm", "github-actions", "nvm", "dockerfile", "docker-compose", "devcontainer"],
   "timezone": "Europe/London",
