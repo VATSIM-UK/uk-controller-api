@@ -5,6 +5,7 @@ namespace App\Services;
 use App\BaseFunctionalTestCase;
 use App\Events\NetworkDataUpdatedEvent;
 use App\Jobs\Network\AircraftDisconnected;
+use App\Models\Vatsim\GroundState;
 use App\Models\Vatsim\NetworkAircraft;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Bus;
@@ -103,6 +104,31 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
                     'updated_at' => Carbon::now()
                 ]
             ),
+        );
+    }
+
+    // Survives only because processPilots passes no update-column list to upsert, so Laravel
+    // derives one from the payload keys. An explicit list there would wipe this every poll.
+    public function testItDoesNotClobberControllerAssignedStateFromDataFeed()
+    {
+        Event::fake();
+        NetworkAircraft::findOrFail('BAW123')->update(
+            [
+                'clearance_flag' => true,
+                'ground_state' => GroundState::Taxi,
+            ]
+        );
+
+        $this->fakeNetworkDataReturn();
+        $this->service->updateNetworkData();
+
+        $this->assertDatabaseHas(
+            'network_aircraft',
+            [
+                'callsign' => 'BAW123',
+                'clearance_flag' => true,
+                'ground_state' => 'TAXI',
+            ]
         );
     }
 
@@ -217,16 +243,13 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
     {
         $this->fakeNetworkDataReturn();
         $this->service->updateNetworkData();
-        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job)
-        {
+        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
             return $job->aircraft->callsign === 'BAW123';
         });
-        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job)
-        {
+        Bus::assertNotDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
             return $job->aircraft->callsign === 'BAW456 ';
         });
-        Bus::assertDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job)
-        {
+        Bus::assertDispatchedSync(AircraftDisconnected::class, function (AircraftDisconnected $job) {
             return $job->aircraft->callsign === 'BAW789';
         });
     }
@@ -374,17 +397,17 @@ class NetworkAircraftServiceTest extends BaseFunctionalTestCase
             'groundspeed' => 123,
             'transponder' => $transponder ?? '0457',
             'flight_plan' => $hasFlightplan
-            ? [
-                'aircraft' => sprintf('H/%s/M', $aircraftType),
-                'aircraft_short' => $aircraftType,
-                'departure' => 'EGKK',
-                'arrival' => 'EGPH',
-                'altitude' => '15001',
-                'flight_rules' => 'I',
-                'route' => 'DIRECT',
-                'remarks' => 'hi'
-            ]
-            : null,
+                ? [
+                    'aircraft' => sprintf('H/%s/M', $aircraftType),
+                    'aircraft_short' => $aircraftType,
+                    'departure' => 'EGKK',
+                    'arrival' => 'EGPH',
+                    'altitude' => '15001',
+                    'flight_rules' => 'I',
+                    'route' => 'DIRECT',
+                    'remarks' => 'hi'
+                ]
+                : null,
         ];
     }
 
